@@ -16,6 +16,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
    - **Weapons & Ammo (`src/App.tsx`)**: The attack trigger consumes ammo (`currentMag`). Autofire consumes 10 bullets. Ensure any weapon modification respects magazine bounds and reload states.
    - **Critical Injuries (`src/data/criticalInjuries.ts`)**: Uses exact 2d6 tables from Core Book (pg. 187-188). If adding new injury tables (e.g. Black Chrome vehicle crits), maintain the `CriticalInjury` interface.
    - **Visual Placeholders (`src/components/ItemVisualPlaceholder.tsx`)**: Every item rendered in combat or compendium must map cleanly to an item type placeholder to preserve the high-end tactile aesthetic.
+   - **Audio/VFX**: Keep SFX/VFX optional and performant using lightweight Web Audio synthesizer tones or small static assets.
 3. **Always Update This Document**: Whenever you increment a version or modify system mechanics, document your changes in the **Master Version Changelog** below with: *What was changed*, *Files modified*, and *Potential regression areas*.
 
 ---
@@ -34,9 +35,23 @@ cpr-omni-deck/
 │   │   ├── data/
 │   │   │   ├── core-rules.cprpack.json   # Frontend active copy of core data
 │   │   │   ├── rangeTables.ts            # Official Ranged & Autofire DV matrices
-│   │   │   └── criticalInjuries.ts       # Official 2d6 Head & Body injury tables
+│   │   │   ├── criticalInjuries.ts       # Official 2d6 Head & Body injury tables
+│   │   │   ├── sourcebooks.ts            # Index of books, lore summaries & mechanics
+│   │   │   ├── rulesCheatSheet.ts        # Quick reference (Grappling, Choke, Cover SP/HP)
+│   │   │   └── npcs.ts                   # Preloaded NPCs (Adam Smasher, Edgerunners, Mooks)
 │   │   ├── components/
-│   │   │   └── ItemVisualPlaceholder.tsx # High-tech SVG/Lucide visual frames
+│   │   │   ├── ItemVisualPlaceholder.tsx # High-tech SVG/Lucide visual frames
+│   │   │   ├── SourceBadge.tsx           # Monochromatic micro-badges per book
+│   │   │   ├── RulesCheatSheetModal.tsx  # Popover with instant combat rules & cover
+│   │   │   ├── CyberwareMannequin.tsx    # 2077-style neutral anatomical wireframe
+│   │   │   ├── NetArchitectureRunner.tsx # Floor-by-floor NET simulator
+│   │   │   ├── MiniVTT.tsx               # Simple tactical 2x2m grid with cover HP
+│   │   │   └── HomebrewBuilderModal.tsx  # Custom weapon, cyberware, and drug creator
+│   │   ├── utils/
+│   │   │   ├── storage.ts                # IndexedDB persistence for all character sheets
+│   │   │   ├── auth.ts                   # GM Password / Player PIN lock for sheet editing
+│   │   │   ├── sfx.ts                    # Audio feedback (shots, reloads, glitches)
+│   │   │   └── sheetImporter.ts          # Universal importer (JSON, PDF, Companion App)
 │   │   ├── App.tsx                       # Unified Tactical Command Deck
 │   │   ├── index.css                     # Chamfered corner styles & design tokens
 │   │   └── main.tsx                      # Vite React entry point
@@ -48,87 +63,76 @@ cpr-omni-deck/
 
 ---
 
-## 🏗️ Planned Subsystem Specifications (For Future LLM Implementation)
+## 🏗️ Detailed Subsystem Specifications (For Future LLM Implementation)
 
-### 1. Era Rules Switcher: RED (2045) vs CEMK (2077)
-* **File Target**: `src/data/eraRules.ts` & state `era: '2045' | '2077'`
-* **Rules Matrix**:
-  - `2045 (Time of the RED)`: Scarcity economy (Night Markets), physical Cyberdecks with interface cables, traditional humanity loss with therapy sessions.
-  - `2077 (Edgerunners Mission Kit)`: Standard Neuroport installed on all characters (contains integrated Agent, Biomonitor, Virtu HUD, chipware sockets). Quickhacking replaces netrunning in combat. Weapons gain Power (ricochet), Tech (cover penetration), or Smart (tracking) traits.
-* **UI Behavior**: When toggling between `2045` and `2077`, the inventory and combat deck conditionally display either Cyberdeck Programs or Quickhack RAM decks.
+### 1. Browser Storage & GM Lock (Roster Management)
+* **Files**: `src/utils/storage.ts` & `src/utils/auth.ts`
+* **Mechanics**:
+  - Uses browser **IndexedDB** (via Dexie.js or native) so that 100+ character sheets, active combats, and custom homebrew items stay in the user's browser permanently with zero server maintenance.
+  - **GM Lock Mode**: A simple local PIN/Password lock.
+    - *Player Mode*: Locked into editing only their selected character sheet; cannot view hidden GM notes or edit other players' sheets.
+    - *GM Mode*: Full unrestricted access to all sheets, enemy spawner, and combat tracker.
 
-### 2. Economy & Transaction Ledger (€$)
-* **File Target**: `src/data/economy.ts`
-* **Schema**:
-  ```ts
-  interface Transaction {
-    id: string;
-    timestamp: string;
-    description: string; // e.g. "Pago de Falco por el trabajo de la chaqueta"
-    amount: number;      // positive for income, negative for expense
-    category: 'gig' | 'market' | 'lifestyle' | 'medical' | 'bribe';
-  }
-  ```
-* **UI Behavior**: A clean slide-over wallet that tracks total balance, quick "+ Pay" / "- Expense" modal with pre-filled gig templates, and lifestyle maintenance deductions.
+### 2. Sourcebook Compendium Dropdown & Lore Summary
+* **Files**: `src/data/sourcebooks.ts` & UI dropdown in Compendium
+* **Mechanics**:
+  - Filter items strictly by book: *Core*, *Black Chrome*, *Danger Gal*, *Interface RED 1-3*, *Edgerunners Mission Kit*.
+  - When clicking "Info de Libro", shows a high-tech brief:
+    - Historic lore and context.
+    - Specific new rules introduced (e.g. *Interface RED Vol 3*: Full Body Conversion borg mechanics, linear frame requirements, cybermatrix).
 
-### 3. Inventory & Carry Capacity (ENC)
-* **File Target**: `src/data/inventory.ts`
-* **Mechanics**: Max Carry Capacity = `BODY * 10` kg / lbs. Overencumbrance inflicts -2 to MOVE, DEX, and REF.
-* **Slots**: Equipped (Hands, Quick-draw holster), Backpack, Stash (Safehouse/Apartment).
+### 3. Netrunning 2045: NET Architecture Floor Runner
+* **Files**: `src/data/netArchitectures.ts` & `src/components/NetArchitectureRunner.tsx`
+* **Mechanics**:
+  - Interactive ladder of virtual floors (File, Password, Control Node, Black ICE).
+  - Net Action counter per turn based on Interface rank.
+  - Meat actions vs Net actions tracker with virus creation DVs.
 
-### 4. Street Drugs & Addiction System
-* **File Target**: `src/data/drugs.ts`
-* **Mechanics**: Duration counter in combat turns / hours. Automatic addiction check (`WILL + 1d10` vs Drug DV). Active buffs (e.g. Black Lace ignores Serious Wound penalties; Synthcoke grants +1 REF) and withdrawal penalties (-2 to all actions when craving).
+### 4. Comprehensive Homebrew & CP2020 Conversion Engine
+* **Files**: `src/data/homebrew.ts` & `src/components/HomebrewBuilderModal.tsx`
+* **Mechanics**:
+  - Visual form to author any custom Weapon, Cyberware, Armor, or Drug.
+  - Implements conversion algorithms from *Old Guns Never Die* (converting Cyberpunk 2020 damage, WA, and reliability to Cyberpunk RED equivalents).
 
-### 5. Night City Weather & Environmental Hazards
-* **File Target**: `src/data/weather.ts`
-* **Mechanics**: 
-  - Acid Rain: Deals 1 damage to armor SP every 10 min without protective gear.
-  - Dust Storm: Target ranges beyond 12m suffer a +2 DV penalty.
-  - Blood Red Sky: Visual impairment for snipers (DVs over 25m increase by 2).
+### 5. Weapon Conversions (2077 Power, Tech, Smart) & Fire Modes
+* **Files**: `src/utils/weaponConversion.ts`
+* **Mechanics**:
+  - *Power*: Bounces off hard surfaces to hit targets behind corners.
+  - *Tech*: Charges up to shoot through cover, deducting cover SP and damaging target.
+  - *Smart*: Tracks targets with Smartlink, ignoring standard cover penalties.
+  - *Fire Modes Guide*: Clear distinction between Single Shot (normal DV), Autofire (10 bullets, special DV, damage multiplier), and Suppressive Fire (6x6m zone forcing concentration check).
 
-### 6. Role-Specific Automation & Lawman/Exec Spawners
-* **File Target**: `src/data/roleAbilities.ts`
-* **Lawman Backup**: Button to summon backup based on Lawman Rank. Immediately spawns full statblocks into the combat tracker:
-  - Ranks 1-4: 2 Patrol Officers (SP 11, Heavy Pistols)
-  - Ranks 5-7: 2 Deputies / Detectives (SP 11, Shotguns)
-  - Ranks 8-9: 4 SWAT Officers (SP 13, Assault Rifles)
-  - Rank 10: 4 Max-Tac Operatives (SP 15 Flak, Sandevistan, Heavy Tech Weapons)
-* **Exec Teamwork**: Preloaded company subordinates (Bodyguard, Chauffeur, Netrunner, Technician).
-* **Solo Combat Awareness**: Point pool allocator at initiative time (Damage Absorb, Precision Attack, Spot Weakness).
-* **Tech Maker**: Fabrication & upgrade timers with calculated DVs.
+### 6. Tactile Audio & Visual FX (SFX / VFX)
+* **Files**: `src/utils/sfx.ts` & `src/utils/vfx.ts`
+* **Mechanics**:
+  - Audio: Procedural or static clicks for reload, dice rolls, gunshots, Sandevistan hum.
+  - Visuals: Screen glitch on brain damage / netrunning zap; pulsing red vignetting at $\le 50\%$ HP (Seriously Wounded).
 
-### 7. Preloaded NPC & Canon Boss Library
-* **File Target**: `src/data/npcs.ts`
-* **Coverage**: Full combat cards for Adam Smasher, Edgerunners crew (David Martinez, Lucy, Rebecca, Maine, Falco), Danger Gal Dossier factions (NCPD, Maelstrom, Tyger Claws, Arasaka, Militech), and generic street mooks.
-* **1-Click Spawn**: Spawns directly into the GM encounter tracker with full HP, armor, weapons, and AI tactics.
+### 7. Quick-Access Rules Cheat Sheet ("Machete de Reglas")
+* **Files**: `src/data/rulesCheatSheet.ts` & `src/components/RulesCheatSheetModal.tsx`
+* **Mechanics**:
+  - **Grapple & Choke**: Opposed Brawling checks, dragging rules, choking deals `BODY * 2` direct HP damage ignoring armor.
+  - **Cover & Object SP/HP**:
+    - Car door: SP 10 / HP 15
+    - Concrete barrier: SP 20 / HP 30
+    - Drywall / wood: SP 5 / HP 10
+    - Steel blast door: SP 25 / HP 50
 
-### 8. Cyberpunk 2077-Style Anatomical Cyberware Mannequin
-* **File Target**: `src/components/CyberwareMannequin.tsx`
-* **Design**: High-tech neutral anatomical wireframe silhouette. Clickable interactive nodes:
-  - Frontal Cortex / Operating System (Cyberdeck, Sandevistan, Kerenzikov)
-  - Ocular System (Cybereyes L/R)
-  - Audio System (Cyberaudio)
-  - Circulatory System (Biomonitor, Blood Pump)
-  - Nervous System (Reflex Co-processor)
-  - Integumentary System (Subdermal Armor, Skinweave)
-  - Skeleton (Linear Frame Sigma/Beta)
-  - Arms (Gorilla Arms, Mantis Blades, Monowire, Pop-up Gun)
-  - Legs (Jump Boosters)
-* Clicking a node opens a slide-over showing installed chrome, option slots, humanity loss, and medical installation requirements.
+### 8. Lightweight Mini-VTT (Tactical Grid & Cover Tracker)
+* **Files**: `src/components/MiniVTT.tsx`
+* **Mechanics**:
+  - Canvas-based or CSS grid calibrated in 2x2m squares.
+  - Drop player & enemy tokens.
+  - Place simple cover obstacles (cars, barricades, walls) with trackable SP/HP that ablate and break when fired upon.
+  - Distance line tool measuring meters directly into the weapon Range DV table.
 
-### 9. 2077 Quickhacks & Cyberdeck Deck
-* **File Target**: `src/data/quickhacks.ts` & `src/components/QuickhackDeck.tsx`
-* **Catalog**: Short Circuit, Overheat, Cyberware Malfunction, Synapse Burnout, Reboot Optics, Weapon Glitch, Ping, Memory Wipe, Suicide, Cyberpsychosis.
-* **UI**: RAM meter bar (Available vs Max RAM), RAM cost per hack, upload time, and cooldown tracker.
+### 9. 2077 Anatomical Cyberware Mannequin
+* **Files**: `src/components/CyberwareMannequin.tsx`
+* **Design**: Neutral humanoid silhouette with interactive nodes (Frontal Cortex, Optics, Audio, Circulatory, Nervous, Integumentary, Skeleton, Arms, Legs) displaying option slots and humanity impact.
 
-### 10. Universal Character Sheet Importer
-* **File Target**: `src/utils/sheetImporter.ts`
-* **Supported Formats**:
-  - Official Companion App share codes / JSON export.
-  - Standard CPR Omni-Deck JSON schema.
-  - Fillable PDF character sheet extractor (reads form field values: `STAT_*`, `SKILL_*`, `ARMOR_*`).
-* **Validation**: Validates required fields, calculates derived values (HP, Humanity, SP), and outputs friendly error messages if fields are missing.
+### 10. Universal Sheet Importer
+* **Files**: `src/utils/sheetImporter.ts`
+* **Mechanics**: Ingests official Companion App export formats, fillable PDF field maps, and native Omni-Deck JSON schemas with field validation.
 
 ---
 
@@ -149,8 +153,6 @@ cpr-omni-deck/
   4. Assigned dynamic trauma icons: cracked skull (`Skull`), brain trauma (`Brain`), eye trauma (`Eye`), broken bone (`Bone`), and chest puncture (`HeartCrack`).
   5. Added a `[ TRATAR / CURAR ]` button to instantly clear healed injuries.
   6. Connected visual placeholders across all weapons, armor, cyberware, and compendium catalog cards.
-* **Potential Regression / Dependency Warnings**:
-  - Active injuries display in the top command bar. If the injury ID format is altered, ensure `removeInjury(id)` filters properly.
 
 ---
 
@@ -166,8 +168,6 @@ cpr-omni-deck/
   4. Added the official **Autofire Range Table** (SMG max multiplier 3, Assault Rifle max multiplier 4).
   5. Added an interactive Global Distance Selector and per-weapon Distance Ladders on each weapon card with a green `★ ÓPTIMO` highlight on the weapon's sweet spot.
   6. Added an Autofire mode toggle that expends 10 bullets and calculates `(Total - DV) * 2d6` damage multiplier.
-* **Potential Regression / Dependency Warnings**:
-  - Melee weapons do not use distance brackets; they bypass `rangeTables.ts` and roll against defender evasion DV. Do not enforce range brackets on `Melee` items.
 
 ---
 
