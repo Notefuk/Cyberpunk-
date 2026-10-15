@@ -1,0 +1,7 @@
+services:
+  omni-deck:
+    build: .
+    container_name: cpr_omni_deck
+    ports:
+      - "8080:80"
+    restart: unless-stopped
