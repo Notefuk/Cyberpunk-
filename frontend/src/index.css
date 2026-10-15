@@ -2,40 +2,87 @@
 
 @layer base {
   :root {
-    --bg-primary: #0a0b10;
-    --bg-surface: #12141c;
-    --bg-panel: #181b26;
-    --border-cyber: #2a2f42;
-    --neon-red: #ff003c;
-    --neon-yellow: #fcee0a;
-    --neon-cyan: #00f0ff;
-    --neon-green: #00ff66;
-    --text-primary: #f0f2f5;
-    --text-muted: #7d8597;
+    --bg-void: #0a0b0e;
+    --bg-surface: #121318;
+    --bg-card: #161820;
+    --bg-card-hover: #1c1e28;
+    --border-subtle: #232632;
+    --border-strong: #363b4e;
+    --red-core: #dc2626;
+    --red-glow: rgba(220, 38, 38, 0.25);
+    --amber-core: #f59e0b;
+    --cyan-core: #0ea5e9;
   }
 
   body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-void);
+    color: #e2e8f0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(220, 38, 38, 0.04) 0%, transparent 60%),
+      linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    background-size: 100% 100%, 32px 32px, 32px 32px;
+  }
+
+  /* Universal pointer cursor for all interactive elements */
+  button, 
+  [role="button"], 
+  input[type="button"], 
+  input[type="submit"], 
+  select,
+  a {
+    cursor: pointer;
   }
 }
 
-/* Custom Cyberpunk Scrollbar */
+/* COMP/CON & Cyberpunk Chamfered Corners */
+.chamfer-card {
+  position: relative;
+  background: #13141a;
+  border: 1px solid #232634;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chamfer-card:hover {
+  border-color: #3b4259;
+}
+
+.chamfer-btn {
+  position: relative;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  transition: all 0.15s ease-out;
+  cursor: pointer;
+}
+
+.chamfer-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0b10;
+  background: #0a0b0e;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a2f42;
-  border-radius: 3px;
+  background: #232634;
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff003c;
+  background: #dc2626;
+}
+
+/* Font utility classes */
+.font-tech {
+  font-family: 'Rajdhani', sans-serif;
+}
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
 }
