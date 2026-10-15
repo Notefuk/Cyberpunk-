@@ -1,0 +1,20 @@
+# Python isolated environment
+.venv/
+__pycache__/
+*.pyc
+
+# Node & Frontend dependencies
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Large binaries and raw PDFs (keep repository light and legal)
+*.pdf
+*.zip
+*.webp
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
