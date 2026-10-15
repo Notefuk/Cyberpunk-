@@ -9,7 +9,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 
 1. **Architecture Decoupling (The COMP/CON Model)**:
    - Never hardcode rules or items into UI views directly.
-   - Core static rules and book data reside in `data/` and `src/data/` as modular `.cprpack.json` files and typed TypeScript registry modules (`rangeTables.ts`, `criticalInjuries.ts`).
+   - Core static rules and book data reside in `data/` and `src/data/` as modular `.cprpack.json` files and typed TypeScript registry modules (`rangeTables.ts`, `criticalInjuries.ts`, etc.).
    - The UI in `src/App.tsx` and `src/components/` acts as a pure reactive consumer.
 2. **System Dependencies & Cascade Effects**:
    - **Range & DV System (`src/data/rangeTables.ts`)**: If you alter distance brackets or weapon classifications, check `getDvForWeapon()` and `executeRoll()` in `App.tsx`. Do NOT change DV values without citing official Cyberpunk RED Core Rulebook (pg. 174).
@@ -46,36 +46,89 @@ cpr-omni-deck/
 └── CONTENT_CHECKLIST.md                  # Granular rulebook adaptation tracking
 ```
 
-### Core Dependency Graph
-```mermaid
-graph TD
-    subgraph DataLayer ["Data & Rules Layer"]
-        PDF["PDF Rulebooks (External)"] --> Extractor["scripts/extract_core_pack.py"]
-        Extractor --> CPRPack["data/core-rules.cprpack.json"]
-        CPRPack --> FrontData["frontend/src/data/core-rules.cprpack.json"]
-        RangeTables["frontend/src/data/rangeTables.ts"]
-        CritTables["frontend/src/data/criticalInjuries.ts"]
-    end
+---
 
-    subgraph LogicLayer ["Combat & Rules Engine (App.tsx)"]
-        FrontData --> Arsenal["Weapons State (currentMag, rof)"]
-        RangeTables --> DistanceCalc["getDvForWeapon(weapon, distance, isAuto)"]
-        CritTables --> CritRoller["rollCriticalInjury(location)"]
-        
-        DistanceCalc --> AttackRoll["executeRoll(action, base, dv)"]
-        Arsenal --> AttackRoll
-        CritRoller --> ActiveInjuries["activeInjuries[] (Penalties & Treatment)"]
-    end
+## 🏗️ Planned Subsystem Specifications (For Future LLM Implementation)
 
-    subgraph UILayer ["User Interface (COMP/CON Aesthetic)"]
-        AttackRoll --> CombatFeed["Combat Dice Log (Margin & Crits)"]
-        AttackRoll --> VitalsHUD["HP, Armor Ablation, Luck Pool"]
-        ActiveInjuries --> InjuryCards["Critical Injury Cards (Cracked Skull / Trauma Icons)"]
-        Arsenal --> WeaponCards["Weapon Arsenal (Visual Placeholders & Distance Ladder)"]
-        ItemPlaceholder["ItemVisualPlaceholder.tsx"] --> WeaponCards
-        ItemPlaceholder --> CompendiumGrid["Master Compendium Catalog"]
-    end
-```
+### 1. Era Rules Switcher: RED (2045) vs CEMK (2077)
+* **File Target**: `src/data/eraRules.ts` & state `era: '2045' | '2077'`
+* **Rules Matrix**:
+  - `2045 (Time of the RED)`: Scarcity economy (Night Markets), physical Cyberdecks with interface cables, traditional humanity loss with therapy sessions.
+  - `2077 (Edgerunners Mission Kit)`: Standard Neuroport installed on all characters (contains integrated Agent, Biomonitor, Virtu HUD, chipware sockets). Quickhacking replaces netrunning in combat. Weapons gain Power (ricochet), Tech (cover penetration), or Smart (tracking) traits.
+* **UI Behavior**: When toggling between `2045` and `2077`, the inventory and combat deck conditionally display either Cyberdeck Programs or Quickhack RAM decks.
+
+### 2. Economy & Transaction Ledger (€$)
+* **File Target**: `src/data/economy.ts`
+* **Schema**:
+  ```ts
+  interface Transaction {
+    id: string;
+    timestamp: string;
+    description: string; // e.g. "Pago de Falco por el trabajo de la chaqueta"
+    amount: number;      // positive for income, negative for expense
+    category: 'gig' | 'market' | 'lifestyle' | 'medical' | 'bribe';
+  }
+  ```
+* **UI Behavior**: A clean slide-over wallet that tracks total balance, quick "+ Pay" / "- Expense" modal with pre-filled gig templates, and lifestyle maintenance deductions.
+
+### 3. Inventory & Carry Capacity (ENC)
+* **File Target**: `src/data/inventory.ts`
+* **Mechanics**: Max Carry Capacity = `BODY * 10` kg / lbs. Overencumbrance inflicts -2 to MOVE, DEX, and REF.
+* **Slots**: Equipped (Hands, Quick-draw holster), Backpack, Stash (Safehouse/Apartment).
+
+### 4. Street Drugs & Addiction System
+* **File Target**: `src/data/drugs.ts`
+* **Mechanics**: Duration counter in combat turns / hours. Automatic addiction check (`WILL + 1d10` vs Drug DV). Active buffs (e.g. Black Lace ignores Serious Wound penalties; Synthcoke grants +1 REF) and withdrawal penalties (-2 to all actions when craving).
+
+### 5. Night City Weather & Environmental Hazards
+* **File Target**: `src/data/weather.ts`
+* **Mechanics**: 
+  - Acid Rain: Deals 1 damage to armor SP every 10 min without protective gear.
+  - Dust Storm: Target ranges beyond 12m suffer a +2 DV penalty.
+  - Blood Red Sky: Visual impairment for snipers (DVs over 25m increase by 2).
+
+### 6. Role-Specific Automation & Lawman/Exec Spawners
+* **File Target**: `src/data/roleAbilities.ts`
+* **Lawman Backup**: Button to summon backup based on Lawman Rank. Immediately spawns full statblocks into the combat tracker:
+  - Ranks 1-4: 2 Patrol Officers (SP 11, Heavy Pistols)
+  - Ranks 5-7: 2 Deputies / Detectives (SP 11, Shotguns)
+  - Ranks 8-9: 4 SWAT Officers (SP 13, Assault Rifles)
+  - Rank 10: 4 Max-Tac Operatives (SP 15 Flak, Sandevistan, Heavy Tech Weapons)
+* **Exec Teamwork**: Preloaded company subordinates (Bodyguard, Chauffeur, Netrunner, Technician).
+* **Solo Combat Awareness**: Point pool allocator at initiative time (Damage Absorb, Precision Attack, Spot Weakness).
+* **Tech Maker**: Fabrication & upgrade timers with calculated DVs.
+
+### 7. Preloaded NPC & Canon Boss Library
+* **File Target**: `src/data/npcs.ts`
+* **Coverage**: Full combat cards for Adam Smasher, Edgerunners crew (David Martinez, Lucy, Rebecca, Maine, Falco), Danger Gal Dossier factions (NCPD, Maelstrom, Tyger Claws, Arasaka, Militech), and generic street mooks.
+* **1-Click Spawn**: Spawns directly into the GM encounter tracker with full HP, armor, weapons, and AI tactics.
+
+### 8. Cyberpunk 2077-Style Anatomical Cyberware Mannequin
+* **File Target**: `src/components/CyberwareMannequin.tsx`
+* **Design**: High-tech neutral anatomical wireframe silhouette. Clickable interactive nodes:
+  - Frontal Cortex / Operating System (Cyberdeck, Sandevistan, Kerenzikov)
+  - Ocular System (Cybereyes L/R)
+  - Audio System (Cyberaudio)
+  - Circulatory System (Biomonitor, Blood Pump)
+  - Nervous System (Reflex Co-processor)
+  - Integumentary System (Subdermal Armor, Skinweave)
+  - Skeleton (Linear Frame Sigma/Beta)
+  - Arms (Gorilla Arms, Mantis Blades, Monowire, Pop-up Gun)
+  - Legs (Jump Boosters)
+* Clicking a node opens a slide-over showing installed chrome, option slots, humanity loss, and medical installation requirements.
+
+### 9. 2077 Quickhacks & Cyberdeck Deck
+* **File Target**: `src/data/quickhacks.ts` & `src/components/QuickhackDeck.tsx`
+* **Catalog**: Short Circuit, Overheat, Cyberware Malfunction, Synapse Burnout, Reboot Optics, Weapon Glitch, Ping, Memory Wipe, Suicide, Cyberpsychosis.
+* **UI**: RAM meter bar (Available vs Max RAM), RAM cost per hack, upload time, and cooldown tracker.
+
+### 10. Universal Character Sheet Importer
+* **File Target**: `src/utils/sheetImporter.ts`
+* **Supported Formats**:
+  - Official Companion App share codes / JSON export.
+  - Standard CPR Omni-Deck JSON schema.
+  - Fillable PDF character sheet extractor (reads form field values: `STAT_*`, `SKILL_*`, `ARMOR_*`).
+* **Validation**: Validates required fields, calculates derived values (HP, Humanity, SP), and outputs friendly error messages if fields are missing.
 
 ---
 
