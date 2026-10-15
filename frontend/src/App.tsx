@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { 
-  Shield, 
   Heart, 
   Crosshair, 
   Terminal, 
@@ -13,9 +12,15 @@ import {
   Check, 
   Zap, 
   Activity, 
-  Flame,
-  Target,
-  Swords
+  Flame, 
+  Target, 
+  Swords, 
+  Skull, 
+  Brain, 
+  Bone, 
+  Eye, 
+  HeartCrack, 
+  AlertOctagon 
 } from 'lucide-react';
 
 import coreData from './data/core-rules.cprpack.json';
@@ -24,6 +29,12 @@ import {
   WEAPON_RANGE_PROFILES, 
   getWeaponProfileKey 
 } from './data/rangeTables';
+import type { CriticalInjury } from './data/criticalInjuries';
+import { 
+  HEAD_CRITICAL_INJURIES, 
+  rollCriticalInjury 
+} from './data/criticalInjuries';
+import { ItemVisualPlaceholder } from './components/ItemVisualPlaceholder';
 
 interface WeaponItem {
   id: string;
@@ -116,6 +127,11 @@ export default function App() {
   const [humanity] = useState(62);
   const currentEmp = Math.floor(humanity / 10);
 
+  // Active Critical Injuries List
+  const [activeInjuries, setActiveInjuries] = useState<CriticalInjury[]>([
+    HEAD_CRITICAL_INJURIES[7] // Fractured Skull by default for preview
+  ]);
+
   // Selected Target Distance Bracket (0-6m, 7-12m, etc.)
   const [selectedDistance, setSelectedDistance] = useState<string>('7-12m');
 
@@ -155,7 +171,7 @@ export default function App() {
 
   // Helper: Get DV for a specific weapon and distance
   const getDvForWeapon = (weapon: WeaponItem, distance: string, isAuto: boolean): number | null => {
-    if (weapon.type === 'Melee') return 13; // Melee defaults to defender evasion DV
+    if (weapon.type === 'Melee') return 13;
     const profileKey = getWeaponProfileKey(weapon.name, weapon.type);
     if (!profileKey) return 15;
     const profile = WEAPON_RANGE_PROFILES[profileKey];
@@ -165,6 +181,30 @@ export default function App() {
       return profile.autofireDvs[distance] ?? null;
     }
     return profile.dvs[distance] ?? null;
+  };
+
+  // Helper: Get placeholder category
+  const getItemPlaceholderType = (w: WeaponItem) => {
+    if (w.type === 'Melee') return 'melee';
+    const lower = w.name.toLowerCase();
+    if (lower.includes('sniper') || lower.includes('assault')) return 'rifle';
+    if (lower.includes('shotgun')) return 'shotgun';
+    if (lower.includes('smg')) return 'smg';
+    if (lower.includes('rocket') || lower.includes('grenade')) return 'heavy';
+    return 'pistol';
+  };
+
+  // Roll Critical Injury
+  const handleRollInjury = (location: 'head' | 'body') => {
+    const injury = rollCriticalInjury(location);
+    if (!activeInjuries.some(i => i.id === injury.id)) {
+      setActiveInjuries(prev => [injury, ...prev]);
+    }
+  };
+
+  // Remove / Cure Injury
+  const removeInjury = (id: string) => {
+    setActiveInjuries(prev => prev.filter(i => i.id !== id));
   };
 
   // Perform Roll Action
@@ -224,10 +264,9 @@ export default function App() {
     const isAuto = !!autofireActive[weapon.id];
     const ammoCost = isAuto ? 10 : 1;
 
-    // Check ammo
     if (weapon.standardMag && weapon.standardMag > 0) {
       if ((weapon.currentMag ?? 0) < ammoCost) {
-        return; // Empty
+        return;
       }
       setWeapons(prev => prev.map(w => {
         if (w.id === weapon.id) {
@@ -298,13 +337,13 @@ export default function App() {
               <div className="flex items-center gap-2">
                 <span className="font-tech text-lg font-bold tracking-wider text-white">OMNI-DECK</span>
                 <span className="text-[10px] font-mono-code bg-[#1f2330] border border-[#2b3042] text-[#94a3b8] px-1.5 py-0.2 rounded">
-                  v1.1.0
+                  v1.2.0
                 </span>
               </div>
               <div className="flex items-center gap-2 text-[11px] text-[#64748b]">
                 <span className="flex items-center gap-1 text-[#10b981]">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#10b981] animate-pulse"></span>
-                  TABLA DE DISTANCIAS ACTIVA
+                  TABLA DE DISTANCIAS E ICONOS ACTIVOS
                 </span>
                 <span>•</span>
                 <span>OFFLINE PWA READY</span>
@@ -338,6 +377,12 @@ export default function App() {
               <div>
                 <span className="text-[#64748b] text-[10px] block leading-none">EMP</span>
                 <span className="font-bold text-[#f59e0b]">{currentEmp} <span className="text-[10px] text-[#64748b]">({humanity} HL)</span></span>
+              </div>
+              <div>
+                <span className="text-[#64748b] text-[10px] block leading-none">HERIDAS CRÍTICAS</span>
+                <span className={`font-bold flex items-center gap-1 ${activeInjuries.length > 0 ? 'text-[#dc2626]' : 'text-[#10b981]'}`}>
+                  <Skull className="w-3 h-3" /> {activeInjuries.length}
+                </span>
               </div>
             </div>
           </div>
@@ -387,7 +432,7 @@ export default function App() {
           >
             <Crosshair className={`w-4 h-4 transition-transform group-hover:scale-110 ${activeTab === 'combat' ? 'text-[#dc2626]' : 'text-[#64748b]'}`} />
             <span>Active Combat</span>
-            {isSeriouslyWounded && (
+            {activeInjuries.length > 0 && (
               <span className="h-2 w-2 rounded-full bg-[#dc2626] animate-ping ml-1"></span>
             )}
           </button>
@@ -454,7 +499,7 @@ export default function App() {
         {activeTab === 'combat' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
             
-            {/* LEFT / CENTER COLUMN (8 COLS): Vitals, Range Selector, Weapons */}
+            {/* LEFT / CENTER COLUMN (8 COLS): Vitals, Critical Injuries, Range Selector, Weapons */}
             <div className="lg:col-span-8 space-y-5">
               
               {/* VITALS & BALLISTIC MATRIX */}
@@ -567,72 +612,78 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Armor Plates Grid (Head & Body) */}
+                {/* Armor Plates Grid with Visual Icon Placeholders */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   
                   {/* HEAD ARMOR */}
-                  <div className="bg-[#171923] p-4 rounded-sm border border-[#222636] relative overflow-hidden">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <span className="text-[10px] font-mono-code text-[#64748b] block tracking-wider uppercase">PROTECCIÓN DE CABEZA</span>
-                        <div className="font-tech text-base font-bold text-white flex items-center gap-1.5">
-                          <Shield className="w-4 h-4 text-[#38bdf8]" />
-                          BLINDAJE CABEZA (SP)
-                        </div>
-                        <div className="text-[11px] text-[#94a3b8]">Light Armorjack</div>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-tech text-3xl font-bold text-white leading-none">{headSp}</span>
-                        <span className="text-xs text-[#64748b] block font-mono-code">/ {maxHeadSp} SP</span>
-                      </div>
-                    </div>
+                  <div className="bg-[#171923] p-4 rounded-sm border border-[#222636] relative overflow-hidden flex items-start gap-3">
+                    <ItemVisualPlaceholder type="armor_head" size="md" />
 
-                    <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-[#1f2332]">
-                      <button 
-                        onClick={() => setHeadSp(prev => Math.max(0, prev - 1))}
-                        className="py-2 px-3 bg-[#dc2626]/10 hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/30 rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 text-center"
-                      >
-                        -1 ABLACIÓN
-                      </button>
-                      <button 
-                        onClick={() => setHeadSp(maxHeadSp)}
-                        className="py-2 px-3 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 text-center"
-                      >
-                        REPARAR
-                      </button>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start mb-1">
+                        <div>
+                          <span className="text-[10px] font-mono-code text-[#64748b] block tracking-wider uppercase">PROTECCIÓN DE CABEZA</span>
+                          <div className="font-tech text-base font-bold text-white flex items-center gap-1.5">
+                            BLINDAJE CABEZA (SP)
+                          </div>
+                          <div className="text-[11px] text-[#94a3b8]">Light Armorjack</div>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-tech text-3xl font-bold text-white leading-none">{headSp}</span>
+                          <span className="text-xs text-[#64748b] block font-mono-code">/ {maxHeadSp} SP</span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 mt-3 pt-2 border-t border-[#1f2332]">
+                        <button 
+                          onClick={() => setHeadSp(prev => Math.max(0, prev - 1))}
+                          className="py-1.5 px-2 bg-[#dc2626]/10 hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/30 rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 text-center"
+                        >
+                          -1 ABLACIÓN
+                        </button>
+                        <button 
+                          onClick={() => setHeadSp(maxHeadSp)}
+                          className="py-1.5 px-2 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 text-center"
+                        >
+                          REPARAR
+                        </button>
+                      </div>
                     </div>
                   </div>
 
                   {/* BODY ARMOR */}
-                  <div className="bg-[#171923] p-4 rounded-sm border border-[#222636] relative overflow-hidden">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <span className="text-[10px] font-mono-code text-[#64748b] block tracking-wider uppercase">PROTECCIÓN DE TORSO</span>
-                        <div className="font-tech text-base font-bold text-white flex items-center gap-1.5">
-                          <Shield className="w-4 h-4 text-[#38bdf8]" />
-                          BLINDAJE CUERPO (SP)
-                        </div>
-                        <div className="text-[11px] text-[#94a3b8]">Light Armorjack</div>
-                      </div>
-                      <div className="text-right">
-                        <span className="font-tech text-3xl font-bold text-white leading-none">{bodySp}</span>
-                        <span className="text-xs text-[#64748b] block font-mono-code">/ {maxBodySp} SP</span>
-                      </div>
-                    </div>
+                  <div className="bg-[#171923] p-4 rounded-sm border border-[#222636] relative overflow-hidden flex items-start gap-3">
+                    <ItemVisualPlaceholder type="armor_body" size="md" />
 
-                    <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-[#1f2332]">
-                      <button 
-                        onClick={() => setBodySp(prev => Math.max(0, prev - 1))}
-                        className="py-2 px-3 bg-[#dc2626]/10 hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/30 rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 text-center"
-                      >
-                        -1 ABLACIÓN
-                      </button>
-                      <button 
-                        onClick={() => setBodySp(maxBodySp)}
-                        className="py-2 px-3 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 text-center"
-                      >
-                        REPARAR
-                      </button>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-start mb-1">
+                        <div>
+                          <span className="text-[10px] font-mono-code text-[#64748b] block tracking-wider uppercase">PROTECCIÓN DE TORSO</span>
+                          <div className="font-tech text-base font-bold text-white flex items-center gap-1.5">
+                            BLINDAJE CUERPO (SP)
+                          </div>
+                          <div className="text-[11px] text-[#94a3b8]">Light Armorjack</div>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-tech text-3xl font-bold text-white leading-none">{bodySp}</span>
+                          <span className="text-xs text-[#64748b] block font-mono-code">/ {maxBodySp} SP</span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2 mt-3 pt-2 border-t border-[#1f2332]">
+                        <button 
+                          onClick={() => setBodySp(prev => Math.max(0, prev - 1))}
+                          className="py-1.5 px-2 bg-[#dc2626]/10 hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/30 rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 text-center"
+                        >
+                          -1 ABLACIÓN
+                        </button>
+                        <button 
+                          onClick={() => setBodySp(maxBodySp)}
+                          className="py-1.5 px-2 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 text-center"
+                        >
+                          REPARAR
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -641,8 +692,94 @@ export default function App() {
               </div>
 
               {/* =====================================================
-                  GLOBAL TARGET RANGE SELECTOR (SELECTOR DE DISTANCIA)
+                  CRITICAL INJURIES MODULE (HERIDAS CRÍTICAS)
               ===================================================== */}
+              <div className="chamfer-card p-5 bg-[#121319] border border-[#232736]">
+                <div className="flex flex-wrap items-center justify-between pb-3 mb-4 border-b border-[#1f2230] gap-2">
+                  <div className="flex items-center gap-2">
+                    <Skull className="w-4 h-4 text-[#dc2626]" />
+                    <span className="font-tech text-sm font-bold tracking-wider text-white uppercase">
+                      HERIDAS CRÍTICAS ACTIVAS ({activeInjuries.length})
+                    </span>
+                  </div>
+
+                  {/* Trigger buttons for Head and Body Crits */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleRollInjury('head')}
+                      className="px-3 py-1.5 bg-[#221820] hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/40 rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 flex items-center gap-1.5"
+                    >
+                      <Skull className="w-3.5 h-3.5" />
+                      <span>+ CRÍTICO CABEZA (2d6)</span>
+                    </button>
+                    <button
+                      onClick={() => handleRollInjury('body')}
+                      className="px-3 py-1.5 bg-[#201d16] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] border border-[#f59e0b]/40 rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 flex items-center gap-1.5"
+                    >
+                      <Bone className="w-3.5 h-3.5" />
+                      <span>+ CRÍTICO CUERPO (2d6)</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Active Injuries Cards */}
+                {activeInjuries.length === 0 ? (
+                  <div className="text-center py-6 text-[#64748b] font-mono-code text-xs bg-[#171923] rounded border border-[#222636]">
+                    Sin heridas críticas activas. El sujeto no presenta miembros rotos ni traumas severos.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {activeInjuries.map((injury) => (
+                      <div 
+                        key={injury.id}
+                        className="bg-[#1c1619] border border-[#3b1d24] p-3.5 rounded-xs flex flex-col md:flex-row md:items-center justify-between gap-3 hover:border-[#dc2626] transition-all"
+                      >
+                        <div className="flex items-start gap-3">
+                          {/* Visual Icon Box for Injury */}
+                          <div className="w-10 h-10 bg-[#29171b] border border-[#4d1f28] rounded-xs flex items-center justify-center shrink-0">
+                            {injury.iconType === 'skull' && <Skull className="w-5 h-5 text-[#dc2626]" />}
+                            {injury.iconType === 'brain' && <Brain className="w-5 h-5 text-[#f43f5e]" />}
+                            {injury.iconType === 'eye' && <Eye className="w-5 h-5 text-[#38bdf8]" />}
+                            {injury.iconType === 'bone' && <Bone className="w-5 h-5 text-[#f59e0b]" />}
+                            {injury.iconType === 'heart' && <HeartCrack className="w-5 h-5 text-[#dc2626]" />}
+                            {injury.iconType === 'muscle' && <AlertOctagon className="w-5 h-5 text-[#e11d48]" />}
+                            {injury.iconType === 'ear' && <AlertOctagon className="w-5 h-5 text-[#f59e0b]" />}
+                            {injury.iconType === 'throat' && <Skull className="w-5 h-5 text-[#dc2626]" />}
+                          </div>
+
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-tech text-base font-bold text-white tracking-wide">{injury.name}</span>
+                              <span className="text-[10px] font-mono-code bg-[#33181d] text-[#dc2626] px-1.5 py-0.2 rounded uppercase">
+                                {injury.location === 'head' ? 'CABEZA' : 'CUERPO'} (Roll: {injury.roll})
+                              </span>
+                            </div>
+                            <p className="text-xs text-[#fca5a5] mt-1 font-sans leading-relaxed">
+                              {injury.effect}
+                            </p>
+                            <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono-code text-[#94a3b8] mt-1.5">
+                              <span><strong className="text-[#64748b]">Arreglo Rápido:</strong> {injury.quickFix}</span>
+                              <span>•</span>
+                              <span><strong className="text-[#64748b]">Tratamiento:</strong> {injury.treatment}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Cure / Remove Button */}
+                        <button
+                          onClick={() => removeInjury(injury.id)}
+                          className="self-end md:self-center px-3.5 py-1.5 bg-[#2a1b22] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#3d2731] hover:border-[#10b981] rounded-xs font-mono-code text-xs font-bold transition-all active:scale-95 flex items-center gap-1.5"
+                        >
+                          <Check className="w-3.5 h-3.5" />
+                          <span>TRATAR / CURAR</span>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* GLOBAL TARGET RANGE SELECTOR */}
               <div className="chamfer-card p-4 bg-[#121319] border border-[#232736]">
                 <div className="flex items-center justify-between mb-2 pb-2 border-b border-[#1f2230]">
                   <div className="flex items-center gap-2">
@@ -694,7 +831,7 @@ export default function App() {
                   </span>
                 </div>
 
-                {/* Weapons List */}
+                {/* Weapons List with Visual Icons */}
                 <div className="space-y-4">
                   {weapons.map((w) => {
                     const isRanged = w.type === 'Ranged';
@@ -704,39 +841,45 @@ export default function App() {
                     const profileKey = getWeaponProfileKey(w.name, w.type);
                     const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
                     const hasAutofire = isRanged && (w.name.includes('SMG') || w.name.includes('Assault Rifle'));
+                    const placeholderType = getItemPlaceholderType(w);
 
                     return (
                       <div 
                         key={w.id} 
                         className="bg-[#171923] p-4 rounded-sm border border-[#222636] hover:border-[#384058] transition-all"
                       >
-                        {/* Top row: Name, Skill, Ammo, Autofire switch */}
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-3 mb-3 border-b border-[#1f2332]">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-tech text-lg font-bold text-white tracking-wide">{w.name}</span>
-                              <span className="text-[10px] font-mono-code bg-[#232738] text-[#f59e0b] px-1.5 py-0.5 rounded">
-                                {w.costTier}
-                              </span>
-                              <span className="text-xs font-mono-code text-[#38bdf8]">
-                                {w.skill} (Base 14)
-                              </span>
-                            </div>
+                        {/* Top row with Visual Placeholder */}
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 mb-3 border-b border-[#1f2332]">
+                          
+                          <div className="flex items-start gap-3">
+                            {/* Weapon Visual Placeholder Frame */}
+                            <ItemVisualPlaceholder type={placeholderType} size="md" />
 
-                            <div className="flex flex-wrap items-center gap-3 mt-1 text-xs font-mono-code text-[#94a3b8]">
-                              <span className="flex items-center gap-1 text-[#f43f5e] font-bold">
-                                <Zap className="w-3.5 h-3.5" /> {w.damage}
-                              </span>
-                              <span>•</span>
-                              <span>ROF: {w.rof}</span>
-                              <span>•</span>
-                              <span>{w.hands} {w.hands === 1 ? 'Mano' : 'Manos'}</span>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-tech text-lg font-bold text-white tracking-wide">{w.name}</span>
+                                <span className="text-[10px] font-mono-code bg-[#232738] text-[#f59e0b] px-1.5 py-0.5 rounded">
+                                  {w.costTier}
+                                </span>
+                                <span className="text-xs font-mono-code text-[#38bdf8]">
+                                  {w.skill} (Base 14)
+                                </span>
+                              </div>
+
+                              <div className="flex flex-wrap items-center gap-3 mt-1 text-xs font-mono-code text-[#94a3b8]">
+                                <span className="flex items-center gap-1 text-[#f43f5e] font-bold">
+                                  <Zap className="w-3.5 h-3.5" /> {w.damage}
+                                </span>
+                                <span>•</span>
+                                <span>ROF: {w.rof}</span>
+                                <span>•</span>
+                                <span>{w.hands} {w.hands === 1 ? 'Mano' : 'Manos'}</span>
+                              </div>
                             </div>
                           </div>
 
                           {/* Ammo and Mode Switch */}
-                          <div className="flex items-center gap-3">
-                            {/* Autofire Mode Switch for automatic guns */}
+                          <div className="flex items-center gap-3 self-end md:self-center">
                             {hasAutofire && (
                               <button
                                 onClick={() => setAutofireActive(prev => ({ ...prev, [w.id]: !prev[w.id] }))}
@@ -747,11 +890,10 @@ export default function App() {
                                 }`}
                               >
                                 <Flame className="w-3.5 h-3.5" />
-                                <span>RÁFAGA AUTOFIRE (10 BALAS)</span>
+                                <span>RÁFAGA AUTOFIRE</span>
                               </button>
                             )}
 
-                            {/* Ammo counter */}
                             {isRanged && (
                               <div className="flex items-center gap-2 bg-[#12141c] px-3 py-1.5 rounded border border-[#222636] font-mono-code text-xs">
                                 <span className="text-[#64748b]">CARGADOR:</span>
@@ -794,7 +936,6 @@ export default function App() {
                                 const isSelectedRange = selectedDistance === b.range;
                                 const isOutOfRange = dvVal === null;
 
-                                // Check if this is the sweet spot (minimum valid DV)
                                 const validDvs = Object.values(isAuto && profile.autofireDvs ? profile.autofireDvs : profile.dvs).filter(v => v !== null) as number[];
                                 const minDv = Math.min(...validDvs);
                                 const isSweetSpot = dvVal === minDv;
@@ -996,7 +1137,7 @@ export default function App() {
         )}
 
         {/* =====================================================
-            TAB 2: MASTER COMPENDIUM
+            TAB 2: MASTER COMPENDIUM (WITH ITEM ICONS)
         ===================================================== */}
         {activeTab === 'compendium' && (
           <div className="space-y-5">
@@ -1004,7 +1145,6 @@ export default function App() {
             {/* Filter and Search Bar */}
             <div className="chamfer-card p-4 bg-[#121319] border border-[#232736] flex flex-wrap items-center justify-between gap-4">
               
-              {/* Search Field */}
               <div className="flex items-center gap-2 flex-1 min-w-[280px] bg-[#171923] px-3.5 py-2 rounded-xs border border-[#262b3c]">
                 <Search className="w-4 h-4 text-[#64748b]" />
                 <input 
@@ -1016,7 +1156,6 @@ export default function App() {
                 />
               </div>
 
-              {/* Category Filter Pills */}
               <div className="flex flex-wrap gap-1 text-xs font-tech">
                 {(['all', 'weapons', 'armor', 'cyberware', 'programs'] as const).map(cat => (
                   <button
@@ -1039,50 +1178,57 @@ export default function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               
               {/* Weapons Catalog */}
-              {(selectedCompCategory === 'all' || selectedCompCategory === 'weapons') && filteredWeapons.map(w => (
-                <div 
-                  key={w.id} 
-                  className="chamfer-card p-4 bg-[#13151e] border border-[#222636] hover:border-[#dc2626]/60 transition-all flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="font-tech text-base font-bold text-white tracking-wide">{w.name}</span>
-                      <span className="text-[10px] font-mono-code bg-[#dc2626]/20 border border-[#dc2626]/30 text-[#dc2626] px-2 py-0.5 rounded-2xs font-bold">
-                        {w.cost} eb
-                      </span>
-                    </div>
-
-                    <div className="text-xs font-mono-code text-[#f59e0b] mb-2">{w.skill} • {w.type}</div>
-
-                    <div className="grid grid-cols-2 gap-1.5 text-xs font-mono-code bg-[#181a25] p-2.5 rounded-xs border border-[#232738] mb-3">
-                      <div><span className="text-[#64748b]">DAÑO:</span> <span className="text-white font-bold">{w.damage}</span></div>
-                      <div><span className="text-[#64748b]">ROF:</span> <span className="text-white font-bold">{w.rof}</span></div>
-                      <div><span className="text-[#64748b]">MANOS:</span> <span className="text-white">{w.hands}</span></div>
-                      <div><span className="text-[#64748b]">OCULTABLE:</span> <span className="text-white">{w.concealable ? 'Sí' : 'No'}</span></div>
-                    </div>
-
-                    <p className="text-xs text-[#94a3b8] leading-relaxed font-sans">{w.notes}</p>
-                    {w.dvTable && (
-                      <div className="text-[11px] font-mono-code text-[#38bdf8] mt-2 pt-2 border-t border-[#1f2334]">
-                        {w.dvTable}
+              {(selectedCompCategory === 'all' || selectedCompCategory === 'weapons') && filteredWeapons.map(w => {
+                const placeholder = getItemPlaceholderType(w);
+                return (
+                  <div 
+                    key={w.id} 
+                    className="chamfer-card p-4 bg-[#13151e] border border-[#222636] hover:border-[#dc2626]/60 transition-all flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-start gap-3 mb-2">
+                        <ItemVisualPlaceholder type={placeholder} size="sm" />
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <span className="font-tech text-base font-bold text-white tracking-wide">{w.name}</span>
+                            <span className="text-[10px] font-mono-code bg-[#dc2626]/20 border border-[#dc2626]/30 text-[#dc2626] px-2 py-0.5 rounded-2xs font-bold">
+                              {w.cost} eb
+                            </span>
+                          </div>
+                          <div className="text-xs font-mono-code text-[#f59e0b]">{w.skill} • {w.type}</div>
+                        </div>
                       </div>
-                    )}
-                  </div>
 
-                  <div className="mt-4 pt-3 border-t border-[#1f2334] flex justify-between items-center text-xs font-mono-code">
-                    <span className="text-[#64748b] text-[10px]">CORE RULES v1.24</span>
-                    <button 
-                      onClick={() => {
-                        setActiveTab('combat');
-                        executeRoll(`${w.name} (Prueba Compendio)`, 14, 15, '13-25m');
-                      }}
-                      className="text-[#dc2626] hover:text-white flex items-center gap-1 font-bold transition-colors"
-                    >
-                      <Dices className="w-3.5 h-3.5" /> Probar Tirada
-                    </button>
+                      <div className="grid grid-cols-2 gap-1.5 text-xs font-mono-code bg-[#181a25] p-2.5 rounded-xs border border-[#232738] mb-3">
+                        <div><span className="text-[#64748b]">DAÑO:</span> <span className="text-white font-bold">{w.damage}</span></div>
+                        <div><span className="text-[#64748b]">ROF:</span> <span className="text-white font-bold">{w.rof}</span></div>
+                        <div><span className="text-[#64748b]">MANOS:</span> <span className="text-white">{w.hands}</span></div>
+                        <div><span className="text-[#64748b]">OCULTABLE:</span> <span className="text-white">{w.concealable ? 'Sí' : 'No'}</span></div>
+                      </div>
+
+                      <p className="text-xs text-[#94a3b8] leading-relaxed font-sans">{w.notes}</p>
+                      {w.dvTable && (
+                        <div className="text-[11px] font-mono-code text-[#38bdf8] mt-2 pt-2 border-t border-[#1f2334]">
+                          {w.dvTable}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-[#1f2334] flex justify-between items-center text-xs font-mono-code">
+                      <span className="text-[#64748b] text-[10px]">CORE RULES v1.24</span>
+                      <button 
+                        onClick={() => {
+                          setActiveTab('combat');
+                          executeRoll(`${w.name} (Prueba Compendio)`, 14, 15, '13-25m');
+                        }}
+                        className="text-[#dc2626] hover:text-white flex items-center gap-1 font-bold transition-colors"
+                      >
+                        <Dices className="w-3.5 h-3.5" /> Probar Tirada
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
               {/* Armor Catalog */}
               {(selectedCompCategory === 'all' || selectedCompCategory === 'armor') && filteredArmor.map(a => (
@@ -1091,17 +1237,21 @@ export default function App() {
                   className="chamfer-card p-4 bg-[#13151e] border border-[#222636] hover:border-[#38bdf8]/60 transition-all flex flex-col justify-between"
                 >
                   <div>
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="font-tech text-base font-bold text-white tracking-wide">{a.name}</span>
-                      <span className="text-[10px] font-mono-code bg-[#38bdf8]/20 border border-[#38bdf8]/30 text-[#38bdf8] px-2 py-0.5 rounded-2xs font-bold">
-                        {a.cost} eb
-                      </span>
+                    <div className="flex items-start gap-3 mb-2">
+                      <ItemVisualPlaceholder type={a.id.includes('shield') ? 'shield' : 'armor_body'} size="sm" />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <span className="font-tech text-base font-bold text-white tracking-wide">{a.name}</span>
+                          <span className="text-[10px] font-mono-code bg-[#38bdf8]/20 border border-[#38bdf8]/30 text-[#38bdf8] px-2 py-0.5 rounded-2xs font-bold">
+                            {a.cost} eb
+                          </span>
+                        </div>
+                        <div className="text-xs font-mono-code text-[#10b981] font-bold">SP {a.sp}</div>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-3 text-xs font-mono-code my-2 bg-[#181a25] p-2 rounded-xs border border-[#232738]">
-                      <span className="text-[#10b981] font-bold">SP {a.sp}</span>
-                      <span className="text-[#64748b]">|</span>
-                      <span className="text-[#f59e0b]">Penalización: {a.penalty === 0 ? 'Ninguna' : `${a.penalty} REF/DEX/MOVE`}</span>
+                    <div className="text-xs font-mono-code my-2 bg-[#181a25] p-2 rounded-xs border border-[#232738] text-[#f59e0b]">
+                      Penalización: {a.penalty === 0 ? 'Ninguna' : `${a.penalty} REF/DEX/MOVE`}
                     </div>
 
                     <p className="text-xs text-[#94a3b8] leading-relaxed font-sans">{a.description}</p>
@@ -1120,16 +1270,20 @@ export default function App() {
                   className="chamfer-card p-4 bg-[#13151e] border border-[#222636] hover:border-[#f59e0b]/60 transition-all flex flex-col justify-between"
                 >
                   <div>
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="font-tech text-base font-bold text-white tracking-wide">{c.name}</span>
-                      <span className="text-[10px] font-mono-code bg-[#f59e0b]/20 border border-[#f59e0b]/30 text-[#f59e0b] px-2 py-0.5 rounded-2xs font-bold">
-                        {c.cost} eb
-                      </span>
+                    <div className="flex items-start gap-3 mb-2">
+                      <ItemVisualPlaceholder type="cyberware" size="sm" />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <span className="font-tech text-base font-bold text-white tracking-wide">{c.name}</span>
+                          <span className="text-[10px] font-mono-code bg-[#f59e0b]/20 border border-[#f59e0b]/30 text-[#f59e0b] px-2 py-0.5 rounded-2xs font-bold">
+                            {c.cost} eb
+                          </span>
+                        </div>
+                        <div className="text-xs font-mono-code text-[#c084fc] font-bold">{c.type}</div>
+                      </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 text-xs font-mono-code my-2 bg-[#181a25] p-2 rounded-xs border border-[#232738]">
-                      <span className="text-[#c084fc] font-bold">{c.type}</span>
-                      <span className="text-[#64748b]">|</span>
                       <span className="text-[#94a3b8]">Instalación: {c.install}</span>
                       <span className="text-[#64748b]">|</span>
                       <span className="text-[#dc2626] font-bold">Pérdida Hum: {c.humanityLoss}</span>
@@ -1151,14 +1305,18 @@ export default function App() {
                   className="chamfer-card p-4 bg-[#13151e] border border-[#222636] hover:border-[#10b981]/60 transition-all flex flex-col justify-between"
                 >
                   <div>
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="font-tech text-base font-bold text-white tracking-wide">{p.name}</span>
-                      <span className="text-[10px] font-mono-code bg-[#10b981]/20 border border-[#10b981]/30 text-[#10b981] px-2 py-0.5 rounded-2xs font-bold">
-                        {p.cost} eb
-                      </span>
+                    <div className="flex items-start gap-3 mb-2">
+                      <ItemVisualPlaceholder type="program" size="sm" />
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <span className="font-tech text-base font-bold text-white tracking-wide">{p.name}</span>
+                          <span className="text-[10px] font-mono-code bg-[#10b981]/20 border border-[#10b981]/30 text-[#10b981] px-2 py-0.5 rounded-2xs font-bold">
+                            {p.cost} eb
+                          </span>
+                        </div>
+                        <div className="text-xs font-mono-code text-[#10b981]">{p.class}</div>
+                      </div>
                     </div>
-
-                    <div className="text-xs font-mono-code text-[#10b981] mb-2">{p.class}</div>
 
                     <div className="grid grid-cols-3 gap-1 text-xs font-mono-code bg-[#181a25] p-2 rounded-xs border border-[#232738] mb-3 text-center">
                       <div><span className="text-[#64748b] block text-[10px]">ATK</span> <span className="text-white font-bold">{p.atk}</span></div>
