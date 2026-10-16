@@ -19,10 +19,8 @@ import {
   Plus, 
   LayoutGrid,
   List,
-  ChevronDown,
-  ChevronUp,
-  Coins,
-  AlertCircle
+  Coins, 
+  AlertCircle 
 } from 'lucide-react';
 
 type CompendiumCategory = 
@@ -43,6 +41,39 @@ interface FeedbackState {
   message: string;
   isError?: boolean;
 }
+
+/* Tactical Cyberpunk Tooltip Helper */
+export const TacticalTooltip: React.FC<{
+  term: 'ROF' | 'SP' | 'HL' | 'MAG' | 'HANDS' | 'DV';
+  children: React.ReactNode;
+  className?: string;
+}> = ({ term, children, className = '' }) => {
+  const descriptions: Record<string, string> = {
+    ROF: 'ROF (Rate of Fire / Cadencia de Fuego): Número de ataques que puedes hacer con esta arma en una sola Acción de Ataque por turno (ej. ROF 2 = 2 ataques por turno).',
+    SP: 'SP (Stopping Power): Poder de parada del blindaje. Se resta al daño de cada ataque que te impacte.',
+    HL: 'HL (Humanity Loss): Pérdida de Humanidad al instalar este implante de Cyberware.',
+    MAG: 'MAG (Cargador): Cantidad de balas que caben en el cargador estándar antes de tener que usar una Acción para recargar.',
+    HANDS: 'Manos requeridas para empuñar y atacar con el arma.',
+    DV: 'DV (Difficulty Value): Número objetivo que debes igualar o superar con tu tirada (STAT + SKILL + 1d10).'
+  };
+  const text = descriptions[term] || '';
+
+  return (
+    <span
+      className={`group/tip relative inline-flex items-center cursor-help underline decoration-dotted underline-offset-2 ${className}`}
+      title={text}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:flex flex-col items-center z-50 w-64 text-left">
+        <span className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code font-normal leading-relaxed p-2.5 rounded-xs border border-[#38bdf8]/60 shadow-xl shadow-black/90">
+          {text}
+        </span>
+        <span className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-[#38bdf8]/60 rotate-45 -mt-1" />
+      </span>
+    </span>
+  );
+};
 
 export const CompendiumView: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -808,9 +839,12 @@ export const CompendiumView: React.FC = () => {
                   return (
                     <div
                       key={weapon.id}
-                      className="bg-[#12141f] border border-[#262c3e] hover:border-[#f43f5e]/40 p-2 rounded-xs chamfer-card space-y-1.5 transition-colors"
+                      onClick={() => toggleExpand(weapon.id)}
+                      className={`group bg-[#12141f] border rounded-xs chamfer-card space-y-2 cursor-pointer select-none p-3.5 transition-all hover:border-cyan-400/70 hover:bg-slate-900/95 ${
+                        isExpanded ? 'border-cyan-400/80 bg-slate-900/90 shadow-lg shadow-cyan-950/30' : 'border-[#262c3e]'
+                      }`}
                     >
-                      {/* Ultra-compact Header (~26px) */}
+                      {/* Header (~26px) */}
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
                         <div className="flex items-center gap-1.5 min-w-0 flex-1">
                           <ItemVisualPlaceholder type={visualType} size="sm" className="w-6 h-6 shrink-0" />
@@ -826,7 +860,8 @@ export const CompendiumView: React.FC = () => {
 
                         {/* Top-Right Quick Action Button */}
                         <button
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             handleAcquire(
                               weapon.id,
                               weapon.name,
@@ -859,21 +894,21 @@ export const CompendiumView: React.FC = () => {
                         </button>
                       </div>
 
-                      {/* Stat Pills in 1 Single Horizontal Strip */}
+                      {/* Stat Pills in 1 Single Horizontal Strip with Tooltips */}
                       <div className="flex flex-wrap items-center gap-1 text-[10px] font-mono-code">
                         <span className="px-1.5 py-0.2 bg-[#f43f5e]/15 text-[#f43f5e] rounded-xs font-bold border border-[#f43f5e]/30">
                           {isMelee ? '⚔️' : '💥'} {weapon.damage}
                         </span>
                         <span className="px-1.5 py-0.2 bg-[#181b2a] text-[#94a3b8] rounded-xs border border-[#262c3e]">
-                          ROF {weapon.rof}
+                          <TacticalTooltip term="ROF">ROF {weapon.rof}</TacticalTooltip>
                         </span>
                         {!isMelee && (
                           <span className="px-1.5 py-0.2 bg-[#181b2a] text-[#38bdf8] rounded-xs border border-[#262c3e]">
-                            MAG {weapon.standardMag}
+                            <TacticalTooltip term="MAG">MAG {weapon.standardMag}</TacticalTooltip>
                           </span>
                         )}
                         <span className="px-1.5 py-0.2 bg-[#181b2a] text-[#94a3b8] rounded-xs border border-[#262c3e]">
-                          {weapon.hands}H
+                          <TacticalTooltip term="HANDS">{weapon.hands}H</TacticalTooltip>
                         </span>
                         {weapon.altFireModes?.includes('Autofire') && (
                           <span className="px-1.5 py-0.2 bg-[#f59e0b]/15 text-[#f59e0b] rounded-xs border border-[#f59e0b]/30 font-bold">
@@ -885,20 +920,27 @@ export const CompendiumView: React.FC = () => {
                         </span>
                       </div>
 
-                      {/* Accordion Toggle Bar */}
-                      <button
-                        onClick={() => toggleExpand(weapon.id)}
-                        className="w-full pt-1 border-t border-[#1e2337] flex items-center justify-between text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer"
+                      {/* Wide Bottom Interactive Bar */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpand(weapon.id);
+                        }}
+                        className="w-full py-1.5 mt-2 bg-slate-900/80 border-t border-slate-800 group-hover:border-cyan-500/40 text-slate-400 group-hover:text-cyan-300 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors rounded-b-xs"
                       >
-                        <span>{isExpanded ? '▾ CERRAR' : '▸ VER DETALLES'}</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded-xs bg-[#181b2a] border border-[#262c3e] text-[#94a3b8]">
-                          {isExpanded ? <ChevronUp className="w-2.5 h-2.5 inline" /> : <ChevronDown className="w-2.5 h-2.5 inline" />}
-                        </span>
-                      </button>
+                        {isExpanded ? (
+                          <span>[ ▴ OCULTAR DETALLES ]</span>
+                        ) : (
+                          <span>[ ▾ VER DETALLES Y REGLAS DEL ÍTEM ]</span>
+                        )}
+                      </div>
 
                       {/* Expanded Section */}
                       {isExpanded && (
-                        <div className="pt-2 border-t border-[#262c3e]">
+                        <div 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="pt-2.5 border-t border-[#262c3e] cursor-default select-text"
+                        >
                           {renderItemDetails(weapon, 'weapons')}
                         </div>
                       )}
@@ -924,7 +966,10 @@ export const CompendiumView: React.FC = () => {
                   return (
                     <div
                       key={armor.id}
-                      className="bg-[#12141f] border border-[#262c3e] hover:border-[#38bdf8]/40 p-2 rounded-xs chamfer-card space-y-1.5 transition-colors"
+                      onClick={() => toggleExpand(armor.id)}
+                      className={`group bg-[#12141f] border rounded-xs chamfer-card space-y-2 cursor-pointer select-none p-3.5 transition-all hover:border-cyan-400/70 hover:bg-slate-900/95 ${
+                        isExpanded ? 'border-cyan-400/80 bg-slate-900/90 shadow-lg shadow-cyan-950/30' : 'border-[#262c3e]'
+                      }`}
                     >
                       {/* Header */}
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
@@ -940,7 +985,10 @@ export const CompendiumView: React.FC = () => {
                         {/* Quick Equip Buttons */}
                         <div className="flex items-center gap-1 shrink-0">
                           <button
-                            onClick={() => handleAcquire(armor.id, `${armor.name} (Cabeza)`, armor.cost, spendMoneyMode ? 'buy' : 'loot', () => equipArmorFromCatalog(armor as ArmorItem, 'head'))}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAcquire(armor.id, `${armor.name} (Cabeza)`, armor.cost, spendMoneyMode ? 'buy' : 'loot', () => equipArmorFromCatalog(armor as ArmorItem, 'head'));
+                            }}
                             className={`px-1.5 py-0.5 rounded-xs text-[9px] font-mono-code font-bold transition-all cursor-pointer ${
                               isHeadEquipped
                                 ? 'bg-[#10b981]/20 border border-[#10b981] text-[#10b981]'
@@ -951,7 +999,10 @@ export const CompendiumView: React.FC = () => {
                             Cab
                           </button>
                           <button
-                            onClick={() => handleAcquire(armor.id, `${armor.name} (Cuerpo)`, armor.cost, spendMoneyMode ? 'buy' : 'loot', () => equipArmorFromCatalog(armor as ArmorItem, 'body'))}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAcquire(armor.id, `${armor.name} (Cuerpo)`, armor.cost, spendMoneyMode ? 'buy' : 'loot', () => equipArmorFromCatalog(armor as ArmorItem, 'body'));
+                            }}
                             className={`px-1.5 py-0.5 rounded-xs text-[9px] font-mono-code font-bold transition-all cursor-pointer ${
                               isBodyEquipped
                                 ? 'bg-[#10b981]/20 border border-[#10b981] text-[#10b981]'
@@ -962,7 +1013,10 @@ export const CompendiumView: React.FC = () => {
                             Cuer
                           </button>
                           <button
-                            onClick={() => handleAcquire(armor.id, `${armor.name} (Ambos)`, armor.cost, spendMoneyMode ? 'buy' : 'loot', () => equipArmorFromCatalog(armor as ArmorItem, 'both'))}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAcquire(armor.id, `${armor.name} (Ambos)`, armor.cost, spendMoneyMode ? 'buy' : 'loot', () => equipArmorFromCatalog(armor as ArmorItem, 'both'));
+                            }}
                             className="px-1.5 py-0.5 bg-[#38bdf8]/20 hover:bg-[#38bdf8] border border-[#38bdf8] text-[#38bdf8] hover:text-[#0b0e17] rounded-xs text-[9px] font-mono-code font-bold transition-all cursor-pointer active:scale-95"
                             title="Equipar en Cabeza y Cuerpo"
                           >
@@ -974,7 +1028,7 @@ export const CompendiumView: React.FC = () => {
                       {/* Stat Pills */}
                       <div className="flex flex-wrap items-center gap-1 text-[10px] font-mono-code">
                         <span className="px-1.5 py-0.2 bg-[#38bdf8]/15 text-[#38bdf8] rounded-xs font-bold border border-[#38bdf8]/30">
-                          SP {armor.sp}
+                          <TacticalTooltip term="SP">SP {armor.sp}</TacticalTooltip>
                         </span>
                         <span className={`px-1.5 py-0.2 rounded-xs border ${armor.penalty < 0 ? 'bg-[#f43f5e]/15 text-[#f43f5e] border-[#f43f5e]/30 font-bold' : 'bg-[#181b2a] text-[#10b981] border-[#262c3e]'}`}>
                           Pen: {armor.penalty}
@@ -984,20 +1038,27 @@ export const CompendiumView: React.FC = () => {
                         </span>
                       </div>
 
-                      {/* Accordion Toggle Bar */}
-                      <button
-                        onClick={() => toggleExpand(armor.id)}
-                        className="w-full pt-1 border-t border-[#1e2337] flex items-center justify-between text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer"
+                      {/* Wide Bottom Interactive Bar */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpand(armor.id);
+                        }}
+                        className="w-full py-1.5 mt-2 bg-slate-900/80 border-t border-slate-800 group-hover:border-cyan-500/40 text-slate-400 group-hover:text-cyan-300 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors rounded-b-xs"
                       >
-                        <span>{isExpanded ? '▾ CERRAR' : '▸ VER DETALLES'}</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded-xs bg-[#181b2a] border border-[#262c3e] text-[#94a3b8]">
-                          {isExpanded ? <ChevronUp className="w-2.5 h-2.5 inline" /> : <ChevronDown className="w-2.5 h-2.5 inline" />}
-                        </span>
-                      </button>
+                        {isExpanded ? (
+                          <span>[ ▴ OCULTAR DETALLES ]</span>
+                        ) : (
+                          <span>[ ▾ VER DETALLES Y REGLAS DEL ÍTEM ]</span>
+                        )}
+                      </div>
 
                       {/* Expanded Section */}
                       {isExpanded && (
-                        <div className="pt-2 border-t border-[#262c3e]">
+                        <div 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="pt-2.5 border-t border-[#262c3e] cursor-default select-text"
+                        >
                           {renderItemDetails(armor, 'armor')}
                         </div>
                       )}
@@ -1022,7 +1083,10 @@ export const CompendiumView: React.FC = () => {
                   return (
                     <div
                       key={cyber.id}
-                      className="bg-[#12141f] border border-[#262c3e] hover:border-[#a855f7]/40 p-2 rounded-xs chamfer-card space-y-1.5 transition-colors"
+                      onClick={() => toggleExpand(cyber.id)}
+                      className={`group bg-[#12141f] border rounded-xs chamfer-card space-y-2 cursor-pointer select-none p-3.5 transition-all hover:border-cyan-400/70 hover:bg-slate-900/95 ${
+                        isExpanded ? 'border-cyan-400/80 bg-slate-900/90 shadow-lg shadow-cyan-950/30' : 'border-[#262c3e]'
+                      }`}
                     >
                       {/* Header */}
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
@@ -1036,7 +1100,8 @@ export const CompendiumView: React.FC = () => {
                         </div>
 
                         <button
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             if (isInstalled) {
                               toggleCyberwareInstall(cyber.id);
                               showFeedback(cyber.id, 'Ciberware desinstalado');
@@ -1062,27 +1127,34 @@ export const CompendiumView: React.FC = () => {
                           {cyber.type}
                         </span>
                         <span className="px-1.5 py-0.2 bg-[#181b2a] text-[#f43f5e] rounded-xs border border-[#262c3e]">
-                          HL: {cyber.humanityLoss}
+                          <TacticalTooltip term="HL">HL: {cyber.humanityLoss}</TacticalTooltip>
                         </span>
                         <span className="px-1.5 py-0.2 bg-[#181b2a] text-[#64748b] rounded-xs border border-[#262c3e]">
                           {cyber.install}
                         </span>
                       </div>
 
-                      {/* Accordion Toggle Bar */}
-                      <button
-                        onClick={() => toggleExpand(cyber.id)}
-                        className="w-full pt-1 border-t border-[#1e2337] flex items-center justify-between text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer"
+                      {/* Wide Bottom Interactive Bar */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpand(cyber.id);
+                        }}
+                        className="w-full py-1.5 mt-2 bg-slate-900/80 border-t border-slate-800 group-hover:border-cyan-500/40 text-slate-400 group-hover:text-cyan-300 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors rounded-b-xs"
                       >
-                        <span>{isExpanded ? '▾ CERRAR' : '▸ VER DETALLES'}</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded-xs bg-[#181b2a] border border-[#262c3e] text-[#94a3b8]">
-                          {isExpanded ? <ChevronUp className="w-2.5 h-2.5 inline" /> : <ChevronDown className="w-2.5 h-2.5 inline" />}
-                        </span>
-                      </button>
+                        {isExpanded ? (
+                          <span>[ ▴ OCULTAR DETALLES ]</span>
+                        ) : (
+                          <span>[ ▾ VER DETALLES Y REGLAS DEL ÍTEM ]</span>
+                        )}
+                      </div>
 
                       {/* Expanded Section */}
                       {isExpanded && (
-                        <div className="pt-2 border-t border-[#262c3e]">
+                        <div 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="pt-2.5 border-t border-[#262c3e] cursor-default select-text"
+                        >
                           {renderItemDetails(cyber, 'cyberware')}
                         </div>
                       )}
@@ -1105,14 +1177,20 @@ export const CompendiumView: React.FC = () => {
                   return (
                     <div
                       key={prog.id}
-                      className="bg-[#12141f] border border-[#262c3e] hover:border-[#10b981]/40 p-2 rounded-xs chamfer-card space-y-1.5 transition-colors"
+                      onClick={() => toggleExpand(prog.id)}
+                      className={`group bg-[#12141f] border rounded-xs chamfer-card space-y-2 cursor-pointer select-none p-3.5 transition-all hover:border-cyan-400/70 hover:bg-slate-900/95 ${
+                        isExpanded ? 'border-cyan-400/80 bg-slate-900/90 shadow-lg shadow-cyan-950/30' : 'border-[#262c3e]'
+                      }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
                         <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={prog.name}>
                           {prog.name}
                         </h4>
                         <button
-                          onClick={() => handleAcquire(prog.id, prog.name, prog.cost, spendMoneyMode ? 'buy' : 'loot', () => {})}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAcquire(prog.id, prog.name, prog.cost, spendMoneyMode ? 'buy' : 'loot', () => {});
+                          }}
                           className="px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer chamfer-btn shrink-0 active:scale-95 bg-[#181b2a] hover:bg-[#10b981]/20 border border-[#262c3e] hover:border-[#10b981] text-[#10b981]"
                         >
                           {spendMoneyMode ? `💳 -${prog.cost} eb` : '🎁 Obtener'}
@@ -1140,18 +1218,26 @@ export const CompendiumView: React.FC = () => {
                         )}
                       </div>
 
-                      <button
-                        onClick={() => toggleExpand(prog.id)}
-                        className="w-full pt-1 border-t border-[#1e2337] flex items-center justify-between text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer"
+                      {/* Wide Bottom Interactive Bar */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpand(prog.id);
+                        }}
+                        className="w-full py-1.5 mt-2 bg-slate-900/80 border-t border-slate-800 group-hover:border-cyan-500/40 text-slate-400 group-hover:text-cyan-300 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors rounded-b-xs"
                       >
-                        <span>{isExpanded ? '▾ CERRAR' : '▸ VER DETALLES'}</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded-xs bg-[#181b2a] border border-[#262c3e] text-[#94a3b8]">
-                          {isExpanded ? <ChevronUp className="w-2.5 h-2.5 inline" /> : <ChevronDown className="w-2.5 h-2.5 inline" />}
-                        </span>
-                      </button>
+                        {isExpanded ? (
+                          <span>[ ▴ OCULTAR DETALLES ]</span>
+                        ) : (
+                          <span>[ ▾ VER DETALLES Y REGLAS DEL ÍTEM ]</span>
+                        )}
+                      </div>
 
                       {isExpanded && (
-                        <div className="pt-2 border-t border-[#262c3e]">
+                        <div 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="pt-2.5 border-t border-[#262c3e] cursor-default select-text"
+                        >
                           {renderItemDetails(prog, 'programs')}
                         </div>
                       )}
@@ -1174,14 +1260,20 @@ export const CompendiumView: React.FC = () => {
                   return (
                     <div
                       key={ammo.id}
-                      className="bg-[#12141f] border border-[#262c3e] hover:border-[#f59e0b]/40 p-2 rounded-xs chamfer-card space-y-1.5 transition-colors"
+                      onClick={() => toggleExpand(ammo.id)}
+                      className={`group bg-[#12141f] border rounded-xs chamfer-card space-y-2 cursor-pointer select-none p-3.5 transition-all hover:border-cyan-400/70 hover:bg-slate-900/95 ${
+                        isExpanded ? 'border-cyan-400/80 bg-slate-900/90 shadow-lg shadow-cyan-950/30' : 'border-[#262c3e]'
+                      }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
                         <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={ammo.name}>
                           {ammo.name}
                         </h4>
                         <button
-                          onClick={() => handleAcquire(ammo.id, ammo.name, ammo.cost, spendMoneyMode ? 'buy' : 'loot', () => {})}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAcquire(ammo.id, ammo.name, ammo.cost, spendMoneyMode ? 'buy' : 'loot', () => {});
+                          }}
                           className="px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer chamfer-btn shrink-0 active:scale-95 bg-[#181b2a] hover:bg-[#f59e0b]/20 border border-[#262c3e] hover:border-[#f59e0b] text-[#f59e0b]"
                         >
                           {spendMoneyMode ? `💳 -${ammo.cost} eb` : '🎁 Obtener'}
@@ -1193,17 +1285,27 @@ export const CompendiumView: React.FC = () => {
                         </span>
                         <span className="text-[#64748b] text-[10px]">{ammo.cost} eb</span>
                       </div>
-                      <button
-                        onClick={() => toggleExpand(ammo.id)}
-                        className="w-full pt-1 border-t border-[#1e2337] flex items-center justify-between text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer"
+
+                      {/* Wide Bottom Interactive Bar */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpand(ammo.id);
+                        }}
+                        className="w-full py-1.5 mt-2 bg-slate-900/80 border-t border-slate-800 group-hover:border-cyan-500/40 text-slate-400 group-hover:text-cyan-300 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors rounded-b-xs"
                       >
-                        <span>{isExpanded ? '▾ CERRAR' : '▸ VER DETALLES'}</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded-xs bg-[#181b2a] border border-[#262c3e] text-[#94a3b8]">
-                          {isExpanded ? <ChevronUp className="w-2.5 h-2.5 inline" /> : <ChevronDown className="w-2.5 h-2.5 inline" />}
-                        </span>
-                      </button>
+                        {isExpanded ? (
+                          <span>[ ▴ OCULTAR DETALLES ]</span>
+                        ) : (
+                          <span>[ ▾ VER DETALLES Y REGLAS DEL ÍTEM ]</span>
+                        )}
+                      </div>
+
                       {isExpanded && (
-                        <div className="pt-2 border-t border-[#262c3e]">
+                        <div 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="pt-2.5 border-t border-[#262c3e] cursor-default select-text"
+                        >
                           {renderItemDetails(ammo, 'ammunition')}
                         </div>
                       )}
@@ -1226,14 +1328,20 @@ export const CompendiumView: React.FC = () => {
                   return (
                     <div
                       key={att.id}
-                      className="bg-[#12141f] border border-[#262c3e] hover:border-[#38bdf8]/40 p-2 rounded-xs chamfer-card space-y-1.5 transition-colors"
+                      onClick={() => toggleExpand(att.id)}
+                      className={`group bg-[#12141f] border rounded-xs chamfer-card space-y-2 cursor-pointer select-none p-3.5 transition-all hover:border-cyan-400/70 hover:bg-slate-900/95 ${
+                        isExpanded ? 'border-cyan-400/80 bg-slate-900/90 shadow-lg shadow-cyan-950/30' : 'border-[#262c3e]'
+                      }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
                         <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={att.name}>
                           {att.name}
                         </h4>
                         <button
-                          onClick={() => handleAcquire(att.id, att.name, att.cost, spendMoneyMode ? 'buy' : 'loot', () => {})}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAcquire(att.id, att.name, att.cost, spendMoneyMode ? 'buy' : 'loot', () => {});
+                          }}
                           className="px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer chamfer-btn shrink-0 active:scale-95 bg-[#181b2a] hover:bg-[#38bdf8]/20 border border-[#262c3e] hover:border-[#38bdf8] text-[#38bdf8]"
                         >
                           {spendMoneyMode ? `💳 -${att.cost} eb` : '🎁 Obtener'}
@@ -1245,17 +1353,27 @@ export const CompendiumView: React.FC = () => {
                         </span>
                         <span className="text-[#64748b] text-[10px]">{att.cost} eb</span>
                       </div>
-                      <button
-                        onClick={() => toggleExpand(att.id)}
-                        className="w-full pt-1 border-t border-[#1e2337] flex items-center justify-between text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer"
+
+                      {/* Wide Bottom Interactive Bar */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpand(att.id);
+                        }}
+                        className="w-full py-1.5 mt-2 bg-slate-900/80 border-t border-slate-800 group-hover:border-cyan-500/40 text-slate-400 group-hover:text-cyan-300 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors rounded-b-xs"
                       >
-                        <span>{isExpanded ? '▾ CERRAR' : '▸ VER DETALLES'}</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded-xs bg-[#181b2a] border border-[#262c3e] text-[#94a3b8]">
-                          {isExpanded ? <ChevronUp className="w-2.5 h-2.5 inline" /> : <ChevronDown className="w-2.5 h-2.5 inline" />}
-                        </span>
-                      </button>
+                        {isExpanded ? (
+                          <span>[ ▴ OCULTAR DETALLES ]</span>
+                        ) : (
+                          <span>[ ▾ VER DETALLES Y REGLAS DEL ÍTEM ]</span>
+                        )}
+                      </div>
+
                       {isExpanded && (
-                        <div className="pt-2 border-t border-[#262c3e]">
+                        <div 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="pt-2.5 border-t border-[#262c3e] cursor-default select-text"
+                        >
                           {renderItemDetails(att, 'attachments')}
                         </div>
                       )}
@@ -1278,14 +1396,20 @@ export const CompendiumView: React.FC = () => {
                   return (
                     <div
                       key={drug.id}
-                      className="bg-[#12141f] border border-[#262c3e] hover:border-[#ec4899]/40 p-2 rounded-xs chamfer-card space-y-1.5 transition-colors"
+                      onClick={() => toggleExpand(drug.id)}
+                      className={`group bg-[#12141f] border rounded-xs chamfer-card space-y-2 cursor-pointer select-none p-3.5 transition-all hover:border-cyan-400/70 hover:bg-slate-900/95 ${
+                        isExpanded ? 'border-cyan-400/80 bg-slate-900/90 shadow-lg shadow-cyan-950/30' : 'border-[#262c3e]'
+                      }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
                         <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={drug.name}>
                           {drug.name}
                         </h4>
                         <button
-                          onClick={() => handleAcquire(drug.id, drug.name, drug.cost, spendMoneyMode ? 'buy' : 'loot', () => {})}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAcquire(drug.id, drug.name, drug.cost, spendMoneyMode ? 'buy' : 'loot', () => {});
+                          }}
                           className="px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer chamfer-btn shrink-0 active:scale-95 bg-[#181b2a] hover:bg-[#ec4899]/20 border border-[#262c3e] hover:border-[#ec4899] text-[#ec4899]"
                         >
                           {spendMoneyMode ? `💳 -${drug.cost} eb` : '🎁 Obtener'}
@@ -1302,17 +1426,27 @@ export const CompendiumView: React.FC = () => {
                         )}
                         <span className="text-[#64748b] text-[10px]">{drug.cost} eb</span>
                       </div>
-                      <button
-                        onClick={() => toggleExpand(drug.id)}
-                        className="w-full pt-1 border-t border-[#1e2337] flex items-center justify-between text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer"
+
+                      {/* Wide Bottom Interactive Bar */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpand(drug.id);
+                        }}
+                        className="w-full py-1.5 mt-2 bg-slate-900/80 border-t border-slate-800 group-hover:border-cyan-500/40 text-slate-400 group-hover:text-cyan-300 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors rounded-b-xs"
                       >
-                        <span>{isExpanded ? '▾ CERRAR' : '▸ VER DETALLES'}</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded-xs bg-[#181b2a] border border-[#262c3e] text-[#94a3b8]">
-                          {isExpanded ? <ChevronUp className="w-2.5 h-2.5 inline" /> : <ChevronDown className="w-2.5 h-2.5 inline" />}
-                        </span>
-                      </button>
+                        {isExpanded ? (
+                          <span>[ ▴ OCULTAR DETALLES ]</span>
+                        ) : (
+                          <span>[ ▾ VER DETALLES Y REGLAS DEL ÍTEM ]</span>
+                        )}
+                      </div>
+
                       {isExpanded && (
-                        <div className="pt-2 border-t border-[#262c3e]">
+                        <div 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="pt-2.5 border-t border-[#262c3e] cursor-default select-text"
+                        >
                           {renderItemDetails(drug, 'drugs')}
                         </div>
                       )}
@@ -1335,14 +1469,20 @@ export const CompendiumView: React.FC = () => {
                   return (
                     <div
                       key={g.id}
-                      className="bg-[#12141f] border border-[#262c3e] hover:border-[#64748b]/40 p-2 rounded-xs chamfer-card space-y-1.5 transition-colors"
+                      onClick={() => toggleExpand(g.id)}
+                      className={`group bg-[#12141f] border rounded-xs chamfer-card space-y-2 cursor-pointer select-none p-3.5 transition-all hover:border-cyan-400/70 hover:bg-slate-900/95 ${
+                        isExpanded ? 'border-cyan-400/80 bg-slate-900/90 shadow-lg shadow-cyan-950/30' : 'border-[#262c3e]'
+                      }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
                         <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={g.name}>
                           {g.name}
                         </h4>
                         <button
-                          onClick={() => handleAcquire(g.id, g.name, g.cost, spendMoneyMode ? 'buy' : 'loot', () => {})}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAcquire(g.id, g.name, g.cost, spendMoneyMode ? 'buy' : 'loot', () => {});
+                          }}
                           className="px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer chamfer-btn shrink-0 active:scale-95 bg-[#181b2a] hover:bg-[#38bdf8]/20 border border-[#262c3e] hover:border-[#38bdf8] text-[#38bdf8]"
                         >
                           {spendMoneyMode ? `💳 -${g.cost} eb` : '🎁 Obtener'}
@@ -1354,17 +1494,27 @@ export const CompendiumView: React.FC = () => {
                         </span>
                         <span className="text-[#64748b] text-[10px]">{g.cost} eb</span>
                       </div>
-                      <button
-                        onClick={() => toggleExpand(g.id)}
-                        className="w-full pt-1 border-t border-[#1e2337] flex items-center justify-between text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer"
+
+                      {/* Wide Bottom Interactive Bar */}
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleExpand(g.id);
+                        }}
+                        className="w-full py-1.5 mt-2 bg-slate-900/80 border-t border-slate-800 group-hover:border-cyan-500/40 text-slate-400 group-hover:text-cyan-300 flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider transition-colors rounded-b-xs"
                       >
-                        <span>{isExpanded ? '▾ CERRAR' : '▸ VER DETALLES'}</span>
-                        <span className="text-[9px] px-1 py-0.2 rounded-xs bg-[#181b2a] border border-[#262c3e] text-[#94a3b8]">
-                          {isExpanded ? <ChevronUp className="w-2.5 h-2.5 inline" /> : <ChevronDown className="w-2.5 h-2.5 inline" />}
-                        </span>
-                      </button>
+                        {isExpanded ? (
+                          <span>[ ▴ OCULTAR DETALLES ]</span>
+                        ) : (
+                          <span>[ ▾ VER DETALLES Y REGLAS DEL ÍTEM ]</span>
+                        )}
+                      </div>
+
                       {isExpanded && (
-                        <div className="pt-2 border-t border-[#262c3e]">
+                        <div 
+                          onClick={(e) => e.stopPropagation()} 
+                          className="pt-2.5 border-t border-[#262c3e] cursor-default select-text"
+                        >
                           {renderItemDetails(g, 'gear')}
                         </div>
                       )}
@@ -1417,8 +1567,14 @@ export const CompendiumView: React.FC = () => {
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
                           <span className="font-bold text-[#f43f5e] mr-2">{w.damage}</span>
-                          <span className="text-[#64748b] mr-2">ROF {w.rof}</span>
-                          {!isMelee && <span className="text-[#38bdf8] mr-2">MAG {w.standardMag}</span>}
+                          <span className="text-[#64748b] mr-2">
+                            <TacticalTooltip term="ROF">ROF {w.rof}</TacticalTooltip>
+                          </span>
+                          {!isMelee && (
+                            <span className="text-[#38bdf8] mr-2">
+                              <TacticalTooltip term="MAG">MAG {w.standardMag}</TacticalTooltip>
+                            </span>
+                          )}
                           {w.altFireModes?.includes('Autofire') && <span className="text-[#f59e0b] font-bold mr-2">AUTO</span>}
                         </td>
                         <td className="py-1.5 px-2 text-right text-[#f59e0b] font-bold">
@@ -1479,7 +1635,9 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
-                          <span className="font-bold text-[#38bdf8] mr-2">SP {a.sp}</span>
+                          <span className="font-bold text-[#38bdf8] mr-2">
+                            <TacticalTooltip term="SP">SP {a.sp}</TacticalTooltip>
+                          </span>
                           <span className={a.penalty < 0 ? 'text-[#f43f5e] mr-2 font-bold' : 'text-[#10b981] mr-2'}>
                             Pen: {a.penalty}
                           </span>
@@ -1559,7 +1717,9 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
-                          <span className="text-[#f43f5e] mr-2">HL {c.humanityLoss}</span>
+                          <span className="text-[#f43f5e] mr-2">
+                            <TacticalTooltip term="HL">HL {c.humanityLoss}</TacticalTooltip>
+                          </span>
                           <span className="text-[#64748b] mr-2">{c.install}</span>
                         </td>
                         <td className="py-1.5 px-2 text-right text-[#f59e0b] font-bold">

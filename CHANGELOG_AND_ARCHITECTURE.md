@@ -119,6 +119,18 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores. 
 
 ## 📜 Master Version Changelog
 
+### [v2.2.1] - 2026-10-16 (Tactical Tooltips on ROF/SP/HL/MAG & Full-Card Expand Hitbox)
+* **Category**: UX/UI Ergonomics & Rule Tooltips
+* **Files Modified**:
+  - `frontend/src/features/compendium/CompendiumView.tsx`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+* **What Changed**:
+  1. **Tooltips Tácticos Flotantes (`ROF`, `SP`, `HL`, `MAG`, `1H/2H`)**: Al pasar el mouse por encima de cualquier etiqueta de `ROF` (y siglas clave en Compendio, HUD de Combate y Street Lab), se despliega un popup explicando qué significa la sigla y cómo funciona mecánicamente en tu turno.
+  2. **Zona Clicable en Toda la Tarjeta + Barra Inferior Ancha (`CompendiumView.tsx`)**: Todo el contenedor de cada tarjeta (`p-3.5`) y su barra inferior de lado a lado (`[ ▾ VER DETALLES Y REGLAS DEL ÍTEM ]` / `[ ▴ OCULTAR DETALLES ]`) actúan como área interactiva para desplegar los detalles sin necesidad de apuntar a un icono pequeño.
+
+---
+
 ### [v2.2.0] - 2026-10-16 (Compendium Full-Detail Accordions & Eurodollar Purchase/Wallet System)
 * **Category**: Economy Engine, Inventory & Interactive Compendium Accordions
 * **Files Modified**:

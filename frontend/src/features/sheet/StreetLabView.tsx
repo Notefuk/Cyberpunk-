@@ -52,6 +52,38 @@ const ROLES = [
 
 type SkillFilterCategory = 'all' | 'ranged' | 'melee' | 'defense' | 'medical' | 'general';
 
+const TacticalTooltip: React.FC<{
+  term: 'ROF' | 'SP' | 'HL' | 'MAG' | 'HANDS' | 'DV';
+  children: React.ReactNode;
+  className?: string;
+}> = ({ term, children, className = '' }) => {
+  const descriptions: Record<string, string> = {
+    ROF: 'ROF (Rate of Fire / Cadencia de Fuego): Número de ataques que puedes hacer con esta arma en una sola Acción de Ataque por turno (ej. ROF 2 = 2 ataques por turno).',
+    SP: 'SP (Stopping Power): Poder de parada del blindaje. Se resta al daño de cada ataque que te impacte.',
+    HL: 'HL (Humanity Loss): Pérdida de Humanidad al instalar este implante de Cyberware.',
+    MAG: 'MAG (Cargador): Cantidad de balas que caben en el cargador estándar antes de tener que usar una Acción para recargar.',
+    HANDS: 'Manos requeridas para empuñar y atacar con el arma.',
+    DV: 'DV (Difficulty Value): Número objetivo que debes igualar o superar con tu tirada (STAT + SKILL + 1d10).'
+  };
+  const text = descriptions[term] || '';
+
+  return (
+    <span
+      className={`group/tip relative inline-flex items-center cursor-help underline decoration-dotted underline-offset-2 ${className}`}
+      title={text}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tip:flex flex-col items-center z-50 w-64 text-left">
+        <span className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code font-normal leading-relaxed p-2.5 rounded-xs border border-[#38bdf8]/60 shadow-xl shadow-black/90">
+          {text}
+        </span>
+        <span className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-[#38bdf8]/60 rotate-45 -mt-1" />
+      </span>
+    </span>
+  );
+};
+
 export const StreetLabView: React.FC = () => {
   const characters = useCharacterStore((state) => state.characters);
   const activeCharacterId = useCharacterStore((state) => state.activeCharacterId);
@@ -676,7 +708,7 @@ export const StreetLabView: React.FC = () => {
                     </div>
                     <div className="flex items-center justify-between mt-1 text-[11px]">
                       <span className="text-[#38bdf8] font-bold">
-                        {activeChar?.headArmor?.currentSp}/{activeChar?.headArmor?.maxSp} SP
+                        {activeChar?.headArmor?.currentSp}/{activeChar?.headArmor?.maxSp} <TacticalTooltip term="SP">SP</TacticalTooltip>
                       </span>
                       <button
                         onClick={() => repairArmor('head')}
@@ -695,7 +727,7 @@ export const StreetLabView: React.FC = () => {
                     </div>
                     <div className="flex items-center justify-between mt-1 text-[11px]">
                       <span className="text-[#38bdf8] font-bold">
-                        {activeChar?.bodyArmor?.currentSp}/{activeChar?.bodyArmor?.maxSp} SP
+                        {activeChar?.bodyArmor?.currentSp}/{activeChar?.bodyArmor?.maxSp} <TacticalTooltip term="SP">SP</TacticalTooltip>
                       </span>
                       <button
                         onClick={() => repairArmor('body')}
@@ -742,13 +774,13 @@ export const StreetLabView: React.FC = () => {
                               </span>
                             </div>
                             <div className="text-[10px] font-mono-code text-[#64748b] flex items-center gap-1.5 mt-0.5">
-                              <span>ROF {w.rof}</span>
+                              <TacticalTooltip term="ROF"><span>ROF {w.rof}</span></TacticalTooltip>
                               <span>•</span>
                               <span>{breakdown.skillLabel}</span>
                               {isRanged && (
                                 <>
                                   <span>•</span>
-                                  <span className="text-white font-bold">{w.currentMag}/{w.standardMag}</span>
+                                  <TacticalTooltip term="MAG"><span className="text-white font-bold">{w.currentMag}/{w.standardMag}</span></TacticalTooltip>
                                 </>
                               )}
                             </div>
@@ -815,7 +847,7 @@ export const StreetLabView: React.FC = () => {
                               {name}
                             </div>
                             <div className="text-[10px] font-mono-code text-[#a855f7]">
-                              {type} • HL: {hl}
+                              {type} • <TacticalTooltip term="HL">HL: {hl}</TacticalTooltip>
                             </div>
                           </div>
 
