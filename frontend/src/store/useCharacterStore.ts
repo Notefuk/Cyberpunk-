@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
   ActiveCriticalInjury,
+  ActiveDrugEffect,
   ArmorItem,
   CharacterSheet,
   CombatSkillKey,
@@ -92,6 +93,8 @@ export const INITIAL_CHARACTER_V: CharacterSheet = {
       currentMag: 8,
       ammoType: 'Heavy Pistol',
       loadedAmmoType: 'Heavy Pistol',
+      inHand: true,
+      reserveAmmo: 48,
       notes: 'Pistola pesada estándar de gran poder de detención.'
     },
     {
@@ -112,6 +115,8 @@ export const INITIAL_CHARACTER_V: CharacterSheet = {
       loadedAmmoType: 'Rifle',
       altFireModes: 'Autofire (4), Suppressive Fire',
       autofireMaxMult: 4,
+      inHand: true,
+      reserveAmmo: 48,
       notes: 'Fusil de asalto militar versátil con selector de Fuego Automático x4.'
     },
     {
@@ -132,6 +137,8 @@ export const INITIAL_CHARACTER_V: CharacterSheet = {
       loadedAmmoType: 'Heavy Pistol',
       altFireModes: 'Autofire (3), Suppressive Fire',
       autofireMaxMult: 3,
+      inHand: false,
+      reserveAmmo: 48,
       notes: 'Subfusil pesado con cargador extendido y modo Autofire x3.'
     },
     {
@@ -150,6 +157,8 @@ export const INITIAL_CHARACTER_V: CharacterSheet = {
       currentMag: 0,
       ammoType: 'N/A',
       loadedAmmoType: 'N/A',
+      inHand: false,
+      reserveAmmo: 0,
       notes: 'Hoja afilada de combate cuerpo a cuerpo. Halves defender SP.'
     }
   ],
@@ -157,7 +166,9 @@ export const INITIAL_CHARACTER_V: CharacterSheet = {
   activeInjuries: [],
   eurodollars: 2450,
   inventory: [],
-  transactions: []
+  transactions: [],
+  unarmedInHand: { brawling: true, martialArts: false },
+  activeDrugs: []
 };
 
 export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
@@ -228,6 +239,8 @@ export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
       currentMag: 12,
       ammoType: 'Medium Pistol',
       loadedAmmoType: 'Medium Pistol',
+      inHand: true,
+      reserveAmmo: 48,
       notes: 'Pistola táctica ligera de respaldo.'
     },
     {
@@ -248,6 +261,8 @@ export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
       loadedAmmoType: 'Medium Pistol',
       altFireModes: 'Autofire (3), Suppressive Fire',
       autofireMaxMult: 3,
+      inHand: true,
+      reserveAmmo: 48,
       notes: 'Subfusil compacto de ocultación rápida.'
     },
     {
@@ -266,6 +281,8 @@ export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
       currentMag: 0,
       ammoType: 'N/A',
       loadedAmmoType: 'N/A',
+      inHand: false,
+      reserveAmmo: 0,
       notes: 'Cuchillo de emergencia de acero monomolecular.'
     }
   ],
@@ -273,7 +290,9 @@ export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
   activeInjuries: [],
   eurodollars: 3800,
   inventory: [],
-  transactions: []
+  transactions: [],
+  unarmedInHand: { brawling: true, martialArts: false },
+  activeDrugs: []
 };
 
 export interface CharacterStoreState {
@@ -298,6 +317,13 @@ export interface CharacterStoreState {
   toggleLuckPip: (pipIndex: number) => void;
   consumeAmmo: (weaponInstanceId: string, amount: number) => boolean;
   reloadWeapon: (weaponInstanceId: string) => void;
+  toggleWeaponInHand: (weaponInstanceId: string) => void;
+  toggleUnarmedInHand: (mode: 'brawling' | 'martialArts') => void;
+  adjustWeaponMag: (weaponInstanceId: string, delta: number) => void;
+  adjustWeaponReserveAmmo: (weaponInstanceId: string, delta: number) => void;
+  setWeaponAmmoType: (weaponInstanceId: string, ammoType: string) => void;
+  useOrInjectDrug: (drug: Omit<ActiveDrugEffect, 'id'>) => void;
+  removeActiveDrug: (id: string) => void;
   equipWeaponFromCatalog: (weapon: WeaponItem) => void;
   unequipWeapon: (weaponInstanceId: string) => void;
   equipArmorFromCatalog: (armor: ArmorItem, location: 'head' | 'body' | 'both') => void;
@@ -392,7 +418,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
           activeInjuries: [],
           eurodollars: 1000,
           inventory: [],
-          transactions: []
+          transactions: [],
+          unarmedInHand: { brawling: true, martialArts: false },
+          activeDrugs: []
         };
 
         set(state => ({
@@ -641,11 +669,157 @@ export const useCharacterStore = create<CharacterStoreState>()(
             if (c.id !== state.activeCharacterId) return c;
             return {
               ...c,
+              equippedWeapons: c.equippedWeapons.map(w => {
+                if (w.instanceId !== weaponInstanceId) return w;
+                const standardMag = w.standardMag || 0;
+                if (standardMag <= 0) return w;
+                const currentMag = w.currentMag || 0;
+                const needed = Math.max(0, standardMag - currentMag);
+                if (needed <= 0) return w;
+
+                const reserve = w.reserveAmmo ?? 36;
+                if (reserve > 0) {
+                  const toLoad = Math.min(needed, reserve);
+                  return {
+                    ...w,
+                    currentMag: currentMag + toLoad,
+                    reserveAmmo: reserve - toLoad
+                  };
+                } else {
+                  return {
+                    ...w,
+                    currentMag: standardMag
+                  };
+                }
+              })
+            };
+          })
+        }));
+      },
+
+      toggleWeaponInHand: (weaponInstanceId: string) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
               equippedWeapons: c.equippedWeapons.map(w =>
                 w.instanceId === weaponInstanceId
-                  ? { ...w, currentMag: w.standardMag || 0 }
+                  ? { ...w, inHand: !(w.inHand ?? true) }
                   : w
               )
+            };
+          })
+        }));
+      },
+
+      toggleUnarmedInHand: (mode: 'brawling' | 'martialArts') => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentUnarmed = c.unarmedInHand || { brawling: true, martialArts: false };
+            return {
+              ...c,
+              unarmedInHand: {
+                ...currentUnarmed,
+                [mode]: !currentUnarmed[mode]
+              }
+            };
+          })
+        }));
+      },
+
+      adjustWeaponMag: (weaponInstanceId: string, delta: number) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              equippedWeapons: c.equippedWeapons.map(w => {
+                if (w.instanceId !== weaponInstanceId) return w;
+                const maxMag = w.standardMag || 0;
+                const newMag = Math.max(0, Math.min(maxMag, (w.currentMag || 0) + delta));
+                return { ...w, currentMag: newMag };
+              })
+            };
+          })
+        }));
+      },
+
+      adjustWeaponReserveAmmo: (weaponInstanceId: string, delta: number) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              equippedWeapons: c.equippedWeapons.map(w => {
+                if (w.instanceId !== weaponInstanceId) return w;
+                const currentReserve = w.reserveAmmo ?? 36;
+                const newReserve = Math.max(0, currentReserve + delta);
+                return { ...w, reserveAmmo: newReserve };
+              })
+            };
+          })
+        }));
+      },
+
+      setWeaponAmmoType: (weaponInstanceId: string, ammoType: string) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              equippedWeapons: c.equippedWeapons.map(w =>
+                w.instanceId === weaponInstanceId
+                  ? { ...w, loadedAmmoType: ammoType }
+                  : w
+              )
+            };
+          })
+        }));
+      },
+
+      useOrInjectDrug: (drug: Omit<ActiveDrugEffect, 'id'>) => {
+        const newDrug: ActiveDrugEffect = {
+          ...drug,
+          id: `drug-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`
+        };
+
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentDrugs = c.activeDrugs || [];
+            let updatedInventory = c.inventory ? [...c.inventory] : [];
+
+            const drugIndex = updatedInventory.findIndex(
+              it => it.name.trim().toLowerCase() === drug.name.trim().toLowerCase()
+            );
+
+            if (drugIndex !== -1) {
+              const item = updatedInventory[drugIndex];
+              if (item.quantity > 1) {
+                updatedInventory[drugIndex] = { ...item, quantity: item.quantity - 1 };
+              } else {
+                updatedInventory.splice(drugIndex, 1);
+              }
+            }
+
+            return {
+              ...c,
+              activeDrugs: [...currentDrugs, newDrug],
+              inventory: updatedInventory
+            };
+          })
+        }));
+      },
+
+      removeActiveDrug: (id: string) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              activeDrugs: (c.activeDrugs || []).filter(d => d.id !== id)
             };
           })
         }));
@@ -656,7 +830,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
           ...weapon,
           instanceId: `wep-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
           currentMag: weapon.standardMag || 0,
-          loadedAmmoType: weapon.ammoType || 'Standard'
+          loadedAmmoType: weapon.ammoType || 'Standard',
+          inHand: true,
+          reserveAmmo: weapon.standardMag && weapon.standardMag > 0 ? 36 : 0
         };
 
         set(state => ({
@@ -863,7 +1039,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
                 ...item,
                 instanceId: `wep-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
                 currentMag: item.standardMag || 0,
-                loadedAmmoType: item.ammoType || 'Standard'
+                loadedAmmoType: item.ammoType || 'Standard',
+                inHand: true,
+                reserveAmmo: item.standardMag && item.standardMag > 0 ? 36 : 0
               };
               updatedEquippedWeapons.push(equippedWep);
             } else if (category === 'armor' && autoEquip !== false) {

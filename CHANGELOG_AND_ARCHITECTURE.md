@@ -119,6 +119,21 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores. 
 
 ## 📜 Master Version Changelog
 
+### [v2.3.0] - 2026-10-16 (Active Combat Overhaul: Attack Rack, Ammo Reserve, Unarmed & Consumables)
+* **Category**: Combat HUD Architecture, Ammo Telemetry & Unarmed/Consumables Engine
+* **Files Modified**:
+  - `frontend/src/types/cyberpunk.ts`
+  - `frontend/src/engine/characterEngine.ts`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+* **What Changed**:
+  1. **Rack Táctico de Formas de Atacar en Columna Derecha (`CombatHudView.tsx`)**: Separado en 4 categorías filtrables (`🔫 Armas`, `🥊 Puños & Artes Marciales`, `💣 Arrojables & Granadas`, `💉 Drogas & Consumibles`), permitiendo activar o sacar cualquier arma/ataque de la Estación Central **"En Mano"** (`inHand`) con un clic.
+  2. **Sistema Completo de Munición y Cargador**: Cada arma con cargador en mano muestra **Balas en Cargador (`actual / máx`)** con barra visual y ajuste fino `[-1/+1]`, **Balas en Reserva (`reserveAmmo`)** que se descuentan automáticamente al presionar `[ 🔄 RECARGAR ]` (con botones rápidos `[-10/+10/+30]`), y selector de **Tipo de Bala (`AMMO_TYPE_CATALOG`: Básica, AP, Incendiaria, Smart, Goma, Biotoxina, EMP, etc.)** con su regla especial en vivo.
+  3. **Puños (`Brawling`), Artes Marciales (`Martial Arts`), Grapple y Choke**: Daño desarmado calculado dinámicamente según `BODY` (`1d6` a `4d6`), botones rápidos de **Grapple** y **Choke** (`= BODY` daño directo ignorando SP) en Brawling, y perforación del 50% de SP en Artes Marciales.
+  4. **Granadas Arrojables y Drogas Activas en Combate**: Lanzamiento con `DEX + Athletics`, tiradas de daño explosivo (`6d6` / `4d6`), inyección de drogas con curación automática en `Speedheal` (`BODY + WILL`), monitor de **Drogas en Sangre** en el Biomonitor y tirada directa de resistencia a la adicción (`WILL + Resist Torture/Drugs vs DV`).
+
+---
+
 ### [v2.2.1] - 2026-10-16 (Tactical Tooltips on ROF/SP/HL/MAG & Full-Card Expand Hitbox)
 * **Category**: UX/UI Ergonomics & Rule Tooltips
 * **Files Modified**:

@@ -179,3 +179,76 @@ export function getAutofireRulesSummary(weapon: WeaponItem): AutofireRulesSummar
       : 'Esta arma opera exclusivamente en modo estándar o tiro único.'
   };
 }
+
+export function calculateUnarmedDamage(body: number): string {
+  if (body <= 4) return '1d6';
+  if (body <= 6) return '2d6';
+  if (body <= 10) return '3d6';
+  return '4d6';
+}
+
+export interface AmmoTypeMeta {
+  id: string;
+  label: string;
+  shortRule: string;
+  spAblation?: number;
+  isNonLethal?: boolean;
+}
+
+export const AMMO_TYPE_CATALOG: AmmoTypeMeta[] = [
+  {
+    id: 'Basic',
+    label: 'Basic',
+    shortRule: 'Ablación estándar 1 SP',
+    spAblation: 1
+  },
+  {
+    id: 'Armor-Piercing',
+    label: 'Armor-Piercing',
+    shortRule: 'Abla 2 puntos de SP al penetrar blindaje',
+    spAblation: 2
+  },
+  {
+    id: 'Incendiary',
+    label: 'Incendiary',
+    shortRule: 'Prende fuego al objetivo: 2 HP directos/turno hasta apagarse'
+  },
+  {
+    id: 'Expansive',
+    label: 'Expansive',
+    shortRule: 'Si causa Herida Crítica de Cuerpo Extraño, tira una segunda herida'
+  },
+  {
+    id: 'Rubber',
+    label: 'Rubber',
+    shortRule: 'No letal [1 HP mín]; no causa Heridas Críticas ni abla armadura',
+    spAblation: 0,
+    isNonLethal: true
+  },
+  {
+    id: 'Smart',
+    label: 'Smart',
+    shortRule: 'Si fallas por 4 o menos, tira de nuevo 1d10 [Requiere Smartgun Link]'
+  },
+  {
+    id: 'Biotoxin',
+    label: 'Biotoxin',
+    shortRule: 'Ignora SP; DV 15 Resist Torture/Drugs o recibe 3d6 directos a HP'
+  },
+  {
+    id: 'Poison',
+    label: 'Poison',
+    shortRule: 'Ignora SP; DV 13 Resist Torture/Drugs o recibe 2d6 directos a HP'
+  },
+  {
+    id: 'EMP',
+    label: 'EMP',
+    shortRule: 'DV 15 Cybertech o desactiva 2 piezas de Cyberware por 1 minuto'
+  },
+  {
+    id: 'Sleep',
+    label: 'Sleep',
+    shortRule: 'Ignora SP; DV 13 Resist Torture/Drugs o cae inconsciente 1 min',
+    isNonLethal: true
+  }
+];

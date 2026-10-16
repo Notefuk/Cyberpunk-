@@ -325,6 +325,8 @@ export interface EquippedWeapon extends WeaponItem {
   instanceId: string;
   currentMag: number;
   loadedAmmoType: string;
+  inHand?: boolean;
+  reserveAmmo?: number;
 }
 
 export interface ActiveCriticalInjury {
@@ -337,6 +339,15 @@ export interface ActiveCriticalInjury {
   iconType: 'skull' | 'brain' | 'eye' | 'bone' | 'limb' | 'organ' | 'ear';
   modifiers: InjuryModifier;
   isTreated: boolean;
+}
+
+export interface ActiveDrugEffect {
+  id: string;
+  name: string;
+  duration: string;
+  primaryEffect: string;
+  secondaryEffect: string;
+  addictionDv: string;
 }
 
 export interface InventoryItem {
@@ -386,6 +397,8 @@ export interface CharacterSheet {
   eurodollars: number;
   inventory?: InventoryItem[];
   transactions?: EurodollarTransaction[];
+  unarmedInHand?: { brawling?: boolean; martialArts?: boolean };
+  activeDrugs?: ActiveDrugEffect[];
 }
 
 export interface RollEntry {
