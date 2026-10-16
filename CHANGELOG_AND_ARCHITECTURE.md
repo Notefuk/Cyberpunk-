@@ -119,6 +119,19 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores. 
 
 ## 📜 Master Version Changelog
 
+### [v2.1.0] - 2026-10-16 (UI Density Overhaul: Compact Street Lab & Low-Noise Compendium)
+* **Category**: UX/UI High-Density Layout & Rule Examples Integration
+* **Files Modified**:
+  - `frontend/src/types/cyberpunk.ts`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/compendium/CompendiumView.tsx`
+* **What Changed**:
+  1. **Street Lab Compact Dashboard**: Reestructurado en 3 zonas sin scroll excesivo: Barra de Identidad en 1 línea, Cinta Táctica Horizontal con los 10 STATS y 4 derivadas en fila única, y Dashboard en 2 Columnas Paralelas (`7 cols` para Habilidades filtrables por categoría + `5 cols` para Blindaje, Arsenal y Cyberware siempre visibles al lado).
+  2. **Dropdowns de Ejemplos y DVs por Habilidad**: Ampliado `SKILL_METADATA` con resúmenes y 3 ejemplos con DVs oficiales del Core Rulebook para las 16 habilidades, desplegables al hacer clic en cada fila.
+  3. **Compendium Low-Noise & Tabla Densa COMP/CON**: Tarjetas compactas (`p-2.5`) con tira horizontal adaptativa de píldoras (ocultando cargador/munición en armas Melee), notas discretas en 1 línea expandibles al hacer clic, botón `[+ Equipar]` integrado en cabecera, y nuevo selector de vista **`[ ☰ TABLA DENSA ]`** de 1 fila por ítem.
+
+---
+
 ### [v2.0.0] - 2026-10-16 (Phase 0 Architectural Overhaul & Full Core Catalog)
 * **Category**: Arquitectura Modular, Motor Matemático Real & Catálogo Completo
 * **Files Modified / Created**:

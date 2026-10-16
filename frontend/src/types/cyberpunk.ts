@@ -28,97 +28,200 @@ export type CombatSkillKey =
   | 'concentration'
   | 'resistTortureDrugs';
 
+export interface SkillExample {
+  label: string;
+  dv: string;
+}
+
 export interface SkillMeta {
   label: string;
   stat: StatKey;
   isDoubleCost?: boolean;
   category: 'ranged' | 'melee' | 'defense' | 'medical' | 'general';
+  summary: string;
+  examples: SkillExample[];
 }
 
 export const SKILL_METADATA: Record<CombatSkillKey, SkillMeta> = {
   handgun: {
     label: 'Handgun',
     stat: 'REF',
-    category: 'ranged'
+    category: 'ranged',
+    summary: 'Disparo y manejo de pistolas y revólveres (1 mano, distancias corta y media).',
+    examples: [
+      { label: 'A quemarropa (0-6m)', dv: 'DV 13' },
+      { label: 'Corta distancia (7-12m)', dv: 'DV 15' },
+      { label: 'Media distancia (13-25m)', dv: 'DV 20' }
+    ]
   },
   shoulderArms: {
     label: 'Shoulder Arms',
     stat: 'REF',
-    category: 'ranged'
+    category: 'ranged',
+    summary: 'Disparo de armas largas a dos manos (fusiles de asalto, francotirador y escopetas).',
+    examples: [
+      { label: 'Fusil Asalto - Óptimo (26-50m)', dv: 'DV 13' },
+      { label: 'Escopeta Cartucho (6x6m zona)', dv: 'DV 13' },
+      { label: 'Francotirador (51-100m)', dv: 'DV 15' }
+    ]
   },
   autofire: {
     label: 'Autofire',
     stat: 'REF',
     isDoubleCost: true,
-    category: 'ranged'
+    category: 'ranged',
+    summary: 'Ráfagas de fuego automático. Daño = 2d6 × margen sobre DV (hasta máx del arma).',
+    examples: [
+      { label: 'SMG Ráfaga - Óptimo (7-12m)', dv: 'DV 17' },
+      { label: 'Fusil Asalto - Óptimo (13-25m)', dv: 'DV 17' },
+      { label: 'Doble 6 en 2d6 de daño', dv: 'Crítico (+5)' }
+    ]
   },
   heavyWeapons: {
     label: 'Heavy Weapons',
     stat: 'REF',
     isDoubleCost: true,
-    category: 'ranged'
+    category: 'ranged',
+    summary: 'Lanzacohetes, lanzagranadas, ametralladoras pesadas y artillería antiblindaje.',
+    examples: [
+      { label: 'Lanzagranadas (13-25m)', dv: 'DV 15' },
+      { label: 'Lanzacohetes (13-50m)', dv: 'DV 15' },
+      { label: 'Impacto explosivo en área', dv: '10x10m' }
+    ]
   },
   archery: {
     label: 'Archery',
     stat: 'REF',
-    category: 'ranged'
+    category: 'ranged',
+    summary: 'Uso de arcos y ballestas silenciosos. Permite recuperar proyectiles no rotos.',
+    examples: [
+      { label: 'Ballesta - Óptimo (7-12m)', dv: 'DV 13' },
+      { label: 'Arco compuesto (13-25m)', dv: 'DV 15' },
+      { label: 'Tiro a larga distancia (26-50m)', dv: 'DV 17' }
+    ]
   },
   meleeWeapon: {
     label: 'Melee Weapon',
     stat: 'DEX',
-    category: 'melee'
+    category: 'melee',
+    summary: 'Armas blancas y contundentes (katanas, bates, cuchillos). Divide a la mitad el SP defensor.',
+    examples: [
+      { label: 'Ataque cuerpo a cuerpo base', dv: 'Enfrentada DEX' },
+      { label: 'Ignorar mitad de blindaje', dv: 'SP / 2' },
+      { label: 'Arma ligera o media (ROF 2)', dv: '2 Ataques' }
+    ]
   },
   brawling: {
     label: 'Brawling',
     stat: 'DEX',
-    category: 'melee'
+    category: 'melee',
+    summary: 'Pelea desarmada, agarres, proyecciones y llaves. Tirada enfrentada; NO ignora SP.',
+    examples: [
+      { label: 'Golpe de puño / patada (ROF 2)', dv: 'Enfrentada DEX' },
+      { label: 'Inmovilizar / Agarrar rival', dv: 'Enfrentada' },
+      { label: 'Escapar de un agarre', dv: 'Brawling vs Brawling' }
+    ]
   },
   martialArts: {
     label: 'Martial Arts',
     stat: 'DEX',
     isDoubleCost: true,
-    category: 'melee'
+    category: 'melee',
+    summary: 'Artes marciales formales. Ignora el 50% de SP y permite maniobras especiales de estilo.',
+    examples: [
+      { label: 'Golpe marcial (ROF 2)', dv: 'Enfrentada DEX' },
+      { label: 'Ignorar blindaje pesado', dv: 'SP / 2' },
+      { label: 'Maniobra especial de estilo', dv: 'Requisito especial' }
+    ]
   },
   evasion: {
     label: 'Evasion',
     stat: 'DEX',
-    category: 'defense'
+    category: 'defense',
+    summary: 'Esquivar golpes cuerpo a cuerpo y, si tienes REF 8+, esquivar balas antes del impacto.',
+    examples: [
+      { label: 'Esquivar ataque Melee/Brawling', dv: 'Enfrentada DEX' },
+      { label: 'Esquivar proyectil (con REF 8+)', dv: 'vs Tirada Ataque' },
+      { label: 'Esquivar explosión / área', dv: 'DV según arma' }
+    ]
   },
   athletics: {
     label: 'Athletics',
     stat: 'DEX',
-    category: 'general'
+    category: 'general',
+    summary: 'Correr, saltar, trepar, nadar y lanzar granadas con precisión atlética.',
+    examples: [
+      { label: 'Lanzar granada a blanco', dv: 'DV por distancia' },
+      { label: 'Salto difícil o carrera con obstáculo', dv: 'DV 13 / 15' },
+      { label: 'Trepar superficie resbaladiza', dv: 'DV 15' }
+    ]
   },
   firstAid: {
     label: 'First Aid',
     stat: 'TECH',
-    category: 'medical'
+    category: 'medical',
+    summary: 'Estabilizar pacientes moribundos y aplicar Quick Fix básico a heridas críticas.',
+    examples: [
+      { label: 'Estabilizar herido grave', dv: 'DV 10' },
+      { label: 'Quick Fix herida básica (ej. Oído)', dv: 'DV 13' },
+      { label: 'Quick Fix trauma severo', dv: 'DV 15' }
+    ]
   },
   paramedic: {
     label: 'Paramedic',
     stat: 'TECH',
     isDoubleCost: true,
-    category: 'medical'
+    category: 'medical',
+    summary: 'Medicina de campaña avanzada, Quick Fix complejo y tratamientos en clínica/ambulancia.',
+    examples: [
+      { label: 'Quick Fix miembro roto o pulmón', dv: 'DV 13 / 15' },
+      { label: 'Tratamiento definitivo en clínica', dv: 'DV 13 / 15' },
+      { label: 'Cirugía de neurofijación / espinal', dv: 'DV 17' }
+    ]
   },
   cybertech: {
     label: 'Cybertech',
     stat: 'TECH',
-    category: 'general'
+    category: 'general',
+    summary: 'Instalación, mantenimiento, diagnóstico y reparación de ciberware y prótesis.',
+    examples: [
+      { label: 'Diagnosticar ciberimplante dañado', dv: 'DV 13' },
+      { label: 'Reparar ciberbrazo en taller', dv: 'DV 15' },
+      { label: 'Calibrar ciberóptica / procesador', dv: 'DV 17' }
+    ]
   },
   perception: {
     label: 'Perception',
     stat: 'INT',
-    category: 'general'
+    category: 'general',
+    summary: 'Detectar emboscadas, trampas, pistas ocultas, escuchar ruidos y ver en penumbra.',
+    examples: [
+      { label: 'Detectar emboscada o trampa obvia', dv: 'DV 13' },
+      { label: 'Escuchar susurro o pasos furtivos', dv: 'DV 15' },
+      { label: 'Hallar microcámara o pista oculta', dv: 'DV 17' }
+    ]
   },
   concentration: {
     label: 'Concentration',
     stat: 'WILL',
-    category: 'general'
+    category: 'general',
+    summary: 'Mantener foco bajo fuego de supresión, resistir distracciones y memorizar datos.',
+    examples: [
+      { label: 'Resistir Fuego de Supresión', dv: 'vs Tirada Supresión' },
+      { label: 'Mantener concentración con dolor', dv: 'DV 13' },
+      { label: 'Memorizar plano de seguridad complejo', dv: 'DV 15' }
+    ]
   },
   resistTortureDrugs: {
     label: 'Resist Torture/Drugs',
     stat: 'WILL',
-    category: 'general'
+    category: 'general',
+    summary: 'Resistir efectos de toxinas, drogas callejeras, interrogatorios duros y flashbangs.',
+    examples: [
+      { label: 'Resistir aturdimiento por Flashbang', dv: 'DV 13' },
+      { label: 'Resistir adicción a drogas', dv: 'DV 15' },
+      { label: 'Resistir interrogatorio químico', dv: 'DV 17' }
+    ]
   }
 };
 
