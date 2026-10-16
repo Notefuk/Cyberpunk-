@@ -122,6 +122,177 @@ const TACTICAL_GRENADES = [
   }
 ];
 
+const AmmoCartridgeVisualizer: React.FC<{
+  currentMag: number;
+  standardMag: number;
+  reserveAmmo: number;
+  onAdjustMag: (delta: number) => void;
+  onAdjustReserve: (delta: number) => void;
+  onReload: () => void;
+}> = ({
+  currentMag,
+  standardMag,
+  reserveAmmo,
+  onAdjustMag,
+  onAdjustReserve,
+  onReload
+}) => {
+  const isOutOfAmmo = currentMag <= 0;
+  const ratio = standardMag > 0 ? currentMag / standardMag : 0;
+
+  const getCounterColor = () => {
+    if (isOutOfAmmo || ratio <= 0.25) {
+      return 'text-[#dc2626] animate-pulse drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]';
+    }
+    if (ratio <= 0.50) {
+      return 'text-[#f59e0b] drop-shadow-[0_0_8px_rgba(245,158,11,0.6)]';
+    }
+    return 'text-[#38bdf8] drop-shadow-[0_0_8px_rgba(56,189,248,0.6)]';
+  };
+
+  const getBulletColor = () => {
+    if (isOutOfAmmo || ratio <= 0.25) {
+      return 'bg-[#dc2626] border-[#f87171] shadow-[0_0_4px_rgba(220,38,38,0.8)]';
+    }
+    if (ratio <= 0.50) {
+      return 'bg-[#f59e0b] border-[#fcd34d] shadow-[0_0_4px_rgba(245,158,11,0.6)]';
+    }
+    return 'bg-[#06b6d4] border-[#67e8f9] shadow-[0_0_4px_rgba(6,182,212,0.6)]';
+  };
+
+  const isCompactBullets = standardMag > 20;
+
+  return (
+    <div className="bg-[#0b0e14] p-3 rounded-sm border border-[#1f2638] space-y-2.5">
+      {/* Fila Superior: Contador Numérico Grande + Controles */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1c2232]">
+        
+        {/* Contador Grande */}
+        <div className="flex items-baseline gap-1.5">
+          <span className={`font-mono font-black text-2xl tracking-tighter ${getCounterColor()}`}>
+            {currentMag}
+          </span>
+          <span className="text-xs font-mono font-bold text-slate-500">
+            / {standardMag}
+          </span>
+          <span className="text-[10px] font-mono-code text-slate-400 ml-1">
+            CARGADOR
+          </span>
+        </div>
+
+        {/* Reserva y Botones Rápidos */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <div className="text-[11px] font-mono font-bold bg-[#141824] px-2 py-0.5 rounded border border-[#232a3e] text-[#f59e0b]">
+            RESERVA: {reserveAmmo}
+          </div>
+
+          <div className="flex items-center gap-0.5">
+            <button
+              onClick={() => onAdjustMag(-1)}
+              disabled={currentMag <= 0}
+              className="px-2 py-0.5 bg-[#1b2030] hover:bg-[#dc2626] disabled:opacity-30 disabled:hover:bg-[#1b2030] text-white rounded text-[11px] font-mono font-bold transition-all"
+              title="Disparar / Restar 1 bala"
+            >
+              -1
+            </button>
+            <button
+              onClick={() => onAdjustMag(1)}
+              disabled={currentMag >= standardMag}
+              className="px-2 py-0.5 bg-[#1b2030] hover:bg-[#10b981] disabled:opacity-30 disabled:hover:bg-[#1b2030] text-white rounded text-[11px] font-mono font-bold transition-all"
+              title="Cargar / Sumar 1 bala"
+            >
+              +1
+            </button>
+          </div>
+
+          <button
+            onClick={onReload}
+            className="px-2.5 py-0.5 bg-[#f59e0b]/20 hover:bg-[#f59e0b] hover:text-black border border-[#f59e0b]/50 text-[#f59e0b] rounded text-[11px] font-mono font-bold transition-all flex items-center gap-1"
+            title="Recargar cargador completo desde la reserva"
+          >
+            <RefreshCw className="w-3 h-3" /> RECARGAR
+          </button>
+        </div>
+
+      </div>
+
+      {/* Fila Inferior: Matriz Visual de Cartuchitos Individuales */}
+      <div className="flex flex-wrap items-end gap-1 p-2 bg-slate-950/90 border border-slate-800 rounded min-h-[36px]">
+        {Array.from({ length: standardMag }).map((_, index) => {
+          const isLoaded = index < currentMag;
+          const bulletTarget = index + 1 === currentMag ? index : index + 1;
+          
+          return (
+            <button
+              key={index}
+              type="button"
+              onClick={() => onAdjustMag(bulletTarget - currentMag)}
+              title={`Cartucho #${index + 1} (${isLoaded ? 'Cargado' : 'Vacío'}). Clic para fijar.`}
+              className={`group flex flex-col items-center justify-end transition-all cursor-pointer ${
+                isCompactBullets ? 'w-2 h-4' : 'w-2.5 h-5'
+              }`}
+            >
+              {isLoaded ? (
+                <>
+                  {/* Ojiva / Punta biselada */}
+                  <span
+                    className={`w-1.5 h-1 rounded-t-2xs border-t border-x ${getBulletColor()} border-b-0`}
+                  />
+                  {/* Vaina / Casquillo */}
+                  <span
+                    className={`w-full ${isCompactBullets ? 'h-3' : 'h-4'} rounded-b-2xs border border-t-0 ${getBulletColor()} relative`}
+                  >
+                    <span className="absolute top-0 inset-x-0 h-[1px] bg-black/40" />
+                  </span>
+                </>
+              ) : (
+                <>
+                  {/* Ojiva vacía */}
+                  <span
+                    className="w-1.5 h-1 rounded-t-2xs border border-slate-800/80 bg-slate-900/40 opacity-35 border-b-0"
+                  />
+                  {/* Casquillo vacío */}
+                  <span
+                    className={`w-full ${isCompactBullets ? 'h-3' : 'h-4'} rounded-b-2xs border border-slate-800/80 bg-slate-900/40 opacity-35 border-t-0`}
+                  />
+                </>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Controles rápidos de Reserva de Munición */}
+      <div className="flex items-center justify-between pt-1 text-[10px] font-mono-code text-[#64748b]">
+        <span>Ajuste rápido de reserva:</span>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => onAdjustReserve(-10)}
+            className="px-1.5 py-0.5 bg-[#171b26] hover:bg-[#dc2626] text-slate-300 hover:text-white rounded border border-[#242b3d] font-bold"
+            title="Gastar 10 balas de reserva"
+          >
+            -10
+          </button>
+          <button
+            onClick={() => onAdjustReserve(10)}
+            className="px-1.5 py-0.5 bg-[#171b26] hover:bg-[#10b981] text-slate-300 hover:text-white rounded border border-[#242b3d] font-bold"
+            title="Añadir 10 balas a reserva"
+          >
+            +10
+          </button>
+          <button
+            onClick={() => onAdjustReserve(30)}
+            className="px-1.5 py-0.5 bg-[#171b26] hover:bg-[#10b981] text-slate-300 hover:text-white rounded border border-[#242b3d] font-bold"
+            title="Añadir caja de 30 balas"
+          >
+            +30
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const CombatHudView: React.FC = () => {
   // Store hooks
   const activeChar = useCharacterStore((state) => state.getActiveCharacter());
@@ -1070,92 +1241,20 @@ export const CombatHudView: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Panel Completo de Munición y Cargador */}
-                {isRanged && (
-                  <div className="mb-3 bg-[#10121a] p-3 rounded border border-[#22283a] space-y-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
-                      
-                      {/* Cargador */}
-                      <div>
-                        <div className="flex justify-between items-baseline text-xs font-mono-code mb-1">
-                          <span className="text-[#94a3b8] flex items-center gap-1">
-                            <TacticalTooltip term="MAG">En Cargador:</TacticalTooltip>
-                          </span>
-                          <span className="font-bold">
-                            <span className={isOutOfAmmo ? 'text-[#dc2626]' : 'text-[#10b981]'}>
-                              {w.currentMag ?? 0}
-                            </span>
-                            <span className="text-[#64748b]">/{w.standardMag ?? 0}</span>
-                          </span>
-                        </div>
-                        <div className="w-full bg-[#090b10] h-2 rounded-xs border border-[#202534] overflow-hidden mb-1.5">
-                          <div 
-                            className={`h-full transition-all duration-200 ${isOutOfAmmo ? 'bg-[#dc2626]' : 'bg-[#10b981]'}`}
-                            style={{ width: `${Math.max(0, Math.min(100, ((w.currentMag ?? 0) / (w.standardMag || 1)) * 100))}%` }}
-                          />
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => adjustWeaponMag(w.instanceId, -1)}
-                            className="px-1.5 py-0.5 bg-[#1b1f2e] hover:bg-[#dc2626] text-white rounded text-[10px] font-mono-code font-bold transition-all"
-                            title="Restar 1 bala del cargador"
-                          >
-                            -1
-                          </button>
-                          <button
-                            onClick={() => adjustWeaponMag(w.instanceId, 1)}
-                            className="px-1.5 py-0.5 bg-[#1b1f2e] hover:bg-[#10b981] text-white rounded text-[10px] font-mono-code font-bold transition-all"
-                            title="Sumar 1 bala al cargador"
-                          >
-                            +1
-                          </button>
-                          <button
-                            onClick={() => reloadWeapon(w.instanceId)}
-                            className="flex-1 py-0.5 bg-[#f59e0b]/20 hover:bg-[#f59e0b] hover:text-black border border-[#f59e0b]/40 text-[#f59e0b] rounded text-[10px] font-mono-code font-bold transition-all flex items-center justify-center gap-1"
-                            title="Recargar desde reserva"
-                          >
-                            <RefreshCw className="w-2.5 h-2.5" /> RECARGAR
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Reserva en Mochila */}
-                      <div>
-                        <div className="flex justify-between items-baseline text-xs font-mono-code mb-1">
-                          <span className="text-[#94a3b8]">En Reserva (Mochila):</span>
-                          <span className="font-bold text-[#f59e0b]">
-                            {w.reserveAmmo ?? 36} balas
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 mt-3">
-                          <button
-                            onClick={() => adjustWeaponReserveAmmo(w.instanceId, -10)}
-                            className="flex-1 py-1 bg-[#1b1f2e] hover:bg-[#dc2626] text-white rounded text-[10px] font-mono-code font-bold transition-all"
-                            title="Gastar 10 de reserva"
-                          >
-                            -10
-                          </button>
-                          <button
-                            onClick={() => adjustWeaponReserveAmmo(w.instanceId, 10)}
-                            className="flex-1 py-1 bg-[#1b1f2e] hover:bg-[#10b981] text-white rounded text-[10px] font-mono-code font-bold transition-all"
-                            title="Añadir 10 de reserva"
-                          >
-                            +10
-                          </button>
-                          <button
-                            onClick={() => adjustWeaponReserveAmmo(w.instanceId, 30)}
-                            className="flex-1 py-1 bg-[#1b1f2e] hover:bg-[#10b981] text-white rounded text-[10px] font-mono-code font-bold transition-all"
-                            title="Añadir caja de 30 balas"
-                          >
-                            +30
-                          </button>
-                        </div>
-                      </div>
-
-                    </div>
+                {/* Panel Completo de Munición y Cargador con Cartuchos Individuales */}
+                {isRanged && (w.standardMag ?? 0) > 0 && (
+                  <div className="mb-3 space-y-2">
+                    <AmmoCartridgeVisualizer
+                      currentMag={w.currentMag ?? 0}
+                      standardMag={w.standardMag ?? 0}
+                      reserveAmmo={w.reserveAmmo ?? 36}
+                      onAdjustMag={(delta) => adjustWeaponMag(w.instanceId, delta)}
+                      onAdjustReserve={(delta) => adjustWeaponReserveAmmo(w.instanceId, delta)}
+                      onReload={() => reloadWeapon(w.instanceId)}
+                    />
 
                     {/* Selector de Tipo de Munición Cargada */}
-                    <div className="pt-2 border-t border-[#1e2332]">
+                    <div className="bg-[#10121a] p-2.5 rounded border border-[#22283a]">
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-[10px] font-mono-code text-[#64748b] uppercase">TIPO DE BALA:</span>
                         <select
@@ -1176,7 +1275,6 @@ export const CombatHudView: React.FC = () => {
                         </div>
                       )}
                     </div>
-
                   </div>
                 )}
 
@@ -1683,7 +1781,7 @@ export const CombatHudView: React.FC = () => {
                             {w.name}
                           </div>
                           <div className="text-[10px] font-mono-code text-[#94a3b8] mt-0.5">
-                            {w.damage} • ROF {w.rof} • Mag: {w.currentMag ?? 0}/{w.standardMag ?? 0} • Res: {w.reserveAmmo ?? 36}
+                            {w.damage} • ROF {w.rof} • Res: {w.reserveAmmo ?? 36}
                           </div>
                         </div>
 
@@ -1698,6 +1796,36 @@ export const CombatHudView: React.FC = () => {
                           {isInHand ? '✓ EN MANO' : '+ PONER EN MANO'}
                         </button>
                       </div>
+
+                      {/* Mini Tira de Rectángulos de Munición */}
+                      {w.type === 'Ranged' && (w.standardMag ?? 0) > 0 && (
+                        <div className="flex items-center gap-1.5 mt-2 pt-1.5 border-t border-[#1a1f2e]">
+                          <div className="flex items-baseline gap-0.5 text-[10px] font-mono font-bold shrink-0">
+                            <span className={(w.currentMag ?? 0) <= 0 ? 'text-[#dc2626]' : (w.currentMag ?? 0) <= (w.standardMag ?? 0) * 0.25 ? 'text-[#f59e0b]' : 'text-[#38bdf8]'}>
+                              {w.currentMag ?? 0}
+                            </span>
+                            <span className="text-slate-600">/{w.standardMag}</span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-0.5 overflow-hidden max-h-[14px]">
+                            {Array.from({ length: Math.min(w.standardMag ?? 0, 40) }).map((_, bIdx) => {
+                              const isLoaded = bIdx < (w.currentMag ?? 0);
+                              return (
+                                <span
+                                  key={bIdx}
+                                  className={`h-2.5 w-1.5 rounded-2xs transition-all ${
+                                    isLoaded
+                                      ? (w.currentMag ?? 0) <= (w.standardMag ?? 0) * 0.25
+                                        ? 'bg-[#dc2626] border border-[#f87171]/80'
+                                        : 'bg-[#38bdf8] border border-[#67e8f9]/80 shadow-[0_0_2px_rgba(56,189,248,0.5)]'
+                                      : 'bg-slate-900/60 border border-slate-800/80 opacity-40'
+                                  }`}
+                                  title={`Bala #${bIdx + 1}`}
+                                />
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}

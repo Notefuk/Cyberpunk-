@@ -119,6 +119,16 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores. 
 
 ## 📜 Master Version Changelog
 
+### [v2.3.1] - 2026-10-16 (Tactical Bullet Cartridge Visualizer & Digital Ammo Readout)
+* **Category**: Combat HUD Visual Telemetry
+* **Files Modified**:
+  - `frontend/src/features/combat/CombatHudView.tsx`
+* **What Changed**:
+  1. **Visualizador de Cartuchitos de Munición (`AmmoCartridgeVisualizer`)**: Reemplazada la barra de progreso simple por cartuchos individuales estilizados con ojiva superior y vaina rectangular para cada bala del cargador (`1..standardMag`). Los proyectiles cargados brillan según el estado del cargador (cian/ámbar/rojo pulsante en reserva baja) y los disparados quedan como casquillos vacíos oscuros; además cada cartucho es clicable para ajustar la munición directamente.
+  2. **Contador Numérico Superior + Tira Mini en el Rack Derecho**: Lectura digital grande arriba de los cartuchos (`ACTUAL / MÁX` + `RESERVA`) en la Estación "En Mano", y mini-tira de rectángulos de munición en las tarjetas del Rack Táctico derecho.
+
+---
+
 ### [v2.3.0] - 2026-10-16 (Active Combat Overhaul: Attack Rack, Ammo Reserve, Unarmed & Consumables)
 * **Category**: Combat HUD Architecture, Ammo Telemetry & Unarmed/Consumables Engine
 * **Files Modified**:
