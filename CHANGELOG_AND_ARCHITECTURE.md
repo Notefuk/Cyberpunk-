@@ -119,6 +119,20 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores. 
 
 ## 📜 Master Version Changelog
 
+### [v2.2.0] - 2026-10-16 (Compendium Full-Detail Accordions & Eurodollar Purchase/Wallet System)
+* **Category**: Economy Engine, Inventory & Interactive Compendium Accordions
+* **Files Modified**:
+  - `frontend/src/types/cyberpunk.ts`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/features/compendium/CompendiumView.tsx`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+* **What Changed**:
+  1. **Acordeones Reales Ultra-Compactos en Compendium (`CompendiumView.tsx`)**: Cerrados ocupan ~60px mostrando solo nombre, precio y 2-3 pills clave; al hacer clic en cualquier parte de la tarjeta (o fila en modo Tabla Densa), se despliega el panel completo con todas las reglas asociadas: tabla completa de 8 distancias DV con punto óptimo (`★`) y fila DV de Autofire en armas de fuego, regla de ignorar 50% SP en armas Melee, duración/efectos/DV de adicción en drogas, clínica/HL en cyberware y notas completas de armas exóticas.
+  2. **Sistema de Compra (`€$` vs Gratis / Loot)**: Switch global en el Compendio (`[ 💳 COMPRAR (Gastar €$) ]` vs `[ 🎁 GRATIS / LOOT (0 €$) ]`) más botones individuales dentro de cada acordeón para descontar Eurodólares automáticamente del saldo del personaje o adquirir sin costo.
+  3. **Mochila de Inventario y Billetera de Transacciones (`StreetLabView.tsx` & `useCharacterStore.ts`)**: Pestañas dedicadas en la columna derecha de `Street Lab` para gestionar cantidades de munición, drogas, accesorios y equipo comprado (`inventory`), más registro de cobros de Gigs (ej. pago de Falco) y bitácora de transacciones (`transactions`).
+
+---
+
 ### [v2.1.0] - 2026-10-16 (UI Density Overhaul: Compact Street Lab & Low-Noise Compendium)
 * **Category**: UX/UI High-Density Layout & Rule Examples Integration
 * **Files Modified**:

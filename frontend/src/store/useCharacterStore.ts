@@ -6,6 +6,8 @@ import type {
   CharacterSheet,
   CombatSkillKey,
   EquippedWeapon,
+  EurodollarTransaction,
+  InventoryItem,
   StatKey,
   WeaponItem
 } from '../types/cyberpunk';
@@ -153,7 +155,9 @@ export const INITIAL_CHARACTER_V: CharacterSheet = {
   ],
   installedCyberwareIds: ['neuralware-processor', 'cybereye', 'subdermal-armor'],
   activeInjuries: [],
-  eurodollars: 2450
+  eurodollars: 2450,
+  inventory: [],
+  transactions: []
 };
 
 export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
@@ -267,7 +271,9 @@ export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
   ],
   installedCyberwareIds: ['neuralware-processor', 'interface-plugs'],
   activeInjuries: [],
-  eurodollars: 3800
+  eurodollars: 3800,
+  inventory: [],
+  transactions: []
 };
 
 export interface CharacterStoreState {
@@ -301,6 +307,15 @@ export interface CharacterStoreState {
   removeInjury: (injuryId: string) => void;
   exportActiveCharacterJson: () => string;
   importCharacterJson: (jsonStr: string) => boolean;
+  purchaseOrAcquireItem: (params: {
+    item: any;
+    category: InventoryItem['category'];
+    spendMoney: boolean;
+    autoEquip?: boolean;
+    armorLocation?: 'head' | 'body' | 'both';
+  }) => { success: boolean; message: string };
+  updateInventoryQuantity: (invId: string, delta: number) => void;
+  addEurodollarTransaction: (concept: string, amount: number) => void;
 }
 
 export const useCharacterStore = create<CharacterStoreState>()(
@@ -375,7 +390,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
           equippedWeapons: [],
           installedCyberwareIds: [],
           activeInjuries: [],
-          eurodollars: 1000
+          eurodollars: 1000,
+          inventory: [],
+          transactions: []
         };
 
         set(state => ({
@@ -807,6 +824,149 @@ export const useCharacterStore = create<CharacterStoreState>()(
         } catch {
           return false;
         }
+      },
+
+      purchaseOrAcquireItem: ({ item, category, spendMoney, autoEquip = true, armorLocation = 'both' }) => {
+        const char = get().getActiveCharacter();
+        const cost = Number(item.cost || 0);
+
+        if (spendMoney && (char.eurodollars || 0) < cost) {
+          return { success: false, message: 'Fondos insuficientes (€$)' };
+        }
+
+        const newEurodollars = spendMoney ? (char.eurodollars || 0) - cost : (char.eurodollars || 0);
+        const txConcept = spendMoney
+          ? `Compra: ${item.name}`
+          : `Adquirido (Gratis/Loot): ${item.name}`;
+        const txAmount = spendMoney ? -cost : 0;
+        const newTx: EurodollarTransaction = {
+          id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          timestamp: new Date().toISOString(),
+          concept: txConcept,
+          amount: txAmount,
+          balanceAfter: newEurodollars
+        };
+
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            const updatedEquippedWeapons = [...c.equippedWeapons];
+            let updatedHeadArmor = { ...c.headArmor };
+            let updatedBodyArmor = { ...c.bodyArmor };
+            const updatedCyberwareIds = [...c.installedCyberwareIds];
+            let updatedHumanity = c.currentHumanity;
+            const updatedInventory = [...(c.inventory || [])];
+
+            if (category === 'weapons' && autoEquip !== false) {
+              const equippedWep: EquippedWeapon = {
+                ...item,
+                instanceId: `wep-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                currentMag: item.standardMag || 0,
+                loadedAmmoType: item.ammoType || 'Standard'
+              };
+              updatedEquippedWeapons.push(equippedWep);
+            } else if (category === 'armor' && autoEquip !== false) {
+              if (armorLocation === 'head' || armorLocation === 'both') {
+                updatedHeadArmor = {
+                  name: `${item.name} (Head)`,
+                  maxSp: item.sp,
+                  currentSp: item.sp,
+                  penalty: item.penalty
+                };
+              }
+              if (armorLocation === 'body' || armorLocation === 'both') {
+                updatedBodyArmor = {
+                  name: `${item.name} (Body)`,
+                  maxSp: item.sp,
+                  currentSp: item.sp,
+                  penalty: item.penalty
+                };
+              }
+            } else if (category === 'cyberware' && autoEquip !== false) {
+              if (!updatedCyberwareIds.includes(item.id)) {
+                updatedCyberwareIds.push(item.id);
+                const parsedHl = item.humanityLoss ? parseInt(String(item.humanityLoss).replace(/\D/g, '')) || 7 : 7;
+                updatedHumanity = Math.max(0, updatedHumanity - parsedHl);
+              }
+            } else {
+              const existingIndex = updatedInventory.findIndex(
+                (inv) => inv.catalogId === (item.id || item.name)
+              );
+              const qtyToAdd = category === 'ammunition' ? 10 : 1;
+              if (existingIndex >= 0) {
+                updatedInventory[existingIndex] = {
+                  ...updatedInventory[existingIndex],
+                  quantity: updatedInventory[existingIndex].quantity + qtyToAdd
+                };
+              } else {
+                updatedInventory.push({
+                  id: `inv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                  catalogId: item.id || item.name,
+                  name: item.name,
+                  category,
+                  cost,
+                  quantity: qtyToAdd,
+                  details: item.description || item.notes || item.damage || ''
+                });
+              }
+            }
+
+            return {
+              ...c,
+              eurodollars: newEurodollars,
+              equippedWeapons: updatedEquippedWeapons,
+              headArmor: updatedHeadArmor,
+              bodyArmor: updatedBodyArmor,
+              installedCyberwareIds: updatedCyberwareIds,
+              currentHumanity: updatedHumanity,
+              inventory: updatedInventory,
+              transactions: [newTx, ...(c.transactions || [])].slice(0, 50)
+            };
+          })
+        }));
+
+        return {
+          success: true,
+          message: `${item.name} adquirido (${spendMoney ? `-${cost} €$` : 'Gratis/Loot'}).`
+        };
+      },
+
+      updateInventoryQuantity: (invId: string, delta: number) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentInv = c.inventory || [];
+            const updatedInv = currentInv
+              .map((it) => (it.id === invId ? { ...it, quantity: it.quantity + delta } : it))
+              .filter((it) => it.quantity > 0);
+            return {
+              ...c,
+              inventory: updatedInv
+            };
+          })
+        }));
+      },
+
+      addEurodollarTransaction: (concept: string, amount: number) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const newBalance = Math.max(0, (c.eurodollars || 0) + amount);
+            const newTx: EurodollarTransaction = {
+              id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+              timestamp: new Date().toISOString(),
+              concept,
+              amount,
+              balanceAfter: newBalance
+            };
+            return {
+              ...c,
+              eurodollars: newBalance,
+              transactions: [newTx, ...(c.transactions || [])].slice(0, 50)
+            };
+          })
+        }));
       }
     }),
     {

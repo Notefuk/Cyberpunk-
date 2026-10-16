@@ -31,7 +31,8 @@ import {
   Shield,
   Crosshair,
   Cpu,
-  RefreshCw
+  RefreshCw,
+  Package
 } from 'lucide-react';
 
 const STAT_KEYS: StatKey[] = ['INT', 'REF', 'DEX', 'TECH', 'COOL', 'WILL', 'LUCK', 'MOVE', 'BODY', 'EMP'];
@@ -65,6 +66,8 @@ export const StreetLabView: React.FC = () => {
   const reloadWeapon = useCharacterStore((state) => state.reloadWeapon);
   const unequipWeapon = useCharacterStore((state) => state.unequipWeapon);
   const toggleCyberwareInstall = useCharacterStore((state) => state.toggleCyberwareInstall);
+  const updateInventoryQuantity = useCharacterStore((state) => state.updateInventoryQuantity);
+  const addEurodollarTransaction = useCharacterStore((state) => state.addEurodollarTransaction);
   const exportActiveCharacterJson = useCharacterStore((state) => state.exportActiveCharacterJson);
   const importCharacterJson = useCharacterStore((state) => state.importCharacterJson);
 
@@ -78,6 +81,11 @@ export const StreetLabView: React.FC = () => {
   const [isImporting, setIsImporting] = useState(false);
   const [importJsonText, setImportJsonText] = useState('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+  // Right column tab and wallet state
+  const [rightColTab, setRightColTab] = useState<'combat' | 'inventory' | 'wallet'>('combat');
+  const [walletConcept, setWalletConcept] = useState('');
+  const [walletAmount, setWalletAmount] = useState<number>(100);
 
   // Skill filter and accordion state
   const [skillFilter, setSkillFilter] = useState<SkillFilterCategory>('all');
@@ -607,180 +615,396 @@ export const StreetLabView: React.FC = () => {
 
         </div>
 
-        {/* COLUMNA DERECHA (5 COLS): ARSENAL, BLINDAJE Y CYBERWARE */}
+        {/* COLUMNA DERECHA (5 COLS): ARSENAL, MOCHILA Y BILLETERA */}
         <div className="lg:col-span-5 space-y-3">
           
-          {/* 1. Blindaje Activo */}
-          <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
-            <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase pb-1.5 mb-2 border-b border-[#1f2230]">
-              <Shield className="w-3.5 h-3.5 text-[#38bdf8]" />
-              <span>BLINDAJE EQUIPADO</span>
-            </div>
+          {/* Selector de Pestañas de Columna Derecha */}
+          <div className="flex gap-1 bg-[#121319] p-1 rounded-sm border border-[#232736]">
+            <button
+              onClick={() => setRightColTab('combat')}
+              className={`flex-1 py-1 px-1.5 rounded-2xs font-tech text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                rightColTab === 'combat'
+                  ? 'bg-[#dc2626] text-white font-bold'
+                  : 'text-[#94a3b8] hover:text-white hover:bg-[#1a1d2c]'
+              }`}
+            >
+              <Shield className="w-3.5 h-3.5" />
+              <span>ARSENAL</span>
+            </button>
 
-            <div className="grid grid-cols-2 gap-2 text-xs font-mono-code">
-              {/* Head */}
-              <div className="bg-[#171923] p-2 rounded border border-[#222636]">
-                <div className="text-[10px] text-[#64748b] uppercase">CABEZA</div>
-                <div className="font-tech text-sm font-bold text-white truncate">
-                  {activeChar?.headArmor?.name || 'Head Armor'}
-                </div>
-                <div className="flex items-center justify-between mt-1 text-[11px]">
-                  <span className="text-[#38bdf8] font-bold">
-                    {activeChar?.headArmor?.currentSp}/{activeChar?.headArmor?.maxSp} SP
-                  </span>
-                  <button
-                    onClick={() => repairArmor('head')}
-                    className="text-[10px] text-[#f59e0b] hover:underline"
-                  >
-                    Reparar
-                  </button>
-                </div>
-              </div>
+            <button
+              onClick={() => setRightColTab('inventory')}
+              className={`flex-1 py-1 px-1.5 rounded-2xs font-tech text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                rightColTab === 'inventory'
+                  ? 'bg-[#dc2626] text-white font-bold'
+                  : 'text-[#94a3b8] hover:text-white hover:bg-[#1a1d2c]'
+              }`}
+            >
+              <Package className="w-3.5 h-3.5" />
+              <span>MOCHILA ({(activeChar?.inventory ?? []).length})</span>
+            </button>
 
-              {/* Body */}
-              <div className="bg-[#171923] p-2 rounded border border-[#222636]">
-                <div className="text-[10px] text-[#64748b] uppercase">TORSO</div>
-                <div className="font-tech text-sm font-bold text-white truncate">
-                  {activeChar?.bodyArmor?.name || 'Body Armor'}
-                </div>
-                <div className="flex items-center justify-between mt-1 text-[11px]">
-                  <span className="text-[#38bdf8] font-bold">
-                    {activeChar?.bodyArmor?.currentSp}/{activeChar?.bodyArmor?.maxSp} SP
-                  </span>
-                  <button
-                    onClick={() => repairArmor('body')}
-                    className="text-[10px] text-[#f59e0b] hover:underline"
-                  >
-                    Reparar
-                  </button>
-                </div>
-              </div>
-            </div>
+            <button
+              onClick={() => setRightColTab('wallet')}
+              className={`flex-1 py-1 px-1.5 rounded-2xs font-tech text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                rightColTab === 'wallet'
+                  ? 'bg-[#dc2626] text-white font-bold'
+                  : 'text-[#94a3b8] hover:text-white hover:bg-[#1a1d2c]'
+              }`}
+            >
+              <Coins className="w-3.5 h-3.5" />
+              <span>BILLETERA (€$)</span>
+            </button>
           </div>
 
-          {/* 2. Armas Equipadas */}
-          <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
-            <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-[#1f2230]">
-              <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
-                <Crosshair className="w-3.5 h-3.5 text-[#dc2626]" />
-                <span>ARSENAL ({activeChar?.equippedWeapons?.length ?? 0})</span>
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              {(activeChar?.equippedWeapons?.length ?? 0) === 0 ? (
-                <div className="text-center py-4 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded">
-                  Sin armas equipadas. Equipa desde el Compendio.
+          {/* TAB 1: ARSENAL & BLINDAJE */}
+          {rightColTab === 'combat' && (
+            <div className="space-y-3">
+              {/* 1. Blindaje Activo */}
+              <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
+                <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase pb-1.5 mb-2 border-b border-[#1f2230]">
+                  <Shield className="w-3.5 h-3.5 text-[#38bdf8]" />
+                  <span>BLINDAJE EQUIPADO</span>
                 </div>
-              ) : (
-                activeChar.equippedWeapons.map((w) => {
-                  const breakdown = calculateWeaponAttackBreakdown(activeChar, w);
-                  const isRanged = w.type === 'Ranged';
 
-                  return (
-                    <div
-                      key={w.instanceId}
-                      className="p-2 bg-[#171923] hover:bg-[#1a1d2a] border border-[#222636] rounded-xs flex items-center justify-between gap-2"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <span className="font-tech text-sm font-bold text-white truncate">
-                            {w.name}
-                          </span>
-                          <span className="text-[10px] font-mono-code bg-[#1f2434] text-[#38bdf8] px-1 rounded">
-                            {w.damage}
-                          </span>
-                        </div>
-                        <div className="text-[10px] font-mono-code text-[#64748b] flex items-center gap-1.5 mt-0.5">
-                          <span>ROF {w.rof}</span>
-                          <span>•</span>
-                          <span>{breakdown.skillLabel}</span>
-                          {isRanged && (
-                            <>
-                              <span>•</span>
-                              <span className="text-white font-bold">{w.currentMag}/{w.standardMag}</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <span className="font-mono-code text-xs font-bold bg-[#142320] text-[#10b981] border border-[#1b3f36] px-1.5 py-0.5 rounded">
-                          Base {breakdown.netBase}
-                        </span>
-
-                        {isRanged && (
-                          <button
-                            onClick={() => reloadWeapon(w.instanceId)}
-                            className="p-1 bg-[#202534] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] rounded transition-colors"
-                            title="Recargar cargador"
-                          >
-                            <RefreshCw className="w-3 h-3" />
-                          </button>
-                        )}
-
-                        <button
-                          onClick={() => unequipWeapon(w.instanceId)}
-                          className="p-1 bg-[#22181d] hover:bg-[#dc2626] text-[#dc2626] hover:text-white rounded transition-colors"
-                          title="Desequipar arma"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      </div>
+                <div className="grid grid-cols-2 gap-2 text-xs font-mono-code">
+                  {/* Head */}
+                  <div className="bg-[#171923] p-2 rounded border border-[#222636]">
+                    <div className="text-[10px] text-[#64748b] uppercase">CABEZA</div>
+                    <div className="font-tech text-sm font-bold text-white truncate">
+                      {activeChar?.headArmor?.name || 'Head Armor'}
                     </div>
-                  );
-                })
-              )}
-            </div>
-          </div>
-
-          {/* 3. Cyberware Instalado */}
-          <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
-            <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase pb-1.5 mb-2 border-b border-[#1f2230]">
-              <Cpu className="w-3.5 h-3.5 text-[#a855f7]" />
-              <span>CIBERWARE INSTALADO ({activeChar?.installedCyberwareIds?.length ?? 0})</span>
-            </div>
-
-            <div className="space-y-1.5 max-h-[220px] overflow-y-auto pr-1">
-              {(activeChar?.installedCyberwareIds?.length ?? 0) === 0 ? (
-                <div className="text-center py-4 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded">
-                  Sin implantes de ciberware instalados.
-                </div>
-              ) : (
-                activeChar.installedCyberwareIds.map((id) => {
-                  const cyber = (coreData.cyberware as Array<{ id: string; name: string; type: string; humanityLoss: string }>).find(
-                    (c) => c.id === id
-                  );
-                  const name = cyber?.name || id;
-                  const hl = cyber?.humanityLoss || '2d6 (7)';
-                  const type = cyber?.type || 'Prótesis';
-
-                  return (
-                    <div
-                      key={id}
-                      className="p-2 bg-[#171923] border border-[#222636] rounded-xs flex items-center justify-between gap-2"
-                    >
-                      <div>
-                        <div className="font-tech text-sm font-bold text-white truncate">
-                          {name}
-                        </div>
-                        <div className="text-[10px] font-mono-code text-[#a855f7]">
-                          {type} • HL: {hl}
-                        </div>
-                      </div>
-
+                    <div className="flex items-center justify-between mt-1 text-[11px]">
+                      <span className="text-[#38bdf8] font-bold">
+                        {activeChar?.headArmor?.currentSp}/{activeChar?.headArmor?.maxSp} SP
+                      </span>
                       <button
-                        onClick={() => toggleCyberwareInstall(id)}
-                        className="text-[10px] font-mono-code text-[#dc2626] hover:underline shrink-0"
+                        onClick={() => repairArmor('head')}
+                        className="text-[10px] text-[#f59e0b] hover:underline"
                       >
-                        Desinstalar
+                        Reparar
                       </button>
                     </div>
-                  );
-                })
+                  </div>
+
+                  {/* Body */}
+                  <div className="bg-[#171923] p-2 rounded border border-[#222636]">
+                    <div className="text-[10px] text-[#64748b] uppercase">TORSO</div>
+                    <div className="font-tech text-sm font-bold text-white truncate">
+                      {activeChar?.bodyArmor?.name || 'Body Armor'}
+                    </div>
+                    <div className="flex items-center justify-between mt-1 text-[11px]">
+                      <span className="text-[#38bdf8] font-bold">
+                        {activeChar?.bodyArmor?.currentSp}/{activeChar?.bodyArmor?.maxSp} SP
+                      </span>
+                      <button
+                        onClick={() => repairArmor('body')}
+                        className="text-[10px] text-[#f59e0b] hover:underline"
+                      >
+                        Reparar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2. Armas Equipadas */}
+              <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
+                <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-[#1f2230]">
+                  <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+                    <Crosshair className="w-3.5 h-3.5 text-[#dc2626]" />
+                    <span>ARSENAL ({activeChar?.equippedWeapons?.length ?? 0})</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  {(activeChar?.equippedWeapons?.length ?? 0) === 0 ? (
+                    <div className="text-center py-4 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded">
+                      Sin armas equipadas. Equipa desde el Compendio.
+                    </div>
+                  ) : (
+                    activeChar.equippedWeapons.map((w) => {
+                      const breakdown = calculateWeaponAttackBreakdown(activeChar, w);
+                      const isRanged = w.type === 'Ranged';
+
+                      return (
+                        <div
+                          key={w.instanceId}
+                          className="p-2 bg-[#171923] hover:bg-[#1a1d2a] border border-[#222636] rounded-xs flex items-center justify-between gap-2"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-tech text-sm font-bold text-white truncate">
+                                {w.name}
+                              </span>
+                              <span className="text-[10px] font-mono-code bg-[#1f2434] text-[#38bdf8] px-1 rounded">
+                                {w.damage}
+                              </span>
+                            </div>
+                            <div className="text-[10px] font-mono-code text-[#64748b] flex items-center gap-1.5 mt-0.5">
+                              <span>ROF {w.rof}</span>
+                              <span>•</span>
+                              <span>{breakdown.skillLabel}</span>
+                              {isRanged && (
+                                <>
+                                  <span>•</span>
+                                  <span className="text-white font-bold">{w.currentMag}/{w.standardMag}</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <span className="font-mono-code text-xs font-bold bg-[#142320] text-[#10b981] border border-[#1b3f36] px-1.5 py-0.5 rounded">
+                              Base {breakdown.netBase}
+                            </span>
+
+                            {isRanged && (
+                              <button
+                                onClick={() => reloadWeapon(w.instanceId)}
+                                className="p-1 bg-[#202534] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] rounded transition-colors"
+                                title="Recargar cargador"
+                              >
+                                <RefreshCw className="w-3 h-3" />
+                              </button>
+                            )}
+
+                            <button
+                              onClick={() => unequipWeapon(w.instanceId)}
+                              className="p-1 bg-[#22181d] hover:bg-[#dc2626] text-[#dc2626] hover:text-white rounded transition-colors"
+                              title="Desequipar arma"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+
+              {/* 3. Cyberware Instalado */}
+              <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
+                <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase pb-1.5 mb-2 border-b border-[#1f2230]">
+                  <Cpu className="w-3.5 h-3.5 text-[#a855f7]" />
+                  <span>CIBERWARE INSTALADO ({activeChar?.installedCyberwareIds?.length ?? 0})</span>
+                </div>
+
+                <div className="space-y-1.5 max-h-[220px] overflow-y-auto pr-1">
+                  {(activeChar?.installedCyberwareIds?.length ?? 0) === 0 ? (
+                    <div className="text-center py-4 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded">
+                      Sin implantes de ciberware instalados.
+                    </div>
+                  ) : (
+                    activeChar.installedCyberwareIds.map((id) => {
+                      const cyber = (coreData.cyberware as Array<{ id: string; name: string; type: string; humanityLoss: string }>).find(
+                        (c) => c.id === id
+                      );
+                      const name = cyber?.name || id;
+                      const hl = cyber?.humanityLoss || '2d6 (7)';
+                      const type = cyber?.type || 'Prótesis';
+
+                      return (
+                        <div
+                          key={id}
+                          className="p-2 bg-[#171923] border border-[#222636] rounded-xs flex items-center justify-between gap-2"
+                        >
+                          <div>
+                            <div className="font-tech text-sm font-bold text-white truncate">
+                              {name}
+                            </div>
+                            <div className="text-[10px] font-mono-code text-[#a855f7]">
+                              {type} • HL: {hl}
+                            </div>
+                          </div>
+
+                          <button
+                            onClick={() => toggleCyberwareInstall(id)}
+                            className="text-[10px] font-mono-code text-[#dc2626] hover:underline shrink-0"
+                          >
+                            Desinstalar
+                          </button>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: MOCHILA / INVENTARIO */}
+          {rightColTab === 'inventory' && (
+            <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-3">
+              <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-[#1f2230]">
+                <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+                  <Package className="w-3.5 h-3.5 text-[#f59e0b]" />
+                  <span>MOCHILA / INVENTARIO GENERAL ({(activeChar?.inventory ?? []).length})</span>
+                </div>
+                <span className="text-[10px] font-mono-code text-[#64748b]">
+                  EQUIPO, MUNICIÓN Y DROGAS
+                </span>
+              </div>
+
+              {(activeChar?.inventory ?? []).length === 0 ? (
+                <div className="text-center py-8 text-[#64748b] font-mono-code text-xs bg-[#171923] rounded p-4">
+                  Mochila vacía.<br />
+                  Adquiere munición, drogas, programas y equipo en el Compendio Omni.
+                </div>
+              ) : (
+                <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
+                  {(activeChar?.inventory ?? []).map((item) => {
+                    const isAmmo = item.category === 'ammunition';
+                    const step = isAmmo ? 10 : 1;
+
+                    return (
+                      <div
+                        key={item.id}
+                        className="p-2 bg-[#171923] hover:bg-[#1a1d2a] border border-[#222636] rounded-xs flex items-center justify-between gap-2"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-tech text-sm font-bold text-white truncate">
+                              {item.name}
+                            </span>
+                            <span className="text-[9px] font-mono-code bg-[#212638] text-[#38bdf8] px-1 rounded uppercase">
+                              {item.category}
+                            </span>
+                          </div>
+                          {item.details && (
+                            <div className="text-[10px] font-mono-code text-[#64748b] truncate mt-0.5">
+                              {item.details}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {/* Stepper de cantidad */}
+                          <div className="flex items-center gap-1 bg-[#10121a] px-1 py-0.5 rounded border border-[#202538]">
+                            <button
+                              onClick={() => updateInventoryQuantity(item.id, -step)}
+                              className="w-4 h-4 bg-[#1f2434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px]"
+                              title={`Restar ${step}`}
+                            >
+                              <Minus className="w-2.5 h-2.5" />
+                            </button>
+                            <span className="w-8 text-center font-mono-code text-xs font-bold text-white">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() => updateInventoryQuantity(item.id, step)}
+                              className="w-4 h-4 bg-[#1f2434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
+                              title={`Sumar ${step}`}
+                            >
+                              <Plus className="w-2.5 h-2.5" />
+                            </button>
+                          </div>
+
+                          <button
+                            onClick={() => updateInventoryQuantity(item.id, -item.quantity)}
+                            className="p-1 bg-[#22181d] hover:bg-[#dc2626] text-[#dc2626] hover:text-white rounded transition-colors"
+                            title="Eliminar de mochila"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
             </div>
-          </div>
+          )}
+
+          {/* TAB 3: BILLETERA & PAGOS (€$) */}
+          {rightColTab === 'wallet' && (
+            <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-3">
+              <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-[#1f2230]">
+                <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+                  <Coins className="w-3.5 h-3.5 text-[#10b981]" />
+                  <span>BILLETERA & PAGOS (€$)</span>
+                </div>
+                <div className="font-tech text-base font-bold text-[#10b981]">
+                  SALDO: {activeChar?.eurodollars ?? 0} €$
+                </div>
+              </div>
+
+              {/* Formulario Rápido de Transacción */}
+              <div className="bg-[#171923] p-2.5 rounded border border-[#222636] space-y-2">
+                <div className="text-[10px] font-mono-code text-[#64748b] uppercase">
+                  REGISTRAR COBRO / PAGO DE GIG
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={walletConcept}
+                    onChange={(e) => setWalletConcept(e.target.value)}
+                    placeholder="Concepto (ej. Pago de Falco, Hotel, Noche Afterlife)..."
+                    className="flex-1 bg-[#0f1016] border border-[#262c3e] text-white font-mono-code text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#10b981]"
+                  />
+                  <input
+                    type="number"
+                    min="1"
+                    value={walletAmount}
+                    onChange={(e) => setWalletAmount(Math.max(1, parseInt(e.target.value) || 0))}
+                    className="w-20 bg-[#0f1016] border border-[#262c3e] text-[#10b981] font-mono-code font-bold text-xs px-2 py-1 rounded focus:outline-none focus:border-[#10b981] text-right"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      addEurodollarTransaction(walletConcept.trim() || 'Cobro de Gig', walletAmount);
+                      setWalletConcept('');
+                    }}
+                    className="flex-1 py-1.5 bg-[#10b981]/20 hover:bg-[#10b981] hover:text-black text-[#10b981] border border-[#10b981]/40 rounded-xs font-tech font-bold text-xs tracking-wider transition-all"
+                  >
+                    + COBRAR (+{walletAmount} €$)
+                  </button>
+                  <button
+                    onClick={() => {
+                      addEurodollarTransaction(walletConcept.trim() || 'Gasto vario', -walletAmount);
+                      setWalletConcept('');
+                    }}
+                    className="flex-1 py-1.5 bg-[#dc2626]/20 hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/40 rounded-xs font-tech font-bold text-xs tracking-wider transition-all"
+                  >
+                    - GASTAR (-{walletAmount} €$)
+                  </button>
+                </div>
+              </div>
+
+              {/* Historial de Transacciones */}
+              <div>
+                <div className="text-[10px] font-mono-code text-[#64748b] uppercase mb-1.5">
+                  ÚLTIMAS TRANSACCIONES:
+                </div>
+                {(activeChar?.transactions ?? []).length === 0 ? (
+                  <div className="text-center py-4 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded">
+                    Sin transacciones registradas.
+                  </div>
+                ) : (
+                  <div className="space-y-1 max-h-[300px] overflow-y-auto pr-1 font-mono-code text-xs">
+                    {(activeChar?.transactions ?? []).map((tx) => (
+                      <div
+                        key={tx.id}
+                        className="p-1.5 bg-[#171923] border border-[#222636] rounded-xs flex items-center justify-between"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <div className="text-white text-xs truncate">{tx.concept}</div>
+                          <div className="text-[9px] text-[#64748b]">
+                            {new Date(tx.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • Saldo: {tx.balanceAfter} €$
+                          </div>
+                        </div>
+                        <div className={`font-bold text-xs ml-2 shrink-0 ${tx.amount >= 0 ? 'text-[#10b981]' : 'text-[#dc2626]'}`}>
+                          {tx.amount >= 0 ? `+${tx.amount}` : tx.amount} €$
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
         </div>
 

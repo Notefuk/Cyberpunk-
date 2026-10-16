@@ -339,6 +339,24 @@ export interface ActiveCriticalInjury {
   isTreated: boolean;
 }
 
+export interface InventoryItem {
+  id: string;
+  catalogId: string;
+  name: string;
+  category: 'weapons' | 'armor' | 'cyberware' | 'programs' | 'ammunition' | 'attachments' | 'drugs' | 'gear';
+  cost: number;
+  quantity: number;
+  details?: string;
+}
+
+export interface EurodollarTransaction {
+  id: string;
+  timestamp: string;
+  concept: string;
+  amount: number; // negativo para compras/gastos, positivo para pagos de gigs
+  balanceAfter: number;
+}
+
 export interface CharacterSheet {
   id: string;
   handle: string;
@@ -366,6 +384,8 @@ export interface CharacterSheet {
   installedCyberwareIds: string[];
   activeInjuries: ActiveCriticalInjury[];
   eurodollars: number;
+  inventory?: InventoryItem[];
+  transactions?: EurodollarTransaction[];
 }
 
 export interface RollEntry {
