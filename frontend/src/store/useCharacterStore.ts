@@ -341,6 +341,16 @@ export interface CharacterStoreState {
     armorLocation?: 'head' | 'body' | 'both';
   }) => { success: boolean; message: string };
   updateInventoryQuantity: (invId: string, delta: number) => void;
+  addConsumableCharge: (
+    item: {
+      catalogId: string;
+      name: string;
+      category: 'ammunition' | 'drugs' | 'gear';
+      cost: number;
+      details?: string;
+    },
+    charges?: number
+  ) => void;
   addEurodollarTransaction: (concept: string, amount: number) => void;
 }
 
@@ -1071,7 +1081,8 @@ export const useCharacterStore = create<CharacterStoreState>()(
               const existingIndex = updatedInventory.findIndex(
                 (inv) => inv.catalogId === (item.id || item.name)
               );
-              const qtyToAdd = category === 'ammunition' ? 10 : 1;
+              const isGrenade = (item.name || '').toLowerCase().includes('grenade');
+              const qtyToAdd = (category === 'ammunition' && !isGrenade) ? 10 : 1;
               if (existingIndex >= 0) {
                 updatedInventory[existingIndex] = {
                   ...updatedInventory[existingIndex],
@@ -1121,6 +1132,42 @@ export const useCharacterStore = create<CharacterStoreState>()(
             return {
               ...c,
               inventory: updatedInv
+            };
+          })
+        }));
+      },
+
+      addConsumableCharge: (item, charges = 1) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentInv = c.inventory ? [...c.inventory] : [];
+            const existingIdx = currentInv.findIndex(
+              (inv) =>
+                inv.catalogId === item.catalogId ||
+                inv.name.trim().toLowerCase() === item.name.trim().toLowerCase()
+            );
+
+            if (existingIdx >= 0) {
+              currentInv[existingIdx] = {
+                ...currentInv[existingIdx],
+                quantity: currentInv[existingIdx].quantity + charges
+              };
+            } else {
+              currentInv.push({
+                id: `inv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                catalogId: item.catalogId,
+                name: item.name,
+                category: item.category,
+                cost: item.cost,
+                quantity: Math.max(1, charges),
+                details: item.details || ''
+              });
+            }
+
+            return {
+              ...c,
+              inventory: currentInv
             };
           })
         }));

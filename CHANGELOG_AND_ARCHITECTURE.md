@@ -119,6 +119,17 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores. 
 
 ## 📜 Master Version Changelog
 
+### [v2.3.2] - 2026-10-16 (Tactical Rack Dropdowns & Strict Equipped/Charges Consumables)
+* **Category**: Combat HUD Ergonomics & Inventory-Driven Charges
+* **Files Modified**:
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+* **What Changed**:
+  1. **Filtro Estricto por Ítems Equipados y Cargas (`quantity > 0`)**: Las secciones de Granadas/Arrojables y Drogas/Consumibles en el Rack Táctico derecho ya no muestran ningún ítem por defecto si el personaje no lo tiene equipado en su inventario con cargas disponibles (`quantity > 0`). Se incluyó un selector compacto `[ + EQUIPAR AL CINTURÓN ]` para añadir cargas cuando el personaje realmente adquiera/equipe el ítem.
+  2. **Acordeones Limpios (Solo Nombre + Cargas cuando está cerrado)**: Cada granada, droga o arma del Rack Derecho muestra en su estado cerrado únicamente el nombre y el contador de cargas (`X CARGAS / DOSIS`); al hacer clic sobre la fila, despliega un dropdown con todos los datos técnicos, reglas, ajuste manual `[-] Cargas [+]` y botones de uso/lanzamiento que descuentan `-1 carga` real (desapareciendo al llegar a `0`).
+
+---
+
 ### [v2.3.1] - 2026-10-16 (Tactical Bullet Cartridge Visualizer & Digital Ammo Readout)
 * **Category**: Combat HUD Visual Telemetry
 * **Files Modified**:

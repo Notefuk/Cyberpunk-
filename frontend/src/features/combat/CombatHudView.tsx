@@ -18,7 +18,7 @@ import {
   createInitialAttackRoll, 
   createDamageRoll 
 } from '../../engine/combatEngine';
-import type { WeaponItem, RollEntry } from '../../types/cyberpunk';
+import type { WeaponItem, RollEntry, InventoryItem } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
 import { 
@@ -45,7 +45,9 @@ import {
   Plus,
   Pill,
   Bomb,
-  Swords
+  Swords,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 
 const TacticalTooltip: React.FC<{
@@ -311,9 +313,12 @@ export const CombatHudView: React.FC = () => {
   const adjustWeaponMag = useCharacterStore((state) => state.adjustWeaponMag);
   const adjustWeaponReserveAmmo = useCharacterStore((state) => state.adjustWeaponReserveAmmo);
   const setWeaponAmmoType = useCharacterStore((state) => state.setWeaponAmmoType);
-  const useOrInjectDrug = useCharacterStore((state) => state.useOrInjectDrug);
+  const injectDrug = useCharacterStore((state) => state.useOrInjectDrug);
   const removeActiveDrug = useCharacterStore((state) => state.removeActiveDrug);
   const equipWeaponFromCatalog = useCharacterStore((state) => state.equipWeaponFromCatalog);
+  const unequipWeapon = useCharacterStore((state) => state.unequipWeapon);
+  const updateInventoryQuantity = useCharacterStore((state) => state.updateInventoryQuantity);
+  const addConsumableCharge = useCharacterStore((state) => state.addConsumableCharge);
   const inflictRandomInjury = useCharacterStore((state) => state.inflictRandomInjury);
   const toggleTreatInjury = useCharacterStore((state) => state.toggleTreatInjury);
   const removeInjury = useCharacterStore((state) => state.removeInjury);
@@ -337,6 +342,103 @@ export const CombatHudView: React.FC = () => {
   const [selectedCatalogWeaponId, setSelectedCatalogWeaponId] = useState<string>(
     coreData.weapons?.[0]?.id || ''
   );
+
+  // Accordion section states
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    weapons: true,
+    unarmed: true,
+    throwables: true,
+    drugs: true
+  });
+  const toggleSection = (section: string) => {
+    setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  // Item-level accordions (default closed so users only see name + charges)
+  const [openWeapons, setOpenWeapons] = useState<Record<string, boolean>>({});
+  const toggleOpenWeapon = (id: string) => {
+    setOpenWeapons((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const [openGrenades, setOpenGrenades] = useState<Record<string, boolean>>({});
+  const toggleOpenGrenade = (id: string) => {
+    setOpenGrenades((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const [openDrugs, setOpenDrugs] = useState<Record<string, boolean>>({});
+  const toggleOpenDrug = (id: string) => {
+    setOpenDrugs((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const [openUnarmed, setOpenUnarmed] = useState<Record<string, boolean>>({
+    brawling: false,
+    martialArts: false
+  });
+  const toggleOpenUnarmed = (mode: 'brawling' | 'martialArts') => {
+    setOpenUnarmed((prev) => ({ ...prev, [mode]: !prev[mode] }));
+  };
+
+  // Dropdown states for equipping from belt
+  const [selectedCatalogGrenadeId, setSelectedCatalogGrenadeId] = useState<string>(
+    TACTICAL_GRENADES[0]?.id || ''
+  );
+  const catalogDrugs: any[] = (coreData as any).drugs || [];
+  const [selectedCatalogDrugId, setSelectedCatalogDrugId] = useState<string>(
+    catalogDrugs[0]?.name || ''
+  );
+  const [showEquipGrenadeDropdown, setShowEquipGrenadeDropdown] = useState<boolean>(false);
+  const [showEquipDrugDropdown, setShowEquipDrugDropdown] = useState<boolean>(false);
+
+  // Helper to match inventory items to tactical grenades
+  const getGrenadeInfo = (item: InventoryItem) => {
+    const found = TACTICAL_GRENADES.find(
+      (tg) => tg.id === item.catalogId || tg.name.toLowerCase() === item.name.toLowerCase()
+    );
+    return {
+      id: item.catalogId || item.id,
+      name: item.name,
+      damage: found?.damage || (item.details?.match(/\d+d\d+/i)?.[0] ?? ''),
+      effect: found?.effect || item.details || 'Granada táctica estándar.',
+      dv: found?.dv ?? 15
+    };
+  };
+
+  // Helper to match inventory items to drugs
+  const getDrugInfo = (item: InventoryItem) => {
+    const found = catalogDrugs.find(
+      (cd) => cd.id === item.catalogId || cd.name.toLowerCase() === item.name.toLowerCase()
+    );
+    return {
+      id: item.catalogId || item.id,
+      name: item.name,
+      duration: found?.duration || '1 hora',
+      primaryEffect: found?.primaryEffect || item.details || 'Efecto estimulante.',
+      secondaryEffect: found?.secondaryEffect || '',
+      addictionDv: found?.addictionDv ?? 15,
+      cost: found?.cost || item.cost || 50
+    };
+  };
+
+  // Filter ONLY items actually owned in inventory with quantity > 0
+  const ownedGrenades = (activeChar?.inventory || []).filter(
+    (item: InventoryItem) => item.quantity > 0 && (
+      item.category === 'ammunition' ||
+      item.name.toLowerCase().includes('grenade') ||
+      item.name.toLowerCase().includes('granada') ||
+      item.name.toLowerCase().includes('flashbang') ||
+      TACTICAL_GRENADES.some((tg) => tg.id === item.catalogId || tg.name.toLowerCase() === item.name.toLowerCase())
+    )
+  );
+
+  const ownedDrugs = (activeChar?.inventory || []).filter(
+    (item: InventoryItem) => item.quantity > 0 && (
+      item.category === 'drugs' ||
+      catalogDrugs.some((cd) => cd.id === item.catalogId || cd.name.toLowerCase() === item.name.toLowerCase())
+    )
+  );
+
+  const totalGrenadeCharges = ownedGrenades.reduce((sum, g) => sum + g.quantity, 0);
+  const totalDrugCharges = ownedDrugs.reduce((sum, d) => sum + d.quantity, 0);
 
   // Calculations for Active Character
   const maxHp = calculateMaxHp(activeChar?.stats?.BODY ?? 6, activeChar?.stats?.WILL ?? 6);
@@ -630,9 +732,48 @@ export const CombatHudView: React.FC = () => {
     }
   };
 
+  // Throw owned grenade action (deducts 1 charge)
+  const handleThrowOwnedGrenade = (invItem: InventoryItem) => {
+    const grenadeInfo = getGrenadeInfo(invItem);
+    handleThrowGrenade(grenadeInfo);
+    updateInventoryQuantity(invItem.id, -1);
+  };
+
+  // Trigger owned grenade damage / effect
+  const handleOwnedGrenadeEffect = (invItem: InventoryItem) => {
+    const grenadeInfo = getGrenadeInfo(invItem);
+    handleGrenadeEffect(grenadeInfo);
+  };
+
+  // Add grenade from catalog to belt (adds 1 charge)
+  const handleEquipGrenadeToBelt = () => {
+    const selected = TACTICAL_GRENADES.find((g) => g.id === selectedCatalogGrenadeId) || TACTICAL_GRENADES[0];
+    if (!selected) return;
+    addConsumableCharge({
+      catalogId: selected.id,
+      name: selected.name,
+      category: 'ammunition',
+      cost: 100,
+      details: selected.effect
+    }, 1);
+  };
+
+  // Add drug from catalog to belt/inventory (adds 1 charge)
+  const handleEquipDrugToBelt = () => {
+    const selected = catalogDrugs.find((d: any) => d.name === selectedCatalogDrugId) || catalogDrugs[0];
+    if (!selected) return;
+    addConsumableCharge({
+      catalogId: selected.id || selected.name,
+      name: selected.name,
+      category: 'drugs',
+      cost: selected.cost || 50,
+      details: selected.primaryEffect
+    }, 1);
+  };
+
   // Drug actions
   const handleInjectDrug = (drug: any) => {
-    useOrInjectDrug({
+    injectDrug({
       name: drug.name,
       duration: drug.duration || '1 hora',
       primaryEffect: drug.primaryEffect || '',
@@ -1727,16 +1868,20 @@ export const CombatHudView: React.FC = () => {
                 RACK TÁCTICO & ACCIONES
               </span>
             </div>
+            <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#64748b]">
+              <span>💣 {totalGrenadeCharges}</span>
+              <span>💉 {totalDrugCharges}</span>
+            </div>
           </div>
 
           {/* Filtros Rápidos */}
           <div className="flex flex-wrap gap-1 mb-3">
             {[
               { id: 'all', label: 'TODO' },
-              { id: 'weapons', label: '🔫 ARMAS' },
+              { id: 'weapons', label: `🔫 ARMAS (${activeChar?.equippedWeapons?.length ?? 0})` },
               { id: 'unarmed', label: '🥊 PUÑOS/ARTES' },
-              { id: 'throwables', label: '💣 ARROJABLES' },
-              { id: 'drugs', label: '💉 DROGAS' }
+              { id: 'throwables', label: `💣 ARROJABLES (${totalGrenadeCharges})` },
+              { id: 'drugs', label: `💉 DROGAS (${totalDrugCharges})` }
             ].map((f) => (
               <button
                 key={f.id}
@@ -1757,263 +1902,685 @@ export const CombatHudView: React.FC = () => {
             {/* SECCIÓN 1: ARMAS EQUIPADAS */}
             {(rackFilter === 'all' || rackFilter === 'weapons') && (
               <div className="bg-[#151722] p-3 rounded border border-[#252a3c] space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => toggleSection('weapons')}
+                  className="w-full flex items-center justify-between text-left group"
+                >
+                  <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5 group-hover:text-[#38bdf8] transition-colors">
+                    {openSections.weapons ? (
+                      <ChevronDown className="w-3.5 h-3.5 text-[#38bdf8]" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5 text-[#64748b]" />
+                    )}
                     🔫 ARMAS EQUIPADAS ({activeChar?.equippedWeapons?.length ?? 0})
                   </span>
-                </div>
+                  <span className="text-[10px] font-mono-code text-[#64748b]">
+                    {openSections.weapons ? 'Plegar' : 'Desplegar'}
+                  </span>
+                </button>
 
-                {/* Lista de armas */}
-                {(activeChar?.equippedWeapons || []).map((w) => {
-                  const isInHand = w.inHand ?? true;
-                  return (
-                    <div
-                      key={w.instanceId}
-                      className={`p-2.5 rounded border transition-all ${
-                        isInHand
-                          ? 'bg-[#121c26] border-[#38bdf8]/50 shadow-xs'
-                          : 'bg-[#10121a] border-[#202534] opacity-80'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="min-w-0">
-                          <div className="font-tech text-xs font-bold text-white truncate">
-                            {w.name}
-                          </div>
-                          <div className="text-[10px] font-mono-code text-[#94a3b8] mt-0.5">
-                            {w.damage} • ROF {w.rof} • Res: {w.reserveAmmo ?? 36}
-                          </div>
-                        </div>
+                {openSections.weapons && (
+                  <div className="space-y-2 pt-1">
+                    {(activeChar?.equippedWeapons || []).length === 0 ? (
+                      <div className="p-3 text-center border border-dashed border-[#232738] rounded text-[11px] font-mono-code text-[#64748b]">
+                        No hay armas equipadas en el cinturón táctico.
+                      </div>
+                    ) : (
+                      (activeChar?.equippedWeapons || []).map((w) => {
+                        const isInHand = w.inHand ?? true;
+                        const isOpen = !!openWeapons[w.instanceId];
+                        return (
+                          <div
+                            key={w.instanceId}
+                            className={`rounded border transition-all overflow-hidden ${
+                              isInHand
+                                ? 'bg-[#121c26] border-[#38bdf8]/50 shadow-xs'
+                                : 'bg-[#10121a] border-[#202534] opacity-85'
+                            }`}
+                          >
+                            {/* Fila Encabezado / Vista Plegada */}
+                            <div className="p-2.5 flex items-center justify-between gap-2">
+                              <button
+                                type="button"
+                                onClick={() => toggleOpenWeapon(w.instanceId)}
+                                className="flex items-center gap-2 min-w-0 text-left flex-1 group/wep"
+                              >
+                                {isOpen ? (
+                                  <ChevronDown className="w-3.5 h-3.5 text-[#38bdf8] shrink-0" />
+                                ) : (
+                                  <ChevronRight className="w-3.5 h-3.5 text-[#64748b] group-hover/wep:text-[#38bdf8] shrink-0" />
+                                )}
+                                <div className="min-w-0 flex-1">
+                                  <div className="font-tech text-xs font-bold text-white truncate group-hover/wep:text-[#38bdf8] transition-colors">
+                                    {w.name}
+                                  </div>
+                                  <div className="text-[10px] font-mono-code text-[#94a3b8] mt-0.5 flex items-center gap-1.5 flex-wrap">
+                                    <span>{w.damage}</span>
+                                    <span>•</span>
+                                    <span>ROF {w.rof}</span>
+                                    {w.type === 'Ranged' && (
+                                      <>
+                                        <span>•</span>
+                                        <span className="text-[#38bdf8]">
+                                          {w.currentMag ?? 0}/{w.standardMag ?? 0}
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                              </button>
 
-                        <button
-                          onClick={() => toggleWeaponInHand(w.instanceId)}
-                          className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all shrink-0 ${
-                            isInHand
-                              ? 'bg-[#10b981]/20 hover:bg-[#dc2626] hover:text-white text-[#10b981] border border-[#10b981]/50'
-                              : 'bg-[#222534] hover:bg-[#38bdf8] hover:text-black text-white border border-[#2c3246]'
-                          }`}
+                              <button
+                                onClick={() => toggleWeaponInHand(w.instanceId)}
+                                className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all shrink-0 flex items-center gap-1 ${
+                                  isInHand
+                                    ? 'bg-[#10b981]/20 hover:bg-[#dc2626] hover:text-white text-[#10b981] border border-[#10b981]/50'
+                                    : 'bg-[#222534] hover:bg-[#38bdf8] hover:text-black text-white border border-[#2c3246]'
+                                }`}
+                                title={isInHand ? 'Quitar de la mano' : 'Poner en la mano para atacar'}
+                              >
+                                {isInHand ? <><Check className="w-3 h-3" /> EN MANO</> : '+ EN MANO'}
+                              </button>
+                            </div>
+
+                            {/* Mini Tira de Rectángulos de Munición en vista compacta si tiene cargador */}
+                            {w.type === 'Ranged' && (w.standardMag ?? 0) > 0 && !isOpen && (
+                              <div className="px-2.5 pb-2 flex items-center gap-1.5">
+                                <div className="flex flex-wrap items-center gap-0.5 overflow-hidden max-h-[14px]">
+                                  {Array.from({ length: Math.min(w.standardMag ?? 0, 40) }).map((_, bIdx) => {
+                                    const isLoaded = bIdx < (w.currentMag ?? 0);
+                                    return (
+                                      <span
+                                        key={bIdx}
+                                        className={`h-2 w-1 rounded-2xs transition-all ${
+                                          isLoaded
+                                            ? (w.currentMag ?? 0) <= (w.standardMag ?? 0) * 0.25
+                                              ? 'bg-[#dc2626] border border-[#f87171]/80'
+                                              : 'bg-[#38bdf8] border border-[#67e8f9]/80 shadow-[0_0_2px_rgba(56,189,248,0.5)]'
+                                            : 'bg-slate-900/60 border border-slate-800/80 opacity-40'
+                                        }`}
+                                      />
+                                    );
+                                  })}
+                                </div>
+                                <span className="text-[9px] font-mono-code text-[#64748b] shrink-0 ml-auto">
+                                  Res: {w.reserveAmmo ?? 36}
+                                </span>
+                              </div>
+                            )}
+
+                            {/* Vista Expandida (Reglas, controles de cargador y desequipar) */}
+                            {isOpen && (
+                              <div className="p-2.5 pt-0 border-t border-[#1a1f2e] bg-[#0c0e14] space-y-2 mt-1">
+                                <div className="grid grid-cols-2 gap-2 text-[10px] font-mono-code pt-2 text-[#94a3b8]">
+                                  <div>Tipo: <strong className="text-white">{w.type}</strong></div>
+                                  <div>Skill: <strong className="text-white">{w.skill}</strong></div>
+                                  <div>Manos: <strong className="text-white">{w.hands || 1}</strong></div>
+                                  <div>Ocultable: <strong className="text-white">{w.concealable ? 'Sí' : 'No'}</strong></div>
+                                </div>
+
+                                {w.type === 'Ranged' && (w.standardMag ?? 0) > 0 && (
+                                  <div className="space-y-1.5 pt-1 border-t border-[#1a1f2e]">
+                                    <div className="flex items-center justify-between text-[10px] font-mono-code">
+                                      <span className="text-[#64748b]">TIPO DE MUNICIÓN:</span>
+                                      <select
+                                        value={w.loadedAmmoType || 'Basic'}
+                                        onChange={(e) => setWeaponAmmoType(w.instanceId, e.target.value)}
+                                        className="bg-[#12141f] border border-[#2b334a] text-white text-[10px] font-mono-code rounded px-1.5 py-0.5 focus:outline-none focus:border-[#38bdf8]"
+                                      >
+                                        {AMMO_TYPE_CATALOG.map((ammo) => (
+                                          <option key={ammo.id} value={ammo.id}>
+                                            {ammo.label}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    </div>
+
+                                    <AmmoCartridgeVisualizer
+                                      currentMag={w.currentMag ?? 0}
+                                      standardMag={w.standardMag ?? 0}
+                                      reserveAmmo={w.reserveAmmo ?? 36}
+                                      onAdjustMag={(delta) => adjustWeaponMag(w.instanceId, delta)}
+                                      onAdjustReserve={(delta) => adjustWeaponReserveAmmo(w.instanceId, delta)}
+                                      onReload={() => reloadWeapon(w.instanceId)}
+                                    />
+                                  </div>
+                                )}
+
+                                <div className="pt-2 border-t border-[#1a1f2e] flex items-center justify-between">
+                                  <span className="text-[10px] font-mono-code text-[#64748b]">
+                                    Coste base: {w.cost || 0} €$
+                                  </span>
+                                  <button
+                                    onClick={() => unequipWeapon(w.instanceId)}
+                                    className="px-2 py-1 bg-[#1c1822] hover:bg-[#dc2626] text-[#f87171] hover:text-white border border-[#3a2028] hover:border-[#dc2626] rounded text-[10px] font-mono-code transition-colors flex items-center gap-1"
+                                    title="Quitar arma del cinturón"
+                                  >
+                                    <Trash2 className="w-3 h-3" /> Desequipar
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+
+                    {/* Mini Selector Rápido del Catálogo */}
+                    <div className="pt-2 border-t border-[#1e2332] space-y-1.5">
+                      <div className="text-[10px] font-mono-code text-[#64748b]">AÑADIR ARMA DEL CATÁLOGO:</div>
+                      <div className="flex gap-1.5">
+                        <select
+                          value={selectedCatalogWeaponId}
+                          onChange={(e) => setSelectedCatalogWeaponId(e.target.value)}
+                          className="flex-1 bg-[#0e1017] border border-[#2b334a] text-white text-[11px] font-mono-code rounded px-2 py-1 focus:outline-none focus:border-[#38bdf8] truncate"
                         >
-                          {isInHand ? '✓ EN MANO' : '+ PONER EN MANO'}
+                          {(coreData.weapons as WeaponItem[]).map((cw) => (
+                            <option key={cw.id} value={cw.id}>
+                              {cw.name} ({cw.damage}, {cw.cost} €$)
+                            </option>
+                          ))}
+                        </select>
+                        <button
+                          onClick={handleAddCatalogWeapon}
+                          className="px-2.5 py-1 bg-[#38bdf8] hover:bg-[#0284c7] text-black font-tech font-bold text-xs rounded transition-all active:scale-95 shrink-0 flex items-center gap-1"
+                        >
+                          <Plus className="w-3 h-3" /> Equipar
                         </button>
                       </div>
-
-                      {/* Mini Tira de Rectángulos de Munición */}
-                      {w.type === 'Ranged' && (w.standardMag ?? 0) > 0 && (
-                        <div className="flex items-center gap-1.5 mt-2 pt-1.5 border-t border-[#1a1f2e]">
-                          <div className="flex items-baseline gap-0.5 text-[10px] font-mono font-bold shrink-0">
-                            <span className={(w.currentMag ?? 0) <= 0 ? 'text-[#dc2626]' : (w.currentMag ?? 0) <= (w.standardMag ?? 0) * 0.25 ? 'text-[#f59e0b]' : 'text-[#38bdf8]'}>
-                              {w.currentMag ?? 0}
-                            </span>
-                            <span className="text-slate-600">/{w.standardMag}</span>
-                          </div>
-                          <div className="flex flex-wrap items-center gap-0.5 overflow-hidden max-h-[14px]">
-                            {Array.from({ length: Math.min(w.standardMag ?? 0, 40) }).map((_, bIdx) => {
-                              const isLoaded = bIdx < (w.currentMag ?? 0);
-                              return (
-                                <span
-                                  key={bIdx}
-                                  className={`h-2.5 w-1.5 rounded-2xs transition-all ${
-                                    isLoaded
-                                      ? (w.currentMag ?? 0) <= (w.standardMag ?? 0) * 0.25
-                                        ? 'bg-[#dc2626] border border-[#f87171]/80'
-                                        : 'bg-[#38bdf8] border border-[#67e8f9]/80 shadow-[0_0_2px_rgba(56,189,248,0.5)]'
-                                      : 'bg-slate-900/60 border border-slate-800/80 opacity-40'
-                                  }`}
-                                  title={`Bala #${bIdx + 1}`}
-                                />
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
                     </div>
-                  );
-                })}
-
-                {/* Mini Selector Rápido del Catálogo */}
-                <div className="pt-2 border-t border-[#1e2332] space-y-1.5">
-                  <div className="text-[10px] font-mono-code text-[#64748b]">AÑADIR ARMA DEL CATÁLOGO:</div>
-                  <div className="flex gap-1.5">
-                    <select
-                      value={selectedCatalogWeaponId}
-                      onChange={(e) => setSelectedCatalogWeaponId(e.target.value)}
-                      className="flex-1 bg-[#0e1017] border border-[#2b334a] text-white text-[11px] font-mono-code rounded px-2 py-1 focus:outline-none focus:border-[#38bdf8] truncate"
-                    >
-                      {(coreData.weapons as WeaponItem[]).map((cw) => (
-                        <option key={cw.id} value={cw.id}>
-                          {cw.name} ({cw.damage}, {cw.cost} €$)
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      onClick={handleAddCatalogWeapon}
-                      className="px-2.5 py-1 bg-[#38bdf8] hover:bg-[#0284c7] text-black font-tech font-bold text-xs rounded transition-all active:scale-95 shrink-0"
-                    >
-                      + Equipar
-                    </button>
                   </div>
-                </div>
-
+                )}
               </div>
             )}
 
             {/* SECCIÓN 2: PUÑOS & ARTES MARCIALES */}
             {(rackFilter === 'all' || rackFilter === 'unarmed') && (
               <div className="bg-[#151722] p-3 rounded border border-[#252a3c] space-y-2.5">
-                <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5">
-                  🥊 PELEA DESARMADA & ARTES
-                </span>
+                <button
+                  type="button"
+                  onClick={() => toggleSection('unarmed')}
+                  className="w-full flex items-center justify-between text-left group"
+                >
+                  <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5 group-hover:text-[#f59e0b] transition-colors">
+                    {openSections.unarmed ? (
+                      <ChevronDown className="w-3.5 h-3.5 text-[#f59e0b]" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5 text-[#64748b]" />
+                    )}
+                    🥊 PELEA DESARMADA & ARTES
+                  </span>
+                  <span className="text-[10px] font-mono-code text-[#64748b]">
+                    {openSections.unarmed ? 'Plegar' : 'Desplegar'}
+                  </span>
+                </button>
 
-                {/* Fila Brawling */}
-                <div className={`p-2.5 rounded border transition-all ${
-                  isBrawlingInHand ? 'bg-[#1e1a14] border-[#f59e0b]/50' : 'bg-[#10121a] border-[#202534] opacity-80'
-                }`}>
-                  <div className="flex items-center justify-between gap-2">
-                    <div>
-                      <div className="font-tech text-xs font-bold text-white">Puños (Brawling)</div>
-                      <div className="text-[10px] font-mono-code text-[#94a3b8]">
-                        Daño: <strong className="text-white">{unarmedDmg}</strong> • ROF 2 • Base: {(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.brawling ?? 0)}
+                {openSections.unarmed && (
+                  <div className="space-y-2 pt-1">
+                    {/* Fila Brawling */}
+                    <div className={`rounded border transition-all overflow-hidden ${
+                      isBrawlingInHand ? 'bg-[#1e1a14] border-[#f59e0b]/50' : 'bg-[#10121a] border-[#202534] opacity-85'
+                    }`}>
+                      <div className="p-2.5 flex items-center justify-between gap-2">
+                        <button
+                          type="button"
+                          onClick={() => toggleOpenUnarmed('brawling')}
+                          className="flex items-center gap-2 min-w-0 text-left flex-1 group/brawl"
+                        >
+                          {openUnarmed.brawling ? (
+                            <ChevronDown className="w-3.5 h-3.5 text-[#f59e0b] shrink-0" />
+                          ) : (
+                            <ChevronRight className="w-3.5 h-3.5 text-[#64748b] group-hover/brawl:text-[#f59e0b] shrink-0" />
+                          )}
+                          <div className="min-w-0 flex-1">
+                            <div className="font-tech text-xs font-bold text-white group-hover/brawl:text-[#f59e0b] transition-colors">
+                              Puños (Brawling)
+                            </div>
+                            <div className="text-[10px] font-mono-code text-[#94a3b8] mt-0.5">
+                              Daño: <strong className="text-white">{unarmedDmg}</strong> • ROF 2
+                            </div>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => toggleUnarmedInHand('brawling')}
+                          className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all shrink-0 flex items-center gap-1 ${
+                            isBrawlingInHand
+                              ? 'bg-[#f59e0b]/20 hover:bg-[#dc2626] hover:text-white text-[#f59e0b] border border-[#f59e0b]/50'
+                              : 'bg-[#222534] hover:bg-[#f59e0b] hover:text-black text-white border border-[#2c3246]'
+                          }`}
+                        >
+                          {isBrawlingInHand ? <><Check className="w-3 h-3" /> EN MANO</> : '+ EN MANO'}
+                        </button>
                       </div>
-                    </div>
-                    <button
-                      onClick={() => toggleUnarmedInHand('brawling')}
-                      className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all shrink-0 ${
-                        isBrawlingInHand
-                          ? 'bg-[#f59e0b]/20 hover:bg-[#dc2626] hover:text-white text-[#f59e0b] border border-[#f59e0b]/50'
-                          : 'bg-[#222534] hover:bg-[#f59e0b] hover:text-black text-white border border-[#2c3246]'
-                      }`}
-                    >
-                      {isBrawlingInHand ? '✓ EN MANO' : '+ PONER EN MANO'}
-                    </button>
-                  </div>
-                </div>
 
-                {/* Fila Martial Arts */}
-                <div className={`p-2.5 rounded border transition-all ${
-                  isMartialArtsInHand ? 'bg-[#121c18] border-[#10b981]/50' : 'bg-[#10121a] border-[#202534] opacity-80'
-                }`}>
-                  <div className="flex items-center justify-between gap-2">
-                    <div>
-                      <div className="font-tech text-xs font-bold text-white">Artes Marciales (Martial Arts)</div>
-                      <div className="text-[10px] font-mono-code text-[#94a3b8]">
-                        Daño: <strong className="text-white">{unarmedDmg}</strong> • Ignora 50% SP • Base: {(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0)}
+                      {openUnarmed.brawling && (
+                        <div className="p-2.5 pt-0 border-t border-[#262016] bg-[#0d0c0a] space-y-2 mt-1">
+                          <div className="text-[10px] font-mono-code text-[#94a3b8] pt-2">
+                            Base: {(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.brawling ?? 0)} (DEX {activeChar?.stats?.DEX ?? 6} + Brawling {activeChar?.skills?.brawling ?? 0})
+                          </div>
+                          <div className="grid grid-cols-2 gap-1.5">
+                            <button
+                              onClick={handleBrawlingAttack}
+                              className="py-1 px-1.5 bg-[#f59e0b] hover:bg-[#d97706] text-black font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1"
+                            >
+                              <Target className="w-3 h-3" /> ATACAR (1d10)
+                            </button>
+                            <button
+                              onClick={handleBrawlingDamage}
+                              className="py-1 px-1.5 bg-[#1e2334] hover:bg-[#2b334a] text-[#f59e0b] font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 border border-[#3b3226]"
+                            >
+                              <Dices className="w-3 h-3" /> TIRAR DAÑO
+                            </button>
+                          </div>
+                          <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-[#262016]">
+                            <button
+                              onClick={handleGrapple}
+                              className="py-1 px-1.5 bg-[#262016] hover:bg-[#f59e0b] hover:text-black text-[#fcd34d] font-mono-code text-[10px] font-bold rounded transition-all border border-[#4d3a1f]"
+                            >
+                              🤼 Presa / Grapple
+                            </button>
+                            <button
+                              onClick={handleChoke}
+                              className="py-1 px-1.5 bg-[#262016] hover:bg-[#dc2626] hover:text-white text-[#f87171] font-mono-code text-[10px] font-bold rounded transition-all border border-[#4d1f24]"
+                            >
+                              💀 Ahorcar ({activeChar?.stats?.BODY ?? 6} HP)
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Fila Martial Arts */}
+                    <div className={`rounded border transition-all overflow-hidden ${
+                      isMartialArtsInHand ? 'bg-[#121c18] border-[#10b981]/50' : 'bg-[#10121a] border-[#202534] opacity-85'
+                    }`}>
+                      <div className="p-2.5 flex items-center justify-between gap-2">
+                        <button
+                          type="button"
+                          onClick={() => toggleOpenUnarmed('martialArts')}
+                          className="flex items-center gap-2 min-w-0 text-left flex-1 group/ma"
+                        >
+                          {openUnarmed.martialArts ? (
+                            <ChevronDown className="w-3.5 h-3.5 text-[#10b981] shrink-0" />
+                          ) : (
+                            <ChevronRight className="w-3.5 h-3.5 text-[#64748b] group-hover/ma:text-[#10b981] shrink-0" />
+                          )}
+                          <div className="min-w-0 flex-1">
+                            <div className="font-tech text-xs font-bold text-white group-hover/ma:text-[#10b981] transition-colors">
+                              Artes Marciales (Martial Arts)
+                            </div>
+                            <div className="text-[10px] font-mono-code text-[#94a3b8] mt-0.5">
+                              Daño: <strong className="text-white">{unarmedDmg}</strong> • Ignora 50% SP
+                            </div>
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => toggleUnarmedInHand('martialArts')}
+                          className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all shrink-0 flex items-center gap-1 ${
+                            isMartialArtsInHand
+                              ? 'bg-[#10b981]/20 hover:bg-[#dc2626] hover:text-white text-[#10b981] border border-[#10b981]/50'
+                              : 'bg-[#222534] hover:bg-[#10b981] hover:text-black text-white border border-[#2c3246]'
+                          }`}
+                        >
+                          {isMartialArtsInHand ? <><Check className="w-3 h-3" /> EN MANO</> : '+ EN MANO'}
+                        </button>
                       </div>
-                    </div>
-                    <button
-                      onClick={() => toggleUnarmedInHand('martialArts')}
-                      className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all shrink-0 ${
-                        isMartialArtsInHand
-                          ? 'bg-[#10b981]/20 hover:bg-[#dc2626] hover:text-white text-[#10b981] border border-[#10b981]/50'
-                          : 'bg-[#222534] hover:bg-[#10b981] hover:text-black text-white border border-[#2c3246]'
-                      }`}
-                    >
-                      {isMartialArtsInHand ? '✓ EN MANO' : '+ PONER EN MANO'}
-                    </button>
-                  </div>
-                </div>
 
+                      {openUnarmed.martialArts && (
+                        <div className="p-2.5 pt-0 border-t border-[#13261f] bg-[#0a0f0d] space-y-2 mt-1">
+                          <div className="text-[10px] font-mono-code text-[#94a3b8] pt-2">
+                            Base: {(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0)} (DEX {activeChar?.stats?.DEX ?? 6} + Martial Arts {activeChar?.skills?.martialArts ?? 0})
+                          </div>
+                          <div className="grid grid-cols-2 gap-1.5">
+                            <button
+                              onClick={handleMartialArtsAttack}
+                              className="py-1 px-1.5 bg-[#10b981] hover:bg-[#059669] text-black font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1"
+                            >
+                              <Target className="w-3 h-3" /> ATACAR (1d10)
+                            </button>
+                            <button
+                              onClick={handleMartialArtsDamage}
+                              className="py-1 px-1.5 bg-[#1e2334] hover:bg-[#2b334a] text-[#10b981] font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 border border-[#1f3b2d]"
+                            >
+                              <Dices className="w-3 h-3" /> TIRAR DAÑO
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
             {/* SECCIÓN 3: ÍTEMS ARROJABLES & GRANADAS */}
             {(rackFilter === 'all' || rackFilter === 'throwables') && (
               <div className="bg-[#151722] p-3 rounded border border-[#252a3c] space-y-2.5">
-                <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5">
-                  <Bomb className="w-3.5 h-3.5 text-[#f59e0b]" /> ARROJABLES & GRANADAS TÁCTICAS
-                </span>
+                <button
+                  type="button"
+                  onClick={() => toggleSection('throwables')}
+                  className="w-full flex items-center justify-between text-left group"
+                >
+                  <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5 group-hover:text-[#f59e0b] transition-colors">
+                    {openSections.throwables ? (
+                      <ChevronDown className="w-3.5 h-3.5 text-[#f59e0b]" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5 text-[#64748b]" />
+                    )}
+                    <Bomb className="w-3.5 h-3.5 text-[#f59e0b]" /> ARROJABLES & GRANADAS ({totalGrenadeCharges} CARGAS)
+                  </span>
+                  <span className="text-[10px] font-mono-code text-[#64748b]">
+                    {openSections.throwables ? 'Plegar' : 'Desplegar'}
+                  </span>
+                </button>
 
-                <div className="space-y-2">
-                  {TACTICAL_GRENADES.map((g) => (
-                    <div key={g.id} className="bg-[#10121a] p-2 rounded border border-[#22283a] space-y-1.5">
+                {openSections.throwables && (
+                  <div className="space-y-2 pt-1">
+                    {ownedGrenades.length === 0 ? (
+                      <div className="p-3 text-center border border-dashed border-[#232738] rounded text-[11px] font-mono-code text-[#64748b]">
+                        No tienes granadas en tu inventario / cinturón táctico.
+                      </div>
+                    ) : (
+                      ownedGrenades.map((gItem) => {
+                        const gInfo = getGrenadeInfo(gItem);
+                        const isOpen = !!openGrenades[gItem.id];
+                        return (
+                          <div
+                            key={gItem.id}
+                            className="bg-[#10121a] rounded border border-[#22283a] overflow-hidden transition-all"
+                          >
+                            {/* Fila Encabezado / Vista Plegada: SÓLO Nombre + Cargas */}
+                            <button
+                              type="button"
+                              onClick={() => toggleOpenGrenade(gItem.id)}
+                              className="w-full p-2.5 flex items-center justify-between gap-2 text-left hover:bg-[#141724] transition-colors"
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                {isOpen ? (
+                                  <ChevronDown className="w-3.5 h-3.5 text-[#f59e0b] shrink-0" />
+                                ) : (
+                                  <ChevronRight className="w-3.5 h-3.5 text-[#64748b] shrink-0" />
+                                )}
+                                <span className="font-tech text-xs font-bold text-white truncate">
+                                  {gItem.name}
+                                </span>
+                              </div>
+                              <span className="bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/40 px-2 py-0.5 rounded text-[10px] font-mono-code font-bold shrink-0">
+                                x{gItem.quantity} CARGAS
+                              </span>
+                            </button>
+
+                            {/* Vista Expandida: Detalles, Reglas, Stepper y Acciones */}
+                            {isOpen && (
+                              <div className="p-2.5 pt-0 border-t border-[#1a1e2c] bg-[#0c0e14] space-y-2 mt-1">
+                                <div className="text-[10px] font-mono-code text-[#cbd5e1] leading-tight pt-2 space-y-1">
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    {gInfo.damage ? (
+                                      <span className="bg-[#dc2626]/20 text-[#f87171] border border-[#dc2626]/40 px-1.5 py-0.2 rounded text-[9px] font-mono-code font-bold">
+                                        Daño: {gInfo.damage}
+                                      </span>
+                                    ) : (
+                                      <span className="bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/40 px-1.5 py-0.2 rounded text-[9px] font-mono-code font-bold">
+                                        TÁCTICA
+                                      </span>
+                                    )}
+                                    <span className="text-[#64748b]">| Radio: 10x10m | DV lanzamiento: {gInfo.dv}</span>
+                                  </div>
+                                  <div className="text-[#94a3b8]">{gInfo.effect}</div>
+                                </div>
+
+                                {/* Ajuste de Cargas (- / +) */}
+                                <div className="flex items-center justify-between pt-1 border-t border-[#1a1e2c] text-[10px] font-mono-code text-[#64748b]">
+                                  <span>Cargas en cinturón:</span>
+                                  <div className="flex items-center gap-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => updateInventoryQuantity(gItem.id, -1)}
+                                      className="w-5 h-5 flex items-center justify-center bg-[#171b26] hover:bg-[#dc2626] text-slate-300 hover:text-white rounded border border-[#242b3d] font-bold"
+                                      title="Gastar 1 carga"
+                                    >
+                                      <Minus className="w-3 h-3" />
+                                    </button>
+                                    <span className="font-mono-code font-bold text-white px-1">
+                                      {gItem.quantity}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => updateInventoryQuantity(gItem.id, 1)}
+                                      className="w-5 h-5 flex items-center justify-center bg-[#171b26] hover:bg-[#10b981] text-slate-300 hover:text-white rounded border border-[#242b3d] font-bold"
+                                      title="Añadir 1 carga"
+                                    >
+                                      <Plus className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Botones de Lanzar y Daño */}
+                                <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-[#1a1e2c]">
+                                  <button
+                                    onClick={() => handleThrowOwnedGrenade(gItem)}
+                                    className="py-1 px-1.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 shadow-sm active:scale-95"
+                                  >
+                                    <Target className="w-3 h-3" /> LANZAR (-1 CARGA)
+                                  </button>
+                                  <button
+                                    onClick={() => handleOwnedGrenadeEffect(gItem)}
+                                    className="py-1 px-1.5 bg-[#1e2334] hover:bg-[#2b334a] text-[#38bdf8] font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 border border-[#2c364e] active:scale-95"
+                                  >
+                                    <Dices className="w-3 h-3" /> DAÑO / EFECTO
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+
+                    {/* Selector para Equipar Granada al Cinturón */}
+                    <div className="pt-2 border-t border-[#1e2332] space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <span className="font-tech text-xs font-bold text-white">{g.name}</span>
-                        {g.damage ? (
-                          <span className="bg-[#dc2626]/20 text-[#f87171] border border-[#dc2626]/40 px-1.5 py-0.2 rounded text-[9px] font-mono-code font-bold">
-                            {g.damage}
-                          </span>
-                        ) : (
-                          <span className="bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/40 px-1.5 py-0.2 rounded text-[9px] font-mono-code font-bold">
-                            TÁCTICA
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-[10px] font-mono-code text-[#94a3b8] leading-tight">
-                        {g.effect}
-                      </div>
-                      <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-[#1a1e2c]">
+                        <span className="text-[10px] font-mono-code text-[#64748b] flex items-center gap-1">
+                          <Plus className="w-3 h-3 text-[#38bdf8]" /> EQUIPAR AL CINTURÓN:
+                        </span>
                         <button
-                          onClick={() => handleThrowGrenade(g)}
-                          className="py-1 px-1.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1"
+                          type="button"
+                          onClick={() => setShowEquipGrenadeDropdown(!showEquipGrenadeDropdown)}
+                          className="text-[9px] font-mono-code text-[#38bdf8] hover:underline"
                         >
-                          <Target className="w-3 h-3" /> LANZAR (DV {g.dv})
-                        </button>
-                        <button
-                          onClick={() => handleGrenadeEffect(g)}
-                          className="py-1 px-1.5 bg-[#1e2334] hover:bg-[#2b334a] text-[#38bdf8] font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 border border-[#2c364e]"
-                        >
-                          <Dices className="w-3 h-3" /> DAÑO / EFECTO
+                          {showEquipGrenadeDropdown ? 'Ocultar catálogo' : '+ Añadir del catálogo'}
                         </button>
                       </div>
+
+                      {showEquipGrenadeDropdown && (
+                        <div className="flex gap-1.5 pt-1">
+                          <select
+                            value={selectedCatalogGrenadeId}
+                            onChange={(e) => setSelectedCatalogGrenadeId(e.target.value)}
+                            className="flex-1 bg-[#0e1017] border border-[#2b334a] text-white text-[11px] font-mono-code rounded px-2 py-1 focus:outline-none focus:border-[#f59e0b] truncate"
+                          >
+                            {TACTICAL_GRENADES.map((g) => (
+                              <option key={g.id} value={g.id}>
+                                {g.name} ({g.damage || 'Táctica'}, DV {g.dv})
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={handleEquipGrenadeToBelt}
+                            className="px-2.5 py-1 bg-[#f59e0b] hover:bg-[#d97706] text-black font-tech font-bold text-xs rounded transition-all active:scale-95 shrink-0 flex items-center gap-1"
+                          >
+                            <Plus className="w-3 h-3" /> Equipar (1)
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
             )}
 
             {/* SECCIÓN 4: DROGAS & CONSUMIBLES */}
             {(rackFilter === 'all' || rackFilter === 'drugs') && (
               <div className="bg-[#151722] p-3 rounded border border-[#252a3c] space-y-2.5">
-                <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5">
-                  <Pill className="w-3.5 h-3.5 text-[#ec4899]" /> DROGAS & CONSUMIBLES DE COMBATE
-                </span>
+                <button
+                  type="button"
+                  onClick={() => toggleSection('drugs')}
+                  className="w-full flex items-center justify-between text-left group"
+                >
+                  <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5 group-hover:text-[#ec4899] transition-colors">
+                    {openSections.drugs ? (
+                      <ChevronDown className="w-3.5 h-3.5 text-[#ec4899]" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5 text-[#64748b]" />
+                    )}
+                    <Pill className="w-3.5 h-3.5 text-[#ec4899]" /> DROGAS & CONSUMIBLES ({totalDrugCharges} DOSIS)
+                  </span>
+                  <span className="text-[10px] font-mono-code text-[#64748b]">
+                    {openSections.drugs ? 'Plegar' : 'Desplegar'}
+                  </span>
+                </button>
 
-                <div className="space-y-2">
-                  {((coreData as any).drugs || []).map((drug: any) => {
-                    const ownedItem = activeChar?.inventory?.find(
-                      (i) => i.name.toLowerCase() === drug.name.toLowerCase()
-                    );
-                    const ownedQty = ownedItem?.quantity || 0;
-
-                    return (
-                      <div key={drug.id || drug.name} className="bg-[#10121a] p-2 rounded border border-[#22283a] space-y-1.5">
-                        <div className="flex items-center justify-between">
-                          <span className="font-tech text-xs font-bold text-white">{drug.name}</span>
-                          <div className="flex items-center gap-1.5 text-[9px] font-mono-code">
-                            {ownedQty > 0 ? (
-                              <span className="bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40 px-1.5 py-0.2 rounded font-bold">
-                                {ownedQty} en mochila
-                              </span>
-                            ) : null}
-                            <span className="text-[#64748b]">{drug.cost} €$</span>
-                          </div>
-                        </div>
-
-                        <div className="text-[10px] font-mono-code text-[#cbd5e1] leading-tight space-y-0.5">
-                          <div><span className="text-[#10b981]">Efecto:</span> {drug.primaryEffect}</div>
-                          {drug.secondaryEffect && (
-                            <div className="text-[#f43f5e]"><span className="text-[#64748b]">Resaca:</span> {drug.secondaryEffect}</div>
-                          )}
-                          <div><span className="text-[#eab308]">Adicción:</span> DV {drug.addictionDv}</div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-[#1a1e2c]">
-                          <button
-                            onClick={() => handleInjectDrug(drug)}
-                            className="py-1 px-1.5 bg-[#ec4899] hover:bg-[#db2777] text-white font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 shadow-sm"
-                          >
-                            <Pill className="w-3 h-3" /> USAR / INYECTAR
-                          </button>
-                          <button
-                            onClick={() => handleDrugAddictionTest(drug)}
-                            className="py-1 px-1.5 bg-[#1e2334] hover:bg-[#2b334a] text-[#eab308] font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 border border-[#2c364e]"
-                          >
-                            <Dices className="w-3 h-3" /> TIRAR ADICCIÓN
-                          </button>
-                        </div>
+                {openSections.drugs && (
+                  <div className="space-y-2 pt-1">
+                    {ownedDrugs.length === 0 ? (
+                      <div className="p-3 text-center border border-dashed border-[#232738] rounded text-[11px] font-mono-code text-[#64748b]">
+                        No tienes drogas o fármacos en tu inventario.
                       </div>
-                    );
-                  })}
-                </div>
+                    ) : (
+                      ownedDrugs.map((dItem) => {
+                        const dInfo = getDrugInfo(dItem);
+                        const isOpen = !!openDrugs[dItem.id];
+                        return (
+                          <div
+                            key={dItem.id}
+                            className="bg-[#10121a] rounded border border-[#22283a] overflow-hidden transition-all"
+                          >
+                            {/* Fila Encabezado / Vista Plegada: SÓLO Nombre + Cargas */}
+                            <button
+                              type="button"
+                              onClick={() => toggleOpenDrug(dItem.id)}
+                              className="w-full p-2.5 flex items-center justify-between gap-2 text-left hover:bg-[#141724] transition-colors"
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                {isOpen ? (
+                                  <ChevronDown className="w-3.5 h-3.5 text-[#ec4899] shrink-0" />
+                                ) : (
+                                  <ChevronRight className="w-3.5 h-3.5 text-[#64748b] shrink-0" />
+                                )}
+                                <span className="font-tech text-xs font-bold text-white truncate">
+                                  {dItem.name}
+                                </span>
+                              </div>
+                              <span className="bg-[#ec4899]/20 text-[#ec4899] border border-[#ec4899]/40 px-2 py-0.5 rounded text-[10px] font-mono-code font-bold shrink-0">
+                                x{dItem.quantity} DOSIS
+                              </span>
+                            </button>
+
+                            {/* Vista Expandida: Efectos, Resaca, Stepper y Acciones */}
+                            {isOpen && (
+                              <div className="p-2.5 pt-0 border-t border-[#1a1e2c] bg-[#0c0e14] space-y-2 mt-1">
+                                <div className="text-[10px] font-mono-code text-[#cbd5e1] leading-tight pt-2 space-y-0.5">
+                                  <div><span className="text-[#10b981]">Efecto:</span> {dInfo.primaryEffect}</div>
+                                  {dInfo.secondaryEffect && (
+                                    <div className="text-[#f43f5e]"><span className="text-[#64748b]">Resaca:</span> {dInfo.secondaryEffect}</div>
+                                  )}
+                                  <div className="flex items-center gap-2 text-[#94a3b8] pt-0.5">
+                                    <span>Duración: {dInfo.duration}</span>
+                                    <span>•</span>
+                                    <span className="text-[#eab308]">Adicción: DV {dInfo.addictionDv}</span>
+                                  </div>
+                                </div>
+
+                                {/* Stepper de Dosis (- / +) */}
+                                <div className="flex items-center justify-between pt-1 border-t border-[#1a1e2c] text-[10px] font-mono-code text-[#64748b]">
+                                  <span>Dosis disponibles:</span>
+                                  <div className="flex items-center gap-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => updateInventoryQuantity(dItem.id, -1)}
+                                      className="w-5 h-5 flex items-center justify-center bg-[#171b26] hover:bg-[#dc2626] text-slate-300 hover:text-white rounded border border-[#242b3d] font-bold"
+                                      title="Gastar 1 dosis"
+                                    >
+                                      <Minus className="w-3 h-3" />
+                                    </button>
+                                    <span className="font-mono-code font-bold text-white px-1">
+                                      {dItem.quantity}
+                                    </span>
+                                    <button
+                                      type="button"
+                                      onClick={() => updateInventoryQuantity(dItem.id, 1)}
+                                      className="w-5 h-5 flex items-center justify-center bg-[#171b26] hover:bg-[#10b981] text-slate-300 hover:text-white rounded border border-[#242b3d] font-bold"
+                                      title="Añadir 1 dosis"
+                                    >
+                                      <Plus className="w-3 h-3" />
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Botones de Inyectar y Tirar Adicción */}
+                                <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-[#1a1e2c]">
+                                  <button
+                                    onClick={() => handleInjectDrug(dInfo)}
+                                    className="py-1 px-1.5 bg-[#ec4899] hover:bg-[#db2777] text-white font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 shadow-sm active:scale-95"
+                                  >
+                                    <Pill className="w-3 h-3" /> INYECTAR (-1 DOSIS)
+                                  </button>
+                                  <button
+                                    onClick={() => handleDrugAddictionTest(dInfo)}
+                                    className="py-1 px-1.5 bg-[#1e2334] hover:bg-[#2b334a] text-[#eab308] font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 border border-[#2c364e] active:scale-95"
+                                  >
+                                    <Dices className="w-3 h-3" /> TIRAR ADICCIÓN
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })
+                    )}
+
+                    {/* Selector para Equipar Droga al Cinturón */}
+                    <div className="pt-2 border-t border-[#1e2332] space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono-code text-[#64748b] flex items-center gap-1">
+                          <Plus className="w-3 h-3 text-[#ec4899]" /> EQUIPAR DROGA / FÁRMACO:
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setShowEquipDrugDropdown(!showEquipDrugDropdown)}
+                          className="text-[9px] font-mono-code text-[#ec4899] hover:underline"
+                        >
+                          {showEquipDrugDropdown ? 'Ocultar catálogo' : '+ Añadir del catálogo'}
+                        </button>
+                      </div>
+
+                      {showEquipDrugDropdown && (
+                        <div className="flex gap-1.5 pt-1">
+                          <select
+                            value={selectedCatalogDrugId}
+                            onChange={(e) => setSelectedCatalogDrugId(e.target.value)}
+                            className="flex-1 bg-[#0e1017] border border-[#2b334a] text-white text-[11px] font-mono-code rounded px-2 py-1 focus:outline-none focus:border-[#ec4899] truncate"
+                          >
+                            {catalogDrugs.map((d: any) => (
+                              <option key={d.name} value={d.name}>
+                                {d.name} ({d.cost || 50} €$)
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={handleEquipDrugToBelt}
+                            className="px-2.5 py-1 bg-[#ec4899] hover:bg-[#db2777] text-white font-tech font-bold text-xs rounded transition-all active:scale-95 shrink-0 flex items-center gap-1"
+                          >
+                            <Plus className="w-3 h-3" /> Equipar (1)
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
