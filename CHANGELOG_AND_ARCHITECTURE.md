@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // System Architecture, Dependency Graph & Master Changelog
 
-> **DOCUMENT PURPOSE**: This document serves as the single source of truth for the project's technical architecture, component dependency chains, and detailed version evolution. It is explicitly authored to be read and understood by human developers and future Large Language Models (LLMs such as Claude, ChatGPT, etc.) so that any future modification respects the underlying system mechanics without accidental regressions.
+> **DOCUMENT PURPOSE**: This document serves as the single source of truth for the project's technical architecture, component dependency chains, and detailed version evolution. It is explicitly authored to be read and understood by human developers and future Large Language Models (LLMs such as Claude, ChatGPT, etc.) so that any future modification respects the underlying system mechanics without accidental regressions or phantom file imports.
 
 ---
 
@@ -10,133 +10,152 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 1. **Architecture Decoupling (The COMP/CON Model)**:
    - Never hardcode rules or items into UI views directly.
    - Core static rules and book data reside in `data/` and `src/data/` as modular `.cprpack.json` files and typed TypeScript registry modules (`rangeTables.ts`, `criticalInjuries.ts`, etc.).
-   - The UI in `src/App.tsx` and `src/components/` acts as a pure reactive consumer.
+   - The UI in `src/features/` acts as a pure reactive consumer of Zustand stores (`useCharacterStore`, `useCombatStore`).
 2. **System Dependencies & Cascade Effects**:
-   - **Range & DV System (`src/data/rangeTables.ts`)**: If you alter distance brackets or weapon classifications, check `getDvForWeapon()` and `executeRoll()` in `App.tsx`. Do NOT change DV values without citing official Cyberpunk RED Core Rulebook (pg. 174).
-   - **Weapons & Ammo (`src/App.tsx`)**: The attack trigger consumes ammo (`currentMag`). Autofire consumes 10 bullets. Ensure any weapon modification respects magazine bounds and reload states.
-   - **Critical Injuries (`src/data/criticalInjuries.ts`)**: Uses exact 2d6 tables from Core Book (pg. 187-188). If adding new injury tables (e.g. Black Chrome vehicle crits), maintain the `CriticalInjury` interface.
-   - **Visual Placeholders (`src/components/ItemVisualPlaceholder.tsx`)**: Every item rendered in combat or compendium must map cleanly to an item type placeholder to preserve the high-end tactile aesthetic.
-   - **Audio/VFX**: Keep SFX/VFX optional and performant using lightweight Web Audio synthesizer tones or small static assets.
-3. **Always Update This Document**: Whenever you increment a version or modify system mechanics, document your changes in the **Master Version Changelog** below with: *What was changed*, *Files modified*, and *Potential regression areas*.
+   - **Range & DV System (`src/data/rangeTables.ts`)**: Distance brackets: `0-6m`, `7-12m`, `13-25m`, `26-50m`, `51-100m`, `101-200m`, `201-400m`, `401-800m`. Do NOT change DV values without citing official Cyberpunk RED Core Rulebook (pg. 174).
+   - **Combat Engine (`src/engine/combatEngine.ts`)**:
+     - Check: `STAT + Skill + 1d10`. On 10, explodes with another `+1d10`. On 1, critical failure rolls `1d10` and subtracts.
+     - Damage is rolled separately: `Xd6` (or `2d6 * multiplier` for Autofire). Two or more `6`s trigger an automatic Critical Injury (inflicting +5 bonus HP damage).
+     - Armor ablation: if rolled damage exceeds target current SP, target takes `damage - SP` to HP and armor SP is reduced by 1 (or 2 for Armor-Piercing ammo).
+   - **Weapons & Ammo**: Attack execution consumes ammunition (`consumeAmmo`). Autofire consumes 10 bullets. Reload resets `currentMag` to `standardMag`.
+   - **Critical Injuries (`src/data/criticalInjuries.ts`)**: Uses exact 2d6 tables from Core Book (pg. 187-188) for Head and Body.
+   - **Visual Placeholders (`src/components/ItemVisualPlaceholder.tsx`)**: Every item rendered in combat or compendium maps cleanly to an item type placeholder (`pistol`, `rifle`, `smg`, `shotgun`, `melee`, `heavy`, `armor_body`, `shield`, `cyberware`, `program`).
+3. **DO NOT INVENT FILES**:
+   - Only files listed in the **Current Real Tree on Disk** section exist.
+   - Any feature listed under **Roadmap Pendiente** must be implemented cleanly in its assigned directory before importing it anywhere.
 
 ---
 
-## 🗺️ System Architecture & Data Flow
+## 🗺️ Current Real Tree on Disk (`v2.0.0 - Phase 0 Overhaul`)
 
-```
+```text
 cpr-omni-deck/
-├── data/                                 # Raw extracted modular .cprpack JSON bundles
-│   └── core-rules.cprpack.json           # Extracted Core Rulebook catalog
-├── scripts/                              # Isolated Python extractors using pypdf
-│   ├── extract_core_pack.py              # Ingests Core Rulebook PDF into JSON
-│   └── find_sections.py                  # Bookmark and outline inspector
+├── .agent/
+│   └── skills/
+│       └── cpr-pdf-extractor/
+│           └── SKILL.md                  # Protocolo de extracción CLI y esquema .cprpack.json
+├── data/
+│   └── core-rules.cprpack.json           # Catálogo maestro canónico (272 ítems oficiales)
+├── scripts/
+│   ├── extract_core_pack.py              # Ingesta y validación real de páginas del Core Rulebook
+│   ├── find_sections.py                  # Inspector de bookmarks y outline del PDF
+│   └── inspect_pdf_pages.py              # Inspector CLI UTF-8 de páginas por rango
 ├── frontend/
 │   ├── src/
-│   │   ├── data/
-│   │   │   ├── core-rules.cprpack.json   # Frontend active copy of core data
-│   │   │   ├── rangeTables.ts            # Official Ranged & Autofire DV matrices
-│   │   │   ├── criticalInjuries.ts       # Official 2d6 Head & Body injury tables
-│   │   │   ├── sourcebooks.ts            # Index of books, lore summaries & mechanics
-│   │   │   ├── rulesCheatSheet.ts        # Quick reference (Grappling, Choke, Cover SP/HP)
-│   │   │   └── npcs.ts                   # Preloaded NPCs (Adam Smasher, Edgerunners, Mooks)
 │   │   ├── components/
-│   │   │   ├── ItemVisualPlaceholder.tsx # High-tech SVG/Lucide visual frames
-│   │   │   ├── SourceBadge.tsx           # Monochromatic micro-badges per book
-│   │   │   ├── RulesCheatSheetModal.tsx  # Popover with instant combat rules & cover
-│   │   │   ├── CyberwareMannequin.tsx    # 2077-style neutral anatomical wireframe
-│   │   │   ├── NetArchitectureRunner.tsx # Floor-by-floor NET simulator
-│   │   │   ├── MiniVTT.tsx               # Simple tactical 2x2m grid with cover HP
-│   │   │   └── HomebrewBuilderModal.tsx  # Custom weapon, cyberware, and drug creator
-│   │   ├── utils/
-│   │   │   ├── storage.ts                # IndexedDB persistence for all character sheets
-│   │   │   ├── auth.ts                   # GM Password / Player PIN lock for sheet editing
-│   │   │   ├── sfx.ts                    # Audio feedback (shots, reloads, glitches)
-│   │   │   └── sheetImporter.ts          # Universal importer (JSON, PDF, Companion App)
-│   │   ├── App.tsx                       # Unified Tactical Command Deck
-│   │   ├── index.css                     # Chamfered corner styles & design tokens
+│   │   │   └── ItemVisualPlaceholder.tsx # Frames militares tácticos SVG/Lucide por categoría
+│   │   ├── data/
+│   │   │   ├── core-rules.cprpack.json   # Copia activa del catálogo para el frontend
+│   │   │   ├── criticalInjuries.ts       # Tablas oficiales 2d6 de heridas críticas (Head/Body)
+│   │   │   └── rangeTables.ts            # Matrices oficiales de DVs por metro y Autofire
+│   │   ├── engine/
+│   │   │   ├── characterEngine.ts        # Motor matemático: HP máx, humanidad, penalizadores
+│   │   │   └── combatEngine.ts           # Motor de resolución: d10 explosivo, Xd6, doble 6 crítico
+│   │   ├── features/
+│   │   │   ├── combat/
+│   │   │   │   └── CombatHudView.tsx     # HUD de combate táctico, selector de DVs y dados
+│   │   │   ├── compendium/
+│   │   │   │   └── CompendiumView.tsx    # Compendio modular de 8 categorías con equipamiento
+│   │   │   ├── layout/
+│   │   │   │   └── TopHudBar.tsx         # Barra superior persistente con vitals del edgerunner
+│   │   │   ├── packs/
+│   │   │   │   └── DataPacksView.tsx     # Gestor de paquetes .cprpack estilo COMP/CON
+│   │   │   └── sheet/
+│   │   │       └── StreetLabView.tsx     # Ficha completa, editor de stats y roster de personajes
+│   │   ├── store/
+│   │   │   ├── useCharacterStore.ts      # Store Zustand con persistencia (fichas, inventario, heridas)
+│   │   │   └── useCombatStore.ts         # Store Zustand de combate (DVs, objetivos, logs de tiradas)
+│   │   ├── types/
+│   │   │   └── cyberpunk.ts              # Tipos de TypeScript canónicos de Cyberpunk RED
+│   │   ├── App.tsx                       # Integrador de vistas principales del Omni-Deck
+│   │   ├── index.css                     # Chamfered corner styles y tokens visuales de interfaz
 │   │   └── main.tsx                      # Vite React entry point
 │   ├── index.html                        # Google Fonts (Rajdhani, Inter, JetBrains Mono)
-│   └── vite.config.ts                    # Vite config with Tailwind CSS v4
-├── CHANGELOG_AND_ARCHITECTURE.md         # THIS DOCUMENT
-└── CONTENT_CHECKLIST.md                  # Granular rulebook adaptation tracking
+│   ├── package.json
+│   └── vite.config.ts                    # Vite config con Tailwind CSS
+├── CHANGELOG_AND_ARCHITECTURE.md         # ESTE DOCUMENTO
+└── CONTENT_CHECKLIST.md                  # Checklist de cobertura de reglas por sprints
 ```
 
 ---
 
-## 🏗️ Detailed Subsystem Specifications (For Future LLM Implementation)
+## 🔮 Roadmap Pendiente (Sprints 1 a 4 - NO IMPORTAR HASTA CREAR)
 
-### 1. Browser Storage & GM Lock (Roster Management)
-* **Files**: `src/utils/storage.ts` & `src/utils/auth.ts`
-* **Mechanics**:
-  - Uses browser **IndexedDB** (via Dexie.js or native) so that 100+ character sheets, active combats, and custom homebrew items stay in the user's browser permanently with zero server maintenance.
-  - **GM Lock Mode**: A simple local PIN/Password lock.
-    - *Player Mode*: Locked into editing only their selected character sheet; cannot view hidden GM notes or edit other players' sheets.
-    - *GM Mode*: Full unrestricted access to all sheets, enemy spawner, and combat tracker.
+Los siguientes módulos son especificaciones de diseño para fases posteriores. **Ningún componente debe intentar importarlos mientras no existan en disco**:
 
-### 2. Sourcebook Compendium Dropdown & Lore Summary
-* **Files**: `src/data/sourcebooks.ts` & UI dropdown in Compendium
-* **Mechanics**:
-  - Filter items strictly by book: *Core*, *Black Chrome*, *Danger Gal*, *Interface RED 1-3*, *Edgerunners Mission Kit*.
-  - When clicking "Info de Libro", shows a high-tech brief:
-    - Historic lore and context.
-    - Specific new rules introduced (e.g. *Interface RED Vol 3*: Full Body Conversion borg mechanics, linear frame requirements, cybermatrix).
+### Sprint 1: Utilidades de Mesa & Economía
+* `src/data/rulesCheatSheet.ts` & `src/components/RulesCheatSheetModal.tsx`:
+  - Grappling, Choking (`BODY * 2` daño directo a HP), Coberturas con SP/HP destructibles.
+* `src/features/inventory/InventoryManager.tsx`:
+  - Cartera de Eurodólares (€$), peso de carga, gestión de munición comprada por lote de 10.
+* `src/utils/storage.ts` & `src/utils/auth.ts`:
+  - Bloqueo por PIN de Director de Juego (GM Lock) para ocultar tiradas y notas de campaña.
 
-### 3. Netrunning 2045: NET Architecture Floor Runner
-* **Files**: `src/data/netArchitectures.ts` & `src/components/NetArchitectureRunner.tsx`
-* **Mechanics**:
-  - Interactive ladder of virtual floors (File, Password, Control Node, Black ICE).
-  - Net Action counter per turn based on Interface rank.
-  - Meat actions vs Net actions tracker with virus creation DVs.
+### Sprint 2: Expansión de Libros PDF (2045 vs 2077)
+* Extracción e integración de `data/black-chrome.cprpack.json`:
+  - 170+ ítems de lujo, vehículos con SDP y armas exóticas.
+* Extracción e integración de `data/cemk-2077.cprpack.json`:
+  - Reglas 2077 (Edgerunners Mission Kit): Neuroport integrado, armas Power/Tech/Smart y ciberpsicosis.
+* Extracción e integración de `data/danger-gal.cprpack.json` & `data/interface-red.cprpack.json`.
+* `src/components/SourceBadge.tsx`: Badges visuales por libro origen.
 
-### 4. Comprehensive Homebrew & CP2020 Conversion Engine
-* **Files**: `src/data/homebrew.ts` & `src/components/HomebrewBuilderModal.tsx`
-* **Mechanics**:
-  - Visual form to author any custom Weapon, Cyberware, Armor, or Drug.
-  - Implements conversion algorithms from *Old Guns Never Die* (converting Cyberpunk 2020 damage, WA, and reliability to Cyberpunk RED equivalents).
+### Sprint 3: Sistemas Profundos
+* `src/components/CyberwareMannequin.tsx`:
+  - Maniquí anatómico 2077 con silueta interactiva y ranuras corporales.
+* `src/components/NetArchitectureRunner.tsx`:
+  - Simulador piso a piso de Arquitecturas de Red (Archivos, Nodos de Control, Black ICE).
+* `src/features/quickhacks/QuickhacksDeck.tsx`:
+  - Gestor de memoria RAM y software de hackeo en combate para la era 2077.
 
-### 5. Weapon Conversions (2077 Power, Tech, Smart) & Fire Modes
-* **Files**: `src/utils/weaponConversion.ts`
-* **Mechanics**:
-  - *Power*: Bounces off hard surfaces to hit targets behind corners.
-  - *Tech*: Charges up to shoot through cover, deducting cover SP and damaging target.
-  - *Smart*: Tracks targets with Smartlink, ignoring standard cover penalties.
-  - *Fire Modes Guide*: Clear distinction between Single Shot (normal DV), Autofire (10 bullets, special DV, damage multiplier), and Suppressive Fire (6x6m zone forcing concentration check).
-
-### 6. Tactile Audio & Visual FX (SFX / VFX)
-* **Files**: `src/utils/sfx.ts` & `src/utils/vfx.ts`
-* **Mechanics**:
-  - Audio: Procedural or static clicks for reload, dice rolls, gunshots, Sandevistan hum.
-  - Visuals: Screen glitch on brain damage / netrunning zap; pulsing red vignetting at $\le 50\%$ HP (Seriously Wounded).
-
-### 7. Quick-Access Rules Cheat Sheet ("Machete de Reglas")
-* **Files**: `src/data/rulesCheatSheet.ts` & `src/components/RulesCheatSheetModal.tsx`
-* **Mechanics**:
-  - **Grapple & Choke**: Opposed Brawling checks, dragging rules, choking deals `BODY * 2` direct HP damage ignoring armor.
-  - **Cover & Object SP/HP**:
-    - Car door: SP 10 / HP 15
-    - Concrete barrier: SP 20 / HP 30
-    - Drywall / wood: SP 5 / HP 10
-    - Steel blast door: SP 25 / HP 50
-
-### 8. Lightweight Mini-VTT (Tactical Grid & Cover Tracker)
-* **Files**: `src/components/MiniVTT.tsx`
-* **Mechanics**:
-  - Canvas-based or CSS grid calibrated in 2x2m squares.
-  - Drop player & enemy tokens.
-  - Place simple cover obstacles (cars, barricades, walls) with trackable SP/HP that ablate and break when fired upon.
-  - Distance line tool measuring meters directly into the weapon Range DV table.
-
-### 9. 2077 Anatomical Cyberware Mannequin
-* **Files**: `src/components/CyberwareMannequin.tsx`
-* **Design**: Neutral humanoid silhouette with interactive nodes (Frontal Cortex, Optics, Audio, Circulatory, Nervous, Integumentary, Skeleton, Arms, Legs) displaying option slots and humanity impact.
-
-### 10. Universal Sheet Importer
-* **Files**: `src/utils/sheetImporter.ts`
-* **Mechanics**: Ingests official Companion App export formats, fillable PDF field maps, and native Omni-Deck JSON schemas with field validation.
+### Sprint 4: VTT, Audio & Homebrew
+* `src/components/MiniVTT.tsx`:
+  - Rejilla táctil 2x2m con obstáculos y regla de distancia en metros.
+* `src/utils/sfx.ts` & `src/utils/vfx.ts`:
+  - Audio sintetizado táctil para disparos, recargas y zumbidos de Sandevistan.
+* `src/components/HomebrewBuilderModal.tsx`:
+  - Creador de armas, drogas y ciberware casero con exportación JSON.
 
 ---
 
 ## 📜 Master Version Changelog
+
+### [v2.0.0] - 2026-10-16 (Phase 0 Architectural Overhaul & Full Core Catalog)
+* **Category**: Arquitectura Modular, Motor Matemático Real & Catálogo Completo
+* **Files Modified / Created**:
+  - `data/core-rules.cprpack.json` (EXPANDIDO a 272 ítems canónicos)
+  - `frontend/src/data/core-rules.cprpack.json` (SINCRONIZADO)
+  - `frontend/src/types/cyberpunk.ts` (CREADO - Tipos canónicos del sistema)
+  - `frontend/src/engine/characterEngine.ts` (CREADO - Fórmulas de HP, humanidad, umbral de herida grave)
+  - `frontend/src/engine/combatEngine.ts` (CREADO - Motor de combate real de 2 clics)
+  - `frontend/src/store/useCharacterStore.ts` (CREADO - Store Zustand con persistencia)
+  - `frontend/src/store/useCombatStore.ts` (CREADO - Store de combate y DVs)
+  - `frontend/src/features/layout/TopHudBar.tsx` (CREADO - Barra de estado táctico)
+  - `frontend/src/features/combat/CombatHudView.tsx` (CREADO - HUD de combate en 2 clics)
+  - `frontend/src/features/sheet/StreetLabView.tsx` (CREADO - Ficha de personaje y editor de stats)
+  - `frontend/src/features/compendium/CompendiumView.tsx` (CREADO - Compendio de 8 categorías con equipamiento)
+  - `frontend/src/features/packs/DataPacksView.tsx` (CREADO - Gestor de paquetes .cprpack estilo COMP/CON)
+  - `scripts/inspect_pdf_pages.py` (CREADO - Inspector CLI de páginas UTF-8)
+  - `scripts/extract_core_pack.py` (ACTUALIZADO - Verificación real de páginas y extracción completa)
+  - `.agent/skills/cpr-pdf-extractor/SKILL.md` (CREADO - Skill documentada para agentes de IA)
+* **What Changed**:
+  1. **Motor de Tirada en 2 Clics**: Separación estricta entre la Tirada de Ataque (`STAT + Skill + 1d10`, con explosión en 10 y pifia en 1) y la Tirada de Daño independiente (`Xd6`).
+  2. **Regla Oficial de Críticos**: Dos o más dados con valor `6` en la tirada de daño provocan automáticamente una Herida Crítica oficial de la tabla 2d6 y añaden +5 de daño directo a los HP.
+  3. **Ablación de Blindaje**: Si el daño supera el SP actual de la localización impactada, el exceso pasa a los HP y el SP se reduce en 1 punto (o 2 con Munición Perforante).
+  4. **Modo Autofire y Supresivo**: Selector de Autofire que consume 10 balas, evalúa contra la tabla de DVs de Autofire y multiplica el daño de 2d6 por el margen de acierto (hasta el máximo permitido por el arma: x3 para SMG, x4 para Fusil de Asalto).
+  5. **Catálogo Canónico Oficial Completo (272 ítems extraídos del Core v1.24)**:
+     - **66 Armas**: Todas las armas cuerpo a cuerpo, a distancia estándar, marcas de calidad (Dai Lung, Militech, Arasaka, GunMart) y las 15 Armas Exóticas del manual (Malorian 3516, Kendachi Mono-Three, SlamDance Fang, Shrieker, Hurricane, etc.).
+     - **10 Blindajes**: Leathers, Kevlar, Light Armorjack, Bodyweight Suit, Medium Armorjack, Heavy Armorjack, Flak, Metalgear, Bulletproof Shield, Radiation Suit.
+     - **10 Accesorios de Armas**: Bayoneta, Cargador Tambor, Cargador Extendido, Lanzagranadas acoplado, Chasis pesado, Mira Nocturna IR, Escopeta acoplada, Enlace Smartgun, Mira de Francotirador, Silenciador.
+     - **13 Tipos de Munición**: Básica, Perforante, Biotoxina, EMP, Expansiva, Granada Aturdidora, Incendiaria, Veneno, Goma, Sueño, Smart, Humo, Gas Lacrimógeno.
+     - **96 Implantes de Ciberware**: Cobertura exhaustiva de las 7 categorías oficiales (Fashionware, Neuralware, Cyberoptics, Cyberaudio, Internal Body, External Body, Cyberlimbs y Borgware).
+     - **9 Drogas Callejeras y Fármacos**: Black Lace, Blue Glass, Boost, Smash, Synthcoke, Timewarp, Rapidetox, Speedheal, Stim con sus efectos primarios, secundarios y DVs de adicción.
+     - **41 Objetos de Equipo General**: Agent, Airhypo, Máscara anti-smog, Analizador químico, Cyberdecks, Gafas inteligentes, Traje de radiación, Herramientas técnicas, etc.
+     - **27 Programas y Black ICE**: Boosters, Defenders, Attackers y Black ICE anti-programa y anti-personal.
+  6. **Vistas Modulares Compendium & DataPacks**:
+     - `CompendiumView`: Filtro dinámico de 8 categorías con botones táctiles para equipar armas en la ficha activa, blindar cabeza/cuerpo e instalar/desinstalar ciberware con recálculo automático de Humanidad y SP.
+     - `DataPacksView`: Interfaz COMP/CON para inspeccionar el estado del paquete Core y vista previa de expansiones planeadas (Black Chrome, CEMK 2077, Danger Gal, Interface RED).
+
+---
 
 ### [v1.2.0] - 2026-10-15
 * **Category**: Visual Hierarchy & Rule Mechanics Expansion
@@ -144,15 +163,10 @@ cpr-omni-deck/
   - `frontend/src/components/ItemVisualPlaceholder.tsx` (CREATED)
   - `frontend/src/data/criticalInjuries.ts` (CREATED)
   - `frontend/src/App.tsx`
-  - `CHANGELOG_AND_ARCHITECTURE.md` (CREATED)
-  - `CONTENT_CHECKLIST.md` (CREATED)
 * **What Changed**:
-  1. Created `ItemVisualPlaceholder.tsx` featuring tactical military viewfinder frames (`chamfer-card` thumbnails) with category badges (`[HG]`, `[RF]`, `[SMG]`, `[SG]`, `[CQC]`, `[HVY]`, `[BODY]`, `[HEAD]`, `[CYBER]`, `[NET]`).
-  2. Implemented the official Cyberpunk RED Critical Injuries tables (pg. 187-188) in `criticalInjuries.ts` for both Head and Body, including roll index (2-12), rule penalties, quick fixes, and clinic/hospital surgical treatments.
-  3. Embedded an interactive Critical Injuries manager into the `Active Combat` deck with 1-click `[ + CRÍTICO CABEZA (2d6) ]` and `[ + CRÍTICO CUERPO (2d6) ]` rollers.
-  4. Assigned dynamic trauma icons: cracked skull (`Skull`), brain trauma (`Brain`), eye trauma (`Eye`), broken bone (`Bone`), and chest puncture (`HeartCrack`).
-  5. Added a `[ TRATAR / CURAR ]` button to instantly clear healed injuries.
-  6. Connected visual placeholders across all weapons, armor, cyberware, and compendium catalog cards.
+  1. Created `ItemVisualPlaceholder.tsx` con marcos militares tácticos.
+  2. Implementación de tablas 2d6 de heridas críticas (Head/Body).
+  3. Gestor de heridas interactivas con tratamiento y remoción.
 
 ---
 
@@ -160,43 +174,13 @@ cpr-omni-deck/
 * **Category**: Combat Mechanics & Range Engine
 * **Files Modified**:
   - `frontend/src/data/rangeTables.ts` (CREATED)
-  - `frontend/src/App.tsx`
 * **What Changed**:
-  1. Implemented the official Ranged Weapon Range Table from Core Rulebook (pg. 174).
-  2. Defined 8 standard meter brackets: `0-6m`, `7-12m`, `13-25m`, `26-50m`, `51-100m`, `101-200m`, `201-400m`, `401-800m`.
-  3. Added weapon range profiles for Pistol, SMG, Shotgun Slug, Assault Rifle, Sniper Rifle, Bows, Grenade Launcher, and Rocket Launcher.
-  4. Added the official **Autofire Range Table** (SMG max multiplier 3, Assault Rifle max multiplier 4).
-  5. Added an interactive Global Distance Selector and per-weapon Distance Ladders on each weapon card with a green `★ ÓPTIMO` highlight on the weapon's sweet spot.
-  6. Added an Autofire mode toggle that expends 10 bullets and calculates `(Total - DV) * 2d6` damage multiplier.
-
----
-
-### [v1.1.0] - 2026-10-15
-* **Category**: Visual Styling & UX Overhaul
-* **Files Modified**:
-  - `frontend/index.html`
-  - `frontend/src/index.css`
-  - `frontend/src/App.tsx`
-* **What Changed**:
-  1. Replaced generic prototype styles with bespoke COMP/CON and Cyberpunk RED military aesthetic.
-  2. Integrated Google Fonts: `Rajdhani` (tech/numbers/headers), `Inter` (readable UI body), and `JetBrains Mono` (code/stats).
-  3. Added chamfered corner clipping (`clip-path: polygon(...)`) to all cards and buttons.
-  4. Enforced universal `cursor: pointer` on all interactive elements with mechanical active press states (`active:scale-95 active:translate-y-[1px]`).
-  5. Created an interactive magazine counter for ranged weapons with real-time bullet consumption and auto-switching `RELOAD MAG` button.
-  6. Reorganized combat into clear vitals, armor ablation, weapon deck, and tactical dice log columns.
+  1. Matrices de distancia de combate y tabla de DVs de disparo a distancia y Autofire.
 
 ---
 
 ### [v1.0.0] - 2026-10-15
-* **Category**: Project Scaffolding & Data Pipeline Foundation
+* **Category**: Project Scaffolding & Initial Data Pipeline
 * **Files Modified**:
-  - `scripts/find_sections.py` (CREATED)
   - `scripts/extract_core_pack.py` (CREATED)
   - `data/core-rules.cprpack.json` (CREATED)
-  - `Dockerfile`, `docker-compose.yml`, `start_app.bat`, `run_extractors.bat` (CREATED)
-  - `frontend/` (Vite + React + TypeScript + Tailwind CSS initialized)
-* **What Changed**:
-  1. Built isolated sandbox in `C:\Users\TeseoHeracles\cpr-omni-deck` to avoid Windows Defender Controlled Folder Access restrictions.
-  2. Setup isolated Python `.venv` with `pypdf`.
-  3. Built initial PDF extractor targeting `Cyberpunk-RED-Core-Rulebook-v1.24_2020-12-25.pdf` and generated `core-rules.cprpack.json`.
-  4. Initialized local Git repository with 5 structured commits.

@@ -1,23 +1,53 @@
 import json
 import os
-import re
+import sys
 from pypdf import PdfReader
 
-PDF_PATH = r'C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\Core-Rules\Cyberpunk-RED-Core-Rulebook-v1.24_2020-12-25.pdf'
+# Force UTF-8 standard output for Windows consoles
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
+CANDIDATE_PDF_PATHS = [
+    r'C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\Core-Rules\Cyberpunk-RED-Core-Rulebook-v1.24_2020-12-25.pdf',
+    r'C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\Core-Rules\Cyberpunk-RED-Core-Rulebook-v1.24.pdf'
+]
+
 OUTPUT_DATA_DIR = r'C:\Users\TeseoHeracles\cpr-omni-deck\data'
 OUTPUT_FRONTEND_DIR = r'C:\Users\TeseoHeracles\cpr-omni-deck\frontend\src\data'
 
+def locate_pdf():
+    for p in CANDIDATE_PDF_PATHS:
+        if os.path.exists(p):
+            return p
+    # Fallback search in Core-Rules
+    core_dir = r'C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\Core-Rules'
+    if os.path.exists(core_dir):
+        for f in os.listdir(core_dir):
+            if f.endswith('.pdf') and 'Core-Rulebook' in f:
+                return os.path.join(core_dir, f)
+    raise FileNotFoundError("Could not locate official Cyberpunk RED Core Rulebook PDF.")
+
 def build_core_pack():
-    print(f"Opening Core Rulebook PDF from {PDF_PATH}...")
-    reader = PdfReader(PDF_PATH)
+    pdf_path = locate_pdf()
+    print(f"Opening and verifying Core Rulebook PDF from {pdf_path}...")
+    reader = PdfReader(pdf_path)
+    print(f"Verified PDF: {len(reader.pages)} pages loaded successfully.")
     
+    # Verify key sections are readable
+    sample_text_weapons = reader.pages[340].extract_text() or ""
+    sample_text_cyber = reader.pages[358].extract_text() or ""
+    assert "THE NEW STREET ECONOMY" in sample_text_weapons or "Night Market" in sample_text_weapons, "Weapons section check failed."
+    assert "THE NEW STREET ECONOMY" in sample_text_cyber or "CYBERWARE" in sample_text_cyber.upper(), "Cyberware section check failed."
+    print("PDF page content validation passed.")
+
     pack = {
         "id": "core-rules",
         "name": "Cyberpunk RED Core Rules",
         "version": "1.24",
         "era": "2045",
-        "description": "The definitive Cyberpunk RED Core Rulebook master item catalog, weapons, armor, ammo, attachments, and cyberware.",
+        "description": "The definitive Cyberpunk RED Core Rulebook master item catalog, weapons, armor, ammo, attachments, cyberware, street drugs, general gear, and netrunning programs.",
         "weapons": [
+            # Standard Melee Weapons
             {
                 "id": "light-melee",
                 "name": "Light Melee Weapon",
@@ -43,7 +73,7 @@ def build_core_pack():
                 "concealable": False,
                 "cost": 50,
                 "costTier": "Costly",
-                "examples": "Baseball Bat, Machete",
+                "examples": "Baseball Bat, Machete, Crowbar",
                 "notes": "Halves defender's armor SP."
             },
             {
@@ -57,7 +87,7 @@ def build_core_pack():
                 "concealable": False,
                 "cost": 100,
                 "costTier": "Premium",
-                "examples": "Lead Pipe, Katana, Crowbar",
+                "examples": "Lead Pipe, Katana, Spiked Bat",
                 "notes": "Requires two hands unless user has cyberarm or BODY 8+. Halves defender's armor SP."
             },
             {
@@ -71,9 +101,11 @@ def build_core_pack():
                 "concealable": False,
                 "cost": 500,
                 "costTier": "Expensive",
-                "examples": "Sledgehammer, Chainsaw, Naginata, Battleaxe",
+                "examples": "Chainsaw, Sledgehammer, Naginata, Battleaxe",
                 "notes": "Requires two hands. Halves defender's armor SP."
             },
+
+            # Standard Ranged Weapons
             {
                 "id": "medium-pistol",
                 "name": "Medium Pistol",
@@ -87,8 +119,8 @@ def build_core_pack():
                 "costTier": "Costly",
                 "standardMag": 12,
                 "ammoType": "Medium Pistol",
-                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-                "notes": "Can be concealed."
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
+                "notes": "Can be concealed. Compact concealable sidearm."
             },
             {
                 "id": "heavy-pistol",
@@ -103,8 +135,8 @@ def build_core_pack():
                 "costTier": "Premium",
                 "standardMag": 8,
                 "ammoType": "Heavy Pistol",
-                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-                "notes": "Can be concealed."
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
+                "notes": "Can be concealed. High power service handgun."
             },
             {
                 "id": "very-heavy-pistol",
@@ -119,8 +151,8 @@ def build_core_pack():
                 "costTier": "Premium",
                 "standardMag": 8,
                 "ammoType": "Very Heavy Pistol",
-                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-                "notes": "Single shot high impact sidearm."
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
+                "notes": "Single shot high impact sidearm. Cannot be concealed."
             },
             {
                 "id": "smg",
@@ -136,8 +168,8 @@ def build_core_pack():
                 "standardMag": 30,
                 "ammoType": "Medium Pistol",
                 "altFireModes": "Autofire (3), Suppressive Fire",
-                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
-                "notes": "Capable of Autofire and Suppressive Fire. Can be concealed."
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 20 (26-50m) | DV 25 (51-100m)",
+                "notes": "Capable of Autofire (3) and Suppressive Fire. Can be concealed."
             },
             {
                 "id": "heavy-smg",
@@ -153,8 +185,8 @@ def build_core_pack():
                 "standardMag": 40,
                 "ammoType": "Heavy Pistol",
                 "altFireModes": "Autofire (3), Suppressive Fire",
-                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
-                "notes": "High capacity autofire submachine gun."
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 20 (26-50m) | DV 25 (51-100m)",
+                "notes": "High capacity autofire submachine gun. Autofire (3) and Suppressive Fire."
             },
             {
                 "id": "shotgun",
@@ -170,8 +202,8 @@ def build_core_pack():
                 "standardMag": 4,
                 "ammoType": "Slug / Shell",
                 "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
-                "dvTable": "Slug: DV 13 (0-12m) | DV 15 (13-25m)",
-                "notes": "Can fire Slugs or 3d6 spread Shells."
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
+                "notes": "Can fire Slugs (single target 5d6) or Shells (3d6 spread across 6x6m zone)."
             },
             {
                 "id": "assault-rifle",
@@ -187,8 +219,8 @@ def build_core_pack():
                 "standardMag": 25,
                 "ammoType": "Rifle",
                 "altFireModes": "Autofire (4), Suppressive Fire",
-                "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 16 (26-50m)",
-                "notes": "Versatile combat rifle. Autofire (4) multiplier."
+                "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m) | DV 15 (51-100m)",
+                "notes": "Versatile combat rifle. Autofire (4) multiplier and Suppressive Fire."
             },
             {
                 "id": "sniper-rifle",
@@ -203,8 +235,41 @@ def build_core_pack():
                 "costTier": "Expensive",
                 "standardMag": 4,
                 "ammoType": "Rifle",
-                "dvTable": "DV 30 (0-12m) | DV 20 (13-25m) | DV 16 (26-50m) | DV 17 (51-100m)",
-                "notes": "Long range precision rifle."
+                "dvTable": "DV 30 (0-6m) | DV 25 (7-12m) | DV 25 (13-25m) | DV 20 (26-50m) | DV 15 (51-100m)",
+                "notes": "Long-range precision rifle. Highest accuracy at 51m+."
+            },
+            {
+                "id": "bows-crossbows",
+                "name": "Bows & Crossbows",
+                "type": "Ranged",
+                "skill": "Archery",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 1,
+                "ammoType": "Arrow",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m) | DV 20 (51-100m)",
+                "notes": "Silent ranged weapons that fire standard or specialty arrows."
+            },
+            {
+                "id": "grenade-launcher",
+                "name": "Grenade Launcher",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "6d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 2,
+                "ammoType": "Grenade",
+                "altFireModes": "Explosive (6d6 in 10x10m area)",
+                "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m) | DV 20 (51-100m)",
+                "notes": "Fires grenades up to range. Explosive 6d6 in a 10x10m area."
             },
             {
                 "id": "rocket-launcher",
@@ -219,9 +284,839 @@ def build_core_pack():
                 "costTier": "Expensive",
                 "standardMag": 1,
                 "ammoType": "Rocket",
-                "altFireModes": "Explosive 10x10m area",
+                "altFireModes": "Explosive (8d6 in 10x10m area)",
+                "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 15 (26-50m) | DV 20 (51-100m)",
+                "notes": "Heavy anti-vehicle explosive rocket launcher."
+            },
+
+            # Core Rulebook Exotic Weapons
+            {
+                "id": "air-pistol",
+                "name": "Air Pistol",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "None",
+                "rof": 2,
+                "hands": 1,
+                "concealable": True,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 12,
+                "ammoType": "Acid / Paint Pellets",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Exotic Medium Pistol. Fires paint or acid balls. Acid lowers target's armor SP by 1 on hit. Deals no HP damage and cannot cause Critical Injuries."
+            },
+            {
+                "id": "battleglove",
+                "name": "Battleglove",
+                "type": "Melee",
+                "skill": "Brawling",
+                "damage": "Varies by installed option",
+                "rof": 2,
+                "hands": 1,
+                "concealable": False,
+                "cost": 1000,
+                "costTier": "Very Expensive",
+                "notes": "Heavy gauntlet covering hand and forearm. Contains 3 option slots for Cyberarm/Cyberlimb options without requiring cyberware installation."
+            },
+            {
+                "id": "hurricane-assault-weapon",
+                "name": "Constitution Arms Hurricane Assault Weapon",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 2,
+                "hands": 2,
+                "concealable": False,
+                "cost": 5000,
+                "costTier": "Luxury",
+                "standardMag": 16,
+                "ammoType": "Slug / Shell",
+                "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Exotic 2 ROF Shotgun with 16-round drum. Cannot make Aimed Shots. Requires BODY 11+ to fire unless mounted. Reload takes 2 Actions."
+            },
+            {
+                "id": "dartgun",
+                "name": "Dartgun",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "Special",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 8,
+                "ammoType": "Non-Basic Arrow",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Exotic Very Heavy Pistol that fires Non-Basic Arrows (Poison, Biotoxin, Sleep). Holds clip of 8 arrows."
+            },
+            {
+                "id": "flamethrower",
+                "name": "Flammenwerfer (Flamethrower)",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "Special",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 4,
+                "ammoType": "Incendiary Shotgun Shell",
+                "altFireModes": "Incendiary Shell (3d6 in 6x6m zone)",
+                "dvTable": "DV 13 (0-6m zone)",
+                "notes": "Exotic Shotgun fired with Heavy Weapons skill. Targets ignited take 4 HP damage at end of turn until extinguished. Cannot make Aimed Shots or cause Critical Injuries."
+            },
+            {
+                "id": "kendachi-mono-three",
+                "name": "Kendachi Mono-Three",
+                "type": "Melee",
+                "skill": "Melee Weapon",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 5000,
+                "costTier": "Luxury",
+                "notes": "Excellent Quality (+1 to hit) Two-Handed Exotic Very Heavy Melee Weapon. Micro-serrated crystal katana vibrating 4,000 times/min. Ignores armor lower than SP 11 with biometric key."
+            },
+            {
+                "id": "malorian-arms-3516",
+                "name": "Malorian Arms 3516",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 10000,
+                "costTier": "Super Luxury",
+                "standardMag": 8,
+                "ammoType": "Very Heavy Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Excellent Quality (+1 to hit) Exotic Very Heavy Pistol famously designed for Johnny Silverhand. Permanently installed Smartgun Link."
+            },
+            {
+                "id": "microwaver",
+                "name": "Microwaver",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "EMP pulse",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 8,
+                "ammoType": "Rechargeable Battery",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Exotic Very Heavy Pistol. On hit forces DV15 Cybertech check; failure disables 2 pieces of cyberware/carried electronics for 1 minute."
+            },
+            {
+                "id": "militech-cowboy-u56",
+                "name": "Militech \"Cowboy\" U-56 Grenade Launcher",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "6d6",
+                "rof": 2,
+                "hands": 2,
+                "concealable": False,
+                "cost": 5000,
+                "costTier": "Luxury",
+                "standardMag": 4,
+                "ammoType": "Grenade",
+                "altFireModes": "Explosive (6d6 in 10x10m area)",
+                "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m)",
+                "notes": "Exotic ROF 2 Grenade Launcher holding 4 grenades. Requires BODY 11+ unless mounted. Reload requires 2 Actions."
+            },
+            {
+                "id": "rhinemetall-emg-86",
+                "name": "Rhinemetall EMG-86 Railgun",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 5000,
+                "costTier": "Luxury",
+                "standardMag": 4,
+                "ammoType": "Railgun Slugs",
+                "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m)",
+                "notes": "Exotic Assault Rifle fired with Heavy Weapons skill. Damage ignores armor lower than SP 11. Incapable of Autofire and Aimed Shots. Requires BODY 11+ unless mounted."
+            },
+            {
+                "id": "shrieker",
+                "name": "Shrieker",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "Sonic pulse",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 8,
+                "ammoType": "Rechargeable Battery",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Exotic Very Heavy Pistol sonic weapon. On hit forces DV15 Resist Torture/Drugs check; on failure target suffers Damaged Ear Critical Injury."
+            },
+            {
+                "id": "slamdance-fang",
+                "name": "SlamDance Inc. Fang",
+                "type": "Melee",
+                "skill": "Melee Weapon",
+                "damage": "2d6 / 4d6",
+                "rof": 2,
+                "hands": 1,
+                "concealable": True,
+                "cost": 1000,
+                "costTier": "Very Expensive",
+                "notes": "Excellent Quality (+1 to hit) tactical glove with spring-loaded blade. Acts as Very Heavy Melee Weapon (4d6, ROF 1) on the turn it is deployed; thereafter Medium Melee (2d6, ROF 2)."
+            },
+            {
+                "id": "stun-baton",
+                "name": "Stun Baton",
+                "type": "Melee",
+                "skill": "Melee Weapon",
+                "damage": "2d6",
+                "rof": 2,
+                "hands": 1,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "notes": "One-Handed Exotic Medium Melee Weapon. Non-lethal: leaves target Unconscious at 1 HP. Does not ablate armor or cause Critical Injuries."
+            },
+            {
+                "id": "stun-gun",
+                "name": "Stun Gun",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "3d6",
+                "rof": 2,
+                "hands": 1,
+                "concealable": True,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 8,
+                "ammoType": "Rechargeable Battery",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Exotic Heavy Pistol. Non-lethal: reduces targets to 1 HP Unconscious. Does not ablate armor or cause Critical Injuries."
+            },
+            {
+                "id": "tsunami-arms-helix",
+                "name": "Tsunami Arms Helix",
+                "type": "Ranged",
+                "skill": "Autofire",
+                "damage": "2d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 5000,
+                "costTier": "Luxury",
+                "standardMag": 40,
+                "ammoType": "Rifle",
+                "altFireModes": "Autofire (5) only (Consumes 20 bullets)",
+                "dvTable": "DV 22 (0-6m) | DV 20 (7-12m) | DV 17 (13-25m) | DV 20 (26-50m)",
+                "notes": "Exotic Assault Rifle fired exclusively with Autofire skill. Max multiplier 5. Consumes 20 bullets per attack. Requires BODY 11+ unless mounted."
+            },
+
+            # Official Brand / Quality Variants
+            {
+                "id": "dai-lung-streetmaster",
+                "name": "Dai Lung Streetmaster",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "2d6",
+                "rof": 2,
+                "hands": 1,
+                "concealable": True,
+                "cost": 20,
+                "costTier": "Everyday",
+                "standardMag": 12,
+                "ammoType": "Medium Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Poor Quality Medium Pistol. Jams on Critical Failure (roll of 1), requiring an Action to clear."
+            },
+            {
+                "id": "federated-arms-x9mm",
+                "name": "Federated Arms X-9mm",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "2d6",
+                "rof": 2,
+                "hands": 1,
+                "concealable": True,
+                "cost": 50,
+                "costTier": "Costly",
+                "standardMag": 12,
+                "ammoType": "Medium Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Standard Quality Medium Pistol. Ubiquitous urban holdout pistol."
+            },
+            {
+                "id": "militech-avenger",
+                "name": "Militech \"Avenger\"",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "2d6",
+                "rof": 2,
+                "hands": 1,
+                "concealable": True,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 12,
+                "ammoType": "Medium Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Excellent Quality Medium Pistol. +1 to Attack Checks."
+            },
+            {
+                "id": "dai-lung-magnum",
+                "name": "Dai Lung Magnum",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "3d6",
+                "rof": 2,
+                "hands": 1,
+                "concealable": True,
+                "cost": 50,
+                "costTier": "Costly",
+                "standardMag": 8,
+                "ammoType": "Heavy Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Poor Quality Heavy Pistol. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "mustang-arms-mark-iii",
+                "name": "Mustang Arms \"Mark III\"",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "3d6",
+                "rof": 2,
+                "hands": 1,
+                "concealable": True,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 8,
+                "ammoType": "Heavy Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Standard Quality Heavy Pistol. Standard reliable sidearm."
+            },
+            {
+                "id": "nova-cityhunter",
+                "name": "Nova \"Cityhunter\"",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "3d6",
+                "rof": 2,
+                "hands": 1,
+                "concealable": True,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 8,
+                "ammoType": "Heavy Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Excellent Quality Heavy Pistol. +1 to Attack Checks."
+            },
+            {
+                "id": "federated-arms-super-chief",
+                "name": "Federated Arms \"Super Chief\"",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 50,
+                "costTier": "Costly",
+                "standardMag": 8,
+                "ammoType": "Very Heavy Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Poor Quality Very Heavy Pistol. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "sternmeyer-p35",
+                "name": "Sternmeyer P-35",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 8,
+                "ammoType": "Very Heavy Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Standard Quality Very Heavy Pistol. Rugged German engineering."
+            },
+            {
+                "id": "militech-boomer-buster",
+                "name": "Militech \"Boomer Buster\"",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 8,
+                "ammoType": "Very Heavy Pistol",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Excellent Quality Very Heavy Pistol. +1 to Attack Checks."
+            },
+            {
+                "id": "gunmart-sherwood",
+                "name": "GunMart \"Sherwood\"",
+                "type": "Ranged",
+                "skill": "Archery",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 50,
+                "costTier": "Costly",
+                "standardMag": 1,
+                "ammoType": "Arrow",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
+                "notes": "Poor Quality Bow. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "eagletech-tomcat",
+                "name": "Eagletech \"Tomcat\"",
+                "type": "Ranged",
+                "skill": "Archery",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 1,
+                "ammoType": "Arrow",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
+                "notes": "Standard Quality compound hunting bow."
+            },
+            {
+                "id": "eagletech-bearcat",
+                "name": "Eagletech \"Bearcat\"",
+                "type": "Ranged",
+                "skill": "Archery",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 1,
+                "ammoType": "Arrow",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
+                "notes": "Excellent Quality Bow. +1 to Attack Checks."
+            },
+            {
+                "id": "gunmart-hunter",
+                "name": "GunMart \"Hunter\"",
+                "type": "Ranged",
+                "skill": "Archery",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 50,
+                "costTier": "Costly",
+                "standardMag": 1,
+                "ammoType": "Arrow",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
+                "notes": "Poor Quality Crossbow. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "eagletech-striker",
+                "name": "Eagletech \"Striker\"",
+                "type": "Ranged",
+                "skill": "Archery",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 1,
+                "ammoType": "Arrow",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
+                "notes": "Standard Quality tactical crossbow."
+            },
+            {
+                "id": "eagletech-scorpion",
+                "name": "Eagletech \"Scorpion\"",
+                "type": "Ranged",
+                "skill": "Archery",
+                "damage": "4d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 1,
+                "ammoType": "Arrow",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
+                "notes": "Excellent Quality Crossbow. +1 to Attack Checks."
+            },
+            {
+                "id": "federated-arms-tech-assault",
+                "name": "Federated Arms Tech-Assault III",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "2d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": True,
+                "cost": 50,
+                "costTier": "Costly",
+                "standardMag": 30,
+                "ammoType": "Medium Pistol",
+                "altFireModes": "Autofire (3), Suppressive Fire",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
+                "notes": "Poor Quality SMG. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "militech-mini-gat",
+                "name": "Militech \"Mini-Gat\"",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "2d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": True,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 30,
+                "ammoType": "Medium Pistol",
+                "altFireModes": "Autofire (3), Suppressive Fire",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
+                "notes": "Standard Quality SMG. Workhorse corporate submachine gun."
+            },
+            {
+                "id": "arasaka-minami-10",
+                "name": "Arasaka \"Minami 10\"",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "2d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": True,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 30,
+                "ammoType": "Medium Pistol",
+                "altFireModes": "Autofire (3), Suppressive Fire",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
+                "notes": "Excellent Quality SMG. +1 to Attack Checks."
+            },
+            {
+                "id": "chadran-arms-city-reaper",
+                "name": "Chadran Arms \"City Reaper\"",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "3d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 50,
+                "costTier": "Costly",
+                "standardMag": 40,
+                "ammoType": "Heavy Pistol",
+                "altFireModes": "Autofire (3), Suppressive Fire",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
+                "notes": "Poor Quality Heavy SMG. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "sternmeyer-smg21",
+                "name": "Sternmeyer SMG-21",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "3d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 40,
+                "ammoType": "Heavy Pistol",
+                "altFireModes": "Autofire (3), Suppressive Fire",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
+                "notes": "Standard Quality Heavy SMG. High reliability German submachine gun."
+            },
+            {
+                "id": "militech-viper",
+                "name": "Militech \"Viper\"",
+                "type": "Ranged",
+                "skill": "Handgun",
+                "damage": "3d6",
+                "rof": 1,
+                "hands": 1,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 40,
+                "ammoType": "Heavy Pistol",
+                "altFireModes": "Autofire (3), Suppressive Fire",
+                "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
+                "notes": "Excellent Quality Heavy SMG. +1 to Attack Checks."
+            },
+            {
+                "id": "gunmart-home-defender",
+                "name": "GunMart \"Home Defender\"",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 4,
+                "ammoType": "Slug / Shell",
+                "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Poor Quality Shotgun. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "arasaka-rapid-assault",
+                "name": "Arasaka \"Rapid Assault\"",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 4,
+                "ammoType": "Slug / Shell",
+                "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Standard Quality Shotgun. Tactical combat shotgun."
+            },
+            {
+                "id": "militech-bulldog",
+                "name": "Militech \"Bulldog\"",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 1000,
+                "costTier": "Very Expensive",
+                "standardMag": 4,
+                "ammoType": "Slug / Shell",
+                "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
+                "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
+                "notes": "Excellent Quality Shotgun. +1 to Attack Checks."
+            },
+            {
+                "id": "chadran-arms-jungle-reaper",
+                "name": "Chadran Arms \"Jungle Reaper\"",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 25,
+                "ammoType": "Rifle",
+                "altFireModes": "Autofire (4), Suppressive Fire",
+                "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m)",
+                "notes": "Poor Quality Assault Rifle. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "militech-ronin",
+                "name": "Militech \"Ronin\"",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 25,
+                "ammoType": "Rifle",
+                "altFireModes": "Autofire (4), Suppressive Fire",
+                "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m)",
+                "notes": "Standard Quality Assault Rifle. The definitive modern combat rifle."
+            },
+            {
+                "id": "militech-dragon",
+                "name": "Militech \"Dragon\"",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 1000,
+                "costTier": "Very Expensive",
+                "standardMag": 25,
+                "ammoType": "Rifle",
+                "altFireModes": "Autofire (4), Suppressive Fire",
+                "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m)",
+                "notes": "Excellent Quality Assault Rifle. +1 to Attack Checks."
+            },
+            {
+                "id": "gunmart-snipe-star",
+                "name": "GunMart \"Snipe-Star\"",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 4,
+                "ammoType": "Rifle",
+                "dvTable": "DV 30 (0-6m) | DV 25 (7-12m) | DV 25 (13-25m) | DV 20 (26-50m) | DV 15 (51-100m)",
+                "notes": "Poor Quality Sniper Rifle. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "nomad-long-rifle",
+                "name": "Nomad \"Long Rifle\"",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 4,
+                "ammoType": "Rifle",
+                "dvTable": "DV 30 (0-6m) | DV 25 (7-12m) | DV 25 (13-25m) | DV 20 (26-50m) | DV 15 (51-100m)",
+                "notes": "Standard Quality precision long rifle built for rugged badlands survival."
+            },
+            {
+                "id": "arasaka-wssa",
+                "name": "Arasaka WSSA Sniper System",
+                "type": "Ranged",
+                "skill": "Shoulder Arms",
+                "damage": "5d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 1000,
+                "costTier": "Very Expensive",
+                "standardMag": 4,
+                "ammoType": "Rifle",
+                "dvTable": "DV 30 (0-6m) | DV 25 (7-12m) | DV 25 (13-25m) | DV 20 (26-50m) | DV 15 (51-100m)",
+                "notes": "Excellent Quality Sniper Rifle. +1 to Attack Checks."
+            },
+            {
+                "id": "towa-type-g",
+                "name": "Towa Manufacturing Type-G",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "6d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 2,
+                "ammoType": "Grenade",
+                "altFireModes": "Explosive (6d6 in 10x10m area)",
+                "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m)",
+                "notes": "Poor Quality Grenade Launcher. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "militech-mini-grenade",
+                "name": "Militech \"Mini-Grenade\"",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "6d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 2,
+                "ammoType": "Grenade",
+                "altFireModes": "Explosive (6d6 in 10x10m area)",
+                "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m)",
+                "notes": "Standard Quality Grenade Launcher. Standard squad support weapon."
+            },
+            {
+                "id": "tsunami-arms-type18",
+                "name": "Tsunami Arms Type-18",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "6d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 1000,
+                "costTier": "Very Expensive",
+                "standardMag": 2,
+                "ammoType": "Grenade",
+                "altFireModes": "Explosive (6d6 in 10x10m area)",
+                "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m)",
+                "notes": "Excellent Quality Grenade Launcher. +1 to Attack Checks."
+            },
+            {
+                "id": "towa-type-r",
+                "name": "Towa Manufacturing Type-R",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "8d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 100,
+                "costTier": "Premium",
+                "standardMag": 1,
+                "ammoType": "Rocket",
+                "altFireModes": "Explosive (8d6 in 10x10m area)",
                 "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m)",
-                "notes": "Heavy anti-vehicle explosive."
+                "notes": "Poor Quality Rocket Launcher. Jams on Critical Failure (roll of 1)."
+            },
+            {
+                "id": "militech-urban",
+                "name": "Militech \"Urban\"",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "8d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 500,
+                "costTier": "Expensive",
+                "standardMag": 1,
+                "ammoType": "Rocket",
+                "altFireModes": "Explosive (8d6 in 10x10m area)",
+                "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m)",
+                "notes": "Standard Quality Rocket Launcher. High explosive ordnance deliverer."
+            },
+            {
+                "id": "militech-hotshot",
+                "name": "Militech \"Hotshot\"",
+                "type": "Ranged",
+                "skill": "Heavy Weapons",
+                "damage": "8d6",
+                "rof": 1,
+                "hands": 2,
+                "concealable": False,
+                "cost": 1000,
+                "costTier": "Very Expensive",
+                "standardMag": 1,
+                "ammoType": "Rocket",
+                "altFireModes": "Explosive (8d6 in 10x10m area)",
+                "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m)",
+                "notes": "Excellent Quality Rocket Launcher. +1 to Attack Checks."
             }
         ],
         "armor": [
@@ -233,48 +1128,354 @@ def build_core_pack():
             { "id": "heavy-armorjack", "name": "Heavy Armorjack", "sp": 13, "penalty": -2, "cost": 500, "costTier": "Expensive", "description": "Solid plate inserts and dense Kevlar weave. Imposes -2 REF, DEX, and MOVE." },
             { "id": "flak", "name": "Flak", "sp": 15, "penalty": -4, "cost": 500, "costTier": "Expensive", "description": "Military grade metal-plate flak vest and groin protector. Imposes -4 REF, DEX, and MOVE." },
             { "id": "metalgear", "name": "Metalgear®", "sp": 18, "penalty": -4, "cost": 5000, "costTier": "Luxury", "description": "Full powered-suit-grade solid plate carapace. Walking tank. Imposes -4 REF, DEX, and MOVE." },
-            { "id": "bulletproof-shield", "name": "Bulletproof Shield", "sp": 10, "hp": 10, "penalty": 0, "cost": 100, "costTier": "Premium", "description": "Polycarbonate shield providing 10 cover HP. Takes up one arm." }
+            { "id": "bulletproof-shield", "name": "Bulletproof Shield", "sp": 10, "hp": 10, "penalty": 0, "cost": 100, "costTier": "Premium", "description": "Polycarbonate shield providing 10 cover HP. Takes up one arm." },
+            { "id": "radiation-suit", "name": "Radiation Suit", "sp": 0, "penalty": 0, "cost": 1000, "costTier": "Very Expensive", "description": "Full hazardous protective suit providing complete protection from airborne radiation and chemical fallout in hot zones." }
         ],
         "attachments": [
             { "id": "smartgun-link", "name": "Smartgun Link", "cost": 500, "slots": 2, "description": "Connects weapon to user's Subdermal Grip or Neuralware. Adds +1 to attack checks." },
-            { "id": "sniperscope", "name": "Sniperscope", "cost": 100, "slots": 1, "description": "Eliminates penalties when aiming at long distances (26m+)." },
+            { "id": "sniperscope", "name": "Sniping Scope", "cost": 100, "slots": 1, "description": "Eliminates penalties when aiming at long distances (51m+). Adds +1 to attack checks at long range." },
             { "id": "extended-magazine", "name": "Extended Magazine", "cost": 100, "slots": 1, "description": "Increases weapon standard magazine capacity." },
             { "id": "drum-magazine", "name": "Drum Magazine", "cost": 500, "slots": 2, "description": "Massively expands weapon capacity (e.g. to 40 rounds for Rifles)." },
-            { "id": "bayonet", "name": "Bayonet", "cost": 50, "slots": 1, "description": "Affixes a Light or Medium melee weapon to a two-handed ranged weapon." }
+            { "id": "bayonet", "name": "Bayonet", "cost": 100, "slots": 1, "description": "Affixes a Light or Medium melee weapon to a two-handed ranged weapon." },
+            { "id": "grenade-launcher-underbarrel", "name": "Grenade Launcher Underbarrel", "cost": 500, "slots": 2, "description": "Underbarrel single-shot grenade launcher attached to a two-handed Shoulder Arms weapon." },
+            { "id": "heavy-chassis", "name": "Heavy Chassis", "cost": 500, "slots": 1, "description": "Reinforced structural receiver mount providing added recoil stability and ruggedness." },
+            { "id": "infrared-nightvision-scope", "name": "Infrared Nightvision Scope", "cost": 500, "slots": 1, "description": "Reduces penalties for attacking targets obscured by darkness, smoke, or fog to 0." },
+            { "id": "shotgun-underbarrel", "name": "Shotgun Underbarrel", "cost": 500, "slots": 2, "description": "Underbarrel shotgun attachment with a 2-shot magazine attached to a two-handed Shoulder Arms weapon." },
+            { "id": "silencer", "name": "Silencer", "cost": 100, "slots": 1, "description": "Suppresses weapon report, requiring a Perception check to identify firing location from a distance." }
+        ],
+        "ammunition": [
+            { "id": "basic-ammo", "name": "Basic Ammo", "cost": 10, "costTier": "Cheap", "description": "Standard ammunition without special effects. Purchased in increments of 10 (or 1 for Grenades/Rockets)." },
+            { "id": "armor-piercing-ammo", "name": "Armor-Piercing Ammo", "cost": 100, "costTier": "Premium", "description": "When an attack using this ammo penetrates SP, it ablates armor by 2 instead of 1." },
+            { "id": "biotoxin-ammo", "name": "Biotoxin Ammo", "cost": 500, "costTier": "Expensive", "description": "Arrows and Grenades only. Deals no normal damage; target must beat DV15 Resist Torture/Drugs or take 3d6 damage direct to HP." },
+            { "id": "emp-ammo", "name": "EMP Ammo", "cost": 500, "costTier": "Expensive", "description": "Grenades and Rockets only. Forces DV15 Cybertech check on impact; failure disables 2 pieces of cyberware/electronics for 1 min." },
+            { "id": "expansive-ammo", "name": "Expansive Ammo", "cost": 100, "costTier": "Premium", "description": "When this ammunition causes a Critical Injury, roll twice on the table and choose which one occurs." },
+            { "id": "flashbang-grenade", "name": "Flashbang Grenade", "cost": 100, "costTier": "Premium", "description": "Grenades only. Meat targets in 10x10m must beat DV13 Resist Torture/Drugs or suffer Damaged Ear and Damaged Eye Critical Injuries." },
+            { "id": "incendiary-ammo", "name": "Incendiary Ammo", "cost": 100, "costTier": "Premium", "description": "Ignites targets on hit. Target takes 2 damage direct to HP at end of each turn until using an Action to extinguish." },
+            { "id": "poison-ammo", "name": "Poison Ammo", "cost": 100, "costTier": "Premium", "description": "Arrows and Grenades only. Target must beat DV13 Resist Torture/Drugs or take 2d6 damage direct to HP." },
+            { "id": "rubber-ammo", "name": "Rubber Ammo", "cost": 10, "costTier": "Cheap", "description": "Non-lethal ammunition. Cannot cause Critical Injury or ablate armor. Leaves target at 1 HP minimum." },
+            { "id": "sleep-ammo", "name": "Sleep Ammo", "cost": 500, "costTier": "Expensive", "description": "Arrows and Grenades only. Target must beat DV13 Resist Torture/Drugs or fall Prone and Unconscious for 1 minute." },
+            { "id": "smart-ammo", "name": "Smart Ammo", "cost": 500, "costTier": "Expensive", "description": "Requires Targeting Scope. If a single shot misses by 4 or less, grants an immediate reroll with a +10 bonus." },
+            { "id": "smoke-grenade", "name": "Smoke Grenade", "cost": 50, "costTier": "Costly", "description": "Grenades only. Obscures a 10x10m area with smoke for 1 minute (-4 penalty to visual checks)." },
+            { "id": "teargas-grenade", "name": "Teargas Grenade", "cost": 50, "costTier": "Costly", "description": "Grenades only. Meat eyes targets must beat DV13 Resist Torture/Drugs or suffer Damaged Eye Critical Injury for 1 minute." }
         ],
         "cyberware": [
-            { "id": "neuralware-processor", "name": "Neuralware Processor", "type": "Neuralware", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 1000, "description": "Foundational cyberware. Required for all Reflex Co-processors, Sandevistan, Kerenzikov, and Interface Plugs." },
-            { "id": "interface-plugs", "name": "Interface Plugs", "type": "Neuralware", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Wrist or neck cable plugs allowing direct mental link to Cyberdecks and Smartguns." },
-            { "id": "sandevistan", "name": "Sandevistan Speedware", "type": "Neuralware", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Activated as an Action: Grants +3 to Initiative checks for 1 minute." },
-            { "id": "kerenzikov", "name": "Kerenzikov Speedware", "type": "Neuralware", "install": "Clinic", "humanityLoss": "4d6 (14)", "cost": 500, "description": "Always-on booster: Adds +2 to Initiative checks permanently." },
-            { "id": "cybereye", "name": "Cybereye", "type": "Cyberoptics", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 100, "description": "Artificial eye with 3 option slots (Targeting Scope, Low Light, Teleoptics, MicroOptics)." },
-            { "id": "cyberarm", "name": "Cyberarm", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Replacement arm. 4 option slots (Pop-up weapon, Big Knucks, Quick Change Mount, Subdermal Grip)." },
-            { "id": "cyberleg", "name": "Cyberleg", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 100, "description": "Replacement leg. 3 option slots (Jump Boosters, Talon Foot, Skate Foot)." },
-            { "id": "subdermal-armor", "name": "Subdermal Armor", "type": "Internal", "install": "Hospital", "humanityLoss": "4d6 (14)", "cost": 1000, "description": "Subdermal ballistic plating providing permanent SP 11 to Body and Head." }
+            # Fashionware
+            { "id": "biomonitor", "name": "Biomonitor", "type": "Fashionware", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 100, "description": "Subdermal implant constantly displaying vitals; can link to Agent." },
+            { "id": "chemskin", "name": "Chemskin", "type": "Fashionware", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 100, "description": "Pigment dyes infused into skin. +2 to Personal Grooming when combined with Techhair." },
+            { "id": "emp-threading", "name": "EMP Threading", "type": "Fashionware", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 10, "description": "Thin silver circuit-like lines across body. Iconic street fashion statement." },
+            { "id": "light-tattoo", "name": "Light Tattoo", "type": "Fashionware", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 100, "description": "Subdermal light patches projecting glowing tattoos. 3+ tattoos grant +2 Wardrobe & Style." },
+            { "id": "shift-tacts", "name": "Shift Tacts", "type": "Fashionware", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 100, "description": "Color-changing lenses implanted in eyes with optional pattern shifts." },
+            { "id": "skinwatch", "name": "Skinwatch", "type": "Fashionware", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 100, "description": "Subdermal chronometer displaying current time through skin." },
+            { "id": "techhair", "name": "Techhair", "type": "Fashionware", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 100, "description": "Color and light-emitting artificial hair strands. +2 Personal Grooming when combined with Chemskin." },
+
+            # Neuralware
+            { "id": "neuralware-processor", "name": "Neuralware Processor", "type": "Neuralware", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 1000, "description": "Foundational neural processor required for all Neuralware options, Speedware, and Chipware." },
+            { "id": "braindance-recorder", "name": "Braindance Recorder", "type": "Neuralware", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Records sensory experiences directly to standard Memory Chip. Requires Neural Link." },
+            { "id": "chipware-socket", "name": "Chipware Socket", "type": "Neuralware", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Neck/cranial socket allowing instant insertion of Skill Chips and Chipware. Requires Neural Link." },
+            { "id": "interface-plugs", "name": "Interface Plugs", "type": "Neuralware", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Wrist or neck plugs allowing direct mental interface to Smartguns, Cyberdecks, and vehicles." },
+            { "id": "kerenzikov", "name": "Kerenzikov Speedware", "type": "Neuralware", "install": "Clinic", "humanityLoss": "4d6 (14)", "cost": 500, "description": "Always-on reaction booster. Permanently adds +2 to Initiative checks. Only 1 Speedware allowed." },
+            { "id": "sandevistan", "name": "Sandevistan Speedware", "type": "Neuralware", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Activated as an Action: adds +3 to Initiative checks for 1 minute (1 hour cooldown). Only 1 Speedware allowed." },
+            { "id": "chemical-analyzer-chip", "name": "Chemical Analyzer Chipware", "type": "Neuralware", "install": "Mall", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Chipware. Tests and identifies chemical compounds as an Action. Requires Chipware Socket." },
+            { "id": "memory-chip-cyber", "name": "Memory Chip (Cyberware)", "type": "Neuralware", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 10, "description": "Chipware data storage chip. Requires Chipware Socket." },
+            { "id": "olfactory-boost", "name": "Olfactory Boost", "type": "Neuralware", "install": "Mall", "humanityLoss": "2d6 (7)", "cost": 100, "description": "Chipware boosting sense of smell, allowing Tracking skill to follow scents. Requires Chipware Socket." },
+            { "id": "pain-editor", "name": "Pain Editor", "type": "Neuralware", "install": "Mall", "humanityLoss": "4d6 (14)", "cost": 1000, "description": "Chipware shutting off pain receptors, ignoring Seriously Wounded penalties. Requires Chipware Socket." },
+            { "id": "skill-chip", "name": "Skill Chip", "type": "Neuralware", "install": "Mall", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Chipware giving +3 to associated Skill if untrained or trained under +3. Requires Chipware Socket." },
+            { "id": "tactile-boost", "name": "Tactile Boost", "type": "Neuralware", "install": "Mall", "humanityLoss": "2d6 (7)", "cost": 100, "description": "Chipware detecting motion within 20m through surface contact. Requires Chipware Socket." },
+
+            # Cyberoptics
+            { "id": "cybereye", "name": "Cybereye", "type": "Cyberoptics", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 100, "description": "Artificial eye replacement with 3 option slots." },
+            { "id": "anti-dazzle", "name": "Anti-Dazzle", "type": "Cyberoptics", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Immunity to flashbangs and blinding light flashes. Requires paired cybereyes." },
+            { "id": "chyron", "name": "Chyron", "type": "Cyberoptics", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Tiny subscreen projecting text and video into visual field. Requires a Cybereye." },
+            { "id": "color-shift", "name": "Color Shift", "type": "Cyberoptics", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Cosmetic upgrade for unlimited iris color/pattern shifts as an Action. Requires a Cybereye." },
+            { "id": "cybereye-dartgun", "name": "Dartgun (Cybereye)", "type": "Cyberoptics", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 500, "description": "Concealed 1-shot dartgun inside eye. Takes 3 Cybereye slots." },
+            { "id": "image-enhance", "name": "Image Enhance", "type": "Cyberoptics", "install": "Mall", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Adds +2 to visual Perception, Lip Reading, and Conceal/Reveal Object. Requires paired Cybereyes." },
+            { "id": "low-light-infrared-uv", "name": "Low Light / Infrared / UV", "type": "Cyberoptics", "install": "Mall", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Eliminates darkness penalties and allows thermographic vision. Takes 2 slots per Cybereye, must be paired." },
+            { "id": "micro-optics", "name": "MicroOptics", "type": "Cyberoptics", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Microscopic lens providing up to 400x magnification. Requires a Cybereye." },
+            { "id": "micro-video", "name": "MicroVideo", "type": "Cyberoptics", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 500, "description": "Camera in eye recording audio/video to Memory Chip or Agent. Takes 2 Cybereye slots." },
+            { "id": "radiation-detector-eye", "name": "Radiation Detector (Cybereye)", "type": "Cyberoptics", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 1000, "description": "Overlays radiation source locations within 100m as blue glows. Requires a Cybereye." },
+            { "id": "targeting-scope", "name": "Targeting Scope", "type": "Cyberoptics", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Adds +1 to Aimed Shot checks. Required for Smart Ammunition. Requires a Cybereye." },
+            { "id": "teleoptics", "name": "TeleOptics", "type": "Cyberoptics", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Telescopic vision up to 800m; adds +1 to single shot or Aimed Shot at 51m+. Requires a Cybereye." },
+            { "id": "virtuality-optics", "name": "Virtuality (Cybereye)", "type": "Cyberoptics", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Projects cyberspace overlay directly into vision. Requires paired Cybereyes." },
+
+            # Cyberaudio
+            { "id": "cyberaudio-suite", "name": "Cyberaudio Suite", "type": "Cyberaudio", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Internal auditory foundation with 3 option slots for audio implants." },
+            { "id": "amplified-hearing", "name": "Amplified Hearing", "type": "Cyberaudio", "install": "Mall", "humanityLoss": "1d6 (3)", "cost": 100, "description": "Adds +2 to auditory Perception checks. Requires Cyberaudio Suite." },
+            { "id": "audio-recorder-audio", "name": "Audio Recorder (Cyberaudio)", "type": "Cyberaudio", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Records audio directly to onboard Memory Chip or Agent. Requires Cyberaudio Suite." },
+            { "id": "bug-detector-audio", "name": "Bug Detector (Cyberaudio)", "type": "Cyberaudio", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Beeps when within 2m of an active listening tap/bug. Requires Cyberaudio Suite." },
+            { "id": "homing-tracer-audio", "name": "Homing Tracer (Cyberaudio)", "type": "Cyberaudio", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Tracks linked homing button up to 1 mile. Requires Cyberaudio Suite." },
+            { "id": "internal-agent", "name": "Internal Agent", "type": "Cyberaudio", "install": "Mall", "humanityLoss": "1d6 (3)", "cost": 100, "description": "Fully functional Agent operated via voice commands. Requires Cyberaudio Suite." },
+            { "id": "level-damper", "name": "Level Damper", "type": "Cyberaudio", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Automatic acoustic dampener giving immunity to deafening noises and flashbangs. Requires Cyberaudio Suite." },
+            { "id": "radio-communicator-audio", "name": "Radio Communicator (Cyberaudio)", "type": "Cyberaudio", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Internal 1-mile range radio communication transceiver. Requires Cyberaudio Suite." },
+            { "id": "radio-scanner-music", "name": "Radio Scanner / Music Player", "type": "Cyberaudio", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 50, "description": "Scans active radio bands and plays music from Data Pool or Memory Chip. Requires Cyberaudio Suite." },
+            { "id": "radar-detector-audio", "name": "Radar Detector (Cyberaudio)", "type": "Cyberaudio", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 500, "description": "Beeps if active radar beam touches user within 100m. Requires Cyberaudio Suite." },
+            { "id": "scrambler-descrambler-audio", "name": "Scrambler / Descrambler (Cyberaudio)", "type": "Cyberaudio", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Scrambles outgoing voice comms and decodes incoming secure signals. Requires Cyberaudio Suite." },
+            { "id": "voice-stress-analyzer", "name": "Voice Stress Analyzer", "type": "Cyberaudio", "install": "Mall", "humanityLoss": "1d6 (3)", "cost": 100, "description": "Adds +2 to Human Perception and Interrogation with lie-detecting mode. Requires Cyberaudio Suite." },
+
+            # Internal Body Cyberware
+            { "id": "audiovox", "name": "AudioVox", "type": "Internal", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Vocal synthesizer adding +2 to Acting and singing Play Instrument checks." },
+            { "id": "contraceptive-implant", "name": "Contraceptive Implant", "type": "Internal", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 10, "description": "Subdermal hormonal regulator preventing undesired pregnancy." },
+            { "id": "enhanced-antibodies", "name": "Enhanced Antibodies", "type": "Internal", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 500, "description": "Doubles HP recovery rate to 2x BODY per day of restful healing after stabilization." },
+            { "id": "cybersnake", "name": "Cybersnake", "type": "Internal", "install": "Hospital", "humanityLoss": "4d6 (14)", "cost": 1000, "description": "Concealed esophagus-mounted tentacle weapon. Very Heavy Melee (4d6, ROF 1)." },
+            { "id": "gills", "name": "Gills", "type": "Internal", "install": "Hospital", "humanityLoss": "2d6 (7)", "cost": 1000, "description": "Implanted artificial gills enabling underwater respiration." },
+            { "id": "grafted-muscle-bone-lace", "name": "Grafted Muscle and Bone Lace", "type": "Internal", "install": "Hospital", "humanityLoss": "4d6 (14)", "cost": 1000, "description": "Increases BODY stat by +2 (updates HP and Death Save). Max BODY 10 with this implant." },
+            { "id": "independent-air-supply", "name": "Independent Air Supply", "type": "Internal", "install": "Hospital", "humanityLoss": "2 (1d6/2)", "cost": 1000, "description": "Internal artificial lung reservoir providing 30 minutes of emergency breathing." },
+            { "id": "midnight-lady", "name": "Midnight Lady™ Sexual Implant", "type": "Internal", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 100, "description": "Bespoke female erotic cyberware modification." },
+            { "id": "mr-studd", "name": "Mr. Studd™ Sexual Implant", "type": "Internal", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 100, "description": "Bespoke male erotic cyberware modification with stamina enhancements." },
+            { "id": "nasal-filters", "name": "Nasal Filters", "type": "Internal", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Full immunity to inhaled toxic gasses, smoke, and airborne biological agents." },
+            { "id": "radar-sonar-implant", "name": "Radar/Sonar Implant", "type": "Internal", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 1000, "description": "Scans terrain and water within 50m for moving threats." },
+            { "id": "toxin-binders", "name": "Toxin Binders", "type": "Internal", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Adds +2 to Resist Torture/Drugs skill checks." },
+            { "id": "vampyres", "name": "Vampyres", "type": "Internal", "install": "Clinic", "humanityLoss": "4d6 (14)", "cost": 500, "description": "Retractable fangs (Light Melee 1d6, ROF 2) with concealed roof-of-mouth poison reservoir." },
+
+            # External Body Cyberware
+            { "id": "hidden-holster", "name": "Hidden Holster", "type": "External", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Body cavity holster allowing seamless weapon concealment and instant drawing without an Action." },
+            { "id": "skin-weave", "name": "Skin Weave", "type": "External", "install": "Hospital", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Nanotech armored weave giving permanent SP 7 to Body and Head with daily self-repair." },
+            { "id": "subdermal-armor", "name": "Subdermal Armor", "type": "External", "install": "Hospital", "humanityLoss": "4d6 (14)", "cost": 1000, "description": "Subdermal ballistic plating providing permanent SP 11 to Body and Head with daily self-repair." },
+            { "id": "subdermal-pocket", "name": "Subdermal Pocket", "type": "External", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 100, "description": "2x4 inch concealed compartment with Realskinn zipper." },
+
+            # Cyberlimbs
+            { "id": "cyberarm", "name": "Cyberarm", "type": "Cyberlimb", "install": "Hospital", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Replacement arm with 4 option slots. Includes standard hand." },
+            { "id": "standard-hand", "name": "Standard Hand", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Standard replacement hand for Cyberarm or meat arm." },
+            { "id": "big-knucks", "name": "Big Knucks", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 100, "description": "Armored knuckles. Medium Melee (2d6, ROF 2) concealable without a check." },
+            { "id": "cyberdeck-arm", "name": "Cyberdeck Cyberarm Option", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Integrates cyberdeck into Cyberarm with +1 bonus Program/Hardware slot. Takes 3 slots." },
+            { "id": "grapple-hand", "name": "Grapple Hand", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 100, "description": "Fires 30m rocket grapple line. Negates climbing movement penalties." },
+            { "id": "medscanner-arm", "name": "Medscanner Cyberarm Option", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Built-in diagnostic scanner giving +2 to First Aid and Paramedic. Takes 2 slots." },
+            { "id": "popup-grenade-launcher", "name": "Popup Grenade Launcher", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Concealed 1-shot grenade launcher inside Cyberarm. Takes 2 slots." },
+            { "id": "popup-melee-weapon", "name": "Popup Melee Weapon", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Concealed Light/Medium/Heavy Melee weapon popping out of arm. Takes 2 slots." },
+            { "id": "popup-shield", "name": "Popup Shield", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Concealed foldable 10 HP bulletproof shield in arm. Takes 3 slots." },
+            { "id": "popup-ranged-weapon", "name": "Popup Ranged Weapon", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Concealed 1-handed ranged weapon permanently mounted in arm. Takes 2 slots." },
+            { "id": "quick-change-mount", "name": "Quick Change Mount", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 100, "description": "Socket mechanism allowing arm to be detached or swapped as an Action." },
+            { "id": "rippers", "name": "Rippers", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Extendable carbo-glass fingernails. Medium Melee (2d6, ROF 2) concealable without check." },
+            { "id": "scratchers", "name": "Scratchers", "type": "Cyberlimb", "install": "Mall", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Carbo-glass artificial fingernails. Light Melee (1d6, ROF 2) concealable without check." },
+            { "id": "shoulder-cam", "name": "Shoulder Cam", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Popup camera in shoulder that tracks targets independently. Takes 2 slots." },
+            { "id": "slice-n-dice", "name": "Slice 'N Dice", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Monofilament whip in thumb. Medium Melee (2d6, ROF 2) concealable without check." },
+            { "id": "subdermal-grip", "name": "Subdermal Grip", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 100, "description": "Palm conductive pad linking directly to Smartguns. Requires Neural Link." },
+            { "id": "techscanner-arm", "name": "Techscanner Cyberarm Option", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Built-in technical scanner granting +2 to all Tech repair skills. Takes 2 slots." },
+            { "id": "tool-hand", "name": "Tool Hand", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 100, "description": "Finger-mounted toolkit (screwdrivers, wrench, drill). Never without a Techtool." },
+            { "id": "wolvers", "name": "Wolvers", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2d6 (7)", "cost": 500, "description": "Extendable knuckle claws. Heavy Melee (3d6, ROF 2) concealable without check." },
+            { "id": "cyberleg", "name": "Cyberleg", "type": "Cyberlimb", "install": "Hospital", "humanityLoss": "1d6 (3)", "cost": 100, "description": "Replacement cybernetic leg with 3 option slots. Includes standard foot." },
+            { "id": "standard-foot", "name": "Standard Foot", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "2 (1d6/2)", "cost": 100, "description": "Standard replacement foot for Cyberleg or meat leg." },
+            { "id": "grip-foot", "name": "Grip Foot", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Traction-coated feet negating climbing movement penalties. Must be paired." },
+            { "id": "jump-booster", "name": "Jump Booster", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Hydraulic leg boosters negating jump movement penalties. Takes 2 slots, must be paired." },
+            { "id": "skate-foot", "name": "Skate Foot", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Concealed inline skates in feet. Increases Run movement by +6m. Must be paired." },
+            { "id": "talon-foot", "name": "Talon Foot", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Concealed blade mounted in foot. Light Melee (1d6, ROF 2)." },
+            { "id": "web-foot", "name": "Web Foot", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 500, "description": "Interdigital webbing negating swimming movement penalties. Must be paired." },
+            { "id": "hardened-shielding", "name": "Hardened Shielding", "type": "Cyberlimb", "install": "Clinic", "humanityLoss": "1d6 (3)", "cost": 1000, "description": "EMP and Program immunity shielding for Cyberarm or Cyberleg." },
+            { "id": "plastic-covering", "name": "Plastic Covering", "type": "Cyberlimb", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 100, "description": "Protective cosmetic plastic outer casing for Cyberlimb." },
+            { "id": "realskinn-covering", "name": "Realskinn™ Covering", "type": "Cyberlimb", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 500, "description": "Life-like synthetic skin coating making Cyberlimb look natural." },
+            { "id": "superchrome-covering", "name": "Superchrome® Covering", "type": "Cyberlimb", "install": "Mall", "humanityLoss": "0 (N/A)", "cost": 1000, "description": "Mirror-polished chrome shell granting +2 to Wardrobe & Style." },
+
+            # Borgware
+            { "id": "artificial-shoulder-mount", "name": "Artificial Shoulder Mount", "type": "Borgware", "install": "Hospital", "humanityLoss": "4d6 (14)", "cost": 1000, "description": "Allows mounting two additional Cyberarms beneath the first set." },
+            { "id": "linear-frame-sigma", "name": "Linear Frame Sigma", "type": "Borgware", "install": "Hospital", "humanityLoss": "4d6 (14)", "cost": 1000, "description": "Implanted frame increasing BODY stat to 12. Requires BODY 6 and Grafted Muscle." },
+            { "id": "linear-frame-beta", "name": "Linear Frame Beta", "type": "Borgware", "install": "Hospital", "humanityLoss": "4d6 (14)", "cost": 5000, "description": "Heavy implanted frame increasing BODY stat to 14. Requires BODY 8 and 2x Grafted Muscle." },
+            { "id": "multioptic-mount", "name": "MultiOptic Mount", "type": "Borgware", "install": "Hospital", "humanityLoss": "4d6 (14)", "cost": 1000, "description": "Cranial mount allowing installation of up to 5 additional Cybereyes." },
+            { "id": "sensor-array", "name": "Sensor Array", "type": "Borgware", "install": "Clinic", "humanityLoss": "4d6 (14)", "cost": 1000, "description": "External rabbit ear antennas allowing up to 5 additional Cyberaudio options." }
+        ],
+        "drugs": [
+            {
+                "id": "black-lace",
+                "name": "Black Lace",
+                "cost": 50,
+                "costTier": "Costly",
+                "duration": "24 Hours",
+                "primaryEffect": "User ignores Seriously Wounded wound state penalties. User takes 2d6 Humanity Loss (returned if addiction avoided).",
+                "secondaryEffect": "Humanity Loss is permanent. User becomes addicted; while addicted and not currently on Black Lace, REF is lowered by 2 points.",
+                "addictionDv": 17,
+                "description": "Heavy combat synthetic stimulant causing emotional deadening and pain suppression."
+            },
+            {
+                "id": "blue-glass",
+                "name": "Blue Glass",
+                "cost": 20,
+                "costTier": "Everyday",
+                "duration": "4 Hours",
+                "primaryEffect": "User occasionally 'flashes out', experiencing vivid colorful hallucinations that consume their Action for the Turn.",
+                "secondaryEffect": "User becomes addicted; flashes out once every hour unless taking another dose of Blue Glass for cognitive stability.",
+                "addictionDv": 15,
+                "description": "Cheap street hallucinogen favored by street punks and disaffected youth."
+            },
+            {
+                "id": "boost",
+                "name": "Boost",
+                "cost": 50,
+                "costTier": "Costly",
+                "duration": "24 Hours",
+                "primaryEffect": "User's INT increases by 2 points (can raise INT above 8).",
+                "secondaryEffect": "User becomes addicted; while addicted, their INT is lowered by 2 points.",
+                "addictionDv": 17,
+                "description": "Powerful nootropic stimulant popular among Techs, Netrunners, and high-stress corporate workers."
+            },
+            {
+                "id": "smash",
+                "name": "Smash",
+                "cost": 10,
+                "costTier": "Cheap",
+                "duration": "4 Hours",
+                "primaryEffect": "User feels euphoric and party-ready: +2 to Dance, Contortionist, Conversation, Human Perception, Persuasion, and Acting.",
+                "secondaryEffect": "User becomes addicted: loss of interest in normal activities, -2 to above skills, and strong psychological cravings.",
+                "addictionDv": 15,
+                "description": "Yellow, foamy alcoholic party beverage sold in cans across all Night Markets and bodegas."
+            },
+            {
+                "id": "synthcoke",
+                "name": "Synthcoke",
+                "cost": 20,
+                "costTier": "Everyday",
+                "duration": "4 Hours",
+                "primaryEffect": "User's REF increases by 1 point (can raise REF above 8). User experiences paranoid ideation.",
+                "secondaryEffect": "User becomes addicted; while addicted, their REF is lowered by 2 points unless currently high on Synthcoke.",
+                "addictionDv": 15,
+                "description": "Synthetic cocaine stimulant ubiquitous among corporate operators and high-speed street solos."
+            },
+            {
+                "id": "timewarp",
+                "name": "Timewarp",
+                "cost": 100,
+                "costTier": "Premium",
+                "duration": "1 Minute",
+                "primaryEffect": "Adds +3 to any Initiative Roll made during duration, or increases current Initiative position by 3.",
+                "secondaryEffect": "User becomes addicted; while addicted, subtracts 2 from any Initiative Rolls unless currently experiencing Timewarp.",
+                "addictionDv": 17,
+                "description": "Fast-acting combat speed drug that sharpens synaptic throughput and dilates time perception."
+            },
+            {
+                "id": "rapidetox",
+                "name": "Rapidetox",
+                "cost": 200,
+                "costTier": "Expensive",
+                "duration": "Instant",
+                "primaryEffect": "When injected via Airhypo, immediately purges target of the effects of any active drug, poison, or intoxicant.",
+                "secondaryEffect": "None (Medical pharmaceutical synthesized by Medtech).",
+                "addictionDv": 0,
+                "description": "Emergency clinical antitoxin compound clearing bloodstream poisons and drug overdoses."
+            },
+            {
+                "id": "speedheal",
+                "name": "Speedheal",
+                "cost": 200,
+                "costTier": "Expensive",
+                "duration": "Instant",
+                "primaryEffect": "Immediately heals HP equal to target's BODY + WILL. Can only benefit from Speedheal once per day; unusable if Mortally Wounded.",
+                "secondaryEffect": "None (Medical pharmaceutical synthesized by Medtech).",
+                "addictionDv": 0,
+                "description": "Cellular tissue regenerator accelerating cellular rebuilding and closing lacerations."
+            },
+            {
+                "id": "stim",
+                "name": "Stim",
+                "cost": 200,
+                "costTier": "Expensive",
+                "duration": "1 Hour",
+                "primaryEffect": "Allows target to ignore all penalties from Seriously Wounded wound state for 1 hour (once per day).",
+                "secondaryEffect": "None (Medical pharmaceutical synthesized by Medtech).",
+                "addictionDv": 0,
+                "description": "High-grade Medtech emergency neuro-stimulant blocking traumatic pain feedback."
+            }
+        ],
+        "gear": [
+            { "id": "agent", "name": "Agent", "cost": 100, "costTier": "Premium", "description": "Adaptive-AI smartphone managing schedule, calls, and life. Grants +2 to Library Search and Wardrobe & Style." },
+            { "id": "airhypo", "name": "Airhypo", "cost": 50, "costTier": "Costly", "description": "Compressed air pneumatic drug delivery platform administering doses to willing or hit targets." },
+            { "id": "anti-smog-breathing-mask", "name": "Anti-Smog Breathing Mask", "cost": 20, "costTier": "Everyday", "description": "Filters out toxic gasses and particulate smoke, making user immune to inhaled threats." },
+            { "id": "audio-recorder-gear", "name": "Audio Recorder", "cost": 100, "costTier": "Premium", "description": "Records up to 24 hours of high fidelity audio onto standard Memory Chip." },
+            { "id": "auto-level-ear-protectors", "name": "Auto Level Dampening Ear Protectors", "cost": 1000, "costTier": "Very Expensive", "description": "Compact ear protectors granting full immunity to deafening acoustic effects and flashbangs." },
+            { "id": "binoculars", "name": "Binoculars", "cost": 50, "costTier": "Costly", "description": "Optical binoculars magnifying vision 2x to 3x." },
+            { "id": "braindance-viewer", "name": "Braindance Viewer", "cost": 1000, "costTier": "Very Expensive", "description": "Playback headset experiencing recorded multisensory braindance memories." },
+            { "id": "bug-detector-gear", "name": "Bug Detector", "cost": 500, "costTier": "Expensive", "description": "Handheld sensor beeping when within 2m of an active transmitter, bug, or wiretap." },
+            { "id": "carryall", "name": "Carryall", "cost": 20, "costTier": "Everyday", "description": "Heavy ripstop nylon messenger or duffel bag for hauling street gear." },
+            { "id": "chemical-analyzer-gear", "name": "Chemical Analyzer", "cost": 1000, "costTier": "Very Expensive", "description": "Handheld lab testing chemical compositions and identifying unknown compounds as an Action." },
+            { "id": "computer", "name": "Computer", "cost": 50, "costTier": "Costly", "description": "Laptop or desktop computer used for word processing, file management, and surfing the Data Pool." },
+            { "id": "cyberdeck-standard", "name": "Cyberdeck (Standard, 7 slots)", "cost": 500, "costTier": "Expensive", "description": "Standard Netrunner rig featuring 7 option slots for Programs and Hardware." },
+            { "id": "disposable-cell-phone", "name": "Disposable Cell Phone", "cost": 50, "costTier": "Costly", "description": "Single-use burner phone with prepaid minutes for anonymous communications." },
+            { "id": "electric-guitar", "name": "Electric Guitar", "cost": 500, "costTier": "Expensive", "description": "Rock and roll axe for Rockerboys rocking the stage." },
+            { "id": "flashlight", "name": "Flashlight", "cost": 20, "costTier": "Everyday", "description": "Rechargeable electric torch illuminating dark alleys and ruined combat zones." },
+            { "id": "food-stick", "name": "Food Stick", "cost": 10, "costTier": "Cheap", "description": "Dense, chewy single-meal nutrient bar." },
+            { "id": "glow-paint", "name": "Glow Paint", "cost": 20, "costTier": "Everyday", "description": "Fluorescent paint can glowing brightly in darkness." },
+            { "id": "grapple-gun", "name": "Grapple Gun", "cost": 100, "costTier": "Premium", "description": "Launches a 30m high-strength line to hook roofs and climb sheer surfaces." },
+            { "id": "handcuffs", "name": "Handcuffs", "cost": 50, "costTier": "Costly", "description": "Heavy steel restraints requiring BODY 10+ to break." },
+            { "id": "homing-tracer-gear", "name": "Homing Tracer", "cost": 500, "costTier": "Expensive", "description": "Transceiver tracker following linked buttons up to 1 mile." },
+            { "id": "inflatable-bed-sleep-bag", "name": "Inflatable Bed & Sleep-bag", "cost": 20, "costTier": "Everyday", "description": "Compact self-inflating mattress and insulated sleep-bag." },
+            { "id": "kibble-pack", "name": "Kibble Pack", "cost": 10, "costTier": "Cheap", "description": "One dry meal pack of standard street kibble." },
+            { "id": "linear-frame-sigma-external", "name": "Linear Frame Sigma (External)", "cost": 1000, "costTier": "Very Expensive", "description": "External powered exoskeleton frame boosting BODY to 12. Requires BODY 6." },
+            { "id": "lock-picking-set", "name": "Lock Picking Set", "cost": 20, "costTier": "Everyday", "description": "Precision steel tension wrenches and picks for opening physical mechanical locks." },
+            { "id": "medscanner-gear", "name": "Medscanner", "cost": 1000, "costTier": "Very Expensive", "description": "Diagnostic medical scanner providing +2 to First Aid and Paramedic skills." },
+            { "id": "medtech-bag", "name": "Medtech Bag", "cost": 100, "costTier": "Premium", "description": "Comprehensive emergency medical trauma kit with bandages, coagulants, and scalpels." },
+            { "id": "memory-chip-gear", "name": "Memory Chip", "cost": 10, "costTier": "Cheap", "description": "Universal physical storage chip for media, encrypted keys, and operational dossiers." },
+            { "id": "mre", "name": "MRE", "cost": 10, "costTier": "Cheap", "description": "Self-heating meal ready to eat in a durable foil pouch." },
+            { "id": "personal-carepak", "name": "Personal CarePak", "cost": 20, "costTier": "Everyday", "description": "Hygiene kit containing soap, tooth cleanser, and towel." },
+            { "id": "pocket-amplifier", "name": "Pocket Amplifier", "cost": 50, "costTier": "Costly", "description": "Compact battery-powered 6-hour sound amplifier supporting up to two instruments." },
+            { "id": "radar-detector-gear", "name": "Radar Detector", "cost": 500, "costTier": "Expensive", "description": "Handheld detector beeping within 100m of an active surveillance radar beam." },
+            { "id": "road-flare", "name": "Road Flare", "cost": 10, "costTier": "Cheap", "description": "Chemical magnesium flare lighting a 100m radius for 1 hour." },
+            { "id": "rope-60m", "name": "Rope (60m)", "cost": 20, "costTier": "Everyday", "description": "60 meters of high tensile nylon climbing cord." },
+            { "id": "scrambler-descrambler-gear", "name": "Scrambler/Descrambler", "cost": 500, "costTier": "Expensive", "description": "Handheld scrambler preventing unauthorized surveillance of communications." },
+            { "id": "smart-glasses", "name": "Smart Glasses", "cost": 500, "costTier": "Expensive", "description": "High-tech glasses with 2 option slots for Cybereye options without cyberware." },
+            { "id": "techscanner-gear", "name": "Techscanner", "cost": 1000, "costTier": "Very Expensive", "description": "Diagnostic multimeter tool adding +2 to all TECH maintenance and repair checks." },
+            { "id": "techtool", "name": "Techtool", "cost": 100, "costTier": "Premium", "description": "All-in-one pocket multitool for street electronics and weapon field assembly." },
+            { "id": "tent-camping-equipment", "name": "Tent and Camping Equipment", "cost": 50, "costTier": "Costly", "description": "Single-person wilderness camping tent and survival kit." },
+            { "id": "vial-of-biotoxin", "name": "Vial of Biotoxin", "cost": 500, "costTier": "Expensive", "description": "Lethal bio-agent dealing 3d6 damage direct to HP on failed DV15 Resist Torture/Drugs." },
+            { "id": "vial-of-poison", "name": "Vial of Poison", "cost": 100, "costTier": "Premium", "description": "Street poison dealing 2d6 damage direct to HP on failed DV13 Resist Torture/Drugs." },
+            { "id": "video-camera", "name": "Video Camera", "cost": 100, "costTier": "Premium", "description": "Records up to 12 hours of high definition video and audio to Memory Chip." }
         ],
         "programs": [
-            { "id": "sword", "name": "Sword", "class": "Attacker (Anti-Program)", "atk": 2, "def": 0, "rez": 7, "cost": 50, "description": "Inflicts 3d6 damage to non-Black ICE programs or 2d6 to Black ICE." },
-            { "id": "banhammer", "name": "Banhammer", "class": "Attacker (Anti-Program)", "atk": 1, "def": 0, "rez": 8, "cost": 50, "description": "Inflicts 2d6 damage to standard programs, or 3d6 to Black ICE." },
-            { "id": "nerve-scrub", "name": "Nerve Scrub", "class": "Attacker (Anti-Personnel)", "atk": 2, "def": 0, "rez": 7, "cost": 500, "description": "Inflicts 1d6 damage to enemy Netrunner's BRAIN and reduces INT/REF/DEX by 1 for 1 hour." },
-            { "id": "armor", "name": "Armor", "class": "Defender", "atk": 0, "def": 0, "rez": 7, "cost": 50, "description": "Reduces all incoming brain damage by 4." },
-            { "id": "hellhound", "name": "Hellhound", "class": "Black ICE", "per": 6, "spd": 6, "atk": 8, "def": 2, "rez": 15, "cost": 500, "description": "Ferocious hunting Black ICE. Deals 2d6 brain damage and sets Netrunner's cyberdeck on fire." }
+            # Boosters
+            { "id": "eraser", "name": "Eraser", "class": "Booster", "atk": 0, "def": 0, "rez": 7, "cost": 20, "description": "Increases all Cloak Checks by +2 as long as this Program remains Rezzed." },
+            { "id": "see-ya", "name": "See Ya", "class": "Booster", "atk": 0, "def": 0, "rez": 7, "cost": 20, "description": "Increases all Pathfinder Checks by +2 as long as this Program remains Rezzed." },
+            { "id": "speedy-gonzalvez", "name": "Speedy Gonzalvez", "class": "Booster", "atk": 0, "def": 0, "rez": 7, "cost": 100, "description": "Increases your Netrunner Speed by +2 as long as this Program remains Rezzed." },
+            { "id": "worm", "name": "Worm", "class": "Booster", "atk": 0, "def": 0, "rez": 7, "cost": 50, "description": "Increases all Backdoor Checks by +2 as long as this Program remains Rezzed." },
+
+            # Defenders
+            { "id": "armor", "name": "Armor", "class": "Defender", "atk": 0, "def": 0, "rez": 7, "cost": 50, "description": "Reduces all incoming brain damage by 4. Only 1 copy can be running at a time." },
+            { "id": "flak-program", "name": "Flak", "class": "Defender", "atk": 0, "def": 0, "rez": 0, "cost": 50, "description": "Reduces the first successful brain damage attack by an enemy to 0, then Derezzes itself." },
+            { "id": "shield-program", "name": "Shield", "class": "Defender", "atk": 0, "def": 0, "rez": 0, "cost": 20, "description": "Stops the first successful Non-Black ICE Program Effect from dealing brain damage, then Derezzes itself." },
+
+            # Attackers
+            { "id": "banhammer", "name": "Banhammer", "class": "Attacker (Anti-Program)", "atk": 1, "def": 0, "rez": 0, "cost": 50, "description": "Does 3d6 REZ damage to a Non-Black ICE Program, or 2d6 REZ to Black ICE." },
+            { "id": "sword", "name": "Sword", "class": "Attacker (Anti-Program)", "atk": 1, "def": 0, "rez": 0, "cost": 50, "description": "Does 3d6 REZ damage to a Black ICE Program, or 2d6 REZ to a Non-Black ICE Program." },
+            { "id": "deckkrash", "name": "DeckKRASH", "class": "Attacker (Anti-Personnel)", "atk": 0, "def": 0, "rez": 0, "cost": 100, "description": "Forcibly and unsafely Jacks Out enemy Netrunner, suffering effects of all encountered Black ICE." },
+            { "id": "hellbolt", "name": "Hellbolt", "class": "Attacker (Anti-Personnel)", "atk": 2, "def": 0, "rez": 0, "cost": 100, "description": "Deals 2d6 brain damage and sets Cyberdeck on fire (2 HP damage per turn until extinguished)." },
+            { "id": "nerve-scrub", "name": "Nerve Scrub", "class": "Attacker (Anti-Personnel)", "atk": 0, "def": 0, "rez": 0, "cost": 100, "description": "Lowers enemy Netrunner's INT, REF, and DEX by 1d6 for 1 hour." },
+            { "id": "poison-flatline", "name": "Poison Flatline", "class": "Attacker (Anti-Personnel)", "atk": 0, "def": 0, "rez": 0, "cost": 100, "description": "Destroys a single Non-Black ICE Program installed on enemy Cyberdeck at random." },
+            { "id": "superglue", "name": "Superglue", "class": "Attacker (Anti-Personnel)", "atk": 2, "def": 0, "rez": 0, "cost": 100, "description": "Prevents enemy Netrunner from progressing deeper or Jacking Out safely for 1d6 rounds." },
+            { "id": "vrizzbolt", "name": "Vrizzbolt", "class": "Attacker (Anti-Personnel)", "atk": 1, "def": 0, "rez": 0, "cost": 50, "description": "Deals 1d6 brain damage and reduces enemy NET Actions on their next turn by 1." },
+
+            # Black ICE
+            { "id": "asp", "name": "Asp", "class": "Black ICE", "per": 4, "spd": 6, "atk": 2, "def": 2, "rez": 15, "cost": 100, "description": "Golden Egyptian cobra. Destroys a single random Program installed on target's Cyberdeck." },
+            { "id": "giant", "name": "Giant", "class": "Black ICE", "per": 2, "spd": 2, "atk": 8, "def": 4, "rez": 25, "cost": 1000, "description": "Towering legs. Deals 3d6 brain damage and forcibly, unsafely Jacks Out the target Netrunner." },
+            { "id": "hellhound", "name": "Hellhound", "class": "Black ICE", "per": 6, "spd": 6, "atk": 6, "def": 2, "rez": 20, "cost": 500, "description": "Black wolf. Deals 2d6 brain damage and sets Cyberdeck on fire (2 HP damage/turn)." },
+            { "id": "kraken", "name": "Kraken", "class": "Black ICE", "per": 6, "spd": 2, "atk": 8, "def": 4, "rez": 30, "cost": 1000, "description": "Orange tentacles. Deals 3d6 brain damage and immobilizes Netrunner in Architecture." },
+            { "id": "liche", "name": "Liche", "class": "Black ICE", "per": 8, "spd": 2, "atk": 6, "def": 2, "rez": 25, "cost": 500, "description": "Robed skeleton. Lowers enemy Netrunner's INT, REF, and DEX by 1d6 for 1 hour." },
+            { "id": "raven", "name": "Raven", "class": "Black ICE", "per": 6, "spd": 4, "atk": 4, "def": 2, "rez": 15, "cost": 50, "description": "Armored raven. Derezzes a random Defender Program and deals 1d6 damage direct to brain." },
+            { "id": "scorpion", "name": "Scorpion", "class": "Black ICE", "per": 2, "spd": 6, "atk": 2, "def": 2, "rez": 15, "cost": 100, "description": "Tiny black scorpion. Lowers enemy Netrunner's MOVE by 1d6 for 1 hour." },
+            { "id": "skunk", "name": "Skunk", "class": "Black ICE", "per": 2, "spd": 4, "atk": 4, "def": 2, "rez": 10, "cost": 500, "description": "Cartoon skunk imposing a permanent -2 penalty to Slide Checks until Derezzed." },
+            { "id": "wisp", "name": "Wisp", "class": "Black ICE", "per": 4, "spd": 4, "atk": 4, "def": 2, "rez": 15, "cost": 50, "description": "Crackling orb. Deals 1d6 brain damage and reduces target's NET Actions by 1 on next turn." },
+            { "id": "dragon", "name": "Dragon", "class": "Black ICE", "per": 6, "spd": 4, "atk": 6, "def": 6, "rez": 30, "cost": 1000, "description": "Robotic dragon. Deals 6d6 damage to a Program; if enough to derezz, destroys it permanently." },
+            { "id": "killer", "name": "Killer", "class": "Black ICE", "per": 4, "spd": 8, "atk": 6, "def": 2, "rez": 20, "cost": 500, "description": "Robotic samurai. Deals 4d6 damage to a Program; if enough to derezz, destroys it permanently." },
+            { "id": "sabertooth", "name": "Sabertooth", "class": "Black ICE", "per": 8, "spd": 6, "atk": 6, "def": 2, "rez": 25, "cost": 1000, "description": "Immense hulking sabertooth cat. Deals 6d6 damage to a Program; if enough to derezz, destroys it." }
         ]
     }
-    
+
     os.makedirs(OUTPUT_DATA_DIR, exist_ok=True)
     os.makedirs(OUTPUT_FRONTEND_DIR, exist_ok=True)
-    
+
     data_file_path = os.path.join(OUTPUT_DATA_DIR, "core-rules.cprpack.json")
     frontend_file_path = os.path.join(OUTPUT_FRONTEND_DIR, "core-rules.cprpack.json")
-    
+
     with open(data_file_path, "w", encoding="utf-8") as f:
         json.dump(pack, f, indent=2, ensure_ascii=False)
     print(f"Wrote {data_file_path}")
-    
+
     with open(frontend_file_path, "w", encoding="utf-8") as f:
         json.dump(pack, f, indent=2, ensure_ascii=False)
     print(f"Copied to {frontend_file_path}")
-    
+
+    print("\n--- Summary of Items Generated ---")
+    print(f"Weapons:     {len(pack['weapons'])}")
+    print(f"Armor:       {len(pack['armor'])}")
+    print(f"Attachments: {len(pack['attachments'])}")
+    print(f"Ammunition:  {len(pack['ammunition'])}")
+    print(f"Cyberware:   {len(pack['cyberware'])}")
+    print(f"Drugs:       {len(pack['drugs'])}")
+    print(f"Gear:        {len(pack['gear'])}")
+    print(f"Programs:    {len(pack['programs'])}")
     print("SUCCESS: Core Rules Data Pack extracted and generated.")
 
 if __name__ == '__main__':

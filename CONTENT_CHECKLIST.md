@@ -1,204 +1,146 @@
 # CPR OMNI-DECK // Lista Maestra de Adaptación y Contenido (Checklist)
 
-> **PROPÓSITO**: Esta lista permite verificar de un solo vistazo el progreso de adaptación de las reglas, mecánicas y libros oficiales de tu biblioteca de PDFs a la aplicación, sin tener que revisar el código fuente.
+> **PROPÓSITO**: Esta lista permite verificar de un solo vistazo el progreso de adaptación de las reglas, mecánicas y libros oficiales de tu biblioteca de PDFs a la aplicación, organizada por **dependencias arquitectónicas en 5 Sprints**.
 
 **Leyenda de Estados:**
-* `[x] COMPLETADO`: Adaptado en código, validado con las reglas oficiales y funcionando en la interfaz.
+* `[x] COMPLETADO`: Implementado en código real, validado con las reglas oficiales y en funcionamiento en la interfaz.
 * `[~] EN PROGRESO`: Estructura o datos parciales cargados, requiere más pulido o módulos secundarios.
-* `[ ] PENDIENTE`: En cola de desarrollo planificado.
+* `[ ] PENDIENTE`: En cola de desarrollo planificado para ese Sprint.
 
 ---
 
-## ⚡ 1. Selector de Era: 2045 (RED) vs 2077 (Edgerunners CEMK)
-- [ ] **Mapeo de Reglas 2045 (Time of the RED)**:
-  - Ciberdecks físicos conectados por cables de interfaz.
-  - Escasez de economía de posguerra (Night Markets y precios estándar).
-  - Ciberware modular clásico y pérdida de Humanidad tradicional.
-- [ ] **Mapeo de Reglas 2077 (Edgerunners Mission Kit)**:
-  - **Neuroport Universal**: Integra teléfono agente, biomonitor, HUD y ranuras de chipware.
-  - **Quickhacking**: Hackeo rápido inalámbrico en combate mediante memoria RAM.
-  - **Borgware 2077**: Sandevistan Militech "David Martinez", Monocables térmicos, Brazos Gorilla 2077.
-  - **Reglas de Ciberpsicosis 2077**: Estados de disociación y estrés neurológico.
+## 🏛️ SPRINT 0: Cimientos, Ficha Real, Persistencia, Motor Matemático y Catálogo Core [COMPLETADO]
+
+### 1. Motor de Reglas & Matemáticas Canónicas (`characterEngine.ts` & `combatEngine.ts`)
+- [x] **Cálculo Canónico de Puntos de Golpe (HP)**:
+  - Fórmula oficial: `10 + 5 * ceil((BODY + WILL) / 2)`.
+- [x] **Umbral de Herida Grave (Seriously Wounded)**:
+  - Activación automática al llegar a $\le \text{ceil}(\text{MaxHP} / 2)$.
+  - Aplica penalizador global de `-2` a todas las acciones con `MOVE` mínimo de 1.
+- [x] **Humanidad y Empatía**:
+  - `MaxHumanity = EMP * 10`. Impacto reactivo al instalar/desinstalar ciberware.
+- [x] **Pool de Suerte Táctil (LUCK)**:
+  - Barra de pips interactiva para gastar en tiradas críticas con botón de restauración completa.
+- [x] **Tirada de Ataque en 2 Clics**:
+  - Tirada de impacto desacoplada: `STAT + Skill + 1d10`.
+  - Explosión crítica en `10` (`+1d10` adicional acumulativo).
+  - Pifia crítica en `1` (`-1d10` restado).
+- [x] **Tirada de Daño Independiente (`Xd6`)**:
+  - Daño separado del acierto. Detección automática de dos o más `6`s para infligir Herida Crítica (+5 daño directo a HP).
+- [x] **Ablación de Blindaje en Tiempo Real**:
+  - Comparación de daño contra `SP` actual de la localización (Cabeza/Cuerpo).
+  - Daño excedente penetra a HP; el blindaje se reduce en 1 punto (o 2 con munición perforante).
+- [x] **Matriz de DVs por Metro y Autofire (`rangeTables.ts`)**:
+  - 8 brackets de distancia estándar (`0-6m`, `7-12m`, `13-25m`, `26-50m`, `51-100m`, `101-200m`, `201-400m`, `401-800m`).
+  - Sweet spot óptimo resaltado en verde (`★ ÓPTIMO`).
+  - Modo Autofire: consume 10 balas, compara con tabla de Autofire y multiplica `(Margen de Acierto) * 2d6` hasta el tope del arma (x3 o x4).
+  - Fuego Supresivo (Suppressive Fire) con zona de 6x6m.
+
+### 2. Ficha de Personaje & Gestión de Roster (`StreetLabView.tsx` & `useCharacterStore.ts`)
+- [x] **10 Estadísticas Primarias (STATs)**: INT, REF, DEX, TECH, COOL, WILL, LUCK, MOVE, BODY, EMP con contadores `[+]` / `[-]`.
+- [x] **16 Habilidades de Combate & Soporte**: Armas cortas, armas largas, armas pesadas, artes marciales, combate cuerpo a cuerpo, esquiva, primeros auxilios, etc.
+- [x] **Fichas Predefinidas de Alto Nivel**: `V (Valerie)` (Solo Rango 4) y `Kiwi` (Netrunner Rango 4).
+- [x] **Persistencia en LocalStorage (Zustand)**: Fichas, equipo y heridas persisten automáticamente en el navegador.
+- [x] **Gestor de Roster**: Creación de nuevos edgerunners, cambio de personaje activo y borrado seguro.
+- [x] **Heridas Críticas Interactivas (2d6)**:
+  - Tablas completas de Cabeza y Cuerpo de las páginas 187-188 del Core Book.
+  - Generador con 1 clic, estados `[ TRATAR ]` y `[ CURAR ]` con iconos temáticos (cráneo, cerebro, ojo, hueso, etc.).
+
+### 3. Catálogo Canónico Maestro (272 Ítems Oficiales en `core-rules.cprpack.json`)
+- [x] **Armas (66 ítems)**:
+  - Armas cuerpo a cuerpo ligeras, medias, pesadas y muy pesadas.
+  - Armas a distancia estándar (Pistolas, Subfusiles, Escopetas, Fusiles, Francotirador, Arcos, Lanzagranadas, Lanzacohetes).
+  - Variantes oficiales de calidad y marca (Dai Lung, Militech Avenger, Arasaka Minami 10, Nomad Long Rifle, GunMart, etc.).
+  - Las 15 Armas Exóticas del Core: Air Pistol, Battleglove, Constitution Arms Hurricane, Dartgun, Flamethrower, Kendachi Mono-Three, Malorian Arms 3516, Microwaver, Militech Cowboy U-56, Rhinemetall EMG-86 Railgun, Shrieker, SlamDance Inc. Fang, Stun Baton, Stun Gun, Tsunami Arms Helix.
+- [x] **Blindajes (10 ítems)**:
+  - Leathers, Kevlar, Light Armorjack, Bodyweight Suit, Medium Armorjack, Heavy Armorjack, Flak, Metalgear, Bulletproof Shield, Radiation Suit.
+- [x] **Accesorios de Armas (10 ítems)**:
+  - Bayoneta, Cargador Tambor, Cargador Extendido, Lanzagranadas acoplado, Chasis pesado, Mira Nocturna IR, Escopeta acoplada, Enlace Smartgun, Mira de Francotirador, Silenciador.
+- [x] **Municiones (13 tipos)**:
+  - Básica, Perforante, Biotoxina, EMP, Expansiva, Granada Aturdidora, Incendiaria, Veneno, Goma, Sueño, Smart, Humo, Gas Lacrimógeno.
+- [x] **Ciberware (96 implantes)**:
+  - Cobertura completa de las 7 categorías: Fashionware, Neuralware, Cyberoptics, Cyberaudio, Internal Body, External Body, Cyberlimbs y Borgware.
+- [x] **Drogas Callejeras & Fármacos (9 tipos)**:
+  - Black Lace, Blue Glass, Boost, Smash, Synthcoke, Timewarp, Rapidetox, Speedheal, Stim con duraciones, efectos primarios, secundarios y DVs de adicción.
+- [x] **Equipo General (41 ítems)**:
+  - Agent, Airhypo, Máscara anti-smog, Analizador químico, Cyberdecks, Gafas inteligentes, Traje de radiación, Herramientas, etc.
+- [x] **Programas de Netrunning & Black ICE (27 programas)**:
+  - Boosters (Eraser, See Ya, Speedy Gonzalvez, Worm), Defenders (Armor, Flak, Shield), Attackers (Banhammer, Sword, DeckKRASH, Hellbolt, Nervescrub, Poison Flatline, Superglue, Vrizzbolt) y Black ICE (Asp, Giant, Hellhound, Kraken, Liche, Raven, Scorpion, Skunk, Wisp, Dragon, Killer, Sabertooth).
+
+### 4. Vistas Modulares del Sistema
+- [x] **`TopHudBar.tsx`**: Barra superior táctica con vitals en tiempo real, selector de edgerunner y pool de suerte.
+- [x] **`CombatHudView.tsx`**: Interfaz de combate con selector de distancia, cargadores interactivos y registro de dados.
+- [x] **`CompendiumView.tsx`**: Compendio modular de 8 categorías con búsqueda, botones de equipamiento directo de armas, blindajes cabeza/cuerpo e instalación de ciberware.
+- [x] **`DataPacksView.tsx`**: Gestor de paquetes .cprpack estilo COMP/CON con conteos reales y vista previa de expansiones.
+- [x] **`scripts/inspect_pdf_pages.py`**: Inspector CLI de páginas en UTF-8 limpio para PDFs de reglas.
+- [x] **`scripts/extract_core_pack.py`**: Extractor verificado contra el PDF oficial de 458 páginas.
+- [x] **`.agent/skills/cpr-pdf-extractor/SKILL.md`**: Skill documentada para agentes de IA.
 
 ---
 
-## 🔫 2. Conversión de Armas 2077: Power, Tech y Smart
-- [ ] **Módulo de Conversión de Armas**:
-  - *Power Weapons*: Rebote balístico en superficies sólidas para golpear tras esquinas.
-  - *Tech Weapons*: Carga electromagnética que atraviesa paredes y coberturas destruyendo su SP/HP.
-  - *Smart Weapons*: Micro-proyectiles teledirigidos con Smartlink que ignoran modificadores de cobertura parcial.
-- [ ] **Guía Explicativa de Modos de Fuego**:
-  - Disparo único (Single Shot).
-  - Fuego Supresivo (Suppressive Fire): Zona de 6x6m que obliga a chequeo de concentración/voluntad.
-  - Autofire: Ráfaga de 10 balas contra tabla de DVs de Autofire multiplicando el daño por margen de éxito.
+## 📦 SPRINT 1: Utilidades de Mesa - Cheat Sheet, Economía €$ e Inventario [PENDIENTE]
+- [ ] **Machete de Reglas Rápidas (`rulesCheatSheet.ts` & `RulesCheatSheetModal.tsx`)**:
+  - Reglas de Grappling, Choking (`BODY * 2` de daño directo ignorando armadura) y Lanzamiento de enemigos.
+  - Tabla de Coberturas y Objetos destructibles con SP/HP (Puerta de coche, Muro de hormigón, Mampara de pladur, Escudo anti-disturbios).
+  - Reglas de Asfixia, Caídas, Fuego y Ahogamiento.
+- [ ] **Gestor de Inventario & Cartera (`InventoryManager.tsx`)**:
+  - Seguimiento de Eurodólares (€$) con registro de ingresos y gastos de Night Market.
+  - Capacidad de carga según BODY.
+  - Control de reservas de munición comprada en lotes de 10.
+- [ ] **Modo Director de Juego & Bloqueo por PIN (GM Lock)**:
+  - Alternador de rol: Vista Jugador (restringida a su personaje) vs Vista GM (acceso a todos los edgerunners y notas ocultas).
+  - Protección de modificaciones con contraseña o PIN local.
 
 ---
 
-## 🗄️ 3. Gestión y Persistencia de Fichas (Browser Storage & Modo GM)
-- [ ] **Persistencia Total en Navegador (IndexedDB)**:
-  - Todas las fichas de jugadores y PNJs se guardan permanentemente en la memoria local del navegador sin necesidad de servidores externos.
-  - Cero riesgo de caída de servidores; funciona 100% offline.
-- [ ] **Control de Acceso / Contraseña de GM**:
-  - Modo Jugador: Solo puede ver y modificar su personaje asignado.
-  - Modo Director de Juego (GM): Protegido con PIN/contraseña local para ver el roster completo, editar cualquier ficha y manejar encuentros secretos.
-- [ ] **Gestor de Roster**: Subir, descargar, clonar y organizar carpetas de personajes para distintas campañas.
+## 📚 SPRINT 2: Expansión de Libros PDF y Reglas 2077 vs 2045 [PENDIENTE]
+- [ ] **Extracción de `Black Chrome Tech & Style Guide`**:
+  - 170+ ítems de catálogo de lujo de Night City.
+  - Reglas completas de vehículos terrestres y aéreos con SDP, asientos y velocidad de combate.
+  - Armas exóticas especializadas (Rostović, SovOil, Faisal's Customs).
+  - Linear Frames avanzados (Fūma Kotarō, Vermilion, SWAT).
+- [ ] **Extracción de `Cyberpunk Edgerunners Mission Kit (CEMK 2077)`**:
+  - Reglas de la Era 2077: Neuroport universal (Agente + Biomonitor + Chipware integrado).
+  - Conversión de armas 2077: *Power* (rebotes), *Tech* (perforación de cobertura) y *Smart* (guiado).
+  - Mecánicas de Ciberpsicosis y Estrés 2077.
+- [ ] **Extracción de `Danger Gal Dossier`**:
+  - Perfiles de PNJs, mooks y jefes listos para combate.
+  - Equipo encubierto y de espionaje corporativo.
+- [ ] **Extracción de `Interface RED (Vol 1-3) & DLCs Oficiales`**:
+  - Hornet's Pharmacy (aditivos químicos, dispersión osmótica y fármacos experimentales).
+  - Reglas completas de Full Body Conversion (FBC) y chasis cyborg.
+- [ ] **Selector Global de Era (2045 vs 2077)**:
+  - Ajuste dinámico de interfaz y reglas disponibles según la época seleccionada.
 
 ---
 
-## 📖 4. Compendio con Filtro por Libro / Expansión y Saber Específico
-- [ ] **Filtro Dropdown por Suplemento**:
-  - Filtro exclusivo por libro: *Core Rulebook v1.24*, *Black Chrome*, *Danger Gal Dossier*, *Interface RED Vol 1-3*, *Edgerunners Mission Kit*, *DLCs*.
-- [ ] **Ficha de Resumen de Libro (Lore & Mechanics)**:
-  - Al seleccionar un suplemento, muestra una vista de resumen con:
-    - El contexto y trasfondo histórico del libro.
-    - Las nuevas mecánicas exclusivas que introduce (ej. *Interface RED Vol 3*: Reglas completas de Full Body Conversion / Chasis de Cyborgs y mecas).
-    - Catálogo filtrado de todos los ítems específicos de ese manual.
+## 🧠 SPRINT 3: Sistemas Profundos - Maniquí Cyberware, Netrunning 2045, Quickhacks y Roles [PENDIENTE]
+- [ ] **Maniquí Anatómico de Ciberware (`CyberwareMannequin.tsx`)**:
+  - Silueta humana interactiva con 7 áreas anatómicas clicables.
+  - Ranuras de opción visuales y cálculo automático de pérdida de humanidad.
+- [ ] **Simulador de Pisos de Red 2045 (`NetArchitectureRunner.tsx`)**:
+  - Escalera virtual de pisos de red: Archivos, Nodos de Control, Contraseñas, Black ICE.
+  - Contador de Acciones de Red (Net Actions) basado en el Rango de Interfaz.
+  - Combate Netrunner vs Black ICE con rez/derez de programas.
+- [ ] **Sistema de Quickhacking 2077 (`QuickhacksDeck.tsx`)**:
+  - Hackeo inalámbrico en combate utilizando pool de RAM.
+  - Quickhacks ofensivos y de control (Short Circuit, Cyberware Malfunction, Overheat).
+- [ ] **Habilidades de Rol Específicas**:
+  - Solos (Combat Awareness), Medtechs (Farmacia/Cirugía/Criogenia), Techs (Maker), Nomads (Moto).
 
 ---
 
-## 💻 5. Netrunning Clásico (2045) y Generador de Arquitecturas de Red
-- [ ] **Simulador de Pisos de Red (NET Architecture Runner)**:
-  - Representación visual de la arquitectura piso por piso (Archivos cifrados, Nodos de Control, Black ICE, Contraseñas).
-- [ ] **Contador de Acciones de Red (Net Actions)**:
-  - Seguimiento de acciones por turno según el Rango de Interfaz del Netrunner.
-- [ ] **Combate en la Red**:
-  - Ataque a programas hostiles, rez/derez de software y tiradas de Virus.
-
----
-
-## 🛠️ 6. Sistema Completo de Homebrew y Conversión CP2020
-- [ ] **Creador Universal de Ítems Homebrew**:
-  - Formulario para crear Armas personalizadas (daño, cargador, modos, DVs).
-  - Creador de Ciberware custom con costes de Humanidad y ranuras anatómicas.
-  - Creador de Drogas personalizadas con efectos benéficos, secundarios y DVs de adicción.
-- [ ] **Módulo de Conversión CP2020 a CPR (*Old Guns Never Die*)**:
-  - Reglas oficiales de adaptación para traer armas y equipo clásico de Cyberpunk 2020 a las estadísticas de Cyberpunk RED.
-
----
-
-## 🏷️ 7. Badges de Libros e Iconos de Armas Míticas
-- [ ] **Iconos / Badges de Fuente**:
-  - Mini-badges visuales de bajo peso para identificar al instante el origen de cada objeto (*Core*, *BC*, *DGD*, *CEMK*, *IR1*, *IR2*, *IR3*).
-- [ ] **Tarjetas de Armas Legendarias y Míticas**:
-  - Marcos especiales con ilustraciones / placeholders para armas icónicas del canon (Malorian de Johnny Silverhand, Escopeta de Rebecca "Carnage", etc.).
-
----
-
-## 🔊 8. Efectos de Audio y Visuales (SFX / VFX Táctiles)
-- [ ] **Efectos de Sonido Táctiles (SFX)**:
-  - Clic metálico al recargar cargadores.
-  - Sonido de disparo al presionar ATTACK.
-  - Rodar de dados en la consola de combate.
-  - Zumbido cibernético al activar Sandevistan / Kerenzikov.
-  - Chisporroteo eléctrico al ser hackeado o recibir daño cerebral.
-- [ ] **Efectos Visuales (VFX)**:
-  - Micro-glitch en la pantalla al sufrir daño de Netrunning.
-  - Pulso rojo en los bordes de la pantalla al entrar en Herida Grave.
-
----
-
-## 📜 9. Machete de Reglas Rápidas (Cheat Sheet de Bolsillo)
-- [ ] **Panel de Reglas Rápidas en 1 Clic**:
-  - **Presa y Agarre (Grapple)**: Tirada enfrentada de `Brawling`, requisitos de BODY y opciones de acción (arrastrar, usar como escudo humano, derribar).
-  - **Asfixia (Chokehold)**: Reglas de ahogamiento (BODY x 2 de daño directo a HP por turno ignorando armadura).
-  - **Coberturas y Puntos de Estructura (SP/HP de Objetos)**:
-    - Puerta de coche: SP 10 / HP 15.
-    - Barrera de hormigón: SP 20 / HP 30.
-    - Tabique de pladur / madera: SP 5 / HP 10.
-    - Blindaje de búnker corporativo: SP 25 / HP 50.
-
----
-
-## 🗺️ 10. Mini-VTT Táctico (Cuadrícula de Combate y Coberturas)
-- [ ] **Tablero Táctico en Cuadrícula**:
-  - Cuadrícula interactiva calibrada en metros/yardas (1 casilla = 2x2 metros).
-- [ ] **Colocación de Elementos en 1 Clic**:
-  - Tokens de jugadores y pandilleros.
-  - Muros y esquinas.
-  - Bloques de cobertura simples (coches, barricadas, barreras) con su SP/HP integrado para destruirse con fuego continuado.
-- [ ] **Regla de Medición**: Medir distancia exacta entre el atacante y el objetivo para seleccionar la franja de DV automáticamente.
-
----
-
-## 💰 11. Economía, Billetera y Registro de Transacciones (€$)
-- [ ] **Billetera de Eurodólares (€$)**: Contador de fondos actuales.
-- [ ] **Registro de Transacciones (Ledger)**:
-  - Entrada de cobros por encargo (ej. *"Pago de Falco por la chaqueta: +1.500 eb"*).
-  - Descuentos por gastos de vida y compras en Night Market.
-
----
-
-## 🎒 12. Inventario y Capacidad de Carga (ENC)
-- [ ] **Cálculo de Carga Máxima**: Determinado por el atributo `BODY` (Págs. 83 y 105).
-- [ ] **Ranuras**: Equipado en manos, funda rápida, mochila y almacén del piso franco.
-
----
-
-## 🧪 13. Drogas Callejeras y Sistema de Adicción
-- [ ] **Catálogo Oficial de Drogas** (Black Lace, Blue Glass, Smash, Synthcoke).
-- [ ] **Temporizador de Duración y Tirada de Adicción**: DVs de Adicción Primaria y Secundaria.
-
----
-
-## 🌦️ 14. Clima y Peligros Ambientales (Night City Weather DLC)
-- [ ] **Selector de Clima Activo**: Lluvia ácida, tormenta de polvo, smog tóxico y cielo rojo sangre.
-
----
-
-## 🧠 15. Terapia, Humanidad y Salud Mental
-- [ ] **Seguimiento de Empatía Base vs Ajustada**: Alerta de Ciberpsicosis (Humanidad < 10).
-- [ ] **Calculadora de Terapia Oficial** (Pág. 229) para recuperar Humanidad con tirada de dados.
-
----
-
-## 🎭 16. Habilidades Específicas de los 10 Roles
-- [ ] **Lawman (Backup / Refuerzos)**: Spawner en 1 clic de policías de patrulla, detectives, SWAT o Max-Tac según el rango.
-- [ ] **Exec (Teamwork)**: Esbirros corporativos precargados (guardaespaldas, chofer, netrunner) y Trauma Team.
-- [ ] **Medtech (Medicine)**: Fabricación de fármacos y cirugía.
-- [ ] **Tech (Maker)**: Tiempos y DVs de invención, mejora y fabricación.
-- [ ] **Solo (Combat Awareness)**: Asignador de puntos de combate en iniciativa.
-- [ ] **Fixer, Nomad, Rockerboy, Media, Netrunner**.
-
----
-
-## 👥 17. Compendio de PNJs y Fichas Precargadas
-- [ ] **Leyendas y Edgerunners**: Adam Smasher, David Martinez, Lucy, Rebecca, Maine, Falco.
-- [ ] **Facciones de Danger Gal Dossier**: NCPD, Maelstrom, Tyger Claws, Arasaka, Militech, Trauma Team.
-- [ ] **Enemigos Genéricos (Mooks & Hardened)**.
-
----
-
-## 🦾 18. Maniquí Anatómico de Ciberware estilo Cyberpunk 2077
-- [ ] **Silueta de Esqueleto Humanoide en Pose Neutral**:
-  - Nodos clicables para Córtex frontal, Ojos, Brazos (Gorilla/Mantis/Monocable), Esqueleto y Piernas.
-  - Panel lateral con ranuras de opciones y pérdida de Humanidad.
-
----
-
-## ⚡ 19. Cyberdecks y Quickhacking 2077
-- [ ] **Monitor de Memoria RAM** y catálogo de Quickhacks con placeholders visuales.
-
----
-
-## 📥 20. Importador Universal de Fichas
-- [ ] **Soporte de Formatos**: Companion App (códigos/JSON), PDFs oficiales y JSON de Omni-Deck.
-
----
-
-## 📸 21. Banco de Capturas de la Companion App (Pendiente de Usuario)
-- [ ] **Revisión de Features Premium**: Integrar cualquier función útil adicional a partir de las fotos que envíe el usuario.
-
----
-
-## 🎲 22. Reglas del Core Rulebook ya Adaptadas (Estado Actual)
-- [x] **Resolución de Tiradas Básicas**: `STAT + Habilidad + 1d10` contra DV.
-- [x] **Críticos y Pifias**: Explosión en 10, deducción en 1.
-- [x] **Selector Global de Distancias**: 0-6m, 7-12m, 13-25m, 26-50m, 51-100m, 101-200m, 201-400m, 401-800m.
-- [x] **Tabla Oficial de DVs por Arma (Pág. 174)**: Pistolas, SMGs, Escopetas, Rifles de Asalto, Francotiradores, etc.
-- [x] **Detección de Zona Óptima**: Marcador verde `★ ÓPTIMO`.
-- [x] **Modo Autofire**: Consumo de 10 balas y multiplicador de daño por margen de éxito.
-- [x] **Puntos de Vida y Herida Grave**: Barra de HP con alerta al llegar al 50%.
-- [x] **Blindaje Cabeza y Torso**: Contador numérico, ablación `[-1]` y reparación.
-- [x] **Heridas Críticas de Cabeza y Cuerpo (Págs. 187-188)**: 22 heridas con mecánicas, iconos dinámicos y botón `[ TRATAR / CURAR ]`.
-- [x] **Recuadros Visuales e Iconos (`ItemVisualPlaceholder.tsx`)**: Para armas, blindajes, ciberware y programas.
-- [x] **Cargador Interactivo**: Descuento de proyectiles en tiempo real y recarga.
+## 🎲 SPRINT 4: VTT Táctico, Clima, Homebrew y Audio/VFX [PENDIENTE]
+- [ ] **Mini-VTT Táctico (`MiniVTT.tsx`)**:
+  - Rejilla táctica 2x2m interactiva en canvas/SVG.
+  - Colocación de tokens de edgerunners y enemigos.
+  - Obstáculos y coberturas destructibles con SP/HP trackeable.
+  - Regla de medición de distancias vinculada directamente a la tabla de DVs del arma activa.
+- [ ] **Generador de Condiciones Atmosféricas y Clima de Night City**:
+  - Lluvia ácida, tormenta de smog rojo, calor radiactivo y sus penalizadores en combate.
+- [ ] **Creador Universal de Homebrew (`HomebrewBuilderModal.tsx`)**:
+  - Formulario para diseñar armas, ciberware, drogas y blindajes caseros.
+  - Algoritmo de conversión oficial de Cyberpunk 2020 a RED (*Old Guns Never Die*).
+- [ ] **Efectos Táctiles de Audio & Visuales (SFX / VFX)**:
+  - Clics metálicos de recarga, detonaciones procedurales y zumbidos de Sandevistan vía Web Audio API.
+  - Vignetting rojo al caer en Herida Grave y glitch visual ante daño de Netrunning.
