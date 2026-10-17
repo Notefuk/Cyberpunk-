@@ -45,6 +45,7 @@ cpr-omni-deck/
 │   │   ├── components/
 │   │   │   └── ItemVisualPlaceholder.tsx # Frames militares tácticos SVG/Lucide por categoría
 │   │   ├── data/
+│   │   │   ├── characterCreationData.ts  # Catálogo canónico de creación, Lifepath, pregenerados y deuda
 │   │   │   ├── core-rules.cprpack.json   # Copia activa del catálogo para el frontend
 │   │   │   ├── criticalInjuries.ts       # Tablas oficiales 2d6 de heridas críticas (Head/Body)
 │   │   │   ├── rangeTables.ts            # Matrices oficiales de DVs por metro y Autofire
@@ -57,6 +58,8 @@ cpr-omni-deck/
 │   │   │   │   └── CombatHudView.tsx     # HUD de combate táctico, selector de DVs y dados
 │   │   │   ├── compendium/
 │   │   │   │   └── CompendiumView.tsx    # Compendio modular de 8 categorías con equipamiento
+│   │   │   ├── creator/
+│   │   │   │   └── CharacterCreatorWizard.tsx # Asistente guiado de 6 pasos para creación de personajes
 │   │   │   ├── cyberware/
 │   │   │   │   └── CyberwareRipperdocView.tsx # Menú Ripperdoc 2077 con maniquí holográfico y ranuras
 │   │   │   ├── gm/
@@ -143,6 +146,37 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores (
 ---
 
 ## 📜 Master Version Changelog
+
+### [v2.6.0] - 2026-10-17 (Guided 6-Step Character Creator Wizard, 2045/2077 CEMK Pregens, Hybrid Lifepath & Selling Out Debt System)
+* **Category**: Character Creation Engine, Onboarding Wizard, Lifepath & Economy
+* **Files Modified / Created**:
+  - `frontend/src/data/characterCreationData.ts`
+  - `frontend/src/features/creator/CharacterCreatorWizard.tsx`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/types/cyberpunk.ts`
+  - `frontend/src/App.tsx`
+* **What Changed**:
+  1. **Catálogo Canónico Maestro de Creación (`characterCreationData.ts`)**:
+     - Soporte completo de eras: **2045 Clásico** vs **2077 CEMK** (con los 7 subsistemas canónicos integrados gratuitos del `Neuroport`: *Chyron HUD, Subdermal Pocket, Neuralware, Interface Plugs, Virtu/Holophone, Biomonitor y Personal Link*).
+     - Las 3 metodologías oficiales del Core Rulebook: *Streetrat* (plantillas rápidas con STATs fijas por Rol), *Edgerunner* (tiradas 1d10 en tablas de stats por Rol) y *Complete Package* (reparto de 62/66/70/75/80 puntos de STATs + 86 puntos de Skills con las 13 Basic Skills reglamentarias preasignadas).
+     - `STAT_TOOLTIPS` para novatos explicando el impacto mecánico de cada una de las 10 estadísticas en lenguaje claro.
+     - Paquetes de armas, armaduras y equipo por cada uno de los 10 Roles oficiales.
+     - Tablas completas de Lifepath Core: origen cultural, estilo personal, ropa, valores, sentimientos, persona más querida, posesión más preciada, trasfondo familiar, entorno de crianza, amigos, amantes trágicos y **Enemigos en 4D** (quién, qué causó la enemistad, recursos/alianzas y plan de venganza).
+     - Lifepath especializado por cada uno de los 10 Roles (territorios de Rockerboy, jerarquías Solo, contratos Netrunner, etc.).
+     - Sistema de Deuda / "Vender el Alma" (*Selling Out*, Core p. 118): pactos con Corporaciones, Fixers o Sindicatos del Crimen otorgando bono inicial (+1,000 €$, ciberware de grado militar o equipo avanzado) a cambio de una deuda financiera o lealtad forzada con intereses.
+     - 17 plantillas pregeneradas completas: 7 Edgerunners oficiales de CEMK 2077 (David Martinez, Lucy, Rebecca, Maine, Kiwi, Falco, Dorio), 6 arquetipos icónicos de 2045 (Solo Merc, Street Netrunner, Combat Tech, Rocker Rebel, Nomad Wheelman, Medtech Sawbones) y 4 plantillas de rivales/enemigos.
+  2. **Asistente Guiado de 6 Pasos (`CharacterCreatorWizard.tsx`)**:
+     - Stepper táctico militar: `1. ERA & MÉTODO` ➔ `2. ROL & CONCEPTO` ➔ `3. ESTADÍSTICAS (STATS)` ➔ `4. HABILIDADES (SKILLS)` ➔ `5. TIENDA & DEUDA` ➔ `6. LIFEPATH & BIO`.
+     - Modo híbrido total: tirada automática `1d10` con animación de dados o personalización y edición manual en cada campo.
+     - Tienda integrada en paso 5: presupuesto oficial de `2,550 €$` para equipo + `800 €$` exclusivos para Moda/Estilo de Vida + bonificaciones de Deuda seleccionada, con compra directa y control de saldo en vivo.
+     - Carga de plantillas pregeneradas o paquetes de Rol con 1 solo clic.
+  3. **Integración en Street Lab, Bio & Navegación Global (`StreetLabView.tsx` & `App.tsx`)**:
+     - Hover tooltips tácticos en cada una de las 10 STATS en la barra de Street Lab.
+     - Nueva pestaña `BIO, LIFEPATH & DEUDA` en Street Lab con visor completo del trasfondo, lista de enemigos y caja de control de Deuda con amortización en Eurodólares (`payOffCharacterDebt`).
+     - Botón y pestaña global `CREAR PJ // WIZARD` en la barra superior del Omni-Deck para iniciar el asistente en cualquier momento.
+
+---
 
 ### [v2.5.0] - 2026-10-17 (Sprint 1 Complete: Right-Edge Rules Cheat Sheet Drawer, Situational Encumbrance & Full Fixer Deck GM Console)
 * **Category**: Tabletop Utilities, Rules Engine, Economy & Master GM Operations (Sprint 1 Complete)

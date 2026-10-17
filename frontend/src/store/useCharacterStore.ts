@@ -4,6 +4,8 @@ import type {
   ActiveCriticalInjury,
   ActiveDrugEffect,
   ArmorItem,
+  CharacterDebt,
+  CharacterLifepath,
   CharacterSheet,
   CombatSkillKey,
   EncumbranceMode,
@@ -376,6 +378,10 @@ export interface CharacterStoreState {
     }
   ) => void;
   gmPayAllCharacters: (concept: string, amount: number) => void;
+  createCharacterFromWizard: (sheet: CharacterSheet) => void;
+  updateCharacterLifepath: (partial: Partial<CharacterLifepath>) => void;
+  updateCharacterDebt: (debt: CharacterDebt | undefined) => void;
+  payOffCharacterDebt: (amount: number) => void;
 }
 
 export const useCharacterStore = create<CharacterStoreState>()(
@@ -1409,6 +1415,102 @@ export const useCharacterStore = create<CharacterStoreState>()(
               ...c,
               eurodollars: newBal,
               transactions: [newTx, ...(c.transactions || [])].slice(0, 50)
+            };
+          })
+        }));
+      },
+
+      createCharacterFromWizard: (sheet: CharacterSheet) => {
+        set((state) => {
+          const exists = state.characters.some((c) => c.id === sheet.id);
+          const characters = exists
+            ? state.characters.map((c) => (c.id === sheet.id ? sheet : c))
+            : [...state.characters, sheet];
+          return {
+            characters,
+            activeCharacterId: sheet.id
+          };
+        });
+      },
+
+      updateCharacterLifepath: (partial: Partial<CharacterLifepath>) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentLifepath: CharacterLifepath = c.lifepath || {
+              culturalRegion: '',
+              personality: '',
+              clothingStyle: '',
+              hairstyle: '',
+              affectation: '',
+              valueMost: '',
+              feelAboutPeople: '',
+              valuedPerson: '',
+              valuedPossession: '',
+              familyBackground: '',
+              childhoodEnvironment: '',
+              familyCrisis: '',
+              friends: [],
+              tragicLoveAffairs: [],
+              enemies: [],
+              roleLifepath: {},
+              lifeGoal: ''
+            };
+            return {
+              ...c,
+              lifepath: {
+                ...currentLifepath,
+                ...partial
+              }
+            };
+          })
+        }));
+      },
+
+      updateCharacterDebt: (debt: CharacterDebt | undefined) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              debt
+            };
+          })
+        }));
+      },
+
+      payOffCharacterDebt: (amount: number) => {
+        if (amount <= 0) return;
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentDebt = c.debt;
+            if (!currentDebt || !currentDebt.isActive) return c;
+
+            const paidAmount = Math.min(amount, c.eurodollars || 0, currentDebt.amount);
+            if (paidAmount <= 0) return c;
+
+            const newBalance = (c.eurodollars || 0) - paidAmount;
+            const remainingDebt = Math.max(0, currentDebt.amount - paidAmount);
+            const isDebtClear = remainingDebt === 0;
+
+            const newTx: EurodollarTransaction = {
+              id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+              timestamp: new Date().toISOString(),
+              concept: `Pago de Deuda (${currentDebt.creditorName || 'Acreedor'})`,
+              amount: -paidAmount,
+              balanceAfter: newBalance
+            };
+
+            return {
+              ...c,
+              eurodollars: newBalance,
+              transactions: [newTx, ...(c.transactions || [])].slice(0, 50),
+              debt: {
+                ...currentDebt,
+                amount: remainingDebt,
+                isActive: !isDebtClear
+              }
             };
           })
         }));

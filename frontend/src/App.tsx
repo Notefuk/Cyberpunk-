@@ -5,18 +5,20 @@ import {
   BookOpen, 
   FolderArchive, 
   Terminal, 
-  Cpu
+  Cpu,
+  UserPlus
 } from 'lucide-react';
 import { TopHudBar } from './features/layout/TopHudBar';
 import { CombatHudView } from './features/combat/CombatHudView';
 import { StreetLabView } from './features/sheet/StreetLabView';
+import { CharacterCreatorWizard } from './features/creator/CharacterCreatorWizard';
 import { CyberwareRipperdocView } from './features/cyberware/CyberwareRipperdocView';
 import { CompendiumView } from './features/compendium/CompendiumView';
 import { DataPacksView } from './features/packs/DataPacksView';
 import { FixerDeckView } from './features/gm/FixerDeckView';
 import { RulesCheatSheetDrawer } from './features/rules/RulesCheatSheetDrawer';
 
-type TabKey = 'combat' | 'sheet' | 'cyberware' | 'compendium' | 'packs' | 'gm';
+type TabKey = 'combat' | 'sheet' | 'cyberware' | 'compendium' | 'packs' | 'gm' | 'creator';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('combat');
@@ -51,6 +53,11 @@ export default function App() {
       id: 'gm',
       label: 'FIXER DECK // GM OPS',
       icon: <Terminal className="w-4 h-4" />
+    },
+    {
+      id: 'creator',
+      label: 'CREAR PJ // WIZARD',
+      icon: <UserPlus className="w-4 h-4" />
     }
   ];
 
@@ -88,6 +95,12 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
         {activeTab === 'combat' && <CombatHudView />}
         {activeTab === 'sheet' && <StreetLabView />}
+        {activeTab === 'creator' && (
+          <CharacterCreatorWizard
+            onClose={() => setActiveTab('sheet')}
+            onComplete={() => setActiveTab('sheet')}
+          />
+        )}
         {activeTab === 'cyberware' && <CyberwareRipperdocView />}
         {activeTab === 'compendium' && <CompendiumView />}
         {activeTab === 'packs' && <DataPacksView />}

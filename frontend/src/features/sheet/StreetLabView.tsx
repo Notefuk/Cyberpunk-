@@ -14,6 +14,8 @@ import type {
 } from '../../types/cyberpunk';
 import { SKILL_METADATA } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
+import { STAT_TOOLTIPS } from '../../data/characterCreationData';
+import { CharacterCreatorWizard } from '../creator/CharacterCreatorWizard';
 import { 
   User, 
   Plus, 
@@ -34,7 +36,11 @@ import {
   Crosshair,
   Cpu,
   RefreshCw,
-  Package
+  Package,
+  BookOpen,
+  AlertCircle,
+  CheckCircle2,
+  DollarSign
 } from 'lucide-react';
 
 const STAT_KEYS: StatKey[] = ['INT', 'REF', 'DEX', 'TECH', 'COOL', 'WILL', 'LUCK', 'MOVE', 'BODY', 'EMP'];
@@ -105,10 +111,14 @@ export const StreetLabView: React.FC = () => {
   const exportActiveCharacterJson = useCharacterStore((state) => state.exportActiveCharacterJson);
   const importCharacterJson = useCharacterStore((state) => state.importCharacterJson);
   const setEncumbranceMode = useCharacterStore((state) => state.setEncumbranceMode);
+  const updateCharacterLifepath = useCharacterStore((state) => state.updateCharacterLifepath);
+  const updateCharacterDebt = useCharacterStore((state) => state.updateCharacterDebt);
+  const payOffCharacterDebt = useCharacterStore((state) => state.payOffCharacterDebt);
 
   const activeChar = getActiveCharacter();
 
   // Local state for modals & filters
+  const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [newHandle, setNewHandle] = useState('');
   const [newRole, setNewRole] = useState('Solo');
@@ -117,10 +127,11 @@ export const StreetLabView: React.FC = () => {
   const [importJsonText, setImportJsonText] = useState('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  // Right column tab and wallet state
-  const [rightColTab, setRightColTab] = useState<'combat' | 'inventory' | 'wallet'>('combat');
+  // Right column tab, wallet & debt state
+  const [rightColTab, setRightColTab] = useState<'combat' | 'inventory' | 'wallet' | 'bio'>('combat');
   const [walletConcept, setWalletConcept] = useState('');
   const [walletAmount, setWalletAmount] = useState<number>(100);
+  const [debtPayAmount, setDebtPayAmount] = useState<number>(500);
 
   // Skill filter and accordion state
   const [skillFilter, setSkillFilter] = useState<SkillFilterCategory>('all');
@@ -234,6 +245,20 @@ export const StreetLabView: React.FC = () => {
 
   return (
     <div className="space-y-4 max-w-7xl mx-auto pb-8">
+      {/* Modal / Overlay del Creador de Personajes en 6 Pasos */}
+      {isWizardOpen && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto flex items-start justify-center">
+          <div className="w-full max-w-6xl my-4">
+            <CharacterCreatorWizard
+              onClose={() => setIsWizardOpen(false)}
+              onComplete={() => {
+                setIsWizardOpen(false);
+                showStatus('¡Ficha creada y activada en Street Lab!');
+              }}
+            />
+          </div>
+        </div>
+      )}
       
       {/* =========================================================
           BLOQUE 1: BARRA SUPERIOR COMPACTA DE IDENTIDAD Y FICHAS
@@ -317,12 +342,12 @@ export const StreetLabView: React.FC = () => {
           )}
 
           <button
-            onClick={() => setIsCreatingNew(!isCreatingNew)}
-            className="px-2 py-1 bg-[#202434] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded-xs border border-[#2d344a] flex items-center gap-1 transition-all"
-            title="Crear nueva ficha"
+            onClick={() => setIsWizardOpen(true)}
+            className="px-2.5 py-1 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs rounded-xs border border-[#dc2626] flex items-center gap-1.5 transition-all shadow-[0_0_10px_rgba(220,38,38,0.3)] cursor-pointer"
+            title="Crear nueva ficha con el Asistente Guiado de 6 Pasos"
           >
-            <FolderPlus className="w-3 h-3" />
-            <span className="hidden sm:inline">+ NUEVO</span>
+            <FolderPlus className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">+ NUEVO (WIZARD)</span>
           </button>
 
           <button
@@ -443,8 +468,31 @@ export const StreetLabView: React.FC = () => {
             return (
               <div
                 key={stat}
-                className="bg-[#151722] p-1.5 rounded border border-[#222636] text-center flex flex-col justify-between hover:border-[#384058] transition-all"
+                className="group/stat relative bg-[#151722] p-1.5 rounded border border-[#222636] text-center flex flex-col justify-between hover:border-[#38bdf8]/60 transition-all cursor-help"
               >
+                {/* Tooltip táctico para principiantes */}
+                {STAT_TOOLTIPS[stat] && (
+                  <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/stat:flex flex-col items-center z-50 w-64 text-left">
+                    <div className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code font-normal leading-relaxed p-2.5 rounded-xs border border-[#38bdf8]/60 shadow-xl shadow-black/90">
+                      <div className="font-tech font-bold text-[#38bdf8] uppercase text-xs mb-0.5">
+                        {stat} — {STAT_TOOLTIPS[stat].name}
+                      </div>
+                      <div className="text-[#cbd5e1] mb-1 font-sans">
+                        {STAT_TOOLTIPS[stat].shortSummary}
+                      </div>
+                      <div className="text-[#94a3b8] text-[9px] mb-1 leading-tight">
+                        {STAT_TOOLTIPS[stat].beginnerExplanation}
+                      </div>
+                      {STAT_TOOLTIPS[stat].mechanicalBreakpoints && STAT_TOOLTIPS[stat].mechanicalBreakpoints.length > 0 && (
+                        <div className="text-[9px] text-[#f59e0b] border-t border-[#1e293b] pt-1">
+                          {STAT_TOOLTIPS[stat].mechanicalBreakpoints[0]}
+                        </div>
+                      )}
+                    </div>
+                    <div className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-[#38bdf8]/60 rotate-45 -mt-1" />
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between text-[11px] font-tech text-[#94a3b8] px-0.5">
                   <span className="font-bold text-white">{stat}</span>
                   {penalty > 0 && (
@@ -698,6 +746,18 @@ export const StreetLabView: React.FC = () => {
             >
               <Coins className="w-3.5 h-3.5" />
               <span>BILLETERA (€$)</span>
+            </button>
+
+            <button
+              onClick={() => setRightColTab('bio')}
+              className={`flex-1 py-1 px-1.5 rounded-2xs font-tech text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                rightColTab === 'bio'
+                  ? 'bg-[#dc2626] text-white font-bold'
+                  : 'text-[#94a3b8] hover:text-white hover:bg-[#1a1d2c]'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>BIO &amp; DEUDA</span>
             </button>
           </div>
 
@@ -1074,6 +1134,278 @@ export const StreetLabView: React.FC = () => {
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: BIO, LIFEPATH & DEUDA */}
+          {rightColTab === 'bio' && (
+            <div className="space-y-3">
+              {/* 1. ERA & IDENTIDAD DE CREACIÓN */}
+              <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-2">
+                <div className="flex items-center justify-between pb-1.5 border-b border-[#1f2230]">
+                  <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+                    <User className="w-3.5 h-3.5 text-[#38bdf8]" />
+                    <span>ERA &amp; ORIGEN DEL EDGERUNNER</span>
+                  </div>
+                  <span className={`text-[10px] font-mono-code px-2 py-0.5 rounded font-bold uppercase border ${
+                    activeChar?.era === '2077'
+                      ? 'bg-[#38bdf8]/20 text-[#38bdf8] border-[#38bdf8]/40'
+                      : 'bg-[#dc2626]/20 text-[#dc2626] border-[#dc2626]/40'
+                  }`}>
+                    {activeChar?.era === '2077' ? 'CEMK 2077 // NEUROPORT' : 'CORE 2045 // ROJO'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs font-mono-code">
+                  <div className="bg-[#171923] p-2 rounded border border-[#222636]">
+                    <span className="text-[10px] text-[#64748b] block">MÉTODO CREACIÓN:</span>
+                    <strong className="text-white uppercase font-tech">
+                      {activeChar?.creationMethod || 'Standard'}
+                    </strong>
+                  </div>
+                  <div className="bg-[#171923] p-2 rounded border border-[#222636]">
+                    <span className="text-[10px] text-[#64748b] block">HABILIDAD DE ROL:</span>
+                    <strong className="text-[#38bdf8] font-tech truncate block">
+                      {activeChar?.roleAbilityName || activeChar?.role} (Rnk {activeChar?.roleRank ?? 4})
+                    </strong>
+                  </div>
+                </div>
+
+                {activeChar?.hasNeuroport && (
+                  <div className="bg-[#0b1720] border border-[#0ea5e9]/40 p-2 rounded text-[11px] font-mono-code text-[#7dd3fc] flex items-center gap-2">
+                    <Cpu className="w-4 h-4 flex-shrink-0 text-[#38bdf8]" />
+                    <span>Neuroport Integrado preinstalado (7 subsistemas neurales activos sin coste de HL).</span>
+                  </div>
+                )}
+              </div>
+
+              {/* 2. ESTADO DE DEUDA (SELLING OUT) */}
+              <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-2.5">
+                <div className="flex items-center justify-between pb-1.5 border-b border-[#1f2230]">
+                  <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+                    <DollarSign className="w-3.5 h-3.5 text-[#f59e0b]" />
+                    <span>ESTADO DE DEUDA // SELLING OUT</span>
+                  </div>
+                  {activeChar?.debt?.isActive && activeChar.debt.amount > 0 ? (
+                    <span className="text-[10px] font-mono-code bg-[#dc2626]/20 text-[#dc2626] border border-[#dc2626]/40 px-2 py-0.5 rounded font-bold uppercase flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> DEUDOR ACTIVO
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-mono-code bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40 px-2 py-0.5 rounded font-bold uppercase flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> LIBRE DE DEUDAS
+                    </span>
+                  )}
+                </div>
+
+                {activeChar?.debt?.isActive && activeChar.debt.amount > 0 ? (
+                  <div className="space-y-2 font-mono-code text-xs">
+                    <div className="bg-[#1b1216] border border-[#dc2626]/40 p-2.5 rounded space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] text-[#94a3b8] uppercase">ACREEDOR:</span>
+                        <span className="text-[#f59e0b] font-bold uppercase text-[10px] bg-[#241a16] px-1.5 py-0.5 rounded border border-[#3b2518]">
+                          {activeChar.debt.creditorType}
+                        </span>
+                      </div>
+                      <div className="text-white font-tech text-base font-bold">
+                        {activeChar.debt.creditorName || 'Prestamista Callejero'}
+                      </div>
+                      <div className="text-[11px] text-[#cbd5e1] leading-relaxed">
+                        {activeChar.debt.terms || 'Deuda pendiente sujeta a condiciones contractuales.'}
+                      </div>
+                      <div className="pt-1 border-t border-[#311b22] flex items-center justify-between">
+                        <span className="text-[#94a3b8] text-[10px]">DEUDA PENDIENTE:</span>
+                        <span className="font-tech text-lg font-black text-[#dc2626]">
+                          {activeChar.debt.amount} €$
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Formulario de Pago de Deuda */}
+                    <div className="bg-[#171923] p-2 rounded border border-[#222636] space-y-2">
+                      <div className="text-[10px] text-[#64748b] uppercase">ABONAR A LA DEUDA:</div>
+                      <div className="flex gap-2">
+                        <input
+                          type="number"
+                          min="1"
+                          max={Math.min(activeChar.debt.amount, activeChar?.eurodollars ?? 0)}
+                          value={debtPayAmount}
+                          onChange={(e) => setDebtPayAmount(Math.max(1, parseInt(e.target.value) || 0))}
+                          className="flex-1 bg-[#0f1016] border border-[#262c3e] text-[#10b981] font-mono-code font-bold text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#10b981]"
+                        />
+                        <button
+                          onClick={() => {
+                            if ((activeChar?.eurodollars ?? 0) < debtPayAmount) {
+                              alert('No tienes suficientes eurodólares para este pago.');
+                              return;
+                            }
+                            payOffCharacterDebt(debtPayAmount);
+                            showStatus(`Abonaste ${debtPayAmount} €$ a tu acreedor.`);
+                          }}
+                          disabled={(activeChar?.eurodollars ?? 0) <= 0}
+                          className="px-3 py-1 bg-[#10b981]/20 hover:bg-[#10b981] hover:text-black text-[#10b981] border border-[#10b981]/40 rounded-xs font-tech font-bold text-xs tracking-wider transition-all disabled:opacity-40 cursor-pointer"
+                        >
+                          💸 ABONAR DEUDA
+                        </button>
+                      </div>
+
+                      <div className="flex justify-between items-center pt-1 border-t border-[#1e2332]">
+                        <button
+                          onClick={() => {
+                            if (confirm('¿Marcar la deuda como perdonada o completamente saldada?')) {
+                              updateCharacterDebt(undefined);
+                              showStatus('Deuda cancelada en la ficha.');
+                            }
+                          }}
+                          className="text-[10px] text-[#64748b] hover:text-[#ef4444] underline cursor-pointer"
+                        >
+                          Perdonar / Eliminar contrato de deuda (GM)
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-[#131b19] border border-[#10b981]/30 p-2.5 rounded text-xs font-mono-code space-y-1.5">
+                    <p className="text-[#a7f3d0] leading-relaxed">
+                      Este Edgerunner no le debe eurodólares ni favores sucios a ninguna corporación, banda ni prestamista.
+                    </p>
+                    <button
+                      onClick={() => {
+                        updateCharacterDebt({
+                          isActive: true,
+                          amount: 1500,
+                          creditorType: 'gang',
+                          creditorName: 'Prestamista Callejero Tyger Claws',
+                          terms: 'Interés mensual del 20% y disponibilidad para 1 gig sucio a requerimiento.'
+                        });
+                        addEurodollarTransaction('Préstamo de Emergencia Selling Out', 1500);
+                        showStatus('Deuda contraída: +1,500 €$ ingresados en billetera.');
+                      }}
+                      className="mt-1 px-2.5 py-1 bg-[#f59e0b]/20 hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] border border-[#f59e0b]/40 rounded-xs font-tech text-xs font-bold transition-all cursor-pointer"
+                    >
+                      + CONTRAER DEUDA MENOR (+1,500 €$)
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* 3. RESUMEN DEL LIFEPATH */}
+              <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-2">
+                <div className="flex items-center justify-between pb-1.5 border-b border-[#1f2230]">
+                  <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+                    <BookOpen className="w-3.5 h-3.5 text-[#38bdf8]" />
+                    <span>HISTORIAL DE VIDA // LIFEPATH</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 text-xs font-mono-code max-h-[280px] overflow-y-auto pr-1">
+                  <div className="bg-[#171923] p-2 rounded border border-[#222636]">
+                    <span className="text-[10px] text-[#64748b] uppercase block">Origen Cultural:</span>
+                    <span className="text-white">{activeChar?.lifepath?.culturalRegion || 'No especificado'}</span>
+                  </div>
+
+                  <div className="bg-[#171923] p-2 rounded border border-[#222636]">
+                    <span className="text-[10px] text-[#64748b] uppercase block">Personalidad:</span>
+                    <span className="text-white">{activeChar?.lifepath?.personality || 'No especificado'}</span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <div className="bg-[#171923] p-1.5 rounded border border-[#222636]">
+                      <span className="text-[9px] text-[#64748b] block">ESTILO ROPA:</span>
+                      <span className="text-white text-[11px] truncate block">{activeChar?.lifepath?.clothingStyle || '—'}</span>
+                    </div>
+                    <div className="bg-[#171923] p-1.5 rounded border border-[#222636]">
+                      <span className="text-[9px] text-[#64748b] block">PEINADO:</span>
+                      <span className="text-white text-[11px] truncate block">{activeChar?.lifepath?.hairstyle || '—'}</span>
+                    </div>
+                    <div className="bg-[#171923] p-1.5 rounded border border-[#222636]">
+                      <span className="text-[9px] text-[#64748b] block">RASGO:</span>
+                      <span className="text-white text-[11px] truncate block">{activeChar?.lifepath?.affectation || '—'}</span>
+                    </div>
+                  </div>
+
+                  <div className="bg-[#171923] p-2 rounded border border-[#222636] space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-[10px] text-[#64748b]">QUÉ VALORA:</span>
+                      <span className="text-white text-right font-medium">{activeChar?.lifepath?.valueMost || '—'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[10px] text-[#64748b]">OPINIÓN SOBRE GENTE:</span>
+                      <span className="text-white text-right font-medium">{activeChar?.lifepath?.feelAboutPeople || '—'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[10px] text-[#64748b]">PERSONA VALORADA:</span>
+                      <span className="text-white text-right font-medium">{activeChar?.lifepath?.valuedPerson || '—'}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[10px] text-[#64748b]">POSESIÓN VALORADA:</span>
+                      <span className="text-white text-right font-medium">{activeChar?.lifepath?.valuedPossession || '—'}</span>
+                    </div>
+                  </div>
+
+                  <div className="bg-[#171923] p-2 rounded border border-[#222636]">
+                    <span className="text-[10px] text-[#64748b] uppercase block">Trasfondo Familiar &amp; Crisis:</span>
+                    <p className="text-white text-[11px] mb-1">{activeChar?.lifepath?.familyBackground || 'Sin trasfondo registrado.'}</p>
+                    {activeChar?.lifepath?.familyCrisis && (
+                      <p className="text-[#f59e0b] text-[10px] border-t border-[#232a3e] pt-1">
+                        ⚠️ {activeChar.lifepath.familyCrisis}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="bg-[#171923] p-2 rounded border border-[#222636]">
+                    <span className="text-[10px] text-[#64748b] uppercase block">Meta de Vida:</span>
+                    <p className="text-[#38bdf8] text-[11px] font-bold">
+                      {activeChar?.lifepath?.lifeGoal || 'Sobrevivir un día más en Night City.'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4. ENEMIGOS DE LIFEPATH */}
+              <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-2">
+                <div className="flex items-center justify-between pb-1.5 border-b border-[#1f2230]">
+                  <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+                    <Skull className="w-3.5 h-3.5 text-[#dc2626]" />
+                    <span>ENEMIGOS ACTIVOS ({(activeChar?.lifepath?.enemies ?? []).length})</span>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 max-h-[220px] overflow-y-auto pr-1 font-mono-code text-xs">
+                  {(activeChar?.lifepath?.enemies ?? []).length === 0 ? (
+                    <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded">
+                      Sin enemigos declarados en tu Lifepath.
+                    </div>
+                  ) : (
+                    activeChar?.lifepath?.enemies.map((enemy, idx) => (
+                      <div key={enemy.id || idx} className="bg-[#181216] border border-[#dc2626]/30 p-2 rounded space-y-1">
+                        <div className="flex items-center justify-between">
+                          <strong className="text-[#ef4444] text-[11px]">{enemy.who}</strong>
+                          <button
+                            onClick={() => {
+                              const updated = (activeChar?.lifepath?.enemies || []).filter((_, i) => i !== idx);
+                              updateCharacterLifepath({ enemies: updated });
+                              showStatus('Enemigo eliminado.');
+                            }}
+                            className="text-[#64748b] hover:text-[#ef4444]"
+                            title="Eliminar enemigo"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                        <div className="text-[10px] text-[#cbd5e1] leading-tight">
+                          <span className="text-[#64748b]">Causa:</span> {enemy.cause}
+                        </div>
+                        <div className="text-[10px] text-[#f59e0b] leading-tight">
+                          <span className="text-[#64748b]">Arrojará:</span> {enemy.throwAtYou}
+                        </div>
+                        <div className="text-[9px] text-[#94a3b8] italic">
+                          "{enemy.reaction}"
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
             </div>
           )}

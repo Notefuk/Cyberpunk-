@@ -101,7 +101,7 @@
     - **Cabeza**: El daño que penetra armadura (`SP`) se multiplica `×2` directo a HP.
     - **Pierna**: Aplica automáticamente estado crítico *Pierna Rota* (`Broken Leg`: `-4 MOVE`, mínimo 1).
     - **Objeto Sostenido (Held Item)**: Provoca Desarme automático (`Disarm`), el objetivo suelta el arma u objeto sostenido.
-- [ ] **🧙‍♂️ Creador de Personajes Guiado Desde Cero (Wizard Paso a Paso & Onboarding para Novatos) (`CharacterWizardModal.tsx`)**:
+- [x] **🧙‍♂️ Creador de Personajes Guiado Desde Cero (Wizard Paso a Paso & Onboarding para Novatos) (`CharacterCreatorWizard.tsx` & `characterCreationData.ts`)**:
   - **Los 3 Sistemas Oficiales de Creación + Plantillas 2077**:
     - Soporte completo para las 3 metodologías del Core Rulebook: *Streetrat (Plantillas Rápidas)*, *Edgerunner (Tiradas Rápidas)* y *Complete Package (Compra por Puntos)*.
     - Integración de las plantillas pregeneradas oficiales de la Era 2077 de *Cyberpunk Edgerunners Mission Kit (CEMK 2077)*.

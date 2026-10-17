@@ -370,6 +370,46 @@ export interface EurodollarTransaction {
 
 export type EncumbranceMode = 'none' | 'heavy_box' | 'carrying_body' | 'extreme_load';
 
+export type CharacterEra = '2045' | '2077';
+export type CreationMethod = 'streetrat' | 'edgerunner' | 'complete_package' | 'pregen';
+
+export interface LifepathEnemy {
+  id: string;
+  who: string;
+  cause: string;
+  throwAtYou: string;
+  reaction: string;
+  customNotes?: string;
+}
+
+export interface CharacterLifepath {
+  culturalRegion: string;
+  personality: string;
+  clothingStyle: string;
+  hairstyle: string;
+  affectation: string;
+  valueMost: string;
+  feelAboutPeople: string;
+  valuedPerson: string;
+  valuedPossession: string;
+  familyBackground: string;
+  childhoodEnvironment: string;
+  familyCrisis: string;
+  friends: string[];
+  tragicLoveAffairs: string[];
+  enemies: LifepathEnemy[];
+  roleLifepath: Record<string, string>;
+  lifeGoal: string;
+}
+
+export interface CharacterDebt {
+  isActive: boolean;
+  amount: number;
+  creditorType: 'corp' | 'law' | 'gang' | 'custom';
+  creditorName: string;
+  terms: string;
+}
+
 export interface CharacterSheet {
   id: string;
   handle: string;
@@ -402,6 +442,14 @@ export interface CharacterSheet {
   unarmedInHand?: { brawling?: boolean; martialArts?: boolean };
   activeDrugs?: ActiveDrugEffect[];
   encumbranceMode?: EncumbranceMode;
+  era?: CharacterEra;
+  creationMethod?: CreationMethod;
+  roleAbilityName?: string;
+  generalSkills?: Record<string, number>;
+  fashionBudgetRemaining?: number;
+  hasNeuroport?: boolean;
+  lifepath?: CharacterLifepath;
+  debt?: CharacterDebt;
 }
 
 export interface RollEntry {
