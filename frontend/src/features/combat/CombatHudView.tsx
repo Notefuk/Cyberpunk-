@@ -389,6 +389,29 @@ export const CombatHudView: React.FC = () => {
   const [showEquipGrenadeDropdown, setShowEquipGrenadeDropdown] = useState<boolean>(false);
   const [showEquipDrugDropdown, setShowEquipDrugDropdown] = useState<boolean>(false);
 
+  // Columna Central: Telémetro y Estación "En Mano"
+  const [isRangefinderOpen, setIsRangefinderOpen] = useState<boolean>(true);
+  const [isInHandStationOpen, setIsInHandStationOpen] = useState<boolean>(true);
+  const [inHandExpanded, setInHandExpanded] = useState<Record<string, boolean>>({});
+  const toggleInHandExpanded = (id: string) => {
+    setInHandExpanded((prev) => ({
+      ...prev,
+      [id]: prev[id] !== undefined ? !prev[id] : false
+    }));
+  };
+  const [inHandSubTab, setInHandSubTab] = useState<Record<string, 'ammo' | 'dv' | 'autofire' | 'all'>>({});
+  const setWeaponSubTab = (id: string, tab: 'ammo' | 'dv' | 'autofire' | 'all') => {
+    setInHandSubTab((prev) => ({ ...prev, [id]: tab }));
+  };
+
+  const [unarmedInHandExpanded, setUnarmedInHandExpanded] = useState<Record<string, boolean>>({
+    brawling: true,
+    martialArts: true
+  });
+  const toggleUnarmedInHandExpanded = (mode: 'brawling' | 'martialArts') => {
+    setUnarmedInHandExpanded((prev) => ({ ...prev, [mode]: !prev[mode] }));
+  };
+
   // Helper to match inventory items to tactical grenades
   const getGrenadeInfo = (item: InventoryItem) => {
     const found = TACTICAL_GRENADES.find(
@@ -446,6 +469,7 @@ export const CombatHudView: React.FC = () => {
   const isSeriouslyWounded = (activeChar?.currentHp ?? 0) < seriousWoundThresh;
   const isMortallyWounded = (activeChar?.currentHp ?? 0) <= 0;
   const unarmedDmg = calculateUnarmedDamage(activeChar?.stats?.BODY ?? 6);
+  const activeBracket = RANGE_BRACKETS.find((b) => b.range === selectedDistance);
 
   // Helper: DV for weapon & distance
   const getDvForWeapon = (weapon: WeaponItem, distance: string, isAuto: boolean): number | null => {
@@ -1244,39 +1268,69 @@ export const CombatHudView: React.FC = () => {
         
         {/* Telémetro Selector de Distancia */}
         <div className="chamfer-card p-3.5 bg-[#121319] border border-[#232736]">
-          <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-[#1f2230]">
+          <div 
+            onClick={() => setIsRangefinderOpen(prev => !prev)}
+            className="flex items-center justify-between pb-1.5 border-b border-[#1f2230] cursor-pointer group select-none"
+          >
             <div className="flex items-center gap-1.5">
+              {isRangefinderOpen ? (
+                <ChevronDown className="w-4 h-4 text-[#f59e0b]" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-[#64748b] group-hover:text-[#f59e0b]" />
+              )}
               <Target className="w-4 h-4 text-[#f59e0b]" />
-              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase">
+              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase group-hover:text-[#f59e0b] transition-colors">
                 TELÉMETRO DE DISTANCIA
               </span>
             </div>
-            <span className="text-xs font-mono-code text-[#38bdf8]">
-              DISTANCIA: <span className="font-bold text-white bg-[#1e2334] px-2 py-0.5 rounded">{selectedDistance}</span>
-            </span>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-mono-code text-[#38bdf8] bg-[#141b29] border border-[#243552] px-2 py-0.5 rounded flex items-center gap-1">
+                <span className="text-[#94a3b8]">🎯 ACTIVA:</span>
+                <strong className="text-white">{selectedDistance}</strong>
+                {activeBracket && (
+                  <span className="text-[#64748b]">
+                    ({activeBracket.label.split('(')[1]?.replace(')', '') || activeBracket.label})
+                  </span>
+                )}
+              </span>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsRangefinderOpen(prev => !prev);
+                }}
+                className="text-[10px] font-mono-code text-[#94a3b8] hover:text-white bg-[#1b1f2e] border border-[#272e42] px-2 py-0.5 rounded transition-all"
+              >
+                {isRangefinderOpen ? '▴ CERRAR TELÉMETRO' : '▾ ABRIR TELÉMETRO'}
+              </button>
+            </div>
           </div>
 
-          <div className="grid grid-cols-4 sm:grid-cols-8 gap-1">
-            {RANGE_BRACKETS.map((b) => {
-              const isSelected = selectedDistance === b.range;
-              return (
-                <button
-                  key={b.range}
-                  onClick={() => setSelectedDistance(b.range)}
-                  className={`p-1 rounded-xs border text-center transition-all ${
-                    isSelected 
-                      ? 'bg-[#dc2626] border-[#dc2626] text-white font-bold shadow-md shadow-[#dc2626]/20' 
-                      : 'bg-[#171923] border-[#242838] text-[#94a3b8] hover:border-[#3b425a] hover:text-white'
-                  }`}
-                >
-                  <div className="font-tech text-[11px] font-bold leading-none">{b.range}</div>
-                  <div className="text-[8px] font-mono-code text-[#64748b] mt-0.5 leading-tight truncate">
-                    {b.label.split('(')[1]?.replace(')', '') || ''}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          {isRangefinderOpen && (
+            <div className="grid grid-cols-4 sm:grid-cols-8 gap-1 pt-2">
+              {RANGE_BRACKETS.map((b) => {
+                const isSelected = selectedDistance === b.range;
+                return (
+                  <button
+                    key={b.range}
+                    onClick={() => setSelectedDistance(b.range)}
+                    className={`p-1 rounded-xs border text-center transition-all ${
+                      isSelected 
+                        ? 'bg-[#dc2626] border-[#dc2626] text-white font-bold shadow-md shadow-[#dc2626]/20' 
+                        : 'bg-[#171923] border-[#242838] text-[#94a3b8] hover:border-[#3b425a] hover:text-white'
+                    }`}
+                  >
+                    <div className="font-tech text-[11px] font-bold leading-none">{b.range}</div>
+                    <div className="text-[8px] font-mono-code text-[#64748b] mt-0.5 leading-tight truncate">
+                      {b.label.split('(')[1]?.replace(')', '') || ''}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* =======================================================
@@ -1284,368 +1338,651 @@ export const CombatHudView: React.FC = () => {
         ======================================================= */}
         <div className="space-y-4">
           
-          <div className="flex items-center justify-between px-1">
-            <span className="font-tech text-xs font-bold text-[#38bdf8] uppercase tracking-wider flex items-center gap-1.5">
+          <div 
+            onClick={() => setIsInHandStationOpen((prev) => !prev)}
+            className="flex items-center justify-between px-1 cursor-pointer group select-none"
+          >
+            <span className="font-tech text-xs font-bold text-[#38bdf8] uppercase tracking-wider flex items-center gap-1.5 group-hover:text-white transition-colors">
+              {isInHandStationOpen ? (
+                <ChevronDown className="w-3.5 h-3.5 text-[#38bdf8]" />
+              ) : (
+                <ChevronRight className="w-3.5 h-3.5 text-[#64748b] group-hover:text-[#38bdf8]" />
+              )}
               <Crosshair className="w-3.5 h-3.5" /> ESTACIÓN DE ATAQUE "EN MANO"
             </span>
-            <span className="text-[10px] font-mono-code text-[#64748b]">
-              {inHandWeapons.length + (isBrawlingInHand ? 1 : 0) + (isMartialArtsInHand ? 1 : 0)} ATAQUES LISTOS
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono-code text-[#64748b]">
+                {inHandWeapons.length + (isBrawlingInHand ? 1 : 0) + (isMartialArtsInHand ? 1 : 0)} ATAQUES LISTOS
+              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsInHandStationOpen((prev) => !prev);
+                }}
+                className="text-[9px] font-mono-code text-[#38bdf8] bg-[#141b29] border border-[#243552] px-1.5 py-0.5 rounded hover:bg-[#1f2d45]"
+              >
+                {isInHandStationOpen ? 'Plegar' : 'Desplegar'}
+              </button>
+            </div>
           </div>
 
-          {!hasAnyInHandAttack && (
-            <div className="chamfer-card p-6 text-center text-[#64748b] font-mono-code text-xs bg-[#121319] border border-[#232736]">
-              No hay armas ni ataques seleccionados "En Mano".<br />
-              Usa el <strong>Rack Táctico de la derecha</strong> para poner armas o puños en mano.
-            </div>
-          )}
+          {isInHandStationOpen && (
+            <>
+              {!hasAnyInHandAttack && (
+                <div className="chamfer-card p-6 text-center text-[#64748b] font-mono-code text-xs bg-[#121319] border border-[#232736]">
+                  No hay armas ni ataques seleccionados "En Mano".<br />
+                  Usa el <strong>Rack Táctico de la derecha</strong> para poner armas o puños en mano.
+                </div>
+              )}
 
-          {/* Tarjetas de Armas En Mano */}
-          {inHandWeapons.map((w) => {
-            const isRanged = w.type === 'Ranged';
-            const isAuto = !!autofireByWeapon[w.instanceId];
-            const autofireRules = getAutofireRulesSummary(w);
-            const breakdown = calculateWeaponAttackBreakdown(activeChar, w, isAuto);
-            const currentDv = getDvForWeapon(w, selectedDistance, isAuto);
-            const profileKey = getWeaponProfileKey(w.name, w.type);
-            const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
-            const placeholderType = getItemPlaceholderType(w);
-            const isOutOfAmmo = isRanged && (w.currentMag ?? 0) <= 0;
-            const netBaseWithLuck = breakdown.netBase + luckToSpendOnNextRoll;
-            const selectedAmmoMeta = AMMO_TYPE_CATALOG.find((a) => a.id === (w.loadedAmmoType || 'Basic'));
+              {/* Tarjetas de Armas En Mano */}
+              {inHandWeapons.map((w) => {
+                const isRanged = w.type === 'Ranged';
+                const hasMag = (w.standardMag ?? 0) > 0;
+                const isAuto = !!autofireByWeapon[w.instanceId];
+                const autofireRules = getAutofireRulesSummary(w);
+                const breakdown = calculateWeaponAttackBreakdown(activeChar, w, isAuto);
+                const currentDv = getDvForWeapon(w, selectedDistance, isAuto);
+                const profileKey = getWeaponProfileKey(w.name, w.type);
+                const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
+                const placeholderType = getItemPlaceholderType(w);
+                const isOutOfAmmo = isRanged && (w.currentMag ?? 0) <= 0;
+                const netBaseWithLuck = breakdown.netBase + luckToSpendOnNextRoll;
+                const selectedAmmoMeta = AMMO_TYPE_CATALOG.find((a) => a.id === (w.loadedAmmoType || 'Basic'));
 
-            // Find optimal range
-            let minDv: number | null = null;
-            if (profile) {
-              RANGE_BRACKETS.forEach((b) => {
-                const dv = isAuto && profile.autofireDvs ? profile.autofireDvs[b.range] : profile.dvs[b.range];
-                if (dv !== null && (minDv === null || dv < minDv)) {
-                  minDv = dv;
+                // Find optimal range
+                let minDv: number | null = null;
+                if (profile) {
+                  RANGE_BRACKETS.forEach((b) => {
+                    const dv = isAuto && profile.autofireDvs ? profile.autofireDvs[b.range] : profile.dvs[b.range];
+                    if (dv !== null && (minDv === null || dv < minDv)) {
+                      minDv = dv;
+                    }
+                  });
                 }
-              });
-            }
 
-            return (
-              <div
-                key={w.instanceId}
-                className="chamfer-card p-4 bg-[#141620] border border-[#38bdf8]/40 shadow-sm shadow-[#38bdf8]/10 transition-all"
-              >
-                {/* Header de la tarjeta */}
-                <div className="flex items-start gap-3 mb-3">
-                  <ItemVisualPlaceholder type={placeholderType} size="md" />
-                  
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-tech text-base font-bold text-white tracking-wide">
-                            {w.name}
-                          </span>
-                          <span className="bg-[#38bdf8]/20 border border-[#38bdf8]/50 text-[#38bdf8] text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs">
-                            EN MANO
-                          </span>
+                const isExpanded = inHandExpanded[w.instanceId] !== undefined ? inHandExpanded[w.instanceId] : true;
+                const currentSubTab = inHandSubTab[w.instanceId] || (isRanged && hasMag ? 'ammo' : 'dv');
+
+                return (
+                  <div
+                    key={w.instanceId}
+                    className="chamfer-card p-4 bg-[#141620] border border-[#38bdf8]/40 shadow-sm shadow-[#38bdf8]/10 transition-all space-y-3"
+                  >
+                    {/* Fila 1: Cabecera Clicable para Abrir / Cerrar Dropdown */}
+                    <div 
+                      onClick={() => toggleInHandExpanded(w.instanceId)}
+                      className="flex items-start justify-between gap-2 cursor-pointer group/header select-none"
+                    >
+                      <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                        <div className="pt-0.5">
+                          {isExpanded ? (
+                            <ChevronDown className="w-4 h-4 text-[#38bdf8]" />
+                          ) : (
+                            <ChevronRight className="w-4 h-4 text-[#64748b] group-hover/header:text-[#38bdf8]" />
+                          )}
                         </div>
-                        <div className="flex items-center gap-2 text-xs font-mono-code text-[#94a3b8] mt-0.5">
-                          <span>{w.damage} DAÑO</span>
-                          <span>•</span>
-                          <TacticalTooltip term="ROF"><span>ROF {w.rof}</span></TacticalTooltip>
-                          <span>•</span>
-                          <span className="text-[#38bdf8]">{breakdown.skillLabel}</span>
+                        <ItemVisualPlaceholder type={placeholderType} size="sm" />
+                        
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-tech text-base font-bold text-white tracking-wide group-hover/header:text-[#38bdf8] transition-colors">
+                              {w.name}
+                            </span>
+                            <span className="bg-[#38bdf8]/20 border border-[#38bdf8]/50 text-[#38bdf8] text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs">
+                              EN MANO
+                            </span>
+                          </div>
+
+                          {/* Píldoras Rápidas */}
+                          <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] font-mono-code">
+                            <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs font-bold">
+                              {w.damage}
+                            </span>
+                            <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
+                              ROF {w.rof}
+                            </span>
+                            {isRanged && hasMag && (
+                              <span className={`px-1.5 py-0.5 rounded-xs border font-bold ${
+                                isOutOfAmmo 
+                                  ? 'bg-[#dc2626]/20 border-[#dc2626] text-[#f87171]' 
+                                  : (w.currentMag ?? 0) <= (w.standardMag ?? 0) * 0.25 
+                                    ? 'bg-[#f59e0b]/20 border-[#f59e0b] text-[#fcd34d]' 
+                                    : 'bg-[#1b1f2e] border-[#272e42] text-[#38bdf8]'
+                              }`}>
+                                Balas: {w.currentMag ?? 0}/{w.standardMag ?? 0}
+                              </span>
+                            )}
+                            <span className={`px-1.5 py-0.5 rounded-xs border font-bold ${
+                              currentDv !== null ? 'bg-[#1b1f2e] border-[#272e42] text-[#38bdf8]' : 'bg-[#1c1417] border-[#3b1d24] text-[#94a3b8]'
+                            }`}>
+                              DV actual: {w.type === 'Melee' ? 'DV 13' : currentDv !== null ? `DV ${currentDv}` : 'N/A'} ({selectedDistance})
+                            </span>
+                            <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
+                              Base: +{netBaseWithLuck}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
+                      {/* Botones de Cabecera: Quitar de Mano y Toggle */}
+                      <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          onClick={() => toggleInHandExpanded(w.instanceId)}
+                          className="text-[10px] font-mono-code text-[#94a3b8] hover:text-white bg-[#1a1e2a] border border-[#293246] px-2 py-0.5 rounded-xs transition-colors"
+                        >
+                          {isExpanded ? '▴ Cerrar' : '▾ Opciones'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => toggleWeaponInHand(w.instanceId)}
+                          className="text-[10px] font-mono-code text-[#94a3b8] hover:text-[#f87171] border border-[#2b334a] hover:border-[#dc2626] px-2 py-0.5 rounded-xs transition-colors"
+                          title="Quitar arma de la mano lista"
+                        >
+                          Quitar de Mano
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Fila 2: Botones de Disparo / Ataque Siempre a Mano */}
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-2 border-t border-[#1f2334]">
                       <button
-                        onClick={() => toggleWeaponInHand(w.instanceId)}
+                        disabled={isOutOfAmmo || (currentDv === null && w.type !== 'Melee')}
+                        onClick={() => handleAttackClick(w, w.instanceId)}
+                        className={`sm:col-span-6 py-2 px-3 font-tech font-bold tracking-wider text-xs chamfer-btn transition-all active:scale-95 flex items-center justify-center gap-1.5 ${
+                          isOutOfAmmo || (currentDv === null && w.type !== 'Melee')
+                            ? 'bg-[#1e212c] text-[#64748b] cursor-not-allowed border border-[#282d3e]'
+                            : 'bg-[#dc2626] hover:bg-[#b91c1c] text-white shadow-md shadow-[#dc2626]/20'
+                        }`}
+                      >
+                        <Crosshair className="w-4 h-4" />
+                        <span>1. ATACAR 1d10 ({w.type === 'Melee' ? 'DV 13' : currentDv !== null ? `DV ${currentDv}` : 'Fuera Rango'})</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleDamageClick(w, w.instanceId)}
+                        className={`${autofireRules.supportsAutofire ? 'sm:col-span-4' : 'sm:col-span-6'} py-2 px-3 bg-[#1d2232] hover:bg-[#252c42] hover:border-[#38bdf8] border border-[#2a3248] text-[#38bdf8] font-tech font-bold tracking-wider text-xs chamfer-btn transition-all active:scale-95 flex items-center justify-center gap-1.5`}
+                      >
+                        <Dices className="w-4 h-4" />
+                        <span>2. TIRAR DAÑO ({isAuto ? '2d6 × Auto' : w.damage})</span>
+                      </button>
+
+                      {autofireRules.supportsAutofire && (
+                        <button
+                          type="button"
+                          onClick={() => toggleWeaponAutofire(w.instanceId)}
+                          className={`sm:col-span-2 py-2 px-1 rounded-xs font-tech font-bold text-[11px] tracking-wider transition-all flex items-center justify-center gap-1 ${
+                            isAuto
+                              ? 'bg-[#f59e0b] text-black shadow-sm shadow-[#f59e0b]/40'
+                              : 'bg-[#222534] text-[#94a3b8] hover:text-white border border-[#2e3448]'
+                          }`}
+                          title="Alternar modo de Fuego Automático (10 balas)"
+                        >
+                          <Zap className="w-3 h-3" />
+                          <span>{isAuto ? 'AUTO: ON' : 'AUTO'}</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Dropdown Desplegable del Arma en Mano (Sub-pestañas tácticas) */}
+                    {isExpanded && (
+                      <div className="pt-2 border-t border-[#1f2434] space-y-3 animate-fade-in">
+                        {/* Barra de Sub-pestañas */}
+                        <div className="flex flex-wrap items-center gap-1">
+                          {isRanged && hasMag && (
+                            <button
+                              type="button"
+                              onClick={() => setWeaponSubTab(w.instanceId, 'ammo')}
+                              className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all ${
+                                currentSubTab === 'ammo'
+                                  ? 'bg-[#38bdf8] text-black shadow-sm'
+                                  : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
+                              }`}
+                            >
+                              🔋 MUNICIÓN & CARGADOR
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setWeaponSubTab(w.instanceId, 'dv')}
+                            className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all ${
+                              currentSubTab === 'dv'
+                                ? 'bg-[#38bdf8] text-black shadow-sm'
+                                : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
+                            }`}
+                          >
+                            📏 DISTANCIAS DV & FÓRMULA
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setWeaponSubTab(w.instanceId, 'autofire')}
+                            className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all ${
+                              currentSubTab === 'autofire'
+                                ? 'bg-[#38bdf8] text-black shadow-sm'
+                                : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
+                            }`}
+                          >
+                            🔥 AUTOFIRE & DATOS TÉCNICOS
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setWeaponSubTab(w.instanceId, 'all')}
+                            className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all ${
+                              currentSubTab === 'all'
+                                ? 'bg-[#38bdf8] text-black shadow-sm'
+                                : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
+                            }`}
+                          >
+                            📋 VER TODO
+                          </button>
+                        </div>
+
+                        {/* SECCIÓN A: MUNICIÓN & CARGADOR */}
+                        {isRanged && hasMag && (currentSubTab === 'ammo' || currentSubTab === 'all') && (
+                          <div className="p-3 bg-[#10121a] rounded border border-[#22283a] space-y-2.5">
+                            <div className="flex items-center justify-between pb-1 border-b border-[#1b202e]">
+                              <span className="font-tech text-xs font-bold text-[#38bdf8] flex items-center gap-1.5 uppercase">
+                                🔋 MUNICIÓN, CARGADOR & BALAS
+                              </span>
+                            </div>
+
+                            <AmmoCartridgeVisualizer
+                              currentMag={w.currentMag ?? 0}
+                              standardMag={w.standardMag ?? 0}
+                              reserveAmmo={w.reserveAmmo ?? 36}
+                              onAdjustMag={(delta) => adjustWeaponMag(w.instanceId, delta)}
+                              onAdjustReserve={(delta) => adjustWeaponReserveAmmo(w.instanceId, delta)}
+                              onReload={() => reloadWeapon(w.instanceId)}
+                            />
+
+                            <div className="bg-[#141724] p-2.5 rounded border border-[#232a3d]">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-[10px] font-mono-code text-[#64748b] uppercase">TIPO DE BALA CARGADA:</span>
+                                <select
+                                  value={w.loadedAmmoType || 'Basic'}
+                                  onChange={(e) => setWeaponAmmoType(w.instanceId, e.target.value)}
+                                  className="bg-[#171923] border border-[#2b334a] text-white text-[11px] font-mono-code rounded px-2 py-0.5 focus:outline-none focus:border-[#38bdf8]"
+                                >
+                                  {AMMO_TYPE_CATALOG.map((ammo) => (
+                                    <option key={ammo.id} value={ammo.id}>
+                                      {ammo.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              {selectedAmmoMeta && (
+                                <div className="text-[10px] font-mono-code text-[#38bdf8] mt-1.5 bg-[#131b26] p-1.5 rounded border border-[#1f2f45]">
+                                  💡 {selectedAmmoMeta.shortRule}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* SECCIÓN B: DISTANCIAS DV & FÓRMULA */}
+                        {(currentSubTab === 'dv' || currentSubTab === 'all') && (
+                          <div className="p-3 bg-[#10121a] rounded border border-[#22283a] space-y-2.5">
+                            <div className="flex items-center justify-between pb-1 border-b border-[#1b202e]">
+                              <span className="font-tech text-xs font-bold text-[#38bdf8] flex items-center gap-1.5 uppercase">
+                                📏 FÓRMULA EN VIVO & TABLA DV
+                              </span>
+                            </div>
+
+                            {/* Fórmula en vivo */}
+                            <div className="bg-[#101218] p-2.5 rounded border border-[#1f2434] text-xs font-mono-code flex flex-wrap items-center justify-between gap-2">
+                              <div className="text-[#94a3b8]">
+                                Base: <strong className="text-white">{breakdown.statKey} ({breakdown.statVal})</strong> +{' '}
+                                <strong className="text-white">{breakdown.skillLabel} ({breakdown.skillVal})</strong>
+                                {breakdown.totalPenalty > 0 && (
+                                  <span className="text-[#dc2626]"> - Pen ({breakdown.totalPenalty})</span>
+                                )}
+                                {luckToSpendOnNextRoll > 0 && (
+                                  <span className="text-[#f59e0b]"> + Luck ({luckToSpendOnNextRoll})</span>
+                                )}
+                              </div>
+                              <div className="text-white font-bold bg-[#1a2030] px-2 py-0.5 rounded border border-[#2b344c]">
+                                BASE TOTAL: <span className="text-[#10b981]">+{netBaseWithLuck}</span>
+                              </div>
+                            </div>
+
+                            {/* Escalera de Distancias DV */}
+                            {isRanged && profile ? (
+                              <div>
+                                <div className="text-[10px] font-mono-code text-[#64748b] mb-1 uppercase flex justify-between">
+                                  <span>ESCALERA DV PARA {w.name}</span>
+                                  <span className="text-[#f59e0b]">★ = DV MÍNIMO</span>
+                                </div>
+                                <div className="grid grid-cols-4 sm:grid-cols-8 gap-1 text-center font-mono-code text-xs">
+                                  {RANGE_BRACKETS.map((b) => {
+                                    const dvVal = isAuto && profile.autofireDvs 
+                                      ? profile.autofireDvs[b.range] 
+                                      : profile.dvs[b.range];
+                                    const isCur = selectedDistance === b.range;
+                                    const isOptimal = dvVal !== null && minDv !== null && dvVal === minDv;
+                                    
+                                    return (
+                                      <div
+                                        key={b.range}
+                                        onClick={() => setSelectedDistance(b.range)}
+                                        className={`p-1 rounded-xs border cursor-pointer transition-all ${
+                                          isCur
+                                            ? 'bg-[#dc2626]/20 border-[#dc2626] text-white font-bold'
+                                            : dvVal !== null 
+                                              ? 'bg-[#101218] border-[#202534] text-[#94a3b8] hover:border-[#3a445e]' 
+                                              : 'bg-[#0b0c10] border-[#161822] text-[#475569]'
+                                        }`}
+                                      >
+                                        <div className="text-[9px] text-[#64748b]">{b.range}</div>
+                                        <div className={`font-bold ${dvVal !== null ? (isCur ? 'text-[#dc2626]' : 'text-white') : 'text-[#475569]'}`}>
+                                          {dvVal !== null ? `DV ${dvVal}` : 'N/A'}
+                                        </div>
+                                        {isOptimal && (
+                                          <div className="text-[8px] text-[#f59e0b] font-bold">★ ÓPTIMO</div>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="text-[11px] font-mono-code text-[#cbd5e1] bg-[#141724] p-2 rounded border border-[#232a3d]">
+                                Ataque cuerpo a cuerpo / Melee: DV fijo 13 o Enfrentado a la Evasión del rival.
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* SECCIÓN C: AUTOFIRE & DATOS TÉCNICOS */}
+                        {(currentSubTab === 'autofire' || currentSubTab === 'all') && (
+                          <div className="p-3 bg-[#10121a] rounded border border-[#22283a] space-y-2.5">
+                            <div className="flex items-center justify-between pb-1 border-b border-[#1b202e]">
+                              <span className="font-tech text-xs font-bold text-[#f59e0b] flex items-center gap-1.5 uppercase">
+                                🔥 AUTOFIRE & REGLAS TÉCNICAS
+                              </span>
+                            </div>
+
+                            {autofireRules.supportsAutofire ? (
+                              <div className="bg-[#181926] p-2.5 rounded border border-[#26283e]">
+                                <div className="flex items-center justify-between mb-1.5">
+                                  <span className="font-tech text-xs font-bold text-[#f59e0b] uppercase flex items-center gap-1.5">
+                                    <Zap className="w-3.5 h-3.5 text-[#f59e0b]" /> FUEGO AUTOMÁTICO (AUTOFIRE)
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => toggleWeaponAutofire(w.instanceId)}
+                                    className={`px-2 py-0.5 rounded-xs font-tech font-bold text-xs tracking-wider transition-all ${
+                                      isAuto
+                                        ? 'bg-[#f59e0b] text-black shadow-sm shadow-[#f59e0b]/40'
+                                        : 'bg-[#222534] text-[#94a3b8] hover:text-white border border-[#2e3448]'
+                                    }`}
+                                  >
+                                    {isAuto ? '🔥 MODO AUTOFIRE ACTIVO' : '⚡ ACTIVAR AUTOFIRE'}
+                                  </button>
+                                </div>
+                                <div className="text-[10px] font-mono-code text-[#cbd5e1] leading-tight space-y-0.5">
+                                  <div><strong className="text-[#64748b]">Habilidad:</strong> {autofireRules.skillUsed} | <strong className="text-[#64748b]">Gasto:</strong> {autofireRules.ammoCost} balas</div>
+                                  <div className="text-[#f59e0b]">{autofireRules.damageRule}</div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="text-[10px] font-mono-code text-[#64748b] bg-[#141724] p-2 rounded border border-[#232a3d]">
+                                Esta arma no cuenta con modo Autofire.
+                              </div>
+                            )}
+
+                            {/* Datos Técnicos */}
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono-code pt-1">
+                              <div className="bg-[#141724] p-2 rounded border border-[#232a3d]">
+                                <span className="text-[#64748b] block">TIPO:</span>
+                                <strong className="text-white">{w.type}</strong>
+                              </div>
+                              <div className="bg-[#141724] p-2 rounded border border-[#232a3d]">
+                                <span className="text-[#64748b] block">HABILIDAD:</span>
+                                <strong className="text-white">{breakdown.skillLabel}</strong>
+                              </div>
+                              <div className="bg-[#141724] p-2 rounded border border-[#232a3d]">
+                                <span className="text-[#64748b] block">MANOS:</span>
+                                <strong className="text-white">{w.hands || 1}H</strong>
+                              </div>
+                              <div className="bg-[#141724] p-2 rounded border border-[#232a3d]">
+                                <span className="text-[#64748b] block">OCULTABLE:</span>
+                                <strong className="text-white">{w.concealable ? 'Sí' : 'No'}</strong>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                  </div>
+                );
+              })}
+
+              {/* Tarjeta de Puños / Brawling En Mano */}
+              {isBrawlingInHand && (
+                <div className="chamfer-card p-4 bg-[#141620] border border-[#f59e0b]/40 shadow-sm shadow-[#f59e0b]/10 transition-all space-y-3">
+                  {/* Fila 1: Cabecera Clicable */}
+                  <div 
+                    onClick={() => toggleUnarmedInHandExpanded('brawling')}
+                    className="flex items-start justify-between gap-2 cursor-pointer group/brawl select-none"
+                  >
+                    <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                      <div className="pt-0.5">
+                        {unarmedInHandExpanded.brawling ? (
+                          <ChevronDown className="w-4 h-4 text-[#f59e0b]" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4 text-[#64748b] group-hover/brawl:text-[#f59e0b]" />
+                        )}
+                      </div>
+                      
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-tech text-base font-bold text-white tracking-wide group-hover/brawl:text-[#f59e0b] transition-colors">
+                            🥊 Puños & Pelea Desarmada (Brawling)
+                          </span>
+                          <span className="bg-[#f59e0b]/20 border border-[#f59e0b]/50 text-[#f59e0b] text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs">
+                            EN MANO
+                          </span>
+                        </div>
+
+                        {/* Píldoras Rápidas */}
+                        <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] font-mono-code">
+                          <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs font-bold">
+                            Daño: {unarmedDmg}
+                          </span>
+                          <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
+                            ROF 2
+                          </span>
+                          <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
+                            DV 13
+                          </span>
+                          <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
+                            Base: +{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.brawling ?? 0) + luckToSpendOnNextRoll}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                      <button
+                        type="button"
+                        onClick={() => toggleUnarmedInHandExpanded('brawling')}
+                        className="text-[10px] font-mono-code text-[#94a3b8] hover:text-white bg-[#1a1e2a] border border-[#293246] px-2 py-0.5 rounded-xs transition-colors"
+                      >
+                        {unarmedInHandExpanded.brawling ? '▴ Cerrar' : '▾ Opciones'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleUnarmedInHand('brawling')}
                         className="text-[10px] font-mono-code text-[#94a3b8] hover:text-[#f87171] border border-[#2b334a] hover:border-[#dc2626] px-2 py-0.5 rounded-xs transition-colors"
-                        title="Quitar arma de la mano lista"
                       >
                         Quitar de Mano
                       </button>
                     </div>
-
-                    {/* Ficha técnica del arma: Píldoras */}
-                    <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                      <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold">
-                        {w.damage}
-                      </span>
-                      <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-2 py-0.5 rounded-xs text-[10px] font-mono-code">
-                        <TacticalTooltip term="ROF">ROF {w.rof}</TacticalTooltip>
-                      </span>
-                      <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-2 py-0.5 rounded-xs text-[10px] font-mono-code">
-                        <TacticalTooltip term="HANDS">{w.hands || 1}H</TacticalTooltip>
-                      </span>
-                      <span className="bg-[#1b1f2e] text-[#94a3b8] border border-[#272e42] px-2 py-0.5 rounded-xs text-[10px] font-mono-code">
-                        {w.concealable ? 'Ocultable' : 'No Ocultable'}
-                      </span>
-                    </div>
-
                   </div>
-                </div>
 
-                {/* Panel Completo de Munición y Cargador con Cartuchos Individuales */}
-                {isRanged && (w.standardMag ?? 0) > 0 && (
-                  <div className="mb-3 space-y-2">
-                    <AmmoCartridgeVisualizer
-                      currentMag={w.currentMag ?? 0}
-                      standardMag={w.standardMag ?? 0}
-                      reserveAmmo={w.reserveAmmo ?? 36}
-                      onAdjustMag={(delta) => adjustWeaponMag(w.instanceId, delta)}
-                      onAdjustReserve={(delta) => adjustWeaponReserveAmmo(w.instanceId, delta)}
-                      onReload={() => reloadWeapon(w.instanceId)}
-                    />
+                  {/* Fila 2: Botones de Ataque Rápido */}
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#1f2334]">
+                    <button
+                      onClick={handleBrawlingAttack}
+                      className="py-2 px-3 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                    >
+                      <Crosshair className="w-4 h-4" />
+                      <span>1. ATACAR 1d10 (DV 13)</span>
+                    </button>
+                    <button
+                      onClick={handleBrawlingDamage}
+                      className="py-2 px-3 bg-[#1d2232] hover:bg-[#252c42] border border-[#2a3248] text-[#38bdf8] font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 active:scale-95"
+                    >
+                      <Dices className="w-4 h-4" />
+                      <span>2. TIRAR DAÑO ({unarmedDmg})</span>
+                    </button>
+                  </div>
 
-                    {/* Selector de Tipo de Munición Cargada */}
-                    <div className="bg-[#10121a] p-2.5 rounded border border-[#22283a]">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[10px] font-mono-code text-[#64748b] uppercase">TIPO DE BALA:</span>
-                        <select
-                          value={w.loadedAmmoType || 'Basic'}
-                          onChange={(e) => setWeaponAmmoType(w.instanceId, e.target.value)}
-                          className="bg-[#171923] border border-[#2b334a] text-white text-[11px] font-mono-code rounded px-2 py-0.5 focus:outline-none focus:border-[#38bdf8]"
-                        >
-                          {AMMO_TYPE_CATALOG.map((ammo) => (
-                            <option key={ammo.id} value={ammo.id}>
-                              {ammo.label}
-                            </option>
-                          ))}
-                        </select>
+                  {/* Dropdown Desplegable: Fórmula y Maniobras Especiales */}
+                  {unarmedInHandExpanded.brawling && (
+                    <div className="pt-2 border-t border-[#1f2434] space-y-2.5 animate-fade-in">
+                      <div className="bg-[#101218] p-2.5 rounded border border-[#1f2434] text-xs font-mono-code flex items-center justify-between">
+                        <span className="text-[#94a3b8]">
+                          Base: DEX ({activeChar?.stats?.DEX ?? 6}) + Brawling ({activeChar?.skills?.brawling ?? 0})
+                          {luckToSpendOnNextRoll > 0 && <span className="text-[#f59e0b]"> + Luck ({luckToSpendOnNextRoll})</span>}
+                        </span>
+                        <span className="text-white font-bold bg-[#1a2030] px-2 py-0.5 rounded border border-[#2b344c]">
+                          TOTAL: <span className="text-[#10b981]">{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.brawling ?? 0) + luckToSpendOnNextRoll}</span>
+                        </span>
                       </div>
-                      {selectedAmmoMeta && (
-                        <div className="text-[10px] font-mono-code text-[#38bdf8] mt-1 bg-[#131b26] p-1.5 rounded border border-[#1f2f45]">
-                          💡 {selectedAmmoMeta.shortRule}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
 
-                {/* Fórmula en vivo de la Base de Ataque */}
-                <div className="bg-[#101218] p-2 rounded border border-[#1f2434] text-xs font-mono-code flex flex-wrap items-center justify-between gap-2 mb-3">
-                  <div className="text-[#94a3b8]">
-                    Base: <strong className="text-white">{breakdown.statKey} ({breakdown.statVal})</strong> +{' '}
-                    <strong className="text-white">{breakdown.skillLabel} ({breakdown.skillVal})</strong>
-                    {breakdown.totalPenalty > 0 && (
-                      <span className="text-[#dc2626]"> - Pen ({breakdown.totalPenalty})</span>
-                    )}
-                    {luckToSpendOnNextRoll > 0 && (
-                      <span className="text-[#f59e0b]"> + Luck ({luckToSpendOnNextRoll})</span>
-                    )}
-                  </div>
-                  <div className="text-white font-bold bg-[#1a2030] px-2 py-0.5 rounded border border-[#2b344c]">
-                    BASE TOTAL: <span className="text-[#10b981]">{netBaseWithLuck}</span>
-                  </div>
-                </div>
-
-                {/* Escalera de Distancias DV */}
-                {isRanged && profile && (
-                  <div className="mb-3">
-                    <div className="text-[10px] font-mono-code text-[#64748b] mb-1 uppercase flex justify-between">
-                      <span>ESCALERA DV PARA {w.name}</span>
-                      <span className="text-[#f59e0b]">★ = DV MÍNIMO</span>
-                    </div>
-                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-1 text-center font-mono-code text-xs">
-                      {RANGE_BRACKETS.map((b) => {
-                        const dvVal = isAuto && profile.autofireDvs 
-                          ? profile.autofireDvs[b.range] 
-                          : profile.dvs[b.range];
-                        const isCur = selectedDistance === b.range;
-                        const isOptimal = dvVal !== null && minDv !== null && dvVal === minDv;
-                        
-                        return (
-                          <div
-                            key={b.range}
-                            onClick={() => setSelectedDistance(b.range)}
-                            className={`p-1 rounded-xs border cursor-pointer transition-all ${
-                              isCur
-                                ? 'bg-[#dc2626]/20 border-[#dc2626] text-white font-bold'
-                                : dvVal !== null 
-                                  ? 'bg-[#101218] border-[#202534] text-[#94a3b8] hover:border-[#3a445e]' 
-                                  : 'bg-[#0b0c10] border-[#161822] text-[#475569]'
-                            }`}
+                      <div className="p-2.5 bg-[#10121a] rounded border border-[#22283a] space-y-2">
+                        <span className="font-tech text-xs font-bold text-[#f59e0b] uppercase block">
+                          🤼 MANIOBRAS ESPECIALES DE CUERPO A CUERPO
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <button
+                            onClick={handleGrapple}
+                            className="py-1.5 px-2 bg-[#2a1e16] hover:bg-[#f59e0b] hover:text-black border border-[#52351c] text-[#f59e0b] font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 transition-all"
+                            title="Inmovilizar al rival en presa enfrentada"
                           >
-                            <div className="text-[9px] text-[#64748b]">{b.range}</div>
-                            <div className={`font-bold ${dvVal !== null ? (isCur ? 'text-[#dc2626]' : 'text-white') : 'text-[#475569]'}`}>
-                              {dvVal !== null ? `DV ${dvVal}` : 'N/A'}
-                            </div>
-                            {isOptimal && (
-                              <div className="text-[8px] text-[#f59e0b] font-bold">★ ÓPTIMO</div>
-                            )}
-                          </div>
-                        );
-                      })}
+                            🤼 GRAPPLE (Presa Enfrentada)
+                          </button>
+                          <button
+                            onClick={handleChoke}
+                            className="py-1.5 px-2 bg-[#25151c] hover:bg-[#dc2626] hover:text-white border border-[#4a1c29] text-[#f43f5e] font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 transition-all"
+                            title={`Ahorcar: ${activeChar?.stats?.BODY ?? 6} HP directos ignorando SP`}
+                          >
+                            <Skull className="w-3.5 h-3.5" /> CHOKE ({activeChar?.stats?.BODY ?? 6} HP Directos)
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              )}
 
-                {/* Bloque de Reglas y Toggle de Autofire */}
-                {autofireRules.supportsAutofire && (
-                  <div className="mb-3 bg-[#181926] p-2.5 rounded border border-[#26283e]">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="font-tech text-xs font-bold text-[#f59e0b] uppercase flex items-center gap-1.5">
-                        <Zap className="w-3.5 h-3.5 text-[#f59e0b]" /> FUEGO AUTOMÁTICO (AUTOFIRE)
-                      </span>
+              {/* Tarjeta de Artes Marciales En Mano */}
+              {isMartialArtsInHand && (
+                <div className="chamfer-card p-4 bg-[#141620] border border-[#10b981]/40 shadow-sm shadow-[#10b981]/10 transition-all space-y-3">
+                  {/* Fila 1: Cabecera Clicable */}
+                  <div 
+                    onClick={() => toggleUnarmedInHandExpanded('martialArts')}
+                    className="flex items-start justify-between gap-2 cursor-pointer group/ma select-none"
+                  >
+                    <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                      <div className="pt-0.5">
+                        {unarmedInHandExpanded.martialArts ? (
+                          <ChevronDown className="w-4 h-4 text-[#10b981]" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4 text-[#64748b] group-hover/ma:text-[#10b981]" />
+                        )}
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-tech text-base font-bold text-white tracking-wide group-hover/ma:text-[#10b981] transition-colors">
+                            🥋 Artes Marciales (Martial Arts)
+                          </span>
+                          <span className="bg-[#10b981]/20 border border-[#10b981]/50 text-[#10b981] text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs">
+                            IGNORA 50% SP
+                          </span>
+                        </div>
+
+                        {/* Píldoras Rápidas */}
+                        <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] font-mono-code">
+                          <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs font-bold">
+                            Daño: {unarmedDmg}
+                          </span>
+                          <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
+                            ROF 2
+                          </span>
+                          <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
+                            DV 13
+                          </span>
+                          <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
+                            Base: +{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0) + luckToSpendOnNextRoll}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
                       <button
-                        onClick={() => toggleWeaponAutofire(w.instanceId)}
-                        className={`px-2 py-0.5 rounded-xs font-tech font-bold text-xs tracking-wider transition-all ${
-                          isAuto
-                            ? 'bg-[#f59e0b] text-black shadow-sm shadow-[#f59e0b]/40'
-                            : 'bg-[#222534] text-[#94a3b8] hover:text-white border border-[#2e3448]'
-                        }`}
+                        type="button"
+                        onClick={() => toggleUnarmedInHandExpanded('martialArts')}
+                        className="text-[10px] font-mono-code text-[#94a3b8] hover:text-white bg-[#1a1e2a] border border-[#293246] px-2 py-0.5 rounded-xs transition-colors"
                       >
-                        {isAuto ? '🔥 MODO AUTOFIRE ACTIVO' : '⚡ ACTIVAR AUTOFIRE'}
+                        {unarmedInHandExpanded.martialArts ? '▴ Cerrar' : '▾ Opciones'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => toggleUnarmedInHand('martialArts')}
+                        className="text-[10px] font-mono-code text-[#94a3b8] hover:text-[#f87171] border border-[#2b334a] hover:border-[#dc2626] px-2 py-0.5 rounded-xs transition-colors"
+                      >
+                        Quitar de Mano
                       </button>
                     </div>
-                    <div className="text-[10px] font-mono-code text-[#cbd5e1] leading-tight space-y-0.5">
-                      <div><strong className="text-[#64748b]">Habilidad:</strong> {autofireRules.skillUsed} | <strong className="text-[#64748b]">Costo:</strong> {autofireRules.ammoCost} balas</div>
-                      <div className="text-[#f59e0b]">{autofireRules.damageRule}</div>
+                  </div>
+
+                  {/* Fila 2: Botones de Ataque Rápido */}
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#1f2334]">
+                    <button
+                      onClick={handleMartialArtsAttack}
+                      className="py-2 px-3 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
+                    >
+                      <Crosshair className="w-4 h-4" />
+                      <span>1. ATACAR 1d10 (DV 13)</span>
+                    </button>
+                    <button
+                      onClick={handleMartialArtsDamage}
+                      className="py-2 px-3 bg-[#1d2232] hover:bg-[#252c42] border border-[#2a3248] text-[#10b981] font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 active:scale-95"
+                    >
+                      <Dices className="w-4 h-4" />
+                      <span>2. TIRAR DAÑO ({unarmedDmg})</span>
+                    </button>
+                  </div>
+
+                  {/* Dropdown Desplegable: Fórmula y Reglas */}
+                  {unarmedInHandExpanded.martialArts && (
+                    <div className="pt-2 border-t border-[#1f2434] space-y-2.5 animate-fade-in">
+                      <div className="bg-[#101218] p-2.5 rounded border border-[#1f2434] text-xs font-mono-code flex items-center justify-between">
+                        <span className="text-[#94a3b8]">
+                          Base: DEX ({activeChar?.stats?.DEX ?? 6}) + Martial Arts ({activeChar?.skills?.martialArts ?? 0})
+                          {luckToSpendOnNextRoll > 0 && <span className="text-[#f59e0b]"> + Luck ({luckToSpendOnNextRoll})</span>}
+                        </span>
+                        <span className="text-white font-bold bg-[#1a2030] px-2 py-0.5 rounded border border-[#2b344c]">
+                          TOTAL: <span className="text-[#10b981]">{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0) + luckToSpendOnNextRoll}</span>
+                        </span>
+                      </div>
+
+                      <div className="p-2.5 bg-[#10121a] rounded border border-[#22283a] text-[10px] font-mono-code text-[#cbd5e1] leading-relaxed">
+                        <span className="text-[#10b981] font-bold block mb-0.5">REGLA ESPECIAL:</span>
+                        Los ataques de Artes Marciales ignoran el 50% del Stopping Power (SP) del blindaje del defensor (redondeado hacia arriba a favor del defensor).
+                      </div>
                     </div>
-                  </div>
-                )}
-
-                {/* Dos Botones de Acción */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-3 pt-2.5 border-t border-[#1f2334]">
-                  <button
-                    disabled={isOutOfAmmo || (currentDv === null && w.type !== 'Melee')}
-                    onClick={() => handleAttackClick(w, w.instanceId)}
-                    className={`py-2 px-3 font-tech font-bold tracking-wider text-xs chamfer-btn transition-all active:scale-95 flex items-center justify-center gap-1.5 ${
-                      isOutOfAmmo || (currentDv === null && w.type !== 'Melee')
-                        ? 'bg-[#1e212c] text-[#64748b] cursor-not-allowed border border-[#282d3e]'
-                        : 'bg-[#dc2626] hover:bg-[#b91c1c] text-white shadow-md shadow-[#dc2626]/20'
-                    }`}
-                  >
-                    <Crosshair className="w-4 h-4" />
-                    <span>1. ATACAR 1d10 ({w.type === 'Melee' ? 'DV 13' : currentDv !== null ? `DV ${currentDv}` : 'Fuera Rango'})</span>
-                  </button>
-
-                  <button
-                    onClick={() => handleDamageClick(w, w.instanceId)}
-                    className="py-2 px-3 bg-[#1d2232] hover:bg-[#252c42] hover:border-[#38bdf8] border border-[#2a3248] text-[#38bdf8] font-tech font-bold tracking-wider text-xs chamfer-btn transition-all active:scale-95 flex items-center justify-center gap-1.5"
-                  >
-                    <Dices className="w-4 h-4" />
-                    <span>2. TIRAR DAÑO ({isAuto ? '2d6 × Autofire' : w.damage})</span>
-                  </button>
+                  )}
                 </div>
-
-              </div>
-            );
-          })}
-
-          {/* Tarjeta de Puños / Brawling En Mano */}
-          {isBrawlingInHand && (
-            <div className="chamfer-card p-4 bg-[#141620] border border-[#f59e0b]/40 shadow-sm shadow-[#f59e0b]/10 transition-all">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-tech text-base font-bold text-white tracking-wide">
-                      🥊 Puños & Pelea Desarmada (Brawling)
-                    </span>
-                    <span className="bg-[#f59e0b]/20 border border-[#f59e0b]/50 text-[#f59e0b] text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs">
-                      EN MANO
-                    </span>
-                  </div>
-                  <div className="text-xs font-mono-code text-[#94a3b8] mt-0.5">
-                    Daño: <strong className="text-white">{unarmedDmg}</strong> (según BODY {activeChar?.stats?.BODY ?? 6}) • ROF 2 • Habilidad: DEX + Brawling
-                  </div>
-                </div>
-                <button
-                  onClick={() => toggleUnarmedInHand('brawling')}
-                  className="text-[10px] font-mono-code text-[#94a3b8] hover:text-[#f87171] border border-[#2b334a] hover:border-[#dc2626] px-2 py-0.5 rounded-xs transition-colors"
-                >
-                  Quitar de Mano
-                </button>
-              </div>
-
-              <div className="bg-[#101218] p-2 rounded border border-[#1f2434] text-xs font-mono-code flex items-center justify-between mb-3">
-                <span className="text-[#94a3b8]">
-                  Base: DEX ({activeChar?.stats?.DEX ?? 6}) + Brawling ({activeChar?.skills?.brawling ?? 0})
-                  {luckToSpendOnNextRoll > 0 && <span className="text-[#f59e0b]"> + Luck ({luckToSpendOnNextRoll})</span>}
-                </span>
-                <span className="text-white font-bold bg-[#1a2030] px-2 py-0.5 rounded border border-[#2b344c]">
-                  TOTAL: <span className="text-[#10b981]">{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.brawling ?? 0) + luckToSpendOnNextRoll}</span>
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <button
-                  onClick={handleBrawlingAttack}
-                  className="py-1.5 px-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1 shadow-sm"
-                >
-                  <Crosshair className="w-3.5 h-3.5" /> 1. ATACAR (DV 13)
-                </button>
-                <button
-                  onClick={handleBrawlingDamage}
-                  className="py-1.5 px-2 bg-[#1d2232] hover:bg-[#252c42] border border-[#2a3248] text-[#38bdf8] font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1"
-                >
-                  <Dices className="w-3.5 h-3.5" /> 2. DAÑO ({unarmedDmg})
-                </button>
-                <button
-                  onClick={handleGrapple}
-                  className="py-1.5 px-2 bg-[#2a1e16] hover:bg-[#f59e0b] hover:text-black border border-[#52351c] text-[#f59e0b] font-tech font-bold text-[11px] tracking-wider rounded-xs flex items-center justify-center gap-1 transition-all"
-                  title="Inmovilizar al rival en presa enfrentada"
-                >
-                  🤼 GRAPPLE
-                </button>
-                <button
-                  onClick={handleChoke}
-                  className="py-1.5 px-2 bg-[#25151c] hover:bg-[#dc2626] hover:text-white border border-[#4a1c29] text-[#f43f5e] font-tech font-bold text-[11px] tracking-wider rounded-xs flex items-center justify-center gap-1 transition-all"
-                  title={`Ahorcar: ${activeChar?.stats?.BODY ?? 6} HP directos ignorando SP`}
-                >
-                  <Skull className="w-3.5 h-3.5" /> CHOKE ({activeChar?.stats?.BODY ?? 6} HP)
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Tarjeta de Artes Marciales En Mano */}
-          {isMartialArtsInHand && (
-            <div className="chamfer-card p-4 bg-[#141620] border border-[#10b981]/40 shadow-sm shadow-[#10b981]/10 transition-all">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-tech text-base font-bold text-white tracking-wide">
-                      🥋 Artes Marciales (Martial Arts)
-                    </span>
-                    <span className="bg-[#10b981]/20 border border-[#10b981]/50 text-[#10b981] text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs">
-                      IGNORA 50% SP
-                    </span>
-                  </div>
-                  <div className="text-xs font-mono-code text-[#94a3b8] mt-0.5">
-                    Daño: <strong className="text-white">{unarmedDmg}</strong> • ROF 2 • Habilidad: DEX + Martial Arts (x2)
-                  </div>
-                </div>
-                <button
-                  onClick={() => toggleUnarmedInHand('martialArts')}
-                  className="text-[10px] font-mono-code text-[#94a3b8] hover:text-[#f87171] border border-[#2b334a] hover:border-[#dc2626] px-2 py-0.5 rounded-xs transition-colors"
-                >
-                  Quitar de Mano
-                </button>
-              </div>
-
-              <div className="bg-[#101218] p-2 rounded border border-[#1f2434] text-xs font-mono-code flex items-center justify-between mb-3">
-                <span className="text-[#94a3b8]">
-                  Base: DEX ({activeChar?.stats?.DEX ?? 6}) + Martial Arts ({activeChar?.skills?.martialArts ?? 0})
-                  {luckToSpendOnNextRoll > 0 && <span className="text-[#f59e0b]"> + Luck ({luckToSpendOnNextRoll})</span>}
-                </span>
-                <span className="text-white font-bold bg-[#1a2030] px-2 py-0.5 rounded border border-[#2b344c]">
-                  TOTAL: <span className="text-[#10b981]">{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0) + luckToSpendOnNextRoll}</span>
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  onClick={handleMartialArtsAttack}
-                  className="py-1.5 px-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1 shadow-sm"
-                >
-                  <Crosshair className="w-3.5 h-3.5" /> 1. ATACAR 1d10 (DV 13)
-                </button>
-                <button
-                  onClick={handleMartialArtsDamage}
-                  className="py-1.5 px-2 bg-[#1d2232] hover:bg-[#252c42] border border-[#2a3248] text-[#10b981] font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1"
-                >
-                  <Dices className="w-3.5 h-3.5" /> 2. DAÑO ({unarmedDmg})
-                </button>
-              </div>
-            </div>
+              )}
+            </>
           )}
 
         </div>

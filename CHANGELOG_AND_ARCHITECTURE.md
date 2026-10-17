@@ -119,6 +119,16 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores. 
 
 ## 📜 Master Version Changelog
 
+### [v2.3.3] - 2026-10-17 (Collapsible Rangefinder & Tabbed In-Hand Weapon Station)
+* **Category**: Combat HUD Ergonomics & Modular Weapon Telemetry
+* **Files Modified**:
+  - `frontend/src/features/combat/CombatHudView.tsx`
+* **What Changed**:
+  1. **Telémetro de Distancia Colapsable**: El panel de selector de distancia y DVs ahora es plegable con botón toggle y resumen de estado (distancia actual, DV activo y modificador), optimizando el espacio vertical del HUD de combate.
+  2. **Estación de Armas "En Mano" con Pestañas Modulares y Plegables**: Cada arma equipada en mano cuenta con control de colapso independiente y un sistema de 4 sub-pestañas (`Munición & Cartuchos`, `Distancias DV & Fórmula`, `Autofire & Datos Técnicos`, `Ver Todo`), permitiendo consultar rápidamente el cargador táctico interactivo, la matriz de dificultad con bonos o los perfiles de ráfaga y munición sin saturar la pantalla.
+
+---
+
 ### [v2.3.2] - 2026-10-16 (Tactical Rack Dropdowns & Strict Equipped/Charges Consumables)
 * **Category**: Combat HUD Ergonomics & Inventory-Driven Charges
 * **Files Modified**:
