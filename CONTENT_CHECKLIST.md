@@ -78,18 +78,18 @@
 
 ---
 
-## 📦 SPRINT 1: Utilidades de Mesa - Cheat Sheet, Economía €$ e Inventario [PENDIENTE]
-- [ ] **Machete de Reglas Rápidas (`rulesCheatSheet.ts` & `RulesCheatSheetModal.tsx`)**:
+## 📦 SPRINT 1: Utilidades de Mesa - Cheat Sheet, Economía €$ e Inventario [COMPLETADO]
+- [x] **Machete de Reglas Rápidas (`rulesCheatSheet.ts` & `RulesCheatSheetDrawer.tsx`)**:
   - Reglas de Grappling, Choking (`BODY * 2` de daño directo ignorando armadura) y Lanzamiento de enemigos.
   - Tabla de Coberturas y Objetos destructibles con SP/HP (Puerta de coche, Muro de hormigón, Mampara de pladur, Escudo anti-disturbios).
   - Reglas de Asfixia, Caídas, Fuego y Ahogamiento.
-- [ ] **Gestor de Inventario & Cartera (`InventoryManager.tsx`)**:
+- [x] **Gestor de Inventario & Cartera / Sobrepeso Situacional (`StreetLabView.tsx` & `characterEngine.ts`)**:
   - Seguimiento de Eurodólares (€$) con registro de ingresos y gastos de Night Market.
-  - Capacidad de carga según BODY.
+  - Capacidad de carga según BODY con toggle de penalización por sobrepeso situacional (-2 REF/DEX/MOVE).
   - Control de reservas de munición comprada en lotes de 10.
-- [ ] **Modo Director de Juego & Bloqueo por PIN (GM Lock)**:
-  - Alternador de rol: Vista Jugador (restringida a su personaje) vs Vista GM (acceso a todos los edgerunners y notas ocultas).
-  - Protección de modificaciones con contraseña o PIN local.
+- [x] **Modo Director de Juego & Bloqueo por PIN (`FixerDeckView.tsx`)**:
+  - Alternador de rol: Vista Jugador (restringida a su personaje) vs Consola GM Fixer (acceso a todos los edgerunners y notas ocultas).
+  - Protección de modificaciones con contraseña o PIN local (`0000` por defecto).
 
 ---
 

@@ -47,7 +47,8 @@ cpr-omni-deck/
 │   │   ├── data/
 │   │   │   ├── core-rules.cprpack.json   # Copia activa del catálogo para el frontend
 │   │   │   ├── criticalInjuries.ts       # Tablas oficiales 2d6 de heridas críticas (Head/Body)
-│   │   │   └── rangeTables.ts            # Matrices oficiales de DVs por metro y Autofire
+│   │   │   ├── rangeTables.ts            # Matrices oficiales de DVs por metro y Autofire
+│   │   │   └── rulesCheatSheet.ts        # Machete canónico de reglas de combate, coberturas y asfixia
 │   │   ├── engine/
 │   │   │   ├── characterEngine.ts        # Motor matemático: HP máx, humanidad, penalizadores
 │   │   │   └── combatEngine.ts           # Motor de resolución: d10 explosivo, Xd6, doble 6 crítico
@@ -56,10 +57,16 @@ cpr-omni-deck/
 │   │   │   │   └── CombatHudView.tsx     # HUD de combate táctico, selector de DVs y dados
 │   │   │   ├── compendium/
 │   │   │   │   └── CompendiumView.tsx    # Compendio modular de 8 categorías con equipamiento
+│   │   │   ├── cyberware/
+│   │   │   │   └── CyberwareRipperdocView.tsx # Menú Ripperdoc 2077 con maniquí holográfico y ranuras
+│   │   │   ├── gm/
+│   │   │   │   └── FixerDeckView.tsx     # Consola GM Fixer con PIN, control global y monitor del equipo
 │   │   │   ├── layout/
 │   │   │   │   └── TopHudBar.tsx         # Barra superior persistente con vitals del edgerunner
 │   │   │   ├── packs/
 │   │   │   │   └── DataPacksView.tsx     # Gestor de paquetes .cprpack estilo COMP/CON
+│   │   │   ├── rules/
+│   │   │   │   └── RulesCheatSheetDrawer.tsx # Drawer táctico deslizable con machete de reglas de mesa
 │   │   │   └── sheet/
 │   │   │       └── StreetLabView.tsx     # Ficha completa, editor de stats y roster de personajes
 │   │   ├── store/
@@ -118,6 +125,24 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores. 
 ---
 
 ## 📜 Master Version Changelog
+
+### [v2.5.0] - 2026-10-17 (Sprint 1 Complete: Right-Edge Rules Cheat Sheet Drawer, Situational Encumbrance & Full Fixer Deck GM Console)
+* **Category**: Tabletop Utilities, Rules Engine, Economy & Master GM Operations (Sprint 1 Complete)
+* **Files Modified / Created**:
+  - `frontend/src/data/rulesCheatSheet.ts`
+  - `frontend/src/features/rules/RulesCheatSheetDrawer.tsx`
+  - `frontend/src/features/gm/FixerDeckView.tsx`
+  - `frontend/src/engine/characterEngine.ts`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/App.tsx`
+* **What Changed**:
+  1. **Machete de Reglas Canónico Flotante (`RulesCheatSheetDrawer.tsx` & `rulesCheatSheet.ts`)**: Drawer lateral persistente accesible desde la pestaña vertical derecha en cualquier pantalla del Omni-Deck. Agrupa en 6 categorías filtrables (`Acciones de Combate`, `Grapple & Asfixia`, `Cobertura & Objetos`, `Trauma & Heridas`, `Peligros Ambientales` y `Matriz de DVs`) con búsqueda en tiempo real, fórmulas exactas del Core Rulebook y tiradas de dados integradas.
+  2. **Reglas Situacionales de Sobrepeso (Encumbrance)**: Toggle táctico y cálculo automático según la regla oficial de Cyberpunk RED (`BODY * 10` ítems/lotes). Cuando el personaje supera su capacidad o activa la penalización situacional, se aplica un modificador dinámico de `-2 REF/DEX/MOVE` reflejado en la telemetría, Street Lab y HUD de combate.
+  3. **Consola Central Fixer / Director de Juego (`FixerDeckView.tsx`)**: Nueva vista de control maestro para el GM protegida por PIN de seguridad (`0000` / configurable). Ofrece tablero de estado del equipo completo (HP, SP, Humanidad, Heridas Graves), inyector de daño o curación global rápida, distribuidor de Eurodólares (€$) o recompensas de Gig, y bitácora de eventos de la sesión.
+
+---
 
 ### [v2.4.0] - 2026-10-17 (Cyberpunk 2077-Style CYBERWARE // RIPPERDOC Tab & Anatomical Hologram)
 * **Category**: Deep Systems, Cyberware Ergonomics & 2077 Ripperdoc Interface

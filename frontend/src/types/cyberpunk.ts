@@ -368,6 +368,8 @@ export interface EurodollarTransaction {
   balanceAfter: number;
 }
 
+export type EncumbranceMode = 'none' | 'heavy_box' | 'carrying_body' | 'extreme_load';
+
 export interface CharacterSheet {
   id: string;
   handle: string;
@@ -399,6 +401,7 @@ export interface CharacterSheet {
   transactions?: EurodollarTransaction[];
   unarmedInHand?: { brawling?: boolean; martialArts?: boolean };
   activeDrugs?: ActiveDrugEffect[];
+  encumbranceMode?: EncumbranceMode;
 }
 
 export interface RollEntry {

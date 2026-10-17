@@ -12,13 +12,14 @@ import {
   calculateMaxHp, 
   calculateSeriouslyWoundedThreshold,
   calculateUnarmedDamage,
-  AMMO_TYPE_CATALOG
+  AMMO_TYPE_CATALOG,
+  ENCUMBRANCE_MODES
 } from '../../engine/characterEngine';
 import { 
   createInitialAttackRoll, 
   createDamageRoll 
 } from '../../engine/combatEngine';
-import type { WeaponItem, RollEntry, InventoryItem } from '../../types/cyberpunk';
+import type { WeaponItem, RollEntry, InventoryItem, EncumbranceMode } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
 import { 
@@ -47,7 +48,8 @@ import {
   Bomb,
   Swords,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  Package
 } from 'lucide-react';
 
 const TacticalTooltip: React.FC<{
@@ -322,6 +324,7 @@ export const CombatHudView: React.FC = () => {
   const inflictRandomInjury = useCharacterStore((state) => state.inflictRandomInjury);
   const toggleTreatInjury = useCharacterStore((state) => state.toggleTreatInjury);
   const removeInjury = useCharacterStore((state) => state.removeInjury);
+  const setEncumbranceMode = useCharacterStore((state) => state.setEncumbranceMode);
 
   const selectedDistance = useCombatStore((state) => state.selectedDistance);
   const setSelectedDistance = useCombatStore((state) => state.setSelectedDistance);
@@ -1068,6 +1071,34 @@ export const CombatHudView: React.FC = () => {
                 CABEZA
               </button>
             </div>
+          </div>
+
+          {/* Selector de Sobrepeso / Carga Situacional */}
+          <div className="mt-2.5 bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="font-tech text-[11px] font-bold text-white uppercase flex items-center gap-1.5">
+                <Package className="w-3.5 h-3.5 text-[#38bdf8]" /> ESTADO DE CARGA / SOBREPESO
+              </span>
+              {activeChar?.encumbranceMode && activeChar.encumbranceMode !== 'none' && (
+                <span className="bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold animate-pulse">
+                  SOBREPESO ACTIVO
+                </span>
+              )}
+            </div>
+            <select
+              value={activeChar?.encumbranceMode || 'none'}
+              onChange={(e) => setEncumbranceMode(e.target.value as EncumbranceMode)}
+              className="w-full bg-[#0f1016] border border-[#2e364c] text-white font-mono-code text-[11px] py-1 px-2 rounded focus:outline-none focus:border-[#38bdf8] cursor-pointer"
+            >
+              {(Object.keys(ENCUMBRANCE_MODES) as EncumbranceMode[]).map((key) => (
+                <option key={key} value={key} className="bg-[#121319] text-white">
+                  {ENCUMBRANCE_MODES[key].label}
+                </option>
+              ))}
+            </select>
+            <p className="text-[10px] text-[#94a3b8] font-mono-code mt-1.5 leading-tight">
+              {ENCUMBRANCE_MODES[activeChar?.encumbranceMode || 'none']?.description}
+            </p>
           </div>
 
         </div>

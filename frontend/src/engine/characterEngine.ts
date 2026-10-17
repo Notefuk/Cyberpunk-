@@ -1,10 +1,41 @@
 import type {
   CharacterSheet,
   CombatSkillKey,
+  EncumbranceMode,
   StatKey,
   WeaponItem
 } from '../types/cyberpunk';
 import { SKILL_METADATA } from '../types/cyberpunk';
+
+export const ENCUMBRANCE_MODES: Record<
+  EncumbranceMode,
+  { label: string; attackPenalty: number; movePenalty: number; description: string }
+> = {
+  none: {
+    label: 'Normal (Sin sobrepeso)',
+    attackPenalty: 0,
+    movePenalty: 0,
+    description: 'Movimiento y combate sin penalización por carga.'
+  },
+  heavy_box: {
+    label: 'Carga Pesada / Caja (-2)',
+    attackPenalty: 2,
+    movePenalty: 2,
+    description: 'Cargando equipo voluminoso o caja pesada: -2 a REF/DEX (Ataques) y -2 MOVE.'
+  },
+  carrying_body: {
+    label: 'Cargando Cuerpo / Aliado (-2 Atk, -4 MOVE)',
+    attackPenalty: 2,
+    movePenalty: 4,
+    description: 'Arrastrando o cargando un cuerpo: -2 a ataques (solo armas 1H) y -4 MOVE.'
+  },
+  extreme_load: {
+    label: 'Sobrecarga Extrema (-4)',
+    attackPenalty: 4,
+    movePenalty: 4,
+    description: 'Exceso severo de peso situacional: -4 a ataques y -4 MOVE.'
+  }
+};
 
 export function calculateMaxHp(body: number, will: number): number {
   return 10 + 5 * Math.ceil((body + will) / 2);
@@ -56,6 +87,7 @@ export interface WeaponAttackBreakdown {
   armorPenalty: number;
   seriousWoundPenalty: number;
   injuryPenalty: number;
+  encumbrancePenalty?: number;
   totalPenalty: number;
   penaltyBreakdown: string[];
   netBase: number;
@@ -123,7 +155,15 @@ export function calculateWeaponAttackBreakdown(
     }
   }
 
-  const totalPenalty = armorPenalty + seriousWoundPenalty + injuryPenalty;
+  // 4. Penalizador de Carga / Sobrepeso Situacional
+  const encMode = character.encumbranceMode || 'none';
+  const encConfig = ENCUMBRANCE_MODES[encMode] || ENCUMBRANCE_MODES.none;
+  const encumbrancePenalty = encConfig.attackPenalty;
+  if (encumbrancePenalty > 0) {
+    penaltyBreakdown.push(`[Carga] ${encConfig.label}: -${encumbrancePenalty}`);
+  }
+
+  const totalPenalty = armorPenalty + seriousWoundPenalty + injuryPenalty + encumbrancePenalty;
   const netBase = statVal + skillVal - totalPenalty;
 
   return {
@@ -135,10 +175,36 @@ export function calculateWeaponAttackBreakdown(
     armorPenalty,
     seriousWoundPenalty,
     injuryPenalty,
+    encumbrancePenalty,
     totalPenalty,
     penaltyBreakdown,
     netBase
   };
+}
+
+export function getEffectiveMove(character: CharacterSheet): number {
+  const baseMove = character.stats?.MOVE ?? 0;
+  let penalty = 0;
+  const headPen = Math.abs(character.headArmor?.penalty ?? 0);
+  const bodyPen = Math.abs(character.bodyArmor?.penalty ?? 0);
+  penalty += Math.max(headPen, bodyPen);
+
+  const encMode = character.encumbranceMode || 'none';
+  const encConfig = ENCUMBRANCE_MODES[encMode];
+  if (encConfig) {
+    penalty += encConfig.movePenalty;
+  }
+
+  character.activeInjuries?.forEach((inj) => {
+    if (!inj.isTreated && inj.modifiers?.statPenalties?.MOVE) {
+      penalty += inj.modifiers.statPenalties.MOVE;
+    }
+    if (!inj.isTreated && inj.modifiers?.movePenalty) {
+      penalty += inj.modifiers.movePenalty;
+    }
+  });
+
+  return Math.max(1, baseMove - penalty);
 }
 
 export interface AutofireRulesSummary {

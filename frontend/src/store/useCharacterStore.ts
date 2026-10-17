@@ -6,6 +6,7 @@ import type {
   ArmorItem,
   CharacterSheet,
   CombatSkillKey,
+  EncumbranceMode,
   EquippedWeapon,
   EurodollarTransaction,
   InventoryItem,
@@ -362,6 +363,19 @@ export interface CharacterStoreState {
     charges?: number
   ) => void;
   addEurodollarTransaction: (concept: string, amount: number) => void;
+  setEncumbranceMode: (mode: EncumbranceMode, characterId?: string) => void;
+  gmUpdateCharacterVitals: (
+    characterId: string,
+    patch: {
+      hpDelta?: number;
+      restoreFullHp?: boolean;
+      repairAllArmor?: boolean;
+      restoreAllLuck?: boolean;
+      eurodollarsDelta?: number;
+      concept?: string;
+    }
+  ) => void;
+  gmPayAllCharacters: (concept: string, amount: number) => void;
 }
 
 export const useCharacterStore = create<CharacterStoreState>()(
@@ -1305,6 +1319,95 @@ export const useCharacterStore = create<CharacterStoreState>()(
             return {
               ...c,
               eurodollars: newBalance,
+              transactions: [newTx, ...(c.transactions || [])].slice(0, 50)
+            };
+          })
+        }));
+      },
+
+      setEncumbranceMode: (mode: EncumbranceMode, characterId?: string) => {
+        set((state) => {
+          const targetId = characterId || state.activeCharacterId;
+          return {
+            characters: state.characters.map((c) =>
+              c.id === targetId ? { ...c, encumbranceMode: mode } : c
+            )
+          };
+        });
+      },
+
+      gmUpdateCharacterVitals: (characterId, patch) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== characterId) return c;
+
+            const maxHp = calculateMaxHp(c.stats?.BODY ?? 0, c.stats?.WILL ?? 0);
+            let updatedHp = c.currentHp;
+            if (patch.restoreFullHp) {
+              updatedHp = maxHp;
+            } else if (typeof patch.hpDelta === 'number') {
+              updatedHp = Math.max(0, Math.min(maxHp, updatedHp + patch.hpDelta));
+            }
+
+            let updatedHeadArmor = { ...c.headArmor };
+            let updatedBodyArmor = { ...c.bodyArmor };
+            if (patch.repairAllArmor) {
+              updatedHeadArmor = {
+                ...updatedHeadArmor,
+                currentSp: updatedHeadArmor.maxSp
+              };
+              updatedBodyArmor = {
+                ...updatedBodyArmor,
+                currentSp: updatedBodyArmor.maxSp
+              };
+            }
+
+            let updatedLuck = c.currentLuck;
+            if (patch.restoreAllLuck) {
+              updatedLuck = c.stats?.LUCK ?? 0;
+            }
+
+            let updatedEurodollars = c.eurodollars ?? 0;
+            let updatedTransactions = [...(c.transactions || [])];
+            if (typeof patch.eurodollarsDelta === 'number' && patch.eurodollarsDelta !== 0) {
+              updatedEurodollars = Math.max(0, updatedEurodollars + patch.eurodollarsDelta);
+              const newTx: EurodollarTransaction = {
+                id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                timestamp: new Date().toISOString(),
+                concept: patch.concept || (patch.eurodollarsDelta > 0 ? 'GM Grant (€$)' : 'GM Deduct (€$)'),
+                amount: patch.eurodollarsDelta,
+                balanceAfter: updatedEurodollars
+              };
+              updatedTransactions = [newTx, ...updatedTransactions].slice(0, 50);
+            }
+
+            return {
+              ...c,
+              currentHp: updatedHp,
+              headArmor: updatedHeadArmor,
+              bodyArmor: updatedBodyArmor,
+              currentLuck: updatedLuck,
+              eurodollars: updatedEurodollars,
+              transactions: updatedTransactions
+            };
+          })
+        }));
+      },
+
+      gmPayAllCharacters: (concept, amount) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            const newBal = Math.max(0, (c.eurodollars || 0) + amount);
+            const newTx: EurodollarTransaction = {
+              id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+              timestamp: new Date().toISOString(),
+              concept: concept || (amount >= 0 ? 'Pago de Gig / Trabajo' : 'Gasto Grupal'),
+              amount,
+              balanceAfter: newBal
+            };
+            return {
+              ...c,
+              eurodollars: newBal,
               transactions: [newTx, ...(c.transactions || [])].slice(0, 50)
             };
           })

@@ -4,11 +4,13 @@ import {
   calculateMaxHp, 
   calculateSeriouslyWoundedThreshold, 
   calculateMaxHumanity,
-  calculateWeaponAttackBreakdown
+  calculateWeaponAttackBreakdown,
+  ENCUMBRANCE_MODES
 } from '../../engine/characterEngine';
 import type { 
   CombatSkillKey, 
-  StatKey 
+  StatKey,
+  EncumbranceMode
 } from '../../types/cyberpunk';
 import { SKILL_METADATA } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
@@ -102,6 +104,7 @@ export const StreetLabView: React.FC = () => {
   const addEurodollarTransaction = useCharacterStore((state) => state.addEurodollarTransaction);
   const exportActiveCharacterJson = useCharacterStore((state) => state.exportActiveCharacterJson);
   const importCharacterJson = useCharacterStore((state) => state.importCharacterJson);
+  const setEncumbranceMode = useCharacterStore((state) => state.setEncumbranceMode);
 
   const activeChar = getActiveCharacter();
 
@@ -147,6 +150,15 @@ export const StreetLabView: React.FC = () => {
       const headPen = Math.abs(activeChar?.headArmor?.penalty ?? 0);
       const bodyPen = Math.abs(activeChar?.bodyArmor?.penalty ?? 0);
       pen += Math.max(headPen, bodyPen);
+    }
+    const encMode = activeChar?.encumbranceMode || 'none';
+    const encConfig = ENCUMBRANCE_MODES[encMode];
+    if (encConfig) {
+      if (stat === 'REF' || stat === 'DEX') {
+        pen += encConfig.attackPenalty;
+      } else if (stat === 'MOVE') {
+        pen += encConfig.movePenalty;
+      }
     }
     activeChar?.activeInjuries?.forEach((inj) => {
       if (!inj.isTreated && inj.modifiers?.statPenalties?.[stat]) {
@@ -877,6 +889,34 @@ export const StreetLabView: React.FC = () => {
                 <span className="text-[10px] font-mono-code text-[#64748b]">
                   EQUIPO, MUNICIÓN Y DROGAS
                 </span>
+              </div>
+
+              {/* Selector de Carga y Sobrepeso Situacional */}
+              <div className="bg-[#171923] p-2.5 rounded-sm border border-[#222636] space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5">
+                    <Package className="w-3.5 h-3.5 text-[#38bdf8]" /> ESTADO DE CARGA / SOBREPESO SITUACIONAL
+                  </span>
+                  {activeChar?.encumbranceMode && activeChar.encumbranceMode !== 'none' && (
+                    <span className="bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold animate-pulse">
+                      SOBREPESO ACTIVO
+                    </span>
+                  )}
+                </div>
+                <select
+                  value={activeChar?.encumbranceMode || 'none'}
+                  onChange={(e) => setEncumbranceMode(e.target.value as EncumbranceMode)}
+                  className="w-full bg-[#0c0d12] border border-[#262b3c] text-white font-mono-code text-xs py-1 px-2 rounded focus:outline-none focus:border-[#38bdf8] cursor-pointer"
+                >
+                  {(Object.keys(ENCUMBRANCE_MODES) as EncumbranceMode[]).map((key) => (
+                    <option key={key} value={key} className="bg-[#121319] text-white">
+                      {ENCUMBRANCE_MODES[key].label}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[10px] text-[#94a3b8] font-mono-code leading-tight">
+                  {ENCUMBRANCE_MODES[activeChar?.encumbranceMode || 'none']?.description}
+                </p>
               </div>
 
               {(activeChar?.inventory ?? []).length === 0 ? (
