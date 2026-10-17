@@ -81,46 +81,55 @@ cpr-omni-deck/
 │   ├── package.json
 │   └── vite.config.ts                    # Vite config con Tailwind CSS
 ├── CHANGELOG_AND_ARCHITECTURE.md         # ESTE DOCUMENTO
-└── CONTENT_CHECKLIST.md                  # Checklist de cobertura de reglas por sprints
+└── CONTENT_CHECKLIST.md                  # Checklist de cobertura de reglas por fases y versiones
 ```
 
 ---
 
-## 🔮 Roadmap Pendiente (Sprints 1 a 4 - NO IMPORTAR HASTA CREAR)
+## 🔮 Roadmap Pendiente (Fases 2 a 5 - NO IMPORTAR HASTA CREAR)
 
-Los siguientes módulos son especificaciones de diseño para fases posteriores. **Ningún componente debe intentar importarlos mientras no existan en disco**:
+Los siguientes módulos son especificaciones de diseño para fases posteriores (Fase 0 y Fase 1 completadas). **Ningún componente debe intentar importarlos mientras no existan en disco**:
 
-### Sprint 1: Utilidades de Mesa & Economía
-* `src/data/rulesCheatSheet.ts` & `src/components/RulesCheatSheetModal.tsx`:
-  - Grappling, Choking (`BODY * 2` daño directo a HP), Coberturas con SP/HP destructibles.
-* `src/features/inventory/InventoryManager.tsx`:
-  - Cartera de Eurodólares (€$), peso de carga, gestión de munición comprada por lote de 10.
-* `src/utils/storage.ts` & `src/utils/auth.ts`:
-  - Bloqueo por PIN de Director de Juego (GM Lock) para ocultar tiradas y notas de campaña.
-
-### Sprint 2: Expansión de Libros PDF (2045 vs 2077)
+### Fase 2 (v2.6 – v2.9): Disparos Apuntados, Compendio de Reglas Nuevas y Expansión de Libros PDF
+* Selector Interactivo de Disparos Apuntados (`CombatHudView.tsx` & `combatEngine.ts`):
+  - Penalizador canónico `-8`, restricción ROF 1, Cabeza (`×2` daño penetrante), Pierna (`Broken Leg -4 MOVE`), Objeto Sostenido (`Disarm`).
+* Compendio Dedicado para Reglas Nuevas de Expansiones (`src/features/rules/ExpansionRulesView.tsx`):
+  - Full Body Conversions (FBC) de *Interface RED Vol 3*, Reglas Era 2077 de *CEMK* (Neuroport, armas Power/Tech/Smart, Ciberpsicosis), DLCs (*Hornet's Pharmacy*).
+* Filtro de Libro Origen (`sourceBook`) y Badges Visuales (`src/components/SourceBadge.tsx`):
+  - Filtro interactivo por manual y badges visuales temáticos en `CompendiumView.tsx`.
 * Extracción e integración de `data/black-chrome.cprpack.json`:
   - 170+ ítems de lujo, vehículos con SDP y armas exóticas.
 * Extracción e integración de `data/cemk-2077.cprpack.json`:
   - Reglas 2077 (Edgerunners Mission Kit): Neuroport integrado, armas Power/Tech/Smart y ciberpsicosis.
 * Extracción e integración de `data/danger-gal.cprpack.json` & `data/interface-red.cprpack.json`.
-* `src/components/SourceBadge.tsx`: Badges visuales por libro origen.
 
-### Sprint 3: Sistemas Profundos
-* `src/components/CyberwareMannequin.tsx`:
-  - Maniquí anatómico 2077 con silueta interactiva y ranuras corporales.
+### Fase 3 (v3.0 – v3.4): Sistemas Profundos & Funciones Premium Companion App
 * `src/components/NetArchitectureRunner.tsx`:
   - Simulador piso a piso de Arquitecturas de Red (Archivos, Nodos de Control, Black ICE).
 * `src/features/quickhacks/QuickhacksDeck.tsx`:
   - Gestor de memoria RAM y software de hackeo en combate para la era 2077.
+* Habilidades de Rol Específicas:
+  - Solos (Combat Awareness), Medtechs (Farmacia/Cirugía/Criogenia), Techs (Maker), Nomads (Moto).
+* Paridad y Superación de Funciones Premium de Cyberpunk RED Companion App:
+  - `src/features/combat/EncounterManager.tsx`: Gestor táctico de encuentros y combate multiobjetivo con seguimiento dinámico de Mooks/Bosses e iniciativa.
+  - `src/features/vehicles/VehicleTracker.tsx`: Seguimiento de vehículos, monturas, SDP, blindaje y maniobras.
+  - Creador y simulador de Arquitecturas de Red personalizadas multietapa con exportación.
+  - Exportación e importación universal (JSON / PDF imprimible estilo hoja oficial).
+  - Consola Fixer enriquecida: notas de sesión secretas, generador de botín y registro cronológico.
 
-### Sprint 4: VTT, Audio & Homebrew
+### Fase 4 (v3.5 – v3.9): VTT Táctico, Clima, Homebrew y Audio/VFX
 * `src/components/MiniVTT.tsx`:
-  - Rejilla táctil 2x2m con obstáculos y regla de distancia en metros.
-* `src/utils/sfx.ts` & `src/utils/vfx.ts`:
-  - Audio sintetizado táctil para disparos, recargas y zumbidos de Sandevistan.
+  - Rejilla táctil 2x2m con obstáculos y regla de distancia en metros vinculada a tabla de DVs.
+* Generador de Condiciones Atmosféricas y Clima de Night City (Lluvia ácida, smog rojo, calor radiactivo).
 * `src/components/HomebrewBuilderModal.tsx`:
-  - Creador de armas, drogas y ciberware casero con exportación JSON.
+  - Creador universal de armas, drogas y ciberware casero con algoritmo de conversión 2020 a RED.
+* `src/utils/sfx.ts` & `src/utils/vfx.ts`:
+  - Audio sintetizado táctil para disparos, recargas, zumbidos de Sandevistan y efectos visuales de glitch/herida.
+
+### Fase 5 (v4.0): Auditoría Integral del Sistema (UI, Mecánicas y Revisión de ~60 PDFs)
+* Guía de Verificación y Checklist de Auditoría Oficial contra reglas de R. Talsorian Games.
+* Paseo Interactivo Funcional de la Interfaz (Live UI/Functional Walkthrough) en todas las vistas principales.
+* Auditoría Exhaustiva Manual por Manual (~60 PDFs oficiales y DLCs) verificando completitud, balanceo canónico y erratas.
 
 ---
 

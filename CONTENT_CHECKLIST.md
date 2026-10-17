@@ -1,15 +1,15 @@
 # CPR OMNI-DECK // Lista Maestra de Adaptación y Contenido (Checklist)
 
-> **PROPÓSITO**: Esta lista permite verificar de un solo vistazo el progreso de adaptación de las reglas, mecánicas y libros oficiales de tu biblioteca de PDFs a la aplicación, organizada por **dependencias arquitectónicas en 5 Sprints**.
+> **PROPÓSITO**: Esta lista permite verificar de un solo vistazo el progreso de adaptación de las reglas, mecánicas y libros oficiales de tu biblioteca de PDFs a la aplicación, organizada por **dependencias arquitectónicas en 6 Fases (v2.0 a v4.0)**.
 
 **Leyenda de Estados:**
 * `[x] COMPLETADO`: Implementado en código real, validado con las reglas oficiales y en funcionamiento en la interfaz.
 * `[~] EN PROGRESO`: Estructura o datos parciales cargados, requiere más pulido o módulos secundarios.
-* `[ ] PENDIENTE`: En cola de desarrollo planificado para ese Sprint.
+* `[ ] PENDIENTE`: En cola de desarrollo planificado para esa Fase.
 
 ---
 
-## 🏛️ SPRINT 0: Cimientos, Ficha Real, Persistencia, Motor Matemático y Catálogo Core [COMPLETADO]
+## 🏛️ FASE 0 (v2.0 – v2.3): Cimientos, Ficha Real, Persistencia, Motor Matemático y Catálogo Core [COMPLETADO]
 
 ### 1. Motor de Reglas & Matemáticas Canónicas (`characterEngine.ts` & `combatEngine.ts`)
 - [x] **Cálculo Canónico de Puntos de Golpe (HP)**:
@@ -78,7 +78,7 @@
 
 ---
 
-## 📦 SPRINT 1: Utilidades de Mesa - Cheat Sheet, Economía €$ e Inventario [COMPLETADO]
+## 📦 FASE 1 (v2.4 – v2.5): Maniquí Ripperdoc 2077, Machete de Reglas, Economía €$ e Inventario / Consola GM [COMPLETADO]
 - [x] **Machete de Reglas Rápidas (`rulesCheatSheet.ts` & `RulesCheatSheetDrawer.tsx`)**:
   - Reglas de Grappling, Choking (`BODY * 2` de daño directo ignorando armadura) y Lanzamiento de enemigos.
   - Tabla de Coberturas y Objetos destructibles con SP/HP (Puerta de coche, Muro de hormigón, Mampara de pladur, Escudo anti-disturbios).
@@ -93,7 +93,21 @@
 
 ---
 
-## 📚 SPRINT 2: Expansión de Libros PDF y Reglas 2077 vs 2045 [PENDIENTE]
+## 📚 FASE 2 (v2.6 – v2.9): Disparos Apuntados en Combate, Compendio de Reglas Nuevas (FBC/2077) y Expansión de Libros PDF [PENDIENTE]
+- [ ] **Selector Interactivo de Disparos Apuntados en Combate Activo (`CombatHudView.tsx` & `combatEngine.ts`)**:
+  - Penalizador canónico automático de `-8` a la tirada de ataque.
+  - Restricción estricta de ROF 1 (armas con ROF 2 o ráfaga limitadas a 1 único disparo al apuntar).
+  - Efectos mecánicos automatizados por localización:
+    - **Cabeza**: El daño que penetra armadura (`SP`) se multiplica `×2` directo a HP.
+    - **Pierna**: Aplica automáticamente estado crítico *Pierna Rota* (`Broken Leg`: `-4 MOVE`, mínimo 1).
+    - **Objeto Sostenido (Held Item)**: Provoca Desarme automático (`Disarm`), el objetivo suelta el arma u objeto sostenido.
+- [ ] **Compendio Dedicado para Nuevos Sistemas de Reglas de Expansiones (`ExpansionRulesView.tsx` / `rulesCheatSheet.ts`)**:
+  - Reglas completas de Full Body Conversions (FBC) de *Interface RED Vol 3* (cuerpos ciborg, chasis, blindajes estructurales, penalizaciones de humanidad y protocolos médicos).
+  - Sistemas de la Era 2077 de *Cyberpunk Edgerunners Mission Kit (CEMK)* (Neuroport universal, Quickhacks vs Netrunning clásico, armas Power/Tech/Smart y mecánicas de Ciberpsicosis).
+  - Reglas de DLCs oficiales (aditivos y dispersión osmótica de *Hornet's Pharmacy*, salvamento náutico, ciberware exótico).
+- [ ] **Filtro por Libro Origen (`sourceBook`) en Compendio Maestro con Badges Visuales (`CompendiumView.tsx` & `SourceBadge.tsx`)**:
+  - Selector de filtrado interactivo por manual fuente (*Core Book*, *Black Chrome*, *CEMK 2077*, *Danger Gal Dossier*, *Interface RED Vol 1-3*, *DLCs Oficiales*).
+  - Badges visuales temáticos con código de color e icono distintivo por cada manual en las tarjetas del catálogo.
 - [ ] **Extracción de `Black Chrome Tech & Style Guide`**:
   - 170+ ítems de catálogo de lujo de Night City.
   - Reglas completas de vehículos terrestres y aéreos con SDP, asientos y velocidad de combate.
@@ -114,7 +128,7 @@
 
 ---
 
-## 🧠 SPRINT 3: Sistemas Profundos - Maniquí Cyberware, Netrunning 2045, Quickhacks y Roles [PENDIENTE]
+## 🧠 FASE 3 (v3.0 – v3.4): Sistemas Profundos (Netrunning 2045, Quickhacks 2077, Roles) y Funciones Premium Companion App [PENDIENTE]
 - [x] **Maniquí Anatómico de Ciberware & Menú Ripperdoc (`CyberwareRipperdocView.tsx`)**:
   - Silueta holográfica en A-Pose con flechas conectoras hacia las 8 zonas corporales + Fashionware.
   - Ranuras de opción visuales estilo 2077 con ilustraciones vectoriales, telemetría de Humanidad/SP e instalador Ripperdoc con tirada Xd6.
@@ -127,10 +141,16 @@
   - Quickhacks ofensivos y de control (Short Circuit, Cyberware Malfunction, Overheat).
 - [ ] **Habilidades de Rol Específicas**:
   - Solos (Combat Awareness), Medtechs (Farmacia/Cirugía/Criogenia), Techs (Maker), Nomads (Moto).
+- [ ] **Paridad y Superación de Funciones Premium de Cyberpunk RED Companion App (`EncounterManager.tsx`, `VehicleTracker.tsx`, etc.)**:
+  - Generador y gestor interactivo de encuentros y combate táctico multiobjetivo (tracking dinámico de Mooks y Bosses en tiempo real, turnos de iniciativa, monitoreo de HP/SP y tiradas grupales).
+  - Gestor completo de vehículos y monturas con seguimiento de SDP (puntos de daño estructural), blindaje, asientos, armas montadas y maniobras de persecución.
+  - Creador y simulador de Arquitecturas de Red personalizadas multietapa con guardado, edición y exportación.
+  - Exportación e importación universal de fichas de personajes y NPCs en formatos estándar (JSON interoperable y PDF imprimible fiel a la hoja oficial de personaje).
+  - Consola de Director de Juego (Fixer Deck) enriquecida con notas secretas por escena, tablas de botín (loot tables) automáticas y bitácora cronológica de eventos.
 
 ---
 
-## 🎲 SPRINT 4: VTT Táctico, Clima, Homebrew y Audio/VFX [PENDIENTE]
+## 🎲 FASE 4 (v3.5 – v3.9): Mini-VTT Táctico, Clima, Homebrew y Audio/VFX [PENDIENTE]
 - [ ] **Mini-VTT Táctico (`MiniVTT.tsx`)**:
   - Rejilla táctica 2x2m interactiva en canvas/SVG.
   - Colocación de tokens de edgerunners y enemigos.
@@ -144,3 +164,19 @@
 - [ ] **Efectos Táctiles de Audio & Visuales (SFX / VFX)**:
   - Clics metálicos de recarga, detonaciones procedurales y zumbidos de Sandevistan vía Web Audio API.
   - Vignetting rojo al caer en Herida Grave y glitch visual ante daño de Netrunning.
+
+---
+
+## 🔍 FASE 5 (v4.0): Auditoría Integral del Sistema (UI, Mecánicas y Revisión Manual por Manual de los ~60 PDFs) [PENDIENTE]
+- [ ] **Guía de Verificación y Checklist de Auditoría Oficial**:
+  - Matriz formal de validación cruzada para cada mecánica implementada contra el texto oficial de las reglas de R. Talsorian Games.
+  - Criterios de aceptación rigurosos de fidelidad matemática: DVs por metro, fórmulas de daño, ablación de SP, penalizadores situacionales y multiplicadores críticos.
+- [ ] **Paseo Interactivo Funcional de la Interfaz (Live UI/Functional Walkthrough)**:
+  - Recorrido exhaustivo por cada vista del sistema (`CombatHudView`, `StreetLabView`, `CompendiumView`, `CyberwareRipperdocView`, `FixerDeckView`, `DataPacksView`, etc.).
+  - Validación de ergonomía de combate, legibilidad táctil de ciberware, respuesta háptica/visual y flujo sin fricción para el usuario en mesa de juego.
+  - Pruebas de estrés de UI en múltiples resoluciones, pantallas táctiles y modos de alto contraste.
+- [ ] **Auditoría Exhaustiva Manual por Manual (~60 PDFs Oficiales)**:
+  - Revisión sistemática de cada uno de los ~60 PDFs oficiales y DLCs de Cyberpunk RED en la biblioteca:
+    - Verificación de completitud de catálogo: armas, blindajes, ciberware, drogas, programas, equipo, vehículos y exóticos.
+    - Detección e incorporación de erratas oficiales y ajustes de balanceo canónicos (FAQs oficiales y errata de R. Talsorian Games).
+    - Homologación de identificadores únicos, categorías y atributos en los data packs (`.cprpack.json`).
