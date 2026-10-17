@@ -234,6 +234,33 @@ export interface InjuryModifier {
   bonusDeathSavePenalty?: number;
 }
 
+export type AimedShotTarget = 'none' | 'head' | 'leg' | 'held_item';
+export type SourceBookId = 'core' | 'black_chrome' | 'cemk_2077' | 'interface_red' | 'danger_gal' | 'dlc';
+
+export interface PreGeneratedEnemyTemplate {
+  id: string;
+  name: string;
+  subtitle: string;
+  faction: string;
+  threatTier: 'mook' | 'hardened_mook' | 'lieutenant' | 'hardened_lieutenant' | 'mini_boss' | 'boss' | 'cyberpsycho' | 'legend';
+  sourceBook: SourceBookId;
+  sourceBookTitle: string;
+  era: '2045' | '2077';
+  role: string;
+  hp: number;
+  seriouslyWounded: number;
+  deathSave: number;
+  headSp: number;
+  bodySp: number;
+  stats: Record<StatKey, number>;
+  combatBases: Array<{ label: string; totalBase: number; damage?: string; rof?: number; notes?: string }>;
+  weapons: Array<{ name: string; skillBase: number; damage: string; rof: number; mag: number; notes?: string }>;
+  cyberware: string[];
+  gear: string[];
+  specialRules: string[];
+  loreSummary: string;
+}
+
 export interface WeaponItem {
   id: string;
   name: string;
@@ -252,6 +279,10 @@ export interface WeaponItem {
   dvTable?: string;
   notes?: string;
   examples?: string;
+  sourceBook?: SourceBookId;
+  sourceBookTitle?: string;
+  era?: '2045' | '2077';
+  weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
 
 export interface ArmorItem {
@@ -263,6 +294,10 @@ export interface ArmorItem {
   costTier?: string;
   description?: string;
   hp?: number;
+  sourceBook?: SourceBookId;
+  sourceBookTitle?: string;
+  era?: '2045' | '2077';
+  weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
 
 export interface CyberwareItem {
@@ -274,6 +309,10 @@ export interface CyberwareItem {
   cost: number;
   description?: string;
   slots?: number;
+  sourceBook?: SourceBookId;
+  sourceBookTitle?: string;
+  era?: '2045' | '2077';
+  weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
 
 export interface ProgramItem {
@@ -287,6 +326,10 @@ export interface ProgramItem {
   spd?: number;
   cost: number;
   description?: string;
+  sourceBook?: SourceBookId;
+  sourceBookTitle?: string;
+  era?: '2045' | '2077';
+  weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
 
 export interface GearItem {
@@ -297,6 +340,10 @@ export interface GearItem {
   description?: string;
   slots?: number;
   notes?: string;
+  sourceBook?: SourceBookId;
+  sourceBookTitle?: string;
+  era?: '2045' | '2077';
+  weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
 
 export interface DrugItem {
@@ -309,6 +356,10 @@ export interface DrugItem {
   duration?: string;
   addictionDv?: number;
   description?: string;
+  sourceBook?: SourceBookId;
+  sourceBookTitle?: string;
+  era?: '2045' | '2077';
+  weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
 
 export interface AmmoItem {
@@ -319,6 +370,10 @@ export interface AmmoItem {
   type?: string;
   quantity?: number;
   description?: string;
+  sourceBook?: SourceBookId;
+  sourceBookTitle?: string;
+  era?: '2045' | '2077';
+  weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
 
 export interface EquippedWeapon extends WeaponItem {
@@ -489,4 +544,7 @@ export interface RollEntry {
   baseDamageTotal?: number;
   critBonusDamage?: number; // +5 si sixesCount >= 2
   finalDamageTotal?: number;
+  aimedShotTarget?: AimedShotTarget;
+  aimedShotLabel?: string;
+  aimedShotEffectSummary?: string;
 }

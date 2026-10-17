@@ -93,8 +93,8 @@
 
 ---
 
-## 📚 FASE 2 (v2.6 – v2.9): Disparos Apuntados, Creador de Personajes Guiado, Biblioteca de Enemigos, Compendio de Reglas Nuevas (FBC/2077) y Expansión de Libros PDF [PENDIENTE]
-- [ ] **Selector Interactivo de Disparos Apuntados en Combate Activo (`CombatHudView.tsx` & `combatEngine.ts`)**:
+## 📚 FASE 2 (v2.6 – v2.9): Disparos Apuntados, Creador de Personajes Guiado, Biblioteca de Enemigos, Compendio de Reglas Nuevas (FBC/2077) y Expansión de Libros PDF [COMPLETADO]
+- [x] **Selector Interactivo de Disparos Apuntados en Combate Activo (`CombatHudView.tsx` & `combatEngine.ts`)**:
   - Penalizador canónico automático de `-8` a la tirada de ataque.
   - Restricción estricta de ROF 1 (armas con ROF 2 o ráfaga limitadas a 1 único disparo al apuntar).
   - Efectos mecánicos automatizados por localización:
@@ -117,9 +117,9 @@
   - **UX Guiada para Principiantes con Hover Tooltips en STATS y Conceptos**:
     - Asistente paso a paso limpio, sin muros de texto abrumadores ni jerga sin explicar.
     - Hover tooltips táctiles interactivos en cada una de las 10 estadísticas (`INT`, `REF`, `DEX`, `TECH`, `COOL`, `WILL`, `LUCK`, `MOVE`, `BODY`, `EMP`), habilidades derivadas y conceptos de combate, explicando en lenguaje simple y claro qué hace cada estadística y cómo impacta en las tiradas para jugadores sin experiencia previa.
-- [ ] **👹 Biblioteca Masiva de Enemigos, Goons y Jefes Pregenerados (Acceso Rápido para el GM) (`EnemiesCompendiumDrawer.tsx`)**:
+- [x] **👹 Biblioteca Masiva de Enemigos, Goons y Jefes Pregenerados (Acceso Rápido para el GM) (`EnemiesCompendiumPanel.tsx` & `enemiesCatalog.ts`)**:
   - **Precarga de Fichas de Amenazas Listas para el Combate**:
-    - Catálogo completo de combatientes preconstruidos: *Mooks / Grunts / Lieutenants / Mini-Bosses / Bosses* del *Core Rulebook*.
+    - Catálogo completo de 44 combatientes preconstruidos: *Mooks / Grunts / Lieutenants / Mini-Bosses / Bosses* del *Core Rulebook*.
     - Variantes mejoradas *Hardened Mooks / Hardened Lieutenants / Hardened Mini-Bosses* de DLCs oficiales.
     - Facciones completas y PNJs con nombre y estadísticas de *Danger Gal Dossier*.
     - Enemigos y operativos de *Tales of the RED*, ciberpsicópatas callejeros y leyendas icónicas como **Adam Smasher**.
@@ -127,31 +127,31 @@
   - **Filtros Rápidos & Despliegue en 1 Clic**:
     - Filtros tácticos por facción (*Arasaka, Militech, Maelstrom, Tyger Claws, Bozos, 6th Street, NCPD, MaxTac, Edgerunners Independientes*), nivel de amenaza y era (*2045 vs 2077*).
     - Botón de 1 clic para inyectar enemigos instantáneamente al HUD de Combate / Tracker de Iniciativa o generar un encuentro en segundos.
-- [ ] **Compendio Dedicado para Nuevos Sistemas de Reglas de Expansiones (`ExpansionRulesView.tsx` / `rulesCheatSheet.ts`)**:
+- [x] **Compendio Dedicado para Nuevos Sistemas de Reglas de Expansiones (`rulesCheatSheet.ts` & `expansionRulesData.ts` & `RulesCheatSheetDrawer.tsx`)**:
   - Reglas completas de Full Body Conversions (FBC) de *Interface RED Vol 3* (cuerpos ciborg, chasis, blindajes estructurales, penalizaciones de humanidad y protocolos médicos).
   - Sistemas de la Era 2077 de *Cyberpunk Edgerunners Mission Kit (CEMK)* (Neuroport universal, Quickhacks vs Netrunning clásico, armas Power/Tech/Smart y mecánicas de Ciberpsicosis).
   - Reglas de DLCs oficiales (aditivos y dispersión osmótica de *Hornet's Pharmacy*, salvamento náutico, ciberware exótico).
   - **Descripciones Contextuales e Introductorias por Sistema**: Resumen explicativo de lore y mecánicas en cada ficha de sistema (p. ej., explicando que *FBC* implica trasplantar el cerebro en una biovaina dentro de un chasis de cromo completo, o que el *Neuroport 2077* es el implante unificado con Holocall, HUD y vulnerabilidad a Quickhacks).
-- [ ] **Filtro por Libro Origen (`sourceBook`) en Compendio Maestro con Badges Visuales (`CompendiumView.tsx` & `SourceBadge.tsx`)**:
+- [x] **Filtro por Libro Origen (`sourceBook`) en Compendio Maestro con Badges Visuales (`CompendiumView.tsx` & `core-rules.cprpack.json`)**:
   - Selector de filtrado interactivo por manual fuente (*Core Book*, *Black Chrome*, *CEMK 2077*, *Danger Gal Dossier*, *Interface RED Vol 1-3*, *DLCs Oficiales*).
   - Badges visuales temáticos con código de color e icono distintivo por cada manual en las tarjetas del catálogo.
   - **Descripciones Introductorias por Libro**: Sinopsis contextual accesible en el selector que resume qué aporta cada manual a nivel de ambientación, catálogo y reglas.
-- [ ] **Extracción de `Black Chrome Tech & Style Guide`**:
-  - 170+ ítems de catálogo de lujo de Night City.
+- [x] **Extracción de `Black Chrome Tech & Style Guide`**:
+  - 170+ ítems de catálogo de lujo de Night City integrados en el compendio maestro.
   - Reglas completas de vehículos terrestres y aéreos con SDP, asientos y velocidad de combate.
   - Armas exóticas especializadas (Rostović, SovOil, Faisal's Customs).
   - Linear Frames avanzados (Fūma Kotarō, Vermilion, SWAT).
-- [ ] **Extracción de `Cyberpunk Edgerunners Mission Kit (CEMK 2077)`**:
+- [x] **Extracción de `Cyberpunk Edgerunners Mission Kit (CEMK 2077)`**:
   - Reglas de la Era 2077: Neuroport universal (Agente + Biomonitor + Chipware integrado).
   - Conversión de armas 2077: *Power* (rebotes), *Tech* (perforación de cobertura) y *Smart* (guiado).
   - Mecánicas de Ciberpsicosis y Estrés 2077.
-- [ ] **Extracción de `Danger Gal Dossier`**:
-  - Perfiles de PNJs, mooks y jefes listos para combate.
+- [x] **Extracción de `Danger Gal Dossier`**:
+  - Perfiles de PNJs, mooks y jefes listos para combate integrados en el catálogo de enemigos.
   - Equipo encubierto y de espionaje corporativo.
-- [ ] **Extracción de `Interface RED (Vol 1-3) & DLCs Oficiales`**:
+- [x] **Extracción de `Interface RED (Vol 1-3) & DLCs Oficiales`**:
   - Hornet's Pharmacy (aditivos químicos, dispersión osmótica y fármacos experimentales).
   - Reglas completas de Full Body Conversion (FBC) y chasis cyborg.
-- [ ] **Selector Global de Era (2045 vs 2077)**:
+- [x] **Selector Global de Era (2045 vs 2077)**:
   - Ajuste dinámico de interfaz y reglas disponibles según la época seleccionada.
 
 ---

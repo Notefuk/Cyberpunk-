@@ -46,8 +46,10 @@ cpr-omni-deck/
 │   │   │   └── ItemVisualPlaceholder.tsx # Frames militares tácticos SVG/Lucide por categoría
 │   │   ├── data/
 │   │   │   ├── characterCreationData.ts  # Catálogo canónico de creación, Lifepath, pregenerados y deuda
-│   │   │   ├── core-rules.cprpack.json   # Copia activa del catálogo para el frontend
+│   │   │   ├── core-rules.cprpack.json   # Catálogo maestro multi-libro (368 ítems canónicos)
 │   │   │   ├── criticalInjuries.ts       # Tablas oficiales 2d6 de heridas críticas (Head/Body)
+│   │   │   ├── enemiesCatalog.ts         # Bestiario táctico de 44 enemigos, goons y bosses para el GM
+│   │   │   ├── expansionRulesData.ts     # Compendio de 8 sistemas de reglas de expansiones (FBC/2077)
 │   │   │   ├── rangeTables.ts            # Matrices oficiales de DVs por metro y Autofire
 │   │   │   └── rulesCheatSheet.ts        # Machete canónico de reglas de combate, coberturas y asfixia
 │   │   ├── engine/
@@ -63,6 +65,7 @@ cpr-omni-deck/
 │   │   │   ├── cyberware/
 │   │   │   │   └── CyberwareRipperdocView.tsx # Menú Ripperdoc 2077 con maniquí holográfico y ranuras
 │   │   │   ├── gm/
+│   │   │   │   ├── EnemiesCompendiumPanel.tsx # Bestiario con filtros por facción e inyección al combate
 │   │   │   │   └── FixerDeckView.tsx     # Consola GM Fixer con PIN, control global y monitor del equipo
 │   │   │   ├── layout/
 │   │   │   │   └── TopHudBar.tsx         # Barra superior persistente con vitals del edgerunner
@@ -89,11 +92,11 @@ cpr-omni-deck/
 
 ---
 
-## 🔮 Roadmap Pendiente (Fases 2 a 5 - NO IMPORTAR HASTA CREAR)
+## 🔮 Roadmap y Evolución de Fases (Fases 3 a 5 Pendientes)
 
-Los siguientes módulos son especificaciones de diseño para fases posteriores (Fase 0 y Fase 1 completadas). **Ningún componente debe intentar importarlos mientras no existan en disco**:
+Las Fases 0, 1 y 2 se encuentran **COMPLETADAS**. Los siguientes módulos representan las especificaciones para las fases subsiguientes. **Ningún componente debe intentar importarlos mientras no existan en disco**:
 
-### Fase 2 (v2.6 – v2.9): Disparos Apuntados, Creador Guiado, Biblioteca de Enemigos, Compendio y Expansión PDF
+### Fase 2 (v2.6 – v2.9): Disparos Apuntados, Creador Guiado, Biblioteca de Enemigos, Compendio y Expansión PDF [COMPLETADO]
 * Selector Interactivo de Disparos Apuntados (`CombatHudView.tsx` & `combatEngine.ts`):
   - Penalizador canónico `-8`, restricción ROF 1, Cabeza (`×2` daño penetrante), Pierna (`Broken Leg -4 MOVE`), Objeto Sostenido (`Disarm`).
 * Creador de Personajes Guiado Desde Cero (`src/features/creation/CharacterWizardModal.tsx`):
@@ -146,6 +149,53 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores (
 ---
 
 ## 📜 Master Version Changelog
+
+### [v2.9.0] - 2026-10-17 (Cierre Completo de Fase 2: Ataques Apuntados, Biblioteca de 44 Enemigos/Jefes, Compendio Doble de 8 Sistemas FBC/2077 & Catálogo Multi-Libro de 368 Ítems)
+* **Category**: Phase 2 Complete (Aimed Shots, NPC Bestiary, Multi-Book Compendium & Expansion Systems)
+* **Files Modified / Created**:
+  - `data/core-rules.cprpack.json` & `frontend/src/data/core-rules.cprpack.json`
+  - `frontend/src/data/enemiesCatalog.ts`
+  - `frontend/src/data/expansionRulesData.ts`
+  - `frontend/src/engine/combatEngine.ts`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/compendium/CompendiumView.tsx`
+  - `frontend/src/features/gm/EnemiesCompendiumPanel.tsx`
+  - `frontend/src/features/gm/FixerDeckView.tsx`
+  - `frontend/src/features/packs/DataPacksView.tsx`
+  - `frontend/src/features/rules/RulesCheatSheetDrawer.tsx`
+  - `frontend/src/store/useCombatStore.ts`
+  - `frontend/src/types/cyberpunk.ts`
+  - `scripts/extract_core_pack.py`
+* **What Changed**:
+  1. **Disparos y Golpes Apuntados Interactivos (`Aimed Shots`)**:
+     - Selector táctico integrado en `CombatHudView.tsx` y resolución matemática en `combatEngine.ts`.
+     - Aplica el penalizador reglamentario de `-8` a la tirada de ataque y restringe automáticamente la cadencia a ROF 1 (desactivando ráfagas o dobles ataques).
+     - Automatización de efectos por localización:
+       - **Cabeza**: El daño penetrante (daño que supere el `SP`) se multiplica `×2` directamente a HP.
+       - **Pierna**: Aplica automáticamente la Herida Crítica oficial de *Pierna Rota* (`Broken Leg`: `-4 MOVE`, mínimo 1).
+       - **Objeto Sostenido (Held Item)**: Provoca Desarme forzado (`Disarm`) con mensaje contextual en el log de combate.
+  2. **Biblioteca Táctica de 44 Enemigos, Goons y Jefes (`enemiesCatalog.ts` & `EnemiesCompendiumPanel.tsx`)**:
+     - Catálogo maestro de 44 fichas completas clasificadas por nivel de amenaza (*Mook, Lieutenant, Boss*) y facciones (*Arasaka, Militech, Maelstrom, Tyger Claws, Bozos, 6th Street, NCPD, MaxTac, Inceptores/Ciberpsicópatas y Leyendas como Adam Smasher*).
+     - Incluye perfiles canónicos de Core Book, Hardened Variants, Danger Gal Dossier, Tales of the RED y CEMK 2077.
+     - Pestaña interactiva de Bestiario en la Consola Fixer (`FixerDeckView.tsx`) con filtros por facción, búsqueda en tiempo real, desglose de estadísticas de combate, armas, blindaje, habilidades y botón de inyección directa al tracker de combate en 1 clic.
+  3. **Compendio de 8 Nuevos Sistemas de Reglas de Expansiones (`expansionRulesData.ts`)**:
+     - Documentación exhaustiva con sinopsis de lore, desglose mecánico, reglas paso a paso y tablas de referencia para 8 sistemas mayores:
+       - *Full Body Conversions (FBC)* de *Interface RED Vol 3* (cuerpos ciborg, biovainas, blindaje estructural y humanidad).
+       - *Neuroport Universal 2077* de *CEMK 2077* (los 7 subsistemas gratuitos, Chyrons y vulnerabilidad a hackeo).
+       - *Armas 2077 (Power, Tech, Smart)* con mecánicas de rebote, perforación de cobertura y seguimiento autónomo.
+       - *Ciberpsicosis & Estrés 2077* (escalas de degradación mental y episodios psicóticos).
+       - *Hornet's Pharmacy* (aditivos químicos, dispersión osmótica y fármacos experimentales).
+       - *Drogas Callejeras & Adicciones* (tabla de abstinencia, sobredosis y tolerancia).
+       - *Vehículos y Combate Motorizado* (SDP, puntos de daño estructural y maniobras).
+       - *Salvamento Náutico & Buceo Táctico*.
+     - Acceso dual: disponible como pestaña dedicada en `RulesCheatSheetDrawer.tsx` y en el Compendio Maestro.
+  4. **Catálogo Maestro Multi-Libro de 368 Ítems & Selector con Sinopsis (`core-rules.cprpack.json` & `CompendiumView.tsx`)**:
+     - Expansión del catálogo canónico de 272 a 368 ítems (+96 ítems de *Black Chrome*, *CEMK 2077*, *Interface RED* y *Danger Gal Dossier*).
+     - Filtro interactivo multi-libro por manual fuente (`sourceBook`) con insignias visuales distintivas.
+     - Banner y drawer desplegable con la sinopsis contextual, aportes de ambientación y novedades mecánicas de cada libro oficial.
+  5. **Cierre Oficial de Fase 2**: Todos los objetivos planificados para la Fase 2 (v2.6 – v2.9) quedan completamente implementados, verificados y operando en vivo.
+
+---
 
 ### [v2.6.0] - 2026-10-17 (Guided 6-Step Character Creator Wizard, 2045/2077 CEMK Pregens, Hybrid Lifepath & Selling Out Debt System)
 * **Category**: Character Creation Engine, Onboarding Wizard, Lifepath & Economy

@@ -5,6 +5,8 @@ import {
   ENCUMBRANCE_MODES 
 } from '../../engine/characterEngine';
 import type { EncumbranceMode } from '../../types/cyberpunk';
+import { EnemiesCompendiumPanel } from './EnemiesCompendiumPanel';
+import type { EnemySheet } from '../../data/enemiesCatalog';
 import { 
   Terminal, 
   Shield, 
@@ -245,6 +247,33 @@ export function FixerDeckView() {
     });
 
     showFeedback(`Spawned ${newGoon.name} con Iniciativa ${newGoon.initiative}.`);
+  };
+
+  const handleAddGoonFromSheet = (enemy: EnemySheet) => {
+    const d10 = rollD10();
+    const ref = enemy.stats.REF ?? 6;
+    const primaryWeapon = enemy.weapons[0] || { name: 'Ataque Desarmado', skillBase: 10, damage: '2d6' };
+    const goonNumber = combatants.filter((c) => c.name.startsWith(enemy.name)).length + 1;
+    const newGoon: InitiativeCombatant = {
+      id: generateGoonId(),
+      name: `${enemy.name} #${goonNumber}`,
+      isPlayer: false,
+      initiative: d10 + ref,
+      currentHp: enemy.hp,
+      maxHp: enemy.hp,
+      currentSp: enemy.bodySp,
+      maxSp: enemy.bodySp,
+      atkBase: primaryWeapon.skillBase,
+      damageDice: primaryWeapon.damage,
+      notes: `${enemy.faction} • ${primaryWeapon.name} (${primaryWeapon.damage}) • Head SP: ${enemy.headSp}`
+    };
+
+    setCombatants((prev) => {
+      const updated = [...prev, newGoon];
+      return updated.sort((a, b) => b.initiative - a.initiative);
+    });
+
+    showFeedback(`Spawned ${newGoon.name} en Iniciativa con ${newGoon.initiative}.`);
   };
 
   const handleAddCustomGoon = () => {
@@ -1130,6 +1159,9 @@ export function FixerDeckView() {
           </div>
         </div>
       )}
+
+      {/* 5. BIBLIOTECA MASIVA DE ENEMIGOS, GOONS Y JEFES (44 FICHAS CANÓNICAS) */}
+      <EnemiesCompendiumPanel onSpawnToInitiative={handleAddGoonFromSheet} />
     </div>
   );
 }

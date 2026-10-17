@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { RollEntry } from '../types/cyberpunk';
+import type { RollEntry, AimedShotTarget } from '../types/cyberpunk';
 import { resolveExplosionSecondDie } from '../engine/combatEngine';
 
 export interface CombatStoreState {
@@ -8,12 +8,14 @@ export interface CombatStoreState {
   selectedDistance: string;
   autofireByWeapon: Record<string, boolean>;
   luckToSpendOnNextRoll: number;
+  aimedShotTarget: AimedShotTarget;
   rollHistory: RollEntry[];
 
   setEra: (era: '2045' | '2077') => void;
   setSelectedDistance: (dist: string) => void;
   toggleWeaponAutofire: (weaponInstanceId: string) => void;
   setLuckToSpend: (amount: number) => void;
+  setAimedShotTarget: (target: AimedShotTarget) => void;
   addRollEntry: (entry: RollEntry) => void;
   triggerExplosionClick: (rollId: string) => void;
   markAttackDamageRolled: (rollId: string) => void;
@@ -27,6 +29,7 @@ export const useCombatStore = create<CombatStoreState>()(
       selectedDistance: '7-12m',
       autofireByWeapon: {},
       luckToSpendOnNextRoll: 0,
+      aimedShotTarget: 'none',
       rollHistory: [],
 
       setEra: (era) => set({ era }),
@@ -42,6 +45,8 @@ export const useCombatStore = create<CombatStoreState>()(
         })),
 
       setLuckToSpend: (amount) => set({ luckToSpendOnNextRoll: Math.max(0, amount) }),
+
+      setAimedShotTarget: (aimedShotTarget) => set({ aimedShotTarget }),
 
       addRollEntry: (entry) =>
         set((state) => ({

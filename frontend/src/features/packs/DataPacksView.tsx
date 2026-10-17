@@ -1,172 +1,120 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import coreData from '../../data/core-rules.cprpack.json';
+import { SOURCEBOOKS_CATALOG, EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
+import { ENEMIES_CATALOG } from '../../data/enemiesCatalog';
+import type { SourceBookId } from '../../data/enemiesCatalog';
 import { 
   FolderArchive, 
   CheckCircle2, 
-  Clock, 
   Download, 
   Cpu,
   Crosshair,
   Shield,
   Terminal,
-  Disc,
   Pill,
   Wrench,
-  Package
+  Package,
+  Skull,
+  Layers
 } from 'lucide-react';
 
-interface PackMeta {
-  id: string;
+interface PackDetail {
+  id: SourceBookId;
   name: string;
   version: string;
   era: '2045' | '2077';
-  status: 'active' | 'ready_for_extraction' | 'planned';
+  status: 'active';
   description: string;
   sourcePdf: string;
+  accentColor: string;
   itemCount: number;
+  enemiesCount: number;
+  systemsCount: number;
   breakdown: { label: string; count: number; icon: React.ReactNode }[];
   features: string[];
 }
 
 export const DataPacksView: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'installed' | 'available'>('installed');
+  const [activeEraFilter, setActiveEraFilter] = useState<'all' | '2045' | '2077'>('all');
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
-  // Exact real counts from core-rules.cprpack.json
-  const weaponsCount = coreData.weapons?.length || 66;
-  const armorCount = coreData.armor?.length || 10;
-  const attachmentsCount = coreData.attachments?.length || 10;
-  const ammoCount = coreData.ammunition?.length || 13;
-  const cyberwareCount = coreData.cyberware?.length || 96;
-  const drugsCount = coreData.drugs?.length || 9;
-  const gearCount = coreData.gear?.length || 41;
-  const programsCount = coreData.programs?.length || 27;
-  const totalCoreItems = 
-    weaponsCount + 
-    armorCount + 
-    attachmentsCount + 
-    ammoCount + 
-    cyberwareCount + 
-    drugsCount + 
-    gearCount + 
-    programsCount;
+  // Compute live breakdown per sourcebook
+  const packs: PackDetail[] = useMemo(() => {
+    const bookSources: Record<SourceBookId, { pdf: string; version: string }> = {
+      core: { pdf: 'Cyberpunk-RED-Core-Rulebook-v1.24_2020-12-25.pdf', version: 'v1.24' },
+      black_chrome: { pdf: 'Cyberpunk-RED-Black-Chrome-Tech-and-Style-Guide_2023-03-01.pdf', version: 'v1.0.0' },
+      cemk_2077: { pdf: 'CEMK-Rulebook-Edgerunners-Core-Rules_2024-05-22.pdf', version: 'v1.0.0' },
+      interface_red: { pdf: 'Interface-RED-Vol-3-Going-Metal-FBC.pdf', version: 'v1.0.0' },
+      danger_gal: { pdf: 'Cyberpunk-RED-Danger-Gal-Dossier_2023-07-07.pdf', version: 'v1.0.0' },
+      dlc: { pdf: 'Hornets-Pharmacy-v1.11.pdf + 12-Days-of-Gunmas.pdf', version: 'v1.0.0' }
+    };
 
-  const corePack: PackMeta = {
-    id: 'core-rules',
-    name: 'Cyberpunk RED Core Rulebook',
-    version: 'v1.24',
-    era: '2045',
-    status: 'active',
-    description: 'Catálogo canónico completo extraído de las 458 páginas del PDF oficial v1.24. Incluye Night Markets completos, armamento exótico, ciberware estándar, netrunning y equipo de supervivencia.',
-    sourcePdf: 'Cyberpunk-RED-Core-Rulebook-v1.24_2020-12-25.pdf',
-    itemCount: totalCoreItems,
-    breakdown: [
-      { label: 'Armas', count: weaponsCount, icon: <Crosshair className="w-3.5 h-3.5" /> },
-      { label: 'Blindajes', count: armorCount, icon: <Shield className="w-3.5 h-3.5" /> },
-      { label: 'Accesorios', count: attachmentsCount, icon: <Wrench className="w-3.5 h-3.5" /> },
-      { label: 'Munición', count: ammoCount, icon: <Disc className="w-3.5 h-3.5" /> },
-      { label: 'Ciberware', count: cyberwareCount, icon: <Cpu className="w-3.5 h-3.5" /> },
-      { label: 'Drogas & Farmacia', count: drugsCount, icon: <Pill className="w-3.5 h-3.5" /> },
-      { label: 'Equipo', count: gearCount, icon: <Package className="w-3.5 h-3.5" /> },
-      { label: 'Programas & ICE', count: programsCount, icon: <Terminal className="w-3.5 h-3.5" /> }
-    ],
-    features: [
-      'Tabla de Rangos oficial de disparo a quemarropa y extrema distancia',
-      'Matriz de Autofire con multiplicadores x3 y x4',
-      'Tabla de Heridas Críticas de Cabeza y Cuerpo (2d6)',
-      '15 Armas Exóticas oficiales (Malorian 3516, Mono-Three, Hurricane, Shrieker)',
-      '7 Categorías oficiales de Ciberware'
-    ]
-  };
+    const bookIds: SourceBookId[] = ['core', 'black_chrome', 'cemk_2077', 'interface_red', 'danger_gal', 'dlc'];
 
-  const expansionPacks: PackMeta[] = [
-    {
-      id: 'black-chrome',
-      name: 'Black Chrome // Tech & Style Guide',
-      version: 'v1.0.0',
-      era: '2045',
-      status: 'ready_for_extraction',
-      description: 'El catálogo de lujo de Night City: más de 170 nuevos ítems, vehículos terrestres y aéreos personalizados, linear frames Fūma Kotarō y armas exóticas de SovOil y Rostović.',
-      sourcePdf: 'Cyberpunk-RED-Black-Chrome-Tech-and-Style-Guide_2023-03-01.pdf',
-      itemCount: 172,
-      breakdown: [
-        { label: 'Armas Especiales', count: 32, icon: <Crosshair className="w-3.5 h-3.5" /> },
-        { label: 'Vehículos', count: 24, icon: <Package className="w-3.5 h-3.5" /> },
-        { label: 'Linear Frames', count: 4, icon: <Cpu className="w-3.5 h-3.5" /> },
-        { label: 'Ciberware de Lujo', count: 28, icon: <Cpu className="w-3.5 h-3.5" /> },
-        { label: 'Moda y Blindajes', count: 18, icon: <Shield className="w-3.5 h-3.5" /> },
-        { label: 'Apps & Gadgets', count: 66, icon: <Wrench className="w-3.5 h-3.5" /> }
-      ],
-      features: [
-        'Reglas de Vehículos con SDP, asientos y velocidad de combate',
-        'Armas con doble modo de disparo (ej. SlamDance FangFist)',
-        'Sistemas de blindaje corporal especializado'
-      ]
-    },
-    {
-      id: 'cemk-2077',
-      name: 'Cyberpunk Edgerunners Mission Kit',
-      version: 'v1.0.0',
-      era: '2077',
-      status: 'ready_for_extraction',
-      description: 'Reglas de conversión a la Era 2077 de CD PROJEKT RED. Neuroport universal, sistema de Quickhacks inalámbricos mediante RAM, armas Power/Tech/Smart y mecánicas de ciberpsicosis.',
-      sourcePdf: 'CEMK-Rulebook-Edgerunners-Core-Rules_2024-05-22.pdf',
-      itemCount: 84,
-      breakdown: [
-        { label: 'Armas 2077', count: 22, icon: <Crosshair className="w-3.5 h-3.5" /> },
-        { label: 'Quickhacks', count: 18, icon: <Terminal className="w-3.5 h-3.5" /> },
-        { label: 'Ciberware 2077', count: 26, icon: <Cpu className="w-3.5 h-3.5" /> },
-        { label: 'Cyberdecks 2077', count: 8, icon: <Cpu className="w-3.5 h-3.5" /> },
-        { label: 'Blindajes 2077', count: 10, icon: <Shield className="w-3.5 h-3.5" /> }
-      ],
-      features: [
-        'Neuroport integrado: Bio-Monitor + Agente + Ranura de Chipware en un solo implante',
-        'Quickhacking táctico en combate con coste de RAM y DVs',
-        'Armas Power (rebotes), Tech (perforación) y Smart (guiado)'
-      ]
-    },
-    {
-      id: 'danger-gal',
-      name: 'Danger Gal Dossier',
-      version: 'v1.0.0',
-      era: '2045',
-      status: 'ready_for_extraction',
-      description: 'Facciones, corporaciones y operativos de élite de Night City. Incluye perfiles de PNJs listos para combate, equipo de investigación encubierta y armamento corporativo.',
-      sourcePdf: 'Cyberpunk-RED-Danger-Gal-Dossier_2023-07-07.pdf',
-      itemCount: 45,
-      breakdown: [
-        { label: 'PNJs & Jefes', count: 25, icon: <Crosshair className="w-3.5 h-3.5" /> },
-        { label: 'Equipo de Vigilancia', count: 12, icon: <Package className="w-3.5 h-3.5" /> },
-        { label: 'Ciberware Encubierto', count: 8, icon: <Cpu className="w-3.5 h-3.5" /> }
-      ],
-      features: [
-        'Generador de encuentros por facción',
-        'Mooks y Lugartenientes calibrados para VTT',
-        'Equipo forense y de contramedidas electrónicas'
-      ]
-    },
-    {
-      id: 'interface-red',
-      name: 'Interface RED (Vol 1-3) & Suplementos Oficiales',
-      version: 'v1.0.0',
-      era: '2045',
-      status: 'planned',
-      description: 'Compilación de expansiones oficiales de R. Talsorian Games: Hornet\'s Pharmacy (química y fármacos), Drones tácticos, Conversión de Cyborgs de Cuerpo Completo (FBC) y micro-vehículos.',
-      sourcePdf: 'Hornets-Pharmacy-Chemical-Wonderland-v1.11_2023-01-23.pdf + DLCs',
-      itemCount: 68,
-      breakdown: [
-        { label: 'Drogas & Compuestos', count: 24, icon: <Pill className="w-3.5 h-3.5" /> },
-        { label: 'Drones', count: 12, icon: <Cpu className="w-3.5 h-3.5" /> },
-        { label: 'Chasis FBC', count: 8, icon: <Cpu className="w-3.5 h-3.5" /> },
-        { label: 'Armamento Exótico', count: 24, icon: <Crosshair className="w-3.5 h-3.5" /> }
-      ],
-      features: [
-        'Reglas químicas de aditivos y dispersión osmótica',
-        'Controles de Drones y Ciberimplantes FBC',
-        'Variantes de armas de combate urbano'
-      ]
-    }
-  ];
+    return bookIds.map((id) => {
+      const meta = SOURCEBOOKS_CATALOG.find((b) => b.id === id) || SOURCEBOOKS_CATALOG[1];
+      const weapons = (coreData.weapons || []).filter((w: any) => (w.sourceBook || 'core') === id).length;
+      const armor = (coreData.armor || []).filter((a: any) => (a.sourceBook || 'core') === id).length;
+      const cyberware = (coreData.cyberware || []).filter((c: any) => (c.sourceBook || 'core') === id).length;
+      const ammo = (coreData.ammunition || []).filter((am: any) => (am.sourceBook || 'core') === id).length;
+      const attachments = (coreData.attachments || []).filter((at: any) => (at.sourceBook || 'core') === id).length;
+      const drugs = (coreData.drugs || []).filter((d: any) => (d.sourceBook || 'core') === id).length;
+      const gear = (coreData.gear || []).filter((g: any) => (g.sourceBook || 'core') === id).length;
+      const programs = (coreData.programs || []).filter((p: any) => (p.sourceBook || 'core') === id).length;
+      const enemies = ENEMIES_CATALOG.filter((e) => e.sourceBook === id).length;
+      const systems = EXPANSION_RULE_SYSTEMS.filter((s) => s.sourceBook === id).length;
+
+      const totalItems = weapons + armor + cyberware + ammo + attachments + drugs + gear + programs;
+
+      const breakdown = [
+        { label: 'Armas', count: weapons, icon: <Crosshair className="w-3.5 h-3.5 text-[#f43f5e]" /> },
+        { label: 'Blindajes', count: armor, icon: <Shield className="w-3.5 h-3.5 text-[#38bdf8]" /> },
+        { label: 'Ciberware & Chasis', count: cyberware, icon: <Cpu className="w-3.5 h-3.5 text-[#a855f7]" /> },
+        { label: 'Drogas & Farmacia', count: drugs, icon: <Pill className="w-3.5 h-3.5 text-[#ec4899]" /> },
+        { label: 'Programas & Hacks', count: programs, icon: <Terminal className="w-3.5 h-3.5 text-[#10b981]" /> },
+        { label: 'Equipo & Gadgets', count: gear, icon: <Package className="w-3.5 h-3.5 text-[#94a3b8]" /> },
+        { label: 'Accesorios & Munición', count: attachments + ammo, icon: <Wrench className="w-3.5 h-3.5 text-[#f59e0b]" /> },
+        { label: 'Enemigos Canónicos', count: enemies, icon: <Skull className="w-3.5 h-3.5 text-[#ef4444]" /> },
+        { label: 'Sistemas de Reglas', count: systems, icon: <Layers className="w-3.5 h-3.5 text-[#00f0ff]" /> }
+      ].filter((b) => b.count > 0);
+
+      const features = [...meta.keyHighlights, ...meta.mechanicsIntroduced];
+
+      return {
+        id,
+        name: meta.title,
+        version: bookSources[id].version,
+        era: (meta.era === 'both' ? '2045' : meta.era) as '2045' | '2077',
+        status: 'active' as const,
+        description: meta.whatItBringsSummary,
+        sourcePdf: bookSources[id].pdf,
+        accentColor: meta.accentColor,
+        itemCount: totalItems,
+        enemiesCount: enemies,
+        systemsCount: systems,
+        breakdown,
+        features
+      };
+    });
+  }, []);
+
+  const totalCatalogItems = useMemo(() => {
+    return (
+      (coreData.weapons?.length || 0) +
+      (coreData.armor?.length || 0) +
+      (coreData.cyberware?.length || 0) +
+      (coreData.ammunition?.length || 0) +
+      (coreData.attachments?.length || 0) +
+      (coreData.drugs?.length || 0) +
+      (coreData.gear?.length || 0) +
+      (coreData.programs?.length || 0)
+    );
+  }, []);
+
+  const filteredPacks = useMemo(() => {
+    if (activeEraFilter === 'all') return packs;
+    return packs.filter((p) => p.era === activeEraFilter);
+  }, [activeEraFilter, packs]);
 
   const handleExportJson = () => {
     const jsonStr = JSON.stringify(coreData, null, 2);
@@ -194,108 +142,160 @@ export const DataPacksView: React.FC = () => {
               <h2 className="text-lg font-bold text-[#f1f5f9] font-tech uppercase tracking-wide">
                 Gestor de Paquetes de Reglas (.cprpack)
               </h2>
-              <span className="text-[10px] bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/30 px-2 py-0.5 rounded-xs font-mono-code font-bold">
-                COMP/CON ENGINE
+              <span className="text-[10px] bg-[#10b981]/15 text-[#10b981] border border-[#10b981]/40 px-2 py-0.5 rounded-xs font-mono-code font-bold">
+                6 MANUALES ACTIVOS & CARGADOS
               </span>
             </div>
-            <p className="text-xs text-[#94a3b8] mt-1 font-mono-code">
-              Arquitectura modular de datos: las reglas, armas y ciberware se desacoplan en paquetes JSON independientes para permitir soporte multi-era (2045 y 2077) y homebrew sin tocar el código fuente.
+            <p className="text-xs text-[#94a3b8] mt-1 font-mono-code leading-relaxed">
+              Biblioteca oficial desacoplada: <strong>{totalCatalogItems} ítems canónicos</strong>, <strong>{ENEMIES_CATALOG.length} perfiles de enemigos</strong> y <strong>{EXPANSION_RULE_SYSTEMS.length} sistemas de reglas avanzadas</strong> cargados en memoria y sincronizados con el motor de combate.
             </p>
           </div>
 
           <div className="flex items-center gap-2 self-stretch md:self-auto">
             <button
               onClick={handleExportJson}
-              className="flex-1 md:flex-none flex items-center justify-center gap-2 px-3 py-2 bg-[#181b2a] hover:bg-[#38bdf8]/20 border border-[#262c3e] hover:border-[#38bdf8] text-[#38bdf8] rounded-xs text-xs font-mono-code font-bold transition-all cursor-pointer chamfer-btn active:scale-95"
+              className="flex-1 md:flex-none flex items-center justify-center gap-2 px-3.5 py-2 bg-[#181b2a] hover:bg-[#38bdf8]/20 border border-[#262c3e] hover:border-[#38bdf8] text-[#38bdf8] rounded-xs text-xs font-mono-code font-bold transition-all cursor-pointer chamfer-btn active:scale-95 shadow-sm"
+              title="Descargar paquete consolidado .cprpack.json con 368 ítems"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>EXPORTAR CORE .JSON</span>
+              <Download className="w-4 h-4" />
+              <span>EXPORTAR PACK MAESTRO .JSON ({totalCatalogItems})</span>
             </button>
           </div>
         </div>
 
         {downloadSuccess && (
           <div className="text-xs text-[#10b981] font-mono-code bg-[#10b981]/10 border border-[#10b981]/30 p-2 rounded-xs animate-pulse flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4" />
-            <span>Archivo `core-rules.cprpack.json` descargado con éxito. 272 ítems listos para su uso externo.</span>
+            <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <span>Archivo `core-rules.cprpack.json` descargado con éxito. 368 ítems listos para su uso externo.</span>
           </div>
         )}
 
-        {/* Tab switch */}
+        {/* Tab / Era Switch */}
         <div className="flex items-center gap-2 pt-3 border-t border-[#1c2030]">
           <button
-            onClick={() => setActiveTab('installed')}
-            className={`px-4 py-1.5 rounded-xs text-xs font-mono-code font-bold transition-colors cursor-pointer chamfer-btn ${
-              activeTab === 'installed'
+            onClick={() => setActiveEraFilter('all')}
+            className={`px-3.5 py-1.5 rounded-xs text-xs font-mono-code font-bold transition-colors cursor-pointer chamfer-btn ${
+              activeEraFilter === 'all'
                 ? 'bg-[#38bdf8]/20 border border-[#38bdf8] text-[#38bdf8]'
                 : 'bg-[#181b2a] border border-[#262c3e] text-[#94a3b8] hover:text-[#f1f5f9]'
             }`}
           >
-            Paquetes Instalados (1)
+            Todos los Manuales Activos ({packs.length})
           </button>
           <button
-            onClick={() => setActiveTab('available')}
-            className={`px-4 py-1.5 rounded-xs text-xs font-mono-code font-bold transition-colors cursor-pointer chamfer-btn ${
-              activeTab === 'available'
-                ? 'bg-[#38bdf8]/20 border border-[#38bdf8] text-[#38bdf8]'
+            onClick={() => setActiveEraFilter('2045')}
+            className={`px-3.5 py-1.5 rounded-xs text-xs font-mono-code font-bold transition-colors cursor-pointer chamfer-btn ${
+              activeEraFilter === '2045'
+                ? 'bg-[#ff003c]/20 border border-[#ff003c] text-[#ff003c]'
                 : 'bg-[#181b2a] border border-[#262c3e] text-[#94a3b8] hover:text-[#f1f5f9]'
             }`}
           >
-            Expansiones Detectadas en Repositorio (4)
+            Era 2045 ({packs.filter((p) => p.era === '2045').length})
+          </button>
+          <button
+            onClick={() => setActiveEraFilter('2077')}
+            className={`px-3.5 py-1.5 rounded-xs text-xs font-mono-code font-bold transition-colors cursor-pointer chamfer-btn ${
+              activeEraFilter === '2077'
+                ? 'bg-[#00ff66]/20 border border-[#00ff66] text-[#00ff66]'
+                : 'bg-[#181b2a] border border-[#262c3e] text-[#94a3b8] hover:text-[#f1f5f9]'
+            }`}
+          >
+            Era 2077 ({packs.filter((p) => p.era === '2077').length})
           </button>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      {activeTab === 'installed' ? (
-        <div className="space-y-4">
-          <div className="bg-[#12141f] border-2 border-[#10b981]/50 p-5 rounded-xs chamfer-card space-y-4 shadow-lg shadow-[#10b981]/5">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 border-b border-[#1c2030] pb-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-ping" />
+      {/* Main Grid: All Active Packs */}
+      <div className="space-y-4">
+        {filteredPacks.map((pack) => (
+          <div
+            key={pack.id}
+            className="bg-[#12141f] border-2 rounded-xs chamfer-card p-5 space-y-4 shadow-lg transition-all"
+            style={{ borderColor: `${pack.accentColor}50` }}
+          >
+            {/* Cabecera del Paquete */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#1c2030] pb-3.5">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full animate-ping"
+                    style={{ backgroundColor: pack.accentColor }}
+                  />
                   <h3 className="text-base font-bold text-[#f1f5f9] font-tech uppercase tracking-wide">
-                    {corePack.name}
+                    {pack.name}
                   </h3>
-                  <span className="text-[11px] px-2 py-0.5 rounded-xs bg-[#10b981]/20 border border-[#10b981] text-[#10b981] font-mono-code font-bold">
-                    {corePack.version} • ACTIVO
+                  <span
+                    className="text-[11px] px-2 py-0.5 rounded-xs font-mono-code font-bold border"
+                    style={{
+                      backgroundColor: `${pack.accentColor}20`,
+                      borderColor: `${pack.accentColor}60`,
+                      color: pack.accentColor
+                    }}
+                  >
+                    {pack.version} • ACTIVO & CARGADO
                   </span>
-                  <span className="text-[11px] px-2 py-0.5 rounded-xs bg-[#1c2030] text-[#f59e0b] font-mono-code">
-                    Era {corePack.era}
+                  <span className="text-[11px] px-2 py-0.5 rounded-xs bg-[#1c2030] text-[#f59e0b] font-mono-code font-bold">
+                    Era {pack.era}
                   </span>
                 </div>
-                <p className="text-xs text-[#94a3b8] mt-1 font-mono-code">
-                  Fuente: <code className="text-[#38bdf8]">{corePack.sourcePdf}</code>
+                <p className="text-xs text-[#94a3b8] font-mono-code">
+                  PDF Canónico en Repositorio: <code className="text-[#38bdf8]">{pack.sourcePdf}</code>
                 </p>
               </div>
 
-              <div className="text-right">
-                <span className="text-2xl font-bold text-[#10b981] font-mono-code block">
-                  {corePack.itemCount}
-                </span>
-                <span className="text-[10px] text-[#64748b] font-mono-code uppercase">
-                  Ítems Canónicos Activos
-                </span>
+              {/* Contadores Clave */}
+              <div className="flex items-center gap-4 text-right">
+                {pack.itemCount > 0 && (
+                  <div>
+                    <span className="text-xl font-bold font-mono-code block text-cyan-300">
+                      {pack.itemCount}
+                    </span>
+                    <span className="text-[10px] text-[#64748b] font-mono-code uppercase">
+                      Ítems
+                    </span>
+                  </div>
+                )}
+                {pack.enemiesCount > 0 && (
+                  <div>
+                    <span className="text-xl font-bold font-mono-code block text-red-400">
+                      {pack.enemiesCount}
+                    </span>
+                    <span className="text-[10px] text-[#64748b] font-mono-code uppercase">
+                      Enemigos
+                    </span>
+                  </div>
+                )}
+                {pack.systemsCount > 0 && (
+                  <div>
+                    <span className="text-xl font-bold font-mono-code block text-purple-300">
+                      {pack.systemsCount}
+                    </span>
+                    <span className="text-[10px] text-[#64748b] font-mono-code uppercase">
+                      Sistemas
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
-            <p className="text-xs text-[#cbd5e1] leading-relaxed">
-              {corePack.description}
+            {/* Descripción Introductoria */}
+            <p className="text-xs text-[#cbd5e1] font-mono-code leading-relaxed">
+              {pack.description}
             </p>
 
-            {/* Category Counts Breakdown */}
+            {/* Desglose de Contenido Extraído */}
             <div className="space-y-2">
               <span className="text-[11px] font-bold text-[#94a3b8] font-mono-code uppercase tracking-wider block">
-                Desglose de Ítems Cargados en Memoria:
+                Desglose Real Cargado en Memoria:
               </span>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {corePack.breakdown.map((item, idx) => (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                {pack.breakdown.map((item, idx) => (
                   <div
                     key={idx}
                     className="bg-[#181b2a] border border-[#262c3e] p-2.5 rounded-xs flex items-center justify-between font-mono-code"
                   >
                     <div className="flex items-center gap-2 text-xs text-[#94a3b8]">
-                      <span className="text-[#38bdf8]">{item.icon}</span>
+                      <span>{item.icon}</span>
                       <span>{item.label}</span>
                     </div>
                     <span className="text-xs font-bold text-[#f1f5f9]">{item.count}</span>
@@ -304,88 +304,23 @@ export const DataPacksView: React.FC = () => {
               </div>
             </div>
 
-            {/* Features list */}
+            {/* Características y Reglas del Manual */}
             <div className="space-y-1.5 pt-2 border-t border-[#1c2030]">
               <span className="text-[11px] font-bold text-[#94a3b8] font-mono-code uppercase tracking-wider block">
-                Mecánicas Vinculadas al Motor:
+                Mecánicas & Aspectos Clave Vinculados al Motor:
               </span>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-1.5 text-xs text-[#94a3b8] font-mono-code">
-                {corePack.features.map((feat, idx) => (
-                  <li key={idx} className="flex items-center gap-2">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10b981] shrink-0" />
+                {pack.features.map((feat, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10b981] shrink-0 mt-0.5" />
                     <span>{feat}</span>
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {expansionPacks.map((pack) => (
-            <div
-              key={pack.id}
-              className="bg-[#12141f] border border-[#262c3e] hover:border-[#38bdf8]/50 p-4 rounded-xs chamfer-card flex flex-col justify-between space-y-4 transition-colors"
-            >
-              <div className="space-y-3">
-                <div className="flex items-start justify-between gap-2 border-b border-[#1c2030] pb-2.5">
-                  <div>
-                    <h3 className="text-sm font-bold text-[#f1f5f9] font-tech uppercase tracking-wide">
-                      {pack.name}
-                    </h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] px-1.5 py-0.2 rounded-xs bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/30 font-mono-code">
-                        Era {pack.era}
-                      </span>
-                      <span className="text-[10px] text-[#64748b] font-mono-code">
-                        {pack.itemCount} ítems listados
-                      </span>
-                    </div>
-                  </div>
-                  <span className="text-[10px] px-2 py-0.5 rounded-xs bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/30 font-mono-code uppercase font-bold shrink-0">
-                    PDF LISTO
-                  </span>
-                </div>
-
-                <p className="text-xs text-[#94a3b8] leading-relaxed">
-                  {pack.description}
-                </p>
-
-                <div className="bg-[#181b2a] p-2 rounded-xs border border-[#262c3e]">
-                  <span className="text-[10px] text-[#64748b] font-mono-code block mb-1">
-                    Archivo Origen en Disco:
-                  </span>
-                  <code className="text-[11px] text-[#38bdf8] font-mono-code block truncate">
-                    {pack.sourcePdf}
-                  </code>
-                </div>
-
-                {/* Breakdown */}
-                <div className="grid grid-cols-2 gap-1.5 text-[11px] font-mono-code">
-                  {pack.breakdown.map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between bg-[#161824] px-2 py-1 rounded-xs">
-                      <span className="text-[#64748b]">{item.label}:</span>
-                      <span className="text-[#f1f5f9] font-bold">{item.count}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-[#1c2030] flex items-center justify-between">
-                <span className="text-[10px] text-[#64748b] font-mono-code flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-[#f59e0b]" /> Sprint 2 Pipeline
-                </span>
-                <button
-                  disabled
-                  className="px-3 py-1 bg-[#181b2a] border border-[#262c3e] text-[#64748b] rounded-xs text-[11px] font-mono-code cursor-not-allowed chamfer-btn"
-                >
-                  PREPARAR EXTRACCIÓN SPRINT 2
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 };

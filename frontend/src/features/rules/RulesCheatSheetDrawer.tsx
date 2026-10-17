@@ -19,8 +19,9 @@ import {
   COVER_RULES_EXPLANATION, 
   CHEAT_SHEET_SECTIONS 
 } from '../../data/rulesCheatSheet';
+import { EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
 
-type CheatCategory = 'all' | 'grapple' | 'cover' | 'aimed' | 'hazards' | 'healing' | 'turn';
+type CheatCategory = 'all' | 'grapple' | 'cover' | 'aimed' | 'hazards' | 'healing' | 'turn' | 'systems';
 
 export const RulesCheatSheetDrawer: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +33,9 @@ export const RulesCheatSheetDrawer: React.FC = () => {
     aimed_shots: true,
     hazards_environment: true,
     healing_death_save: true,
-    turn_structure: true
+    turn_structure: true,
+    'fbc-rules': true,
+    'neuroport-2077': true
   });
 
   // Close on Escape key
@@ -55,6 +58,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
 
   const categoriesConfig: { key: CheatCategory; label: string; icon: React.ReactNode }[] = [
     { key: 'all', label: 'TODAS', icon: <Layers className="w-3.5 h-3.5" /> },
+    { key: 'systems', label: '🦾 SISTEMAS 2077 & FBC', icon: <span className="text-xs">🦾</span> },
     { key: 'grapple', label: '🤼 GRAPPLE/CHOKE', icon: <span className="text-xs">🤼</span> },
     { key: 'cover', label: '🛡️ COBERTURAS HP', icon: <Shield className="w-3.5 h-3.5" /> },
     { key: 'aimed', label: '🎯 APUNTADOS', icon: <Crosshair className="w-3.5 h-3.5" /> },
@@ -96,6 +100,21 @@ export const RulesCheatSheetDrawer: React.FC = () => {
       );
       return matchesTitle || matchesRule;
     });
+  }, [searchQuery, selectedCategory]);
+
+  // Filtered Expansion Systems
+  const filteredSystems = useMemo(() => {
+    if (selectedCategory !== 'all' && selectedCategory !== 'systems') return [];
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return EXPANSION_RULE_SYSTEMS;
+    return EXPANSION_RULE_SYSTEMS.filter(sys => 
+      sys.title.toLowerCase().includes(q) ||
+      sys.subtitle.toLowerCase().includes(q) ||
+      sys.introDescription.toLowerCase().includes(q) ||
+      sys.categoryBadge.toLowerCase().includes(q) ||
+      sys.howItWorksSteps.some(s => s.toLowerCase().includes(q)) ||
+      sys.keyBenefits.some(b => b.toLowerCase().includes(q))
+    );
   }, [searchQuery, selectedCategory]);
 
   const showCoverTable = (selectedCategory === 'all' || selectedCategory === 'cover') && 
@@ -386,11 +405,122 @@ export const RulesCheatSheetDrawer: React.FC = () => {
             );
           })}
 
+          {/* =========================================================
+              SECCIONES DE SISTEMAS EXPANDIDOS (2077 & FBC)
+          ========================================================= */}
+          {filteredSystems.map((sys) => {
+            const isExpanded = !!expandedSections[sys.id];
+
+            return (
+              <div 
+                key={sys.id}
+                className="bg-[#10131e] border border-[#a855f7]/40 rounded-xs overflow-hidden"
+              >
+                {/* Header Acordeón */}
+                <div
+                  onClick={() => toggleSection(sys.id)}
+                  className="p-3 bg-[#151a2a] hover:bg-[#1a2135] border-b border-[#222b40] flex items-center justify-between cursor-pointer transition-colors"
+                >
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-base">🦾</span>
+                    <span className="font-tech text-xs font-bold text-white uppercase tracking-wider">
+                      {sys.title}
+                    </span>
+                    <span className="text-[10px] text-[#c084fc] bg-[#a855f7]/20 px-1.5 rounded-xs border border-[#a855f7]/40">
+                      {sys.sourceBookTitle}
+                    </span>
+                    <span className="text-[10px] text-amber-400 bg-amber-950/40 px-1 rounded-xs border border-amber-600/30">
+                      {sys.era.toUpperCase()}
+                    </span>
+                  </div>
+                  <span className="text-slate-400">
+                    {isExpanded ? <ChevronDown className="w-4 h-4 text-[#c084fc]" /> : <ChevronRight className="w-4 h-4" />}
+                  </span>
+                </div>
+
+                {isExpanded && (
+                  <div className="p-3.5 space-y-3 text-xs">
+                    <div className="p-2.5 bg-[#141824] border-l-2 border-[#a855f7] rounded-r-xs space-y-1">
+                      <div className="text-[10px] font-bold text-[#c084fc] uppercase tracking-wider">
+                        ★ {sys.categoryBadge}
+                      </div>
+                      <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                        {sys.introDescription}
+                      </p>
+                    </div>
+
+                    {/* Paso a Paso */}
+                    <div className="space-y-1.5">
+                      <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block">
+                        ⚡ Pasos de Funcionamiento:
+                      </span>
+                      <div className="space-y-1">
+                        {sys.howItWorksSteps.map((step, idx) => (
+                          <div key={idx} className="p-2 bg-[#0e111a] border border-[#222b40] rounded-xs text-[10px] text-slate-300 leading-relaxed">
+                            {step}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Ventajas y Riesgos */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                      <div className="p-2 bg-[#10b981]/5 border border-[#10b981]/30 rounded-xs space-y-1">
+                        <span className="text-[10px] font-bold text-[#10b981] uppercase block">
+                          ✓ Ventajas:
+                        </span>
+                        <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-300">
+                          {sys.keyBenefits.map((b, bIdx) => (
+                            <li key={bIdx}>{b}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="p-2 bg-[#f43f5e]/5 border border-[#f43f5e]/30 rounded-xs space-y-1">
+                        <span className="text-[10px] font-bold text-[#f43f5e] uppercase block">
+                          ⚠ Riesgos y Costes:
+                        </span>
+                        <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-300">
+                          {sys.drawbacksAndRisks.map((d, dIdx) => (
+                            <li key={dIdx}>{d}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Tabla de Referencia si existe */}
+                    {sys.referenceTable && (
+                      <div className="overflow-x-auto border border-[#222b40] rounded-xs mt-2">
+                        <table className="w-full text-left text-[10px]">
+                          <thead className="bg-[#141824] text-cyan-300 uppercase border-b border-[#222b40]">
+                            <tr>
+                              {sys.referenceTable.headers.map((h, hIdx) => (
+                                <th key={hIdx} className="py-1.5 px-2">{h}</th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-[#1b2233]">
+                            {sys.referenceTable.rows.map((row, rIdx) => (
+                              <tr key={rIdx} className="hover:bg-[#141824]/60">
+                                {row.map((cell, cIdx) => (
+                                  <td key={cIdx} className="py-1.5 px-2 text-slate-300">{cell}</td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
           {/* Estado vacío cuando la búsqueda no da resultados */}
-          {!showCoverTable && filteredSections.length === 0 && (
+          {!showCoverTable && filteredSections.length === 0 && filteredSystems.length === 0 && (
             <div className="p-8 text-center bg-[#10131e] border border-[#222b40] rounded-xs space-y-2">
               <p className="text-xs text-slate-400">
-                No se encontraron reglas que coincidan con &ldquo;{searchQuery}&rdquo;.
+                No se encontraron reglas ni sistemas que coincidan con &ldquo;{searchQuery}&rdquo;.
               </p>
               <button
                 onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}

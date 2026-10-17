@@ -5,6 +5,8 @@ import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
 import type { WeaponItem, ArmorItem } from '../../types/cyberpunk';
 import { RANGE_BRACKETS, WEAPON_RANGE_PROFILES, getWeaponProfileKey } from '../../data/rangeTables';
 import { getAutofireRulesSummary } from '../../engine/characterEngine';
+import { SOURCEBOOKS_CATALOG, EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
+import type { SourceBookId } from '../../data/enemiesCatalog';
 import { 
   Search, 
   Crosshair, 
@@ -20,7 +22,16 @@ import {
   LayoutGrid,
   List,
   Coins, 
-  AlertCircle 
+  AlertCircle,
+  BookOpen,
+  ChevronDown,
+  ChevronUp,
+  ChevronRight,
+  Info,
+  Layers,
+  Zap,
+  CheckCircle2,
+  AlertTriangle
 } from 'lucide-react';
 
 type CompendiumCategory = 
@@ -75,13 +86,72 @@ export const TacticalTooltip: React.FC<{
   );
 };
 
+/* Origin SourceBook Badge Helper */
+export const renderSourceBookBadge = (sourceBook?: string) => {
+  const book = sourceBook || 'core';
+  switch (book) {
+    case 'core':
+      return (
+        <span className="px-1.5 py-0.5 rounded-xs text-[9px] font-mono-code font-bold bg-[#ff003c]/15 text-[#ff003c] border border-[#ff003c]/40 shrink-0" title="Cyberpunk RED Core Rulebook v1.24">
+          CORE 2045
+        </span>
+      );
+    case 'black_chrome':
+      return (
+        <span className="px-1.5 py-0.5 rounded-xs text-[9px] font-mono-code font-bold bg-[#e0a800]/15 text-[#f59e0b] border border-[#e0a800]/40 shrink-0" title="Black Chrome Tech & Style Guide">
+          BLACK CHROME
+        </span>
+      );
+    case 'cemk_2077':
+      return (
+        <span className="px-1.5 py-0.5 rounded-xs text-[9px] font-mono-code font-bold bg-[#00ff66]/15 text-[#10b981] border border-[#00ff66]/40 shrink-0" title="Cyberpunk Edgerunners Mission Kit (2077)">
+          CEMK 2077
+        </span>
+      );
+    case 'interface_red':
+      return (
+        <span className="px-1.5 py-0.5 rounded-xs text-[9px] font-mono-code font-bold bg-[#a855f7]/15 text-[#c084fc] border border-[#a855f7]/40 shrink-0" title="Interface RED Vol 1-3 & Going Metal FBC">
+          INTERFACE RED // FBC
+        </span>
+      );
+    case 'danger_gal':
+      return (
+        <span className="px-1.5 py-0.5 rounded-xs text-[9px] font-mono-code font-bold bg-[#ec4899]/15 text-[#f472b6] border border-[#ec4899]/40 shrink-0" title="Danger Gal Dossier">
+          DANGER GAL
+        </span>
+      );
+    case 'dlc':
+      return (
+        <span className="px-1.5 py-0.5 rounded-xs text-[9px] font-mono-code font-bold bg-[#3b82f6]/15 text-[#38bdf8] border border-[#38bdf8]/40 shrink-0" title="DLCs Oficiales & Hornet's Pharmacy">
+          DLC
+        </span>
+      );
+    default:
+      return (
+        <span className="px-1.5 py-0.5 rounded-xs text-[9px] font-mono-code font-bold bg-slate-800 text-slate-300 border border-slate-700 shrink-0">
+          {book.toUpperCase()}
+        </span>
+      );
+  }
+};
+
 export const CompendiumView: React.FC = () => {
+  const [compendiumMode, setCompendiumMode] = useState<'items' | 'systems'>('items');
+  const [selectedBookFilter, setSelectedBookFilter] = useState<SourceBookId | 'all'>('all');
+  const [isBookSummaryExpanded, setIsBookSummaryExpanded] = useState<boolean>(true);
+
+  // Search & Filters for Items
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CompendiumCategory>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
   const [spendMoneyMode, setSpendMoneyMode] = useState<boolean>(true);
   const [feedback, setFeedback] = useState<FeedbackState | null>(null);
+
+  // Search & Filters for Systems
+  const [systemSearchQuery, setSystemSearchQuery] = useState<string>('');
+  const [systemSourceFilter, setSystemSourceFilter] = useState<string>('all');
+  const [expandedSystemIds, setExpandedSystemIds] = useState<Record<string, boolean>>({ 'fbc-rules': true });
 
   const getActiveCharacter = useCharacterStore((state) => state.getActiveCharacter);
   const equipWeaponFromCatalog = useCharacterStore((state) => state.equipWeaponFromCatalog);
@@ -100,6 +170,13 @@ export const CompendiumView: React.FC = () => {
 
   const toggleExpand = (id: string) => {
     setExpandedItemId((prev) => (prev === id ? null : id));
+  };
+
+  const toggleSystemExpand = (id: string) => {
+    setExpandedSystemIds((prev) => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
   };
 
   const handleAcquire = (
@@ -139,93 +216,145 @@ export const CompendiumView: React.FC = () => {
     return 'rifle';
   };
 
+  // Consolidate all items to compute accurate counts per book
+  const allCatalogItems = useMemo(() => {
+    return [
+      ...(coreData.weapons || []),
+      ...(coreData.armor || []),
+      ...(coreData.cyberware || []),
+      ...(coreData.programs || []),
+      ...(coreData.ammunition || []),
+      ...(coreData.attachments || []),
+      ...(coreData.drugs || []),
+      ...(coreData.gear || [])
+    ];
+  }, []);
+
+  const bookItemCounts = useMemo(() => {
+    const counts: Record<string, number> = {
+      all: allCatalogItems.length,
+      core: 0,
+      black_chrome: 0,
+      cemk_2077: 0,
+      interface_red: 0,
+      danger_gal: 0,
+      dlc: 0
+    };
+    allCatalogItems.forEach((item: any) => {
+      const sb = (item.sourceBook || 'core') as string;
+      if (counts[sb] !== undefined) {
+        counts[sb]++;
+      } else {
+        counts[sb] = 1;
+      }
+    });
+    return counts;
+  }, [allCatalogItems]);
+
+  // Pre-filter catalog by selected book
+  const bookFilteredItems = useMemo(() => {
+    const filterByBook = (items: any[] = []) =>
+      items.filter((item: any) => selectedBookFilter === 'all' || (item.sourceBook || 'core') === selectedBookFilter);
+
+    return {
+      weapons: filterByBook(coreData.weapons),
+      armor: filterByBook(coreData.armor),
+      cyberware: filterByBook(coreData.cyberware),
+      programs: filterByBook(coreData.programs),
+      ammunition: filterByBook(coreData.ammunition),
+      attachments: filterByBook(coreData.attachments),
+      drugs: filterByBook(coreData.drugs),
+      gear: filterByBook(coreData.gear)
+    };
+  }, [selectedBookFilter]);
+
   const categoriesConfig: { key: CompendiumCategory; label: string; count: number; icon: React.ReactNode }[] = [
-    { key: 'all', label: 'Todo', count: 272, icon: <Package className="w-3.5 h-3.5" /> },
-    { key: 'weapons', label: 'Armas', count: coreData.weapons?.length || 0, icon: <Crosshair className="w-3.5 h-3.5" /> },
-    { key: 'armor', label: 'Blindajes', count: coreData.armor?.length || 0, icon: <Shield className="w-3.5 h-3.5" /> },
-    { key: 'cyberware', label: 'Ciberware', count: coreData.cyberware?.length || 0, icon: <Cpu className="w-3.5 h-3.5" /> },
-    { key: 'programs', label: 'Programas', count: coreData.programs?.length || 0, icon: <Terminal className="w-3.5 h-3.5" /> },
-    { key: 'ammunition', label: 'Munición', count: coreData.ammunition?.length || 0, icon: <Disc className="w-3.5 h-3.5" /> },
-    { key: 'attachments', label: 'Accesorios', count: coreData.attachments?.length || 0, icon: <Wrench className="w-3.5 h-3.5" /> },
-    { key: 'drugs', label: 'Drogas', count: coreData.drugs?.length || 0, icon: <Pill className="w-3.5 h-3.5" /> },
-    { key: 'gear', label: 'Equipo', count: coreData.gear?.length || 0, icon: <Package className="w-3.5 h-3.5" /> }
+    { key: 'all', label: 'Todo', count: Object.values(bookFilteredItems).reduce((sum, arr) => sum + arr.length, 0), icon: <Package className="w-3.5 h-3.5" /> },
+    { key: 'weapons', label: 'Armas', count: bookFilteredItems.weapons.length, icon: <Crosshair className="w-3.5 h-3.5" /> },
+    { key: 'armor', label: 'Blindajes', count: bookFilteredItems.armor.length, icon: <Shield className="w-3.5 h-3.5" /> },
+    { key: 'cyberware', label: 'Ciberware', count: bookFilteredItems.cyberware.length, icon: <Cpu className="w-3.5 h-3.5" /> },
+    { key: 'programs', label: 'Programas', count: bookFilteredItems.programs.length, icon: <Terminal className="w-3.5 h-3.5" /> },
+    { key: 'ammunition', label: 'Munición', count: bookFilteredItems.ammunition.length, icon: <Disc className="w-3.5 h-3.5" /> },
+    { key: 'attachments', label: 'Accesorios', count: bookFilteredItems.attachments.length, icon: <Wrench className="w-3.5 h-3.5" /> },
+    { key: 'drugs', label: 'Drogas', count: bookFilteredItems.drugs.length, icon: <Pill className="w-3.5 h-3.5" /> },
+    { key: 'gear', label: 'Equipo', count: bookFilteredItems.gear.length, icon: <Package className="w-3.5 h-3.5" /> }
   ];
 
   const filteredWeapons = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'weapons') return [];
     const q = searchQuery.toLowerCase();
-    return (coreData.weapons || []).filter((item: any) =>
+    return bookFilteredItems.weapons.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.skill?.toLowerCase().includes(q) ||
       item.notes?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, bookFilteredItems]);
 
   const filteredArmor = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'armor') return [];
     const q = searchQuery.toLowerCase();
-    return (coreData.armor || []).filter((item: any) =>
+    return bookFilteredItems.armor.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, bookFilteredItems]);
 
   const filteredCyberware = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'cyberware') return [];
     const q = searchQuery.toLowerCase();
-    return (coreData.cyberware || []).filter((item: any) =>
+    return bookFilteredItems.cyberware.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.type?.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, bookFilteredItems]);
 
   const filteredPrograms = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'programs') return [];
     const q = searchQuery.toLowerCase();
-    return (coreData.programs || []).filter((item: any) =>
+    return bookFilteredItems.programs.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.class?.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, bookFilteredItems]);
 
   const filteredAmmo = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'ammunition') return [];
     const q = searchQuery.toLowerCase();
-    return (coreData.ammunition || []).filter((item: any) =>
+    return bookFilteredItems.ammunition.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, bookFilteredItems]);
 
   const filteredAttachments = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'attachments') return [];
     const q = searchQuery.toLowerCase();
-    return (coreData.attachments || []).filter((item: any) =>
+    return bookFilteredItems.attachments.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, bookFilteredItems]);
 
   const filteredDrugs = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'drugs') return [];
     const q = searchQuery.toLowerCase();
-    return (coreData.drugs || []).filter((item: any) =>
+    return bookFilteredItems.drugs.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.primaryEffect?.toLowerCase().includes(q) ||
       item.secondaryEffect?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, bookFilteredItems]);
 
   const filteredGear = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'gear') return [];
     const q = searchQuery.toLowerCase();
-    return (coreData.gear || []).filter((item: any) =>
+    return bookFilteredItems.gear.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery, selectedCategory, bookFilteredItems]);
 
   const totalResults = 
     filteredWeapons.length + 
@@ -236,6 +365,29 @@ export const CompendiumView: React.FC = () => {
     filteredAttachments.length + 
     filteredDrugs.length + 
     filteredGear.length;
+
+  // Filter for Expansion Rule Systems
+  const filteredRuleSystems = useMemo(() => {
+    const q = systemSearchQuery.toLowerCase().trim();
+    return EXPANSION_RULE_SYSTEMS.filter((sys) => {
+      if (systemSourceFilter !== 'all' && sys.sourceBook !== systemSourceFilter) {
+        return false;
+      }
+      if (!q) return true;
+      return (
+        sys.title.toLowerCase().includes(q) ||
+        sys.subtitle.toLowerCase().includes(q) ||
+        sys.introDescription.toLowerCase().includes(q) ||
+        sys.categoryBadge.toLowerCase().includes(q) ||
+        sys.howItWorksSteps.some((s) => s.toLowerCase().includes(q)) ||
+        sys.keyBenefits.some((b) => b.toLowerCase().includes(q))
+      );
+    });
+  }, [systemSearchQuery, systemSourceFilter]);
+
+  const activeBookMeta = useMemo(() => {
+    return SOURCEBOOKS_CATALOG.find((b) => b.id === selectedBookFilter) || SOURCEBOOKS_CATALOG[0];
+  }, [selectedBookFilter]);
 
   /* Helper to render rich mechanical details */
   const renderItemDetails = (item: any, category: CompendiumCategory) => {
@@ -688,8 +840,142 @@ export const CompendiumView: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      {/* Top Bar with Search, Category Filter, and View Mode Toggle */}
-      <div className="bg-[#12141f] border border-[#262c3e] p-3 rounded-xs chamfer-card space-y-3">
+      {/* =====================================================================
+          CONMUTADOR PRINCIPAL DESTACADO: ITEMS (368) vs SISTEMAS Y REGLAS NUEVAS
+      ===================================================================== */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-[#0c0f1a] p-1.5 rounded-xs border border-[#1e2337] shadow-lg">
+        <button
+          onClick={() => setCompendiumMode('items')}
+          className={`flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xs text-xs font-mono-code font-bold transition-all cursor-pointer chamfer-btn ${
+            compendiumMode === 'items'
+              ? 'bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8] shadow-md shadow-cyan-950/60'
+              : 'bg-[#12141f] text-slate-400 hover:text-slate-200 border border-[#20273a]'
+          }`}
+        >
+          <Package className="w-4 h-4 text-[#38bdf8]" />
+          <span>📦 CATÁLOGO MAESTRO DE ÍTEMS ({allCatalogItems.length} ÍTEMS POR MANUAL)</span>
+        </button>
+        <button
+          onClick={() => setCompendiumMode('systems')}
+          className={`flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xs text-xs font-mono-code font-bold transition-all cursor-pointer chamfer-btn ${
+            compendiumMode === 'systems'
+              ? 'bg-[#a855f7]/20 text-[#c084fc] border border-[#a855f7] shadow-md shadow-purple-950/60'
+              : 'bg-[#12141f] text-slate-400 hover:text-slate-200 border border-[#20273a]'
+          }`}
+        >
+          <Cpu className="w-4 h-4 text-[#c084fc]" />
+          <span>⚙️ COMPENDIO DE SISTEMAS Y REGLAS NUEVAS (FBC / 2077 / DLCs)</span>
+        </button>
+      </div>
+
+      {compendiumMode === 'items' ? (
+        <>
+          {/* BARRA DE MANUALES DE ORIGEN CON CONTADORES REALES */}
+          <div className="bg-[#12141f] border border-[#262c3e] p-2.5 rounded-xs chamfer-card space-y-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-bold text-slate-400 font-mono-code uppercase tracking-wider flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-cyan-400" /> Filtrar por Manual de Origen:
+              </span>
+              <span className="text-[10px] text-cyan-400 font-mono-code">
+                {bookItemCounts[selectedBookFilter] ?? 0} ítems filtrados
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {SOURCEBOOKS_CATALOG.map((book) => {
+                const isSelected = selectedBookFilter === book.id;
+                const count = bookItemCounts[book.id] ?? 0;
+                return (
+                  <button
+                    key={book.id}
+                    onClick={() => setSelectedBookFilter(book.id as SourceBookId | 'all')}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xs text-[11px] font-mono-code transition-all cursor-pointer chamfer-btn ${
+                      isSelected
+                        ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold shadow-xs'
+                        : 'bg-[#181b2a] border-[#262c3e] text-slate-400 hover:text-white hover:border-slate-500'
+                    } border`}
+                  >
+                    <span className="text-[10px]">{book.shortBadge}</span>
+                    <span className="text-[10px] px-1 py-0.2 rounded-xs bg-[#0b0e17] text-slate-300 font-bold">
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* PANEL INTRODUCTORIO DEL MANUAL SELECCIONADO (COLAPSABLE) */}
+          <div className="bg-[#0f121d] border border-cyan-500/30 rounded-xs chamfer-card p-3 space-y-2.5 shadow-sm">
+            <div className="flex items-center justify-between gap-2 border-b border-[#1c2235] pb-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span
+                  className="px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold border"
+                  style={{
+                    backgroundColor: `${activeBookMeta.accentColor}20`,
+                    borderColor: `${activeBookMeta.accentColor}60`,
+                    color: activeBookMeta.accentColor
+                  }}
+                >
+                  {activeBookMeta.shortBadge}
+                </span>
+                <h3 className="text-xs font-bold text-white font-tech uppercase tracking-wide">
+                  {activeBookMeta.title}
+                </h3>
+                <span className="text-[10px] px-1.5 py-0.2 rounded-xs bg-slate-800 text-slate-300 font-mono-code">
+                  Era: {activeBookMeta.era.toUpperCase()}
+                </span>
+              </div>
+              <button
+                onClick={() => setIsBookSummaryExpanded(!isBookSummaryExpanded)}
+                className="text-[10px] font-mono-code text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer transition-colors"
+              >
+                {isBookSummaryExpanded ? (
+                  <>
+                    <span>[ ▴ Plegar Sinopsis ]</span>
+                    <ChevronUp className="w-3.5 h-3.5" />
+                  </>
+                ) : (
+                  <>
+                    <span>[ ▾ Desplegar Sinopsis ]</span>
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </>
+                )}
+              </button>
+            </div>
+
+            {isBookSummaryExpanded && (
+              <div className="space-y-2 text-xs font-mono-code text-slate-300">
+                <p className="text-[11px] leading-relaxed text-slate-300">
+                  {activeBookMeta.whatItBringsSummary}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-1">
+                  <div className="bg-[#141826] p-2 rounded-xs border border-[#222a40] space-y-1">
+                    <span className="text-[10px] font-bold text-cyan-300 uppercase tracking-wider block">
+                      ★ Aspectos Clave del Manual:
+                    </span>
+                    <ul className="list-disc pl-4 space-y-0.5 text-[10px] text-slate-400">
+                      {activeBookMeta.keyHighlights.map((hl, idx) => (
+                        <li key={idx}>{hl}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="bg-[#141826] p-2 rounded-xs border border-[#222a40] space-y-1">
+                    <span className="text-[10px] font-bold text-emerald-300 uppercase tracking-wider block">
+                      ⚡ Mecánicas & Sistemas Aportados:
+                    </span>
+                    <ul className="list-disc pl-4 space-y-0.5 text-[10px] text-slate-400">
+                      {activeBookMeta.mechanicsIntroduced.map((mec, idx) => (
+                        <li key={idx}>{mec}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Top Bar with Search, Category Filter, and View Mode Toggle */}
+          <div className="bg-[#12141f] border border-[#262c3e] p-3 rounded-xs chamfer-card space-y-3">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
           {/* Search box */}
           <div className="relative w-full lg:w-72">
@@ -849,9 +1135,12 @@ export const CompendiumView: React.FC = () => {
                         <div className="flex items-center gap-1.5 min-w-0 flex-1">
                           <ItemVisualPlaceholder type={visualType} size="sm" className="w-6 h-6 shrink-0" />
                           <div className="min-w-0 flex-1">
-                            <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={weapon.name}>
-                              {weapon.name}
-                            </h4>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={weapon.name}>
+                                {weapon.name}
+                              </h4>
+                              {renderSourceBookBadge(weapon.sourceBook)}
+                            </div>
                             <span className="text-[10px] text-[#f59e0b] font-mono-code">
                               {weapon.cost} eb
                             </span>
@@ -974,9 +1263,12 @@ export const CompendiumView: React.FC = () => {
                       {/* Header */}
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
                         <div className="min-w-0 flex-1">
-                          <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={armor.name}>
-                            {armor.name}
-                          </h4>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={armor.name}>
+                              {armor.name}
+                            </h4>
+                            {renderSourceBookBadge(armor.sourceBook)}
+                          </div>
                           <span className="text-[10px] text-[#f59e0b] font-mono-code">
                             {armor.cost} eb
                           </span>
@@ -1091,9 +1383,12 @@ export const CompendiumView: React.FC = () => {
                       {/* Header */}
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
                         <div className="min-w-0 flex-1">
-                          <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={cyber.name}>
-                            {cyber.name}
-                          </h4>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={cyber.name}>
+                              {cyber.name}
+                            </h4>
+                            {renderSourceBookBadge(cyber.sourceBook)}
+                          </div>
                           <span className="text-[10px] text-[#f59e0b] font-mono-code">
                             {cyber.cost} eb
                           </span>
@@ -1183,9 +1478,14 @@ export const CompendiumView: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
-                        <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={prog.name}>
-                          {prog.name}
-                        </h4>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={prog.name}>
+                              {prog.name}
+                            </h4>
+                            {renderSourceBookBadge(prog.sourceBook)}
+                          </div>
+                        </div>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1266,9 +1566,14 @@ export const CompendiumView: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
-                        <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={ammo.name}>
-                          {ammo.name}
-                        </h4>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={ammo.name}>
+                              {ammo.name}
+                            </h4>
+                            {renderSourceBookBadge(ammo.sourceBook)}
+                          </div>
+                        </div>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1334,9 +1639,14 @@ export const CompendiumView: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
-                        <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={att.name}>
-                          {att.name}
-                        </h4>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={att.name}>
+                              {att.name}
+                            </h4>
+                            {renderSourceBookBadge(att.sourceBook)}
+                          </div>
+                        </div>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1402,9 +1712,14 @@ export const CompendiumView: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
-                        <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={drug.name}>
-                          {drug.name}
-                        </h4>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={drug.name}>
+                              {drug.name}
+                            </h4>
+                            {renderSourceBookBadge(drug.sourceBook)}
+                          </div>
+                        </div>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1475,9 +1790,14 @@ export const CompendiumView: React.FC = () => {
                       }`}
                     >
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
-                        <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={g.name}>
-                          {g.name}
-                        </h4>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={g.name}>
+                              {g.name}
+                            </h4>
+                            {renderSourceBookBadge(g.sourceBook)}
+                          </div>
+                        </div>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1534,6 +1854,7 @@ export const CompendiumView: React.FC = () => {
                 <tr>
                   <th className="py-2 px-3">Nombre</th>
                   <th className="py-2 px-2">Categoría</th>
+                  <th className="py-2 px-2">Manual</th>
                   <th className="py-2 px-2">Datos Clave (Stats / Efectos)</th>
                   <th className="py-2 px-2 text-right">Costo</th>
                   <th className="py-2 px-3 text-right">Acción</th>
@@ -1564,6 +1885,9 @@ export const CompendiumView: React.FC = () => {
                           <span className="text-[10px] px-1.5 py-0.2 rounded-xs bg-[#f43f5e]/15 text-[#f43f5e] border border-[#f43f5e]/30 font-bold">
                             Arma
                           </span>
+                        </td>
+                        <td className="py-1.5 px-2">
+                          {renderSourceBookBadge(w.sourceBook)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
                           <span className="font-bold text-[#f43f5e] mr-2">{w.damage}</span>
@@ -1600,7 +1924,7 @@ export const CompendiumView: React.FC = () => {
                       </tr>
                       {isExpanded && (
                         <tr className="bg-[#0f111a] border-b border-[#262c3e]">
-                          <td colSpan={5} className="p-3">
+                          <td colSpan={6} className="p-3">
                             {renderItemDetails(w, 'weapons')}
                           </td>
                         </tr>
@@ -1633,6 +1957,9 @@ export const CompendiumView: React.FC = () => {
                           <span className="text-[10px] px-1.5 py-0.2 rounded-xs bg-[#38bdf8]/15 text-[#38bdf8] border border-[#38bdf8]/30 font-bold">
                             Blindaje
                           </span>
+                        </td>
+                        <td className="py-1.5 px-2">
+                          {renderSourceBookBadge(a.sourceBook)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
                           <span className="font-bold text-[#38bdf8] mr-2">
@@ -1683,7 +2010,7 @@ export const CompendiumView: React.FC = () => {
                       </tr>
                       {isExpanded && (
                         <tr className="bg-[#0f111a] border-b border-[#262c3e]">
-                          <td colSpan={5} className="p-3">
+                          <td colSpan={6} className="p-3">
                             {renderItemDetails(a, 'armor')}
                           </td>
                         </tr>
@@ -1715,6 +2042,9 @@ export const CompendiumView: React.FC = () => {
                           <span className="text-[10px] px-1.5 py-0.2 rounded-xs bg-[#a855f7]/15 text-[#a855f7] border border-[#a855f7]/30 font-bold">
                             {c.type}
                           </span>
+                        </td>
+                        <td className="py-1.5 px-2">
+                          {renderSourceBookBadge(c.sourceBook)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
                           <span className="text-[#f43f5e] mr-2">
@@ -1750,7 +2080,7 @@ export const CompendiumView: React.FC = () => {
                       </tr>
                       {isExpanded && (
                         <tr className="bg-[#0f111a] border-b border-[#262c3e]">
-                          <td colSpan={5} className="p-3">
+                          <td colSpan={6} className="p-3">
                             {renderItemDetails(c, 'cyberware')}
                           </td>
                         </tr>
@@ -1779,6 +2109,9 @@ export const CompendiumView: React.FC = () => {
                             {p.class}
                           </span>
                         </td>
+                        <td className="py-1.5 px-2">
+                          {renderSourceBookBadge(p.sourceBook)}
+                        </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
                           {p.atk !== undefined && <span className="mr-2 text-[#f43f5e]">ATK {p.atk}</span>}
                           {p.def !== undefined && <span className="mr-2 text-[#38bdf8]">DEF {p.def}</span>}
@@ -1802,7 +2135,7 @@ export const CompendiumView: React.FC = () => {
                       </tr>
                       {isExpanded && (
                         <tr className="bg-[#0f111a] border-b border-[#262c3e]">
-                          <td colSpan={5} className="p-3">
+                          <td colSpan={6} className="p-3">
                             {renderItemDetails(p, 'programs')}
                           </td>
                         </tr>
@@ -1831,6 +2164,9 @@ export const CompendiumView: React.FC = () => {
                             Munición
                           </span>
                         </td>
+                        <td className="py-1.5 px-2">
+                          {renderSourceBookBadge(am.sourceBook)}
+                        </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#94a3b8] truncate max-w-[300px]">
                           {am.description}
                         </td>
@@ -1851,7 +2187,7 @@ export const CompendiumView: React.FC = () => {
                       </tr>
                       {isExpanded && (
                         <tr className="bg-[#0f111a] border-b border-[#262c3e]">
-                          <td colSpan={5} className="p-3">
+                          <td colSpan={6} className="p-3">
                             {renderItemDetails(am, 'ammunition')}
                           </td>
                         </tr>
@@ -1880,6 +2216,9 @@ export const CompendiumView: React.FC = () => {
                             Accesorio
                           </span>
                         </td>
+                        <td className="py-1.5 px-2">
+                          {renderSourceBookBadge(att.sourceBook)}
+                        </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#94a3b8] truncate max-w-[300px]">
                           {att.slots} ranuras • {att.description}
                         </td>
@@ -1900,7 +2239,7 @@ export const CompendiumView: React.FC = () => {
                       </tr>
                       {isExpanded && (
                         <tr className="bg-[#0f111a] border-b border-[#262c3e]">
-                          <td colSpan={5} className="p-3">
+                          <td colSpan={6} className="p-3">
                             {renderItemDetails(att, 'attachments')}
                           </td>
                         </tr>
@@ -1929,6 +2268,9 @@ export const CompendiumView: React.FC = () => {
                             Droga
                           </span>
                         </td>
+                        <td className="py-1.5 px-2">
+                          {renderSourceBookBadge(d.sourceBook)}
+                        </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#94a3b8] truncate max-w-[300px]">
                           {d.duration} {d.addictionDv > 0 ? `• DV ${d.addictionDv}` : ''} • {d.primaryEffect}
                         </td>
@@ -1949,7 +2291,7 @@ export const CompendiumView: React.FC = () => {
                       </tr>
                       {isExpanded && (
                         <tr className="bg-[#0f111a] border-b border-[#262c3e]">
-                          <td colSpan={5} className="p-3">
+                          <td colSpan={6} className="p-3">
                             {renderItemDetails(d, 'drugs')}
                           </td>
                         </tr>
@@ -1978,6 +2320,9 @@ export const CompendiumView: React.FC = () => {
                             Equipo
                           </span>
                         </td>
+                        <td className="py-1.5 px-2">
+                          {renderSourceBookBadge(g.sourceBook)}
+                        </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#94a3b8] truncate max-w-[300px]">
                           {g.description}
                         </td>
@@ -1998,7 +2343,7 @@ export const CompendiumView: React.FC = () => {
                       </tr>
                       {isExpanded && (
                         <tr className="bg-[#0f111a] border-b border-[#262c3e]">
-                          <td colSpan={5} className="p-3">
+                          <td colSpan={6} className="p-3">
                             {renderItemDetails(g, 'gear')}
                           </td>
                         </tr>
@@ -2024,6 +2369,224 @@ export const CompendiumView: React.FC = () => {
           >
             Restablecer filtros
           </button>
+        </div>
+      )}
+        </>
+      ) : (
+        /* =====================================================================
+            COMPENDIO DE SISTEMAS Y REGLAS NUEVAS (FBC / 2077 / DLCs)
+        ===================================================================== */
+        <div className="space-y-4">
+          {/* Barra de Búsqueda y Filtros de Sistemas */}
+          <div className="bg-[#12141f] border border-[#262c3e] p-3 rounded-xs chamfer-card space-y-3">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+              <div className="relative w-full md:w-80">
+                <Search className="w-3.5 h-3.5 text-[#64748b] absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={systemSearchQuery}
+                  onChange={(e) => setSystemSearchQuery(e.target.value)}
+                  placeholder="Buscar reglas (FBC, Neuroport, Smart, Quickhack...)"
+                  className="w-full bg-[#181b2a] border border-[#262c3e] pl-8 pr-7 py-1.5 text-xs text-[#f1f5f9] rounded-xs focus:outline-hidden focus:border-[#a855f7] font-mono-code"
+                />
+                {systemSearchQuery && (
+                  <button 
+                    onClick={() => setSystemSearchQuery('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-[#64748b] hover:text-[#f1f5f9]"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+
+              {/* Filtro rápido por fuente */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                {[
+                  { id: 'all', label: 'Todos (8)' },
+                  { id: 'interface_red', label: 'Interface RED // FBC' },
+                  { id: 'cemk_2077', label: 'CEMK 2077' },
+                  { id: 'black_chrome', label: 'Black Chrome' },
+                  { id: 'dlc', label: 'DLCs & Hornet' }
+                ].map((f) => (
+                  <button
+                    key={f.id}
+                    onClick={() => setSystemSourceFilter(f.id)}
+                    className={`px-2.5 py-1 rounded-xs text-[11px] font-mono-code transition-colors cursor-pointer chamfer-btn ${
+                      systemSourceFilter === f.id
+                        ? 'bg-[#a855f7]/25 border border-[#a855f7] text-[#c084fc] font-bold'
+                        : 'bg-[#181b2a] border border-[#262c3e] text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* LISTA DE SISTEMAS EXPANDIBLES */}
+          <div className="space-y-4">
+            {filteredRuleSystems.map((sys) => {
+              const isExpanded = !!expandedSystemIds[sys.id];
+              return (
+                <div
+                  key={sys.id}
+                  className="bg-[#12141f] border border-[#262c3e] hover:border-[#a855f7]/60 rounded-xs chamfer-card overflow-hidden transition-all shadow-md"
+                >
+                  {/* Cabecera del Sistema (Clickable) */}
+                  <div
+                    onClick={() => toggleSystemExpand(sys.id)}
+                    className="p-3.5 bg-[#161a29] hover:bg-[#1a2135] border-b border-[#242c42] flex items-center justify-between cursor-pointer select-none transition-colors"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold bg-[#a855f7]/20 border border-[#a855f7]/50 text-[#c084fc]">
+                          {sys.categoryBadge}
+                        </span>
+                        <h3 className="text-sm font-bold text-white font-tech uppercase tracking-wider">
+                          {sys.title}
+                        </h3>
+                        {renderSourceBookBadge(sys.sourceBook)}
+                        <span className="text-[10px] px-1.5 py-0.2 rounded-xs bg-[#0b0e17] text-slate-300 font-mono-code border border-[#20273a]">
+                          Era: {sys.era.toUpperCase()}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[#94a3b8] font-mono-code">
+                        {sys.subtitle} • <span className="text-cyan-400">{sys.sourceBookTitle}</span>
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="text-xs font-mono-code text-[#c084fc] hidden sm:inline">
+                        {isExpanded ? '[ Plegar ]' : '[ Desplegar Reglas ]'}
+                      </span>
+                      <div className="p-1 rounded-xs bg-[#0b0e17] border border-[#242c42] text-slate-400">
+                        {isExpanded ? <ChevronDown className="w-4 h-4 text-[#c084fc]" /> : <ChevronRight className="w-4 h-4 text-slate-400" />}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* DESCRIPCIÓN INTRODUCTORIA SIEMPRE VISIBLE */}
+                  <div className="p-3.5 bg-[#0e111a] border-b border-[#1e2337]">
+                    <div className="p-3 rounded-xs bg-[#161c2b] border-l-4 border-cyan-400 space-y-1">
+                      <div className="text-[10px] font-bold text-cyan-300 font-mono-code uppercase tracking-wider flex items-center gap-1.5">
+                        <Info className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>Sinopsis & Transformación del Sistema:</span>
+                      </div>
+                      <p className="text-xs text-slate-300 font-mono-code leading-relaxed">
+                        {sys.introDescription}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* CONTENIDO DESPLEGABLE */}
+                  {isExpanded && (
+                    <div className="p-4 space-y-4 bg-[#12141f] font-mono-code text-xs">
+                      {/* 1. ¿Cómo Funciona Paso a Paso? */}
+                      <div className="space-y-2">
+                        <h4 className="text-xs font-bold text-[#f59e0b] uppercase tracking-wider flex items-center gap-1.5">
+                          <Zap className="w-3.5 h-3.5 text-[#f59e0b]" /> ¿Cómo Funciona Paso a Paso?
+                        </h4>
+                        <div className="space-y-1.5">
+                          {sys.howItWorksSteps.map((step, idx) => (
+                            <div
+                              key={idx}
+                              className="p-2.5 rounded-xs bg-[#181c2b] border border-[#242c42] flex items-start gap-2.5 text-[11px] text-slate-300 leading-relaxed"
+                            >
+                              <span className="w-5 h-5 rounded-full bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/40 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                                {idx + 1}
+                              </span>
+                              <p className="flex-1">{step}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* 2. Beneficios vs Riesgos */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {/* Beneficios */}
+                        <div className="p-3 bg-[#10b981]/5 border border-[#10b981]/30 rounded-xs space-y-2">
+                          <h5 className="text-[11px] font-bold text-[#10b981] uppercase tracking-wider flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Beneficios y Ventajas Mecánicas:
+                          </h5>
+                          <ul className="space-y-1 text-[10px] text-slate-300">
+                            {sys.keyBenefits.map((b, idx) => (
+                              <li key={idx} className="flex items-start gap-1.5">
+                                <span className="text-[#10b981] font-bold shrink-0">✓</span>
+                                <span>{b}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Riesgos y Limitaciones */}
+                        <div className="p-3 bg-[#f43f5e]/5 border border-[#f43f5e]/30 rounded-xs space-y-2">
+                          <h5 className="text-[11px] font-bold text-[#f43f5e] uppercase tracking-wider flex items-center gap-1.5">
+                            <AlertTriangle className="w-3.5 h-3.5" /> Riesgos, Costes y Limitaciones:
+                          </h5>
+                          <ul className="space-y-1 text-[10px] text-slate-300">
+                            {sys.drawbacksAndRisks.map((d, idx) => (
+                              <li key={idx} className="flex items-start gap-1.5">
+                                <span className="text-[#f43f5e] font-bold shrink-0">⚠</span>
+                                <span>{d}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      {/* 3. Tabla Oficial de Referencia (si existe) */}
+                      {sys.referenceTable && (
+                        <div className="space-y-1.5 pt-1">
+                          <h5 className="text-[11px] font-bold text-cyan-300 uppercase tracking-wider flex items-center gap-1.5">
+                            <Layers className="w-3.5 h-3.5 text-cyan-400" /> Tabla Canónica de Referencia Táctica:
+                          </h5>
+                          <div className="overflow-x-auto border border-[#242c42] rounded-xs">
+                            <table className="w-full text-left text-[11px]">
+                              <thead className="bg-[#181c2b] text-cyan-300 text-[10px] uppercase border-b border-[#242c42]">
+                                <tr>
+                                  {sys.referenceTable.headers.map((h, idx) => (
+                                    <th key={idx} className="py-2 px-2.5">
+                                      {h}
+                                    </th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-[#1e2337]">
+                                {sys.referenceTable.rows.map((row, rIdx) => (
+                                  <tr key={rIdx} className="hover:bg-[#161c2b] transition-colors">
+                                    {row.map((cell, cIdx) => (
+                                      <td key={cIdx} className="py-1.5 px-2.5 text-slate-300 text-[10px]">
+                                        {cell}
+                                      </td>
+                                    ))}
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {filteredRuleSystems.length === 0 && (
+            <div className="bg-[#12141f] border border-[#262c3e] p-6 rounded-xs text-center space-y-1.5 font-mono-code">
+              <p className="text-xs text-slate-400">
+                No se encontraron sistemas de reglas para &ldquo;{systemSearchQuery}&rdquo;.
+              </p>
+              <button
+                onClick={() => { setSystemSearchQuery(''); setSystemSourceFilter('all'); }}
+                className="text-[11px] text-cyan-400 hover:underline cursor-pointer"
+              >
+                Restablecer filtros
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

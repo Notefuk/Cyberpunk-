@@ -17,7 +17,10 @@
       "cost": 50,
       "costTier": "Costly",
       "examples": "Combat Knife, Brass Knuckles",
-      "notes": "Can be concealed. Halves defender's armor SP."
+      "notes": "Can be concealed. Halves defender's armor SP.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "medium-melee",
@@ -31,7 +34,10 @@
       "cost": 50,
       "costTier": "Costly",
       "examples": "Baseball Bat, Machete, Crowbar",
-      "notes": "Halves defender's armor SP."
+      "notes": "Halves defender's armor SP.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "heavy-melee",
@@ -45,7 +51,10 @@
       "cost": 100,
       "costTier": "Premium",
       "examples": "Lead Pipe, Katana, Spiked Bat",
-      "notes": "Requires two hands unless user has cyberarm or BODY 8+. Halves defender's armor SP."
+      "notes": "Requires two hands unless user has cyberarm or BODY 8+. Halves defender's armor SP.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "very-heavy-melee",
@@ -59,7 +68,10 @@
       "cost": 500,
       "costTier": "Expensive",
       "examples": "Chainsaw, Sledgehammer, Naginata, Battleaxe",
-      "notes": "Requires two hands. Halves defender's armor SP."
+      "notes": "Requires two hands. Halves defender's armor SP.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "medium-pistol",
@@ -75,7 +87,10 @@
       "standardMag": 12,
       "ammoType": "Medium Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
-      "notes": "Can be concealed. Compact concealable sidearm."
+      "notes": "Can be concealed. Compact concealable sidearm.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "heavy-pistol",
@@ -91,7 +106,10 @@
       "standardMag": 8,
       "ammoType": "Heavy Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
-      "notes": "Can be concealed. High power service handgun."
+      "notes": "Can be concealed. High power service handgun.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "very-heavy-pistol",
@@ -107,7 +125,10 @@
       "standardMag": 8,
       "ammoType": "Very Heavy Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
-      "notes": "Single shot high impact sidearm. Cannot be concealed."
+      "notes": "Single shot high impact sidearm. Cannot be concealed.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "smg",
@@ -124,7 +145,10 @@
       "ammoType": "Medium Pistol",
       "altFireModes": "Autofire (3), Suppressive Fire",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 20 (26-50m) | DV 25 (51-100m)",
-      "notes": "Capable of Autofire (3) and Suppressive Fire. Can be concealed."
+      "notes": "Capable of Autofire (3) and Suppressive Fire. Can be concealed.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "heavy-smg",
@@ -141,7 +165,10 @@
       "ammoType": "Heavy Pistol",
       "altFireModes": "Autofire (3), Suppressive Fire",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 20 (26-50m) | DV 25 (51-100m)",
-      "notes": "High capacity autofire submachine gun. Autofire (3) and Suppressive Fire."
+      "notes": "High capacity autofire submachine gun. Autofire (3) and Suppressive Fire.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "shotgun",
@@ -158,7 +185,10 @@
       "ammoType": "Slug / Shell",
       "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
-      "notes": "Can fire Slugs (single target 5d6) or Shells (3d6 spread across 6x6m zone)."
+      "notes": "Can fire Slugs (single target 5d6) or Shells (3d6 spread across 6x6m zone).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "assault-rifle",
@@ -175,7 +205,10 @@
       "ammoType": "Rifle",
       "altFireModes": "Autofire (4), Suppressive Fire",
       "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m) | DV 15 (51-100m)",
-      "notes": "Versatile combat rifle. Autofire (4) multiplier and Suppressive Fire."
+      "notes": "Versatile combat rifle. Autofire (4) multiplier and Suppressive Fire.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "sniper-rifle",
@@ -191,7 +224,10 @@
       "standardMag": 4,
       "ammoType": "Rifle",
       "dvTable": "DV 30 (0-6m) | DV 25 (7-12m) | DV 25 (13-25m) | DV 20 (26-50m) | DV 15 (51-100m)",
-      "notes": "Long-range precision rifle. Highest accuracy at 51m+."
+      "notes": "Long-range precision rifle. Highest accuracy at 51m+.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "bows-crossbows",
@@ -207,7 +243,10 @@
       "standardMag": 1,
       "ammoType": "Arrow",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m) | DV 20 (51-100m)",
-      "notes": "Silent ranged weapons that fire standard or specialty arrows."
+      "notes": "Silent ranged weapons that fire standard or specialty arrows.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "grenade-launcher",
@@ -224,7 +263,10 @@
       "ammoType": "Grenade",
       "altFireModes": "Explosive (6d6 in 10x10m area)",
       "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m) | DV 20 (51-100m)",
-      "notes": "Fires grenades up to range. Explosive 6d6 in a 10x10m area."
+      "notes": "Fires grenades up to range. Explosive 6d6 in a 10x10m area.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "rocket-launcher",
@@ -241,7 +283,10 @@
       "ammoType": "Rocket",
       "altFireModes": "Explosive (8d6 in 10x10m area)",
       "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 15 (26-50m) | DV 20 (51-100m)",
-      "notes": "Heavy anti-vehicle explosive rocket launcher."
+      "notes": "Heavy anti-vehicle explosive rocket launcher.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "air-pistol",
@@ -257,7 +302,10 @@
       "standardMag": 12,
       "ammoType": "Acid / Paint Pellets",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Exotic Medium Pistol. Fires paint or acid balls. Acid lowers target's armor SP by 1 on hit. Deals no HP damage and cannot cause Critical Injuries."
+      "notes": "Exotic Medium Pistol. Fires paint or acid balls. Acid lowers target's armor SP by 1 on hit. Deals no HP damage and cannot cause Critical Injuries.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "battleglove",
@@ -270,7 +318,10 @@
       "concealable": false,
       "cost": 1000,
       "costTier": "Very Expensive",
-      "notes": "Heavy gauntlet covering hand and forearm. Contains 3 option slots for Cyberarm/Cyberlimb options without requiring cyberware installation."
+      "notes": "Heavy gauntlet covering hand and forearm. Contains 3 option slots for Cyberarm/Cyberlimb options without requiring cyberware installation.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "hurricane-assault-weapon",
@@ -287,7 +338,10 @@
       "ammoType": "Slug / Shell",
       "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Exotic 2 ROF Shotgun with 16-round drum. Cannot make Aimed Shots. Requires BODY 11+ to fire unless mounted. Reload takes 2 Actions."
+      "notes": "Exotic 2 ROF Shotgun with 16-round drum. Cannot make Aimed Shots. Requires BODY 11+ to fire unless mounted. Reload takes 2 Actions.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "dartgun",
@@ -303,7 +357,10 @@
       "standardMag": 8,
       "ammoType": "Non-Basic Arrow",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Exotic Very Heavy Pistol that fires Non-Basic Arrows (Poison, Biotoxin, Sleep). Holds clip of 8 arrows."
+      "notes": "Exotic Very Heavy Pistol that fires Non-Basic Arrows (Poison, Biotoxin, Sleep). Holds clip of 8 arrows.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "flamethrower",
@@ -320,7 +377,10 @@
       "ammoType": "Incendiary Shotgun Shell",
       "altFireModes": "Incendiary Shell (3d6 in 6x6m zone)",
       "dvTable": "DV 13 (0-6m zone)",
-      "notes": "Exotic Shotgun fired with Heavy Weapons skill. Targets ignited take 4 HP damage at end of turn until extinguished. Cannot make Aimed Shots or cause Critical Injuries."
+      "notes": "Exotic Shotgun fired with Heavy Weapons skill. Targets ignited take 4 HP damage at end of turn until extinguished. Cannot make Aimed Shots or cause Critical Injuries.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "kendachi-mono-three",
@@ -333,7 +393,10 @@
       "concealable": false,
       "cost": 5000,
       "costTier": "Luxury",
-      "notes": "Excellent Quality (+1 to hit) Two-Handed Exotic Very Heavy Melee Weapon. Micro-serrated crystal katana vibrating 4,000 times/min. Ignores armor lower than SP 11 with biometric key."
+      "notes": "Excellent Quality (+1 to hit) Two-Handed Exotic Very Heavy Melee Weapon. Micro-serrated crystal katana vibrating 4,000 times/min. Ignores armor lower than SP 11 with biometric key.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "malorian-arms-3516",
@@ -349,7 +412,10 @@
       "standardMag": 8,
       "ammoType": "Very Heavy Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Excellent Quality (+1 to hit) Exotic Very Heavy Pistol famously designed for Johnny Silverhand. Permanently installed Smartgun Link."
+      "notes": "Excellent Quality (+1 to hit) Exotic Very Heavy Pistol famously designed for Johnny Silverhand. Permanently installed Smartgun Link.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "microwaver",
@@ -365,7 +431,10 @@
       "standardMag": 8,
       "ammoType": "Rechargeable Battery",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Exotic Very Heavy Pistol. On hit forces DV15 Cybertech check; failure disables 2 pieces of cyberware/carried electronics for 1 minute."
+      "notes": "Exotic Very Heavy Pistol. On hit forces DV15 Cybertech check; failure disables 2 pieces of cyberware/carried electronics for 1 minute.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-cowboy-u56",
@@ -382,7 +451,10 @@
       "ammoType": "Grenade",
       "altFireModes": "Explosive (6d6 in 10x10m area)",
       "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m)",
-      "notes": "Exotic ROF 2 Grenade Launcher holding 4 grenades. Requires BODY 11+ unless mounted. Reload requires 2 Actions."
+      "notes": "Exotic ROF 2 Grenade Launcher holding 4 grenades. Requires BODY 11+ unless mounted. Reload requires 2 Actions.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "rhinemetall-emg-86",
@@ -398,7 +470,10 @@
       "standardMag": 4,
       "ammoType": "Railgun Slugs",
       "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m)",
-      "notes": "Exotic Assault Rifle fired with Heavy Weapons skill. Damage ignores armor lower than SP 11. Incapable of Autofire and Aimed Shots. Requires BODY 11+ unless mounted."
+      "notes": "Exotic Assault Rifle fired with Heavy Weapons skill. Damage ignores armor lower than SP 11. Incapable of Autofire and Aimed Shots. Requires BODY 11+ unless mounted.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "shrieker",
@@ -414,7 +489,10 @@
       "standardMag": 8,
       "ammoType": "Rechargeable Battery",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Exotic Very Heavy Pistol sonic weapon. On hit forces DV15 Resist Torture/Drugs check; on failure target suffers Damaged Ear Critical Injury."
+      "notes": "Exotic Very Heavy Pistol sonic weapon. On hit forces DV15 Resist Torture/Drugs check; on failure target suffers Damaged Ear Critical Injury.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "slamdance-fang",
@@ -427,7 +505,10 @@
       "concealable": true,
       "cost": 1000,
       "costTier": "Very Expensive",
-      "notes": "Excellent Quality (+1 to hit) tactical glove with spring-loaded blade. Acts as Very Heavy Melee Weapon (4d6, ROF 1) on the turn it is deployed; thereafter Medium Melee (2d6, ROF 2)."
+      "notes": "Excellent Quality (+1 to hit) tactical glove with spring-loaded blade. Acts as Very Heavy Melee Weapon (4d6, ROF 1) on the turn it is deployed; thereafter Medium Melee (2d6, ROF 2).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "stun-baton",
@@ -440,7 +521,10 @@
       "concealable": false,
       "cost": 100,
       "costTier": "Premium",
-      "notes": "One-Handed Exotic Medium Melee Weapon. Non-lethal: leaves target Unconscious at 1 HP. Does not ablate armor or cause Critical Injuries."
+      "notes": "One-Handed Exotic Medium Melee Weapon. Non-lethal: leaves target Unconscious at 1 HP. Does not ablate armor or cause Critical Injuries.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "stun-gun",
@@ -456,7 +540,10 @@
       "standardMag": 8,
       "ammoType": "Rechargeable Battery",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Exotic Heavy Pistol. Non-lethal: reduces targets to 1 HP Unconscious. Does not ablate armor or cause Critical Injuries."
+      "notes": "Exotic Heavy Pistol. Non-lethal: reduces targets to 1 HP Unconscious. Does not ablate armor or cause Critical Injuries.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "tsunami-arms-helix",
@@ -473,7 +560,10 @@
       "ammoType": "Rifle",
       "altFireModes": "Autofire (5) only (Consumes 20 bullets)",
       "dvTable": "DV 22 (0-6m) | DV 20 (7-12m) | DV 17 (13-25m) | DV 20 (26-50m)",
-      "notes": "Exotic Assault Rifle fired exclusively with Autofire skill. Max multiplier 5. Consumes 20 bullets per attack. Requires BODY 11+ unless mounted."
+      "notes": "Exotic Assault Rifle fired exclusively with Autofire skill. Max multiplier 5. Consumes 20 bullets per attack. Requires BODY 11+ unless mounted.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "dai-lung-streetmaster",
@@ -489,7 +579,10 @@
       "standardMag": 12,
       "ammoType": "Medium Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Poor Quality Medium Pistol. Jams on Critical Failure (roll of 1), requiring an Action to clear."
+      "notes": "Poor Quality Medium Pistol. Jams on Critical Failure (roll of 1), requiring an Action to clear.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "federated-arms-x9mm",
@@ -505,7 +598,10 @@
       "standardMag": 12,
       "ammoType": "Medium Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Standard Quality Medium Pistol. Ubiquitous urban holdout pistol."
+      "notes": "Standard Quality Medium Pistol. Ubiquitous urban holdout pistol.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-avenger",
@@ -521,7 +617,10 @@
       "standardMag": 12,
       "ammoType": "Medium Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Excellent Quality Medium Pistol. +1 to Attack Checks."
+      "notes": "Excellent Quality Medium Pistol. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "dai-lung-magnum",
@@ -537,7 +636,10 @@
       "standardMag": 8,
       "ammoType": "Heavy Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Poor Quality Heavy Pistol. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Heavy Pistol. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "mustang-arms-mark-iii",
@@ -553,7 +655,10 @@
       "standardMag": 8,
       "ammoType": "Heavy Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Standard Quality Heavy Pistol. Standard reliable sidearm."
+      "notes": "Standard Quality Heavy Pistol. Standard reliable sidearm.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "nova-cityhunter",
@@ -569,7 +674,10 @@
       "standardMag": 8,
       "ammoType": "Heavy Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Excellent Quality Heavy Pistol. +1 to Attack Checks."
+      "notes": "Excellent Quality Heavy Pistol. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "federated-arms-super-chief",
@@ -585,7 +693,10 @@
       "standardMag": 8,
       "ammoType": "Very Heavy Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Poor Quality Very Heavy Pistol. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Very Heavy Pistol. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "sternmeyer-p35",
@@ -601,7 +712,10 @@
       "standardMag": 8,
       "ammoType": "Very Heavy Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Standard Quality Very Heavy Pistol. Rugged German engineering."
+      "notes": "Standard Quality Very Heavy Pistol. Rugged German engineering.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-boomer-buster",
@@ -617,7 +731,10 @@
       "standardMag": 8,
       "ammoType": "Very Heavy Pistol",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Excellent Quality Very Heavy Pistol. +1 to Attack Checks."
+      "notes": "Excellent Quality Very Heavy Pistol. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "gunmart-sherwood",
@@ -633,7 +750,10 @@
       "standardMag": 1,
       "ammoType": "Arrow",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
-      "notes": "Poor Quality Bow. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Bow. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "eagletech-tomcat",
@@ -649,7 +769,10 @@
       "standardMag": 1,
       "ammoType": "Arrow",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
-      "notes": "Standard Quality compound hunting bow."
+      "notes": "Standard Quality compound hunting bow.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "eagletech-bearcat",
@@ -665,7 +788,10 @@
       "standardMag": 1,
       "ammoType": "Arrow",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
-      "notes": "Excellent Quality Bow. +1 to Attack Checks."
+      "notes": "Excellent Quality Bow. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "gunmart-hunter",
@@ -681,7 +807,10 @@
       "standardMag": 1,
       "ammoType": "Arrow",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
-      "notes": "Poor Quality Crossbow. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Crossbow. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "eagletech-striker",
@@ -697,7 +826,10 @@
       "standardMag": 1,
       "ammoType": "Arrow",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
-      "notes": "Standard Quality tactical crossbow."
+      "notes": "Standard Quality tactical crossbow.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "eagletech-scorpion",
@@ -713,7 +845,10 @@
       "standardMag": 1,
       "ammoType": "Arrow",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m) | DV 17 (26-50m)",
-      "notes": "Excellent Quality Crossbow. +1 to Attack Checks."
+      "notes": "Excellent Quality Crossbow. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "federated-arms-tech-assault",
@@ -730,7 +865,10 @@
       "ammoType": "Medium Pistol",
       "altFireModes": "Autofire (3), Suppressive Fire",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
-      "notes": "Poor Quality SMG. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality SMG. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-mini-gat",
@@ -747,7 +885,10 @@
       "ammoType": "Medium Pistol",
       "altFireModes": "Autofire (3), Suppressive Fire",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
-      "notes": "Standard Quality SMG. Workhorse corporate submachine gun."
+      "notes": "Standard Quality SMG. Workhorse corporate submachine gun.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "arasaka-minami-10",
@@ -764,7 +905,10 @@
       "ammoType": "Medium Pistol",
       "altFireModes": "Autofire (3), Suppressive Fire",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
-      "notes": "Excellent Quality SMG. +1 to Attack Checks."
+      "notes": "Excellent Quality SMG. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "chadran-arms-city-reaper",
@@ -781,7 +925,10 @@
       "ammoType": "Heavy Pistol",
       "altFireModes": "Autofire (3), Suppressive Fire",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
-      "notes": "Poor Quality Heavy SMG. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Heavy SMG. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "sternmeyer-smg21",
@@ -798,7 +945,10 @@
       "ammoType": "Heavy Pistol",
       "altFireModes": "Autofire (3), Suppressive Fire",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
-      "notes": "Standard Quality Heavy SMG. High reliability German submachine gun."
+      "notes": "Standard Quality Heavy SMG. High reliability German submachine gun.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-viper",
@@ -815,7 +965,10 @@
       "ammoType": "Heavy Pistol",
       "altFireModes": "Autofire (3), Suppressive Fire",
       "dvTable": "DV 15 (0-6m) | DV 13 (7-12m) | DV 15 (13-25m)",
-      "notes": "Excellent Quality Heavy SMG. +1 to Attack Checks."
+      "notes": "Excellent Quality Heavy SMG. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "gunmart-home-defender",
@@ -832,7 +985,10 @@
       "ammoType": "Slug / Shell",
       "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Poor Quality Shotgun. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Shotgun. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "arasaka-rapid-assault",
@@ -849,7 +1005,10 @@
       "ammoType": "Slug / Shell",
       "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Standard Quality Shotgun. Tactical combat shotgun."
+      "notes": "Standard Quality Shotgun. Tactical combat shotgun.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-bulldog",
@@ -866,7 +1025,10 @@
       "ammoType": "Slug / Shell",
       "altFireModes": "Shotgun Shell (3d6 in 6x6m zone, DV 13)",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Excellent Quality Shotgun. +1 to Attack Checks."
+      "notes": "Excellent Quality Shotgun. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "chadran-arms-jungle-reaper",
@@ -883,7 +1045,10 @@
       "ammoType": "Rifle",
       "altFireModes": "Autofire (4), Suppressive Fire",
       "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m)",
-      "notes": "Poor Quality Assault Rifle. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Assault Rifle. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-ronin",
@@ -900,7 +1065,10 @@
       "ammoType": "Rifle",
       "altFireModes": "Autofire (4), Suppressive Fire",
       "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m)",
-      "notes": "Standard Quality Assault Rifle. The definitive modern combat rifle."
+      "notes": "Standard Quality Assault Rifle. The definitive modern combat rifle.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-dragon",
@@ -917,7 +1085,10 @@
       "ammoType": "Rifle",
       "altFireModes": "Autofire (4), Suppressive Fire",
       "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m) | DV 13 (26-50m)",
-      "notes": "Excellent Quality Assault Rifle. +1 to Attack Checks."
+      "notes": "Excellent Quality Assault Rifle. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "gunmart-snipe-star",
@@ -933,7 +1104,10 @@
       "standardMag": 4,
       "ammoType": "Rifle",
       "dvTable": "DV 30 (0-6m) | DV 25 (7-12m) | DV 25 (13-25m) | DV 20 (26-50m) | DV 15 (51-100m)",
-      "notes": "Poor Quality Sniper Rifle. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Sniper Rifle. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "nomad-long-rifle",
@@ -949,7 +1123,10 @@
       "standardMag": 4,
       "ammoType": "Rifle",
       "dvTable": "DV 30 (0-6m) | DV 25 (7-12m) | DV 25 (13-25m) | DV 20 (26-50m) | DV 15 (51-100m)",
-      "notes": "Standard Quality precision long rifle built for rugged badlands survival."
+      "notes": "Standard Quality precision long rifle built for rugged badlands survival.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "arasaka-wssa",
@@ -965,7 +1142,10 @@
       "standardMag": 4,
       "ammoType": "Rifle",
       "dvTable": "DV 30 (0-6m) | DV 25 (7-12m) | DV 25 (13-25m) | DV 20 (26-50m) | DV 15 (51-100m)",
-      "notes": "Excellent Quality Sniper Rifle. +1 to Attack Checks."
+      "notes": "Excellent Quality Sniper Rifle. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "towa-type-g",
@@ -982,7 +1162,10 @@
       "ammoType": "Grenade",
       "altFireModes": "Explosive (6d6 in 10x10m area)",
       "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m)",
-      "notes": "Poor Quality Grenade Launcher. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Grenade Launcher. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-mini-grenade",
@@ -999,7 +1182,10 @@
       "ammoType": "Grenade",
       "altFireModes": "Explosive (6d6 in 10x10m area)",
       "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m)",
-      "notes": "Standard Quality Grenade Launcher. Standard squad support weapon."
+      "notes": "Standard Quality Grenade Launcher. Standard squad support weapon.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "tsunami-arms-type18",
@@ -1016,7 +1202,10 @@
       "ammoType": "Grenade",
       "altFireModes": "Explosive (6d6 in 10x10m area)",
       "dvTable": "DV 16 (0-6m) | DV 15 (7-12m) | DV 15 (13-25m)",
-      "notes": "Excellent Quality Grenade Launcher. +1 to Attack Checks."
+      "notes": "Excellent Quality Grenade Launcher. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "towa-type-r",
@@ -1033,7 +1222,10 @@
       "ammoType": "Rocket",
       "altFireModes": "Explosive (8d6 in 10x10m area)",
       "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m)",
-      "notes": "Poor Quality Rocket Launcher. Jams on Critical Failure (roll of 1)."
+      "notes": "Poor Quality Rocket Launcher. Jams on Critical Failure (roll of 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-urban",
@@ -1050,7 +1242,10 @@
       "ammoType": "Rocket",
       "altFireModes": "Explosive (8d6 in 10x10m area)",
       "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m)",
-      "notes": "Standard Quality Rocket Launcher. High explosive ordnance deliverer."
+      "notes": "Standard Quality Rocket Launcher. High explosive ordnance deliverer.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "militech-hotshot",
@@ -1067,7 +1262,604 @@
       "ammoType": "Rocket",
       "altFireModes": "Explosive (8d6 in 10x10m area)",
       "dvTable": "DV 17 (0-6m) | DV 16 (7-12m) | DV 15 (13-25m)",
-      "notes": "Excellent Quality Rocket Launcher. +1 to Attack Checks."
+      "notes": "Excellent Quality Rocket Launcher. +1 to Attack Checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
+    },
+    {
+      "id": "rostovic-kleaver",
+      "name": "Rostović Kleaver",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 2,
+      "ammoType": "Slug",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Double-barrel sawed-off break-action heavy shotgun. Fires both barrels simultaneously on demand."
+    },
+    {
+      "id": "sternmeyer-m02",
+      "name": "Sternmeyer M-02 Heavy Rifle",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 20,
+      "ammoType": "Rifle",
+      "altFireModes": "Autofire (4)",
+      "autofireMaxMult": 4,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Military-grade battle rifle with reinforced titanium barrel. +1 to Attack Checks (Excellent Quality)."
+    },
+    {
+      "id": "militech-perseus",
+      "name": "Militech Perseus",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 30,
+      "ammoType": "Rifle",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Composite assault weapon with integrated smartlink sensor suite."
+    },
+    {
+      "id": "gunmart-smart-special",
+      "name": "GunMart Smart Special",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 8,
+      "ammoType": "Heavy Pistol",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Budget smart pistol. Poor quality: Jams on critical failure (roll of 1)."
+    },
+    {
+      "id": "borg-assault-rifle",
+      "name": "Borg Assault Rifle",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 40,
+      "ammoType": "Rifle",
+      "altFireModes": "Autofire (4)",
+      "autofireMaxMult": 4,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Requires BODY 11+ or FBC chassis. Fires heavy depleted-uranium sabot rounds."
+    },
+    {
+      "id": "sanroo-hello-cutie",
+      "name": "Sanroo Hello Cutie Ultra-K8",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "2d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 30,
+      "ammoType": "Medium Pistol",
+      "altFireModes": "Autofire (3)",
+      "autofireMaxMult": 3,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Concealable submachine gun disguised as a pink consumer novelty toy."
+    },
+    {
+      "id": "tsunami-rasetsu",
+      "name": "Tsunami Arms Rasetsu",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "6d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 2000,
+      "costTier": "Super Luxury",
+      "standardMag": 3,
+      "ammoType": "Slug",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Electromagnetic heavy sniper railgun. Overpenetrates cover."
+    },
+    {
+      "id": "kendachi-mono-katana",
+      "name": "Kendachi Mono-Katana",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Monomolecular edged katana. Halves defender's armor SP. +1 to Attack Checks (Excellent Quality)."
+    },
+    {
+      "id": "slamdance-hyper-hammer",
+      "name": "SlamDance Hyper-Hammer",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Hydraulically assisted sledgehammer. Destroys cover SP on impact."
+    },
+    {
+      "id": "faisals-magna-knuckles",
+      "name": "Faisal's Magna Knuckles",
+      "type": "Melee",
+      "skill": "Brawling",
+      "damage": "2d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "notes": "Electromagnetic brawling knuckles. Inflicts EMP shock on metallic targets."
+    },
+    {
+      "id": "unity-power",
+      "name": "Constitutional Arms Unity (Power)",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 12,
+      "ammoType": "Heavy Pistol",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Power Weapon: Ricochet off walls (-4 or 0 with Coprocessor). +5 Critical Damage."
+    },
+    {
+      "id": "tamayura-power",
+      "name": "Arasaka Tamayura (Power)",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 8,
+      "ammoType": "Very Heavy Pistol",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Arasaka heavy power pistol. Excellent quality (+1 Attack). +5 Critical Damage."
+    },
+    {
+      "id": "lexington-power",
+      "name": "Militech Lexington (Power)",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 15,
+      "ammoType": "Heavy Pistol",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "High-capacity power service pistol used by NCPD and Militech."
+    },
+    {
+      "id": "shigure-power",
+      "name": "Arasaka Shigure (Power SMG)",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 30,
+      "ammoType": "Heavy Pistol",
+      "altFireModes": "Autofire (3)",
+      "autofireMaxMult": 3,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Power SMG with rapid kinetic ricochet capability."
+    },
+    {
+      "id": "masamune-power",
+      "name": "Arasaka HJSH-18 Masamune (Power AR)",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 30,
+      "ammoType": "Rifle",
+      "altFireModes": "Autofire (4)",
+      "autofireMaxMult": 4,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Military 3-round burst precision assault rifle. +5 Critical Damage on ricochet."
+    },
+    {
+      "id": "carnage-guts-power",
+      "name": "Constitutional Arms Carnage \"Guts\" (Power Shotgun)",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 8,
+      "ammoType": "Slug",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Heavy pump-action power shotgun. Rebecca's customized weapon of choice."
+    },
+    {
+      "id": "grad-power-sniper",
+      "name": "Techtronika SPT32 Grad (Power Sniper)",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 4,
+      "ammoType": "Rifle",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Heavy anti-materiel bolt-action power sniper rifle."
+    },
+    {
+      "id": "db2-satara-tech",
+      "name": "Rostović DB-2 Satara (Tech Shotgun)",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 2,
+      "ammoType": "Slug",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Tech Weapon: Charge Action halves defender SP and overpenetrates cover."
+    },
+    {
+      "id": "nekomata-tech",
+      "name": "Tsunami Nekomata (Tech Sniper)",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 4,
+      "ammoType": "Rifle",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Electromagnetic Gauss sniper rifle. Charged shot pierces solid concrete."
+    },
+    {
+      "id": "achilles-tech",
+      "name": "Militech M-179E Achilles (Tech Rifle)",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 30,
+      "ammoType": "Rifle",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Militech tech precision rifle. Fires charged hyper-velocity tungsten penetrators."
+    },
+    {
+      "id": "burya-tech",
+      "name": "RT-46 Burya (Tech Revolver)",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 4,
+      "ammoType": "Very Heavy Pistol",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Heavy tech hand cannon. Charged shot punches through armored vehicles."
+    },
+    {
+      "id": "kenshin-tech",
+      "name": "Arasaka Kenshin (Tech Pistol)",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 12,
+      "ammoType": "Heavy Pistol",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Arasaka corporate tech pistol with rapid electromagnetic capacitor."
+    },
+    {
+      "id": "chao-smart",
+      "name": "Kang Tao A-22B Chao (Smart Pistol)",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 30,
+      "ammoType": "Heavy Pistol",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Smart Weapon: +1 to Attack. Second chance reroll if miss by 4 or less. Requires Neuroport."
+    },
+    {
+      "id": "dian-smart",
+      "name": "Kang Tao G-58 Dian (Smart SMG)",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 30,
+      "ammoType": "Heavy Pistol",
+      "altFireModes": "Autofire (3)",
+      "autofireMaxMult": 3,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Micro-missile guided smart submachine gun. Second chance reroll on miss."
+    },
+    {
+      "id": "zhuo-smart",
+      "name": "Kang Tao L-69 Zhuo (Smart Shotgun)",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 8,
+      "ammoType": "Slug",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Eight-barrel smart tracking shotgun. Homing micro-pellets seek target behind cover."
+    },
+    {
+      "id": "yukimura-smart",
+      "name": "Arasaka HJKE-11 Yukimura (Smart Pistol)",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 15,
+      "ammoType": "Heavy Pistol",
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "notes": "Arasaka executive smart defense pistol. High tracking precision."
+    },
+    {
+      "id": "borg-heavy-autocannon",
+      "name": "Borg Heavy Autocannon",
+      "type": "Ranged",
+      "skill": "Heavy Weapons",
+      "damage": "6d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 2000,
+      "costTier": "Super Luxury",
+      "standardMag": 50,
+      "ammoType": "Rifle",
+      "altFireModes": "Autofire (4)",
+      "autofireMaxMult": 4,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "notes": "Requires FBC Chassis or Linear Frame BODY 12+. Devastating heavy rotary cannon."
+    },
+    {
+      "id": "borg-super-shotgun",
+      "name": "Borg Super-Shotgun",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "6d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 12,
+      "ammoType": "Slug",
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "notes": "Requires FBC Chassis or BODY 11+. Industrial demolition shotgun."
+    },
+    {
+      "id": "danger-gal-kitty-smg",
+      "name": "Danger Gal \"Kitty\" Smart SMG",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 35,
+      "ammoType": "Heavy Pistol",
+      "altFireModes": "Autofire (3)",
+      "autofireMaxMult": 3,
+      "sourceBook": "danger_gal",
+      "sourceBookTitle": "Danger Gal Dossier",
+      "era": "2045",
+      "notes": "Customized smart submachine gun with feline logo and targeting software."
+    },
+    {
+      "id": "midnight-erebus",
+      "name": "Midnight Arms Erebus",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 30,
+      "ammoType": "Heavy Pistol",
+      "altFireModes": "Autofire (3)",
+      "autofireMaxMult": 3,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "12 Days of Gunmas DLC",
+      "era": "2045",
+      "notes": "Black-market suppressed submachine gun. Silent firing."
+    },
+    {
+      "id": "militech-fox-dual",
+      "name": "Militech Fox Dual-Ammo Pistol",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 16,
+      "ammoType": "Heavy Pistol",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "12 Days of Gunmas DLC",
+      "era": "2045",
+      "notes": "Twin-feed magazine allowing toggling between Standard and Armor-Piercing ammo without an Action."
+    },
+    {
+      "id": "rostovic-kolokol",
+      "name": "Rostović Kolokol Assault Pistol",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 20,
+      "ammoType": "Heavy Pistol",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "12 Days of Gunmas DLC",
+      "era": "2045",
+      "notes": "Neo-Soviet military sidearm with heavy compensator."
     }
   ],
   "armor": [
@@ -1078,7 +1870,10 @@
       "penalty": 0,
       "cost": 20,
       "costTier": "Everyday",
-      "description": "Thin leather with reinforced pads at shoulders, hips, and gut. Favored by Nomads."
+      "description": "Thin leather with reinforced pads at shoulders, hips, and gut. Favored by Nomads.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "kevlar",
@@ -1087,7 +1882,10 @@
       "penalty": 0,
       "cost": 50,
       "costTier": "Costly",
-      "description": "Heat-resistant synthetic lightweight fiber delivering high tensile strength."
+      "description": "Heat-resistant synthetic lightweight fiber delivering high tensile strength.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "light-armorjack",
@@ -1096,7 +1894,10 @@
       "penalty": 0,
       "cost": 100,
       "costTier": "Premium",
-      "description": "A combination of Kevlar and plastic meshes inserted into fabric weave. Modern standard."
+      "description": "A combination of Kevlar and plastic meshes inserted into fabric weave. Modern standard.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "bodyweight-suit",
@@ -1105,7 +1906,10 @@
       "penalty": 0,
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "Skinsuit with impact-absorbing sintered armorgel. Includes built-in interface plugs and biomonitor."
+      "description": "Skinsuit with impact-absorbing sintered armorgel. Includes built-in interface plugs and biomonitor.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "medium-armorjack",
@@ -1114,7 +1918,10 @@
       "penalty": -2,
       "cost": 100,
       "costTier": "Premium",
-      "description": "Heavier mesh plating. Imposes a -2 penalty to REF, DEX, and MOVE."
+      "description": "Heavier mesh plating. Imposes a -2 penalty to REF, DEX, and MOVE.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "heavy-armorjack",
@@ -1123,7 +1930,10 @@
       "penalty": -2,
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Solid plate inserts and dense Kevlar weave. Imposes -2 REF, DEX, and MOVE."
+      "description": "Solid plate inserts and dense Kevlar weave. Imposes -2 REF, DEX, and MOVE.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "flak",
@@ -1132,7 +1942,10 @@
       "penalty": -4,
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Military grade metal-plate flak vest and groin protector. Imposes -4 REF, DEX, and MOVE."
+      "description": "Military grade metal-plate flak vest and groin protector. Imposes -4 REF, DEX, and MOVE.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "metalgear",
@@ -1141,7 +1954,10 @@
       "penalty": -4,
       "cost": 5000,
       "costTier": "Luxury",
-      "description": "Full powered-suit-grade solid plate carapace. Walking tank. Imposes -4 REF, DEX, and MOVE."
+      "description": "Full powered-suit-grade solid plate carapace. Walking tank. Imposes -4 REF, DEX, and MOVE.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "bulletproof-shield",
@@ -1151,7 +1967,10 @@
       "penalty": 0,
       "cost": 100,
       "costTier": "Premium",
-      "description": "Polycarbonate shield providing 10 cover HP. Takes up one arm."
+      "description": "Polycarbonate shield providing 10 cover HP. Takes up one arm.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "radiation-suit",
@@ -1160,7 +1979,70 @@
       "penalty": 0,
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "Full hazardous protective suit providing complete protection from airborne radiation and chemical fallout in hot zones."
+      "description": "Full hazardous protective suit providing complete protection from airborne radiation and chemical fallout in hot zones.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
+    },
+    {
+      "id": "militech-tacvest",
+      "name": "Militech Tac-Vest",
+      "sp": 12,
+      "penalty": 0,
+      "cost": 500,
+      "costTier": "Expensive",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Reinforced medium armorjack tactical vest with modular pouches and zero movement penalty."
+    },
+    {
+      "id": "trauma-team-armor",
+      "name": "Trauma Team Medtech Armor",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 500,
+      "costTier": "Expensive",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Standard issue Trauma Team high-visibility paramedical ballistic armor."
+    },
+    {
+      "id": "gibson-battlegear",
+      "name": "Gibson Battlegear",
+      "sp": 13,
+      "penalty": -2,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Heavy interlocking composite armor plates designed for riot suppression and trench warfare."
+    },
+    {
+      "id": "skunkworks-stealth-suit",
+      "name": "Skunkworks Stealth Suit",
+      "sp": 7,
+      "penalty": 0,
+      "cost": 500,
+      "costTier": "Expensive",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Radar-absorbent lightweight Kevlar bodysuit giving +2 to Stealth checks in darkness."
+    },
+    {
+      "id": "firebrand-bunker-gear",
+      "name": "Firebrand Bunker Gear",
+      "sp": 15,
+      "penalty": -4,
+      "cost": 1500,
+      "costTier": "Very Expensive",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Industrial firefighting and hazmat flak suit with full thermal and flame resistance."
     }
   ],
   "attachments": [
@@ -1169,70 +2051,100 @@
       "name": "Smartgun Link",
       "cost": 500,
       "slots": 2,
-      "description": "Connects weapon to user's Subdermal Grip or Neuralware. Adds +1 to attack checks."
+      "description": "Connects weapon to user's Subdermal Grip or Neuralware. Adds +1 to attack checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "sniperscope",
       "name": "Sniping Scope",
       "cost": 100,
       "slots": 1,
-      "description": "Eliminates penalties when aiming at long distances (51m+). Adds +1 to attack checks at long range."
+      "description": "Eliminates penalties when aiming at long distances (51m+). Adds +1 to attack checks at long range.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "extended-magazine",
       "name": "Extended Magazine",
       "cost": 100,
       "slots": 1,
-      "description": "Increases weapon standard magazine capacity."
+      "description": "Increases weapon standard magazine capacity.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "drum-magazine",
       "name": "Drum Magazine",
       "cost": 500,
       "slots": 2,
-      "description": "Massively expands weapon capacity (e.g. to 40 rounds for Rifles)."
+      "description": "Massively expands weapon capacity (e.g. to 40 rounds for Rifles).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "bayonet",
       "name": "Bayonet",
       "cost": 100,
       "slots": 1,
-      "description": "Affixes a Light or Medium melee weapon to a two-handed ranged weapon."
+      "description": "Affixes a Light or Medium melee weapon to a two-handed ranged weapon.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "grenade-launcher-underbarrel",
       "name": "Grenade Launcher Underbarrel",
       "cost": 500,
       "slots": 2,
-      "description": "Underbarrel single-shot grenade launcher attached to a two-handed Shoulder Arms weapon."
+      "description": "Underbarrel single-shot grenade launcher attached to a two-handed Shoulder Arms weapon.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "heavy-chassis",
       "name": "Heavy Chassis",
       "cost": 500,
       "slots": 1,
-      "description": "Reinforced structural receiver mount providing added recoil stability and ruggedness."
+      "description": "Reinforced structural receiver mount providing added recoil stability and ruggedness.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "infrared-nightvision-scope",
       "name": "Infrared Nightvision Scope",
       "cost": 500,
       "slots": 1,
-      "description": "Reduces penalties for attacking targets obscured by darkness, smoke, or fog to 0."
+      "description": "Reduces penalties for attacking targets obscured by darkness, smoke, or fog to 0.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "shotgun-underbarrel",
       "name": "Shotgun Underbarrel",
       "cost": 500,
       "slots": 2,
-      "description": "Underbarrel shotgun attachment with a 2-shot magazine attached to a two-handed Shoulder Arms weapon."
+      "description": "Underbarrel shotgun attachment with a 2-shot magazine attached to a two-handed Shoulder Arms weapon.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "silencer",
       "name": "Silencer",
       "cost": 100,
       "slots": 1,
-      "description": "Suppresses weapon report, requiring a Perception check to identify firing location from a distance."
+      "description": "Suppresses weapon report, requiring a Perception check to identify firing location from a distance.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     }
   ],
   "ammunition": [
@@ -1241,91 +2153,130 @@
       "name": "Basic Ammo",
       "cost": 10,
       "costTier": "Cheap",
-      "description": "Standard ammunition without special effects. Purchased in increments of 10 (or 1 for Grenades/Rockets)."
+      "description": "Standard ammunition without special effects. Purchased in increments of 10 (or 1 for Grenades/Rockets).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "armor-piercing-ammo",
       "name": "Armor-Piercing Ammo",
       "cost": 100,
       "costTier": "Premium",
-      "description": "When an attack using this ammo penetrates SP, it ablates armor by 2 instead of 1."
+      "description": "When an attack using this ammo penetrates SP, it ablates armor by 2 instead of 1.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "biotoxin-ammo",
       "name": "Biotoxin Ammo",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Arrows and Grenades only. Deals no normal damage; target must beat DV15 Resist Torture/Drugs or take 3d6 damage direct to HP."
+      "description": "Arrows and Grenades only. Deals no normal damage; target must beat DV15 Resist Torture/Drugs or take 3d6 damage direct to HP.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "emp-ammo",
       "name": "EMP Ammo",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Grenades and Rockets only. Forces DV15 Cybertech check on impact; failure disables 2 pieces of cyberware/electronics for 1 min."
+      "description": "Grenades and Rockets only. Forces DV15 Cybertech check on impact; failure disables 2 pieces of cyberware/electronics for 1 min.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "expansive-ammo",
       "name": "Expansive Ammo",
       "cost": 100,
       "costTier": "Premium",
-      "description": "When this ammunition causes a Critical Injury, roll twice on the table and choose which one occurs."
+      "description": "When this ammunition causes a Critical Injury, roll twice on the table and choose which one occurs.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "flashbang-grenade",
       "name": "Flashbang Grenade",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Grenades only. Meat targets in 10x10m must beat DV13 Resist Torture/Drugs or suffer Damaged Ear and Damaged Eye Critical Injuries."
+      "description": "Grenades only. Meat targets in 10x10m must beat DV13 Resist Torture/Drugs or suffer Damaged Ear and Damaged Eye Critical Injuries.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "incendiary-ammo",
       "name": "Incendiary Ammo",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Ignites targets on hit. Target takes 2 damage direct to HP at end of each turn until using an Action to extinguish."
+      "description": "Ignites targets on hit. Target takes 2 damage direct to HP at end of each turn until using an Action to extinguish.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "poison-ammo",
       "name": "Poison Ammo",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Arrows and Grenades only. Target must beat DV13 Resist Torture/Drugs or take 2d6 damage direct to HP."
+      "description": "Arrows and Grenades only. Target must beat DV13 Resist Torture/Drugs or take 2d6 damage direct to HP.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "rubber-ammo",
       "name": "Rubber Ammo",
       "cost": 10,
       "costTier": "Cheap",
-      "description": "Non-lethal ammunition. Cannot cause Critical Injury or ablate armor. Leaves target at 1 HP minimum."
+      "description": "Non-lethal ammunition. Cannot cause Critical Injury or ablate armor. Leaves target at 1 HP minimum.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "sleep-ammo",
       "name": "Sleep Ammo",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Arrows and Grenades only. Target must beat DV13 Resist Torture/Drugs or fall Prone and Unconscious for 1 minute."
+      "description": "Arrows and Grenades only. Target must beat DV13 Resist Torture/Drugs or fall Prone and Unconscious for 1 minute.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "smart-ammo",
       "name": "Smart Ammo",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Requires Targeting Scope. If a single shot misses by 4 or less, grants an immediate reroll with a +10 bonus."
+      "description": "Requires Targeting Scope. If a single shot misses by 4 or less, grants an immediate reroll with a +10 bonus.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "smoke-grenade",
       "name": "Smoke Grenade",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Grenades only. Obscures a 10x10m area with smoke for 1 minute (-4 penalty to visual checks)."
+      "description": "Grenades only. Obscures a 10x10m area with smoke for 1 minute (-4 penalty to visual checks).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "teargas-grenade",
       "name": "Teargas Grenade",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Grenades only. Meat eyes targets must beat DV13 Resist Torture/Drugs or suffer Damaged Eye Critical Injury for 1 minute."
+      "description": "Grenades only. Meat eyes targets must beat DV13 Resist Torture/Drugs or suffer Damaged Eye Critical Injury for 1 minute.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     }
   ],
   "cyberware": [
@@ -1336,7 +2287,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 100,
-      "description": "Subdermal implant constantly displaying vitals; can link to Agent."
+      "description": "Subdermal implant constantly displaying vitals; can link to Agent.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "chemskin",
@@ -1345,7 +2299,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 100,
-      "description": "Pigment dyes infused into skin. +2 to Personal Grooming when combined with Techhair."
+      "description": "Pigment dyes infused into skin. +2 to Personal Grooming when combined with Techhair.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "emp-threading",
@@ -1354,7 +2311,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 10,
-      "description": "Thin silver circuit-like lines across body. Iconic street fashion statement."
+      "description": "Thin silver circuit-like lines across body. Iconic street fashion statement.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "light-tattoo",
@@ -1363,7 +2323,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 100,
-      "description": "Subdermal light patches projecting glowing tattoos. 3+ tattoos grant +2 Wardrobe & Style."
+      "description": "Subdermal light patches projecting glowing tattoos. 3+ tattoos grant +2 Wardrobe & Style.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "shift-tacts",
@@ -1372,7 +2335,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 100,
-      "description": "Color-changing lenses implanted in eyes with optional pattern shifts."
+      "description": "Color-changing lenses implanted in eyes with optional pattern shifts.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "skinwatch",
@@ -1381,7 +2347,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 100,
-      "description": "Subdermal chronometer displaying current time through skin."
+      "description": "Subdermal chronometer displaying current time through skin.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "techhair",
@@ -1390,7 +2359,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 100,
-      "description": "Color and light-emitting artificial hair strands. +2 Personal Grooming when combined with Chemskin."
+      "description": "Color and light-emitting artificial hair strands. +2 Personal Grooming when combined with Chemskin.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "neuralware-processor",
@@ -1399,7 +2371,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 1000,
-      "description": "Foundational neural processor required for all Neuralware options, Speedware, and Chipware."
+      "description": "Foundational neural processor required for all Neuralware options, Speedware, and Chipware.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "braindance-recorder",
@@ -1408,7 +2383,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Records sensory experiences directly to standard Memory Chip. Requires Neural Link."
+      "description": "Records sensory experiences directly to standard Memory Chip. Requires Neural Link.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "chipware-socket",
@@ -1417,7 +2395,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Neck/cranial socket allowing instant insertion of Skill Chips and Chipware. Requires Neural Link."
+      "description": "Neck/cranial socket allowing instant insertion of Skill Chips and Chipware. Requires Neural Link.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "interface-plugs",
@@ -1426,7 +2407,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Wrist or neck plugs allowing direct mental interface to Smartguns, Cyberdecks, and vehicles."
+      "description": "Wrist or neck plugs allowing direct mental interface to Smartguns, Cyberdecks, and vehicles.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "kerenzikov",
@@ -1435,7 +2419,10 @@
       "install": "Clinic",
       "humanityLoss": "4d6 (14)",
       "cost": 500,
-      "description": "Always-on reaction booster. Permanently adds +2 to Initiative checks. Only 1 Speedware allowed."
+      "description": "Always-on reaction booster. Permanently adds +2 to Initiative checks. Only 1 Speedware allowed.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "sandevistan",
@@ -1444,7 +2431,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Activated as an Action: adds +3 to Initiative checks for 1 minute (1 hour cooldown). Only 1 Speedware allowed."
+      "description": "Activated as an Action: adds +3 to Initiative checks for 1 minute (1 hour cooldown). Only 1 Speedware allowed.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "chemical-analyzer-chip",
@@ -1453,7 +2443,10 @@
       "install": "Mall",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Chipware. Tests and identifies chemical compounds as an Action. Requires Chipware Socket."
+      "description": "Chipware. Tests and identifies chemical compounds as an Action. Requires Chipware Socket.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "memory-chip-cyber",
@@ -1462,7 +2455,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 10,
-      "description": "Chipware data storage chip. Requires Chipware Socket."
+      "description": "Chipware data storage chip. Requires Chipware Socket.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "olfactory-boost",
@@ -1471,7 +2467,10 @@
       "install": "Mall",
       "humanityLoss": "2d6 (7)",
       "cost": 100,
-      "description": "Chipware boosting sense of smell, allowing Tracking skill to follow scents. Requires Chipware Socket."
+      "description": "Chipware boosting sense of smell, allowing Tracking skill to follow scents. Requires Chipware Socket.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "pain-editor",
@@ -1480,7 +2479,10 @@
       "install": "Mall",
       "humanityLoss": "4d6 (14)",
       "cost": 1000,
-      "description": "Chipware shutting off pain receptors, ignoring Seriously Wounded penalties. Requires Chipware Socket."
+      "description": "Chipware shutting off pain receptors, ignoring Seriously Wounded penalties. Requires Chipware Socket.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "skill-chip",
@@ -1489,7 +2491,10 @@
       "install": "Mall",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Chipware giving +3 to associated Skill if untrained or trained under +3. Requires Chipware Socket."
+      "description": "Chipware giving +3 to associated Skill if untrained or trained under +3. Requires Chipware Socket.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "tactile-boost",
@@ -1498,7 +2503,10 @@
       "install": "Mall",
       "humanityLoss": "2d6 (7)",
       "cost": 100,
-      "description": "Chipware detecting motion within 20m through surface contact. Requires Chipware Socket."
+      "description": "Chipware detecting motion within 20m through surface contact. Requires Chipware Socket.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "cybereye",
@@ -1507,7 +2515,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 100,
-      "description": "Artificial eye replacement with 3 option slots."
+      "description": "Artificial eye replacement with 3 option slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "anti-dazzle",
@@ -1516,7 +2527,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Immunity to flashbangs and blinding light flashes. Requires paired cybereyes."
+      "description": "Immunity to flashbangs and blinding light flashes. Requires paired cybereyes.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "chyron",
@@ -1525,7 +2539,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Tiny subscreen projecting text and video into visual field. Requires a Cybereye."
+      "description": "Tiny subscreen projecting text and video into visual field. Requires a Cybereye.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "color-shift",
@@ -1534,7 +2551,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Cosmetic upgrade for unlimited iris color/pattern shifts as an Action. Requires a Cybereye."
+      "description": "Cosmetic upgrade for unlimited iris color/pattern shifts as an Action. Requires a Cybereye.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "cybereye-dartgun",
@@ -1543,7 +2563,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 500,
-      "description": "Concealed 1-shot dartgun inside eye. Takes 3 Cybereye slots."
+      "description": "Concealed 1-shot dartgun inside eye. Takes 3 Cybereye slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "image-enhance",
@@ -1552,7 +2575,10 @@
       "install": "Mall",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Adds +2 to visual Perception, Lip Reading, and Conceal/Reveal Object. Requires paired Cybereyes."
+      "description": "Adds +2 to visual Perception, Lip Reading, and Conceal/Reveal Object. Requires paired Cybereyes.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "low-light-infrared-uv",
@@ -1561,7 +2587,10 @@
       "install": "Mall",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Eliminates darkness penalties and allows thermographic vision. Takes 2 slots per Cybereye, must be paired."
+      "description": "Eliminates darkness penalties and allows thermographic vision. Takes 2 slots per Cybereye, must be paired.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "micro-optics",
@@ -1570,7 +2599,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Microscopic lens providing up to 400x magnification. Requires a Cybereye."
+      "description": "Microscopic lens providing up to 400x magnification. Requires a Cybereye.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "micro-video",
@@ -1579,7 +2611,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 500,
-      "description": "Camera in eye recording audio/video to Memory Chip or Agent. Takes 2 Cybereye slots."
+      "description": "Camera in eye recording audio/video to Memory Chip or Agent. Takes 2 Cybereye slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "radiation-detector-eye",
@@ -1588,7 +2623,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 1000,
-      "description": "Overlays radiation source locations within 100m as blue glows. Requires a Cybereye."
+      "description": "Overlays radiation source locations within 100m as blue glows. Requires a Cybereye.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "targeting-scope",
@@ -1597,7 +2635,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Adds +1 to Aimed Shot checks. Required for Smart Ammunition. Requires a Cybereye."
+      "description": "Adds +1 to Aimed Shot checks. Required for Smart Ammunition. Requires a Cybereye.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "teleoptics",
@@ -1606,7 +2647,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Telescopic vision up to 800m; adds +1 to single shot or Aimed Shot at 51m+. Requires a Cybereye."
+      "description": "Telescopic vision up to 800m; adds +1 to single shot or Aimed Shot at 51m+. Requires a Cybereye.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "virtuality-optics",
@@ -1615,7 +2659,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Projects cyberspace overlay directly into vision. Requires paired Cybereyes."
+      "description": "Projects cyberspace overlay directly into vision. Requires paired Cybereyes.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "cyberaudio-suite",
@@ -1624,7 +2671,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Internal auditory foundation with 3 option slots for audio implants."
+      "description": "Internal auditory foundation with 3 option slots for audio implants.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "amplified-hearing",
@@ -1633,7 +2683,10 @@
       "install": "Mall",
       "humanityLoss": "1d6 (3)",
       "cost": 100,
-      "description": "Adds +2 to auditory Perception checks. Requires Cyberaudio Suite."
+      "description": "Adds +2 to auditory Perception checks. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "audio-recorder-audio",
@@ -1642,7 +2695,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Records audio directly to onboard Memory Chip or Agent. Requires Cyberaudio Suite."
+      "description": "Records audio directly to onboard Memory Chip or Agent. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "bug-detector-audio",
@@ -1651,7 +2707,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Beeps when within 2m of an active listening tap/bug. Requires Cyberaudio Suite."
+      "description": "Beeps when within 2m of an active listening tap/bug. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "homing-tracer-audio",
@@ -1660,7 +2719,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Tracks linked homing button up to 1 mile. Requires Cyberaudio Suite."
+      "description": "Tracks linked homing button up to 1 mile. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "internal-agent",
@@ -1669,7 +2731,10 @@
       "install": "Mall",
       "humanityLoss": "1d6 (3)",
       "cost": 100,
-      "description": "Fully functional Agent operated via voice commands. Requires Cyberaudio Suite."
+      "description": "Fully functional Agent operated via voice commands. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "level-damper",
@@ -1678,7 +2743,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Automatic acoustic dampener giving immunity to deafening noises and flashbangs. Requires Cyberaudio Suite."
+      "description": "Automatic acoustic dampener giving immunity to deafening noises and flashbangs. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "radio-communicator-audio",
@@ -1687,7 +2755,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Internal 1-mile range radio communication transceiver. Requires Cyberaudio Suite."
+      "description": "Internal 1-mile range radio communication transceiver. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "radio-scanner-music",
@@ -1696,7 +2767,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 50,
-      "description": "Scans active radio bands and plays music from Data Pool or Memory Chip. Requires Cyberaudio Suite."
+      "description": "Scans active radio bands and plays music from Data Pool or Memory Chip. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "radar-detector-audio",
@@ -1705,7 +2779,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 500,
-      "description": "Beeps if active radar beam touches user within 100m. Requires Cyberaudio Suite."
+      "description": "Beeps if active radar beam touches user within 100m. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "scrambler-descrambler-audio",
@@ -1714,7 +2791,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Scrambles outgoing voice comms and decodes incoming secure signals. Requires Cyberaudio Suite."
+      "description": "Scrambles outgoing voice comms and decodes incoming secure signals. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "voice-stress-analyzer",
@@ -1723,7 +2803,10 @@
       "install": "Mall",
       "humanityLoss": "1d6 (3)",
       "cost": 100,
-      "description": "Adds +2 to Human Perception and Interrogation with lie-detecting mode. Requires Cyberaudio Suite."
+      "description": "Adds +2 to Human Perception and Interrogation with lie-detecting mode. Requires Cyberaudio Suite.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "audiovox",
@@ -1732,7 +2815,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Vocal synthesizer adding +2 to Acting and singing Play Instrument checks."
+      "description": "Vocal synthesizer adding +2 to Acting and singing Play Instrument checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "contraceptive-implant",
@@ -1741,7 +2827,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 10,
-      "description": "Subdermal hormonal regulator preventing undesired pregnancy."
+      "description": "Subdermal hormonal regulator preventing undesired pregnancy.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "enhanced-antibodies",
@@ -1750,7 +2839,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 500,
-      "description": "Doubles HP recovery rate to 2x BODY per day of restful healing after stabilization."
+      "description": "Doubles HP recovery rate to 2x BODY per day of restful healing after stabilization.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "cybersnake",
@@ -1759,7 +2851,10 @@
       "install": "Hospital",
       "humanityLoss": "4d6 (14)",
       "cost": 1000,
-      "description": "Concealed esophagus-mounted tentacle weapon. Very Heavy Melee (4d6, ROF 1)."
+      "description": "Concealed esophagus-mounted tentacle weapon. Very Heavy Melee (4d6, ROF 1).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "gills",
@@ -1768,7 +2863,10 @@
       "install": "Hospital",
       "humanityLoss": "2d6 (7)",
       "cost": 1000,
-      "description": "Implanted artificial gills enabling underwater respiration."
+      "description": "Implanted artificial gills enabling underwater respiration.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "grafted-muscle-bone-lace",
@@ -1777,7 +2875,10 @@
       "install": "Hospital",
       "humanityLoss": "4d6 (14)",
       "cost": 1000,
-      "description": "Increases BODY stat by +2 (updates HP and Death Save). Max BODY 10 with this implant."
+      "description": "Increases BODY stat by +2 (updates HP and Death Save). Max BODY 10 with this implant.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "independent-air-supply",
@@ -1786,7 +2887,10 @@
       "install": "Hospital",
       "humanityLoss": "2 (1d6/2)",
       "cost": 1000,
-      "description": "Internal artificial lung reservoir providing 30 minutes of emergency breathing."
+      "description": "Internal artificial lung reservoir providing 30 minutes of emergency breathing.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "midnight-lady",
@@ -1795,7 +2899,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 100,
-      "description": "Bespoke female erotic cyberware modification."
+      "description": "Bespoke female erotic cyberware modification.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "mr-studd",
@@ -1804,7 +2911,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 100,
-      "description": "Bespoke male erotic cyberware modification with stamina enhancements."
+      "description": "Bespoke male erotic cyberware modification with stamina enhancements.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "nasal-filters",
@@ -1813,7 +2923,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Full immunity to inhaled toxic gasses, smoke, and airborne biological agents."
+      "description": "Full immunity to inhaled toxic gasses, smoke, and airborne biological agents.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "radar-sonar-implant",
@@ -1822,7 +2935,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 1000,
-      "description": "Scans terrain and water within 50m for moving threats."
+      "description": "Scans terrain and water within 50m for moving threats.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "toxin-binders",
@@ -1831,7 +2947,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Adds +2 to Resist Torture/Drugs skill checks."
+      "description": "Adds +2 to Resist Torture/Drugs skill checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "vampyres",
@@ -1840,7 +2959,10 @@
       "install": "Clinic",
       "humanityLoss": "4d6 (14)",
       "cost": 500,
-      "description": "Retractable fangs (Light Melee 1d6, ROF 2) with concealed roof-of-mouth poison reservoir."
+      "description": "Retractable fangs (Light Melee 1d6, ROF 2) with concealed roof-of-mouth poison reservoir.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "hidden-holster",
@@ -1849,7 +2971,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Body cavity holster allowing seamless weapon concealment and instant drawing without an Action."
+      "description": "Body cavity holster allowing seamless weapon concealment and instant drawing without an Action.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "skin-weave",
@@ -1858,7 +2983,10 @@
       "install": "Hospital",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Nanotech armored weave giving permanent SP 7 to Body and Head with daily self-repair."
+      "description": "Nanotech armored weave giving permanent SP 7 to Body and Head with daily self-repair.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "subdermal-armor",
@@ -1867,7 +2995,10 @@
       "install": "Hospital",
       "humanityLoss": "4d6 (14)",
       "cost": 1000,
-      "description": "Subdermal ballistic plating providing permanent SP 11 to Body and Head with daily self-repair."
+      "description": "Subdermal ballistic plating providing permanent SP 11 to Body and Head with daily self-repair.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "subdermal-pocket",
@@ -1876,7 +3007,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 100,
-      "description": "2x4 inch concealed compartment with Realskinn zipper."
+      "description": "2x4 inch concealed compartment with Realskinn zipper.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "cyberarm",
@@ -1885,7 +3019,10 @@
       "install": "Hospital",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Replacement arm with 4 option slots. Includes standard hand."
+      "description": "Replacement arm with 4 option slots. Includes standard hand.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "standard-hand",
@@ -1894,7 +3031,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Standard replacement hand for Cyberarm or meat arm."
+      "description": "Standard replacement hand for Cyberarm or meat arm.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "big-knucks",
@@ -1903,7 +3043,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 100,
-      "description": "Armored knuckles. Medium Melee (2d6, ROF 2) concealable without a check."
+      "description": "Armored knuckles. Medium Melee (2d6, ROF 2) concealable without a check.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "cyberdeck-arm",
@@ -1912,7 +3055,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Integrates cyberdeck into Cyberarm with +1 bonus Program/Hardware slot. Takes 3 slots."
+      "description": "Integrates cyberdeck into Cyberarm with +1 bonus Program/Hardware slot. Takes 3 slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "grapple-hand",
@@ -1921,7 +3067,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 100,
-      "description": "Fires 30m rocket grapple line. Negates climbing movement penalties."
+      "description": "Fires 30m rocket grapple line. Negates climbing movement penalties.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "medscanner-arm",
@@ -1930,7 +3079,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Built-in diagnostic scanner giving +2 to First Aid and Paramedic. Takes 2 slots."
+      "description": "Built-in diagnostic scanner giving +2 to First Aid and Paramedic. Takes 2 slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "popup-grenade-launcher",
@@ -1939,7 +3091,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Concealed 1-shot grenade launcher inside Cyberarm. Takes 2 slots."
+      "description": "Concealed 1-shot grenade launcher inside Cyberarm. Takes 2 slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "popup-melee-weapon",
@@ -1948,7 +3103,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Concealed Light/Medium/Heavy Melee weapon popping out of arm. Takes 2 slots."
+      "description": "Concealed Light/Medium/Heavy Melee weapon popping out of arm. Takes 2 slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "popup-shield",
@@ -1957,7 +3115,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Concealed foldable 10 HP bulletproof shield in arm. Takes 3 slots."
+      "description": "Concealed foldable 10 HP bulletproof shield in arm. Takes 3 slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "popup-ranged-weapon",
@@ -1966,7 +3127,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Concealed 1-handed ranged weapon permanently mounted in arm. Takes 2 slots."
+      "description": "Concealed 1-handed ranged weapon permanently mounted in arm. Takes 2 slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "quick-change-mount",
@@ -1975,7 +3139,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 100,
-      "description": "Socket mechanism allowing arm to be detached or swapped as an Action."
+      "description": "Socket mechanism allowing arm to be detached or swapped as an Action.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "rippers",
@@ -1984,7 +3151,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Extendable carbo-glass fingernails. Medium Melee (2d6, ROF 2) concealable without check."
+      "description": "Extendable carbo-glass fingernails. Medium Melee (2d6, ROF 2) concealable without check.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "scratchers",
@@ -1993,7 +3163,10 @@
       "install": "Mall",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Carbo-glass artificial fingernails. Light Melee (1d6, ROF 2) concealable without check."
+      "description": "Carbo-glass artificial fingernails. Light Melee (1d6, ROF 2) concealable without check.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "shoulder-cam",
@@ -2002,7 +3175,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Popup camera in shoulder that tracks targets independently. Takes 2 slots."
+      "description": "Popup camera in shoulder that tracks targets independently. Takes 2 slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "slice-n-dice",
@@ -2011,7 +3187,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Monofilament whip in thumb. Medium Melee (2d6, ROF 2) concealable without check."
+      "description": "Monofilament whip in thumb. Medium Melee (2d6, ROF 2) concealable without check.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "subdermal-grip",
@@ -2020,7 +3199,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 100,
-      "description": "Palm conductive pad linking directly to Smartguns. Requires Neural Link."
+      "description": "Palm conductive pad linking directly to Smartguns. Requires Neural Link.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "techscanner-arm",
@@ -2029,7 +3211,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Built-in technical scanner granting +2 to all Tech repair skills. Takes 2 slots."
+      "description": "Built-in technical scanner granting +2 to all Tech repair skills. Takes 2 slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "tool-hand",
@@ -2038,7 +3223,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 100,
-      "description": "Finger-mounted toolkit (screwdrivers, wrench, drill). Never without a Techtool."
+      "description": "Finger-mounted toolkit (screwdrivers, wrench, drill). Never without a Techtool.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "wolvers",
@@ -2047,7 +3235,10 @@
       "install": "Clinic",
       "humanityLoss": "2d6 (7)",
       "cost": 500,
-      "description": "Extendable knuckle claws. Heavy Melee (3d6, ROF 2) concealable without check."
+      "description": "Extendable knuckle claws. Heavy Melee (3d6, ROF 2) concealable without check.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "cyberleg",
@@ -2056,7 +3247,10 @@
       "install": "Hospital",
       "humanityLoss": "1d6 (3)",
       "cost": 100,
-      "description": "Replacement cybernetic leg with 3 option slots. Includes standard foot."
+      "description": "Replacement cybernetic leg with 3 option slots. Includes standard foot.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "standard-foot",
@@ -2065,7 +3259,10 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2)",
       "cost": 100,
-      "description": "Standard replacement foot for Cyberleg or meat leg."
+      "description": "Standard replacement foot for Cyberleg or meat leg.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "grip-foot",
@@ -2074,7 +3271,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Traction-coated feet negating climbing movement penalties. Must be paired."
+      "description": "Traction-coated feet negating climbing movement penalties. Must be paired.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "jump-booster",
@@ -2083,7 +3283,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Hydraulic leg boosters negating jump movement penalties. Takes 2 slots, must be paired."
+      "description": "Hydraulic leg boosters negating jump movement penalties. Takes 2 slots, must be paired.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "skate-foot",
@@ -2092,7 +3295,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Concealed inline skates in feet. Increases Run movement by +6m. Must be paired."
+      "description": "Concealed inline skates in feet. Increases Run movement by +6m. Must be paired.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "talon-foot",
@@ -2101,7 +3307,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Concealed blade mounted in foot. Light Melee (1d6, ROF 2)."
+      "description": "Concealed blade mounted in foot. Light Melee (1d6, ROF 2).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "web-foot",
@@ -2110,7 +3319,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 500,
-      "description": "Interdigital webbing negating swimming movement penalties. Must be paired."
+      "description": "Interdigital webbing negating swimming movement penalties. Must be paired.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "hardened-shielding",
@@ -2119,7 +3331,10 @@
       "install": "Clinic",
       "humanityLoss": "1d6 (3)",
       "cost": 1000,
-      "description": "EMP and Program immunity shielding for Cyberarm or Cyberleg."
+      "description": "EMP and Program immunity shielding for Cyberarm or Cyberleg.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "plastic-covering",
@@ -2128,7 +3343,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 100,
-      "description": "Protective cosmetic plastic outer casing for Cyberlimb."
+      "description": "Protective cosmetic plastic outer casing for Cyberlimb.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "realskinn-covering",
@@ -2137,7 +3355,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 500,
-      "description": "Life-like synthetic skin coating making Cyberlimb look natural."
+      "description": "Life-like synthetic skin coating making Cyberlimb look natural.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "superchrome-covering",
@@ -2146,7 +3367,10 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 1000,
-      "description": "Mirror-polished chrome shell granting +2 to Wardrobe & Style."
+      "description": "Mirror-polished chrome shell granting +2 to Wardrobe & Style.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "artificial-shoulder-mount",
@@ -2155,7 +3379,10 @@
       "install": "Hospital",
       "humanityLoss": "4d6 (14)",
       "cost": 1000,
-      "description": "Allows mounting two additional Cyberarms beneath the first set."
+      "description": "Allows mounting two additional Cyberarms beneath the first set.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "linear-frame-sigma",
@@ -2164,7 +3391,10 @@
       "install": "Hospital",
       "humanityLoss": "4d6 (14)",
       "cost": 1000,
-      "description": "Implanted frame increasing BODY stat to 12. Requires BODY 6 and Grafted Muscle."
+      "description": "Implanted frame increasing BODY stat to 12. Requires BODY 6 and Grafted Muscle.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "linear-frame-beta",
@@ -2173,7 +3403,10 @@
       "install": "Hospital",
       "humanityLoss": "4d6 (14)",
       "cost": 5000,
-      "description": "Heavy implanted frame increasing BODY stat to 14. Requires BODY 8 and 2x Grafted Muscle."
+      "description": "Heavy implanted frame increasing BODY stat to 14. Requires BODY 8 and 2x Grafted Muscle.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "multioptic-mount",
@@ -2182,7 +3415,10 @@
       "install": "Hospital",
       "humanityLoss": "4d6 (14)",
       "cost": 1000,
-      "description": "Cranial mount allowing installation of up to 5 additional Cybereyes."
+      "description": "Cranial mount allowing installation of up to 5 additional Cybereyes.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "sensor-array",
@@ -2191,7 +3427,358 @@
       "install": "Clinic",
       "humanityLoss": "4d6 (14)",
       "cost": 1000,
-      "description": "External rabbit ear antennas allowing up to 5 additional Cyberaudio options."
+      "description": "External rabbit ear antennas allowing up to 5 additional Cyberaudio options.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
+    },
+    {
+      "id": "linear-frame-vermilion",
+      "name": "Linear Frame Vermilion",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "4d6 (14)",
+      "cost": 5000,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Heavy internal exoskeleton frame setting BODY to 12. Requires Grafted Muscle & Bone Lace x2."
+    },
+    {
+      "id": "linear-frame-fuma-kotaro",
+      "name": "Linear Frame Fūma Kotarō",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "4d6 (14)",
+      "cost": 6000,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Shinobi martial frame setting BODY to 12 and granting +2 to MOVE for athletic sprints."
+    },
+    {
+      "id": "extra-jointed-cyberlimb",
+      "name": "Extra-Jointed Cyberlimb",
+      "type": "Cyberlimb",
+      "install": "Clinic",
+      "humanityLoss": "2 (1d6/2)",
+      "cost": 500,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Contortionist cyberlimb upgrade allowing 360-degree rotation and escape from grapples."
+    },
+    {
+      "id": "trauma-nanomatrix",
+      "name": "Trauma Response Nanomatrix",
+      "type": "Internal",
+      "install": "Clinic",
+      "humanityLoss": "2d6 (7)",
+      "cost": 1000,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Subdermal nanobots that automatically stabilize user at 0 HP on first death save."
+    },
+    {
+      "id": "reflex-co-processor",
+      "name": "Reflex Co-Processor",
+      "type": "Neuralware",
+      "install": "Clinic",
+      "humanityLoss": "2d6 (7)",
+      "cost": 1000,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Secondary neural coprocessor granting +2 to Initiative checks. Stacks with Speedware."
+    },
+    {
+      "id": "sponsored-cybereye",
+      "name": "Sponsored Cybereye",
+      "type": "Cyberoptics",
+      "install": "Mall",
+      "humanityLoss": "1d6 (3)",
+      "cost": 50,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Economy cyberoptic subsidized by corporate sponsors. Projects occasional holographic ads."
+    },
+    {
+      "id": "sponsored-cyberarm",
+      "name": "Sponsored Cyberarm",
+      "type": "Cyberlimb",
+      "install": "Hospital",
+      "humanityLoss": "2d6 (7)",
+      "cost": 250,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Half-price cyberarm featuring unremovable corporate sponsor logos and telemetry."
+    },
+    {
+      "id": "modular-finger-hand",
+      "name": "Modular Finger Cyberhand",
+      "type": "Cyberlimb",
+      "install": "Clinic",
+      "humanityLoss": "2 (1d6/2)",
+      "cost": 500,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Specialized replacement hand with built-in lockpicks, screwdriver, and data probe."
+    },
+    {
+      "id": "discount-cyberaudio",
+      "name": "Discount Cyberaudio",
+      "type": "Cyberaudio",
+      "install": "Mall",
+      "humanityLoss": "2d6 (7)",
+      "cost": 250,
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Budget audio suite with occasional radio interference on open frequencies."
+    },
+    {
+      "id": "neuroport-universal",
+      "name": "Neuroport (Implante Universal 2077)",
+      "type": "Neuralware",
+      "install": "Clinic",
+      "humanityLoss": "0 (N/A)",
+      "cost": 0,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Standard 2077 cranial neural platform integrating Holocall, HUD, Biomonitor, and Personal Link."
+    },
+    {
+      "id": "davids-sandevistan",
+      "name": "David's Experimental Sandevistan",
+      "type": "Neuralware",
+      "install": "Clinic",
+      "humanityLoss": "4d6 (14)",
+      "cost": 2000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Military prototype Sandevistan. Grants +4 to Initiative and bullet dodging. Requires Stress Checks on repeated use."
+    },
+    {
+      "id": "gorilla-arms-2077",
+      "name": "Gorilla Arms (2077)",
+      "type": "Cyberlimb",
+      "install": "Hospital",
+      "humanityLoss": "2d6 (7)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "High-torque pneumatic cyberarms. Grants BODY 10 for brawling damage and forced door opening."
+    },
+    {
+      "id": "mantis-blades-2077",
+      "name": "Mantis Blades (2077)",
+      "type": "Cyberlimb",
+      "install": "Clinic",
+      "humanityLoss": "2d6 (7)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Forearm-concealed monomolecular scythe blades (3d6 damage, ROF 2, halves defender SP)."
+    },
+    {
+      "id": "monowire-2077",
+      "name": "Monowire (2077)",
+      "type": "Cyberlimb",
+      "install": "Clinic",
+      "humanityLoss": "2d6 (7)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Subdermal monomolecular whip with 2m reach. Halves defender SP."
+    },
+    {
+      "id": "pls-projectile-launcher",
+      "name": "Projectile Launch System (PLS)",
+      "type": "Cyberlimb",
+      "install": "Clinic",
+      "humanityLoss": "2d6 (7)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Forearm-integrated micro-missile launcher dealing 6d6 explosive damage."
+    },
+    {
+      "id": "ballistic-coprocessor",
+      "name": "Ballistic Coprocessor",
+      "type": "Internal",
+      "install": "Clinic",
+      "humanityLoss": "1d6 (3)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Synchronizes with Power weapons to eliminate the -4 penalty when ricocheting bullets off walls."
+    },
+    {
+      "id": "subdermal-armor-2077",
+      "name": "Subdermal Armor (2077)",
+      "type": "External",
+      "install": "Hospital",
+      "humanityLoss": "2d6 (7)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Modern nanotech mesh giving permanent SP 11 to Body and Head with zero movement penalty."
+    },
+    {
+      "id": "heal-on-kill",
+      "name": "Heal-On-Kill Nanoware",
+      "type": "Internal",
+      "install": "Clinic",
+      "humanityLoss": "2d6 (7)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Nanites restore 5 HP instantly whenever user neutralizes an enemy in combat."
+    },
+    {
+      "id": "self-ice-2077",
+      "name": "Self-ICE Cyberware Defense",
+      "type": "Neuralware",
+      "install": "Clinic",
+      "humanityLoss": "1d6 (3)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Automated defensive firewall that automatically blocks the first Quickhack attempt per encounter."
+    },
+    {
+      "id": "kerenzikov-2077",
+      "name": "Kerenzikov (2077)",
+      "type": "Neuralware",
+      "install": "Clinic",
+      "humanityLoss": "2d6 (7)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Permanent +2 to Initiative and enables shooting while sliding into cover."
+    },
+    {
+      "id": "kiroshi-optics-mk3",
+      "name": "Kiroshi Optics Mk.III",
+      "type": "Cyberoptics",
+      "install": "Clinic",
+      "humanityLoss": "2d6 (7)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Premier cyberoptics suite with integrated thermal vision, targeting scope, and anti-dazzle."
+    },
+    {
+      "id": "fbc-biopod",
+      "name": "Biopod (Núcleo Cerebral FBC)",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "4d6 (14)",
+      "cost": 10000,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "description": "Life-support brain capsule housing brain, brainstem, and sensory interfaces. SP 18 armored shell."
+    },
+    {
+      "id": "fbc-iec-alpha",
+      "name": "Chasis FBC: IEC Alpha Class",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "0 (N/A)",
+      "cost": 15000,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "description": "All-purpose civilian FBC chassis. BODY 10, MOVE 5, integrated SP 11 structural armor."
+    },
+    {
+      "id": "fbc-raven-gemini",
+      "name": "Chasis FBC: Raven Gemini",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "0 (N/A)",
+      "cost": 25000,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "description": "Infiltration human-replica FBC chassis. Indistinguishable from biological human. BODY 8, MOVE 6, SP 11."
+    },
+    {
+      "id": "fbc-militech-enforcer",
+      "name": "Chasis FBC: Militech Enforcer",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "0 (N/A)",
+      "cost": 30000,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "description": "Security combat FBC chassis. BODY 12, MOVE 5, integrated SP 13 armor."
+    },
+    {
+      "id": "fbc-zetatech-samson",
+      "name": "Chasis FBC: Zetatech Samson",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "0 (N/A)",
+      "cost": 28000,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "description": "Industrial heavy labor FBC chassis. BODY 13, MOVE 4, integrated SP 13 armor."
+    },
+    {
+      "id": "fbc-iec-dragoon",
+      "name": "Chasis FBC: IEC Dragoon",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "0 (N/A)",
+      "cost": 50000,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "description": "Military combat dominator chassis used by Adam Smasher. BODY 14, MOVE 7, integrated SP 15 armor."
+    },
+    {
+      "id": "fbc-arasaka-daioni",
+      "name": "Chasis FBC: Arasaka DaiOni",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "0 (N/A)",
+      "cost": 100000,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "description": "Superheavy experimental assault chassis. BODY 15, MOVE 6, integrated SP 18 armor."
+    },
+    {
+      "id": "fbc-vermilion",
+      "name": "Chasis FBC: Vermilion Borg",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "0 (N/A)",
+      "cost": 35000,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+      "era": "2045",
+      "description": "High-mobility covert operative FBC chassis. BODY 11, MOVE 8, integrated SP 13 armor."
     }
   ],
   "drugs": [
@@ -2204,7 +3791,10 @@
       "primaryEffect": "User ignores Seriously Wounded wound state penalties. User takes 2d6 Humanity Loss (returned if addiction avoided).",
       "secondaryEffect": "Humanity Loss is permanent. User becomes addicted; while addicted and not currently on Black Lace, REF is lowered by 2 points.",
       "addictionDv": 17,
-      "description": "Heavy combat synthetic stimulant causing emotional deadening and pain suppression."
+      "description": "Heavy combat synthetic stimulant causing emotional deadening and pain suppression.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "blue-glass",
@@ -2215,7 +3805,10 @@
       "primaryEffect": "User occasionally 'flashes out', experiencing vivid colorful hallucinations that consume their Action for the Turn.",
       "secondaryEffect": "User becomes addicted; flashes out once every hour unless taking another dose of Blue Glass for cognitive stability.",
       "addictionDv": 15,
-      "description": "Cheap street hallucinogen favored by street punks and disaffected youth."
+      "description": "Cheap street hallucinogen favored by street punks and disaffected youth.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "boost",
@@ -2226,7 +3819,10 @@
       "primaryEffect": "User's INT increases by 2 points (can raise INT above 8).",
       "secondaryEffect": "User becomes addicted; while addicted, their INT is lowered by 2 points.",
       "addictionDv": 17,
-      "description": "Powerful nootropic stimulant popular among Techs, Netrunners, and high-stress corporate workers."
+      "description": "Powerful nootropic stimulant popular among Techs, Netrunners, and high-stress corporate workers.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "smash",
@@ -2237,7 +3833,10 @@
       "primaryEffect": "User feels euphoric and party-ready: +2 to Dance, Contortionist, Conversation, Human Perception, Persuasion, and Acting.",
       "secondaryEffect": "User becomes addicted: loss of interest in normal activities, -2 to above skills, and strong psychological cravings.",
       "addictionDv": 15,
-      "description": "Yellow, foamy alcoholic party beverage sold in cans across all Night Markets and bodegas."
+      "description": "Yellow, foamy alcoholic party beverage sold in cans across all Night Markets and bodegas.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "synthcoke",
@@ -2248,7 +3847,10 @@
       "primaryEffect": "User's REF increases by 1 point (can raise REF above 8). User experiences paranoid ideation.",
       "secondaryEffect": "User becomes addicted; while addicted, their REF is lowered by 2 points unless currently high on Synthcoke.",
       "addictionDv": 15,
-      "description": "Synthetic cocaine stimulant ubiquitous among corporate operators and high-speed street solos."
+      "description": "Synthetic cocaine stimulant ubiquitous among corporate operators and high-speed street solos.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "timewarp",
@@ -2259,7 +3861,10 @@
       "primaryEffect": "Adds +3 to any Initiative Roll made during duration, or increases current Initiative position by 3.",
       "secondaryEffect": "User becomes addicted; while addicted, subtracts 2 from any Initiative Rolls unless currently experiencing Timewarp.",
       "addictionDv": 17,
-      "description": "Fast-acting combat speed drug that sharpens synaptic throughput and dilates time perception."
+      "description": "Fast-acting combat speed drug that sharpens synaptic throughput and dilates time perception.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "rapidetox",
@@ -2270,7 +3875,10 @@
       "primaryEffect": "When injected via Airhypo, immediately purges target of the effects of any active drug, poison, or intoxicant.",
       "secondaryEffect": "None (Medical pharmaceutical synthesized by Medtech).",
       "addictionDv": 0,
-      "description": "Emergency clinical antitoxin compound clearing bloodstream poisons and drug overdoses."
+      "description": "Emergency clinical antitoxin compound clearing bloodstream poisons and drug overdoses.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "speedheal",
@@ -2281,7 +3889,10 @@
       "primaryEffect": "Immediately heals HP equal to target's BODY + WILL. Can only benefit from Speedheal once per day; unusable if Mortally Wounded.",
       "secondaryEffect": "None (Medical pharmaceutical synthesized by Medtech).",
       "addictionDv": 0,
-      "description": "Cellular tissue regenerator accelerating cellular rebuilding and closing lacerations."
+      "description": "Cellular tissue regenerator accelerating cellular rebuilding and closing lacerations.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "stim",
@@ -2292,7 +3903,136 @@
       "primaryEffect": "Allows target to ignore all penalties from Seriously Wounded wound state for 1 hour (once per day).",
       "secondaryEffect": "None (Medical pharmaceutical synthesized by Medtech).",
       "addictionDv": 0,
-      "description": "High-grade Medtech emergency neuro-stimulant blocking traumatic pain feedback."
+      "description": "High-grade Medtech emergency neuro-stimulant blocking traumatic pain feedback.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
+    },
+    {
+      "id": "immunoblockers-2077",
+      "name": "Immunoblockers",
+      "cost": 100,
+      "costTier": "Premium",
+      "primaryEffect": "Suppresses cyberpsychosis tremors and stress episodes for 1 hour.",
+      "secondaryEffect": "Tolerance buildup. Repeated doses require Addiction Check DV 15.",
+      "duration": "1 Hour",
+      "addictionDv": 15,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Essential neural immunosuppressant for heavily cyberized edgerunners in 2077."
+    },
+    {
+      "id": "maxdoc-mk1",
+      "name": "MaxDoc Mk.1 Inhaler",
+      "cost": 50,
+      "costTier": "Costly",
+      "primaryEffect": "Instantly heals 10 HP as an Action.",
+      "secondaryEffect": "Limit 2 uses per day or suffer nausea.",
+      "duration": "Instant",
+      "addictionDv": 0,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Over-the-counter Trauma Team rapid aerosol cellular regeneration inhaler."
+    },
+    {
+      "id": "bounceback-mk1",
+      "name": "BounceBack Mk.1 Regenerator",
+      "cost": 100,
+      "costTier": "Premium",
+      "primaryEffect": "Regenerates 3 HP per turn for 5 turns.",
+      "secondaryEffect": "Elevated heart rate (-1 to concentration).",
+      "duration": "5 Turns",
+      "addictionDv": 0,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Timed-release tissue rebuild injection."
+    },
+    {
+      "id": "drug-sixgun",
+      "name": "Sixgun",
+      "cost": 100,
+      "costTier": "Premium",
+      "primaryEffect": "+2 REF and +2 DEX in combat shooting and evasion.",
+      "secondaryEffect": "Muscle spasms and -2 DEX when effect ends.",
+      "duration": "10 Minutes",
+      "addictionDv": 16,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Hornet's Pharmacy DLC",
+      "era": "2045",
+      "description": "Hornet's premier gunslinger neural stimulant."
+    },
+    {
+      "id": "drug-prime-time",
+      "name": "Prime Time",
+      "cost": 100,
+      "costTier": "Premium",
+      "primaryEffect": "+2 COOL and +2 on all social interaction skill checks.",
+      "secondaryEffect": "Severe social paranoia upon withdrawal.",
+      "duration": "1 Hour",
+      "addictionDv": 13,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Hornet's Pharmacy DLC",
+      "era": "2045",
+      "description": "Charisma booster favored by Rockerboys, Medias, and Fixers."
+    },
+    {
+      "id": "drug-berserk",
+      "name": "Berserk",
+      "cost": 100,
+      "costTier": "Premium",
+      "primaryEffect": "+10 temporary HP and ignores Seriously Wounded penalties.",
+      "secondaryEffect": "Exhaustion: -2 MOVE for 1 hour after wearing off.",
+      "duration": "10 Minutes",
+      "addictionDv": 15,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Hornet's Pharmacy DLC",
+      "era": "2045",
+      "description": "Adrenaline combat cocktail used by street shock troopers."
+    },
+    {
+      "id": "drug-hover",
+      "name": "Hover",
+      "cost": 100,
+      "costTier": "Premium",
+      "primaryEffect": "+2 INT for Netrunning and analytical investigation.",
+      "secondaryEffect": "Mental fatigue and brain fog on crash.",
+      "duration": "1 Hour",
+      "addictionDv": 14,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Hornet's Pharmacy DLC",
+      "era": "2045",
+      "description": "Cognitive processing accelerant popular among hackers."
+    },
+    {
+      "id": "drug-red-glass",
+      "name": "Red Glass",
+      "cost": 50,
+      "costTier": "Costly",
+      "primaryEffect": "Vibrant auditory/visual euphoria and +1 WILL.",
+      "secondaryEffect": "Mild sensory hallucinations.",
+      "duration": "4 Hours",
+      "addictionDv": 13,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Hornet's Pharmacy DLC",
+      "era": "2045",
+      "description": "Street party psychedelic giving fearless confidence."
+    },
+    {
+      "id": "drug-detox-additive",
+      "name": "Detox Additive",
+      "cost": 50,
+      "costTier": "Costly",
+      "primaryEffect": "Flushes active drugs and poisons from bloodstream.",
+      "secondaryEffect": "Temporary nausea for 5 minutes.",
+      "duration": "Instant",
+      "addictionDv": 0,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Hornet's Pharmacy DLC",
+      "era": "2045",
+      "description": "Medtech compounding agent used to purge overdoses."
     }
   ],
   "gear": [
@@ -2301,287 +4041,480 @@
       "name": "Agent",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Adaptive-AI smartphone managing schedule, calls, and life. Grants +2 to Library Search and Wardrobe & Style."
+      "description": "Adaptive-AI smartphone managing schedule, calls, and life. Grants +2 to Library Search and Wardrobe & Style.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "airhypo",
       "name": "Airhypo",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Compressed air pneumatic drug delivery platform administering doses to willing or hit targets."
+      "description": "Compressed air pneumatic drug delivery platform administering doses to willing or hit targets.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "anti-smog-breathing-mask",
       "name": "Anti-Smog Breathing Mask",
       "cost": 20,
       "costTier": "Everyday",
-      "description": "Filters out toxic gasses and particulate smoke, making user immune to inhaled threats."
+      "description": "Filters out toxic gasses and particulate smoke, making user immune to inhaled threats.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "audio-recorder-gear",
       "name": "Audio Recorder",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Records up to 24 hours of high fidelity audio onto standard Memory Chip."
+      "description": "Records up to 24 hours of high fidelity audio onto standard Memory Chip.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "auto-level-ear-protectors",
       "name": "Auto Level Dampening Ear Protectors",
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "Compact ear protectors granting full immunity to deafening acoustic effects and flashbangs."
+      "description": "Compact ear protectors granting full immunity to deafening acoustic effects and flashbangs.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "binoculars",
       "name": "Binoculars",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Optical binoculars magnifying vision 2x to 3x."
+      "description": "Optical binoculars magnifying vision 2x to 3x.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "braindance-viewer",
       "name": "Braindance Viewer",
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "Playback headset experiencing recorded multisensory braindance memories."
+      "description": "Playback headset experiencing recorded multisensory braindance memories.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "bug-detector-gear",
       "name": "Bug Detector",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Handheld sensor beeping when within 2m of an active transmitter, bug, or wiretap."
+      "description": "Handheld sensor beeping when within 2m of an active transmitter, bug, or wiretap.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "carryall",
       "name": "Carryall",
       "cost": 20,
       "costTier": "Everyday",
-      "description": "Heavy ripstop nylon messenger or duffel bag for hauling street gear."
+      "description": "Heavy ripstop nylon messenger or duffel bag for hauling street gear.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "chemical-analyzer-gear",
       "name": "Chemical Analyzer",
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "Handheld lab testing chemical compositions and identifying unknown compounds as an Action."
+      "description": "Handheld lab testing chemical compositions and identifying unknown compounds as an Action.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "computer",
       "name": "Computer",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Laptop or desktop computer used for word processing, file management, and surfing the Data Pool."
+      "description": "Laptop or desktop computer used for word processing, file management, and surfing the Data Pool.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "cyberdeck-standard",
       "name": "Cyberdeck (Standard, 7 slots)",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Standard Netrunner rig featuring 7 option slots for Programs and Hardware."
+      "description": "Standard Netrunner rig featuring 7 option slots for Programs and Hardware.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "disposable-cell-phone",
       "name": "Disposable Cell Phone",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Single-use burner phone with prepaid minutes for anonymous communications."
+      "description": "Single-use burner phone with prepaid minutes for anonymous communications.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "electric-guitar",
       "name": "Electric Guitar",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Rock and roll axe for Rockerboys rocking the stage."
+      "description": "Rock and roll axe for Rockerboys rocking the stage.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "flashlight",
       "name": "Flashlight",
       "cost": 20,
       "costTier": "Everyday",
-      "description": "Rechargeable electric torch illuminating dark alleys and ruined combat zones."
+      "description": "Rechargeable electric torch illuminating dark alleys and ruined combat zones.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "food-stick",
       "name": "Food Stick",
       "cost": 10,
       "costTier": "Cheap",
-      "description": "Dense, chewy single-meal nutrient bar."
+      "description": "Dense, chewy single-meal nutrient bar.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "glow-paint",
       "name": "Glow Paint",
       "cost": 20,
       "costTier": "Everyday",
-      "description": "Fluorescent paint can glowing brightly in darkness."
+      "description": "Fluorescent paint can glowing brightly in darkness.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "grapple-gun",
       "name": "Grapple Gun",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Launches a 30m high-strength line to hook roofs and climb sheer surfaces."
+      "description": "Launches a 30m high-strength line to hook roofs and climb sheer surfaces.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "handcuffs",
       "name": "Handcuffs",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Heavy steel restraints requiring BODY 10+ to break."
+      "description": "Heavy steel restraints requiring BODY 10+ to break.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "homing-tracer-gear",
       "name": "Homing Tracer",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Transceiver tracker following linked buttons up to 1 mile."
+      "description": "Transceiver tracker following linked buttons up to 1 mile.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "inflatable-bed-sleep-bag",
       "name": "Inflatable Bed & Sleep-bag",
       "cost": 20,
       "costTier": "Everyday",
-      "description": "Compact self-inflating mattress and insulated sleep-bag."
+      "description": "Compact self-inflating mattress and insulated sleep-bag.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "kibble-pack",
       "name": "Kibble Pack",
       "cost": 10,
       "costTier": "Cheap",
-      "description": "One dry meal pack of standard street kibble."
+      "description": "One dry meal pack of standard street kibble.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "linear-frame-sigma-external",
       "name": "Linear Frame Sigma (External)",
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "External powered exoskeleton frame boosting BODY to 12. Requires BODY 6."
+      "description": "External powered exoskeleton frame boosting BODY to 12. Requires BODY 6.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "lock-picking-set",
       "name": "Lock Picking Set",
       "cost": 20,
       "costTier": "Everyday",
-      "description": "Precision steel tension wrenches and picks for opening physical mechanical locks."
+      "description": "Precision steel tension wrenches and picks for opening physical mechanical locks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "medscanner-gear",
       "name": "Medscanner",
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "Diagnostic medical scanner providing +2 to First Aid and Paramedic skills."
+      "description": "Diagnostic medical scanner providing +2 to First Aid and Paramedic skills.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "medtech-bag",
       "name": "Medtech Bag",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Comprehensive emergency medical trauma kit with bandages, coagulants, and scalpels."
+      "description": "Comprehensive emergency medical trauma kit with bandages, coagulants, and scalpels.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "memory-chip-gear",
       "name": "Memory Chip",
       "cost": 10,
       "costTier": "Cheap",
-      "description": "Universal physical storage chip for media, encrypted keys, and operational dossiers."
+      "description": "Universal physical storage chip for media, encrypted keys, and operational dossiers.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "mre",
       "name": "MRE",
       "cost": 10,
       "costTier": "Cheap",
-      "description": "Self-heating meal ready to eat in a durable foil pouch."
+      "description": "Self-heating meal ready to eat in a durable foil pouch.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "personal-carepak",
       "name": "Personal CarePak",
       "cost": 20,
       "costTier": "Everyday",
-      "description": "Hygiene kit containing soap, tooth cleanser, and towel."
+      "description": "Hygiene kit containing soap, tooth cleanser, and towel.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "pocket-amplifier",
       "name": "Pocket Amplifier",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Compact battery-powered 6-hour sound amplifier supporting up to two instruments."
+      "description": "Compact battery-powered 6-hour sound amplifier supporting up to two instruments.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "radar-detector-gear",
       "name": "Radar Detector",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Handheld detector beeping within 100m of an active surveillance radar beam."
+      "description": "Handheld detector beeping within 100m of an active surveillance radar beam.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "road-flare",
       "name": "Road Flare",
       "cost": 10,
       "costTier": "Cheap",
-      "description": "Chemical magnesium flare lighting a 100m radius for 1 hour."
+      "description": "Chemical magnesium flare lighting a 100m radius for 1 hour.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "rope-60m",
       "name": "Rope (60m)",
       "cost": 20,
       "costTier": "Everyday",
-      "description": "60 meters of high tensile nylon climbing cord."
+      "description": "60 meters of high tensile nylon climbing cord.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "scrambler-descrambler-gear",
       "name": "Scrambler/Descrambler",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Handheld scrambler preventing unauthorized surveillance of communications."
+      "description": "Handheld scrambler preventing unauthorized surveillance of communications.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "smart-glasses",
       "name": "Smart Glasses",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "High-tech glasses with 2 option slots for Cybereye options without cyberware."
+      "description": "High-tech glasses with 2 option slots for Cybereye options without cyberware.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "techscanner-gear",
       "name": "Techscanner",
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "Diagnostic multimeter tool adding +2 to all TECH maintenance and repair checks."
+      "description": "Diagnostic multimeter tool adding +2 to all TECH maintenance and repair checks.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "techtool",
       "name": "Techtool",
       "cost": 100,
       "costTier": "Premium",
-      "description": "All-in-one pocket multitool for street electronics and weapon field assembly."
+      "description": "All-in-one pocket multitool for street electronics and weapon field assembly.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "tent-camping-equipment",
       "name": "Tent and Camping Equipment",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Single-person wilderness camping tent and survival kit."
+      "description": "Single-person wilderness camping tent and survival kit.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "vial-of-biotoxin",
       "name": "Vial of Biotoxin",
       "cost": 500,
       "costTier": "Expensive",
-      "description": "Lethal bio-agent dealing 3d6 damage direct to HP on failed DV15 Resist Torture/Drugs."
+      "description": "Lethal bio-agent dealing 3d6 damage direct to HP on failed DV15 Resist Torture/Drugs.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "vial-of-poison",
       "name": "Vial of Poison",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Street poison dealing 2d6 damage direct to HP on failed DV13 Resist Torture/Drugs."
+      "description": "Street poison dealing 2d6 damage direct to HP on failed DV13 Resist Torture/Drugs.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "video-camera",
       "name": "Video Camera",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Records up to 12 hours of high definition video and audio to Memory Chip."
+      "description": "Records up to 12 hours of high definition video and audio to Memory Chip.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
+    },
+    {
+      "id": "makigai-maimai",
+      "name": "Makigai MaiMai",
+      "cost": 10000,
+      "costTier": "Luxury",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Ultra-compact two-seater city commuter car. 35 SDP, SP 10 armor."
+    },
+    {
+      "id": "yaiba-kusanagi",
+      "name": "Yaiba Kusanagi CT-3X",
+      "cost": 20000,
+      "costTier": "Super Luxury",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Iconic high-performance superbike. 30 SDP, top combat speed."
+    },
+    {
+      "id": "quadra-turbo-r",
+      "name": "Quadra Turbo-R V-Tech",
+      "cost": 40000,
+      "costTier": "Super Luxury",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Legendary American muscle sports coupe. 50 SDP, SP 12 armor."
+    },
+    {
+      "id": "militech-gorgon",
+      "name": "Militech Gorgon Security Van",
+      "cost": 50000,
+      "costTier": "Super Luxury",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Heavily armored tactical response van. 65 SDP, SP 18 armor, seats 8."
+    },
+    {
+      "id": "zetatech-aerovox-av4",
+      "name": "Zetatech AeroVox AV-4",
+      "cost": 100000,
+      "costTier": "Super Luxury",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Twin-turbine tactical aerodyne vehicle. 70 SDP, SP 15 armor, flight speed."
+    },
+    {
+      "id": "grundy-salvage-suit",
+      "name": "Grundy Salvage Suit",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Deep-water salvage dive suit with oxygen rebreather and floodlights."
+    },
+    {
+      "id": "drink-master-3000",
+      "name": "Drink Master 3000",
+      "cost": 500,
+      "costTier": "Expensive",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "description": "Portable robotic cocktail station providing perfect refreshments for Night Market gigs."
     }
   ],
   "programs": [
@@ -2593,7 +4526,10 @@
       "def": 0,
       "rez": 7,
       "cost": 20,
-      "description": "Increases all Cloak Checks by +2 as long as this Program remains Rezzed."
+      "description": "Increases all Cloak Checks by +2 as long as this Program remains Rezzed.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "see-ya",
@@ -2603,7 +4539,10 @@
       "def": 0,
       "rez": 7,
       "cost": 20,
-      "description": "Increases all Pathfinder Checks by +2 as long as this Program remains Rezzed."
+      "description": "Increases all Pathfinder Checks by +2 as long as this Program remains Rezzed.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "speedy-gonzalvez",
@@ -2613,7 +4552,10 @@
       "def": 0,
       "rez": 7,
       "cost": 100,
-      "description": "Increases your Netrunner Speed by +2 as long as this Program remains Rezzed."
+      "description": "Increases your Netrunner Speed by +2 as long as this Program remains Rezzed.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "worm",
@@ -2623,7 +4565,10 @@
       "def": 0,
       "rez": 7,
       "cost": 50,
-      "description": "Increases all Backdoor Checks by +2 as long as this Program remains Rezzed."
+      "description": "Increases all Backdoor Checks by +2 as long as this Program remains Rezzed.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "armor",
@@ -2633,7 +4578,10 @@
       "def": 0,
       "rez": 7,
       "cost": 50,
-      "description": "Reduces all incoming brain damage by 4. Only 1 copy can be running at a time."
+      "description": "Reduces all incoming brain damage by 4. Only 1 copy can be running at a time.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "flak-program",
@@ -2643,7 +4591,10 @@
       "def": 0,
       "rez": 0,
       "cost": 50,
-      "description": "Reduces the first successful brain damage attack by an enemy to 0, then Derezzes itself."
+      "description": "Reduces the first successful brain damage attack by an enemy to 0, then Derezzes itself.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "shield-program",
@@ -2653,7 +4604,10 @@
       "def": 0,
       "rez": 0,
       "cost": 20,
-      "description": "Stops the first successful Non-Black ICE Program Effect from dealing brain damage, then Derezzes itself."
+      "description": "Stops the first successful Non-Black ICE Program Effect from dealing brain damage, then Derezzes itself.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "banhammer",
@@ -2663,7 +4617,10 @@
       "def": 0,
       "rez": 0,
       "cost": 50,
-      "description": "Does 3d6 REZ damage to a Non-Black ICE Program, or 2d6 REZ to Black ICE."
+      "description": "Does 3d6 REZ damage to a Non-Black ICE Program, or 2d6 REZ to Black ICE.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "sword",
@@ -2673,7 +4630,10 @@
       "def": 0,
       "rez": 0,
       "cost": 50,
-      "description": "Does 3d6 REZ damage to a Black ICE Program, or 2d6 REZ to a Non-Black ICE Program."
+      "description": "Does 3d6 REZ damage to a Black ICE Program, or 2d6 REZ to a Non-Black ICE Program.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "deckkrash",
@@ -2683,7 +4643,10 @@
       "def": 0,
       "rez": 0,
       "cost": 100,
-      "description": "Forcibly and unsafely Jacks Out enemy Netrunner, suffering effects of all encountered Black ICE."
+      "description": "Forcibly and unsafely Jacks Out enemy Netrunner, suffering effects of all encountered Black ICE.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "hellbolt",
@@ -2693,7 +4656,10 @@
       "def": 0,
       "rez": 0,
       "cost": 100,
-      "description": "Deals 2d6 brain damage and sets Cyberdeck on fire (2 HP damage per turn until extinguished)."
+      "description": "Deals 2d6 brain damage and sets Cyberdeck on fire (2 HP damage per turn until extinguished).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "nerve-scrub",
@@ -2703,7 +4669,10 @@
       "def": 0,
       "rez": 0,
       "cost": 100,
-      "description": "Lowers enemy Netrunner's INT, REF, and DEX by 1d6 for 1 hour."
+      "description": "Lowers enemy Netrunner's INT, REF, and DEX by 1d6 for 1 hour.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "poison-flatline",
@@ -2713,7 +4682,10 @@
       "def": 0,
       "rez": 0,
       "cost": 100,
-      "description": "Destroys a single Non-Black ICE Program installed on enemy Cyberdeck at random."
+      "description": "Destroys a single Non-Black ICE Program installed on enemy Cyberdeck at random.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "superglue",
@@ -2723,7 +4695,10 @@
       "def": 0,
       "rez": 0,
       "cost": 100,
-      "description": "Prevents enemy Netrunner from progressing deeper or Jacking Out safely for 1d6 rounds."
+      "description": "Prevents enemy Netrunner from progressing deeper or Jacking Out safely for 1d6 rounds.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "vrizzbolt",
@@ -2733,7 +4708,10 @@
       "def": 0,
       "rez": 0,
       "cost": 50,
-      "description": "Deals 1d6 brain damage and reduces enemy NET Actions on their next turn by 1."
+      "description": "Deals 1d6 brain damage and reduces enemy NET Actions on their next turn by 1.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "asp",
@@ -2745,7 +4723,10 @@
       "def": 2,
       "rez": 15,
       "cost": 100,
-      "description": "Golden Egyptian cobra. Destroys a single random Program installed on target's Cyberdeck."
+      "description": "Golden Egyptian cobra. Destroys a single random Program installed on target's Cyberdeck.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "giant",
@@ -2757,7 +4738,10 @@
       "def": 4,
       "rez": 25,
       "cost": 1000,
-      "description": "Towering legs. Deals 3d6 brain damage and forcibly, unsafely Jacks Out the target Netrunner."
+      "description": "Towering legs. Deals 3d6 brain damage and forcibly, unsafely Jacks Out the target Netrunner.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "hellhound",
@@ -2769,7 +4753,10 @@
       "def": 2,
       "rez": 20,
       "cost": 500,
-      "description": "Black wolf. Deals 2d6 brain damage and sets Cyberdeck on fire (2 HP damage/turn)."
+      "description": "Black wolf. Deals 2d6 brain damage and sets Cyberdeck on fire (2 HP damage/turn).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "kraken",
@@ -2781,7 +4768,10 @@
       "def": 4,
       "rez": 30,
       "cost": 1000,
-      "description": "Orange tentacles. Deals 3d6 brain damage and immobilizes Netrunner in Architecture."
+      "description": "Orange tentacles. Deals 3d6 brain damage and immobilizes Netrunner in Architecture.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "liche",
@@ -2793,7 +4783,10 @@
       "def": 2,
       "rez": 25,
       "cost": 500,
-      "description": "Robed skeleton. Lowers enemy Netrunner's INT, REF, and DEX by 1d6 for 1 hour."
+      "description": "Robed skeleton. Lowers enemy Netrunner's INT, REF, and DEX by 1d6 for 1 hour.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "raven",
@@ -2805,7 +4798,10 @@
       "def": 2,
       "rez": 15,
       "cost": 50,
-      "description": "Armored raven. Derezzes a random Defender Program and deals 1d6 damage direct to brain."
+      "description": "Armored raven. Derezzes a random Defender Program and deals 1d6 damage direct to brain.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "scorpion",
@@ -2817,7 +4813,10 @@
       "def": 2,
       "rez": 15,
       "cost": 100,
-      "description": "Tiny black scorpion. Lowers enemy Netrunner's MOVE by 1d6 for 1 hour."
+      "description": "Tiny black scorpion. Lowers enemy Netrunner's MOVE by 1d6 for 1 hour.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "skunk",
@@ -2829,7 +4828,10 @@
       "def": 2,
       "rez": 10,
       "cost": 500,
-      "description": "Cartoon skunk imposing a permanent -2 penalty to Slide Checks until Derezzed."
+      "description": "Cartoon skunk imposing a permanent -2 penalty to Slide Checks until Derezzed.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "wisp",
@@ -2841,7 +4843,10 @@
       "def": 2,
       "rez": 15,
       "cost": 50,
-      "description": "Crackling orb. Deals 1d6 brain damage and reduces target's NET Actions by 1 on next turn."
+      "description": "Crackling orb. Deals 1d6 brain damage and reduces target's NET Actions by 1 on next turn.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "dragon",
@@ -2853,7 +4858,10 @@
       "def": 6,
       "rez": 30,
       "cost": 1000,
-      "description": "Robotic dragon. Deals 6d6 damage to a Program; if enough to derezz, destroys it permanently."
+      "description": "Robotic dragon. Deals 6d6 damage to a Program; if enough to derezz, destroys it permanently.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "killer",
@@ -2865,7 +4873,10 @@
       "def": 2,
       "rez": 20,
       "cost": 500,
-      "description": "Robotic samurai. Deals 4d6 damage to a Program; if enough to derezz, destroys it permanently."
+      "description": "Robotic samurai. Deals 4d6 damage to a Program; if enough to derezz, destroys it permanently.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
     },
     {
       "id": "sabertooth",
@@ -2877,7 +4888,150 @@
       "def": 2,
       "rez": 25,
       "cost": 1000,
-      "description": "Immense hulking sabertooth cat. Deals 6d6 damage to a Program; if enough to derezz, destroys it."
+      "description": "Immense hulking sabertooth cat. Deals 6d6 damage to a Program; if enough to derezz, destroys it.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
+    },
+    {
+      "id": "qh-overheat",
+      "name": "Overheat [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (3 RAM, DV 6). Deals 2d6 thermal damage per turn directly to enemy HP for 2 turns."
+    },
+    {
+      "id": "qh-short-circuit",
+      "name": "Short Circuit [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (3 RAM, DV 6). Deals 3d6 EMP damage to HP (double damage against drones and FBC Borgs)."
+    },
+    {
+      "id": "qh-cyberware-malfunction",
+      "name": "Cyberware Malfunction [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (4 RAM, DV 8). Disables target's key cyberware implant for 1 minute."
+    },
+    {
+      "id": "qh-synapse-burnout",
+      "name": "Synapse Burnout [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (5 RAM, DV 8). Deals 4d6 damage to HP plus +1d6 per 10 HP missing from target."
+    },
+    {
+      "id": "qh-contagion",
+      "name": "Contagion [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (4 RAM, DV 8). Deals 2d6 viral damage and jumps to a secondary target within 6m."
+    },
+    {
+      "id": "qh-cripple-movement",
+      "name": "Cripple Movement [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (3 RAM, DV 8). Locks cyberlimb actuators, reducing target MOVE to 2 for 2 turns."
+    },
+    {
+      "id": "qh-detonate-grenade",
+      "name": "Detonate Grenade [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (5 RAM, DV 10). Detonates a grenade on target's belt or cyberlimb."
+    },
+    {
+      "id": "qh-lure",
+      "name": "Lure [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 100,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (2 RAM, DV 6). Sends a false auditory alert forcing an enemy to investigate a location."
+    },
+    {
+      "id": "qh-memory-wipe",
+      "name": "Memory Wipe [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (4 RAM, DV 10). Erases combat awareness: target exits combat state and loses their turn."
+    },
+    {
+      "id": "qh-optics-jammer",
+      "name": "Optics Jammer [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (2 RAM, DV 6). Blinds optics: target suffers -4 penalty to all attacks for 1 turn."
+    },
+    {
+      "id": "qh-sonic-shock",
+      "name": "Sonic Shock [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 500,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (3 RAM, DV 8). Deafens target and severs audio communications with allies."
+    },
+    {
+      "id": "qh-suicide",
+      "name": "Suicide [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 2000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (8 RAM, DV 12). Ultimate override: target discharges their own weapon point-blank into their head."
+    },
+    {
+      "id": "qh-system-reset",
+      "name": "System Reset [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 1000,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (7 RAM, DV 12). Shuts down nervous system: target falls unconscious for 1 minute."
+    },
+    {
+      "id": "qh-weapon-glitch",
+      "name": "Weapon Glitch [Quickhack]",
+      "class": "Quickhack (2077)",
+      "cost": 100,
+      "sourceBook": "cemk_2077",
+      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
+      "era": "2077",
+      "description": "Quickhack (2 RAM, DV 6). Jams target's active weapon, requiring an Action to clear."
     }
   ]
 }

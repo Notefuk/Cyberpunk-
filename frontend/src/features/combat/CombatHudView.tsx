@@ -17,11 +17,13 @@ import {
 } from '../../engine/characterEngine';
 import { 
   createInitialAttackRoll, 
-  createDamageRoll 
+  createDamageRoll,
+  AIMED_SHOT_OPTIONS
 } from '../../engine/combatEngine';
-import type { WeaponItem, RollEntry, InventoryItem, EncumbranceMode } from '../../types/cyberpunk';
+import type { WeaponItem, RollEntry, InventoryItem, EncumbranceMode, AimedShotTarget } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
+import { EnemiesCompendiumPanel } from '../gm/EnemiesCompendiumPanel';
 import { 
   Heart, 
   Shield, 
@@ -49,7 +51,8 @@ import {
   Swords,
   ChevronDown,
   ChevronRight,
-  Package
+  Package,
+  X
 } from 'lucide-react';
 
 const TacticalTooltip: React.FC<{
@@ -297,6 +300,109 @@ const AmmoCartridgeVisualizer: React.FC<{
   );
 };
 
+interface HeadshotCalculatorProps {
+  entry: RollEntry;
+}
+
+const HeadshotCalculator: React.FC<HeadshotCalculatorProps> = ({ entry }) => {
+  const [enemyHeadSp, setEnemyHeadSp] = useState<number>(11);
+
+  const baseDmg = entry.baseDamageTotal ?? ((entry.finalDamageTotal ?? 0) - (entry.critBonusDamage || 0));
+  const penetratingDmg = Math.max(0, baseDmg - enemyHeadSp);
+  const penetrates = baseDmg > enemyHeadSp;
+  const multipliedDmg = penetratingDmg * 2;
+  const critBonus = entry.critBonusDamage || (entry.isCriticalInjuryTrigger ? 5 : 0);
+  const totalHpDamage = penetrates ? multipliedDmg + critBonus : critBonus;
+  const newEnemySp = penetrates ? Math.max(0, enemyHeadSp - 1) : enemyHeadSp;
+
+  return (
+    <div className="mt-2 p-2 bg-[#1b1216] border border-[#ef4444]/50 rounded-xs space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="font-tech text-[11px] font-bold text-[#f87171] flex items-center gap-1">
+          <Crosshair className="w-3.5 h-3.5 text-[#ef4444]" />
+          MINI-CALCULADORA DE HEADSHOT (×2)
+        </span>
+        <span className="text-[9px] font-mono-code text-[#cbd5e1] bg-[#2a131a] px-1.5 py-0.5 rounded border border-[#ef4444]/30">
+          SP Cabeza
+        </span>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <label className="text-[10px] font-mono-code text-[#94a3b8] whitespace-nowrap">
+          SP Cabeza Enemigo:
+        </label>
+        <input
+          type="number"
+          min="0"
+          max="30"
+          value={enemyHeadSp}
+          onChange={(e) => setEnemyHeadSp(Math.max(0, parseInt(e.target.value) || 0))}
+          className="w-16 px-1.5 py-0.5 bg-[#0e1017] border border-[#3b1d24] focus:border-[#ef4444] rounded text-white font-mono-code text-xs text-center font-bold focus:outline-none"
+        />
+        <div className="flex items-center gap-1 text-[9px] font-mono-code text-[#64748b]">
+          <button
+            type="button"
+            onClick={() => setEnemyHeadSp(7)}
+            className="px-1 py-0.2 bg-[#171b26] hover:bg-[#252c42] rounded border border-[#293246]"
+            title="Kevlar Cabeza (SP 7)"
+          >
+            SP 7
+          </button>
+          <button
+            type="button"
+            onClick={() => setEnemyHeadSp(11)}
+            className="px-1 py-0.2 bg-[#171b26] hover:bg-[#252c42] rounded border border-[#293246]"
+            title="Light Armorjack Cabeza (SP 11 - Estándar)"
+          >
+            SP 11
+          </button>
+          <button
+            type="button"
+            onClick={() => setEnemyHeadSp(13)}
+            className="px-1 py-0.2 bg-[#171b26] hover:bg-[#252c42] rounded border border-[#293246]"
+            title="Medium Armorjack (SP 13)"
+          >
+            SP 13
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-[#10121a] p-1.5 rounded border border-[#291b22] text-[10px] font-mono-code space-y-1">
+        <div className="flex justify-between items-center text-[#cbd5e1]">
+          <span>Daño base ({baseDmg}) - SP ({enemyHeadSp}):</span>
+          <span className={`font-bold ${penetrates ? 'text-[#f87171]' : 'text-[#64748b]'}`}>
+            {penetrates ? `${penetratingDmg} penetrante` : 'Armadura Detuvo Daño'}
+          </span>
+        </div>
+
+        {penetrates && (
+          <div className="flex justify-between items-center text-amber-300">
+            <span>Multiplicador de Cabeza (×2):</span>
+            <span className="font-bold">{penetratingDmg} × 2 = {multipliedDmg} HP</span>
+          </div>
+        )}
+
+        {critBonus > 0 && (
+          <div className="flex justify-between items-center text-[#ef4444]">
+            <span>Bonus Herida Crítica (+5):</span>
+            <span className="font-bold">+5 HP</span>
+          </div>
+        )}
+
+        <div className="pt-1 border-t border-[#291b22] flex justify-between items-center">
+          <div className="text-[9px] text-[#94a3b8]">
+            {penetrates ? `Ablación: SP pasa a ${newEnemySp}` : 'Sin ablación'}
+          </div>
+          <div className="font-tech text-xs font-bold text-white flex items-center gap-1">
+            <span>DAÑO DIRECTO A HP:</span>
+            <span className="text-emerald-400 text-sm font-mono-code">{totalHpDamage} HP</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const CombatHudView: React.FC = () => {
   // Store hooks
   const activeChar = useCharacterStore((state) => state.getActiveCharacter());
@@ -332,6 +438,8 @@ export const CombatHudView: React.FC = () => {
   const toggleWeaponAutofire = useCombatStore((state) => state.toggleWeaponAutofire);
   const luckToSpendOnNextRoll = useCombatStore((state) => state.luckToSpendOnNextRoll);
   const setLuckToSpend = useCombatStore((state) => state.setLuckToSpend);
+  const aimedShotTarget = useCombatStore((state) => state.aimedShotTarget);
+  const setAimedShotTarget = useCombatStore((state) => state.setAimedShotTarget);
   const rollHistory = useCombatStore((state) => state.rollHistory);
   const addRollEntry = useCombatStore((state) => state.addRollEntry);
   const triggerExplosionClick = useCombatStore((state) => state.triggerExplosionClick);
@@ -345,6 +453,7 @@ export const CombatHudView: React.FC = () => {
   const [selectedCatalogWeaponId, setSelectedCatalogWeaponId] = useState<string>(
     coreData.weapons?.[0]?.id || ''
   );
+  const [isBestiaryDrawerOpen, setIsBestiaryDrawerOpen] = useState(false);
 
   // Accordion section states
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -548,7 +657,8 @@ export const CombatHudView: React.FC = () => {
       distanceLabel: weapon.type === 'Melee' ? 'Cuerpo a cuerpo' : selectedDistance,
       luckSpent,
       isAutofire: isAuto,
-      weaponInstanceId: instanceId
+      weaponInstanceId: instanceId,
+      aimedShotTarget
     });
 
     addRollEntry(entry);
@@ -567,7 +677,8 @@ export const CombatHudView: React.FC = () => {
       weapon.damage,
       isAuto,
       multiplier,
-      instanceId
+      instanceId,
+      recentHit?.aimedShotTarget ?? aimedShotTarget
     );
 
     if (recentHit) {
@@ -601,14 +712,15 @@ export const CombatHudView: React.FC = () => {
       targetDv: 13,
       distanceLabel: 'Cuerpo a cuerpo (Enfrentada)',
       luckSpent,
-      weaponInstanceId: 'unarmed-brawling'
+      weaponInstanceId: 'unarmed-brawling',
+      aimedShotTarget
     });
     addRollEntry(entry);
   };
 
   // Unarmed: Brawling damage
   const handleBrawlingDamage = () => {
-    const dmgEntry = createDamageRoll('Puños (Brawling)', unarmedDmg, false, 1, 'unarmed-brawling');
+    const dmgEntry = createDamageRoll('Puños (Brawling)', unarmedDmg, false, 1, 'unarmed-brawling', aimedShotTarget);
     addRollEntry(dmgEntry);
   };
 
@@ -681,14 +793,15 @@ export const CombatHudView: React.FC = () => {
       targetDv: 13,
       distanceLabel: 'Cuerpo a cuerpo (Ignora 50% SP)',
       luckSpent,
-      weaponInstanceId: 'unarmed-martial-arts'
+      weaponInstanceId: 'unarmed-martial-arts',
+      aimedShotTarget
     });
     addRollEntry(entry);
   };
 
   // Unarmed: Martial Arts damage
   const handleMartialArtsDamage = () => {
-    const dmgEntry = createDamageRoll('Artes Marciales (Ignora 50% SP)', unarmedDmg, false, 1, 'unarmed-martial-arts');
+    const dmgEntry = createDamageRoll('Artes Marciales (Ignora 50% SP)', unarmedDmg, false, 1, 'unarmed-martial-arts', aimedShotTarget);
     addRollEntry(dmgEntry);
   };
 
@@ -877,7 +990,60 @@ export const CombatHudView: React.FC = () => {
   const hasAnyInHandAttack = inHandWeapons.length > 0 || isBrawlingInHand || isMartialArtsInHand;
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
+    <div className="space-y-4">
+      {/* Barra Superior Táctica de Combate: Bestiario GM */}
+      <div className="chamfer-card p-2.5 bg-[#12141f] border border-[#242b3d] flex flex-wrap items-center justify-between gap-3 shadow-md">
+        <div className="flex items-center gap-2">
+          <Crosshair className="w-4 h-4 text-[#ef4444]" />
+          <span className="font-tech text-xs font-bold text-white uppercase tracking-wider">
+            SISTEMA DE COMBATE ACTIVO & ENCUENTROS
+          </span>
+          <span className="text-[10px] font-mono-code text-slate-400 hidden sm:inline">
+            • {activeChar?.handle || 'Sin Personaje Activo'}
+          </span>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsBestiaryDrawerOpen((p) => !p)}
+          className={`px-3 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm cursor-pointer ${
+            isBestiaryDrawerOpen
+              ? 'bg-[#ef4444] text-white shadow-md shadow-[#ef4444]/30'
+              : 'bg-[#1e1728] hover:bg-[#c084fc] text-[#c084fc] hover:text-black border border-[#482d5e]'
+          }`}
+        >
+          <Skull className="w-3.5 h-3.5 text-amber-400" />
+          <span>👹 BESTIARIO & ENCUENTRO GM (44 ENEMIGOS)</span>
+          <span className="text-[10px] font-mono-code opacity-80">
+            {isBestiaryDrawerOpen ? '[ Plegar ]' : '[ Desplegar ]'}
+          </span>
+        </button>
+      </div>
+
+      {/* Sección Desplegable del Bestiario */}
+      {isBestiaryDrawerOpen && (
+        <div className="chamfer-card p-4 bg-[#0a0c13] border-2 border-amber-500/50 shadow-2xl space-y-3 animate-fade-in">
+          <div className="flex items-center justify-between pb-2 border-b border-[#23293c]">
+            <div className="flex items-center gap-2">
+              <Skull className="w-5 h-5 text-amber-400" />
+              <h3 className="font-tech text-sm font-bold text-white uppercase tracking-wider">
+                PANEL INTEGRADO DE BESTIARIO & ENCUENTRO GM
+              </h3>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsBestiaryDrawerOpen(false)}
+              className="px-2.5 py-1 bg-[#1a1e2a] hover:bg-red-600 text-slate-300 hover:text-white font-mono-code text-xs rounded transition-colors flex items-center gap-1 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Cerrar Bestiario</span>
+            </button>
+          </div>
+          <EnemiesCompendiumPanel />
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
       
       {/* =========================================================
           COLUMNA IZQUIERDA (3 COLS): BIOMONITOR, SP, LUCK, DROGAS ACTIVAS, CRITS
@@ -1407,6 +1573,85 @@ export const CombatHudView: React.FC = () => {
                 </div>
               )}
 
+              {/* Selector Táctico de Disparo Apuntado (Aimed Shot) */}
+              <div className="chamfer-card p-3 bg-[#13151f] border border-[#262c3e] space-y-2.5">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <Crosshair className="w-4 h-4 text-[#ef4444]" />
+                    <span className="font-tech text-xs font-bold text-white uppercase tracking-wider">
+                      MODO DE DISPARO / ATAQUE APUNTADO
+                    </span>
+                    {aimedShotTarget !== 'none' && (
+                      <span className="bg-[#ef4444]/20 border border-[#ef4444]/60 text-[#f87171] text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs">
+                        PENALIZADOR ACTIVO: -8 (ROF 1)
+                      </span>
+                    )}
+                  </div>
+                  {aimedShotTarget !== 'none' && (
+                    <button
+                      type="button"
+                      onClick={() => setAimedShotTarget('none')}
+                      className="text-[9px] font-mono-code text-[#94a3b8] hover:text-white bg-[#1a1e2a] border border-[#2b334a] hover:border-[#ef4444] px-2 py-0.5 rounded-xs transition-colors"
+                    >
+                      Restablecer a Normal
+                    </button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+                  {(Object.keys(AIMED_SHOT_OPTIONS) as AimedShotTarget[]).map((key) => {
+                    const opt = AIMED_SHOT_OPTIONS[key];
+                    const isSelected = aimedShotTarget === key;
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setAimedShotTarget(key)}
+                        className={`py-1.5 px-2 rounded-xs font-mono-code text-[11px] font-bold text-left transition-all border flex flex-col justify-between min-h-[48px] ${
+                          isSelected
+                            ? key === 'none'
+                              ? 'bg-[#10b981]/20 border-[#10b981] text-[#10b981] shadow-sm shadow-[#10b981]/20'
+                              : 'bg-[#ef4444]/20 border-[#ef4444] text-white shadow-sm shadow-[#ef4444]/30'
+                            : 'bg-[#171a26] border-[#252b3e] text-[#94a3b8] hover:text-white hover:border-[#38bdf8]/50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <span className="truncate">{opt.shortBadge}</span>
+                          <span className={`text-[9px] px-1 py-0.2 rounded-xs ${
+                            opt.penalty > 0 ? 'bg-[#ef4444]/30 text-[#f87171]' : 'bg-[#10b981]/30 text-[#34d399]'
+                          }`}>
+                            {opt.penalty > 0 ? `-${opt.penalty}` : '0'}
+                          </span>
+                        </div>
+                        <span className="text-[9px] text-[#64748b] truncate">
+                          {opt.forceRof1 ? 'ROF 1 · Sin Auto' : 'ROF Normal'}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Panel Iluminado de Beneficio Táctico */}
+                {aimedShotTarget !== 'none' && (
+                  <div className="p-2.5 rounded-xs bg-[#241318] border border-[#ef4444]/40 text-[10px] font-mono-code text-[#cbd5e1] space-y-1 animate-fade-in shadow-inner">
+                    <div className="flex items-center justify-between font-tech text-[11px] font-bold text-[#f87171]">
+                      <span className="flex items-center gap-1.5">
+                        <Crosshair className="w-3.5 h-3.5 text-[#ef4444]" />
+                        {AIMED_SHOT_OPTIONS[aimedShotTarget].label}
+                      </span>
+                      <span className="text-amber-400">{AIMED_SHOT_OPTIONS[aimedShotTarget].benefitTitle}</span>
+                    </div>
+                    <p className="text-slate-300 leading-snug">
+                      {AIMED_SHOT_OPTIONS[aimedShotTarget].benefitDescription}
+                    </p>
+                    <div className="pt-1 border-t border-[#3b1d24] flex items-center justify-between text-[9px] text-[#94a3b8]">
+                      <span>Regla: {AIMED_SHOT_OPTIONS[aimedShotTarget].onHitMechanicalRule}</span>
+                      <span className="text-[#ef4444] font-bold">Penalizador directo: -8</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Tarjetas de Armas En Mano */}
               {inHandWeapons.map((w) => {
                 const isRanged = w.type === 'Ranged';
@@ -1419,7 +1664,9 @@ export const CombatHudView: React.FC = () => {
                 const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
                 const placeholderType = getItemPlaceholderType(w);
                 const isOutOfAmmo = isRanged && (w.currentMag ?? 0) <= 0;
-                const netBaseWithLuck = breakdown.netBase + luckToSpendOnNextRoll;
+                const aimedPenalty = aimedShotTarget !== 'none' ? 8 : 0;
+                const effectiveRof = aimedShotTarget !== 'none' ? 1 : w.rof;
+                const netBaseWithLuck = breakdown.netBase - aimedPenalty + luckToSpendOnNextRoll;
                 const selectedAmmoMeta = AMMO_TYPE_CATALOG.find((a) => a.id === (w.loadedAmmoType || 'Basic'));
 
                 // Find optimal range
@@ -1472,7 +1719,7 @@ export const CombatHudView: React.FC = () => {
                               {w.damage}
                             </span>
                             <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
-                              ROF {w.rof}
+                              ROF {effectiveRof}{aimedShotTarget !== 'none' ? ' (Apuntado)' : ''}
                             </span>
                             {isRanged && hasMag && (
                               <span className={`px-1.5 py-0.5 rounded-xs border font-bold ${
@@ -1491,7 +1738,7 @@ export const CombatHudView: React.FC = () => {
                               DV actual: {w.type === 'Melee' ? 'DV 13' : currentDv !== null ? `DV ${currentDv}` : 'N/A'} ({selectedDistance})
                             </span>
                             <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
-                              Base: +{netBaseWithLuck}
+                              Base: +{netBaseWithLuck}{aimedPenalty > 0 ? ' (-8)' : ''}
                             </span>
                           </div>
                         </div>
@@ -1529,7 +1776,7 @@ export const CombatHudView: React.FC = () => {
                         }`}
                       >
                         <Crosshair className="w-4 h-4" />
-                        <span>1. ATACAR 1d10 ({w.type === 'Melee' ? 'DV 13' : currentDv !== null ? `DV ${currentDv}` : 'Fuera Rango'})</span>
+                        <span>1. ATACAR 1d10 ({w.type === 'Melee' ? 'DV 13' : currentDv !== null ? `DV ${currentDv}` : 'Fuera Rango'}){aimedShotTarget !== 'none' ? ` [${AIMED_SHOT_OPTIONS[aimedShotTarget].shortBadge} -8]` : ''}</span>
                       </button>
 
                       <button
@@ -1543,16 +1790,19 @@ export const CombatHudView: React.FC = () => {
                       {autofireRules.supportsAutofire && (
                         <button
                           type="button"
+                          disabled={aimedShotTarget !== 'none'}
                           onClick={() => toggleWeaponAutofire(w.instanceId)}
                           className={`sm:col-span-2 py-2 px-1 rounded-xs font-tech font-bold text-[11px] tracking-wider transition-all flex items-center justify-center gap-1 ${
-                            isAuto
+                            aimedShotTarget !== 'none'
+                              ? 'bg-[#181a24] text-[#475569] border border-[#232738] cursor-not-allowed opacity-50'
+                              : isAuto
                               ? 'bg-[#f59e0b] text-black shadow-sm shadow-[#f59e0b]/40'
                               : 'bg-[#222534] text-[#94a3b8] hover:text-white border border-[#2e3448]'
                           }`}
-                          title="Alternar modo de Fuego Automático (10 balas)"
+                          title={aimedShotTarget !== 'none' ? 'Autofire no permitido en disparos apuntados' : 'Alternar modo de Fuego Automático (10 balas)'}
                         >
                           <Zap className="w-3 h-3" />
-                          <span>{isAuto ? 'AUTO: ON' : 'AUTO'}</span>
+                          <span>{aimedShotTarget !== 'none' ? 'AUTO (BLOQ)' : isAuto ? 'AUTO: ON' : 'AUTO'}</span>
                         </button>
                       )}
                     </div>
@@ -1824,13 +2074,13 @@ export const CombatHudView: React.FC = () => {
                             Daño: {unarmedDmg}
                           </span>
                           <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
-                            ROF 2
+                            ROF {aimedShotTarget !== 'none' ? '1 (Apuntado)' : '2'}
                           </span>
                           <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
                             DV 13
                           </span>
                           <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
-                            Base: +{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.brawling ?? 0) + luckToSpendOnNextRoll}
+                            Base: +{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.brawling ?? 0) + luckToSpendOnNextRoll - (aimedShotTarget !== 'none' ? 8 : 0)}{aimedShotTarget !== 'none' ? ' (-8)' : ''}
                           </span>
                         </div>
                       </div>
@@ -1861,7 +2111,7 @@ export const CombatHudView: React.FC = () => {
                       className="py-2 px-3 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
                     >
                       <Crosshair className="w-4 h-4" />
-                      <span>1. ATACAR 1d10 (DV 13)</span>
+                      <span>1. ATACAR 1d10 (DV 13){aimedShotTarget !== 'none' ? ` [${AIMED_SHOT_OPTIONS[aimedShotTarget].shortBadge} -8]` : ''}</span>
                     </button>
                     <button
                       onClick={handleBrawlingDamage}
@@ -1944,13 +2194,13 @@ export const CombatHudView: React.FC = () => {
                             Daño: {unarmedDmg}
                           </span>
                           <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
-                            ROF 2
+                            ROF {aimedShotTarget !== 'none' ? '1 (Apuntado)' : '2'}
                           </span>
                           <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
                             DV 13
                           </span>
                           <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
-                            Base: +{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0) + luckToSpendOnNextRoll}
+                            Base: +{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0) + luckToSpendOnNextRoll - (aimedShotTarget !== 'none' ? 8 : 0)}{aimedShotTarget !== 'none' ? ' (-8)' : ''}
                           </span>
                         </div>
                       </div>
@@ -1981,7 +2231,7 @@ export const CombatHudView: React.FC = () => {
                       className="py-2 px-3 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
                     >
                       <Crosshair className="w-4 h-4" />
-                      <span>1. ATACAR 1d10 (DV 13)</span>
+                      <span>1. ATACAR 1d10 (DV 13){aimedShotTarget !== 'none' ? ` [${AIMED_SHOT_OPTIONS[aimedShotTarget].shortBadge} -8]` : ''}</span>
                     </button>
                     <button
                       onClick={handleMartialArtsDamage}
@@ -2125,6 +2375,23 @@ export const CombatHudView: React.FC = () => {
                         </div>
                       </div>
 
+                      {entry.aimedShotTarget && entry.aimedShotTarget !== 'none' && (
+                        <div className="mt-1 p-1 bg-[#2b1016] rounded border border-[#ef4444]/40 flex flex-col gap-0.5 text-[10px] font-mono-code">
+                          <div className="flex items-center justify-between text-[#f87171] font-bold">
+                            <span className="flex items-center gap-1">
+                              <Crosshair className="w-3 h-3" />
+                              {entry.aimedShotLabel || 'DISPARO APUNTADO'} (-8)
+                            </span>
+                            <span className="text-[9px] uppercase tracking-wider text-rose-300">ROF 1</span>
+                          </div>
+                          {entry.aimedShotEffectSummary && (
+                            <div className="text-[9px] text-slate-300">
+                              {entry.aimedShotEffectSummary}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       {entry.isAutofire && entry.isHit && (
                         <div className="mt-1 p-1 bg-[#201d14] rounded border border-[#3b341d] flex items-center justify-between text-[11px] font-mono-code text-[#f59e0b]">
                           <span>MULTIPLICADOR:</span>
@@ -2141,7 +2408,8 @@ export const CombatHudView: React.FC = () => {
                               entry.damageFormula || '3d6',
                               entry.isAutofire,
                               entry.autofireMultiplier,
-                              entry.weaponInstanceId
+                              entry.weaponInstanceId,
+                              entry.aimedShotTarget || 'none'
                             );
                             addRollEntry(dmg);
                           }}
@@ -2165,6 +2433,18 @@ export const CombatHudView: React.FC = () => {
                           {entry.finalDamageTotal} PTS
                         </span>
                       </div>
+
+                      {entry.aimedShotTarget && entry.aimedShotTarget !== 'none' && (
+                        <div className="mb-1.5 p-1 bg-[#2b1016] rounded border border-[#ef4444]/40 flex items-center justify-between text-[10px] font-mono-code text-[#f87171]">
+                          <span className="flex items-center gap-1 font-bold">
+                            <Crosshair className="w-3 h-3" />
+                            {entry.aimedShotLabel || 'DISPARO APUNTADO'}
+                          </span>
+                          {entry.aimedShotTarget === 'head' && (
+                            <span className="text-amber-400 font-bold">×2 DAÑO PENETRANTE</span>
+                          )}
+                        </div>
+                      )}
 
                       <div className="flex flex-wrap items-center gap-1 my-1.5">
                         {entry.diceResults?.map((die, idx) => (
@@ -2206,6 +2486,10 @@ export const CombatHudView: React.FC = () => {
                             </button>
                           </div>
                         </div>
+                      )}
+
+                      {entry.aimedShotTarget === 'head' && (
+                        <HeadshotCalculator entry={entry} />
                       )}
                     </div>
                   )}
@@ -2958,6 +3242,7 @@ export const CombatHudView: React.FC = () => {
 
       </div>
 
+    </div>
     </div>
   );
 };

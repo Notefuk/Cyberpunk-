@@ -1,12 +1,67 @@
 import type {
   CharacterSheet,
   RollEntry,
-  WeaponItem
+  WeaponItem,
+  AimedShotTarget
 } from '../types/cyberpunk';
 import {
   calculateWeaponAttackBreakdown,
   getAutofireRulesSummary
 } from './characterEngine';
+
+export interface AimedShotOption {
+  id: AimedShotTarget;
+  label: string;
+  shortBadge: string;
+  penalty: number;
+  forceRof1: boolean;
+  benefitTitle: string;
+  benefitDescription: string;
+  onHitMechanicalRule: string;
+}
+
+export const AIMED_SHOT_OPTIONS: Record<AimedShotTarget, AimedShotOption> = {
+  none: {
+    id: 'none',
+    label: 'Tiro Normal (Centro de Masa)',
+    shortBadge: 'Centro de Masa',
+    penalty: 0,
+    forceRof1: false,
+    benefitTitle: 'Disparo Estándar',
+    benefitDescription: 'Ataque dirigido al torso o centro de masa general sin modificador de puntería. Aplica daño al SP de Cuerpo y cadencia de fuego (ROF) normal.',
+    onHitMechanicalRule: 'Abla el SP de Cuerpo en 1 punto si el daño penetra.'
+  },
+  head: {
+    id: 'head',
+    label: '🎯 Apuntar a la Cabeza (Headshot)',
+    shortBadge: 'Headshot',
+    penalty: 8,
+    forceRof1: true,
+    benefitTitle: 'Daño Penetrante ×2 al HP',
+    benefitDescription: 'Todo el daño que atraviese la Armadura de Cabeza (SP) se multiplica ×2 directamente a los Puntos de Vida (HP), además de ablandar 1 punto de SP.',
+    onHitMechanicalRule: 'Impacta contra el SP de Cabeza. Daño penetrante × 2 directo a HP + abla 1 SP.'
+  },
+  leg: {
+    id: 'leg',
+    label: '🦵 Apuntar a la Pierna (Leg Shot)',
+    shortBadge: 'Tiro a la Pierna',
+    penalty: 8,
+    forceRof1: true,
+    benefitTitle: 'Pierna Rota Automática (-4 MOVE)',
+    benefitDescription: 'Si al menos 1 punto de daño atraviesa el SP del cuerpo, el objetivo sufre automáticamente la Herida Crítica Pierna Rota (-4 MOVE, mín. 1) además del daño.',
+    onHitMechanicalRule: 'Si penetra el SP de Cuerpo, aplica Herida Crítica Pierna Rota (-4 MOVE) sin requerir doble 6.'
+  },
+  held_item: {
+    id: 'held_item',
+    label: '✋ Apuntar a Objeto en Mano (Disarm)',
+    shortBadge: 'Desarme',
+    penalty: 8,
+    forceRof1: true,
+    benefitTitle: 'Desarme Instantáneo',
+    benefitDescription: 'Si al menos 1 punto de daño atraviesa el SP del cuerpo, el objetivo suelta inmediatamente el arma u objeto que sostiene en esa mano (cae al suelo intacto).',
+    onHitMechanicalRule: 'Si penetra el SP de Cuerpo, el enemigo suelta el arma u objeto sostenido inmediatamente.'
+  }
+};
 
 export interface InitialAttackRollOptions {
   targetDv?: number | null;
@@ -14,12 +69,14 @@ export interface InitialAttackRollOptions {
   luckSpent?: number;
   isAutofire?: boolean;
   weaponInstanceId?: string;
+  aimedShotTarget?: AimedShotTarget;
 }
 
 export function createInitialAttackRoll(
   character: CharacterSheet,
   weapon: WeaponItem,
-  options: InitialAttackRollOptions = {}
+  options: InitialAttackRollOptions = {},
+  aimedShotTargetParam: AimedShotTarget = 'none'
 ): RollEntry {
   const {
     targetDv = null,
@@ -29,7 +86,12 @@ export function createInitialAttackRoll(
     weaponInstanceId
   } = options;
 
-  const breakdown = calculateWeaponAttackBreakdown(character, weapon, isAutofire);
+  const aimedShotTarget = options.aimedShotTarget || aimedShotTargetParam || 'none';
+  const aimedConfig = AIMED_SHOT_OPTIONS[aimedShotTarget];
+  const aimedPenalty = aimedConfig ? aimedConfig.penalty : 0;
+
+  const effectiveIsAutofire = isAutofire && aimedShotTarget === 'none';
+  const breakdown = calculateWeaponAttackBreakdown(character, weapon, effectiveIsAutofire);
   const autofireSummary = getAutofireRulesSummary(weapon);
   const autofireMaxMult = autofireSummary.maxMultiplier;
 
@@ -47,7 +109,13 @@ export function createInitialAttackRoll(
     ? 'crit_fail'
     : null;
 
-  const provisionalTotalAttack = breakdown.netBase + luckSpent + d10;
+  const totalPenalty = breakdown.totalPenalty + aimedPenalty;
+  const penaltyBreakdown = [...breakdown.penaltyBreakdown];
+  if (aimedPenalty > 0 && aimedConfig) {
+    penaltyBreakdown.push(`Ataque Apuntado (-${aimedPenalty}): ${aimedConfig.label}`);
+  }
+
+  const provisionalTotalAttack = breakdown.netBase - aimedPenalty + luckSpent + d10;
 
   let margin: number | undefined = undefined;
   let isHit: boolean | undefined = undefined;
@@ -56,7 +124,7 @@ export function createInitialAttackRoll(
   if (targetDv !== null && targetDv !== undefined) {
     margin = provisionalTotalAttack - targetDv;
     isHit = margin > 0;
-    if (isAutofire) {
+    if (effectiveIsAutofire) {
       autofireMultiplier = isHit
         ? Math.min(Math.max(1, margin), autofireMaxMult || 1)
         : 0;
@@ -80,18 +148,21 @@ export function createInitialAttackRoll(
     skillName: breakdown.skillLabel,
     skillVal: breakdown.skillVal,
     luckSpent,
-    penaltiesTotal: breakdown.totalPenalty,
-    penaltyBreakdown: breakdown.penaltyBreakdown,
+    penaltiesTotal: totalPenalty,
+    penaltyBreakdown,
     totalAttack: provisionalTotalAttack,
     targetDv,
     margin,
     isHit,
     isCritSuccess,
     isCritFail,
-    isAutofire,
+    isAutofire: effectiveIsAutofire,
     autofireMaxMult,
     autofireMultiplier,
-    damageRolled: false
+    damageRolled: false,
+    aimedShotTarget,
+    aimedShotLabel: aimedShotTarget !== 'none' && aimedConfig ? aimedConfig.label : undefined,
+    aimedShotEffectSummary: aimedShotTarget !== 'none' && aimedConfig ? aimedConfig.benefitDescription : undefined
   };
 }
 
@@ -140,12 +211,13 @@ export function createDamageRoll(
   damageFormula: string,
   isAutofire?: boolean,
   autofireMultiplier?: number,
-  weaponInstanceId?: string
+  weaponInstanceId?: string,
+  aimedShotTarget: AimedShotTarget = 'none'
 ): RollEntry {
   let diceResults: number[] = [];
   let baseDamageTotal = 0;
 
-  if (isAutofire) {
+  if (isAutofire && aimedShotTarget === 'none') {
     const d1 = Math.floor(Math.random() * 6) + 1;
     const d2 = Math.floor(Math.random() * 6) + 1;
     diceResults = [d1, d2];
@@ -165,6 +237,8 @@ export function createDamageRoll(
   const critBonusDamage = isCriticalInjuryTrigger ? 5 : 0;
   const finalDamageTotal = baseDamageTotal + critBonusDamage;
 
+  const aimedConfig = AIMED_SHOT_OPTIONS[aimedShotTarget];
+
   return {
     id: `roll-dmg-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
     timestamp: new Date().toISOString(),
@@ -172,7 +246,7 @@ export function createDamageRoll(
     weaponInstanceId,
     weaponName,
     damageFormula,
-    isAutofire: !!isAutofire,
+    isAutofire: !!isAutofire && aimedShotTarget === 'none',
     autofireMultiplier,
     diceResults,
     sixesCount,
@@ -180,7 +254,10 @@ export function createDamageRoll(
     baseDamageTotal,
     critBonusDamage,
     finalDamageTotal,
-    damageRolled: true
+    damageRolled: true,
+    aimedShotTarget,
+    aimedShotLabel: aimedShotTarget !== 'none' && aimedConfig ? aimedConfig.label : undefined,
+    aimedShotEffectSummary: aimedShotTarget !== 'none' && aimedConfig ? aimedConfig.benefitDescription : undefined
   };
 }
 
