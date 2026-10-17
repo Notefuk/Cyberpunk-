@@ -6,15 +6,17 @@ import {
   FolderArchive, 
   Terminal, 
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Cpu
 } from 'lucide-react';
 import { TopHudBar } from './features/layout/TopHudBar';
 import { CombatHudView } from './features/combat/CombatHudView';
 import { StreetLabView } from './features/sheet/StreetLabView';
+import { CyberwareRipperdocView } from './features/cyberware/CyberwareRipperdocView';
 import { CompendiumView } from './features/compendium/CompendiumView';
 import { DataPacksView } from './features/packs/DataPacksView';
 
-type TabKey = 'combat' | 'sheet' | 'compendium' | 'packs' | 'gm';
+type TabKey = 'combat' | 'sheet' | 'cyberware' | 'compendium' | 'packs' | 'gm';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('combat');
@@ -29,6 +31,11 @@ export default function App() {
       id: 'sheet',
       label: 'STREET LAB // FICHA & ARSENAL',
       icon: <User className="w-4 h-4" />
+    },
+    {
+      id: 'cyberware',
+      label: 'CYBERWARE // RIPPERDOC',
+      icon: <Cpu className="w-4 h-4" />
     },
     {
       id: 'compendium',
@@ -81,6 +88,7 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
         {activeTab === 'combat' && <CombatHudView />}
         {activeTab === 'sheet' && <StreetLabView />}
+        {activeTab === 'cyberware' && <CyberwareRipperdocView />}
         {activeTab === 'compendium' && <CompendiumView />}
         {activeTab === 'packs' && <DataPacksView />}
         {activeTab === 'gm' && (

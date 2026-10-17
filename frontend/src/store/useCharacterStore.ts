@@ -328,6 +328,16 @@ export interface CharacterStoreState {
   unequipWeapon: (weaponInstanceId: string) => void;
   equipArmorFromCatalog: (armor: ArmorItem, location: 'head' | 'body' | 'both') => void;
   toggleCyberwareInstall: (cyberwareId: string, humanityCostAvg?: number) => void;
+  installCyberwareAdvanced: (params: {
+    cyberwareId: string;
+    cyberwareName: string;
+    humanityLossAmount: number;
+    cost: number;
+    spendMoney: boolean;
+    armorSpBonus?: { location: 'head' | 'body' | 'both'; sp: number };
+  }) => { success: boolean; message: string };
+  uninstallCyberware: (cyberwareId: string, humanityRefundAmount?: number) => void;
+  adjustHumanity: (delta: number) => void;
   inflictRandomInjury: (location: 'head' | 'body') => ActiveCriticalInjury;
   toggleTreatInjury: (injuryId: string) => void;
   removeInjury: (injuryId: string) => void;
@@ -921,6 +931,113 @@ export const useCharacterStore = create<CharacterStoreState>()(
                 currentHumanity: Math.max(0, c.currentHumanity - humanityCostAvg)
               };
             }
+          })
+        }));
+      },
+
+      installCyberwareAdvanced: ({
+        cyberwareId,
+        cyberwareName,
+        humanityLossAmount,
+        cost,
+        spendMoney,
+        armorSpBonus
+      }) => {
+        const char = get().getActiveCharacter();
+        if (spendMoney && (char.eurodollars || 0) < cost) {
+          return { success: false, message: 'Fondos insuficientes (€$)' };
+        }
+
+        const newEurodollars = spendMoney ? (char.eurodollars || 0) - cost : (char.eurodollars || 0);
+        const txConcept = spendMoney
+          ? `Cirugía Ciberware: ${cyberwareName}`
+          : `Instalación Ciberware (Cortesía/Loot): ${cyberwareName}`;
+        const txAmount = spendMoney ? -cost : 0;
+        const newTx: EurodollarTransaction = {
+          id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          timestamp: new Date().toISOString(),
+          concept: txConcept,
+          amount: txAmount,
+          balanceAfter: newEurodollars
+        };
+
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            const updatedCyberwareIds = c.installedCyberwareIds.includes(cyberwareId)
+              ? c.installedCyberwareIds
+              : [...c.installedCyberwareIds, cyberwareId];
+
+            const updatedHumanity = Math.max(0, c.currentHumanity - humanityLossAmount);
+
+            let updatedHeadArmor = { ...c.headArmor };
+            let updatedBodyArmor = { ...c.bodyArmor };
+
+            if (armorSpBonus) {
+              if (armorSpBonus.location === 'head' || armorSpBonus.location === 'both') {
+                if (updatedHeadArmor.currentSp < armorSpBonus.sp) {
+                  updatedHeadArmor = {
+                    ...updatedHeadArmor,
+                    name: `${cyberwareName} (SP ${armorSpBonus.sp})`,
+                    currentSp: armorSpBonus.sp,
+                    maxSp: Math.max(updatedHeadArmor.maxSp, armorSpBonus.sp)
+                  };
+                }
+              }
+              if (armorSpBonus.location === 'body' || armorSpBonus.location === 'both') {
+                if (updatedBodyArmor.currentSp < armorSpBonus.sp) {
+                  updatedBodyArmor = {
+                    ...updatedBodyArmor,
+                    name: `${cyberwareName} (SP ${armorSpBonus.sp})`,
+                    currentSp: armorSpBonus.sp,
+                    maxSp: Math.max(updatedBodyArmor.maxSp, armorSpBonus.sp)
+                  };
+                }
+              }
+            }
+
+            return {
+              ...c,
+              eurodollars: newEurodollars,
+              installedCyberwareIds: updatedCyberwareIds,
+              currentHumanity: updatedHumanity,
+              headArmor: updatedHeadArmor,
+              bodyArmor: updatedBodyArmor,
+              transactions: [newTx, ...(c.transactions || [])].slice(0, 50)
+            };
+          })
+        }));
+
+        return {
+          success: true,
+          message: `${cyberwareName} instalado con éxito (-${humanityLossAmount} HUM).`
+        };
+      },
+
+      uninstallCyberware: (cyberwareId: string, humanityRefundAmount = 7) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const maxHumanity = c.stats.EMP * 10;
+            return {
+              ...c,
+              installedCyberwareIds: c.installedCyberwareIds.filter((id) => id !== cyberwareId),
+              currentHumanity: Math.min(maxHumanity, c.currentHumanity + humanityRefundAmount)
+            };
+          })
+        }));
+      },
+
+      adjustHumanity: (delta: number) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const maxHumanity = c.stats.EMP * 10;
+            return {
+              ...c,
+              currentHumanity: Math.max(0, Math.min(maxHumanity, c.currentHumanity + delta))
+            };
           })
         }));
       },

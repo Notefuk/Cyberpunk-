@@ -115,9 +115,9 @@
 ---
 
 ## 🧠 SPRINT 3: Sistemas Profundos - Maniquí Cyberware, Netrunning 2045, Quickhacks y Roles [PENDIENTE]
-- [ ] **Maniquí Anatómico de Ciberware (`CyberwareMannequin.tsx`)**:
-  - Silueta humana interactiva con 7 áreas anatómicas clicables.
-  - Ranuras de opción visuales y cálculo automático de pérdida de humanidad.
+- [x] **Maniquí Anatómico de Ciberware & Menú Ripperdoc (`CyberwareRipperdocView.tsx`)**:
+  - Silueta holográfica en A-Pose con flechas conectoras hacia las 8 zonas corporales + Fashionware.
+  - Ranuras de opción visuales estilo 2077 con ilustraciones vectoriales, telemetría de Humanidad/SP e instalador Ripperdoc con tirada Xd6.
 - [ ] **Simulador de Pisos de Red 2045 (`NetArchitectureRunner.tsx`)**:
   - Escalera virtual de pisos de red: Archivos, Nodos de Control, Contraseñas, Black ICE.
   - Contador de Acciones de Red (Net Actions) basado en el Rango de Interfaz.

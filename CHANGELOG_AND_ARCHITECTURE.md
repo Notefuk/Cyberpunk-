@@ -119,6 +119,20 @@ Los siguientes módulos son especificaciones de diseño para fases posteriores. 
 
 ## 📜 Master Version Changelog
 
+### [v2.4.0] - 2026-10-17 (Cyberpunk 2077-Style CYBERWARE // RIPPERDOC Tab & Anatomical Hologram)
+* **Category**: Deep Systems, Cyberware Ergonomics & 2077 Ripperdoc Interface
+* **Files Modified / Created**:
+  - `frontend/src/features/cyberware/CyberwareRipperdocView.tsx`
+  - `frontend/src/App.tsx`
+  - `frontend/src/store/useCharacterStore.ts`
+* **What Changed**:
+  1. **Nueva Pestaña Táctica `CYBERWARE // RIPPERDOC`**: Implementada vista inmersiva completa inspirada en el menú de ciberware de Cyberpunk 2077.
+  2. **Maniquí Anatómico Holográfico en A-Pose**: Silueta cibernética central en SVG interactivo con animaciones de escaneo, flechas conectoras direccionales hacia las 8 zonas corporales (`Cerebro / Neuralware`, `Ojos / Cyberoptics`, `Oído / Cyberaudio`, `Torso / Internal`, `Piel / External`, `Brazo Izquierdo`, `Brazo Derecho`, `Piernas`) más `Fashionware`.
+  3. **Biometría & Telemetría en Tiempo Real**: Medidores verticales segmentados de Humanidad, Umbral de Ciberpsicosis (EMP pérdida) y Blindaje/Biometría en tiempo real.
+  4. **Ranuras Estilo 2077 con Ilustraciones Vectoriales e Instalador Ripperdoc**: Cada categoría muestra slots dinámicos con arte vectorial para cada implante instalado, desinstalación con un clic y modal de instalación directa desde el catálogo de 96 implantes oficiales con tirada Xd6 de pérdida de humanidad.
+
+---
+
 ### [v2.3.3] - 2026-10-17 (Collapsible Rangefinder & Tabbed In-Hand Weapon Station)
 * **Category**: Combat HUD Ergonomics & Modular Weapon Telemetry
 * **Files Modified**:
