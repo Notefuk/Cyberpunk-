@@ -55,6 +55,7 @@ import {
 } from 'lucide-react';
 
 const STAT_KEYS: StatKey[] = ['INT', 'REF', 'DEX', 'TECH', 'COOL', 'WILL', 'LUCK', 'MOVE', 'BODY', 'EMP'];
+const BASIC_COMBAT_KEYS: CombatSkillKey[] = ['athletics', 'brawling', 'concentration', 'evasion', 'firstAid', 'perception'];
 
 interface CharacterCreatorWizardProps {
   onClose?: () => void;
@@ -89,27 +90,37 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
     );
   }, [selectedRoleKey]);
 
+  const [selectedStreetratRow, setSelectedStreetratRow] = useState<number>(1);
+  const [edgerunnerRolls, setEdgerunnerRolls] = useState<Record<StatKey, number>>(() => ({
+    INT: 1,
+    REF: 1,
+    DEX: 1,
+    TECH: 1,
+    COOL: 1,
+    WILL: 1,
+    LUCK: 1,
+    MOVE: 1,
+    BODY: 1,
+    EMP: 1
+  }));
+
   const [stats, setStats] = useState<Record<StatKey, number>>(() => ({
-    INT: 6,
-    REF: 8,
-    DEX: 7,
-    TECH: 4,
-    COOL: 6,
-    WILL: 6,
-    LUCK: 6,
-    MOVE: 7,
-    BODY: 7,
-    EMP: 5
+    ...ROLES_CATALOG[0].edgerunnerStatTable[0]
   }));
   const [inspectedStat, setInspectedStat] = useState<StatKey>('INT');
 
   // Step 4: Skills
+  const pureGeneralSkills = useMemo(() => {
+    return GENERAL_SKILLS_CATALOG.filter((g) => !g.combatSkillKey);
+  }, []);
+
   const [combatSkills, setCombatSkills] = useState<Record<CombatSkillKey, number>>(() => {
     return createDefaultCombatSkills();
   });
   const [generalSkills, setGeneralSkills] = useState<Record<string, number>>(() => {
     const map: Record<string, number> = {};
     for (const g of GENERAL_SKILLS_CATALOG) {
+      if (g.combatSkillKey) continue;
       map[g.key] = g.isBasic ? 2 : 0;
     }
     return map;
@@ -230,56 +241,179 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
     for (const [key, level] of Object.entries(combatSkills)) {
       const isDouble = key === 'autofire' || key === 'heavyWeapons' || key === 'martialArts';
       const costMultiplier = isDouble ? 2 : 1;
-      sum += level * costMultiplier;
+      sum += (level || 0) * costMultiplier;
     }
-    // General skills
-    for (const [key, level] of Object.entries(generalSkills)) {
-      const meta = GENERAL_SKILLS_CATALOG.find((g) => g.key === key);
-      const mult = meta?.isDoubleCost ? 2 : 1;
+    // Pure general skills
+    for (const g of pureGeneralSkills) {
+      const level = generalSkills[g.key] ?? (g.isBasic ? 2 : 0);
+      const mult = g.isDoubleCost ? 2 : 1;
       sum += level * mult;
     }
     return sum;
-  }, [combatSkills, generalSkills]);
+  }, [combatSkills, generalSkills, pureGeneralSkills]);
   const skillPointsRemaining = 86 - totalSkillPointsSpent;
+
+  // Apply Role Template Skills
+  const applyRoleTemplateSkills = (role: typeof ROLES_CATALOG[0]) => {
+    const baseCombat = createDefaultCombatSkills();
+    const newCombat = {
+      ...baseCombat,
+      ...(role.templateCombatSkills as Record<CombatSkillKey, number>)
+    };
+    for (const k of BASIC_COMBAT_KEYS) {
+      if ((newCombat[k] ?? 0) < 2) {
+        newCombat[k] = 2;
+      }
+    }
+    setCombatSkills(newCombat);
+
+    const newGeneral: Record<string, number> = {};
+    for (const g of pureGeneralSkills) {
+      newGeneral[g.key] = g.isBasic ? 2 : 0;
+    }
+    if (role.templateGeneralSkills) {
+      for (const [key, val] of Object.entries(role.templateGeneralSkills)) {
+        const norm = key === 'HumanPerception' ? 'Human Perception' : key;
+        if (norm in newGeneral) {
+          newGeneral[norm] = Math.max(newGeneral[norm], val);
+        }
+      }
+    }
+    setGeneralSkills(newGeneral);
+  };
 
   // Auto-Assign role template skills
   const handleAutoAssignTemplateSkills = () => {
     if (!currentRoleInfo) return;
-    setCombatSkills((prev) => ({
-      ...prev,
-      ...(currentRoleInfo.templateCombatSkills as Record<CombatSkillKey, number>)
-    }));
-    setGeneralSkills((prev) => ({
-      ...prev,
-      ...currentRoleInfo.templateGeneralSkills
-    }));
-    showToast(`Habilidades asignadas según la plantilla de ${currentRoleInfo.name}.`);
+    applyRoleTemplateSkills(currentRoleInfo);
+    showToast(`Habilidades asignadas según la plantilla oficial de ${currentRoleInfo.name}.`);
   };
 
-  // Auto-Assign role streetrat stats
-  const handleAutoAssignRoleStats = () => {
-    if (!currentRoleInfo) return;
-    setStats({ ...currentRoleInfo.streetratStats });
-    showToast(`Estadísticas fijadas según la plantilla oficial de ${currentRoleInfo.name}.`);
+  // Reset skills to basic level 2
+  const handleResetSkillsToBasic = () => {
+    setCombatSkills(createDefaultCombatSkills());
+    const newGeneral: Record<string, number> = {};
+    for (const g of pureGeneralSkills) {
+      newGeneral[g.key] = g.isBasic ? 2 : 0;
+    }
+    setGeneralSkills(newGeneral);
+    showToast('Habilidades restablecidas a sus valores básicos (26 pts base, 60 pts libres).');
   };
 
-  // Roll edgerunner random row (1d10)
-  const handleRollEdgerunnerStats = () => {
-    if (!currentRoleInfo || !currentRoleInfo.edgerunnerStatTable) return;
-    const roll = Math.floor(Math.random() * currentRoleInfo.edgerunnerStatTable.length);
-    const row = currentRoleInfo.edgerunnerStatTable[roll];
-    if (row) {
+  // Method Selection Synchronization
+  const handleSelectMethod = (methodId: CreationMethod) => {
+    setSelectedMethod(methodId);
+    if (methodId === 'streetrat') {
+      const table = currentRoleInfo.edgerunnerStatTable;
+      const row = table?.[selectedStreetratRow - 1] || currentRoleInfo.streetratStats;
       setStats({ ...row });
-      showToast(`🎲 Tirada de tabla Edgerunner: Fila #${roll + 1} asignada.`);
+      applyRoleTemplateSkills(currentRoleInfo);
+    } else if (methodId === 'edgerunner') {
+      const table = currentRoleInfo.edgerunnerStatTable;
+      if (table) {
+        const newStats: Record<StatKey, number> = {} as any;
+        STAT_KEYS.forEach((stat) => {
+          const roll = edgerunnerRolls[stat] || 1;
+          newStats[stat] = table[roll - 1]?.[stat] ?? 6;
+        });
+        setStats(newStats);
+      }
+    } else if (methodId === 'complete_package') {
+      const sum = Object.values(stats).reduce((a, b) => a + b, 0);
+      if (sum !== 62) {
+        setStats({ ...currentRoleInfo.streetratStats });
+      }
     }
   };
 
-  // Roll single stat 1d10
-  const handleRollSingleStat = (stat: StatKey) => {
-    if (!currentRoleInfo?.edgerunnerStatTable) return;
-    const randomRow = currentRoleInfo.edgerunnerStatTable[Math.floor(Math.random() * currentRoleInfo.edgerunnerStatTable.length)];
-    const newVal = randomRow[stat] || 6;
-    setStats((prev) => ({ ...prev, [stat]: newVal }));
+  // Role Selection Synchronization
+  const handleSelectRole = (role: typeof ROLES_CATALOG[0]) => {
+    setSelectedRoleKey(role.name);
+    if (selectedMethod === 'streetrat') {
+      const table = role.edgerunnerStatTable;
+      const row = table?.[selectedStreetratRow - 1] || role.streetratStats;
+      setStats({ ...row });
+      applyRoleTemplateSkills(role);
+    } else if (selectedMethod === 'edgerunner') {
+      const table = role.edgerunnerStatTable;
+      if (table) {
+        const newStats: Record<StatKey, number> = {} as any;
+        STAT_KEYS.forEach((stat) => {
+          const roll = edgerunnerRolls[stat] || 1;
+          newStats[stat] = table[roll - 1]?.[stat] ?? 6;
+        });
+        setStats(newStats);
+      }
+    }
+  };
+
+  // Roll Streetrat single 1d10 row
+  const handleRollStreetratStats = () => {
+    if (!currentRoleInfo?.edgerunnerStatTable?.length) return;
+    const roll = Math.floor(Math.random() * currentRoleInfo.edgerunnerStatTable.length) + 1;
+    setSelectedStreetratRow(roll);
+    setStats({ ...currentRoleInfo.edgerunnerStatTable[roll - 1] });
+    showToast(`🎲 Tirada de tabla Streetrat: Fila #${roll} asignada.`);
+  };
+
+  // Select Streetrat row from table
+  const handleSelectStreetratRow = (rowNum: number) => {
+    if (!currentRoleInfo?.edgerunnerStatTable?.[rowNum - 1]) return;
+    setSelectedStreetratRow(rowNum);
+    setStats({ ...currentRoleInfo.edgerunnerStatTable[rowNum - 1] });
+    showToast(`Fila #${rowNum} de Streetrat seleccionada.`);
+  };
+
+  // Roll all 10 independent 1d10 dice for Edgerunner
+  const handleRollAllEdgerunnerStats = () => {
+    if (!currentRoleInfo?.edgerunnerStatTable?.length) return;
+    const newRolls: Record<StatKey, number> = {} as any;
+    const newStats: Record<StatKey, number> = {} as any;
+    STAT_KEYS.forEach((stat) => {
+      const roll = Math.floor(Math.random() * 10) + 1;
+      newRolls[stat] = roll;
+      newStats[stat] = currentRoleInfo.edgerunnerStatTable[roll - 1][stat];
+    });
+    setEdgerunnerRolls(newRolls);
+    setStats(newStats);
+    showToast('🎲 10 tiradas independientes asignadas para cada STAT.');
+  };
+
+  // Roll single stat 1d10 for Edgerunner
+  const handleRollSingleEdgerunnerStat = (stat: StatKey) => {
+    if (!currentRoleInfo?.edgerunnerStatTable?.length) return;
+    const roll = Math.floor(Math.random() * 10) + 1;
+    setEdgerunnerRolls((prev) => ({ ...prev, [stat]: roll }));
+    setStats((prev) => ({ ...prev, [stat]: currentRoleInfo.edgerunnerStatTable[roll - 1][stat] }));
+    showToast(`🎲 ${stat}: Tirada #${roll} -> Valor: ${currentRoleInfo.edgerunnerStatTable[roll - 1][stat]}`);
+  };
+
+  // Select cell in 10x10 matrix for Edgerunner
+  const handleSelectEdgerunnerCell = (stat: StatKey, dieRoll: number) => {
+    if (!currentRoleInfo?.edgerunnerStatTable?.[dieRoll - 1]) return;
+    setEdgerunnerRolls((prev) => ({ ...prev, [stat]: dieRoll }));
+    setStats((prev) => ({ ...prev, [stat]: currentRoleInfo.edgerunnerStatTable[dieRoll - 1][stat] }));
+  };
+
+  // Complete Package Presets
+  const handlePresetMinStats = () => {
+    setStats({
+      INT: 2, REF: 2, DEX: 2, TECH: 2, COOL: 2, WILL: 2, LUCK: 2, MOVE: 2, BODY: 2, EMP: 2
+    });
+    showToast('Preset: Todos los STATS al mínimo (2 -> 42 pts libres restantes).');
+  };
+
+  const handlePresetBalancedStats = () => {
+    setStats({
+      INT: 5, REF: 5, DEX: 5, TECH: 5, COOL: 5, WILL: 5, LUCK: 5, MOVE: 5, BODY: 5, EMP: 5
+    });
+    showToast('Preset: Base equilibrada a 5 (12 pts libres restantes).');
+  };
+
+  const handlePresetRoleSuggestedStats = () => {
+    if (!currentRoleInfo) return;
+    setStats({ ...currentRoleInfo.streetratStats });
+    showToast(`Preset: Distribución sugerida de ${currentRoleInfo.name} (62 pts).`);
   };
 
   // Randomize full lifepath
@@ -607,7 +741,7 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
                 return (
                   <div
                     key={method.id}
-                    onClick={() => setSelectedMethod(method.id)}
+                    onClick={() => handleSelectMethod(method.id)}
                     className={`p-3.5 rounded-xs border transition-all cursor-pointer flex flex-col justify-between ${
                       isSelected
                         ? 'bg-[#181d2a] border-[#f59e0b] shadow-[0_0_12px_rgba(245,158,11,0.25)]'
@@ -762,20 +896,7 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
                 return (
                   <div
                     key={role.id}
-                    onClick={() => {
-                      setSelectedRoleKey(role.name);
-                      if (selectedMethod === 'streetrat') {
-                        setStats({ ...role.streetratStats });
-                        setCombatSkills((prev) => ({
-                          ...prev,
-                          ...(role.templateCombatSkills as Record<CombatSkillKey, number>)
-                        }));
-                        setGeneralSkills((prev) => ({
-                          ...prev,
-                          ...role.templateGeneralSkills
-                        }));
-                      }
-                    }}
+                    onClick={() => handleSelectRole(role)}
                     className={`p-3 rounded-xs border transition-all cursor-pointer flex flex-col justify-between ${
                       isSelected
                         ? 'bg-[#161a29] border-[#38bdf8] shadow-[0_0_12px_rgba(56,189,248,0.3)]'
@@ -885,31 +1006,62 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
 
             <div className="flex flex-wrap items-center gap-2">
               {selectedMethod === 'streetrat' && (
-                <button
-                  onClick={handleAutoAssignRoleStats}
-                  className="px-3 py-1.5 bg-[#38bdf8]/20 hover:bg-[#38bdf8] text-[#38bdf8] hover:text-black border border-[#38bdf8]/40 rounded-xs font-tech text-xs font-bold uppercase transition-colors cursor-pointer"
-                >
-                  ⚡ Cargar Plantilla Streetrat de {selectedRoleKey}
-                </button>
+                <div className="flex items-center gap-2">
+                  <div className="text-xs font-mono-code px-3 py-1.5 rounded bg-[#090b10] border border-[#262c3e] text-[#38bdf8]">
+                    Fila Activa: <strong className="font-tech text-sm text-white">#{selectedStreetratRow}</strong>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRollStreetratStats}
+                    className="px-3 py-1.5 bg-[#38bdf8] hover:bg-white text-black font-tech text-xs font-black uppercase rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-[0_0_10px_rgba(56,189,248,0.3)]"
+                  >
+                    <Dices className="w-4 h-4" />
+                    <span>🎲 TIRAR 1d10 (FILA DE PLANTILLA AL AZAR)</span>
+                  </button>
+                </div>
               )}
 
               {selectedMethod === 'edgerunner' && (
                 <button
-                  onClick={handleRollEdgerunnerStats}
+                  type="button"
+                  onClick={handleRollAllEdgerunnerStats}
                   className="px-3 py-1.5 bg-[#f59e0b] hover:bg-white text-black font-tech text-xs font-black uppercase rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-[0_0_10px_rgba(245,158,11,0.3)]"
                 >
                   <Dices className="w-4 h-4" />
-                  <span>🎲 TIRAR TODOS LOS STATS (1d10)</span>
+                  <span>🎲 TIRAR LOS 10 DADOS (1d10 INDEPENDIENTE POR CADA STAT)</span>
                 </button>
               )}
 
               {selectedMethod === 'complete_package' && (
-                <div className="text-xs font-mono-code px-3 py-1.5 rounded bg-[#090b10] border border-[#262c3e]">
-                  Puntos restantes:{' '}
-                  <strong className={`text-base font-tech ${statsPointsRemaining === 0 ? 'text-[#10b981]' : statsPointsRemaining < 0 ? 'text-[#ef4444]' : 'text-[#f59e0b]'}`}>
-                    {statsPointsRemaining}
-                  </strong>{' '}
-                  / 62
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="text-xs font-mono-code px-3 py-1.5 rounded bg-[#090b10] border border-[#262c3e]">
+                    Puntos restantes:{' '}
+                    <strong className={`text-base font-tech ${statsPointsRemaining === 0 ? 'text-[#10b981]' : statsPointsRemaining < 0 ? 'text-[#ef4444]' : 'text-[#f59e0b]'}`}>
+                      {statsPointsRemaining}
+                    </strong>{' '}
+                    / 62
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handlePresetMinStats}
+                    className="px-2.5 py-1 bg-[#1a1f30] hover:bg-[#38bdf8] text-[#94a3b8] hover:text-black border border-[#262c3e] rounded font-tech text-xs font-bold uppercase transition-colors cursor-pointer"
+                  >
+                    2️⃣ Mínimo (2 -&gt; 42 pts)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handlePresetBalancedStats}
+                    className="px-2.5 py-1 bg-[#1a1f30] hover:bg-[#38bdf8] text-[#94a3b8] hover:text-black border border-[#262c3e] rounded font-tech text-xs font-bold uppercase transition-colors cursor-pointer"
+                  >
+                    ⚖️ Equilibrada (5 -&gt; 12 pts)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handlePresetRoleSuggestedStats}
+                    className="px-2.5 py-1 bg-[#f59e0b]/20 hover:bg-[#f59e0b] text-[#f59e0b] hover:text-black border border-[#f59e0b]/40 rounded font-tech text-xs font-bold uppercase transition-colors cursor-pointer"
+                  >
+                    ⚡ Sugerida del Rol (62 pts)
+                  </button>
                 </div>
               )}
             </div>
@@ -995,41 +1147,191 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
                     {val}
                   </div>
 
-                  {/* Controles de incremento o tirada */}
-                  <div
-                    onClick={(e) => e.stopPropagation()}
-                    className="flex items-center justify-center gap-1 pt-1.5 border-t border-[#1a1f30]"
-                  >
-                    <button
-                      onClick={() => setStats((prev) => ({ ...prev, [stat]: Math.max(2, val - 1) }))}
-                      disabled={val <= 2}
-                      className="w-5 h-5 bg-[#1b2030] hover:bg-[#dc2626] disabled:opacity-30 disabled:hover:bg-[#1b2030] text-white rounded flex items-center justify-center text-xs cursor-pointer"
-                      title="Reducir stat"
-                    >
-                      <Minus className="w-3 h-3" />
-                    </button>
-                    <button
-                      onClick={() => setStats((prev) => ({ ...prev, [stat]: Math.min(8, val + 1) }))}
-                      disabled={val >= 8}
-                      className="w-5 h-5 bg-[#1b2030] hover:bg-[#10b981] disabled:opacity-30 disabled:hover:bg-[#1b2030] text-white rounded flex items-center justify-center text-xs cursor-pointer"
-                      title="Aumentar stat"
-                    >
-                      <Plus className="w-3 h-3" />
-                    </button>
-                    {selectedMethod === 'edgerunner' && (
+                  {/* Controles según el Método de Creación */}
+                  {selectedMethod === 'streetrat' && (
+                    <div className="text-[10px] font-mono-code text-[#38bdf8] pt-1">
+                      Fila #{selectedStreetratRow}
+                    </div>
+                  )}
+
+                  {selectedMethod === 'edgerunner' && (
+                    <div className="pt-1.5 border-t border-[#1a1f30] space-y-1">
+                      <div className="text-[10px] font-mono-code text-[#f59e0b] truncate">
+                        🎲 Dado: #{edgerunnerRolls[stat] || 1}
+                      </div>
                       <button
-                        onClick={() => handleRollSingleStat(stat)}
-                        className="w-5 h-5 bg-[#f59e0b]/20 hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] rounded flex items-center justify-center text-[10px] cursor-pointer"
-                        title="Tirar este stat en la tabla del rol"
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRollSingleEdgerunnerStat(stat);
+                        }}
+                        className="w-full py-0.5 bg-[#f59e0b]/20 hover:bg-[#f59e0b] text-[#f59e0b] hover:text-black rounded text-[9px] font-mono-code flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                        title={`Tirar 1d10 para ${stat}`}
                       >
-                        🎲
+                        <Dices className="w-2.5 h-2.5" />
+                        <span>Re-tirar</span>
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
+
+                  {selectedMethod === 'complete_package' && (
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex items-center justify-center gap-1 pt-1.5 border-t border-[#1a1f30]"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setStats((prev) => ({ ...prev, [stat]: Math.max(2, val - 1) }))}
+                        disabled={val <= 2}
+                        className="w-5 h-5 bg-[#1b2030] hover:bg-[#dc2626] disabled:opacity-30 disabled:hover:bg-[#1b2030] text-white rounded flex items-center justify-center text-xs cursor-pointer"
+                        title="Reducir stat (mín 2)"
+                      >
+                        <Minus className="w-3 h-3" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setStats((prev) => ({ ...prev, [stat]: Math.min(8, val + 1) }))}
+                        disabled={val >= 8 || statsPointsRemaining <= 0}
+                        className="w-5 h-5 bg-[#1b2030] hover:bg-[#10b981] disabled:opacity-30 disabled:hover:bg-[#1b2030] text-white rounded flex items-center justify-center text-xs cursor-pointer"
+                        title="Aumentar stat (máx 8)"
+                      >
+                        <Plus className="w-3 h-3" />
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
+
+          {/* Tabla 10x10 Streetrat: Filas 1..10 oficiales del Rol */}
+          {selectedMethod === 'streetrat' && (
+            <div className="bg-[#0f121c] border border-[#22293d] rounded-xs p-3 space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#1c2234] pb-2">
+                <div className="flex items-center gap-2">
+                  <span className="font-tech text-xs font-bold text-[#38bdf8] uppercase tracking-wider">
+                    📋 TABLA DE PLANTILLAS STREETRAT // {currentRoleInfo.name.toUpperCase()} (10 FILAS OFICIALES)
+                  </span>
+                  <span className="text-[10px] font-mono-code bg-[#1f2638] text-[#38bdf8] px-2 py-0.5 rounded font-bold">
+                    FILA ACTIVA: #{selectedStreetratRow}
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono-code text-[#64748b]">
+                  Haz clic en cualquier fila o usa el botón de tirar 1d10 para asignarla
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs font-mono-code text-center border-collapse">
+                  <thead>
+                    <tr className="bg-[#151928] text-[#94a3b8] text-[11px] font-tech uppercase">
+                      <th className="py-1.5 px-2 text-left">Fila / 1d10</th>
+                      {STAT_KEYS.map((k) => (
+                        <th key={k} className="py-1.5 px-2">{k}</th>
+                      ))}
+                      <th className="py-1.5 px-2 text-right">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentRoleInfo.edgerunnerStatTable?.map((row, idx) => {
+                      const rowNum = idx + 1;
+                      const isActive = selectedStreetratRow === rowNum;
+                      return (
+                        <tr
+                          key={rowNum}
+                          onClick={() => handleSelectStreetratRow(rowNum)}
+                          className={`border-b border-[#181d2c] transition-colors cursor-pointer ${
+                            isActive
+                              ? 'bg-[#38bdf8]/20 text-white font-bold border-l-4 border-l-[#38bdf8]'
+                              : 'hover:bg-[#151824] text-[#cbd5e1]'
+                          }`}
+                        >
+                          <td className="py-1.5 px-2 text-left font-tech font-bold text-[#38bdf8]">
+                            {isActive ? `▶ Fila #${rowNum}` : `Fila #${rowNum}`}
+                          </td>
+                          {STAT_KEYS.map((k) => (
+                            <td key={k} className="py-1.5 px-2">
+                              {row[k]}
+                            </td>
+                          ))}
+                          <td className="py-1.5 px-2 text-right">
+                            <span className={`text-[10px] px-2 py-0.5 rounded font-tech font-bold uppercase ${
+                              isActive ? 'bg-[#38bdf8] text-black' : 'bg-[#181d2c] text-[#64748b]'
+                            }`}>
+                              {isActive ? 'Activa' : 'Elegir'}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Matriz 10x10 Edgerunner: Tiradas de 1d10 independientes por cada STAT */}
+          {selectedMethod === 'edgerunner' && (
+            <div className="bg-[#0f121c] border border-[#22293d] rounded-xs p-3 space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#1c2234] pb-2">
+                <div className="flex items-center gap-2">
+                  <span className="font-tech text-xs font-bold text-[#f59e0b] uppercase tracking-wider">
+                    🎲 MATRIZ DE TIRADAS EDGERUNNER // {currentRoleInfo.name.toUpperCase()} (1d10 INDEPENDIENTE POR STAT)
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono-code text-[#64748b]">
+                  Haz clic en cualquier celda para fijar la tirada de ese STAT
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs font-mono-code text-center border-collapse">
+                  <thead>
+                    <tr className="bg-[#151928] text-[#94a3b8] text-[11px] font-tech uppercase">
+                      <th className="py-1.5 px-2 text-left">Dado 1d10</th>
+                      {STAT_KEYS.map((k) => (
+                        <th key={k} className="py-1.5 px-2">
+                          <div>{k}</div>
+                          <div className="text-[9px] text-[#f59e0b] font-mono-code">#{edgerunnerRolls[k] || 1} ({stats[k]})</div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Array.from({ length: 10 }).map((_, rIdx) => {
+                      const dieRoll = rIdx + 1;
+                      const rowData = currentRoleInfo.edgerunnerStatTable?.[rIdx];
+                      return (
+                        <tr key={dieRoll} className="border-b border-[#181d2c]">
+                          <td className="py-1 px-2 text-left font-tech font-bold text-[#94a3b8]">
+                            Dado {dieRoll}
+                          </td>
+                          {STAT_KEYS.map((k) => {
+                            const cellVal = rowData?.[k] ?? 6;
+                            const isSelected = (edgerunnerRolls[k] || 1) === dieRoll;
+                            return (
+                              <td
+                                key={k}
+                                onClick={() => handleSelectEdgerunnerCell(k, dieRoll)}
+                                className={`py-1 px-2 transition-all cursor-pointer ${
+                                  isSelected
+                                    ? 'bg-[#f59e0b] text-black font-black shadow-[0_0_8px_rgba(245,158,11,0.4)]'
+                                    : 'hover:bg-[#1e2538] text-[#cbd5e1]'
+                                }`}
+                                title={`Fijar ${k} = ${cellVal} (Dado ${dieRoll})`}
+                              >
+                                {cellVal}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
           {/* Panel: INSPECTOR DE STAT EN FOCO */}
           {STAT_TOOLTIPS[inspectedStat] && (
@@ -1136,7 +1438,7 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
               </p>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2">
               <div className="text-xs font-mono-code px-3 py-1.5 rounded bg-[#090b10] border border-[#262c3e]">
                 Puntos restantes:{' '}
                 <strong className={`text-base font-tech ${skillPointsRemaining === 0 ? 'text-[#10b981]' : skillPointsRemaining < 0 ? 'text-[#ef4444]' : 'text-[#f59e0b]'}`}>
@@ -1146,11 +1448,21 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
               </div>
 
               <button
+                type="button"
+                onClick={handleResetSkillsToBasic}
+                className="px-3 py-1.5 bg-[#171a26] hover:bg-[#38bdf8] text-[#cbd5e1] hover:text-black border border-[#23293c] rounded-xs font-tech text-xs font-bold uppercase transition-colors cursor-pointer flex items-center gap-1.5"
+                title="Restablece las 13 habilidades básicas a nivel 2 y las demás a 0"
+              >
+                <span>🔄 RESETEAR A BÁSICAS (60 PTS LIBRES)</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={handleAutoAssignTemplateSkills}
                 className="px-3 py-1.5 bg-[#f59e0b] hover:bg-white text-black font-tech text-xs font-black uppercase rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-[0_0_10px_rgba(245,158,11,0.3)]"
               >
                 <Zap className="w-3.5 h-3.5" />
-                <span>⚡ AUTO-ASIGNAR PLANTILLA DE {selectedRoleKey.toUpperCase()}</span>
+                <span>⚡ CARGAR PLANTILLA SUGERIDA DEL ROL</span>
               </button>
             </div>
           </div>
@@ -1164,16 +1476,26 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
               {(Object.keys(combatSkills) as CombatSkillKey[]).map((skillKey) => {
                 const meta = SKILL_METADATA[skillKey];
                 const level = combatSkills[skillKey] || 0;
+                const isBasic = BASIC_COMBAT_KEYS.includes(skillKey);
+                const minLevel = isBasic ? 2 : 0;
                 const isDouble = skillKey === 'autofire' || skillKey === 'heavyWeapons' || skillKey === 'martialArts';
+                const cost = isDouble ? 2 : 1;
 
                 return (
                   <div
                     key={skillKey}
-                    className="p-2.5 bg-[#121520] border border-[#202638] rounded-xs flex items-center justify-between gap-2"
+                    className={`p-2.5 rounded-xs border flex items-center justify-between gap-2 ${
+                      isBasic ? 'bg-[#141824] border-[#293248]' : 'bg-[#121520] border-[#202638]'
+                    }`}
                   >
                     <div>
                       <div className="flex items-center gap-1.5">
                         <span className="font-tech text-xs font-bold text-white">{meta?.label || skillKey}</span>
+                        {isBasic && (
+                          <span className="text-[8px] font-mono-code bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/40 px-1 rounded font-bold">
+                            BÁSICA (MÍN 2)
+                          </span>
+                        )}
                         {isDouble && (
                           <span className="text-[8px] font-mono-code bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/40 px-1 rounded font-bold">
                             COSTE x2
@@ -1186,8 +1508,11 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
 
                     <div className="flex items-center gap-1.5 bg-[#090b10] px-2 py-1 rounded border border-[#1d2334]">
                       <button
-                        onClick={() => setCombatSkills((prev) => ({ ...prev, [skillKey]: Math.max(0, level - 1) }))}
-                        className="w-4 h-4 bg-[#1e2334] hover:bg-[#dc2626] text-white rounded text-xs flex items-center justify-center cursor-pointer"
+                        type="button"
+                        onClick={() => setCombatSkills((prev) => ({ ...prev, [skillKey]: Math.max(minLevel, level - 1) }))}
+                        disabled={level <= minLevel}
+                        className="w-4 h-4 bg-[#1e2334] hover:bg-[#dc2626] disabled:opacity-20 text-white rounded text-xs flex items-center justify-center cursor-pointer"
+                        title={level <= minLevel ? `Nivel mínimo (${minLevel}) alcanzado` : 'Reducir nivel'}
                       >
                         -
                       </button>
@@ -1195,8 +1520,11 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
                         {level}
                       </span>
                       <button
+                        type="button"
                         onClick={() => setCombatSkills((prev) => ({ ...prev, [skillKey]: Math.min(6, level + 1) }))}
-                        className="w-4 h-4 bg-[#1e2334] hover:bg-[#10b981] text-white rounded text-xs flex items-center justify-center cursor-pointer"
+                        disabled={level >= 6 || skillPointsRemaining < cost}
+                        className="w-4 h-4 bg-[#1e2334] hover:bg-[#10b981] disabled:opacity-20 text-white rounded text-xs flex items-center justify-center cursor-pointer"
+                        title={level >= 6 ? 'Nivel máximo (6) alcanzado' : skillPointsRemaining < cost ? 'Puntos insuficientes' : 'Aumentar nivel'}
                       >
                         +
                       </button>
@@ -1213,10 +1541,11 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
               <BookOpen className="w-3.5 h-3.5" /> HABILIDADES GENERALES (RED CANONICAL)
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[380px] overflow-y-auto pr-1">
-              {GENERAL_SKILLS_CATALOG.map((gSkill) => {
-                const level = generalSkills[gSkill.key] ?? 0;
+              {pureGeneralSkills.map((gSkill) => {
+                const level = generalSkills[gSkill.key] ?? (gSkill.isBasic ? 2 : 0);
                 const minLevel = gSkill.isBasic ? 2 : 0;
                 const isDouble = !!gSkill.isDoubleCost;
+                const cost = isDouble ? 2 : 1;
 
                 return (
                   <div
@@ -1232,12 +1561,12 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
                         <span className="font-tech text-xs font-bold text-white">{gSkill.label}</span>
                         {gSkill.isBasic && (
                           <span className="text-[8px] font-mono-code bg-[#38bdf8]/20 text-[#38bdf8] px-1 rounded font-bold">
-                            CORE
+                            BÁSICA (MÍN 2)
                           </span>
                         )}
                         {isDouble && (
                           <span className="text-[8px] font-mono-code bg-[#f59e0b]/20 text-[#f59e0b] px-1 rounded font-bold">
-                            x2
+                            COSTE x2
                           </span>
                         )}
                         <span className="text-[9px] font-mono-code text-[#64748b]">({gSkill.stat})</span>
@@ -1247,9 +1576,11 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
 
                     <div className="flex items-center gap-1.5 bg-[#090b10] px-2 py-1 rounded border border-[#1d2334]">
                       <button
+                        type="button"
                         onClick={() => setGeneralSkills((prev) => ({ ...prev, [gSkill.key]: Math.max(minLevel, level - 1) }))}
                         disabled={level <= minLevel}
                         className="w-4 h-4 bg-[#1e2334] hover:bg-[#dc2626] disabled:opacity-20 text-white rounded text-xs flex items-center justify-center cursor-pointer"
+                        title={level <= minLevel ? `Nivel mínimo (${minLevel}) alcanzado` : 'Reducir nivel'}
                       >
                         -
                       </button>
@@ -1257,9 +1588,11 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
                         {level}
                       </span>
                       <button
+                        type="button"
                         onClick={() => setGeneralSkills((prev) => ({ ...prev, [gSkill.key]: Math.min(6, level + 1) }))}
-                        disabled={level >= 6}
+                        disabled={level >= 6 || skillPointsRemaining < cost}
                         className="w-4 h-4 bg-[#1e2334] hover:bg-[#10b981] disabled:opacity-20 text-white rounded text-xs flex items-center justify-center cursor-pointer"
+                        title={level >= 6 ? 'Nivel máximo (6) alcanzado' : skillPointsRemaining < cost ? 'Puntos insuficientes' : 'Aumentar nivel'}
                       >
                         +
                       </button>
