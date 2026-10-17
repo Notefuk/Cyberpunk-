@@ -7,7 +7,8 @@ import {
   Terminal, 
   Cpu,
   UserPlus,
-  Network
+  Network,
+  Train
 } from 'lucide-react';
 import { useCharacterStore } from './store/useCharacterStore';
 import { TopHudBar } from './features/layout/TopHudBar';
@@ -19,9 +20,10 @@ import { CompendiumView } from './features/compendium/CompendiumView';
 import { DataPacksView } from './features/packs/DataPacksView';
 import { FixerDeckView } from './features/gm/FixerDeckView';
 import { NetAndRolesDeckView } from './features/netroles/NetAndRolesDeckView';
+import { RedChromeCargoView } from './features/oneshot/RedChromeCargoView';
 import { RulesCheatSheetDrawer } from './features/rules/RulesCheatSheetDrawer';
 
-type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'creator';
+type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'oneshot' | 'creator';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('combat');
@@ -85,6 +87,11 @@ export default function App() {
       icon: <Terminal className="w-4 h-4" />
     },
     {
+      id: 'oneshot',
+      label: '🚆 RED CHROME CARGO',
+      icon: <Train className="w-4 h-4 text-red-500" />
+    },
+    {
       id: 'creator',
       label: 'CREAR PJ // WIZARD',
       icon: <UserPlus className="w-4 h-4" />
@@ -139,6 +146,7 @@ export default function App() {
         {activeTab === 'compendium' && <CompendiumView />}
         {activeTab === 'packs' && <DataPacksView />}
         {activeTab === 'gm' && <FixerDeckView />}
+        {activeTab === 'oneshot' && <RedChromeCargoView />}
       </main>
 
       {/* Rules Cheat Sheet Drawer persistente */}

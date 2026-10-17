@@ -114,6 +114,51 @@ export interface NetArchitecturePreset {
 
 export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
   {
+    id: 'net-hammerhead-mainframe',
+    name: 'Hammerhead Cargo Train Mainframe (Red Chrome Cargo — 5 Pisos)',
+    difficulty: 'Standard',
+    totalFloors: 5,
+    loreDescription: 'Arquitectura NET militarizada de 5 pisos de Militech instalada en el vagón central (Middle Car) del tren The Hammerhead. Controla el manifiesto y la torreta automática de techo.',
+    floors: [
+      {
+        floorNumber: 1,
+        type: 'Password',
+        name: 'Contraseña de Acceso Militech (Piso 1)',
+        dv: 6
+      },
+      {
+        floorNumber: 2,
+        type: 'File',
+        name: "File: Hammerhead's Original Cargo Manifest",
+        dv: 8,
+        rewardOrDevice: 'Revela el manifiesto militar de Militech (posibles ganchos de trama / equipo extra)'
+      },
+      {
+        floorNumber: 3,
+        type: 'Password',
+        name: 'Firewall de Seguridad Táctica (Piso 3)',
+        dv: 8
+      },
+      {
+        floorNumber: 4,
+        type: 'Black ICE',
+        name: 'Black ICE: Hellhound',
+        iceType: 'Hellhound',
+        iceHp: 20,
+        iceAtk: 6,
+        iceDef: 2,
+        rewardOrDevice: 'PER 6, SPD 6, ATK 6, DEF 2, REZ 20 — Causa 2d6 daño mental e incendia ropa/cyberdeck'
+      },
+      {
+        floorNumber: 5,
+        type: 'Control Node',
+        name: 'Control Node: Controls the Automated Turret',
+        dv: 8,
+        rewardOrDevice: 'Toma el control de la Torreta Automática del Vagón Delantero (+14 ataque, 5d6 daño, Autofire 2d6×4)'
+      }
+    ]
+  },
+  {
     id: 'net-basic-kiosk',
     name: 'Kiosco Nocturno / Terminal de Venta',
     difficulty: 'Basic',

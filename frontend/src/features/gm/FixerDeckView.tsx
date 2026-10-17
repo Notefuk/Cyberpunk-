@@ -31,7 +31,8 @@ import {
   Copy,
   Clock,
   Gift,
-  Check
+  Check,
+  Train
 } from 'lucide-react';
 
 interface InitiativeCombatant {
@@ -613,6 +614,40 @@ export function FixerDeckView() {
             </button>
           )}
         </div>
+      </div>
+
+      {/* ONESHOT CAMPAIGN BANNER: RED CHROME CARGO */}
+      <div className="bg-gradient-to-r from-red-950/80 via-[#16121d] to-[#0d121c] border-2 border-red-600/70 p-4 rounded-xs flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-xl">
+        <div className="flex items-center gap-3">
+          <div className="p-3 bg-red-600 text-white rounded-xs border border-red-400">
+            <Train className="w-6 h-6 animate-pulse" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="bg-red-600 text-white font-tech font-black text-[10px] px-2 py-0.5 rounded-2xs uppercase tracking-widest">
+                ONESHOT CANÓNICO ACTIVO
+              </span>
+              <span className="text-xs font-mono-code text-amber-400">CEMK 2077 & 2045 DUAL ENGINE</span>
+            </div>
+            <h2 className="font-tech text-base sm:text-lg font-black text-white uppercase tracking-wider">
+              RED CHROME CARGO // THE HAMMERHEAD
+            </h2>
+            <p className="text-xs font-mono-code text-[#94a3b8]">
+              Mapa esquemático interactivo de 4 vagones, 5 pisos de Mainframe NET, Screamsheet y pago de Hornet.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            const oneshotTabBtn = document.querySelector('button:has(svg.lucide-train)') as HTMLButtonElement | null;
+            if (oneshotTabBtn) oneshotTabBtn.click();
+          }}
+          className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-tech font-bold text-xs uppercase tracking-wider rounded-xs transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-red-600/30 whitespace-nowrap self-start md:self-center"
+        >
+          <Train className="w-4 h-4" />
+          <span>ABRIR RED CHROME CARGO ➔</span>
+        </button>
       </div>
 
       {/* 2. MASS FIXER PAYOUT (PAGO GRUPAL DE GIGS) */}

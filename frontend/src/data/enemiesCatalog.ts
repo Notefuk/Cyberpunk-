@@ -239,6 +239,170 @@ export const DANGER_GAL_15_FACTIONS: DangerGalFaction[] = [
 
 export const ENEMIES_CATALOG: EnemySheet[] = [
   // --------------------------------------------------------------------------
+  // RED CHROME CARGO // THE HAMMERHEAD TRAIN (ONESHOT CANÓNICO)
+  // --------------------------------------------------------------------------
+  {
+    id: 'rcc-shotgun-guard-2077',
+    name: 'Red Chrome Legion Guard (2077 CEMK)',
+    subtitle: 'Escopetero Cibernético Calibrado para Edgerunners 2077 (Red Chrome Cargo)',
+    faction: 'Red Chrome Legion',
+    threatTier: 'hardened_mook',
+    sourceBook: 'cemk_2077',
+    sourceBookTitle: 'Red Chrome Cargo // CEMK 2077',
+    era: '2077',
+    role: 'Solo',
+    hp: 30,
+    seriouslyWounded: 15,
+    deathSave: 6,
+    headSp: 7,
+    bodySp: 11,
+    stats: { INT: 3, REF: 6, DEX: 5, TECH: 3, COOL: 4, WILL: 4, LUCK: 0, MOVE: 5, BODY: 6, EMP: 3 },
+    combatBases: [
+      { label: 'Shoulder Arms (Satara / Carnage)', totalBase: 12, damage: '5d6', rof: 1 },
+      { label: 'Handgun (Militech Lexington)', totalBase: 12, damage: '3d6', rof: 2 },
+      { label: 'Brawling / Rippers Cromados', totalBase: 11, damage: '2d6', rof: 2 },
+      { label: 'Evasion', totalBase: 10 }
+    ],
+    weapons: [
+      {
+        name: 'Rostović DB-2 Satara [Tech Shotgun] / Carnage [Power Shotgun]',
+        skillBase: 12,
+        damage: '5d6',
+        rof: 1,
+        mag: 4,
+        notes: 'Disparo Tech que atraviesa cobertura del tren o Power con +5 a daño crítico'
+      },
+      {
+        name: 'Militech Lexington [Power Pistol]',
+        skillBase: 12,
+        damage: '3d6',
+        rof: 2,
+        mag: 21,
+        notes: 'Disparo de ráfaga rápida con rebote'
+      },
+      {
+        name: 'Rippers Cromados',
+        skillBase: 11,
+        damage: '2d6',
+        rof: 2,
+        mag: 0
+      }
+    ],
+    cyberware: [
+      'Neuroport 2077 (Holocall, HUD, Biomonitor, Personal Link)',
+      'Subdermal Grip (Enlace inteligente de arma)',
+      'Rippers de Aleación de Titanio',
+      'Kevlar Subdermal básico'
+    ],
+    gear: ['Light Armorjack RCL Rojo y Cromo (SP 11)', 'Casco Kevlar Ligero (SP 7)', 'Inyector de Bounce Back Mk.1'],
+    specialRules: [
+      'Neuroport 2077 Activo: Puede ser objetivo de Quickhacks (Short Circuit DV 6, Cyberware Malfunction DV 8, Overheat DV 8, Synapse Burnout DV 10).',
+      'Blindaje RCL: El peto metálico absorbe el primer impacto crítico sin ablación de armadura.'
+    ],
+    loreSummary: 'Tropas de asalto de la Red Chrome Legion en 2077, mejoradas con cibérware militar de segunda mano y escopetas tecnológicas capaces de perforar los contenedores del tren The Hammerhead.'
+  },
+  {
+    id: 'rcc-officer-2077',
+    name: 'Red Chrome Legion Officer (2077 CEMK)',
+    subtitle: 'Teniente Blindado con Masamune y Kerenzikov (Red Chrome Cargo)',
+    faction: 'Red Chrome Legion',
+    threatTier: 'hardened_lieutenant',
+    sourceBook: 'cemk_2077',
+    sourceBookTitle: 'Red Chrome Cargo // CEMK 2077',
+    era: '2077',
+    role: 'Solo',
+    hp: 45,
+    seriouslyWounded: 23,
+    deathSave: 7,
+    headSp: 11,
+    bodySp: 11,
+    stats: { INT: 5, REF: 8, DEX: 7, TECH: 5, COOL: 6, WILL: 6, LUCK: 0, MOVE: 6, BODY: 7, EMP: 5 },
+    combatBases: [
+      { label: 'Shoulder Arms (Masamune)', totalBase: 14, damage: '5d6', rof: 1 },
+      { label: 'Autofire (Masamune)', totalBase: 13, damage: '2d6×4', rof: 1 },
+      { label: 'Handgun (Tsunami Nue)', totalBase: 14, damage: '4d6', rof: 1 },
+      { label: 'Melee Weapon (Espada Térmica)', totalBase: 13, damage: '3d6', rof: 2 },
+      { label: 'Evasion (Esquiva Balas)', totalBase: 13 }
+    ],
+    weapons: [
+      {
+        name: 'Arasaka HJSH-18 Masamune [Power Assault Rifle]',
+        skillBase: 14,
+        damage: '5d6',
+        rof: 1,
+        mag: 30,
+        notes: 'Ráfaga de precisión militar. Autofire 2d6×4 (DV 17) con rebote de metralla y +5 daño crítico'
+      },
+      {
+        name: 'Tsunami Nue [Power Heavy Pistol]',
+        skillBase: 14,
+        damage: '4d6',
+        rof: 1,
+        mag: 10
+      },
+      {
+        name: 'Espada Térmica Pesada [Thermal Blade]',
+        skillBase: 13,
+        damage: '3d6',
+        rof: 2,
+        mag: 0,
+        notes: 'Ignora mitad de SP y prende fuego si inflige herida crítica'
+      }
+    ],
+    cyberware: [
+      'Neuroport 2077 con Self-ICE (+2 a DVs de Quickhacks hostiles)',
+      'Kerenzikov (+2 a tiradas de Iniciativa)',
+      'Ballistic Coprocessor (Permite tiros de rebote calculados)',
+      'Nasal Filters 2077 (Inmune a neurotoxinas)'
+    ],
+    gear: ['Traje Táctico Reforzado RCL (Light Armorjack SP 11)', 'Casco Balístico Militech (SP 11)', 'Inyector de MaxDoc Mk.2', 'Llave cifrada de la locomotora'],
+    specialRules: [
+      'Esquiva de Balas Activa: Gracias a su REF 8 puede esquivar proyectiles a distancia con Evasion (+13).',
+      'Self-ICE Defensivo: Los Netrunners enemigos sufren un penalizador de +2 al DV de cualquier Quickhack dirigido contra él.',
+      'Iniciativa Aumentada: Su Kerenzikov le permite reaccionar antes que la mayoría de atacantes.'
+    ],
+    loreSummary: 'Oficial de élite de la Red Chrome Legion en 2077, equipado con fusil Arasaka de contrabando militar y reflejos cableados para neutralizar mercenarios de alto calibre.'
+  },
+  {
+    id: 'rcc-hammerhead-turret',
+    name: 'Hammerhead Automated Turret',
+    subtitle: 'Torreta de Techo Militech Automatizada (Red Chrome Cargo)',
+    faction: 'Militech Automated Systems',
+    threatTier: 'mini_boss',
+    sourceBook: 'core',
+    sourceBookTitle: 'Red Chrome Cargo // CPRED pág. 214',
+    era: '2045',
+    role: 'Emplaced Defense',
+    hp: 25,
+    seriouslyWounded: 13,
+    deathSave: 5,
+    headSp: 0,
+    bodySp: 0,
+    stats: { INT: 0, REF: 7, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 5, EMP: 0 },
+    combatBases: [
+      { label: 'Combat Number (Targeting AI)', totalBase: 14, damage: '5d6', rof: 1 },
+      { label: 'Autofire Combat Number', totalBase: 14, damage: '2d6×4', rof: 1 }
+    ],
+    weapons: [
+      {
+        name: 'Automated Assault Rifle',
+        skillBase: 14,
+        damage: '5d6',
+        rof: 1,
+        mag: 30,
+        notes: 'Disparo único 5d6 o ráfaga de Autofire 2d6×4 (multiplicador máx 4)'
+      }
+    ],
+    cyberware: ['Mira I.A. Militech con Sensor Térmico'],
+    gear: ['Montaje de techo giratorio de 360 grados (SDP 25)'],
+    specialRules: [
+      'Disparo Automatizado: Dispara automáticamente al objetivo más cercano que no porte una baliza de identificación Militech.',
+      'Controlable por Netrunner: Si un Netrunner hackea el Nodo de Control (Piso 5), puede tomar el mando como Acción de Red y disparar a los guardias de la Legion.'
+    ],
+    loreSummary: 'Torreta robotizada colgada del techo del vagón delantero (Front Car) del tren The Hammerhead para repeler abordajes enemigos.'
+  },
+
+  // --------------------------------------------------------------------------
   // 1. CORE RULEBOOK (2045 Core)
   // --------------------------------------------------------------------------
   {

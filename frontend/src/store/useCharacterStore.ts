@@ -24,6 +24,10 @@ import type {
 import { calculateMaxHp, getEffectiveBody } from '../engine/characterEngine';
 import { calculateArmorAblation } from '../engine/combatEngine';
 import { rollCriticalInjury } from '../data/criticalInjuries';
+import {
+  PREGEN_TEMPLATES,
+  buildCharacterSheetFromPregen as instantiatePregenCharacter
+} from '../data/characterCreationData';
 
 function mapInjuryIcon(icon: string): ActiveCriticalInjury['iconType'] {
   if (icon === 'heart' || icon === 'throat') return 'organ';
@@ -301,8 +305,46 @@ export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
   inventory: [],
   transactions: [],
   unarmedInHand: { brawling: true, martialArts: false },
-  activeDrugs: []
 };
+
+export function buildCemk2077Characters(): CharacterSheet[] {
+  const cemkHandles = [
+    'David Martinez',
+    'Lucy (Kushinada)',
+    'Rebecca',
+    'Maine',
+    'Kiwi',
+    'Falco',
+    'Pilar'
+  ];
+  const templates = PREGEN_TEMPLATES.filter(
+    (p) => p.era === '2077' && cemkHandles.includes(p.handle)
+  );
+  return templates.map((tmpl) => {
+    const sheet = instantiatePregenCharacter(tmpl);
+    sheet.id = `char-cemk-${tmpl.id}`;
+    return sheet;
+  });
+}
+
+export function loadInitialCharacters(): { characters: CharacterSheet[]; activeCharacterId: string } {
+  const cemk = buildCemk2077Characters();
+  const initial = [INITIAL_CHARACTER_V, ...cemk];
+  const deduped: CharacterSheet[] = [];
+  const seen = new Set<string>();
+  for (const c of initial) {
+    const norm = c.handle.toLowerCase();
+    if (!seen.has(norm)) {
+      seen.add(norm);
+      deduped.push(c);
+    }
+  }
+  const david = deduped.find((c) => c.handle.toLowerCase().includes('david'));
+  return {
+    characters: deduped,
+    activeCharacterId: david?.id || deduped[0]?.id || INITIAL_CHARACTER_V.id
+  };
+}
 
 export interface CharacterStoreState {
   characters: CharacterSheet[];
@@ -383,7 +425,7 @@ export interface CharacterStoreState {
       concept?: string;
     }
   ) => void;
-  gmPayAllCharacters: (concept: string, amount: number) => void;
+  gmPayAllCharacters: (conceptOrAmount: string | number, amountOrConcept?: number | string) => void;
   createCharacterFromWizard: (sheet: CharacterSheet) => void;
   updateCharacterLifepath: (partial: Partial<CharacterLifepath>) => void;
   updateCharacterDebt: (debt: CharacterDebt | undefined) => void;
@@ -425,13 +467,18 @@ export interface CharacterStoreState {
 
   // Tech Maker Projects
   updateTechProjects: (projects: TechMakerProject[]) => void;
+
+  // CEMK 2077 Roster & Party actions
+  loadCemk2077PartyRoster: () => void;
 }
+
+const initialRoster = loadInitialCharacters();
 
 export const useCharacterStore = create<CharacterStoreState>()(
   persist(
     (set, get) => ({
-      characters: [INITIAL_CHARACTER_V, INITIAL_CHARACTER_KIWI],
-      activeCharacterId: INITIAL_CHARACTER_V.id,
+      characters: initialRoster.characters,
+      activeCharacterId: initialRoster.activeCharacterId,
       appTheme:
         (typeof window !== 'undefined'
           ? (localStorage.getItem('cpr_app_theme_v1') as AppThemeId)
@@ -1447,7 +1494,16 @@ export const useCharacterStore = create<CharacterStoreState>()(
         }));
       },
 
-      gmPayAllCharacters: (concept, amount) => {
+      gmPayAllCharacters: (conceptOrAmount, amountOrConcept) => {
+        let concept = 'Pago de Gig / Trabajo';
+        let amount = 0;
+        if (typeof conceptOrAmount === 'number') {
+          amount = conceptOrAmount;
+          if (typeof amountOrConcept === 'string') concept = amountOrConcept;
+        } else if (typeof conceptOrAmount === 'string') {
+          concept = conceptOrAmount;
+          if (typeof amountOrConcept === 'number') amount = amountOrConcept;
+        }
         set((state) => ({
           characters: state.characters.map((c) => {
             const newBal = Math.max(0, (c.eurodollars || 0) + amount);
@@ -1788,10 +1844,54 @@ export const useCharacterStore = create<CharacterStoreState>()(
             };
           })
         }));
+      },
+
+      loadCemk2077PartyRoster: () => {
+        set((state) => {
+          const cemkChars = buildCemk2077Characters();
+          const existingHandles = new Set(state.characters.map((c) => c.handle.toLowerCase()));
+          const toAdd = cemkChars.filter((c) => !existingHandles.has(c.handle.toLowerCase()));
+          const newCharacters = [...state.characters, ...toAdd];
+          const david = newCharacters.find((c) => c.handle.toLowerCase().includes('david martinez'));
+          return {
+            characters: newCharacters,
+            activeCharacterId: state.activeCharacterId || (david ? david.id : newCharacters[0]?.id) || ''
+          };
+        });
       }
     }),
     {
-      name: 'cpr-omni-deck-characters-v2'
+      name: 'cpr-omni-deck-characters-v2',
+      merge: (persistedState: unknown, currentState: CharacterStoreState) => {
+        if (!persistedState || typeof persistedState !== 'object') {
+          return currentState;
+        }
+        const p = persistedState as Partial<CharacterStoreState>;
+        const persistedChars: CharacterSheet[] = Array.isArray(p.characters) ? p.characters : [];
+
+        // Ensure the 7 CEMK 2077 characters are present in characters roster
+        const cemkChars = buildCemk2077Characters();
+        const mergedCharacters = [...persistedChars];
+        const existingHandles = new Set(mergedCharacters.map((c) => c.handle.toLowerCase()));
+
+        for (const cemk of cemkChars) {
+          if (!existingHandles.has(cemk.handle.toLowerCase())) {
+            mergedCharacters.push(cemk);
+            existingHandles.add(cemk.handle.toLowerCase());
+          }
+        }
+
+        const validActiveId = p.activeCharacterId && mergedCharacters.some((c) => c.id === p.activeCharacterId)
+          ? p.activeCharacterId
+          : mergedCharacters.find((c) => c.handle.toLowerCase().includes('david'))?.id || mergedCharacters[0]?.id || currentState.activeCharacterId;
+
+        return {
+          ...currentState,
+          ...p,
+          characters: mergedCharacters.length > 0 ? mergedCharacters : currentState.characters,
+          activeCharacterId: validActiveId
+        };
+      }
     }
   )
 );

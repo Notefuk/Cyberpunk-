@@ -55,7 +55,8 @@ import {
   ChevronDown,
   ChevronRight,
   Package,
-  X
+  X,
+  Train
 } from 'lucide-react';
 
 const TacticalTooltip: React.FC<{
@@ -1236,21 +1237,36 @@ export const CombatHudView: React.FC = () => {
           </span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsBestiaryDrawerOpen((p) => !p)}
-          className={`px-3 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm cursor-pointer ${
-            isBestiaryDrawerOpen
-              ? 'bg-[#ef4444] text-white shadow-md shadow-[#ef4444]/30'
-              : 'bg-[#1e1728] hover:bg-[#c084fc] text-[#c084fc] hover:text-black border border-[#482d5e]'
-          }`}
-        >
-          <Skull className="w-3.5 h-3.5 text-amber-400" />
-          <span>👹 BESTIARIO & ENCUENTRO GM (44 ENEMIGOS)</span>
-          <span className="text-[10px] font-mono-code opacity-80">
-            {isBestiaryDrawerOpen ? '[ Plegar ]' : '[ Desplegar ]'}
-          </span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              const oneshotTabBtn = document.querySelector('button:has(svg.lucide-train)') as HTMLButtonElement | null;
+              if (oneshotTabBtn) oneshotTabBtn.click();
+            }}
+            className="px-3 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm cursor-pointer bg-red-950/80 hover:bg-red-600 text-red-200 hover:text-white border border-red-700/80 shadow-md shadow-red-950/50"
+            title="Abrir Centro de Comando interactivo de Red Chrome Cargo"
+          >
+            <Train className="w-3.5 h-3.5 text-red-400" />
+            <span>🚆 RED CHROME CARGO // THE HAMMERHEAD</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsBestiaryDrawerOpen((p) => !p)}
+            className={`px-3 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm cursor-pointer ${
+              isBestiaryDrawerOpen
+                ? 'bg-[#ef4444] text-white shadow-md shadow-[#ef4444]/30'
+                : 'bg-[#1e1728] hover:bg-[#c084fc] text-[#c084fc] hover:text-black border border-[#482d5e]'
+            }`}
+          >
+            <Skull className="w-3.5 h-3.5 text-amber-400" />
+            <span>👹 BESTIARIO & ENCUENTRO GM (44 ENEMIGOS)</span>
+            <span className="text-[10px] font-mono-code opacity-80">
+              {isBestiaryDrawerOpen ? '[ Plegar ]' : '[ Desplegar ]'}
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Sección Desplegable del Bestiario */}

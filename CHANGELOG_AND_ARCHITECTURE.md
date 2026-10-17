@@ -54,6 +54,7 @@ cpr-omni-deck/
 │   │   │   ├── goingMetalFbcData.ts      # 13 chasis FBC, 16 cyberware borg e inmunidades (Interface RED 3)
 │   │   │   ├── netAndRolesData.ts        # Arquitecturas de red 2045, Quickhacks 2077 y 10 Habilidades de Rol
 │   │   │   ├── rangeTables.ts            # Matrices oficiales de DVs por metro y Autofire
+│   │   │   ├── redChromeCargoData.ts     # Misión oficial Red Chrome Cargo CEMK 2077 (mapa, escenas, botín)
 │   │   │   └── rulesCheatSheet.ts        # Machete canónico de reglas de combate, coberturas y asfixia
 │   │   ├── engine/
 │   │   │   ├── characterEngine.ts        # Motor matemático: HP máx, humanidad, penalizadores
@@ -74,6 +75,8 @@ cpr-omni-deck/
 │   │   │   │   └── TopHudBar.tsx         # Barra superior persistente con vitals del edgerunner
 │   │   │   ├── netroles/
 │   │   │   │   └── NetAndRolesDeckView.tsx # Simulador Netrunning 2045, Quickhacks 2077 y 10 Roles
+│   │   │   ├── oneshot/
+│   │   │   │   └── RedChromeCargoView.tsx # Centro de mando táctico interactivo de Red Chrome Cargo CEMK
 │   │   │   ├── packs/
 │   │   │   │   └── DataPacksView.tsx     # Gestor de paquetes .cprpack estilo COMP/CON
 │   │   │   ├── rules/
@@ -193,6 +196,32 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ---
 
 ## 📜 Master Version Changelog
+
+### [v3.4.5] - 2026-10-17 (Oneshot Command Center: RED CHROME CARGO [CEMK 2077 Edition] + Precarga de los 7 Edgerunners CEMK)
+* **Category**: Official Adventure Engine, Oneshot Operations & Roster Automation
+* **Files Modified / Created**:
+  - `frontend/src/data/redChromeCargoData.ts`
+  - `frontend/src/features/oneshot/RedChromeCargoView.tsx`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/gm/FixerDeckView.tsx`
+  - `frontend/src/data/enemiesCatalog.ts`
+  - `frontend/src/data/netAndRolesData.ts`
+  - `frontend/src/App.tsx`
+* **What Changed**:
+  1. **Centro de Comando Táctico para Oneshot `RED CHROME CARGO` (`RedChromeCargoView.tsx` & `redChromeCargoData.ts`)**:
+     - Adaptación oficial completa de la aventura canónica de *Cyberpunk Edgerunners Mission Kit (CEMK 2077)*.
+     - **Diagrama Táctico Interactivo del Tren Maglev "Hammerhead"**: Plano esquemático vectorizado de los 5 vagones (*Locomotora, Vagón de Tropas/Seguridad, Contenedor Criogénico de Alto Secreto, Vagón de Pasajeros/Personal y Vagón de Cola*) con telemetría de compuertas, terminales de acceso, puntos de inserción y alarmas.
+     - **Secuenciador de Fases de Misión**: Guía paso a paso para el GM y la crew (*Briefing de Falco/Maine, Inserción Táctica, Brecha de Seguridad, Hackeo de la Red del Tren, Huida con el Contenedor y Enfrentamiento con Militech*).
+     - **Terminales de Red & Ciberseguridad Integrada**: Nodos de red del tren con DVs de Interfaz/Quickhacks para abrir puertas estancas, anular torretas automatizadas y sabotear frenos electromagnéticos.
+     - **Generador de Encuentros & Inyección Directa en 1 Clic**: Spawneo instantáneo de patrullas de Militech y drones de combate directo al tracker de iniciativa y al HUD de combate.
+  2. **Precarga Automática de la Banda Completa de Edgerunners CEMK (`useCharacterStore.ts`)**:
+     - Incorporación directa en el store de los 7 personajes pregenerados oficiales de la serie de anime y el Mission Kit: **David Martinez, Lucy, Rebecca, Maine, Kiwi, Falco y Pilar**.
+     - Cada personaje incluye sus estadísticas canónicas, inventario con armas icónicas (Lexington, Shotgun Carnage, Monowire, Malorian, etc.), blindaje corporal, cyberware de la era 2077 (Neuroport universal, Sandevistan, mantis blades, cyberóptica) y trasfondo del Lifepath.
+  3. **Acceso Rápido Global en Barra Superior (`App.tsx`)**:
+     - Nueva pestaña dedicada `🚂 RED CHROME CARGO` en el Top Hud Bar para alternar instantáneamente entre la hoja de personaje, combate, compendio y la consola de la misión.
+
+---
 
 ### [v3.4.0] - 2026-10-17 (Cierre Completo de Fase 3: Netrunning 2045, Quickhacks 2077, 10 Roles Interactivos, Garaje de Vehículos SDP & Módulos Premium Going Metal, Cyberfists of Fury y Danger Gal Dossier)
 * **Category**: Phase 3 Complete (Netrunning 2045, Quickhacking 2077, Role Abilities, Vehicle Tracker & Premium Expansions)
