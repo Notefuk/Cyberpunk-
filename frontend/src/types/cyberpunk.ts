@@ -465,6 +465,62 @@ export interface CharacterDebt {
   terms: string;
 }
 
+export type AppThemeId = 'neo_red' | 'edgerunners_2077' | 'danger_gal_pink';
+
+export interface SoloCombatAwarenessAllocation {
+  fumbleRecovery: boolean; // Costs 4 pts: ignore natural 1 critical failures
+  damageDeflection: number; // Costs 2 pts per 1 dmg reduction on first hit
+  initiativeReaction: number; // Costs 1 pt per +1 to Initiative
+  precisionAttack: number; // Costs 3 pts per +1 to all Attacks
+  spotWeakness: number; // Costs 1 pt per +1 damage to first successful attack
+  threatDetection: number; // Costs 1 pt per +1 to Perception
+}
+
+export interface ActiveFbcState {
+  isFullBodyConversion: boolean;
+  hasBiopod: boolean;
+  activeChassisId: string;
+  activeChassisName: string;
+  bodyOverride: number;
+  moveOverride: number;
+  baseArmorSp: number;
+  immunities: string[];
+}
+
+export interface OwnedVehicle {
+  instanceId: string;
+  catalogId: string;
+  name: string;
+  category: 'land' | 'sea' | 'air';
+  maxSdp: number;
+  currentSdp: number;
+  armorSp: number;
+  seats: number;
+  combatSpeed: string;
+  narrativeSpeed: string;
+  upgrades: string[];
+  mountedWeapons: string[];
+  notes?: string;
+}
+
+export interface TechMakerProject {
+  id: string;
+  name: string;
+  specialty: 'field' | 'upgrade' | 'fabrication' | 'invention';
+  dv: number;
+  hoursRequired: number;
+  hoursCompleted: number;
+  cost: number;
+  isCompleted: boolean;
+}
+
+export interface MedtechCryoAndPharma {
+  pharmaceuticalsRank: number;
+  cryoSystemRank: number;
+  synthesizedDoses: Record<string, number>;
+  activeCryotanks: Array<{ id: string; patientName: string; condition: string }>;
+}
+
 export interface CharacterSheet {
   id: string;
   handle: string;
@@ -505,6 +561,13 @@ export interface CharacterSheet {
   hasNeuroport?: boolean;
   lifepath?: CharacterLifepath;
   debt?: CharacterDebt;
+  portraitId?: string;
+  fbcState?: ActiveFbcState;
+  soloAllocation?: SoloCombatAwarenessAllocation;
+  knownMartialArts?: Record<string, number>;
+  vehicles?: OwnedVehicle[];
+  techProjects?: TechMakerProject[];
+  medtechLab?: MedtechCryoAndPharma;
 }
 
 export interface RollEntry {

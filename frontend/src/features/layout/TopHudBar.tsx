@@ -25,6 +25,8 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
 
   const era = useCombatStore((state) => state.era);
   const setEra = useCombatStore((state) => state.setEra);
+  const appTheme = useCharacterStore((state) => state.appTheme);
+  const setAppTheme = useCharacterStore((state) => state.setAppTheme);
 
   const activeChar = getActiveCharacter();
   const maxHp = calculateMaxHp(activeChar?.stats?.BODY ?? 6, activeChar?.stats?.WILL ?? 6);
@@ -165,8 +167,49 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
 
         </div>
 
-        {/* Era Switcher */}
-        <div className="flex items-center gap-2">
+        {/* Controles de Era y Selector de Tema Visual */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Theme Selector */}
+          <div className="flex bg-[#14161f] p-0.5 border border-[#222634] rounded-sm text-xs font-mono-code" title="Selector de Tema Visual del Omni-Deck">
+            <button
+              onClick={() => setAppTheme('neo_red')}
+              className={`px-2 py-1 transition-all rounded-xs flex items-center gap-1 ${
+                appTheme === 'neo_red'
+                  ? 'bg-[#dc2626] text-white font-bold shadow-sm'
+                  : 'text-[#64748b] hover:text-[#cbd5e1]'
+              }`}
+              title="🔴 Neo-Red 2045 (Rojo Clásico)"
+            >
+              <span>🔴</span>
+              <span className="hidden sm:inline">NEO-RED</span>
+            </button>
+            <button
+              onClick={() => setAppTheme('edgerunners_2077')}
+              className={`px-2 py-1 transition-all rounded-xs flex items-center gap-1 ${
+                appTheme === 'edgerunners_2077'
+                  ? 'bg-[#fcee0a] text-black font-bold shadow-sm'
+                  : 'text-[#64748b] hover:text-[#cbd5e1]'
+              }`}
+              title="🟡 Edgerunners 2077 (Amarillo Neón)"
+            >
+              <span>🟡</span>
+              <span className="hidden sm:inline">2077</span>
+            </button>
+            <button
+              onClick={() => setAppTheme('danger_gal_pink')}
+              className={`px-2 py-1 transition-all rounded-xs flex items-center gap-1 ${
+                appTheme === 'danger_gal_pink'
+                  ? 'bg-[#ff2a85] text-white font-bold shadow-sm'
+                  : 'text-[#64748b] hover:text-[#cbd5e1]'
+              }`}
+              title="🩷 Danger Gal Dossier (Rosa Neón)"
+            >
+              <span>🩷</span>
+              <span className="hidden sm:inline">DANGER GAL</span>
+            </button>
+          </div>
+
+          {/* Era Switcher */}
           <div className="flex bg-[#14161f] p-0.5 border border-[#222634] rounded-sm text-xs font-mono-code">
             <button 
               onClick={() => setEra('2045')}

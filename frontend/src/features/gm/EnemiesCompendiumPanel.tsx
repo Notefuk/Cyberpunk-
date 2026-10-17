@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { 
   ENEMIES_CATALOG, 
+  DANGER_GAL_15_FACTIONS,
   convertEnemyToCharacterSheet,
   type EnemySheet, 
   type ThreatTier, 
@@ -26,7 +27,8 @@ import {
   Crosshair, 
   Check, 
   X, 
-  Layers
+  Layers,
+  Wrench
 } from 'lucide-react';
 
 export interface ActiveEncounterEnemy {
@@ -186,16 +188,129 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
     setTimeout(() => setFeedbackMessage(null), 3500);
   };
 
-  // Distinct Factions list
-  const uniqueFactions = useMemo(() => {
-    const set = new Set<string>();
-    ENEMIES_CATALOG.forEach((e) => set.add(e.faction));
-    return Array.from(set).sort();
-  }, []);
+  // Custom NPCs state with persistence
+  const [customNpcs, setCustomNpcs] = useState<EnemySheet[]>(() => {
+    try {
+      const saved = localStorage.getItem('cpr_custom_npcs_v1');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error('Failed to load custom npcs:', e);
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('cpr_custom_npcs_v1', JSON.stringify(customNpcs));
+    } catch (e) {
+      console.error('Failed to save custom npcs:', e);
+    }
+  }, [customNpcs]);
+
+  const [isCustomNpcModalOpen, setIsCustomNpcModalOpen] = useState(false);
+  const [customNpcForm, setCustomNpcForm] = useState({
+    name: '',
+    subtitle: 'Mercenario Independiente',
+    faction: 'Danger Gal Operations',
+    threatTier: 'mook' as ThreatTier,
+    era: '2045' as CharacterEra,
+    role: 'Solo',
+    hp: 35,
+    headSp: 7,
+    bodySp: 11,
+    weaponName: 'Heavy Pistol Arasaka',
+    weaponSkillBase: 12,
+    weaponDamage: '3d6',
+    weaponRof: 2,
+    combatBaseLabel: 'Handgun',
+    combatBaseTotal: 12,
+    int: 5,
+    ref: 7,
+    dex: 6,
+    tech: 4,
+    cool: 6,
+    will: 6,
+    luck: 5,
+    move: 6,
+    body: 7,
+    emp: 5,
+    specialRules: 'Reflejos aumentados, blindaje subdérmico.',
+    loreSummary: 'Operativo contratado para misiones de asalto o escolta táctica en Night City.'
+  });
+
+  const handleSaveCustomNpc = () => {
+    if (!customNpcForm.name.trim()) {
+      showFeedback('⚠ Error: El PNJ debe tener un nombre.');
+      return;
+    }
+    const newEnemy: EnemySheet = {
+      id: `custom-npc-${Date.now()}`,
+      name: customNpcForm.name.trim(),
+      subtitle: customNpcForm.subtitle.trim() || 'PNJ Personalizado',
+      faction: customNpcForm.faction.trim() || 'Independiente',
+      threatTier: customNpcForm.threatTier,
+      sourceBook: 'dlc',
+      sourceBookTitle: 'Homebrew DLC',
+      era: customNpcForm.era,
+      role: customNpcForm.role.trim() || 'Solo',
+      hp: customNpcForm.hp,
+      seriouslyWounded: Math.ceil(customNpcForm.hp / 2),
+      deathSave: customNpcForm.body,
+      headSp: customNpcForm.headSp,
+      bodySp: customNpcForm.bodySp,
+      stats: {
+        INT: customNpcForm.int,
+        REF: customNpcForm.ref,
+        DEX: customNpcForm.dex,
+        TECH: customNpcForm.tech,
+        COOL: customNpcForm.cool,
+        WILL: customNpcForm.will,
+        LUCK: customNpcForm.luck,
+        MOVE: customNpcForm.move,
+        BODY: customNpcForm.body,
+        EMP: customNpcForm.emp
+      },
+      combatBases: [
+        {
+          label: customNpcForm.combatBaseLabel || 'Combate',
+          totalBase: customNpcForm.combatBaseTotal,
+          damage: customNpcForm.weaponDamage,
+          rof: customNpcForm.weaponRof
+        }
+      ],
+      weapons: [
+        {
+          name: customNpcForm.weaponName || 'Arma Estándar',
+          skillBase: customNpcForm.weaponSkillBase,
+          damage: customNpcForm.weaponDamage,
+          rof: customNpcForm.weaponRof,
+          mag: 12
+        }
+      ],
+      cyberware: [],
+      gear: ['Teléfono Agent', '100 €$'],
+      specialRules: customNpcForm.specialRules ? [customNpcForm.specialRules] : [],
+      loreSummary: customNpcForm.loreSummary || 'Ficha de PNJ creada por el GM.'
+    };
+
+    setCustomNpcs((prev) => [newEnemy, ...prev]);
+    setIsCustomNpcModalOpen(false);
+    showFeedback(`✅ PNJ personalizado "${newEnemy.name}" guardado exitosamente.`);
+  };
+
+  const handleDeleteCustomNpc = (npcId: string) => {
+    setCustomNpcs((prev) => prev.filter((n) => n.id !== npcId));
+    showFeedback('🗑️ PNJ personalizado eliminado.');
+  };
+
+  // Combined Catalog (Custom NPCs + Canonical Enemies)
+  const combinedCatalog = useMemo(() => {
+    return [...customNpcs, ...ENEMIES_CATALOG];
+  }, [customNpcs]);
 
   // Filtered Enemies
   const filteredEnemies = useMemo(() => {
-    return ENEMIES_CATALOG.filter((enemy) => {
+    return combinedCatalog.filter((enemy) => {
       if (selectedThreatTier !== 'all' && enemy.threatTier !== selectedThreatTier) return false;
       if (selectedSourceBook !== 'all' && enemy.sourceBook !== selectedSourceBook) return false;
       if (selectedEra !== 'all' && enemy.era !== selectedEra) return false;
@@ -216,7 +331,7 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
       }
       return true;
     });
-  }, [searchQuery, selectedThreatTier, selectedSourceBook, selectedEra, selectedFaction]);
+  }, [combinedCatalog, searchQuery, selectedThreatTier, selectedSourceBook, selectedEra, selectedFaction]);
 
   const toggleExpandEnemy = (id: string) => {
     setExpandedEnemyIds((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -828,17 +943,24 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
             <BookOpen className="w-5 h-5 text-amber-400" />
             <div>
               <h2 className="font-tech text-base font-bold text-white uppercase tracking-wider">
-                COMPENDIO TÁCTICO DE ENEMIGOS, GOONS & JEFES
+                COMPENDIO TÁCTICO // 15 FACCIONES & 128 NPCS CANÓNICOS
               </h2>
               <p className="text-[11px] font-mono-code text-slate-400">
-                44 fichas canónicas integradas: Core, Danger Gal Dossier, CEMK 2077 y DLCs
+                Danger Gal Dossier completo (15 Facciones), Core 2045, CEMK 2077 y Creador de PNJ
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono-code text-amber-400 bg-amber-950/40 border border-amber-800/40 px-2.5 py-1 rounded-xs font-bold">
-              {filteredEnemies.length} / {ENEMIES_CATALOG.length} Fichas
+            <button
+              onClick={() => setIsCustomNpcModalOpen(true)}
+              className="px-3 py-1.5 bg-[#10b981] hover:bg-white text-black font-tech text-xs font-bold uppercase rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+            >
+              <UserPlus className="w-3.5 h-3.5" />
+              <span>🛠️ CREAR PNJ PERSONALIZADO</span>
+            </button>
+            <span className="text-xs font-mono-code text-amber-400 bg-amber-950/40 border border-amber-800/40 px-2.5 py-1.5 rounded-xs font-bold">
+              {filteredEnemies.length} / {combinedCatalog.length} Fichas
             </span>
           </div>
         </div>
@@ -916,36 +1038,63 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
           </div>
         </div>
 
-        {/* Selector de Facción Rápida */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[#1a1f2e] text-[10px] font-mono-code">
-          <span className="text-slate-400 mr-1 flex items-center gap-1">
-            <Layers className="w-3 h-3 text-amber-400" /> Facción:
-          </span>
-          <button
-            type="button"
-            onClick={() => setSelectedFaction('all')}
-            className={`px-2 py-0.5 rounded-xs transition-colors ${
-              selectedFaction === 'all'
-                ? 'bg-amber-400 text-black font-bold'
-                : 'bg-[#151926] text-slate-400 hover:text-white border border-[#232a3d]'
-            }`}
-          >
-            Todas ({ENEMIES_CATALOG.length})
-          </button>
-          {uniqueFactions.map((f) => (
+        {/* Barra de 15 Facciones Danger Gal Dossier */}
+        <div className="space-y-1.5 pt-1 border-t border-[#1a1f2e]">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold tracking-wider flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-pink-400" />
+              15 FACCIONES OFICIALES // DANGER GAL DOSSIER:
+            </span>
+            {selectedFaction !== 'all' && (
+              <button
+                onClick={() => setSelectedFaction('all')}
+                className="text-[10px] font-mono-code text-red-400 hover:text-white underline cursor-pointer"
+              >
+                Limpiar filtro ({selectedFaction})
+              </button>
+            )}
+          </div>
+          <div className="flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-thin">
             <button
-              key={f}
               type="button"
-              onClick={() => setSelectedFaction(f)}
-              className={`px-2 py-0.5 rounded-xs transition-colors ${
-                selectedFaction === f
-                  ? 'bg-amber-400 text-black font-bold'
-                  : 'bg-[#151926] text-slate-400 hover:text-white border border-[#232a3d]'
+              onClick={() => setSelectedFaction('all')}
+              className={`px-2.5 py-1 rounded-xs text-[11px] font-mono-code font-bold whitespace-nowrap transition-colors cursor-pointer border ${
+                selectedFaction === 'all'
+                  ? 'bg-amber-400 text-black border-amber-300 shadow-[0_0_8px_rgba(251,191,36,0.3)]'
+                  : 'bg-[#121520] text-slate-400 border-[#23293c] hover:bg-[#1a2030] hover:text-white'
               }`}
             >
-              {f}
+              TODAS ({combinedCatalog.length})
             </button>
-          ))}
+            {DANGER_GAL_15_FACTIONS.map((fac) => {
+              const count = combinedCatalog.filter((e) => e.faction.toLowerCase().includes(fac.name.toLowerCase()) || fac.name.toLowerCase().includes(e.faction.toLowerCase())).length;
+              const isSelected = selectedFaction === fac.name;
+              return (
+                <button
+                  key={fac.id}
+                  type="button"
+                  onClick={() => setSelectedFaction(isSelected ? 'all' : fac.name)}
+                  className={`px-2.5 py-1 rounded-xs text-[11px] font-mono-code font-bold whitespace-nowrap transition-colors cursor-pointer border flex items-center gap-1.5 ${
+                    isSelected
+                      ? 'text-white shadow-[0_0_10px_rgba(255,255,255,0.2)]'
+                      : 'bg-[#121520] text-slate-300 border-[#23293c] hover:bg-[#1a2030]'
+                  }`}
+                  style={{
+                    borderColor: isSelected ? fac.threatColor : '#23293c',
+                    backgroundColor: isSelected ? `${fac.threatColor}33` : undefined
+                  }}
+                  title={`${fac.name} — Territorio: ${fac.territory}`}
+                >
+                  <span
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: fac.threatColor }}
+                  />
+                  <span>{fac.name}</span>
+                  <span className="text-[9px] opacity-70">({count})</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Listado de Tarjetas de Enemigos */}
@@ -992,6 +1141,11 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
                         <span className="text-[9px] font-mono-code text-cyan-300 bg-cyan-950/40 border border-cyan-800/40 px-1.5 py-0.2 rounded-xs">
                           {enemy.era}
                         </span>
+                        {customNpcs.some((c) => c.id === enemy.id) && (
+                          <span className="text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs border bg-emerald-950/60 text-emerald-300 border-emerald-500/50">
+                            🛠️ PNJ PERSONALIZADO
+                          </span>
+                        )}
                       </div>
 
                       <p className="text-[11px] font-mono-code text-slate-400">
@@ -1032,6 +1186,16 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
                     >
                       +x3
                     </button>
+                    {customNpcs.some((c) => c.id === enemy.id) && (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteCustomNpc(enemy.id)}
+                        className="p-1.5 bg-[#25151c] hover:bg-[#ef4444] text-[#f87171] hover:text-white border border-[#48202d] rounded-xs transition-colors"
+                        title="Eliminar PNJ personalizado"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -1257,6 +1421,282 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
           )}
         </div>
       </div>
+
+      {/* =====================================================================
+          MODAL: CREADOR DE PNJ PERSONALIZADO (CUSTOM NPC CREATOR)
+      ===================================================================== */}
+      {isCustomNpcModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-3 sm:p-4 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="bg-[#0e1017] border-2 border-[#10b981] w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-xs p-5 shadow-2xl space-y-4 font-mono-code text-xs text-slate-200">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-[#1f2638]">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 bg-[#10b981]/20 border border-[#10b981] rounded-xs text-[#10b981]">
+                  <Wrench className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-tech text-base font-black text-white uppercase tracking-wider">
+                    🛠️ CREADOR DE PNJ PERSONALIZADO // COMBAT READY
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Crea fichas tácticas a medida y guárdalas en tu base de datos local
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCustomNpcModalOpen(false)}
+                className="p-1 hover:bg-[#20273a] text-slate-400 hover:text-white rounded"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Formulario */}
+            <div className="space-y-4">
+              {/* Sección 1: Identidad Básica */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-[10px] uppercase text-[#10b981] font-bold block">
+                    Nombre del PNJ *
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ej. Teniente Grigori, Razor Jack..."
+                    value={customNpcForm.name}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, name: e.target.value })}
+                    className="w-full bg-[#141824] border border-[#273248] focus:border-[#10b981] text-white p-2 rounded-xs focus:outline-none text-xs"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-[10px] uppercase text-slate-400 block">
+                    Subtítulo / Especialidad
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ej. Sicario de Arasaka, Ciberpsicópata de la Zona..."
+                    value={customNpcForm.subtitle}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, subtitle: e.target.value })}
+                    className="w-full bg-[#141824] border border-[#273248] focus:border-[#10b981] text-white p-2 rounded-xs focus:outline-none text-xs"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-[10px] uppercase text-slate-400 block">
+                    Facción (Seleccionar o Escribir)
+                  </label>
+                  <input
+                    type="text"
+                    list="factions-datalist"
+                    placeholder="Ej. Danger Gal, Arasaka, Maelstrom..."
+                    value={customNpcForm.faction}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, faction: e.target.value })}
+                    className="w-full bg-[#141824] border border-[#273248] focus:border-[#10b981] text-white p-2 rounded-xs focus:outline-none text-xs"
+                  />
+                  <datalist id="factions-datalist">
+                    {DANGER_GAL_15_FACTIONS.map((f) => (
+                      <option key={f.id} value={f.name} />
+                    ))}
+                    <option value="Independiente" />
+                    <option value="Mercenarios Callejeros" />
+                  </datalist>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-slate-400 block">Rol</label>
+                  <input
+                    type="text"
+                    value={customNpcForm.role}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, role: e.target.value })}
+                    className="w-full bg-[#141824] border border-[#273248] focus:border-[#10b981] text-white p-2 rounded-xs focus:outline-none text-xs"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-slate-400 block">Era</label>
+                  <select
+                    value={customNpcForm.era}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, era: e.target.value as CharacterEra })}
+                    className="w-full bg-[#141824] border border-[#273248] focus:border-[#10b981] text-white p-2 rounded-xs focus:outline-none text-xs"
+                  >
+                    <option value="2045">2045 RED</option>
+                    <option value="2077">2077 CEMK</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Sección 2: Amenaza, Salud & Blindaje */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#111420] p-3 rounded-xs border border-[#1e2538]">
+                <div className="col-span-2 sm:col-span-1 space-y-1">
+                  <label className="text-[10px] uppercase text-amber-400 font-bold block">
+                    Nivel Amenaza
+                  </label>
+                  <select
+                    value={customNpcForm.threatTier}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, threatTier: e.target.value as ThreatTier })}
+                    className="w-full bg-[#161c2c] border border-[#2b374e] text-amber-300 p-2 rounded-xs focus:outline-none text-xs font-bold"
+                  >
+                    <option value="mook">Mook</option>
+                    <option value="hardened_mook">Hardened Mook</option>
+                    <option value="lieutenant">Lieutenant</option>
+                    <option value="hardened_lieutenant">Hardened Lieutenant</option>
+                    <option value="mini_boss">Mini-Boss</option>
+                    <option value="boss">Boss</option>
+                    <option value="cyberpsycho">Cyberpsycho</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-red-400 font-bold block">
+                    Puntos de Vida (HP)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={customNpcForm.hp}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, hp: parseInt(e.target.value) || 20 })}
+                    className="w-full bg-[#161c2c] border border-[#2b374e] text-red-400 font-tech font-bold p-2 rounded-xs focus:outline-none text-sm text-center"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-[#38bdf8] font-bold block">
+                    SP Cabeza
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={customNpcForm.headSp}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, headSp: parseInt(e.target.value) || 0 })}
+                    className="w-full bg-[#161c2c] border border-[#2b374e] text-[#38bdf8] font-tech font-bold p-2 rounded-xs focus:outline-none text-sm text-center"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-[#38bdf8] font-bold block">
+                    SP Cuerpo
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={customNpcForm.bodySp}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, bodySp: parseInt(e.target.value) || 0 })}
+                    className="w-full bg-[#161c2c] border border-[#2b374e] text-[#38bdf8] font-tech font-bold p-2 rounded-xs focus:outline-none text-sm text-center"
+                  />
+                </div>
+              </div>
+
+              {/* Sección 3: Arma Principal & Habilidad */}
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 bg-[#111420] p-3 rounded-xs border border-[#1e2538]">
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="text-[10px] uppercase text-slate-400 block">Arma Principal</label>
+                  <input
+                    type="text"
+                    value={customNpcForm.weaponName}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, weaponName: e.target.value })}
+                    className="w-full bg-[#161c2c] border border-[#2b374e] text-white p-2 rounded-xs focus:outline-none text-xs"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-slate-400 block">Base Ataque (+)</label>
+                  <input
+                    type="number"
+                    value={customNpcForm.weaponSkillBase}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, weaponSkillBase: parseInt(e.target.value) || 10, combatBaseTotal: parseInt(e.target.value) || 10 })}
+                    className="w-full bg-[#161c2c] border border-[#2b374e] text-white p-2 rounded-xs focus:outline-none text-xs text-center"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-slate-400 block">Daño (ej. 3d6)</label>
+                  <input
+                    type="text"
+                    value={customNpcForm.weaponDamage}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, weaponDamage: e.target.value })}
+                    className="w-full bg-[#161c2c] border border-[#2b374e] text-white p-2 rounded-xs focus:outline-none text-xs text-center font-bold"
+                  />
+                </div>
+              </div>
+
+              {/* Sección 4: STATS (10 Atributos) */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] uppercase text-slate-400 block font-bold">
+                  Atributos (STATs Cyberpunk RED)
+                </label>
+                <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5">
+                  {(['int', 'ref', 'dex', 'tech', 'cool', 'will', 'luck', 'move', 'body', 'emp'] as const).map((stat) => (
+                    <div key={stat} className="bg-[#141824] border border-[#22293c] p-1.5 rounded-xs text-center">
+                      <span className="text-[8px] uppercase text-slate-400 block font-bold">{stat}</span>
+                      <input
+                        type="number"
+                        min="1"
+                        max="20"
+                        value={customNpcForm[stat]}
+                        onChange={(e) => setCustomNpcForm({ ...customNpcForm, [stat]: parseInt(e.target.value) || 5 })}
+                        className="w-full bg-transparent text-white font-tech font-bold text-center text-xs focus:outline-none"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sección 5: Reglas Especiales & Lore */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-slate-400 block">
+                    Reglas Especiales / Ciberware
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={customNpcForm.specialRules}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, specialRules: e.target.value })}
+                    placeholder="Ventajas en Sigilo, Sandevistan, etc."
+                    className="w-full bg-[#141824] border border-[#273248] text-white p-2 rounded-xs focus:outline-none text-xs"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-slate-400 block">
+                    Resumen Táctico / Lore
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={customNpcForm.loreSummary}
+                    onChange={(e) => setCustomNpcForm({ ...customNpcForm, loreSummary: e.target.value })}
+                    placeholder="Instrucciones tácticas para el GM al interpretar este NPC..."
+                    className="w-full bg-[#141824] border border-[#273248] text-white p-2 rounded-xs focus:outline-none text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex items-center justify-between pt-3 border-t border-[#1f2638]">
+              <span className="text-[11px] text-slate-500">
+                Se guardará inmediatamente en tu navegador y aparecerá en el compendio.
+              </span>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsCustomNpcModalOpen(false)}
+                  className="px-4 py-2 bg-[#1b202e] hover:bg-[#252c40] text-slate-300 font-tech text-xs font-bold uppercase rounded-xs cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveCustomNpc}
+                  className="px-4 py-2 bg-[#10b981] hover:bg-white text-black font-tech text-xs font-bold uppercase rounded-xs transition-colors cursor-pointer shadow-[0_0_12px_rgba(16,185,129,0.3)]"
+                >
+                  Guardar PNJ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

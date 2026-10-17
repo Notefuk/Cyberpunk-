@@ -48,8 +48,11 @@ cpr-omni-deck/
 │   │   │   ├── characterCreationData.ts  # Catálogo canónico de creación, Lifepath, pregenerados y deuda
 │   │   │   ├── core-rules.cprpack.json   # Catálogo maestro multi-libro (368 ítems canónicos)
 │   │   │   ├── criticalInjuries.ts       # Tablas oficiales 2d6 de heridas críticas (Head/Body)
+│   │   │   ├── cyberfistsMartialArtsData.ts # 23 artes marciales y 46 movimientos (Interface RED Vol 4)
 │   │   │   ├── enemiesCatalog.ts         # Bestiario táctico de 44 enemigos, goons y bosses para el GM
 │   │   │   ├── expansionRulesData.ts     # Compendio de 8 sistemas de reglas de expansiones (FBC/2077)
+│   │   │   ├── goingMetalFbcData.ts      # 13 chasis FBC, 16 cyberware borg e inmunidades (Interface RED 3)
+│   │   │   ├── netAndRolesData.ts        # Arquitecturas de red 2045, Quickhacks 2077 y 10 Habilidades de Rol
 │   │   │   ├── rangeTables.ts            # Matrices oficiales de DVs por metro y Autofire
 │   │   │   └── rulesCheatSheet.ts        # Machete canónico de reglas de combate, coberturas y asfixia
 │   │   ├── engine/
@@ -69,6 +72,8 @@ cpr-omni-deck/
 │   │   │   │   └── FixerDeckView.tsx     # Consola GM Fixer con PIN, control global y monitor del equipo
 │   │   │   ├── layout/
 │   │   │   │   └── TopHudBar.tsx         # Barra superior persistente con vitals del edgerunner
+│   │   │   ├── netroles/
+│   │   │   │   └── NetAndRolesDeckView.tsx # Simulador Netrunning 2045, Quickhacks 2077 y 10 Roles
 │   │   │   ├── packs/
 │   │   │   │   └── DataPacksView.tsx     # Gestor de paquetes .cprpack estilo COMP/CON
 │   │   │   ├── rules/
@@ -92,9 +97,9 @@ cpr-omni-deck/
 
 ---
 
-## 🔮 Roadmap y Evolución de Fases (Fases 3 a 5 Pendientes)
+## 🔮 Roadmap y Evolución de Fases (Fases 4 y 5 Pendientes)
 
-Las Fases 0, 1 y 2 se encuentran **COMPLETADAS**. Los siguientes módulos representan las especificaciones para las fases subsiguientes. **Ningún componente debe intentar importarlos mientras no existan en disco**:
+Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos representan las especificaciones para las fases subsiguientes. **Ningún componente debe intentar importarlos mientras no existan en disco**:
 
 ### Fase 2 (v2.6 – v2.9): Disparos Apuntados, Creador Guiado, Biblioteca de Enemigos, Compendio y Expansión PDF [COMPLETADO]
 * Selector Interactivo de Disparos Apuntados (`CombatHudView.tsx` & `combatEngine.ts`):
@@ -118,7 +123,7 @@ Las Fases 0, 1 y 2 se encuentran **COMPLETADAS**. Los siguientes módulos repres
   - Reglas 2077 (Edgerunners Mission Kit): Neuroport integrado, armas Power/Tech/Smart y ciberpsicosis.
 * Extracción e integración de `data/danger-gal.cprpack.json` & `data/interface-red.cprpack.json`.
 
-### Fase 3 (v3.0 – v3.4): Sistemas Profundos & Funciones Premium Companion App
+### Fase 3 (v3.0 – v3.4): Sistemas Profundos & Funciones Premium Companion App [COMPLETADO]
 * `src/components/NetArchitectureRunner.tsx`:
   - Simulador piso a piso de Arquitecturas de Red (Archivos, Nodos de Control, Black ICE).
 * `src/features/quickhacks/QuickhacksDeck.tsx`:
@@ -131,6 +136,10 @@ Las Fases 0, 1 y 2 se encuentran **COMPLETADAS**. Los siguientes módulos repres
   - Creador y simulador de Arquitecturas de Red personalizadas multietapa con exportación.
   - Exportación e importación universal (JSON / PDF imprimible estilo hoja oficial).
   - Consola Fixer enriquecida: notas de sesión secretas, generador de botín y registro cronológico.
+* **Integración de Módulos Premium Companion App (Fase 3)**:
+  - **`Going Metal` (FBC & Cyberware)**: 13 Cuerpos FBC (+6 chasis restantes sobre los 7 de Fase 2), 16 piezas de cyberware FBC, nuevo Linear Frame externo, nueva granada y conmutador interactivo FBC en Hoja de Personaje y Ripperdoc (`CyberwareRipperdocView.tsx`).
+  - **`Cyberfists of Fury` (Artes Marciales Avanzadas)**: 23 nuevas formas de artes marciales y 46 movimientos especiales integrados en `CombatHudView.tsx` con evaluación de requisitos de STATs y DVs.
+  - **`Danger Gal Dossier` (Facciones, NPCs & Tema)**: 118 PNJs oficiales en 15 facciones en `EnemiesCompendiumPanel.tsx`, flujo de creación de PNJs custom en `FixerDeckView.tsx`, tema visual "Danger Gal" y nuevos retratos de personajes oficiales.
 
 ### Fase 4 (v3.5 – v3.9): VTT Táctico, Clima, Homebrew y Audio/VFX
 * `src/components/MiniVTT.tsx`:
@@ -140,6 +149,41 @@ Las Fases 0, 1 y 2 se encuentran **COMPLETADAS**. Los siguientes módulos repres
   - Creador universal de armas, drogas y ciberware casero con algoritmo de conversión 2020 a RED.
 * `src/utils/sfx.ts` & `src/utils/vfx.ts`:
   - Audio sintetizado táctil para disparos, recargas, zumbidos de Sandevistan y efectos visuales de glitch/herida.
+* **Integración de Módulos Premium Companion App (Fase 4)**:
+  - **`Night City 2045` (Atlas Interactivo & Cartografía Urbana)**: Mapa interactivo en SVG/Canvas, 25 distritos buscables, 700+ ubicaciones con filtros por categoría, 73 facciones buscables con guaridas georreferenciadas, 112 nuevos PNJs de distrito, 130 ganchos de trama (plot hooks) y creador de ubicaciones personalizadas (Custom Locations).
+  - **`Solo of Fortune` (Armaduras de Poder ACPA & Arsenal Militar)**: Tipo de armadura ACPA (*Assisted Combat Personnel Armor*) y Constructor Personalizado de ACPA (*Custom ACPA Builder*), 10 modelos ACPA equipables, 13 nuevas armas, 8 accesorios de armas, 15 tablas de rango dedicadas, 12 municiones y explosivos, 3 sets de blindaje y 10 piezas de equipo.
+
+### 💎 Índice de Módulos Premium por Nombre (Paridad Companion App)
+> Especificaciones derivadas directamente de las capturas de la Companion App oficial. Este índice mantiene el desglose por pack independiente y deja preparado el espacio para las próximas capturas enviadas por el usuario.
+
+* **1. `GOING METAL` (Full Body Conversions Completo)**:
+  - *(Nota: En Fase 2 ya se implementó la sección explicativa "About FBCs", la Biovaina y los primeros 7 cuerpos FBC).*
+  - **13 Cuerpos FBC (`13 FBC Bodies`)**: Añadir los 6 chasis FBC restantes para llegar a los 13 oficiales.
+  - **16 Nuevas Piezas de Cyberware FBC (`16 New Pieces of Cyberware`)**: Implantes exclusivos y adaptados para cuerpos cyborg.
+  - **Nuevo Linear Frame Externo (`New External Linear Frame`)** y **Nuevo Tipo de Granada (`New Grenade Type`)**.
+  - **Modo Interactivo FBC en Hoja de Personaje y Ripperdoc**: Conmutador para transformar un personaje activo en Full Body Conversion aplicando automáticamente sus reglas de chasis intercambiable, inmunidades y cálculo de Humanidad/Reparación.
+* **2. `NIGHT CITY 2045` (Atlas Interactivo, Distritos, Facciones y Plot Hooks)**:
+  - **Mapa Interactivo de Night City 2045 (`Interactive Map of Night City`)** en SVG/Canvas.
+  - **25 Distritos Buscables (`25 Searchable Districts`)** y **700+ Ubicaciones Buscables (`700+ Searchable Locations`)** con filtros por tipo (*Médico, Transporte, Night Markets, Corporativo, Ripperdocs, Bares, etc.*).
+  - **73 Facciones Buscables (`73 Searchable Factions`)** asociadas a sus guaridas y zonas de influencia directamente en el mapa interactivo.
+  - **112 Nuevos PNJs de Distrito (`112 New NPCs`)** vinculados a su distrito correspondiente.
+  - **130 Ganchos de Trama / Misiones (`130 Plot Hooks`)** para inspirar a GMs y jugadores.
+  - **Ubicaciones Personalizadas (`Custom Locations`)**: Capacidad de añadir ubicaciones propias al mapa interactivo y compartirlas/hacerlas buscables para los jugadores de la sesión.
+* **3. `CYBERFISTS OF FURY` (Artes Marciales Completas — *Interface RED Vol. 4*)**:
+  - **23 Nuevas Formas/Estilos de Artes Marciales (`23 New Martial Art Forms`)** (además de Aikido, Karate, Judo y Taekwondo del Core Book).
+  - **46 Nuevos Movimientos Especiales de Artes Marciales (`46 New Martial Art Moves`)** integrados en el HUD de Combate para ejecutar llaves, golpes especiales y combos con sus requisitos de STATS y DVs.
+* **4. `SOLO OF FORTUNE` (Armaduras de Poder ACPA & Arsenal Pesado)**:
+  - **Tipo de Armadura ACPA (`ACPA Armor Type` — *Assisted Combat Personnel Armor*)** y **Constructor Personalizado de ACPA (`Custom ACPA Builder`)**.
+  - **10 Modelos de ACPA (`10 ACPAs`)** listos para equipar y pilotar.
+  - **13 Nuevas Armas (`13 New Weapons`)**, **8 Nuevos Accesorios de Armas (`8 New Weapon Attachments`)** y **15 Nuevas Tablas de Rango de Armas (`15 New Weapon Range Tables`)**.
+  - **12 Nuevas Municiones y Explosivos (`12 New Ammunition & Explosives`)**, **3 Nuevos Sets de Armadura (`3 New Armor Sets`)** y **10 Nuevas Piezas de Equipo (`10 New Pieces of Gear`)**.
+* **5. `DANGER GAL DOSSIER` (Expansión Completa de Facciones, Creador de NPCs y Tema Visual)**:
+  - *(Nota: En Fase 2 ya se integró una primera tanda de operativos y armas de Danger Gal).*
+  - **Completar los 118 PNJs Oficiales (`118 New NPCs`)** distribuidos en las **15 Facciones (`15 Factions`)**.
+  - **Nuevo Flujo de Creación de PNJs Personalizados (`New Workflow for Custom NPCs`)** para el Director de Juego.
+  - **Tema Visual "Danger Gal" (`Danger Gal Theme`)** seleccionable en la interfaz y **Retratos de Personajes (`New Character Portraits`)**.
+* **[Espacio Reservado para Próximos Módulos Premium]**:
+  - *(Ranuras preparadas para capturas adicionales: Black Chrome Packs, Interface RED Vol. 1-2 Packs, etc.)*
 
 ### Fase 5 (v4.0): Auditoría Integral del Sistema (UI, Mecánicas y Revisión de ~60 PDFs)
 * Guía de Verificación y Checklist de Auditoría Oficial contra reglas de R. Talsorian Games.
@@ -149,6 +193,63 @@ Las Fases 0, 1 y 2 se encuentran **COMPLETADAS**. Los siguientes módulos repres
 ---
 
 ## 📜 Master Version Changelog
+
+### [v3.4.0] - 2026-10-17 (Cierre Completo de Fase 3: Netrunning 2045, Quickhacks 2077, 10 Roles Interactivos, Garaje de Vehículos SDP & Módulos Premium Going Metal, Cyberfists of Fury y Danger Gal Dossier)
+* **Category**: Phase 3 Complete (Netrunning 2045, Quickhacking 2077, Role Abilities, Vehicle Tracker & Premium Expansions)
+* **Files Modified / Created**:
+  - `frontend/src/data/cyberfistsMartialArtsData.ts`
+  - `frontend/src/data/goingMetalFbcData.ts`
+  - `frontend/src/data/netAndRolesData.ts`
+  - `frontend/src/features/netroles/NetAndRolesDeckView.tsx`
+  - `frontend/src/data/enemiesCatalog.ts`
+  - `data/core-rules.cprpack.json` & `frontend/src/data/core-rules.cprpack.json`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/cyberware/CyberwareRipperdocView.tsx`
+  - `frontend/src/features/gm/FixerDeckView.tsx`
+  - `frontend/src/features/gm/EnemiesCompendiumPanel.tsx`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/layout/TopHudBar.tsx`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/types/cyberpunk.ts`
+  - `frontend/src/engine/characterEngine.ts`
+  - `frontend/src/App.tsx`
+* **What Changed**:
+  1. **Simulador Táctico de Pisos de Red 2045 (`NetAndRolesDeckView.tsx` & `netAndRolesData.ts`)**:
+     - Visualizador interactivo piso a piso de Arquitecturas de Red (Archivos DV, Nodos de Control, Contraseñas DV, Black ICE hostil y Demonios).
+     - Contador dinámico de Acciones de Red (*Net Actions: 2..5*) basado en el Rango de Interfaz del Netrunner.
+     - Combate en la Red contra Black ICE (Asp, Hellhound, Giant, Kraken, Raven, etc.) con simulación de rez/derez de programas atacantes y defensores (Sword, Banhammer, Armor, Flak, Shield).
+     - Creador y simulador de Arquitecturas de Red personalizadas multietapa con exportación/guardado.
+  2. **Sistema de Quickhacking Era 2077 (`NetAndRolesDeckView.tsx`)**:
+     - Consola de hackeo inalámbrico en tiempo real mediante pool dinámico de RAM con recuperación reactiva.
+     - Biblioteca completa de Quickhacks ofensivos y de control (Short Circuit, Cyberware Malfunction, Overheat, Reboot Optics, Weapon Glitch, Memory Wipe, Suicide, Cyberpsychosis) con cálculo de costes de RAM, rangos y tiradas de ataque Cyberdeck vs Defensa objetivo.
+  3. **Estación de Habilidades de Rol Interactivas para los 10 Roles Oficiales**:
+     - Paneles dedicados con modificadores en vivo, calculadoras y tiradas en 1 clic:
+       - **Solo**: *Combat Awareness* con reparto interactivo de puntos a Iniciativa, Faded, Percepción Dañina y Esquiva.
+       - **Medtech**: *Medicine* con especialización en Cirugía (reparación de extremidades y órganos), Criogenia y Farmacia (creación de Speedheal, Stim y fármacos avanzados).
+       - **Tech**: *Maker* con subdisciplinas de Reparación de Campo, Fabricación, Modificación e Ingeniería inversa.
+       - **Nomad**: *Moto* con selección de vehículos de flota y mejoras mecánicas.
+       - **Rockerboy**: *Charismatic Impact* (afinidad de masas e influencia social).
+       - **Netrunner**: *Interface* (telemetría de cyberdeck y virus).
+       - **Fixer**: *Operator* (redes de contactos, regateo de precios y acceso al Night Market).
+       - **Media**: *Credibility* (publicación de noticias, credibilidad y scoops).
+       - **Exec**: *Teamwork* (cobertura corporativa, subordinados y beneficios de lujo).
+       - **Lawman**: *Backup* (llamada táctica por radio de refuerzos según el nivel de amenaza).
+  4. **Gestor de Vehículos y Monturas con SDP & Persecución (`StreetLabView.tsx` & `useCharacterStore.ts`)**:
+     - Pestaña de Garaje / Vehículos con seguimiento de SDP (*Structural Damage Points*), blindaje corporal/lunas, asientos, armas montadas, estado funcional (Operativo, Dañado, Crítico, Destruido) y modificadores de maniobras de persecución.
+  5. **Integración Completa del Módulo Premium `GOING METAL`**:
+     - Catálogo exhaustivo de los 13 Cuerpos FBC canónicos de *Interface RED Vol. 3* (Aquarius, Dragoon, Enforcer, Samson, Wingman, Gemini, Spyder, etc.).
+     - 16 nuevas piezas de ciberware FBC especializadas, nuevo Linear Frame externo y nuevo tipo de granada.
+     - Conmutador FBC interactivo en `CyberwareRipperdocView.tsx` y `StreetLabView.tsx` para transformar edgerunners en Full Body Conversions con chasis intercambiable, inmunidades de borgware y recálculo automático de Humanidad/Reparación.
+  6. **Integración Completa del Módulo Premium `CYBERFISTS OF FURY`**:
+     - 23 formas y estilos marciales avanzados de *Interface RED Vol. 4* sumadas a las 4 canónicas del Core Rulebook.
+     - 46 movimientos especiales de artes marciales en `CombatHudView.tsx` con verificación de requisitos de STATs, habilidades y DVs para llaves, proyecciones y combos devastadores.
+  7. **Integración Completa del Módulo Premium `DANGER GAL DOSSIER`**:
+     - Bestiario ampliado a 118 PNJs oficiales en sus 15 facciones en `EnemiesCompendiumPanel.tsx`.
+     - Flujo de creación de PNJs personalizados (*Custom NPC Creator*) en `FixerDeckView.tsx`.
+     - Tema visual "Danger Gal" (neón rosa/magenta/negro) y retratos de personajes oficiales.
+  8. **Cierre Oficial de Fase 3**: Todas las metas y dependencias arquitectónicas de la Fase 3 y los módulos premium de paridad quedan 100% integrados y verificados.
+
+---
 
 ### [v2.9.0] - 2026-10-17 (Cierre Completo de Fase 2: Ataques Apuntados, Biblioteca de 44 Enemigos/Jefes, Compendio Doble de 8 Sistemas FBC/2077 & Catálogo Multi-Libro de 368 Ítems)
 * **Category**: Phase 2 Complete (Aimed Shots, NPC Bestiary, Multi-Book Compendium & Expansion Systems)

@@ -2062,6 +2062,25 @@ def build_core_pack():
             "sourceBookTitle": "12 Days of Gunmas DLC",
             "era": "2045",
             "notes": "Neo-Soviet military sidearm with heavy compensator."
+        },
+        # Interface RED Vol. 3 (Going Metal - Granada)
+        {
+            "id": "grenade-laser-chaff",
+            "name": "Laser-Blinding / Chaff Grenade",
+            "type": "Heavy",
+            "skill": "Heavy Weapons",
+            "damage": "N/A",
+            "rof": 1,
+            "hands": 1,
+            "concealable": True,
+            "cost": 100,
+            "costTier": "Premium",
+            "standardMag": 1,
+            "ammoType": "Grenade",
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "notes": "Anti-sensor aerosol and blinding laser flash. +4 DV to ranged attacks crossing the 6m radius; disables smartlinks."
         }
     ]
 
@@ -2482,6 +2501,259 @@ def build_core_pack():
             "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
             "era": "2045",
             "description": "High-mobility covert operative FBC chassis. BODY 11, MOVE 8, integrated SP 13 armor."
+        },
+        {
+            "id": "fbc-biotechnica-sigma",
+            "name": "Chasis FBC: Biotechnica Sigma",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "0 (N/A)",
+            "cost": 32000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Hazardous environmental exploration FBC chassis. BODY 11, MOVE 6, SP 12. Full radiation and bio-hazard immunity."
+        },
+        {
+            "id": "fbc-dynalar-lotus",
+            "name": "Chasis FBC: Dynalar Executive Lotus",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "0 (N/A)",
+            "cost": 40000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Luxury corporate diplomatic FBC chassis. Polished lacquer and chrome exterior. BODY 9, MOVE 6, SP 11. +2 to social interactions."
+        },
+        {
+            "id": "fbc-lazarus-centurion",
+            "name": "Chasis FBC: Lazarus Centurion Mk.IV",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "0 (N/A)",
+            "cost": 45000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Armored urban combat leadership FBC chassis. BODY 13, MOVE 6, SP 14. Integrated tactical command suite."
+        },
+        {
+            "id": "fbc-sovoil-koschei",
+            "name": "Chasis FBC: SovOil Koschei Heavy Rig",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "0 (N/A)",
+            "cost": 38000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Abyssal sub-aquatic and arctic heavy operations FBC chassis. BODY 14, MOVE 4, SP 14. Hydro-jet propulsion."
+        },
+        {
+            "id": "fbc-kangtao-fenghuang",
+            "name": "Chasis FBC: Kang Tao Fenghuang Stealth Borg",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "0 (N/A)",
+            "cost": 42000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Infiltration thermoptic chameleon FBC chassis. BODY 10, MOVE 7, SP 12. Invisible to IR and thermal sensors."
+        },
+        {
+            "id": "fbc-continental-wiseman",
+            "name": "Chasis FBC: Continental Brands Wiseman Tech-Med",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "0 (N/A)",
+            "cost": 36000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Surgical and engineering mobile workshop FBC chassis. Quad-arm rig with 4 functional cyberarms. BODY 9, MOVE 5, SP 11."
+        },
+        # Going Metal FBC Cyberware Options (15 items)
+        {
+            "id": "fbc-internal-frame-sigma",
+            "name": "Internal Linear Frame Sigma (FBC Tuned)",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "2d6 (7)",
+            "cost": 6000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Internal chassis reinforcement setting cyborg BODY to 12."
+        },
+        {
+            "id": "fbc-internal-frame-beta",
+            "name": "Internal Linear Frame Beta (FBC Tuned)",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "3d6 (10)",
+            "cost": 10000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Hyper-dense titanium internal skeleton setting cyborg BODY to 14."
+        },
+        {
+            "id": "fbc-internal-frame-omega",
+            "name": "Internal Linear Frame Omega (BODY 16)",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "4d6 (14)",
+            "cost": 18000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Military apex biomechanics setting cyborg BODY to 16 with 4d6 unarmed damage."
+        },
+        {
+            "id": "fbc-hydraulic-rams",
+            "name": "FBC Hydraulic Rams",
+            "type": "Cyberarm Option",
+            "install": "Clinic",
+            "humanityLoss": "1d6 (3)",
+            "cost": 1000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "High-pressure arm pistons doubling grip strength and adding +2 unarmed damage."
+        },
+        {
+            "id": "fbc-magnetic-grip-feet",
+            "name": "FBC Magnetic Grip Feet",
+            "type": "Cyberleg Option",
+            "install": "Clinic",
+            "humanityLoss": "1d6 (3)",
+            "cost": 500,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Electromagnetic foot clamps allowing wall walking on steel surfaces and knockdown immunity."
+        },
+        {
+            "id": "fbc-overclocked-actuators",
+            "name": "FBC Overclocked Leg Actuators (+2 MOVE)",
+            "type": "Cyberleg Option",
+            "install": "Clinic",
+            "humanityLoss": "2d6 (7)",
+            "cost": 2000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Copper-wound high-conductive motor servos granting +2 MOVE to the chassis."
+        },
+        {
+            "id": "fbc-armored-biopod-casing",
+            "name": "FBC Armored Biopod Casing",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "1d6 (3)",
+            "cost": 3000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Carbon-ceramic head reinforcement increasing Biopod head armor from SP 18 to SP 20."
+        },
+        {
+            "id": "fbc-integrated-cyberdeck-bay",
+            "name": "FBC Integrated Cyberdeck Bay",
+            "type": "Neuralware Option",
+            "install": "Clinic",
+            "humanityLoss": "1d6 (3)",
+            "cost": 1500,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Internal pressurized bay housing a Cyberdeck with direct high-speed neural fiber bridge."
+        },
+        {
+            "id": "fbc-smartlink-ballistic-matrix",
+            "name": "FBC Smartlink Ballistic Matrix",
+            "type": "Neuralware Option",
+            "install": "Clinic",
+            "humanityLoss": "2d6 (7)",
+            "cost": 2500,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Neural coprocessor adding +1 bonus to all smartgun weapon attacks mounted on the chassis."
+        },
+        {
+            "id": "fbc-shoulder-weapon-mount",
+            "name": "FBC Heavy Shoulder Weapon Mount",
+            "type": "Borgware",
+            "install": "Hospital",
+            "humanityLoss": "2d6 (7)",
+            "cost": 3000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Scapular hardpoint allowing hands-free firing of shoulder-mounted long guns via mental trigger."
+        },
+        {
+            "id": "fbc-thermoptic-coating",
+            "name": "FBC Thermoptic Chameleon Coating",
+            "type": "External Body",
+            "install": "Hospital",
+            "humanityLoss": "3d6 (10)",
+            "cost": 5000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Electrochromic surface layer granting +3 to Stealth checks."
+        },
+        {
+            "id": "fbc-self-repair-nanites",
+            "name": "FBC Self-Repair Nanite Hive",
+            "type": "Internal Body",
+            "install": "Hospital",
+            "humanityLoss": "2d6 (7)",
+            "cost": 4000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Nanite manufacturing hive automatically repairing 1 point of ablative SP per hour."
+        },
+        {
+            "id": "fbc-emp-hardened-shielding",
+            "name": "FBC EMP/Hardened Shielding",
+            "type": "Internal Body",
+            "install": "Clinic",
+            "humanityLoss": "1d6 (3)",
+            "cost": 2000,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Internal Faraday cage providing +4 bonus against EMP and microwave discharges."
+        },
+        {
+            "id": "fbc-micro-thruster-jump",
+            "name": "FBC Micro-Thruster Jump Pack",
+            "type": "External Body",
+            "install": "Clinic",
+            "humanityLoss": "2d6 (7)",
+            "cost": 2500,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Vector thrusters negating fall damage and allowing 8m assisted power jumps."
+        },
+        {
+            "id": "fbc-auxiliary-power-core",
+            "name": "FBC Auxiliary Power Core",
+            "type": "Internal Body",
+            "install": "Clinic",
+            "humanityLoss": "1d6 (3)",
+            "cost": 1500,
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Secondary hydrogen fuel cell providing 72 hours emergency power reserve."
         }
     ]
 
@@ -2688,6 +2960,17 @@ def build_core_pack():
             "sourceBookTitle": "Black Chrome Tech & Style Guide",
             "era": "2045",
             "description": "Portable robotic cocktail station providing perfect refreshments for Night Market gigs."
+        },
+        # Interface RED Vol. 3 (Going Metal - Gear)
+        {
+            "id": "external-linear-frame-omega",
+            "name": "External Linear Frame Omega (BODY 16)",
+            "cost": 5000,
+            "costTier": "Luxury",
+            "sourceBook": "interface_red",
+            "sourceBookTitle": "Interface RED Vol. 3 (Going Metal)",
+            "era": "2045",
+            "description": "Heavy industrial powered exoskeleton rig granting BODY 16. Requires two Interface Plugs."
         }
     ]
 

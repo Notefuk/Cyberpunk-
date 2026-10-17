@@ -88,9 +88,18 @@ export interface WeaponAttackBreakdown {
   seriousWoundPenalty: number;
   injuryPenalty: number;
   encumbrancePenalty?: number;
+  soloPrecisionBonus?: number;
   totalPenalty: number;
   penaltyBreakdown: string[];
   netBase: number;
+}
+
+export function getEffectiveBody(character: CharacterSheet): number {
+  const baseBody = character.stats?.BODY ?? 0;
+  if (character.fbcState?.isFullBodyConversion && (character.fbcState.bodyOverride ?? 0) > 0) {
+    return Math.max(baseBody, character.fbcState.bodyOverride);
+  }
+  return baseBody;
 }
 
 export function calculateWeaponAttackBreakdown(
@@ -103,7 +112,13 @@ export function calculateWeaponAttackBreakdown(
   const statKey: StatKey = skillMeta.stat;
   const skillLabel = skillMeta.label;
 
-  const statVal = character.stats?.[statKey] ?? 0;
+  let statVal = character.stats?.[statKey] ?? 0;
+  if (statKey === 'BODY' && character.fbcState?.isFullBodyConversion && (character.fbcState.bodyOverride ?? 0) > 0) {
+    statVal = Math.max(statVal, character.fbcState.bodyOverride);
+  }
+  if (statKey === 'MOVE' && character.fbcState?.isFullBodyConversion && (character.fbcState.moveOverride ?? 0) > 0) {
+    statVal = character.fbcState.moveOverride;
+  }
   const skillVal = character.skills?.[skillKey] ?? 0;
 
   const penaltyBreakdown: string[] = [];
@@ -117,7 +132,8 @@ export function calculateWeaponAttackBreakdown(
   }
 
   // 2. Penalizador por Gravemente Herido (HP actual < 50% de Max HP: -2 a todas las acciones)
-  const maxHp = calculateMaxHp(character.stats?.BODY ?? 0, character.stats?.WILL ?? 0);
+  const effectiveBody = getEffectiveBody(character);
+  const maxHp = calculateMaxHp(effectiveBody, character.stats?.WILL ?? 0);
   const woundThreshold = calculateSeriouslyWoundedThreshold(maxHp);
   const isSeriouslyWounded = (character.currentHp ?? 0) < woundThreshold;
   const seriousWoundPenalty = isSeriouslyWounded ? 2 : 0;
@@ -163,8 +179,14 @@ export function calculateWeaponAttackBreakdown(
     penaltyBreakdown.push(`[Carga] ${encConfig.label}: -${encumbrancePenalty}`);
   }
 
+  // 5. Bonificador de Solo: Combat Awareness (Precision Attack)
+  const soloPrecisionBonus = character.soloAllocation?.precisionAttack ?? 0;
+  if (soloPrecisionBonus > 0) {
+    penaltyBreakdown.push(`[Combat Awareness] Precision Attack: +${soloPrecisionBonus}`);
+  }
+
   const totalPenalty = armorPenalty + seriousWoundPenalty + injuryPenalty + encumbrancePenalty;
-  const netBase = statVal + skillVal - totalPenalty;
+  const netBase = statVal + skillVal - totalPenalty + soloPrecisionBonus;
 
   return {
     statKey,
@@ -176,6 +198,7 @@ export function calculateWeaponAttackBreakdown(
     seriousWoundPenalty,
     injuryPenalty,
     encumbrancePenalty,
+    soloPrecisionBonus,
     totalPenalty,
     penaltyBreakdown,
     netBase
@@ -183,7 +206,10 @@ export function calculateWeaponAttackBreakdown(
 }
 
 export function getEffectiveMove(character: CharacterSheet): number {
-  const baseMove = character.stats?.MOVE ?? 0;
+  let baseMove = character.stats?.MOVE ?? 0;
+  if (character.fbcState?.isFullBodyConversion && (character.fbcState.moveOverride ?? 0) > 0) {
+    baseMove = character.fbcState.moveOverride;
+  }
   let penalty = 0;
   const headPen = Math.abs(character.headArmor?.penalty ?? 0);
   const bodyPen = Math.abs(character.bodyArmor?.penalty ?? 0);

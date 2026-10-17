@@ -156,25 +156,78 @@
 
 ---
 
-## 🧠 FASE 3 (v3.0 – v3.4): Sistemas Profundos (Netrunning 2045, Quickhacks 2077, Roles) y Funciones Premium Companion App [PENDIENTE]
+## 💎 CATÁLOGO DE MÓDULOS PREMIUM & EXPANSIONES (Paridad Companion App — Separados por Nombre)
+
+> **ALCANCE Y METODOLOGÍA**: Estos 5 módulos corresponden a los paquetes de expansión Premium de la *Cyberpunk RED Companion App* identificados en las capturas de pantalla del usuario. Para garantizar máxima fidelidad y cero duplicación, esta sección desglosa las adiciones pendientes específicas paquete por paquete, integrándose directamente con la arquitectura del Omni-Deck en **Fase 3** y **Fase 4**.
+
+### 1. `GOING METAL` (Full Body Conversions Completo)
+*Módulo de conversión a cuerpo completo y cibernética de alta gama (*Interface RED Vol. 3*).*
+*(Nota: En Fase 2 ya se implementó la sección explicativa "About FBCs", la Biovaina y los primeros 7 cuerpos FBC).*
+- [x] **Completar los 13 Cuerpos FBC (`13 FBC Bodies`)**: Añadir los 6 chasis FBC restantes para llegar a los 13 oficiales.
+- [x] **16 Nuevas Piezas de Cyberware FBC (`16 New Pieces of Cyberware`)**: Implantes exclusivos y adaptados para cuerpos cyborg.
+- [x] **Nuevo Linear Frame Externo (`New External Linear Frame`)** y **Nuevo Tipo de Granada (`New Grenade Type`)**.
+- [x] **Modo Interactivo FBC en Hoja de Personaje y Ripperdoc**: Conmutador para transformar un personaje activo en Full Body Conversion aplicando automáticamente sus reglas de chasis intercambiable, inmunidades y cálculo de Humanidad/Reparación.
+
+### 2. `NIGHT CITY 2045` (Atlas Interactivo, Distritos, Facciones y Plot Hooks)
+*Módulo de cartografía urbana, geopolítica distrital y generador narrativo de misiones.*
+- [ ] **Mapa Interactivo de Night City 2045 (`Interactive Map of Night City`)**.
+- [ ] **25 Distritos Buscables (`25 Searchable Districts`)** y **700+ Ubicaciones Buscables (`700+ Searchable Locations`)** con filtros por tipo (*Médico, Transporte, Night Markets, Corporativo, Ripperdocs, Bares, etc.*).
+- [ ] **73 Facciones Buscables (`73 Searchable Factions`)** asociadas a sus guaridas y zonas de influencia directamente en el mapa interactivo.
+- [ ] **112 Nuevos PNJs de Distrito (`112 New NPCs`)** vinculados a su distrito correspondiente.
+- [ ] **130 Ganchos de Trama / Misiones (`130 Plot Hooks`)** para inspirar a GMs y jugadores.
+- [ ] **Ubicaciones Personalizadas (`Custom Locations`)**: Capacidad de añadir ubicaciones propias al mapa interactivo y compartirlas/hacerlas buscables para los jugadores de la sesión.
+
+### 3. `CYBERFISTS OF FURY` (Artes Marciales Completas — *Interface RED Vol. 4*)
+*Módulo de combate desarmado avanzado, disciplinas milenarias y técnicas especiales de combate cuerpo a cuerpo.*
+- [x] **23 Nuevas Formas/Estilos de Artes Marciales (`23 New Martial Art Forms`)** (además de Aikido, Karate, Judo y Taekwondo del Core Book).
+- [x] **46 Nuevos Movimientos Especiales de Artes Marciales (`46 New Martial Art Moves`)** integrados en el HUD de Combate para ejecutar llaves, golpes especiales y combos con sus requisitos de STATS y DVs.
+
+### 4. `SOLO OF FORTUNE` (Armaduras de Poder ACPA & Arsenal Pesado)
+*Módulo de guerra pesada corporativa, exoesqueletos blindados y balística militar de vanguardia.*
+- [ ] **Tipo de Armadura ACPA (`ACPA Armor Type` — *Assisted Combat Personnel Armor*)** y **Constructor Personalizado de ACPA (`Custom ACPA Builder`)**.
+- [ ] **10 Modelos de ACPA (`10 ACPAs`)** listos para equipar y pilotar.
+- [ ] **13 Nuevas Armas (`13 New Weapons`)**, **8 Nuevos Accesorios de Armas (`8 New Weapon Attachments`)** y **15 Nuevas Tablas de Rango de Armas (`15 New Weapon Range Tables`)**.
+- [ ] **12 Nuevas Municiones y Explosivos (`12 New Ammunition & Explosives`)**, **3 Nuevos Sets de Armadura (`3 New Armor Sets`)** y **10 Nuevas Piezas de Equipo (`10 New Pieces of Gear`)**.
+
+### 5. `DANGER GAL DOSSIER` (Expansión Completa de Facciones, Creador de NPCs y Tema Visual)
+*Módulo de inteligencia civil, agencias de detectives, facciones encubiertas y diseño de encuentros.*
+*(Nota: En Fase 2 ya se integró una primera tanda de operativos y armas de Danger Gal).*
+- [x] **Completar los 118 PNJs Oficiales (`118 New NPCs`)** distribuidos en las **15 Facciones (`15 Factions`)**.
+- [x] **Nuevo Flujo de Creación de PNJs Personalizados (`New Workflow for Custom NPCs`)** para el Director de Juego.
+- [x] **Tema Visual "Danger Gal" (`Danger Gal Theme`)** seleccionable en la interfaz y **Retratos de Personajes (`New Character Portraits`)**.
+
+---
+
+## 🧠 FASE 3 (v3.0 – v3.4): Sistemas Profundos (Netrunning 2045, Quickhacks 2077, Roles) y Funciones Premium Companion App [COMPLETADO]
 - [x] **Maniquí Anatómico de Ciberware & Menú Ripperdoc (`CyberwareRipperdocView.tsx`)**:
   - Silueta holográfica en A-Pose con flechas conectoras hacia las 8 zonas corporales + Fashionware.
   - Ranuras de opción visuales estilo 2077 con ilustraciones vectoriales, telemetría de Humanidad/SP e instalador Ripperdoc con tirada Xd6.
-- [ ] **Simulador de Pisos de Red 2045 (`NetArchitectureRunner.tsx`)**:
+- [x] **Simulador de Pisos de Red 2045 (`NetAndRolesDeckView.tsx` & `netAndRolesData.ts`)**:
   - Escalera virtual de pisos de red: Archivos, Nodos de Control, Contraseñas, Black ICE.
   - Contador de Acciones de Red (Net Actions) basado en el Rango de Interfaz.
   - Combate Netrunner vs Black ICE con rez/derez de programas.
-- [ ] **Sistema de Quickhacking 2077 (`QuickhacksDeck.tsx`)**:
+- [x] **Sistema de Quickhacking 2077 (`NetAndRolesDeckView.tsx`)**:
   - Hackeo inalámbrico en combate utilizando pool de RAM.
   - Quickhacks ofensivos y de control (Short Circuit, Cyberware Malfunction, Overheat).
-- [ ] **Habilidades de Rol Específicas**:
+- [x] **Habilidades de Rol Específicas**:
   - Solos (Combat Awareness), Medtechs (Farmacia/Cirugía/Criogenia), Techs (Maker), Nomads (Moto).
-- [ ] **Paridad y Superación de Funciones Premium de Cyberpunk RED Companion App (`EncounterManager.tsx`, `VehicleTracker.tsx`, etc.)**:
+- [x] **Paridad y Superación de Funciones Premium de Cyberpunk RED Companion App (`FixerDeckView.tsx`, `NetAndRolesDeckView.tsx`, etc.)**:
   - Generador y gestor interactivo de encuentros y combate táctico multiobjetivo (tracking dinámico de Mooks y Bosses en tiempo real, turnos de iniciativa, monitoreo de HP/SP y tiradas grupales).
   - Gestor completo de vehículos y monturas con seguimiento de SDP (puntos de daño estructural), blindaje, asientos, armas montadas y maniobras de persecución.
   - Creador y simulador de Arquitecturas de Red personalizadas multietapa con guardado, edición y exportación.
   - Exportación e importación universal de fichas de personajes y NPCs en formatos estándar (JSON interoperable y PDF imprimible fiel a la hoja oficial de personaje).
   - Consola de Director de Juego (Fixer Deck) enriquecida con notas secretas por escena, tablas de botín (loot tables) automáticas y bitácora cronológica de eventos.
+- [x] **Integración Módulo Premium `GOING METAL` (FBCs & Ciberware)**:
+  - Completar los 13 Cuerpos FBC oficiales (+6 chasis restantes sobre los 7 de Fase 2).
+  - 16 nuevas piezas de ciberware FBC, nuevo Linear Frame externo y nuevo tipo de granada.
+  - Conmutador interactivo FBC en Hoja de Personaje y Ripperdoc (`CyberwareRipperdocView.tsx`) con chasis intercambiables, inmunidades de borgware y recálculo automático de Humanidad/Reparación.
+- [x] **Integración Módulo Premium `CYBERFISTS OF FURY` (Artes Marciales Avanzadas — *Interface RED Vol. 4*)**:
+  - 23 nuevas formas/estilos de artes marciales (sumadas a Aikido, Karate, Judo y Taekwondo).
+  - 46 nuevos movimientos especiales de artes marciales integrados en el HUD de Combate (`CombatHudView.tsx`) para ejecutar llaves, golpes especiales y combos con sus requisitos de STATs y DVs.
+- [x] **Integración Módulo Premium `DANGER GAL DOSSIER` (Expansión de Facciones, NPCs y Estilo)**:
+  - Completar los 118 PNJs oficiales en sus 15 facciones en el bestiario táctico (`EnemiesCompendiumPanel.tsx`).
+  - Flujo de creación de PNJs personalizados (*New Workflow for Custom NPCs*) integrado en la Consola Fixer (`FixerDeckView.tsx`).
+  - Tema visual "Danger Gal" (neón rosa/magenta/negro) y nuevos retratos de personajes oficiales.
 
 ---
 
@@ -192,6 +245,18 @@
 - [ ] **Efectos Táctiles de Audio & Visuales (SFX / VFX)**:
   - Clics metálicos de recarga, detonaciones procedurales y zumbidos de Sandevistan vía Web Audio API.
   - Vignetting rojo al caer en Herida Grave y glitch visual ante daño de Netrunning.
+- [ ] **Integración Módulo Premium `NIGHT CITY 2045` (Atlas Interactivo, Distritos, Facciones y Plot Hooks)**:
+  - Mapa interactivo de Night City 2045 con navegación táctica SVG/Canvas.
+  - 25 distritos buscables y 700+ ubicaciones buscables con filtros por tipo (*Médico, Transporte, Night Markets, Corporativo, Ripperdocs, Bares, etc.*).
+  - 73 facciones buscables con guaridas y zonas de influencia asociadas directamente en el mapa.
+  - 112 nuevos PNJs de distrito vinculados a sus zonas territoriales.
+  - Generador de 130 ganchos de trama / misiones (*Plot Hooks*) para inspirar a GMs y jugadores.
+  - Creador y gestor de ubicaciones personalizadas (*Custom Locations*) para añadir y compartir en mesa.
+- [ ] **Integración Módulo Premium `SOLO OF FORTUNE` (Armaduras de Poder ACPA & Arsenal Pesado)**:
+  - Soporte de tipo de armadura ACPA (*Assisted Combat Personnel Armor*) y Constructor Personalizado de ACPA (*Custom ACPA Builder*).
+  - 10 modelos oficiales de ACPA listos para equipar y pilotar.
+  - 13 nuevas armas, 8 nuevos accesorios de armas y 15 nuevas tablas de rango de armas dedicadas.
+  - 12 nuevas municiones y explosivos, 3 nuevos sets de armadura y 10 nuevas piezas de equipo.
 
 ---
 

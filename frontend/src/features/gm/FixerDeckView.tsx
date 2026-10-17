@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { 
   calculateMaxHp, 
@@ -7,6 +7,7 @@ import {
 import type { EncumbranceMode } from '../../types/cyberpunk';
 import { EnemiesCompendiumPanel } from './EnemiesCompendiumPanel';
 import type { EnemySheet } from '../../data/enemiesCatalog';
+import { GM_LOOT_TABLES } from '../../data/netAndRolesData';
 import { 
   Terminal, 
   Shield, 
@@ -25,7 +26,12 @@ import {
   X, 
   Package, 
   Flame, 
-  UserCheck 
+  UserCheck,
+  FileText,
+  Copy,
+  Clock,
+  Gift,
+  Check
 } from 'lucide-react';
 
 interface InitiativeCombatant {
@@ -182,6 +188,94 @@ export function FixerDeckView() {
   const showFeedback = (msg: string) => {
     setFeedbackMessage(msg);
     setTimeout(() => setFeedbackMessage(null), 3500);
+  };
+
+  // 4. GM Loot Generator State
+  const [selectedLootTableId, setSelectedLootTableId] = useState<string>(GM_LOOT_TABLES[0].id);
+  const [rolledLoot, setRolledLoot] = useState<{
+    tableId: string;
+    tableName: string;
+    roll: number;
+    item: string;
+    value: string;
+    notes?: string;
+  } | null>(null);
+
+  const handleRollLoot = () => {
+    const table = GM_LOOT_TABLES.find((t) => t.id === selectedLootTableId) || GM_LOOT_TABLES[0];
+    const roll = rollD10();
+    const entry = table.entries.find((e) => e.roll === roll) || table.entries[0];
+    setRolledLoot({
+      tableId: table.id,
+      tableName: table.name,
+      roll,
+      item: entry.item,
+      value: entry.value,
+      notes: entry.notes
+    });
+    showFeedback(`🎲 Tirada de Botín 1d10 [${roll}]: ${entry.item}`);
+  };
+
+  const handleAwardLootValue = () => {
+    if (!rolledLoot) return;
+    const match = rolledLoot.value.match(/([\d,]+)/);
+    if (!match) {
+      showFeedback(`ℹ️ El botín "${rolledLoot.item}" tiene valor variable o no monetario.`);
+      return;
+    }
+    const cleanNum = parseInt(match[1].replace(/,/g, ''), 10);
+    if (isNaN(cleanNum) || cleanNum <= 0) return;
+    const perChar = Math.floor(cleanNum / Math.max(1, characters.length));
+    gmPayAllCharacters(`Botín de Escena: ${rolledLoot.item}`, perChar);
+    showFeedback(`💰 Se transfirieron ${cleanNum} €$ divididos entre el grupo (${perChar} €$ c/u).`);
+  };
+
+  // 5. GM Secret Scene Notes State
+  const [secretNotes, setSecretNotes] = useState<string>(() => {
+    try {
+      return localStorage.getItem('cpr_gm_secret_notes_v1') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('cpr_gm_secret_notes_v1', secretNotes);
+    } catch (e) {
+      console.error('Failed to save secret notes:', e);
+    }
+  }, [secretNotes]);
+
+  const handleInsertTimestamp = () => {
+    const now = new Date();
+    const timeStr = `[${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}] `;
+    setSecretNotes((prev) => (prev ? `${prev}\n${timeStr}` : timeStr));
+  };
+
+  const handleInsertTemplate = (type: 'scene' | 'clues' | 'combat') => {
+    let tpl = '';
+    if (type === 'scene') {
+      tpl = `\n### 🎬 NUEVA ESCENA // LOCALIZACIÓN: \n- Objetivo Táctico: \n- NPCs Clave / Actores: \n- DVs Relevantes (Percepción / Atletismo / Sigilo): \n- Recompensa Estimada: \n`;
+    } else if (type === 'clues') {
+      tpl = `\n### 🕵️ PISTAS & RUMORES FIXER: \n- Pista Obvia (Pública en Data Pool): \n- Pista Oculta (Percepción o Deduction DV 13): \n- Secreto Peligroso (Extorsión o Megacorp): \n`;
+    } else if (type === 'combat') {
+      tpl = `\n### 💀 CONSECUENCIAS & BAJAS DE COMBATE: \n- Bajas enemigas confirmadas: \n- Daño colateral / Testigos: \n- Nivel de Alerta Policial (NCPD / C-SWAT): \n`;
+    }
+    setSecretNotes((prev) => (prev ? `${prev}${tpl}` : tpl.trimStart()));
+    showFeedback('Plantilla insertada en las notas secretas.');
+  };
+
+  const handleCopyNotes = () => {
+    navigator.clipboard.writeText(secretNotes);
+    showFeedback('📋 Notas secretas copiadas al portapapeles.');
+  };
+
+  const handleClearNotes = () => {
+    if (window.confirm('¿Seguro que deseas vaciar todas las notas secretas?')) {
+      setSecretNotes('');
+      showFeedback('🗑️ Notas secretas eliminadas.');
+    }
   };
 
   // Roll players initiative (1d10 + REF)
@@ -1160,7 +1254,236 @@ export function FixerDeckView() {
         </div>
       )}
 
-      {/* 5. BIBLIOTECA MASIVA DE ENEMIGOS, GOONS Y JEFES (44 FICHAS CANÓNICAS) */}
+      {/* ========================================================================= */}
+      {/* 5. GM LOOT GENERATOR // 6 TABLAS CANÓNICAS DE BOTÍN (TIRADA 1d10) */}
+      {/* ========================================================================= */}
+      <div className="chamfer-card p-4 bg-[#0e1017] border border-[#202538] space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#1b2030]">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 bg-[#f59e0b]/20 border border-[#f59e0b] rounded-xs text-[#f59e0b]">
+              <Gift className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="font-tech text-base font-bold text-white uppercase tracking-wider">
+                GENERADOR DE BOTÍN TÁCTICO // 6 TABLAS 1d10
+              </h2>
+              <p className="text-[11px] font-mono-code text-slate-400">
+                Tablas canónicas: Chatarra callejera, alijos de armas, ciberware, datos corporativos, contrabando y drogas
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleRollLoot}
+              className="px-4 py-2 bg-[#f59e0b] hover:bg-white text-black font-tech font-black text-xs uppercase tracking-wider rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-[0_0_12px_rgba(245,158,11,0.35)]"
+            >
+              <Dices className="w-4 h-4" />
+              <span>🎲 TIRAR BOTÍN (1d10)</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Table Selector Pills */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+          {GM_LOOT_TABLES.map((table) => {
+            const isSelected = selectedLootTableId === table.id;
+            return (
+              <button
+                key={table.id}
+                onClick={() => setSelectedLootTableId(table.id)}
+                className={`p-2.5 text-left rounded-xs border transition-all cursor-pointer flex flex-col justify-between ${
+                  isSelected
+                    ? 'bg-[#1e1724] border-[#f59e0b] shadow-[0_0_10px_rgba(245,158,11,0.25)]'
+                    : 'bg-[#10131e] border-[#1f2436] hover:bg-[#161a29]'
+                }`}
+              >
+                <span className={`text-[10px] font-mono-code font-bold line-clamp-2 ${isSelected ? 'text-[#f59e0b]' : 'text-slate-300'}`}>
+                  {table.name}
+                </span>
+                <span className="text-[9px] font-mono-code text-slate-500 mt-1 block">
+                  10 entradas
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Active Rolled Result Banner */}
+        {rolledLoot && (
+          <div className="p-3.5 bg-[#17141f] border-2 border-[#f59e0b] rounded-xs space-y-2 animate-in fade-in duration-150">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <span className="font-tech text-xs font-bold text-[#f59e0b] uppercase bg-[#f59e0b]/20 px-2 py-0.5 rounded border border-[#f59e0b]/40">
+                  TIRADA 1d10: #{rolledLoot.roll}
+                </span>
+                <span className="text-[11px] font-mono-code text-slate-400">
+                  {rolledLoot.tableName}
+                </span>
+              </div>
+              <span className="text-sm font-tech font-black text-[#00f5d4]">
+                Valor: {rolledLoot.value}
+              </span>
+            </div>
+
+            <div className="p-3 bg-[#0c0e16] border border-[#23293c] rounded-xs flex flex-wrap items-center justify-between gap-3">
+              <div className="space-y-0.5">
+                <h4 className="font-tech text-base font-bold text-white">
+                  {rolledLoot.item}
+                </h4>
+                {rolledLoot.notes && (
+                  <p className="text-[11px] font-mono-code text-amber-300">
+                    ⚠ {rolledLoot.notes}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleAwardLootValue}
+                  className="px-3 py-1.5 bg-[#00f5d4] hover:bg-white text-black font-tech text-xs font-bold uppercase rounded-xs transition-colors cursor-pointer flex items-center gap-1 shadow-sm"
+                  title="Dividir el valor en Eurodólares entre los personajes del Roster"
+                >
+                  <Coins className="w-3.5 h-3.5" />
+                  <span>+ ASIGNAR A GRUPO</span>
+                </button>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${rolledLoot.item} (Valor: ${rolledLoot.value})`);
+                    showFeedback('Botín copiado al portapapeles.');
+                  }}
+                  className="px-2.5 py-1.5 bg-[#1a2030] hover:bg-[#28324a] text-slate-300 hover:text-white font-mono-code text-xs rounded-xs border border-[#2b374e] cursor-pointer"
+                >
+                  <Copy className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Selected Table Full 10 Entries Grid */}
+        {(() => {
+          const currentTable = GM_LOOT_TABLES.find((t) => t.id === selectedLootTableId) || GM_LOOT_TABLES[0];
+          return (
+            <div className="space-y-1.5 pt-1 border-t border-[#1a1f2e]">
+              <div className="flex items-center justify-between text-[11px] font-mono-code text-slate-400">
+                <span>Tabla Activa: <strong className="text-white">{currentTable.name}</strong></span>
+                <span>{currentTable.description}</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                {currentTable.entries.map((entry) => {
+                  const isHit = rolledLoot && rolledLoot.tableId === currentTable.id && rolledLoot.roll === entry.roll;
+                  return (
+                    <div
+                      key={entry.roll}
+                      className={`p-2 rounded-xs border text-xs font-mono-code flex items-center justify-between gap-2 transition-colors ${
+                        isHit
+                          ? 'bg-[#f59e0b]/20 border-[#f59e0b] text-white shadow-[0_0_8px_rgba(245,158,11,0.3)]'
+                          : 'bg-[#10131e] border-[#1e2334] text-slate-300'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <span className={`w-6 h-6 flex items-center justify-center font-tech font-bold rounded text-xs flex-shrink-0 ${
+                          isHit ? 'bg-[#f59e0b] text-black' : 'bg-[#171b26] text-slate-400 border border-[#222738]'
+                        }`}>
+                          {entry.roll}
+                        </span>
+                        <span className="truncate">{entry.item}</span>
+                      </div>
+                      <span className="text-[11px] font-bold text-[#f59e0b] whitespace-nowrap">
+                        {entry.value}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 6. SECRET SCENE NOTES // NOTAS SECRETAS DEL GM CON AUTO-GUARDADO */}
+      {/* ========================================================================= */}
+      <div className="chamfer-card p-4 bg-[#0e1017] border border-[#202538] space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-[#1b2030]">
+          <div className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-[#38bdf8]" />
+            <div>
+              <h2 className="font-tech text-sm font-bold text-white uppercase tracking-wider">
+                SECRET SCENE NOTES // CUADERNO DE CAMPAÑA GM
+              </h2>
+              <p className="text-[10px] font-mono-code text-slate-400">
+                Registro privado local sin spoilers para jugadores • Auto-guardado en tiempo real
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-1.5">
+            <button
+              onClick={handleInsertTimestamp}
+              className="px-2.5 py-1 bg-[#151c2a] hover:bg-[#38bdf8] text-[#38bdf8] hover:text-black border border-[#24334a] font-mono-code text-[11px] font-bold rounded-xs transition-colors cursor-pointer flex items-center gap-1"
+              title="Insertar hora actual [HH:MM]"
+            >
+              <Clock className="w-3 h-3" />
+              <span>Timestamp</span>
+            </button>
+            <button
+              onClick={() => handleInsertTemplate('scene')}
+              className="px-2.5 py-1 bg-[#151c2a] hover:bg-[#10b981] text-[#10b981] hover:text-black border border-[#1e3a2f] font-mono-code text-[11px] font-bold rounded-xs transition-colors cursor-pointer"
+            >
+              + Escena
+            </button>
+            <button
+              onClick={() => handleInsertTemplate('clues')}
+              className="px-2.5 py-1 bg-[#151c2a] hover:bg-[#f59e0b] text-[#f59e0b] hover:text-black border border-[#3d2e1c] font-mono-code text-[11px] font-bold rounded-xs transition-colors cursor-pointer"
+            >
+              + Pistas
+            </button>
+            <button
+              onClick={() => handleInsertTemplate('combat')}
+              className="px-2.5 py-1 bg-[#151c2a] hover:bg-[#ef4444] text-[#ef4444] hover:text-white border border-[#3d1c1c] font-mono-code text-[11px] font-bold rounded-xs transition-colors cursor-pointer"
+            >
+              + Bajas
+            </button>
+            <button
+              onClick={handleCopyNotes}
+              className="px-2.5 py-1 bg-[#1c2232] hover:bg-white text-slate-300 hover:text-black border border-[#2b354d] font-mono-code text-[11px] rounded-xs cursor-pointer flex items-center gap-1"
+              title="Copiar texto de notas"
+            >
+              <Copy className="w-3 h-3" />
+              <span>Copiar</span>
+            </button>
+            {secretNotes && (
+              <button
+                onClick={handleClearNotes}
+                className="p-1 text-slate-500 hover:text-red-400 cursor-pointer"
+                title="Limpiar notas"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="space-y-1">
+          <textarea
+            rows={8}
+            value={secretNotes}
+            onChange={(e) => setSecretNotes(e.target.value)}
+            placeholder="Escribe notas secretas de la sesión, pistas descubiertas por los jugadores, números de teléfono de Fixers, contraseñas de terminales o recompensas pendientes..."
+            className="w-full bg-[#08090f] border border-[#22293c] focus:border-[#38bdf8] text-slate-200 font-mono-code text-xs p-3 rounded-xs focus:outline-none leading-relaxed resize-y"
+          />
+          <div className="flex items-center justify-between text-[10px] font-mono-code text-slate-500 pt-0.5">
+            <span>{secretNotes.length} caracteres • {secretNotes.split(/\s+/).filter(Boolean).length} palabras</span>
+            <span className="text-emerald-500 flex items-center gap-1">
+              <Check className="w-3 h-3" /> Guardado automáticamente en navegador
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* 7. BIBLIOTECA MASIVA DE ENEMIGOS, GOONS Y JEFES (15 FACCIONES & 128 FICHAS) */}
       <EnemiesCompendiumPanel onSpawnToInitiative={handleAddGoonFromSheet} />
     </div>
   );

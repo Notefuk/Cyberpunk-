@@ -3,6 +3,8 @@ import { persist } from 'zustand/middleware';
 import type {
   ActiveCriticalInjury,
   ActiveDrugEffect,
+  ActiveFbcState,
+  AppThemeId,
   ArmorItem,
   CharacterDebt,
   CharacterLifepath,
@@ -12,10 +14,14 @@ import type {
   EquippedWeapon,
   EurodollarTransaction,
   InventoryItem,
+  MedtechCryoAndPharma,
+  OwnedVehicle,
+  SoloCombatAwarenessAllocation,
   StatKey,
+  TechMakerProject,
   WeaponItem
 } from '../types/cyberpunk';
-import { calculateMaxHp } from '../engine/characterEngine';
+import { calculateMaxHp, getEffectiveBody } from '../engine/characterEngine';
 import { calculateArmorAblation } from '../engine/combatEngine';
 import { rollCriticalInjury } from '../data/criticalInjuries';
 
@@ -382,6 +388,43 @@ export interface CharacterStoreState {
   updateCharacterLifepath: (partial: Partial<CharacterLifepath>) => void;
   updateCharacterDebt: (debt: CharacterDebt | undefined) => void;
   payOffCharacterDebt: (amount: number) => void;
+
+  // Visual Theme
+  appTheme: AppThemeId;
+  setAppTheme: (theme: AppThemeId) => void;
+
+  // Portrait
+  setCharacterPortrait: (portraitId: string) => void;
+
+  // FBC (Going Metal)
+  activateFullBodyConversion: (chassis: {
+    id: string;
+    name: string;
+    bodyOverride: number;
+    moveOverride: number;
+    baseArmorSp: number;
+    humanityCost: number;
+    immunities: string[];
+  }) => void;
+  deactivateFullBodyConversion: () => void;
+
+  // Solo Combat Awareness
+  updateSoloAllocation: (allocation: SoloCombatAwarenessAllocation) => void;
+
+  // Martial Arts
+  updateMartialArtRank: (formId: string, rank: number) => void;
+
+  // Vehicles (Nomad Garage)
+  addVehicleToCharacter: (vehicle: OwnedVehicle) => void;
+  updateVehicleSdp: (instanceId: string, deltaSdp: number) => void;
+  updateVehicleArmorSp: (instanceId: string, deltaSp: number) => void;
+  removeVehicleFromCharacter: (instanceId: string) => void;
+
+  // Medtech Cryo & Pharma Lab
+  updateMedtechLab: (lab: MedtechCryoAndPharma) => void;
+
+  // Tech Maker Projects
+  updateTechProjects: (projects: TechMakerProject[]) => void;
 }
 
 export const useCharacterStore = create<CharacterStoreState>()(
@@ -389,6 +432,10 @@ export const useCharacterStore = create<CharacterStoreState>()(
     (set, get) => ({
       characters: [INITIAL_CHARACTER_V, INITIAL_CHARACTER_KIWI],
       activeCharacterId: INITIAL_CHARACTER_V.id,
+      appTheme:
+        (typeof window !== 'undefined'
+          ? (localStorage.getItem('cpr_app_theme_v1') as AppThemeId)
+          : null) || 'neo_red',
 
       getActiveCharacter: () => {
         const state = get();
@@ -1511,6 +1558,233 @@ export const useCharacterStore = create<CharacterStoreState>()(
                 amount: remainingDebt,
                 isActive: !isDebtClear
               }
+            };
+          })
+        }));
+      },
+
+      setAppTheme: (theme: AppThemeId) => {
+        if (typeof window !== 'undefined') {
+          try {
+            localStorage.setItem('cpr_app_theme_v1', theme);
+          } catch {
+            // ignore storage errors
+          }
+        }
+        set({ appTheme: theme });
+      },
+
+      setCharacterPortrait: (portraitId: string) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              portraitId
+            };
+          })
+        }));
+      },
+
+      activateFullBodyConversion: (chassis: {
+        id: string;
+        name: string;
+        bodyOverride: number;
+        moveOverride: number;
+        baseArmorSp: number;
+        humanityCost: number;
+        immunities: string[];
+      }) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            const wasAlreadyFbc = Boolean(c.fbcState?.isFullBodyConversion);
+            const humanityCost = wasAlreadyFbc ? 0 : (chassis.humanityCost ?? 0);
+            const newHumanity = Math.max(0, (c.currentHumanity ?? 0) - humanityCost);
+
+            const oldMaxHp = calculateMaxHp(getEffectiveBody(c), c.stats?.WILL ?? 0);
+
+            const newFbcState: ActiveFbcState = {
+              isFullBodyConversion: true,
+              hasBiopod: true,
+              activeChassisId: chassis.id,
+              activeChassisName: chassis.name,
+              bodyOverride: chassis.bodyOverride,
+              moveOverride: chassis.moveOverride,
+              baseArmorSp: chassis.baseArmorSp,
+              immunities: chassis.immunities || []
+            };
+
+            const updatedCharTemp: CharacterSheet = {
+              ...c,
+              fbcState: newFbcState,
+              stats: {
+                ...c.stats,
+                BODY: Math.max(c.stats?.BODY ?? 0, chassis.bodyOverride),
+                MOVE: chassis.moveOverride
+              }
+            };
+
+            const newMaxHp = calculateMaxHp(getEffectiveBody(updatedCharTemp), updatedCharTemp.stats?.WILL ?? 0);
+            const hpDiff = newMaxHp - oldMaxHp;
+            const newHp = Math.max(1, (c.currentHp ?? 0) + (hpDiff > 0 ? hpDiff : 0));
+
+            let headArmor = c.headArmor;
+            let bodyArmor = c.bodyArmor;
+
+            if (chassis.baseArmorSp > 0) {
+              if (!headArmor || chassis.baseArmorSp > headArmor.maxSp) {
+                headArmor = {
+                  name: `${chassis.name} Chassis Plating (Head)`,
+                  maxSp: chassis.baseArmorSp,
+                  currentSp: chassis.baseArmorSp,
+                  penalty: 0
+                };
+              }
+              if (!bodyArmor || chassis.baseArmorSp > bodyArmor.maxSp) {
+                bodyArmor = {
+                  name: `${chassis.name} Chassis Plating (Body)`,
+                  maxSp: chassis.baseArmorSp,
+                  currentSp: chassis.baseArmorSp,
+                  penalty: 0
+                };
+              }
+            }
+
+            return {
+              ...updatedCharTemp,
+              currentHumanity: newHumanity,
+              currentHp: newHp,
+              headArmor,
+              bodyArmor
+            };
+          })
+        }));
+      },
+
+      deactivateFullBodyConversion: () => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            if (!c.fbcState?.isFullBodyConversion) return c;
+
+            const newFbcState: ActiveFbcState = {
+              ...c.fbcState,
+              isFullBodyConversion: false
+            };
+
+            return {
+              ...c,
+              fbcState: newFbcState
+            };
+          })
+        }));
+      },
+
+      updateSoloAllocation: (allocation: SoloCombatAwarenessAllocation) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              soloAllocation: allocation
+            };
+          })
+        }));
+      },
+
+      updateMartialArtRank: (formId: string, rank: number) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentForms = c.knownMartialArts || {};
+            return {
+              ...c,
+              knownMartialArts: {
+                ...currentForms,
+                [formId]: Math.max(0, rank)
+              }
+            };
+          })
+        }));
+      },
+
+      addVehicleToCharacter: (vehicle: OwnedVehicle) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              vehicles: [...(c.vehicles || []), vehicle]
+            };
+          })
+        }));
+      },
+
+      updateVehicleSdp: (instanceId: string, deltaSdp: number) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              vehicles: (c.vehicles || []).map((v) => {
+                if (v.instanceId !== instanceId) return v;
+                const newSdp = Math.max(0, Math.min(v.maxSdp, v.currentSdp + deltaSdp));
+                return { ...v, currentSdp: newSdp };
+              })
+            };
+          })
+        }));
+      },
+
+      updateVehicleArmorSp: (instanceId: string, deltaSp: number) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              vehicles: (c.vehicles || []).map((v) => {
+                if (v.instanceId !== instanceId) return v;
+                const newSp = Math.max(0, v.armorSp + deltaSp);
+                return { ...v, armorSp: newSp };
+              })
+            };
+          })
+        }));
+      },
+
+      removeVehicleFromCharacter: (instanceId: string) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              vehicles: (c.vehicles || []).filter((v) => v.instanceId !== instanceId)
+            };
+          })
+        }));
+      },
+
+      updateMedtechLab: (lab: MedtechCryoAndPharma) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              medtechLab: lab
+            };
+          })
+        }));
+      },
+
+      updateTechProjects: (projects: TechMakerProject[]) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              techProjects: projects
             };
           })
         }));

@@ -6,8 +6,10 @@ import {
   FolderArchive, 
   Terminal, 
   Cpu,
-  UserPlus
+  UserPlus,
+  Network
 } from 'lucide-react';
+import { useCharacterStore } from './store/useCharacterStore';
 import { TopHudBar } from './features/layout/TopHudBar';
 import { CombatHudView } from './features/combat/CombatHudView';
 import { StreetLabView } from './features/sheet/StreetLabView';
@@ -16,12 +18,35 @@ import { CyberwareRipperdocView } from './features/cyberware/CyberwareRipperdocV
 import { CompendiumView } from './features/compendium/CompendiumView';
 import { DataPacksView } from './features/packs/DataPacksView';
 import { FixerDeckView } from './features/gm/FixerDeckView';
+import { NetAndRolesDeckView } from './features/netroles/NetAndRolesDeckView';
 import { RulesCheatSheetDrawer } from './features/rules/RulesCheatSheetDrawer';
 
-type TabKey = 'combat' | 'sheet' | 'cyberware' | 'compendium' | 'packs' | 'gm' | 'creator';
+type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'creator';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('combat');
+  const appTheme = useCharacterStore((state) => state.appTheme);
+
+  const themeConfig = {
+    neo_red: {
+      activeTab: 'border-[#dc2626] text-white bg-[#dc2626]/10 font-bold',
+      activeIcon: 'text-[#dc2626]',
+      selection: 'selection:bg-[#dc2626] selection:text-white',
+      accentLine: 'bg-[#dc2626]'
+    },
+    edgerunners_2077: {
+      activeTab: 'border-[#fcee0a] text-white bg-[#fcee0a]/15 font-bold shadow-[0_0_12px_rgba(252,238,10,0.15)]',
+      activeIcon: 'text-[#fcee0a]',
+      selection: 'selection:bg-[#fcee0a] selection:text-black',
+      accentLine: 'bg-[#fcee0a]'
+    },
+    danger_gal_pink: {
+      activeTab: 'border-[#ff2a85] text-white bg-[#ff2a85]/15 font-bold shadow-[0_0_12px_rgba(255,42,133,0.15)]',
+      activeIcon: 'text-[#ff2a85]',
+      selection: 'selection:bg-[#ff2a85] selection:text-white',
+      accentLine: 'bg-[#ff2a85]'
+    }
+  }[appTheme || 'neo_red'];
 
   const tabs: Array<{ id: TabKey; label: string; icon: React.ReactNode }> = [
     {
@@ -38,6 +63,11 @@ export default function App() {
       id: 'cyberware',
       label: 'CYBERWARE // RIPPERDOC',
       icon: <Cpu className="w-4 h-4" />
+    },
+    {
+      id: 'netroles',
+      label: 'NET, ROLES & VEHÍCULOS',
+      icon: <Network className="w-4 h-4" />
     },
     {
       id: 'compendium',
@@ -62,7 +92,10 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0b0e] text-[#cbd5e1] flex flex-col font-sans selection:bg-[#dc2626] selection:text-white">
+    <div className={`min-h-screen bg-[#0a0b0e] text-[#cbd5e1] flex flex-col font-sans ${themeConfig.selection}`}>
+      {/* Barra de acento de Tema Visual */}
+      <div className={`h-[2px] w-full ${themeConfig.accentLine}`} />
+
       {/* HUD Superior Persistente */}
       <TopHudBar onOpenStreetLab={() => setActiveTab('sheet')} />
 
@@ -77,11 +110,11 @@ export default function App() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`group flex items-center gap-2 py-3 px-4 border-b-2 font-tech text-sm tracking-wider uppercase transition-all whitespace-nowrap cursor-pointer ${
                   isActive
-                    ? 'border-[#dc2626] text-white bg-[#dc2626]/10 font-bold'
+                    ? themeConfig.activeTab
                     : 'border-transparent text-[#64748b] hover:text-[#e2e8f0] hover:bg-[#151720]'
                 }`}
               >
-                <span className={isActive ? 'text-[#dc2626]' : 'text-[#64748b] group-hover:text-[#cbd5e1]'}>
+                <span className={isActive ? themeConfig.activeIcon : 'text-[#64748b] group-hover:text-[#cbd5e1]'}>
                   {tab.icon}
                 </span>
                 <span>{tab.label}</span>
@@ -102,6 +135,7 @@ export default function App() {
           />
         )}
         {activeTab === 'cyberware' && <CyberwareRipperdocView />}
+        {activeTab === 'netroles' && <NetAndRolesDeckView />}
         {activeTab === 'compendium' && <CompendiumView />}
         {activeTab === 'packs' && <DataPacksView />}
         {activeTab === 'gm' && <FixerDeckView />}

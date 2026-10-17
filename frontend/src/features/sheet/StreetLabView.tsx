@@ -16,6 +16,7 @@ import { SKILL_METADATA } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { STAT_TOOLTIPS } from '../../data/characterCreationData';
 import { CharacterCreatorWizard } from '../creator/CharacterCreatorWizard';
+import { CHARACTER_PORTRAITS_CATALOG } from '../../data/netAndRolesData';
 import { 
   User, 
   Plus, 
@@ -40,7 +41,10 @@ import {
   BookOpen,
   AlertCircle,
   CheckCircle2,
-  DollarSign
+  DollarSign,
+  Printer,
+  Camera,
+  X
 } from 'lucide-react';
 
 const STAT_KEYS: StatKey[] = ['INT', 'REF', 'DEX', 'TECH', 'COOL', 'WILL', 'LUCK', 'MOVE', 'BODY', 'EMP'];
@@ -114,11 +118,14 @@ export const StreetLabView: React.FC = () => {
   const updateCharacterLifepath = useCharacterStore((state) => state.updateCharacterLifepath);
   const updateCharacterDebt = useCharacterStore((state) => state.updateCharacterDebt);
   const payOffCharacterDebt = useCharacterStore((state) => state.payOffCharacterDebt);
+  const setCharacterPortrait = useCharacterStore((state) => state.setCharacterPortrait);
 
   const activeChar = getActiveCharacter();
 
   // Local state for modals & filters
   const [isWizardOpen, setIsWizardOpen] = useState(false);
+  const [isPortraitModalOpen, setIsPortraitModalOpen] = useState(false);
+  const [portraitFilterCategory, setPortraitFilterCategory] = useState<string>('all');
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [newHandle, setNewHandle] = useState('');
   const [newRole, setNewRole] = useState('Solo');
@@ -286,6 +293,47 @@ export const StreetLabView: React.FC = () => {
 
           <div className="hidden sm:block h-5 w-px bg-[#232736]"></div>
 
+          {/* Retrato / Avatar Cyberpunk Activo */}
+          {(() => {
+            const currentPortrait =
+              CHARACTER_PORTRAITS_CATALOG.find((p) => p.id === activeChar?.portraitId) ||
+              CHARACTER_PORTRAITS_CATALOG[0];
+            const isFbc = Boolean(activeChar?.fbcState?.isFullBodyConversion);
+
+            return (
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setIsPortraitModalOpen(true)}
+                  className="flex items-center gap-1.5 p-1 bg-[#171924] hover:bg-[#202434] rounded border border-[#2c3246] hover:border-[#38bdf8] transition-all group/avatar"
+                  title="Cambiar Retrato Oficial del Personaje"
+                >
+                  <div
+                    className="w-7 h-7 rounded-sm flex items-center justify-center font-bold text-xs shadow-sm"
+                    style={{ backgroundColor: `${currentPortrait.accentColor}25`, color: currentPortrait.accentColor }}
+                  >
+                    {currentPortrait.name.substring(0, 2).toUpperCase()}
+                  </div>
+                  <div className="text-left hidden md:block">
+                    <div className="text-[10px] font-mono-code font-bold text-white group-hover/avatar:text-[#38bdf8] truncate max-w-[90px]">
+                      {currentPortrait.name.split(' ')[0]}
+                    </div>
+                    <div className="text-[8px] font-mono-code text-[#64748b]">RETRATO</div>
+                  </div>
+                </button>
+
+                {isFbc && (
+                  <span
+                    className="bg-[#0284c7]/20 border border-[#0284c7]/50 text-[#38bdf8] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold flex items-center gap-1 animate-pulse"
+                    title={`Full Body Conversion: ${activeChar.fbcState?.activeChassisName || 'Borg'}`}
+                  >
+                    🤖 FBC
+                  </span>
+                )}
+              </div>
+            );
+          })()}
+
           {/* Inputs inline: Handle, Rol, Rango, Eurodólares */}
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono-code">
             <input
@@ -372,6 +420,15 @@ export const StreetLabView: React.FC = () => {
             title="Importar ficha desde JSON"
           >
             <Upload className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            onClick={() => window.print()}
+            className="p-1 bg-[#171924] hover:bg-[#10b981] hover:text-black text-[#10b981] rounded-xs border border-[#2a3044] transition-all flex items-center gap-1 px-1.5"
+            title="Imprimir Ficha / Dossier como PDF"
+          >
+            <Printer className="w-3.5 h-3.5" />
+            <span className="hidden md:inline text-[10px] font-mono-code font-bold">PDF</span>
           </button>
 
           {characters.length > 1 && (
@@ -1423,6 +1480,100 @@ export const StreetLabView: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Modal: Selector de los 20 Retratos Oficiales */}
+      {isPortraitModalOpen && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#12141d] border border-[#262c3e] rounded-xs max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl animate-fade-in">
+            <div className="p-3.5 border-b border-[#1f2434] flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Camera className="w-4 h-4 text-[#38bdf8]" />
+                <span className="font-tech text-sm font-bold text-white tracking-wider uppercase">
+                  SELECTOR DE RETRATOS // 20 AVATARES OFICIALES
+                </span>
+              </div>
+              <button
+                onClick={() => setIsPortraitModalOpen(false)}
+                className="text-[#64748b] hover:text-white p-1 rounded"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-3 border-b border-[#1f2434] flex gap-1.5 overflow-x-auto text-[10px] font-mono-code font-bold">
+              {['all', 'Danger Gal', 'Edgerunners 2077', 'Cyberware & Borgs', 'Roles'].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setPortraitFilterCategory(cat)}
+                  className={`px-2.5 py-1 rounded transition-colors whitespace-nowrap ${
+                    portraitFilterCategory === cat
+                      ? 'bg-[#38bdf8] text-black font-bold'
+                      : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#222738]'
+                  }`}
+                >
+                  {cat === 'all' ? 'TODOS (20)' : cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="p-4 overflow-y-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+              {CHARACTER_PORTRAITS_CATALOG.filter((p) => {
+                if (portraitFilterCategory === 'all') return true;
+                if (portraitFilterCategory === 'Roles') return p.category.includes('Rol');
+                return p.category.toLowerCase().includes(portraitFilterCategory.toLowerCase());
+              }).map((p) => {
+                const isSelected = (activeChar?.portraitId || 'portrait-role-solo') === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      setCharacterPortrait(p.id);
+                      setIsPortraitModalOpen(false);
+                      showStatus(`Retrato actualizado: ${p.name}`);
+                    }}
+                    className={`p-2.5 rounded border text-left transition-all flex flex-col justify-between gap-2 ${
+                      isSelected
+                        ? 'bg-[#182334] border-[#38bdf8] shadow-md shadow-[#38bdf8]/10'
+                        : 'bg-[#151722] border-[#222738] hover:border-[#38bdf8]/50'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div
+                        className="w-9 h-9 rounded flex items-center justify-center font-bold text-sm shrink-0 border"
+                        style={{
+                          backgroundColor: `${p.accentColor}20`,
+                          borderColor: `${p.accentColor}60`,
+                          color: p.accentColor
+                        }}
+                      >
+                        {p.name.substring(0, 2).toUpperCase()}
+                      </div>
+                      <span className={`text-[8px] font-mono-code px-1.5 py-0.5 rounded border ${p.badgeColor}`}>
+                        {p.badge}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="font-tech text-xs font-bold text-white leading-tight">
+                        {p.name}
+                      </div>
+                      <div className="text-[9px] font-mono-code text-[#64748b] mt-0.5">
+                        {p.loreTags.join(' • ')}
+                      </div>
+                    </div>
+
+                    {isSelected && (
+                      <div className="text-[9px] font-mono-code text-[#38bdf8] font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> SELECCIONADO
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
