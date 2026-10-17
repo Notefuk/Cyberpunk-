@@ -461,19 +461,30 @@ export const StreetLabView: React.FC = () => {
         
         {/* Tira de 10 STATS */}
         <div className="grid grid-cols-5 lg:grid-cols-10 gap-1.5">
-          {STAT_KEYS.map((stat) => {
+          {STAT_KEYS.map((stat, idx) => {
             const val = activeChar?.stats?.[stat] ?? 6;
             const penalty = getStatPenalty(stat);
+            const isRightSide = idx >= 5;
 
             return (
               <div
                 key={stat}
-                className="group/stat relative bg-[#151722] p-1.5 rounded border border-[#222636] text-center flex flex-col justify-between hover:border-[#38bdf8]/60 transition-all cursor-help"
+                className="group/stat relative bg-[#151722] p-1.5 rounded border border-[#222636] text-center flex flex-col justify-between hover:border-[#38bdf8]/60 hover:z-[100] transition-all cursor-help"
               >
-                {/* Tooltip táctico para principiantes */}
+                {/* Tooltip táctico para principiantes hacia abajo interactivo */}
                 {STAT_TOOLTIPS[stat] && (
-                  <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/stat:flex flex-col items-center z-50 w-64 text-left">
-                    <div className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code font-normal leading-relaxed p-2.5 rounded-xs border border-[#38bdf8]/60 shadow-xl shadow-black/90">
+                  <div
+                    className={`absolute top-full ${
+                      isRightSide ? 'right-0' : 'left-0'
+                    } pt-2 hidden group-hover/stat:block z-[110] w-64 text-left`}
+                  >
+                    <div className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code font-normal leading-relaxed p-2.5 rounded-xs border border-[#38bdf8]/60 shadow-xl shadow-black/90 relative">
+                      {/* Triángulo indicador arriba */}
+                      <div
+                        className={`w-2 h-2 bg-[#0b0e17] border-l border-t border-[#38bdf8]/60 rotate-45 absolute -top-1.5 ${
+                          isRightSide ? 'right-6' : 'left-6'
+                        }`}
+                      />
                       <div className="font-tech font-bold text-[#38bdf8] uppercase text-xs mb-0.5">
                         {stat} — {STAT_TOOLTIPS[stat].name}
                       </div>
@@ -489,7 +500,6 @@ export const StreetLabView: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    <div className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-[#38bdf8]/60 rotate-45 -mt-1" />
                   </div>
                 )}
 

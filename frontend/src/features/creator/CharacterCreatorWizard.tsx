@@ -101,6 +101,7 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
     BODY: 7,
     EMP: 5
   }));
+  const [inspectedStat, setInspectedStat] = useState<StatKey>('INT');
 
   // Step 4: Skills
   const [combatSkills, setCombatSkills] = useState<Record<CombatSkillKey, number>>(() => {
@@ -914,55 +915,74 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
             </div>
           </div>
 
-          {/* Tira de 10 STATS con Hover Tooltips */}
+          {/* Tira de 10 STATS con Hover Tooltips Interactivos */}
           <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-2">
-            {STAT_KEYS.map((stat: StatKey) => {
+            {STAT_KEYS.map((stat: StatKey, idx: number) => {
               const val = stats[stat] || 6;
               const tooltip = STAT_TOOLTIPS[stat];
+              const isRightSide = idx >= 6;
+              const isLeftSide = idx <= 2;
 
               return (
                 <div
                   key={stat}
-                  className="relative group/stat bg-[#121520] p-2.5 rounded-xs border border-[#20273a] hover:border-[#38bdf8] text-center flex flex-col justify-between transition-all"
+                  onMouseEnter={() => setInspectedStat(stat)}
+                  onClick={() => setInspectedStat(stat)}
+                  className={`relative group/stat bg-[#121520] p-2.5 rounded-xs border transition-all text-center flex flex-col justify-between hover:z-[100] cursor-pointer ${
+                    inspectedStat === stat
+                      ? 'border-[#38bdf8] shadow-[0_0_10px_rgba(56,189,248,0.25)]'
+                      : 'border-[#20273a] hover:border-[#38bdf8]/60'
+                  }`}
                 >
-                  {/* Hover Tooltip para Principiantes */}
+                  {/* Hover Tooltip con apertura hacia abajo (top-full pt-2) interactivo */}
                   {tooltip && (
-                    <div className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/stat:block z-50 w-72 text-left p-3 bg-[#0a0c13] border border-[#38bdf8] rounded shadow-2xl text-xs font-sans">
-                      <div className="flex items-center justify-between border-b border-[#1f2638] pb-1 mb-1.5">
-                        <span className="font-tech font-bold text-sm text-[#38bdf8]">
-                          {tooltip.name}
-                        </span>
-                        <span className="text-[9px] font-mono-code bg-[#1f2638] text-[#94a3b8] px-1.5 py-0.5 rounded">
-                          STAT
-                        </span>
+                    <div
+                      className={`absolute top-full ${
+                        isRightSide ? 'right-0' : isLeftSide ? 'left-0' : 'left-1/2 -translate-x-1/2'
+                      } pt-2 hidden group-hover/stat:block z-[110] w-72 text-left`}
+                    >
+                      <div className="p-3 bg-[#0a0c13] border border-[#38bdf8] rounded-xs shadow-2xl text-xs font-sans relative">
+                        {/* Triángulo indicador arriba */}
+                        <div
+                          className={`w-2 h-2 bg-[#0a0c13] border-l border-t border-[#38bdf8] rotate-45 absolute -top-1.5 ${
+                            isRightSide ? 'right-6' : isLeftSide ? 'left-6' : 'left-1/2 -translate-x-1/2'
+                          }`}
+                        />
+                        <div className="flex items-center justify-between border-b border-[#1f2638] pb-1 mb-1.5">
+                          <span className="font-tech font-bold text-sm text-[#38bdf8]">
+                            {tooltip.name}
+                          </span>
+                          <span className="text-[9px] font-mono-code bg-[#1f2638] text-[#94a3b8] px-1.5 py-0.5 rounded">
+                            STAT
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[#cbd5e1] leading-relaxed mb-2 font-mono-code">
+                          {tooltip.beginnerExplanation}
+                        </p>
+                        {tooltip.mechanicalBreakpoints && tooltip.mechanicalBreakpoints.length > 0 && (
+                          <div className="mb-2 pt-1 border-t border-[#171b26]">
+                            <span className="text-[9px] font-mono-code uppercase text-[#f59e0b] block font-bold mb-0.5">
+                              Hitos Mecánicos Clave:
+                            </span>
+                            <ul className="text-[10px] text-[#94a3b8] list-disc list-inside space-y-0.5 font-mono-code">
+                              {tooltip.mechanicalBreakpoints.map((bp: string, i: number) => (
+                                <li key={i}>{bp}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {tooltip.dependentSkills && (
+                          <div className="pt-1 border-t border-[#171b26]">
+                            <span className="text-[9px] font-mono-code uppercase text-[#38bdf8] block font-bold mb-0.5">
+                              Habilidades Vinculadas:
+                            </span>
+                            <p className="text-[10px] text-[#64748b] font-mono-code line-clamp-2">
+                              {tooltip.dependentSkills.slice(0, 5).join(', ')}
+                              {tooltip.dependentSkills.length > 5 ? '...' : ''}
+                            </p>
+                          </div>
+                        )}
                       </div>
-                      <p className="text-[11px] text-[#cbd5e1] leading-relaxed mb-2 font-mono-code">
-                        {tooltip.beginnerExplanation}
-                      </p>
-                      {tooltip.mechanicalBreakpoints && tooltip.mechanicalBreakpoints.length > 0 && (
-                        <div className="mb-2 pt-1 border-t border-[#171b26]">
-                          <span className="text-[9px] font-mono-code uppercase text-[#f59e0b] block font-bold mb-0.5">
-                            Hitos Mecánicos Clave:
-                          </span>
-                          <ul className="text-[10px] text-[#94a3b8] list-disc list-inside space-y-0.5 font-mono-code">
-                            {tooltip.mechanicalBreakpoints.map((bp: string, i: number) => (
-                              <li key={i}>{bp}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      {tooltip.dependentSkills && (
-                        <div className="pt-1 border-t border-[#171b26]">
-                          <span className="text-[9px] font-mono-code uppercase text-[#38bdf8] block font-bold mb-0.5">
-                            Habilidades Vinculadas:
-                          </span>
-                          <p className="text-[10px] text-[#64748b] font-mono-code line-clamp-2">
-                            {tooltip.dependentSkills.slice(0, 5).join(', ')}
-                            {tooltip.dependentSkills.length > 5 ? '...' : ''}
-                          </p>
-                        </div>
-                      )}
-                      <div className="w-2 h-2 bg-[#0a0c13] border-r border-b border-[#38bdf8] rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2" />
                     </div>
                   )}
 
@@ -976,7 +996,10 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
                   </div>
 
                   {/* Controles de incremento o tirada */}
-                  <div className="flex items-center justify-center gap-1 pt-1.5 border-t border-[#1a1f30]">
+                  <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center justify-center gap-1 pt-1.5 border-t border-[#1a1f30]"
+                  >
                     <button
                       onClick={() => setStats((prev) => ({ ...prev, [stat]: Math.max(2, val - 1) }))}
                       disabled={val <= 2}
@@ -1007,6 +1030,70 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
               );
             })}
           </div>
+
+          {/* Panel: INSPECTOR DE STAT EN FOCO */}
+          {STAT_TOOLTIPS[inspectedStat] && (
+            <div className="chamfer-card bg-[#111420] border border-[#38bdf8]/50 p-3.5 rounded-xs space-y-2">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#1c2438] pb-2">
+                <div className="flex items-center gap-2">
+                  <span className="font-tech text-base font-black text-white uppercase tracking-wider flex items-center gap-1.5">
+                    <span className="text-[#38bdf8]">[INSPECTOR DE STAT EN FOCO]:</span>
+                    <span>{STAT_TOOLTIPS[inspectedStat].name} ({STAT_TOOLTIPS[inspectedStat].spanishName})</span>
+                  </span>
+                  <span className="text-[10px] font-mono-code bg-[#1f2638] text-[#38bdf8] px-2 py-0.5 rounded font-bold">
+                    VALOR ACTUAL: {stats[inspectedStat]}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 text-[10px] font-mono-code text-[#64748b]">
+                  <span>Haz hover o clic en cualquier STAT para cambiar el foco</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 text-xs font-mono-code">
+                <div className="md:col-span-7 space-y-2">
+                  <p className="text-[#e2e8f0] font-sans leading-relaxed text-xs">
+                    {STAT_TOOLTIPS[inspectedStat].beginnerExplanation}
+                  </p>
+                  <p className="text-[11px] text-[#94a3b8] italic">
+                    {STAT_TOOLTIPS[inspectedStat].shortSummary}
+                  </p>
+                </div>
+
+                <div className="md:col-span-5 space-y-2 bg-[#0a0d14] p-2.5 rounded border border-[#1b2234]">
+                  {STAT_TOOLTIPS[inspectedStat].mechanicalBreakpoints && STAT_TOOLTIPS[inspectedStat].mechanicalBreakpoints.length > 0 && (
+                    <div>
+                      <span className="text-[10px] font-mono-code uppercase text-[#f59e0b] font-bold block mb-1">
+                        ⚡ HITOS MECÁNICOS CLAVE:
+                      </span>
+                      <ul className="text-[10px] text-[#cbd5e1] space-y-1 list-disc list-inside">
+                        {STAT_TOOLTIPS[inspectedStat].mechanicalBreakpoints.map((bp: string, i: number) => (
+                          <li key={i}>{bp}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {STAT_TOOLTIPS[inspectedStat].dependentSkills && (
+                    <div className="pt-1.5 border-t border-[#182030]">
+                      <span className="text-[10px] font-mono-code uppercase text-[#38bdf8] font-bold block mb-1">
+                        🎯 HABILIDADES DEPENDIENTES:
+                      </span>
+                      <div className="flex flex-wrap gap-1">
+                        {STAT_TOOLTIPS[inspectedStat].dependentSkills.map((sk: string, i: number) => (
+                          <span
+                            key={i}
+                            className="text-[9px] bg-[#141b29] text-[#7dd3fc] border border-[#21314d] px-1.5 py-0.5 rounded"
+                          >
+                            {sk}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Panel de Derivadas en Vivo */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#0a0d14] p-3.5 rounded-xs border border-[#1e2538]">
