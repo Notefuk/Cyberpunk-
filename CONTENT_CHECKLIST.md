@@ -93,7 +93,7 @@
 
 ---
 
-## 📚 FASE 2 (v2.6 – v2.9): Disparos Apuntados en Combate, Compendio de Reglas Nuevas (FBC/2077) y Expansión de Libros PDF [PENDIENTE]
+## 📚 FASE 2 (v2.6 – v2.9): Disparos Apuntados, Creador de Personajes Guiado, Biblioteca de Enemigos, Compendio de Reglas Nuevas (FBC/2077) y Expansión de Libros PDF [PENDIENTE]
 - [ ] **Selector Interactivo de Disparos Apuntados en Combate Activo (`CombatHudView.tsx` & `combatEngine.ts`)**:
   - Penalizador canónico automático de `-8` a la tirada de ataque.
   - Restricción estricta de ROF 1 (armas con ROF 2 o ráfaga limitadas a 1 único disparo al apuntar).
@@ -101,13 +101,41 @@
     - **Cabeza**: El daño que penetra armadura (`SP`) se multiplica `×2` directo a HP.
     - **Pierna**: Aplica automáticamente estado crítico *Pierna Rota* (`Broken Leg`: `-4 MOVE`, mínimo 1).
     - **Objeto Sostenido (Held Item)**: Provoca Desarme automático (`Disarm`), el objetivo suelta el arma u objeto sostenido.
+- [ ] **🧙‍♂️ Creador de Personajes Guiado Desde Cero (Wizard Paso a Paso & Onboarding para Novatos) (`CharacterWizardModal.tsx`)**:
+  - **Los 3 Sistemas Oficiales de Creación + Plantillas 2077**:
+    - Soporte completo para las 3 metodologías del Core Rulebook: *Streetrat (Plantillas Rápidas)*, *Edgerunner (Tiradas Rápidas)* y *Complete Package (Compra por Puntos)*.
+    - Integración de las plantillas pregeneradas oficiales de la Era 2077 de *Cyberpunk Edgerunners Mission Kit (CEMK 2077)*.
+  - **Generador de Lifepath Híbrido (Tirada de Dados o Escritura Libre)**:
+    - Tablas completas canónicas: origen cultural, personalidad, estilo de ropa, peinado, detalle afectivo, valores, sentimientos hacia las personas, persona más valorada, posesión más preciada, trasfondo familiar y entorno de crianza.
+    - Historial de romances trágicos y amigos leales.
+    - **Sistema Profundo de Enemigos**: Quién es el enemigo, qué causó la enemistad, qué recursos/alianzas puede arrojar en tu contra, y cómo planeas vengarte si se cruzan.
+    - **Control Total Híbrido**: En cada tirada o etapa del Lifepath y Enemigos, el jugador puede **tirar `1d10`/`1d6` automáticamente O escribir/editar libremente a mano** para forjar su propia historia sin estar atado a la aleatoriedad.
+  - **Economía Inicial, Tienda de Inicio y Regla Opcional "Vender el Alma / Empezar con Deuda" (*Selling Out / In Debt*)**:
+    - Presupuesto reglamentario de inicio: `2,550 €$` para armas, blindajes, cyberware y equipo general + `800 €$` exclusivos para Moda, Ropa y Estilo de Vida.
+    - Paquetes de equipo base por Rol con selección automática o personalizable en tienda integrada durante la creación.
+    - **Regla Opcional de Mesa "Empezar con Deuda / Vender el Alma"**: Toggle configurable de común acuerdo con el GM y los jugadores para acceder a fondos iniciales adicionales o cibernética avanzada/de grado militar/corporativo desde el día 1, a cambio de adquirir una deuda monetaria o una obligación peligrosa con un fixer o megacorporación.
+  - **UX Guiada para Principiantes con Hover Tooltips en STATS y Conceptos**:
+    - Asistente paso a paso limpio, sin muros de texto abrumadores ni jerga sin explicar.
+    - Hover tooltips táctiles interactivos en cada una de las 10 estadísticas (`INT`, `REF`, `DEX`, `TECH`, `COOL`, `WILL`, `LUCK`, `MOVE`, `BODY`, `EMP`), habilidades derivadas y conceptos de combate, explicando en lenguaje simple y claro qué hace cada estadística y cómo impacta en las tiradas para jugadores sin experiencia previa.
+- [ ] **👹 Biblioteca Masiva de Enemigos, Goons y Jefes Pregenerados (Acceso Rápido para el GM) (`EnemiesCompendiumDrawer.tsx`)**:
+  - **Precarga de Fichas de Amenazas Listas para el Combate**:
+    - Catálogo completo de combatientes preconstruidos: *Mooks / Grunts / Lieutenants / Mini-Bosses / Bosses* del *Core Rulebook*.
+    - Variantes mejoradas *Hardened Mooks / Hardened Lieutenants / Hardened Mini-Bosses* de DLCs oficiales.
+    - Facciones completas y PNJs con nombre y estadísticas de *Danger Gal Dossier*.
+    - Enemigos y operativos de *Tales of the RED*, ciberpsicópatas callejeros y leyendas icónicas como **Adam Smasher**.
+    - Plantillas de enemigos y gángsters de la Era 2077 de *CEMK 2077*.
+  - **Filtros Rápidos & Despliegue en 1 Clic**:
+    - Filtros tácticos por facción (*Arasaka, Militech, Maelstrom, Tyger Claws, Bozos, 6th Street, NCPD, MaxTac, Edgerunners Independientes*), nivel de amenaza y era (*2045 vs 2077*).
+    - Botón de 1 clic para inyectar enemigos instantáneamente al HUD de Combate / Tracker de Iniciativa o generar un encuentro en segundos.
 - [ ] **Compendio Dedicado para Nuevos Sistemas de Reglas de Expansiones (`ExpansionRulesView.tsx` / `rulesCheatSheet.ts`)**:
   - Reglas completas de Full Body Conversions (FBC) de *Interface RED Vol 3* (cuerpos ciborg, chasis, blindajes estructurales, penalizaciones de humanidad y protocolos médicos).
   - Sistemas de la Era 2077 de *Cyberpunk Edgerunners Mission Kit (CEMK)* (Neuroport universal, Quickhacks vs Netrunning clásico, armas Power/Tech/Smart y mecánicas de Ciberpsicosis).
   - Reglas de DLCs oficiales (aditivos y dispersión osmótica de *Hornet's Pharmacy*, salvamento náutico, ciberware exótico).
+  - **Descripciones Contextuales e Introductorias por Sistema**: Resumen explicativo de lore y mecánicas en cada ficha de sistema (p. ej., explicando que *FBC* implica trasplantar el cerebro en una biovaina dentro de un chasis de cromo completo, o que el *Neuroport 2077* es el implante unificado con Holocall, HUD y vulnerabilidad a Quickhacks).
 - [ ] **Filtro por Libro Origen (`sourceBook`) en Compendio Maestro con Badges Visuales (`CompendiumView.tsx` & `SourceBadge.tsx`)**:
   - Selector de filtrado interactivo por manual fuente (*Core Book*, *Black Chrome*, *CEMK 2077*, *Danger Gal Dossier*, *Interface RED Vol 1-3*, *DLCs Oficiales*).
   - Badges visuales temáticos con código de color e icono distintivo por cada manual en las tarjetas del catálogo.
+  - **Descripciones Introductorias por Libro**: Sinopsis contextual accesible en el selector que resume qué aporta cada manual a nivel de ambientación, catálogo y reglas.
 - [ ] **Extracción de `Black Chrome Tech & Style Guide`**:
   - 170+ ítems de catálogo de lujo de Night City.
   - Reglas completas de vehículos terrestres y aéreos con SDP, asientos y velocidad de combate.

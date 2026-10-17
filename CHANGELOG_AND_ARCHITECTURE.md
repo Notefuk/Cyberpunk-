@@ -90,13 +90,22 @@ cpr-omni-deck/
 
 Los siguientes módulos son especificaciones de diseño para fases posteriores (Fase 0 y Fase 1 completadas). **Ningún componente debe intentar importarlos mientras no existan en disco**:
 
-### Fase 2 (v2.6 – v2.9): Disparos Apuntados, Compendio de Reglas Nuevas y Expansión de Libros PDF
+### Fase 2 (v2.6 – v2.9): Disparos Apuntados, Creador Guiado, Biblioteca de Enemigos, Compendio y Expansión PDF
 * Selector Interactivo de Disparos Apuntados (`CombatHudView.tsx` & `combatEngine.ts`):
   - Penalizador canónico `-8`, restricción ROF 1, Cabeza (`×2` daño penetrante), Pierna (`Broken Leg -4 MOVE`), Objeto Sostenido (`Disarm`).
+* Creador de Personajes Guiado Desde Cero (`src/features/creation/CharacterWizardModal.tsx`):
+  - 3 métodos oficiales (*Streetrat*, *Edgerunner*, *Complete Package*) + plantillas 2077 (*CEMK*).
+  - Lifepath híbrido (tirada de dados o redacción libre) con módulo detallado de Enemigos.
+  - Economía inicial (`2,550 €$` + `800 €$` moda), paquetes por Rol y toggle opcional "Empezar con Deuda / Vender el Alma".
+  - Onboarding para novatos con hover tooltips explicativos en STATs, habilidades y conceptos de reglas.
+* Biblioteca Masiva de Enemigos y Jefes para el GM (`src/features/enemies/EnemiesCompendiumDrawer.tsx`):
+  - Fichas pregeneradas listas para combate: Core Mooks/Lieutenants/Bosses, Hardened variants, Danger Gal Dossier, Tales of the RED, CEMK 2077, ciberpsicópatas y Adam Smasher.
+  - Filtros por facción (Arasaka, Militech, Maelstrom, Tyger Claws, etc.), amenaza y era con inyección en 1 clic al combate.
 * Compendio Dedicado para Reglas Nuevas de Expansiones (`src/features/rules/ExpansionRulesView.tsx`):
   - Full Body Conversions (FBC) de *Interface RED Vol 3*, Reglas Era 2077 de *CEMK* (Neuroport, armas Power/Tech/Smart, Ciberpsicosis), DLCs (*Hornet's Pharmacy*).
-* Filtro de Libro Origen (`sourceBook`) y Badges Visuales (`src/components/SourceBadge.tsx`):
-  - Filtro interactivo por manual y badges visuales temáticos en `CompendiumView.tsx`.
+  - Descripciones contextuales e introductorias de lore y mecánicas en cada sistema.
+* Filtro de Libro Origen (`sourceBook`), Badges Visuales y Sinopsis de Manual (`src/components/SourceBadge.tsx` & `CompendiumView.tsx`):
+  - Filtro interactivo por manual con sinopsis de contenido y badges temáticos.
 * Extracción e integración de `data/black-chrome.cprpack.json`:
   - 170+ ítems de lujo, vehículos con SDP y armas exóticas.
 * Extracción e integración de `data/cemk-2077.cprpack.json`:
