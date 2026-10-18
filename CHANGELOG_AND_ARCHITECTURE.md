@@ -205,6 +205,31 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v3.6.1] - 2026-10-18 (Resizable Telemetry Window & 3-Zone Right Tactical Module Dock with Bidirectional Drag & Drop)
+* **Category**: Combat HUD Ergonomics, Window Resizing & Modular Workspace Customization
+* **Files Modified**:
+  - `frontend/src/features/combat/CombatHudView.tsx`
+* **What Changed**:
+  1. **Consola de Telemetría Redimensionable como Ventana Real**:
+     - Tirador interactivo de esquina inferior derecha (`Resize Handle`) para estirar o achicar libremente el ancho (`260px–900px`) y alto (`110px–780px`) de la consola.
+     - Presets rápidos de tamaño con 1 clic (`[XS] 300px`, `[S] 380px`, `[M] 500px`, `[L] 660px`) y ajuste fino incremental `[-10%]/[+10%]`.
+     - Modo ultra-compacto adaptativo automático al achicar la consola por debajo de 380px para evitar desbordes.
+     - Posicionamiento libre bidimensional `{x, y}` con arrastre de barra de título en modo Ventana Flotante (`🪟 Flotante`).
+     - Conmutador `⚡ Auto-abrir`: opción para evitar que la ventana se des-colapse sola tras una tirada si el usuario decidió deliberadamente minimizarla.
+  2. **Layout Táctico de 3 Zonas con Bandeja Lateral Derecha (`🗂️ MÓDULOS TÁCTICOS`)**:
+     - Nueva columna derecha dedicada donde residen todas las cajas tácticas desacopladas individualmente (`📡 Telemetría`, `🔫 Armas En Mano`, `📏 Telémetro DV`, `🎒 Cartuchera/Arsenal`, `🥋 Artes Marciales`, `⚡ Quickhacks 2077`, `🎭 Habilidad de Rol` + controles de soporte izquierdo).
+     - **Drag & Drop Bidireccional Total**: Arrastre fluido de cualquier caja entre la bandeja derecha y el espacio de trabajo central, o reordenación vertical mediante drag handles táctiles.
+     - Botones de acción directa: `[ ➕ Al Centro ]` para desplegar en el área de combate activa y `[ ➡️ Guardar en Derecha ]` para despejar el centro.
+     - Modo de vista previa rápida in-situ `[ 👁️ Abrir aquí ]` directamente en la bandeja derecha para consultar datos sin saturar el centro.
+     - **5 Presets Tácticos de Configuración Inmediata en 1 Clic**:
+       - `🎯 Esencial Tiro`: Despliega solo Armas En Mano y Telémetro DV.
+       - `🥋 Melee/Dojo`: Despliega Armas En Mano y Artes Marciales.
+       - `⚡ Netrunner 2077`: Despliega Quickhacks 2077 y Telemetría.
+       - `🌌 Todo al Centro`: Abre y despliega todos los módulos simultáneamente.
+       - `🧹 Limpiar Centro`: Mueve todos los módulos a la bandeja derecha para máxima visibilidad.
+
+---
+
 ### [v3.6.0] - 2026-10-18 (Dedicated Quickhacks 2077 Interface Unlocking Zone & Martial Arts Dojo / IP / Skill Chip System)
 * **Category**: Combat Telemetry, Netrunning 2077, Martial Arts Engine & Skill Chip Progression
 * **Files Modified**:

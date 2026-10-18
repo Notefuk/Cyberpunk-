@@ -428,6 +428,9 @@ const STORAGE_KEY_LEFT_ORDER = 'cpr_combat_left_order_v2';
 const STORAGE_KEY_RIGHT_ORDER = 'cpr_combat_right_order_v2';
 const STORAGE_KEY_COLLAPSED = 'cpr_combat_collapsed_boxes_v2';
 const STORAGE_KEY_DOCK_MODE = 'cpr_combat_telemetry_dock_v2';
+const STORAGE_KEY_TELEMETRY_SIZE = 'cpr_telemetry_size_v1';
+const STORAGE_KEY_ACTIVE_CENTER = 'cpr_combat_active_center_modules_v1';
+const STORAGE_KEY_AUTO_EXPAND = 'cpr_telemetry_auto_expand_v1';
 
 interface CollapsibleHudCardProps {
   id: string;
@@ -447,6 +450,8 @@ interface CollapsibleHudCardProps {
   children: React.ReactNode;
   extraHeaderActions?: React.ReactNode;
   accentBorderClass?: string;
+  onSendToTray?: () => void;
+  headerDragHandler?: (e: React.MouseEvent) => void;
 }
 
 const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
@@ -465,11 +470,13 @@ const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
   isDragOver,
   children,
   extraHeaderActions,
-  accentBorderClass = 'border-[#232736]'
+  accentBorderClass = 'border-[#232736]',
+  onSendToTray,
+  headerDragHandler
 }) => {
   return (
     <div
-      draggable
+      draggable={!headerDragHandler}
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDrop={onDrop}
@@ -480,10 +487,11 @@ const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
       }`}
     >
       <div
+        onMouseDown={headerDragHandler}
         onClick={onToggleCollapse}
         className={`p-2.5 sm:p-3 flex items-center justify-between gap-2 cursor-pointer select-none group/header transition-colors hover:bg-[#161924] ${
           isCollapsed ? '' : 'border-b border-[#1f2230]'
-        }`}
+        } ${headerDragHandler ? 'cursor-move' : ''}`}
       >
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <div
@@ -501,7 +509,7 @@ const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
               onClick={onMoveUp}
               disabled={!canMoveUp}
               title="Subir un lugar"
-              className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+              className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               ▲
             </button>
@@ -510,10 +518,20 @@ const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
               onClick={onMoveDown}
               disabled={!canMoveDown}
               title="Bajar un lugar"
-              className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+              className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors cursor-pointer"
             >
               ▼
             </button>
+            {onSendToTray && (
+              <button
+                type="button"
+                onClick={onSendToTray}
+                title="Mandar este módulo a la Bandeja Derecha (quitar del centro)"
+                className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-amber-600 hover:text-black text-slate-400 hover:text-amber-300 transition-colors ml-0.5 cursor-pointer"
+              >
+                ➡️
+              </button>
+            )}
           </div>
 
           <span className="text-slate-500 group-hover/header:text-cyan-400 transition-colors shrink-0">
@@ -611,7 +629,7 @@ export const CombatHudView: React.FC = () => {
     return DEFAULT_LEFT_ORDER;
   });
 
-  const [rightColumnOrder, setRightColumnOrder] = useState<RightPanelId[]>(() => {
+  const [_rightColumnOrder, setRightColumnOrder] = useState<RightPanelId[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_RIGHT_ORDER);
       if (saved) {
@@ -647,7 +665,224 @@ export const CombatHudView: React.FC = () => {
     return 'inline';
   });
 
-  const [draggedItem, setDraggedItem] = useState<{ column: 'left' | 'right'; id: string } | null>(null);
+  const [activeCenterModules, setActiveCenterModules] = useState<RightPanelId[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_ACTIVE_CENTER);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const clean = parsed
+            .map((id) => (id === 'roleQuickhacks' ? 'roleAbility' : id))
+            .filter((id) => DEFAULT_RIGHT_ORDER.includes(id as RightPanelId)) as RightPanelId[];
+          if (clean.length > 0) return clean;
+        }
+      }
+    } catch {}
+    return DEFAULT_RIGHT_ORDER;
+  });
+
+  const [isRightTrayCollapsed, setIsRightTrayCollapsed] = useState<boolean>(false);
+  const [sidePreviewModule, setSidePreviewModule] = useState<RightPanelId | null>(null);
+  const [isTrayDragOver, setIsTrayDragOver] = useState<boolean>(false);
+
+  const [telemetryAutoExpand, setTelemetryAutoExpand] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_AUTO_EXPAND);
+      return saved !== null ? JSON.parse(saved) : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const [telemetrySizeConfig, setTelemetrySizeConfig] = useState<{
+    height: number;
+    width: number;
+    compact: boolean;
+    floatingPos: { x: number; y: number } | null;
+  }>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_TELEMETRY_SIZE);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          height: typeof parsed.height === 'number' ? Math.max(110, Math.min(780, parsed.height)) : 280,
+          width: typeof parsed.width === 'number' ? Math.max(260, Math.min(900, parsed.width)) : 420,
+          compact: !!parsed.compact,
+          floatingPos:
+            parsed.floatingPos &&
+            typeof parsed.floatingPos.x === 'number' &&
+            typeof parsed.floatingPos.y === 'number'
+              ? parsed.floatingPos
+              : null
+        };
+      }
+    } catch {}
+    return {
+      height: 280,
+      width: 420,
+      compact: false,
+      floatingPos: null
+    };
+  });
+
+  const telemetryHeight = telemetrySizeConfig.height;
+  const telemetryWidth = telemetrySizeConfig.width;
+  const telemetryCompactMode = telemetrySizeConfig.compact;
+  const floatingPos = telemetrySizeConfig.floatingPos;
+  const isEffectiveCompact = telemetryCompactMode || telemetryHeight < 200 || telemetryWidth < 340;
+
+  const setTelemetryHeight = (h: number) => {
+    setTelemetrySizeConfig((prev) => {
+      const next = { ...prev, height: h };
+      localStorage.setItem(STORAGE_KEY_TELEMETRY_SIZE, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const setTelemetryWidth = (w: number) => {
+    setTelemetrySizeConfig((prev) => {
+      const next = { ...prev, width: w };
+      localStorage.setItem(STORAGE_KEY_TELEMETRY_SIZE, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const setTelemetryCompactMode = (c: boolean) => {
+    setTelemetrySizeConfig((prev) => {
+      const next = { ...prev, compact: c };
+      localStorage.setItem(STORAGE_KEY_TELEMETRY_SIZE, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const setFloatingPos = (pos: { x: number; y: number } | null) => {
+    setTelemetrySizeConfig((prev) => {
+      const next = { ...prev, floatingPos: pos };
+      localStorage.setItem(STORAGE_KEY_TELEMETRY_SIZE, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const applyTelemetryPreset = (preset: 'xs' | 's' | 'm' | 'l') => {
+    let h = 280;
+    let w = 420;
+    let compact = false;
+    if (preset === 'xs') {
+      h = 140;
+      w = 300;
+      compact = true;
+    } else if (preset === 's') {
+      h = 220;
+      w = 360;
+      compact = false;
+    } else if (preset === 'm') {
+      h = 340;
+      w = 460;
+      compact = false;
+    } else if (preset === 'l') {
+      h = 520;
+      w = 620;
+      compact = false;
+    }
+    const next = { height: h, width: w, compact, floatingPos };
+    setTelemetrySizeConfig(next);
+    localStorage.setItem(STORAGE_KEY_TELEMETRY_SIZE, JSON.stringify(next));
+  };
+
+  const adjustTelemetrySize = (delta: number) => {
+    const newH = Math.max(110, Math.min(780, telemetryHeight + delta));
+    const newW = Math.max(260, Math.min(900, telemetryWidth + delta));
+    const next = { height: newH, width: newW, compact: telemetryCompactMode, floatingPos };
+    setTelemetrySizeConfig(next);
+    localStorage.setItem(STORAGE_KEY_TELEMETRY_SIZE, JSON.stringify(next));
+  };
+
+  const handleResizeMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startH = telemetryHeight;
+    const startW = telemetryWidth;
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startX;
+      const deltaY = moveEvent.clientY - startY;
+      const newH = Math.max(110, Math.min(780, startH + deltaY));
+      const newW = Math.max(260, Math.min(900, startW + deltaX));
+      setTelemetryHeight(newH);
+      setTelemetryWidth(newW);
+    };
+
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
+
+  const handleFloatingDragStart = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button, input, select, [data-no-drag]')) return;
+    e.preventDefault();
+    const startMouseX = e.clientX;
+    const startMouseY = e.clientY;
+    const currentX = floatingPos?.x ?? (window.innerWidth - telemetryWidth - 24);
+    const currentY = floatingPos?.y ?? (window.innerHeight - telemetryHeight - 120);
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const deltaX = moveEvent.clientX - startMouseX;
+      const deltaY = moveEvent.clientY - startMouseY;
+      const nextX = Math.max(10, Math.min(window.innerWidth - 120, currentX + deltaX));
+      const nextY = Math.max(10, Math.min(window.innerHeight - 80, currentY + deltaY));
+      setFloatingPos({ x: nextX, y: nextY });
+    };
+
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
+
+  const toggleCenterModule = (panelId: RightPanelId) => {
+    setActiveCenterModules((prev) => {
+      const exists = prev.includes(panelId);
+      const next = exists ? prev.filter((id) => id !== panelId) : [...prev, panelId];
+      localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const sendModuleToTray = (panelId: RightPanelId) => {
+    setActiveCenterModules((prev) => {
+      const next = prev.filter((id) => id !== panelId);
+      localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const applyCenterPreset = (preset: 'shooting' | 'melee' | 'netrunner' | 'all' | 'clean') => {
+    let next: RightPanelId[] = [];
+    if (preset === 'shooting') {
+      next = ['telemetry', 'inHand', 'rangefinder'];
+    } else if (preset === 'melee') {
+      next = ['telemetry', 'inHand', 'martialArts'];
+    } else if (preset === 'netrunner') {
+      next = ['telemetry', 'quickhacks2077', 'inHand'];
+    } else if (preset === 'all') {
+      next = [...DEFAULT_RIGHT_ORDER];
+    } else if (preset === 'clean') {
+      next = ['inHand'];
+    }
+    setActiveCenterModules(next);
+    localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(next));
+  };
+
+  const [draggedItem, setDraggedItem] = useState<{ column: 'left' | 'right' | 'tray'; id: string } | null>(null);
   const [dragOverItem, setDragOverItem] = useState<string | null>(null);
 
   const toggleBoxCollapse = (boxId: string) => {
@@ -659,7 +894,7 @@ export const CombatHudView: React.FC = () => {
   };
 
   const ensureTelemetryExpanded = () => {
-    if (collapsedBoxes['telemetry']) {
+    if (telemetryAutoExpand && collapsedBoxes['telemetry']) {
       setCollapsedBoxes(prev => {
         const next = { ...prev, telemetry: false };
         localStorage.setItem(STORAGE_KEY_COLLAPSED, JSON.stringify(next));
@@ -693,8 +928,10 @@ export const CombatHudView: React.FC = () => {
   const handleResetBoxOrder = () => {
     setLeftColumnOrder(DEFAULT_LEFT_ORDER);
     setRightColumnOrder(DEFAULT_RIGHT_ORDER);
+    setActiveCenterModules(DEFAULT_RIGHT_ORDER);
     localStorage.setItem(STORAGE_KEY_LEFT_ORDER, JSON.stringify(DEFAULT_LEFT_ORDER));
     localStorage.setItem(STORAGE_KEY_RIGHT_ORDER, JSON.stringify(DEFAULT_RIGHT_ORDER));
+    localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(DEFAULT_RIGHT_ORDER));
   };
 
   const moveLeftPanel = (panelId: LeftPanelId, direction: 'up' | 'down') => {
@@ -711,19 +948,19 @@ export const CombatHudView: React.FC = () => {
   };
 
   const moveRightPanel = (panelId: RightPanelId, direction: 'up' | 'down') => {
-    const idx = rightColumnOrder.indexOf(panelId);
+    const idx = activeCenterModules.indexOf(panelId);
     if (idx === -1) return;
     const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
-    if (targetIdx < 0 || targetIdx >= rightColumnOrder.length) return;
-    const next = [...rightColumnOrder];
+    if (targetIdx < 0 || targetIdx >= activeCenterModules.length) return;
+    const next = [...activeCenterModules];
     const temp = next[idx];
     next[idx] = next[targetIdx];
     next[targetIdx] = temp;
-    setRightColumnOrder(next);
-    localStorage.setItem(STORAGE_KEY_RIGHT_ORDER, JSON.stringify(next));
+    setActiveCenterModules(next);
+    localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(next));
   };
 
-  const handleDragStart = (column: 'left' | 'right', id: string) => {
+  const handleDragStart = (column: 'left' | 'right' | 'tray', id: string) => {
     setDraggedItem({ column, id });
   };
 
@@ -734,7 +971,16 @@ export const CombatHudView: React.FC = () => {
 
   const handleDrop = (targetColumn: 'left' | 'right', targetId: string) => {
     if (!draggedItem) return;
-    if (draggedItem.column === targetColumn) {
+    if (draggedItem.column === 'tray' && targetColumn === 'right') {
+      const draggedPanelId = draggedItem.id as RightPanelId;
+      const currentActive = [...activeCenterModules];
+      const targetIdx = currentActive.indexOf(targetId as RightPanelId);
+      const filtered = currentActive.filter((id) => id !== draggedPanelId);
+      const insertAt = targetIdx !== -1 ? Math.min(targetIdx, filtered.length) : filtered.length;
+      filtered.splice(insertAt, 0, draggedPanelId);
+      setActiveCenterModules(filtered);
+      localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(filtered));
+    } else if (draggedItem.column === targetColumn) {
       if (targetColumn === 'left') {
         const fromIdx = leftColumnOrder.indexOf(draggedItem.id as LeftPanelId);
         const toIdx = leftColumnOrder.indexOf(targetId as LeftPanelId);
@@ -746,19 +992,20 @@ export const CombatHudView: React.FC = () => {
           localStorage.setItem(STORAGE_KEY_LEFT_ORDER, JSON.stringify(next));
         }
       } else {
-        const fromIdx = rightColumnOrder.indexOf(draggedItem.id as RightPanelId);
-        const toIdx = rightColumnOrder.indexOf(targetId as RightPanelId);
+        const fromIdx = activeCenterModules.indexOf(draggedItem.id as RightPanelId);
+        const toIdx = activeCenterModules.indexOf(targetId as RightPanelId);
         if (fromIdx !== -1 && toIdx !== -1 && fromIdx !== toIdx) {
-          const next = [...rightColumnOrder];
+          const next = [...activeCenterModules];
           const [removed] = next.splice(fromIdx, 1);
           next.splice(toIdx, 0, removed);
-          setRightColumnOrder(next);
-          localStorage.setItem(STORAGE_KEY_RIGHT_ORDER, JSON.stringify(next));
+          setActiveCenterModules(next);
+          localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(next));
         }
       }
     }
     setDraggedItem(null);
     setDragOverItem(null);
+    setIsTrayDragOver(false);
   };
 
   const [incomingDamageInput, setIncomingDamageInput] = useState<number>(10);
@@ -2097,10 +2344,11 @@ export const CombatHudView: React.FC = () => {
     }
   };
 
-  const renderRightPanel = (id: RightPanelId, index: number, isFloating = false) => {
-    const isCollapsed = isFloating ? false : !!collapsedBoxes[id];
-    const canMoveUp = !isFloating && index > 0;
-    const canMoveDown = !isFloating && index < rightColumnOrder.length - 1;
+  const renderRightPanel = (id: RightPanelId, index: number, isFloating = false, isPreview = false) => {
+    const isCollapsed = !!collapsedBoxes[id];
+    const canMoveUp = !isFloating && !isPreview && index > 0;
+    const canMoveDown = !isFloating && !isPreview && index < activeCenterModules.length - 1;
+    const onSendToTray = (!isFloating && !isPreview) ? () => sendModuleToTray(id) : undefined;
 
     switch (id) {
       case 'telemetry':
@@ -2122,8 +2370,11 @@ export const CombatHudView: React.FC = () => {
             onDrop={() => handleDrop('right', 'telemetry')}
             isDragOver={dragOverItem === 'telemetry'}
             accentBorderClass="border-cyan-500/50 shadow-md shadow-cyan-950/30"
+            onSendToTray={onSendToTray}
+            headerDragHandler={isFloating ? handleFloatingDragStart : undefined}
             extraHeaderActions={
-              <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+              <div className="flex flex-wrap items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                {/* Selectores de Modo */}
                 <div className="flex items-center gap-0.5 bg-[#161a26] p-0.5 rounded border border-[#2b334a]">
                   <button
                     type="button"
@@ -2131,12 +2382,12 @@ export const CombatHudView: React.FC = () => {
                       setTelemetryDockMode('inline');
                       localStorage.setItem(STORAGE_KEY_DOCK_MODE, 'inline');
                     }}
-                    className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors ${
+                    className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
                       telemetryDockMode === 'inline' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
                     }`}
-                    title="Anclar en columna principal"
+                    title="Anclar en la columna central del HUD"
                   >
-                    📌 En Columna
+                    📌 Centro
                   </button>
                   <button
                     type="button"
@@ -2144,12 +2395,12 @@ export const CombatHudView: React.FC = () => {
                       setTelemetryDockMode('split_sticky');
                       localStorage.setItem(STORAGE_KEY_DOCK_MODE, 'split_sticky');
                     }}
-                    className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors ${
+                    className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
                       telemetryDockMode === 'split_sticky' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
                     }`}
-                    title="Anclar sticky lateral"
+                    title="Anclar sticky lateral fijo al lado de las armas"
                   >
-                    📐 Sticky
+                    📐 Split Lateral
                   </button>
                   <button
                     type="button"
@@ -2157,29 +2408,149 @@ export const CombatHudView: React.FC = () => {
                       setTelemetryDockMode('floating_pip');
                       localStorage.setItem(STORAGE_KEY_DOCK_MODE, 'floating_pip');
                     }}
-                    className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors ${
+                    className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
                       telemetryDockMode === 'floating_pip' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
                     }`}
-                    title="Ventana flotante mini-HUD (PiP)"
+                    title="Ventana flotante mini-HUD libre (arrástrala por la pantalla)"
                   >
-                    🪟 Flotante
+                    🪟 Ventana Libre
                   </button>
                 </div>
+
+                {/* Botones Rápidos de Tamaño XS / S / M / L + [-] / [+] */}
+                <div className="flex items-center gap-0.5 bg-[#161a26] p-0.5 rounded border border-[#2b334a]">
+                  <button
+                    type="button"
+                    onClick={() => applyTelemetryPreset('xs')}
+                    className={`px-1 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+                      telemetryHeight <= 160 ? 'bg-cyan-400 text-black font-bold' : 'text-slate-400 hover:text-white'
+                    }`}
+                    title="Tamaño XS (Mini: alto 140px, ancho 300px, compacto automático)"
+                  >
+                    XS
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyTelemetryPreset('s')}
+                    className={`px-1 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+                      telemetryHeight > 160 && telemetryHeight <= 250 ? 'bg-cyan-400 text-black font-bold' : 'text-slate-400 hover:text-white'
+                    }`}
+                    title="Tamaño S (Chica: alto 220px, ancho 360px)"
+                  >
+                    S
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyTelemetryPreset('m')}
+                    className={`px-1 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+                      telemetryHeight > 250 && telemetryHeight <= 380 ? 'bg-cyan-400 text-black font-bold' : 'text-slate-400 hover:text-white'
+                    }`}
+                    title="Tamaño M (Media: alto 340px, ancho 460px)"
+                  >
+                    M
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyTelemetryPreset('l')}
+                    className={`px-1 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+                      telemetryHeight > 380 ? 'bg-cyan-400 text-black font-bold' : 'text-slate-400 hover:text-white'
+                    }`}
+                    title="Tamaño L (Grande: alto 520px, ancho 620px)"
+                  >
+                    L
+                  </button>
+                  <span className="text-slate-600 px-0.5">|</span>
+                  <button
+                    type="button"
+                    onClick={() => adjustTelemetrySize(-40)}
+                    className="w-4 h-4 flex items-center justify-center text-[10px] font-mono-code text-slate-300 hover:text-white bg-[#10141f] hover:bg-[#1f2638] rounded cursor-pointer"
+                    title="Achicar altura y ancho (-40px)"
+                  >
+                    -
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => adjustTelemetrySize(40)}
+                    className="w-4 h-4 flex items-center justify-center text-[10px] font-mono-code text-slate-300 hover:text-white bg-[#10141f] hover:bg-[#1f2638] rounded cursor-pointer"
+                    title="Agrandar altura y ancho (+40px)"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* Toggle de Auto-expand al tirar */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = !telemetryAutoExpand;
+                    setTelemetryAutoExpand(next);
+                    localStorage.setItem(STORAGE_KEY_AUTO_EXPAND, JSON.stringify(next));
+                  }}
+                  className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded border transition-colors cursor-pointer ${
+                    telemetryAutoExpand
+                      ? 'bg-amber-950/70 text-amber-300 border-amber-600/50'
+                      : 'bg-[#161a26] text-slate-500 border-[#2b334a]'
+                  }`}
+                  title="Auto-abrir la consola al hacer tiradas de combate"
+                >
+                  ⚡ {telemetryAutoExpand ? 'Auto-abrir' : 'Manual'}
+                </button>
+
+                {/* Toggle Modo Compacto */}
+                <button
+                  type="button"
+                  onClick={() => setTelemetryCompactMode(!telemetryCompactMode)}
+                  className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded border transition-colors cursor-pointer ${
+                    telemetryCompactMode
+                      ? 'bg-cyan-950/70 text-cyan-300 border-cyan-600/50'
+                      : 'bg-[#161a26] text-slate-500 border-[#2b334a]'
+                  }`}
+                  title="Alternar vista compacta de telemetría"
+                >
+                  {telemetryCompactMode ? '🗜️ Compacto' : '📄 Normal'}
+                </button>
+
+                {/* Reset posición en modo ventana flotante */}
+                {isFloating && floatingPos !== null && (
+                  <button
+                    type="button"
+                    onClick={() => setFloatingPos(null)}
+                    className="px-1.5 py-0.5 text-[9px] font-mono-code text-cyan-300 bg-[#161a26] hover:bg-cyan-700/40 rounded border border-cyan-500/40 cursor-pointer"
+                    title="Devolver ventana a la esquina inferior derecha"
+                  >
+                    ⟲ Reset Pos
+                  </button>
+                )}
+
                 {rollHistory.length > 0 && (
                   <button
                     type="button"
                     onClick={clearRollHistory}
-                    className="text-[10px] font-mono-code text-[#64748b] hover:text-[#dc2626] transition-colors px-1"
+                    className="text-[10px] font-mono-code text-[#64748b] hover:text-[#dc2626] transition-colors px-1 cursor-pointer"
                     title="Limpiar historial de tiradas"
                   >
                     LIMPIAR
+                  </button>
+                )}
+
+                {onSendToTray && (
+                  <button
+                    type="button"
+                    onClick={onSendToTray}
+                    className="px-1.5 py-0.5 text-[9px] font-mono-code bg-[#161a26] hover:bg-amber-950/60 hover:text-amber-300 text-slate-400 border border-[#2b334a] hover:border-amber-600/40 rounded transition-colors cursor-pointer"
+                    title="Mandar a Bandeja Derecha para despejar el centro"
+                  >
+                    ➡️ A Bandeja
                   </button>
                 )}
               </div>
             }
           >
             
-        <div className={`space-y-2.5 ${isFloating ? 'max-h-[500px]' : 'max-h-[360px]'} overflow-y-auto pr-1`}>
+        <div
+          style={{ height: isCollapsed ? undefined : `${telemetryHeight}px`, maxHeight: `${telemetryHeight}px` }}
+          className={`space-y-2 overflow-y-auto pr-1.5 ${isEffectiveCompact ? 'text-[11px]' : ''}`}
+        >
                       {rollHistory.length === 0 ? (
               <div className="text-center py-8 text-[#64748b] font-mono-code text-xs">
                 Sin tiradas registradas. Selecciona una distancia y pulsa Atacar o Tirar Daño.
@@ -2392,6 +2763,22 @@ export const CombatHudView: React.FC = () => {
             )}
         </div>
 
+            {/* Tirador de Redimensionado Interactivo Libre con Mouse */}
+            <div
+              onMouseDown={handleResizeMouseDown}
+              className="mt-2 pt-1 border-t border-[#1c2234] flex items-center justify-between text-[9px] font-mono-code text-slate-400 select-none cursor-ns-resize hover:text-cyan-300 hover:border-cyan-500/40 transition-colors py-0.5"
+              title="Haz clic y arrastra con el ratón para achicar o agrandar la consola libremente"
+            >
+              <div className="flex items-center gap-1">
+                <span className="text-cyan-400 font-bold">📏</span>
+                <span>{telemetryWidth}×{telemetryHeight}px</span>
+                <span className="text-slate-500 hidden sm:inline">(Arrastra para redimensionar)</span>
+              </div>
+              <div className="flex items-center gap-1 cursor-se-resize">
+                <span className="text-[10px] text-slate-500 hover:text-cyan-300">◢</span>
+              </div>
+            </div>
+
           </CollapsibleHudCard>
         );
 
@@ -2413,6 +2800,19 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'inHand')}
             onDrop={() => handleDrop('right', 'inHand')}
             isDragOver={dragOverItem === 'inHand'}
+            onSendToTray={onSendToTray}
+            extraHeaderActions={
+              onSendToTray ? (
+                <button
+                  type="button"
+                  onClick={onSendToTray}
+                  className="px-1.5 py-0.5 rounded text-[9px] font-mono-code bg-[#161a26] hover:bg-amber-950/60 hover:text-amber-300 text-slate-400 border border-[#2b334a] hover:border-amber-600/40 transition-colors cursor-pointer"
+                  title="Mandar a la Bandeja Derecha para despejar el centro"
+                >
+                  ➡️ A Bandeja
+                </button>
+              ) : undefined
+            }
           >
             
         <div className="space-y-4">
@@ -3136,6 +3536,19 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'rangefinder')}
             onDrop={() => handleDrop('right', 'rangefinder')}
             isDragOver={dragOverItem === 'rangefinder'}
+            onSendToTray={onSendToTray}
+            extraHeaderActions={
+              onSendToTray ? (
+                <button
+                  type="button"
+                  onClick={onSendToTray}
+                  className="px-1.5 py-0.5 rounded text-[9px] font-mono-code bg-[#161a26] hover:bg-amber-950/60 hover:text-amber-300 text-slate-400 border border-[#2b334a] hover:border-amber-600/40 transition-colors cursor-pointer"
+                  title="Mandar a la Bandeja Derecha para despejar el centro"
+                >
+                  ➡️ A Bandeja
+                </button>
+              ) : undefined
+            }
           >
             
                     <div className="grid grid-cols-4 sm:grid-cols-8 gap-1 pt-2">
@@ -3181,10 +3594,21 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'arsenalBelt')}
             onDrop={() => handleDrop('right', 'arsenalBelt')}
             isDragOver={dragOverItem === 'arsenalBelt'}
+            onSendToTray={onSendToTray}
             extraHeaderActions={
               <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#64748b]" onClick={(e) => e.stopPropagation()}>
                 <span>💣 {totalGrenadeCharges}</span>
                 <span>💉 {totalDrugCharges}</span>
+                {onSendToTray && (
+                  <button
+                    type="button"
+                    onClick={onSendToTray}
+                    className="px-1.5 py-0.5 rounded text-[9px] font-mono-code bg-[#161a26] hover:bg-amber-950/60 hover:text-amber-300 text-slate-400 border border-[#2b334a] hover:border-amber-600/40 transition-colors cursor-pointer"
+                    title="Mandar a la Bandeja Derecha para despejar el centro"
+                  >
+                    ➡️ A Bandeja
+                  </button>
+                )}
               </div>
             }
           >
@@ -3942,23 +4366,33 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'martialArts')}
             onDrop={() => handleDrop('right', 'martialArts')}
             isDragOver={dragOverItem === 'martialArts'}
+            onSendToTray={onSendToTray}
             extraHeaderActions={
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowDojoModal(!showDojoModal);
-                }}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer flex items-center gap-1 ${
-                  showDojoModal
-                    ? 'bg-[#10b981] text-black shadow-sm'
-                    : 'bg-[#181f2f] hover:bg-[#25324c] text-emerald-400 border border-emerald-500/40'
-                }`}
-                title="Abrir Dojo de Artes Marciales, Entrenamiento IP y Chipware"
-              >
-                <span>🥋 DOJO</span>
-                <span className="text-[9px] opacity-80">{showDojoModal ? '▲' : '▼'}</span>
-              </button>
+              <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                <button
+                  type="button"
+                  onClick={() => setShowDojoModal(!showDojoModal)}
+                  className={`px-2 py-0.5 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                    showDojoModal
+                      ? 'bg-[#10b981] text-black shadow-sm'
+                      : 'bg-[#181f2f] hover:bg-[#25324c] text-emerald-400 border border-emerald-500/40'
+                  }`}
+                  title="Abrir Dojo de Artes Marciales, Entrenamiento IP y Chipware"
+                >
+                  <span>🥋 DOJO</span>
+                  <span className="text-[9px] opacity-80">{showDojoModal ? '▲' : '▼'}</span>
+                </button>
+                {onSendToTray && (
+                  <button
+                    type="button"
+                    onClick={onSendToTray}
+                    className="px-1.5 py-0.5 rounded text-[9px] font-mono-code bg-[#161a26] hover:bg-amber-950/60 hover:text-amber-300 text-slate-400 border border-[#2b334a] hover:border-amber-600/40 transition-colors cursor-pointer"
+                    title="Mandar a la Bandeja Derecha para despejar el centro"
+                  >
+                    ➡️ A Bandeja
+                  </button>
+                )}
+              </div>
             }
           >
             <div className="space-y-3">
@@ -4474,10 +4908,23 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'roleAbility')}
             onDrop={() => handleDrop('right', 'roleAbility')}
             isDragOver={dragOverItem === 'roleAbility'}
+            onSendToTray={onSendToTray}
             extraHeaderActions={
-              <span className="text-[10px] font-mono-code text-[#38bdf8] bg-[#38bdf8]/10 px-2 py-0.5 rounded border border-[#38bdf8]/30">
-                {activeChar?.role?.toUpperCase() || 'SOLO'} R{activeChar?.roleRank || 4}
-              </span>
+              <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                <span className="text-[10px] font-mono-code text-[#38bdf8] bg-[#38bdf8]/10 px-2 py-0.5 rounded border border-[#38bdf8]/30">
+                  {activeChar?.role?.toUpperCase() || 'SOLO'} R{activeChar?.roleRank || 4}
+                </span>
+                {onSendToTray && (
+                  <button
+                    type="button"
+                    onClick={onSendToTray}
+                    className="px-1.5 py-0.5 rounded text-[9px] font-mono-code bg-[#161a26] hover:bg-amber-950/60 hover:text-amber-300 text-slate-400 border border-[#2b334a] hover:border-amber-600/40 transition-colors cursor-pointer"
+                    title="Mandar a la Bandeja Derecha para despejar el centro"
+                  >
+                    ➡️ A Bandeja
+                  </button>
+                )}
+              </div>
             }
           >
             <div className="space-y-4">
@@ -4665,6 +5112,7 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'quickhacks2077')}
             onDrop={() => handleDrop('right', 'quickhacks2077')}
             isDragOver={dragOverItem === 'quickhacks2077'}
+            onSendToTray={onSendToTray}
             extraHeaderActions={
               <div className="flex items-center gap-1 bg-[#141722] border border-[#222738] p-1 rounded-xs" onClick={(e) => e.stopPropagation()}>
                 <span className="text-[10px] font-mono-code text-[#94a3b8] px-1">Interface:</span>
@@ -4695,6 +5143,16 @@ export const CombatHudView: React.FC = () => {
                     title="Restablecer al Rango canónico del personaje"
                   >
                     Reset
+                  </button>
+                )}
+                {onSendToTray && (
+                  <button
+                    type="button"
+                    onClick={onSendToTray}
+                    className="px-1.5 py-0.5 rounded text-[9px] font-mono-code bg-[#161a26] hover:bg-amber-950/60 hover:text-amber-300 text-slate-400 border border-[#2b334a] hover:border-amber-600/40 transition-colors cursor-pointer ml-1"
+                    title="Mandar a la Bandeja Derecha para despejar el centro"
+                  >
+                    ➡️ A Bandeja
                   </button>
                 )}
               </div>
@@ -4979,6 +5437,89 @@ export const CombatHudView: React.FC = () => {
     }
   };
 
+  const RIGHT_MODULES_METADATA: Array<{
+    id: RightPanelId;
+    title: string;
+    shortTitle: string;
+    icon: React.ReactNode;
+    color: string;
+    getSummary: () => string;
+    getDetails: () => string;
+  }> = [
+    {
+      id: 'telemetry',
+      title: 'Consola de Telemetría (Log de Tiradas)',
+      shortTitle: 'Telemetría',
+      icon: <Terminal className="w-4 h-4 text-cyan-400" />,
+      color: 'text-cyan-400',
+      getSummary: () => `${rollHistory.length} tiradas registradas`,
+      getDetails: () => 'Log de tiradas en vivo, D10 y cálculos'
+    },
+    {
+      id: 'inHand',
+      title: 'Estación de Ataque // En Mano',
+      shortTitle: 'En Mano',
+      icon: <Crosshair className="w-4 h-4 text-[#38bdf8]" />,
+      color: 'text-[#38bdf8]',
+      getSummary: () => `${inHandWeapons.length + (isBrawlingInHand ? 1 : 0) + (isMartialArtsInHand ? 1 : 0)} ataque(s) listo(s)`,
+      getDetails: () => 'Ataques directos de armas empuñadas, autofuego, tiro apuntado y recargas'
+    },
+    {
+      id: 'rangefinder',
+      title: 'Telémetro de Distancia & DV',
+      shortTitle: 'Telémetro',
+      icon: <Target className="w-4 h-4 text-[#f59e0b]" />,
+      color: 'text-[#f59e0b]',
+      getSummary: () => `Distancia: ${selectedDistance}m`,
+      getDetails: () => 'Tabla oficial de DVs según metro y arma'
+    },
+    {
+      id: 'arsenalBelt',
+      title: 'Rack Táctico & Arsenal Completo',
+      shortTitle: 'Arsenal & Rack',
+      icon: <Swords className="w-4 h-4 text-[#38bdf8]" />,
+      color: 'text-[#38bdf8]',
+      getSummary: () => `${(activeChar?.equippedWeapons || []).length} armas | 💣 ${totalGrenadeCharges} | 💉 ${totalDrugCharges}`,
+      getDetails: () => 'Inventario listo, granadas, drogas y munición'
+    },
+    {
+      id: 'martialArts',
+      title: 'Cyberfists & Artes Marciales',
+      shortTitle: 'Artes Marciales',
+      icon: <Flame className="w-4 h-4 text-amber-400" />,
+      color: 'text-amber-400',
+      getSummary: () => {
+        const combatReady = MARTIAL_ARTS_FORMS.filter((f) => {
+          const nat = activeChar?.knownMartialArts?.[f.id] ?? 0;
+          const chip = (activeChar?.equippedMartialArtChips || []).includes(f.id);
+          return nat > 0 || chip;
+        });
+        const currentForm = combatReady.find((f) => f.id === selectedMartialFormId) || combatReady[0] || MARTIAL_ARTS_FORMS[0];
+        const rank = activeChar?.knownMartialArts?.[currentForm?.id] ?? 0;
+        return currentForm ? `${currentForm.name} (R${rank})` : 'Dojo';
+      },
+      getDetails: () => 'Kárate, Taekwondo, Judo, Aikido y ataques especiales'
+    },
+    {
+      id: 'roleAbility',
+      title: 'Rol en Combate // Habilidad Canónica',
+      shortTitle: 'Rol Canónico',
+      icon: <Zap className="w-4 h-4 text-emerald-400" />,
+      color: 'text-emerald-400',
+      getSummary: () => `${activeChar?.role?.toUpperCase() || 'SOLO'} R${activeChar?.roleRank || 4}`,
+      getDetails: () => 'Especialización de clase canónica (Combat Awareness, etc.)'
+    },
+    {
+      id: 'quickhacks2077',
+      title: 'Quickhacks 2077 // CEMK Neuroport',
+      shortTitle: 'Quickhacks 2077',
+      icon: <Cpu className="w-4 h-4 text-cyan-400" />,
+      color: 'text-cyan-400',
+      getSummary: () => `Interface R${activeInterfaceRank} | 15 Hacks CEMK`,
+      getDetails: () => 'Hacks del Cyberpunk 2077 adaptados al combate TTRPG'
+    }
+  ];
+
   return (
     <div className="space-y-4">
       {/* Barra Superior Táctica de Combate: Bestiario GM */}
@@ -5079,43 +5620,380 @@ export const CombatHudView: React.FC = () => {
       )}
 
 
-      {/* GRID PRINCIPAL MODULAR Y REORDENABLE */}
+      {/* GRID PRINCIPAL MODULAR Y REORDENABLE (3 ZONAS: BIO/DEFENSAS + CONFIGURADOR CENTRAL + BANDEJA TÁCTICA) */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
-        {/* COLUMNA IZQUIERDA (4 COLS EN PANTALLAS XL) */}
-        <div className="xl:col-span-4 space-y-4">
+        {/* COLUMNA IZQUIERDA: BIO & DEFENSAS (3 COLS EN PANTALLAS XL) */}
+        <div className="xl:col-span-3 space-y-4">
           {leftColumnOrder.map((panelId, idx) => renderLeftPanel(panelId, idx))}
         </div>
 
-        {/* COLUMNA DERECHA / PRINCIPAL (8 COLS EN PANTALLAS XL) */}
-        <div className="xl:col-span-8 space-y-4">
-          {telemetryDockMode === 'split_sticky' ? (
-            <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
-              <div className="xl:col-span-5 sticky top-3 space-y-4">
-                {renderRightPanel('telemetry', rightColumnOrder.indexOf('telemetry'))}
+        {/* COLUMNA CENTRAL (CONFIGURABLE: 6 COLS O 8 SI BANDEJA ESTÁ COLAPSADA) */}
+        <div
+          className={`${isRightTrayCollapsed ? 'xl:col-span-8' : 'xl:col-span-6'} space-y-4`}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={() => {
+            if (draggedItem && draggedItem.column === 'tray') {
+              const draggedPanelId = draggedItem.id as RightPanelId;
+              if (!activeCenterModules.includes(draggedPanelId)) {
+                setActiveCenterModules((prev) => {
+                  const next = [...prev, draggedPanelId];
+                  localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(next));
+                  return next;
+                });
+              }
+              setDraggedItem(null);
+              setDragOverItem(null);
+            }
+          }}
+        >
+          {activeCenterModules.length === 0 ||
+          (telemetryDockMode === 'floating_pip' && activeCenterModules.length === 1 && activeCenterModules[0] === 'telemetry') ? (
+            <div className="p-8 text-center bg-[#10121a] border-2 border-dashed border-[#242b3d] rounded-md space-y-3">
+              <div className="text-3xl">🗂️</div>
+              <h4 className="font-tech text-sm font-bold text-slate-300 uppercase">Centro de Combate Despejado</h4>
+              <p className="text-xs text-slate-500 max-w-md mx-auto">
+                No hay módulos tácticos activos en el centro. Elige un preset táctico o trae módulos desde la Bandeja Táctica a la derecha.
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => applyCenterPreset('shooting')}
+                  className="px-3 py-1.5 bg-[#182030] hover:bg-cyan-600 hover:text-black text-cyan-300 border border-cyan-500/40 rounded text-xs font-tech font-bold transition-all cursor-pointer"
+                >
+                  🎯 Esencial Tiro
+                </button>
+                <button
+                  type="button"
+                  onClick={() => applyCenterPreset('melee')}
+                  className="px-3 py-1.5 bg-[#182030] hover:bg-emerald-600 hover:text-black text-emerald-300 border border-emerald-500/40 rounded text-xs font-tech font-bold transition-all cursor-pointer"
+                >
+                  🥋 Peleador
+                </button>
+                <button
+                  type="button"
+                  onClick={() => applyCenterPreset('netrunner')}
+                  className="px-3 py-1.5 bg-[#182030] hover:bg-purple-600 hover:text-white text-purple-300 border border-purple-500/40 rounded text-xs font-tech font-bold transition-all cursor-pointer"
+                >
+                  ⚡ Netrunner
+                </button>
+                <button
+                  type="button"
+                  onClick={() => applyCenterPreset('all')}
+                  className="px-3 py-1.5 bg-[#182030] hover:bg-white hover:text-black text-white border border-[#3b435c] rounded text-xs font-tech font-bold transition-all cursor-pointer"
+                >
+                  🌌 Todo en Centro
+                </button>
               </div>
-              <div className="xl:col-span-7 space-y-4">
-                {rightColumnOrder
+            </div>
+          ) : telemetryDockMode === 'split_sticky' && activeCenterModules.includes('telemetry') ? (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+              <div className="lg:col-span-5 sticky top-3 space-y-4">
+                {renderRightPanel('telemetry', activeCenterModules.indexOf('telemetry'))}
+              </div>
+              <div className="lg:col-span-7 space-y-4">
+                {activeCenterModules
                   .filter((id) => id !== 'telemetry')
-                  .map((panelId, idx) => renderRightPanel(panelId, idx))}
+                  .map((panelId) => renderRightPanel(panelId, activeCenterModules.indexOf(panelId)))}
               </div>
             </div>
           ) : telemetryDockMode === 'floating_pip' ? (
             <div className="space-y-4">
-              {rightColumnOrder
+              {activeCenterModules
                 .filter((id) => id !== 'telemetry')
-                .map((panelId, idx) => renderRightPanel(panelId, idx))}
+                .map((panelId) => renderRightPanel(panelId, activeCenterModules.indexOf(panelId)))}
             </div>
           ) : (
             <div className="space-y-4">
-              {rightColumnOrder.map((panelId, idx) => renderRightPanel(panelId, idx))}
+              {activeCenterModules.map((panelId) => renderRightPanel(panelId, activeCenterModules.indexOf(panelId)))}
             </div>
           )}
         </div>
+
+        {/* COLUMNA DERECHA: BANDEJA DE MÓDULOS TÁCTICOS */}
+        {isRightTrayCollapsed ? (
+          <div className="xl:col-span-1 sticky top-3">
+            <div className="chamfer-card bg-[#0e1017] border border-[#22283a] p-2 flex flex-col items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setIsRightTrayCollapsed(false)}
+                className="p-1.5 rounded bg-[#171a26] hover:bg-cyan-500 hover:text-black text-cyan-400 border border-[#2b334a] transition-all cursor-pointer"
+                title="Expandir Bandeja de Módulos Tácticos"
+              >
+                <ChevronRight className="w-4 h-4 rotate-180" />
+              </button>
+              <div className="[writing-mode:vertical-lr] text-xs font-tech font-bold uppercase tracking-wider text-slate-400 py-2 select-none">
+                🗂️ MÓDULOS ({activeCenterModules.length}/7)
+              </div>
+              <div className="flex flex-col gap-1.5 w-full pt-2 border-t border-[#1d2334]">
+                {RIGHT_MODULES_METADATA.map((mod) => {
+                  const isActive = activeCenterModules.includes(mod.id);
+                  return (
+                    <button
+                      key={mod.id}
+                      type="button"
+                      onClick={() => toggleCenterModule(mod.id)}
+                      className={`w-8 h-8 mx-auto rounded flex items-center justify-center text-xs transition-all cursor-pointer border ${
+                        isActive
+                          ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-300'
+                          : 'bg-[#141724] border-[#22283a] text-slate-500 hover:text-white'
+                      }`}
+                      title={`${mod.title} (${isActive ? 'En Centro' : 'En Bandeja'})`}
+                    >
+                      {mod.icon}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="xl:col-span-3 sticky top-3 space-y-3">
+            {/* Header de la Bandeja */}
+            <div className="chamfer-card p-3 bg-[#0e1017] border border-[#22283a] space-y-2.5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="font-tech text-xs font-bold text-white uppercase tracking-wider truncate">
+                    🗂️ MÓDULOS TÁCTICOS
+                  </span>
+                  <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-600/40 shrink-0">
+                    {activeCenterModules.length}/7
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsRightTrayCollapsed(true)}
+                  className="p-1 rounded bg-[#161a26] hover:bg-[#252c3e] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  title="Plegar a barra delgada"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Botones de Preset 1-Click */}
+              <div className="space-y-1">
+                <div className="text-[9px] font-mono-code text-slate-400 font-bold uppercase">
+                  Presets Rápidos:
+                </div>
+                <div className="grid grid-cols-2 gap-1 text-[10px] font-tech font-bold">
+                  <button
+                    type="button"
+                    onClick={() => applyCenterPreset('shooting')}
+                    className="py-1 px-1.5 bg-[#141926] hover:bg-cyan-500 hover:text-black text-cyan-300 border border-cyan-500/30 rounded transition-colors cursor-pointer truncate text-left"
+                    title="Activa: Telemetría, Armas en Mano, Telémetro"
+                  >
+                    🎯 ESENCIAL TIRO
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyCenterPreset('melee')}
+                    className="py-1 px-1.5 bg-[#141926] hover:bg-emerald-500 hover:text-black text-emerald-300 border border-emerald-500/30 rounded transition-colors cursor-pointer truncate text-left"
+                    title="Activa: Telemetría, En Mano, Dojo de Artes Marciales"
+                  >
+                    🥋 PELEADOR
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyCenterPreset('netrunner')}
+                    className="py-1 px-1.5 bg-[#141926] hover:bg-purple-500 hover:text-white text-purple-300 border border-purple-500/30 rounded transition-colors cursor-pointer truncate text-left"
+                    title="Activa: Telemetría, Quickhacks 2077, En Mano"
+                  >
+                    ⚡ NETRUNNER
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyCenterPreset('all')}
+                    className="py-1 px-1.5 bg-[#141926] hover:bg-white hover:text-black text-slate-300 border border-[#2b334a] rounded transition-colors cursor-pointer truncate text-left"
+                    title="Activa todos los 7 módulos en el centro"
+                  >
+                    🌌 TODO EN CENTRO
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => applyCenterPreset('clean')}
+                  className="w-full py-0.5 px-2 bg-[#12141c] hover:bg-red-950/60 hover:text-red-300 text-slate-400 border border-[#242838] hover:border-red-600/40 rounded text-[9px] font-mono-code transition-colors cursor-pointer"
+                  title="Despeja el centro dejando solo armas en mano"
+                >
+                  🧹 Limpiar Centro
+                </button>
+              </div>
+
+              {/* Zona de Drop para Desactivar Módulos Arrastrados */}
+              <div
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsTrayDragOver(true);
+                }}
+                onDragLeave={() => setIsTrayDragOver(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  if (draggedItem && (draggedItem.column === 'right' || draggedItem.column === 'tray')) {
+                    sendModuleToTray(draggedItem.id as RightPanelId);
+                  }
+                  setDraggedItem(null);
+                  setDragOverItem(null);
+                  setIsTrayDragOver(false);
+                }}
+                className={`p-2 rounded border-2 border-dashed text-center text-[10px] font-tech uppercase tracking-wider transition-all select-none ${
+                  isTrayDragOver
+                    ? 'bg-amber-950/60 border-amber-500 text-amber-300 scale-[1.02]'
+                    : 'bg-[#0a0c13] border-[#22283a] text-slate-500 hover:border-slate-500 hover:text-slate-400'
+                }`}
+              >
+                <span>{isTrayDragOver ? '📥 SOLTAR AQUÍ PARA BANDEJA' : '📥 ARRASTRA AQUÍ PARA DESACTIVAR'}</span>
+              </div>
+            </div>
+
+            {/* Lista de las 7 Tarjetas de Módulo */}
+            <div className="space-y-2 max-h-[calc(100vh-280px)] overflow-y-auto pr-1">
+              {RIGHT_MODULES_METADATA.map((mod) => {
+                const isActive = activeCenterModules.includes(mod.id);
+                const isPreviewing = sidePreviewModule === mod.id;
+
+                return (
+                  <div
+                    key={mod.id}
+                    draggable
+                    onDragStart={() => handleDragStart('tray', mod.id)}
+                    className={`chamfer-card p-2.5 rounded transition-all ${
+                      isActive
+                        ? 'bg-[#121522] border border-cyan-500/40 shadow-sm'
+                        : 'bg-[#0d0f16] border border-[#1f2434] hover:border-[#2f374e] opacity-85 hover:opacity-100'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-1.5 mb-1">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span
+                          title="Arrastra este módulo al Centro"
+                          className="cursor-grab active:cursor-grabbing text-slate-500 hover:text-cyan-400 shrink-0"
+                        >
+                          <GripVertical className="w-3.5 h-3.5" />
+                        </span>
+                        <span className="shrink-0">{mod.icon}</span>
+                        <span className="font-tech text-xs font-bold text-white truncate uppercase">
+                          {mod.shortTitle}
+                        </span>
+                      </div>
+                      <span
+                        className={`text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded shrink-0 ${
+                          isActive
+                            ? 'bg-cyan-950 text-cyan-300 border border-cyan-600/50'
+                            : 'bg-[#161a24] text-slate-500 border border-[#232838]'
+                        }`}
+                      >
+                        {isActive ? '✅ CENTRO' : '💤 BANDEJA'}
+                      </span>
+                    </div>
+
+                    <div className="text-[10px] font-mono-code text-slate-400 mb-1.5 truncate">
+                      {mod.getSummary()}
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => toggleCenterModule(mod.id)}
+                        className={`flex-1 py-1 px-2 rounded text-[10px] font-tech font-bold uppercase tracking-wider transition-all cursor-pointer flex items-center justify-center gap-1 border ${
+                          isActive
+                            ? 'bg-[#181d2a] hover:bg-amber-950/80 hover:text-amber-300 hover:border-amber-600/50 text-cyan-300 border-cyan-500/30'
+                            : 'bg-[#182030] hover:bg-cyan-500 hover:text-black text-slate-300 border-[#2b354d]'
+                        }`}
+                      >
+                        {isActive ? '➡️ A BANDEJA' : '➕ AL CENTRO'}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setSidePreviewModule(isPreviewing ? null : mod.id)}
+                        className={`py-1 px-2 rounded text-[10px] font-mono-code transition-all cursor-pointer border ${
+                          isPreviewing
+                            ? 'bg-amber-500 text-black font-bold border-amber-400'
+                            : 'bg-[#141724] text-slate-400 hover:text-white border-[#242b3e]'
+                        }`}
+                        title="Abrir vista previa lateral interactiva en este panel sin mandarlo al centro"
+                      >
+                        {isPreviewing ? '✖ VISTA' : '👁️ VISTA'}
+                      </button>
+                    </div>
+
+                    {/* Vista previa lateral interactiva */}
+                    {isPreviewing && (
+                      <div className="mt-2.5 pt-2 border-t border-[#20273a] animate-fade-in">
+                        <div className="flex items-center justify-between text-[10px] font-mono-code text-amber-400 font-bold mb-1.5">
+                          <span>👁️ VISTA PREVIA LATERAL:</span>
+                          <button
+                            type="button"
+                            onClick={() => setSidePreviewModule(null)}
+                            className="text-slate-400 hover:text-white text-[9px] hover:underline cursor-pointer"
+                          >
+                            Cerrar [✕]
+                          </button>
+                        </div>
+                        {renderRightPanel(mod.id, 0, false, true)}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Sub-sección de Resumen de Soporte & Vitales */}
+            <div className="chamfer-card bg-[#0b0d14] border border-[#1f2536] p-2.5 rounded space-y-1.5">
+              <div className="text-[10px] font-tech font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between border-b border-[#1b2130] pb-1">
+                <span>VITALES & DEFENSAS</span>
+                <span className="text-[9px] font-mono-code text-emerald-400">EN VIVO</span>
+              </div>
+              <div className="grid grid-cols-2 gap-1.5 text-[10px] font-mono-code">
+                <div className="bg-[#121520] p-1.5 rounded border border-[#1e2538] flex items-center justify-between">
+                  <span className="text-red-400 font-bold flex items-center gap-1">
+                    <Heart className="w-3 h-3 text-red-400" /> HP
+                  </span>
+                  <span className="font-bold text-white">
+                    {activeChar?.currentHp ?? 0}/{maxHp}
+                  </span>
+                </div>
+                <div className="bg-[#121520] p-1.5 rounded border border-[#1e2538] flex items-center justify-between">
+                  <span className="text-amber-400 font-bold flex items-center gap-1">
+                    <Shield className="w-3 h-3 text-amber-400" /> SP
+                  </span>
+                  <span className="font-bold text-white">
+                    C:{activeChar?.headArmor?.currentSp ?? 0} | T:{activeChar?.bodyArmor?.currentSp ?? 0}
+                  </span>
+                </div>
+                <div className="bg-[#121520] p-1.5 rounded border border-[#1e2538] flex items-center justify-between">
+                  <span className="text-cyan-400 font-bold flex items-center gap-1">
+                    <Dices className="w-3 h-3 text-cyan-400" /> LUCK
+                  </span>
+                  <span className="font-bold text-white">
+                    {activeChar?.currentLuck ?? activeChar?.stats?.LUCK ?? 0}/{activeChar?.stats?.LUCK ?? 0}
+                  </span>
+                </div>
+                <div className="bg-[#121520] p-1.5 rounded border border-[#1e2538] flex items-center justify-between">
+                  <span className="text-rose-400 font-bold flex items-center gap-1">
+                    <AlertOctagon className="w-3 h-3 text-rose-400" /> HERIDAS
+                  </span>
+                  <span className={`font-bold ${activeChar?.activeInjuries?.length ? 'text-red-400' : 'text-slate-400'}`}>
+                    {activeChar?.activeInjuries?.length ?? 0}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* MODAL / PIP FLOTANTE PARA TELEMETRÍA SI ESTÁ EN MODO FLOATING_PIP */}
       {telemetryDockMode === 'floating_pip' && (
-        <div className="fixed bottom-4 right-4 w-[460px] max-w-[calc(100vw-2rem)] z-50 shadow-2xl border-2 border-cyan-400/80 bg-[#0e1017]/95 backdrop-blur-md rounded-md overflow-hidden animate-fade-in">
+        <div
+          style={{
+            left: floatingPos?.x !== undefined ? `${floatingPos.x}px` : undefined,
+            top: floatingPos?.y !== undefined ? `${floatingPos.y}px` : undefined,
+            right: floatingPos ? undefined : '1rem',
+            bottom: floatingPos ? undefined : '1rem',
+            width: `${telemetryWidth}px`
+          }}
+          className="fixed max-w-[calc(100vw-2rem)] z-50 shadow-2xl border-2 border-cyan-400/80 bg-[#0e1017]/95 backdrop-blur-md rounded-md overflow-hidden animate-fade-in"
+        >
           {renderRightPanel('telemetry', 0, true)}
         </div>
       )}
