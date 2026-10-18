@@ -26,7 +26,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 
 ---
 
-## 🗺️ Current Real Tree on Disk (`v3.5.0 - Arquitectura Modular Completa Fases 0 a 3 + Oneshot & Codex`)
+## 🗺️ Current Real Tree on Disk (`v3.6.2 - Arquitectura Modular Completa Fases 0 a 3 + Oneshot & Codex + HUD Ergonomics`)
 
 ```text
 cpr-omni-deck/
@@ -253,6 +253,35 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
      - Nueva pestaña `🥋 DOJO & IP` en `StreetLabView.tsx` para entrenar estilos marciales mediante Puntos de Mejora (`IP`), equipar *Skill Chips Nivel 3* o adquirir licencias en el dojo.
      - **Filtrado Estricto en Combate**: `CombatHudView.tsx` y `NetAndRolesDeckView.tsx` ahora muestran únicamente los estilos de combate que el edgerunner ha aprendido orgánicamente o equipado mediante Chipware en su zócalo neural.
      - Inclusión del manual oficial completo de artes marciales extraído de los PDFs (`MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT` de *Interface RED Vol. 4*), detallando los requisitos de STATs, DVs y efectos de las 23 disciplinas y 46 movimientos especiales.
+
+### [v3.6.2] - 2026-10-18 (Combat HUD Ergonomics, Visual SP/SDP Plates, Damage Calculator & Workspace Sizing)
+* **Category**: Combat HUD Ergonomics, Visual SP/SDP Matrix, Damage Calculator & Workspace Layout
+* **Files Modified / Created**:
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+* **What Changed**:
+  1. **Placas de Blindaje Visuales e Interactivas (SP Plates)**:
+     - Cuadrícula de insignias tácticas (`🛡️` intactas vs `💥` ablacionadas) para Cabeza y Torso (hasta 20 placas) con click directo para fijar el SP exacto.
+     - Botones de acción rápida para ablación (-1 SP) y reparación inmediata al SP máximo.
+  2. **Rastreador de SDP para Escudos y Coberturas**:
+     - Monitor estructural dedicado de Puntos de Daño Estructural (SDP) persistido en `localStorage` (`cpr_shield_cover_sdp_v1`).
+     - Presets oficiales: Escudo Antibalas (10 SDP), Cobertura Madera/Puerta (15 SDP), Cobertura Vehículo/Metal (25 SDP) y Cobertura Muro de Acero (35 SDP).
+     - Representación gráfica de placas (`🔰/💥`), reparación en 1 clic y botones de incremento/decremento (-5, -1, +1, +5).
+  3. **Calculadora Táctica de Daño, SP y SDP en Tiempo Real**:
+     - Selector de daño entrante bruto mediante teclado o presets rápidos (`[5, 8, 10, 12, 15, 18, 22, 25]`).
+     - Selector de objetivo: Escudo/Cobertura (`shield`), Torso (`body`), Cabeza (`head` con daño penetrante ×2).
+     - Tipos de ataque: Estándar (100% SP, -1 SP), Perforante AP (100% SP, -2 SP), Melee (50% SP, -1 SP), Artes Marciales (50% SP, -1 SP), Brawling (100% SP, -1 SP) y Directo (0% SP, 0 ablación).
+     - Modificadores: Herida Crítica (+5 HP directo) y transferencia táctica opcional de daño excedente a Torso tras destrucción del escudo.
+     - Previsualización reactiva y dictamen de reglas, con botón de ejecución en 1 clic que aplica el daño y registra la telemetría en el log.
+  4. **Acordeón de Reglas Oficiales de Blindaje CP RED**:
+     - Guía interactiva desplegable integrada explicando las mecánicas del Core Rulebook pp. 183-187 (ablación, disparos a la cabeza, melee vs brawling, SDP vs SP y heridas críticas).
+  5. **Controles de Ergonomía del Workspace y Auto-Expansión**:
+     - Selector de ancho para la columna izquierda (3 Cols, 4 Cols, 5 Cols) con reajuste dinámico de la columna central para totalizar siempre 12 columnas en el grid de Tailwind.
+     - Controles de altura en cabeceras de todos los paneles izquierdos: `[ S ]` (160px), `[ M ]` (280px), `[ L ]` (480px), `[ ↕ Todo ]` (sin límite) y botones `[-]` / `[+]`.
+     - Grip de arrastre vertical con ratón (`Resize Grip 📏`) en el borde inferior de cada tarjeta del panel izquierdo.
+     - Auto-expansión inteligente con badge `🔓 Auto-expandido ({count})` cuando la lista de heridas, implantes o consumibles supera 3 elementos.
 
 ---
 

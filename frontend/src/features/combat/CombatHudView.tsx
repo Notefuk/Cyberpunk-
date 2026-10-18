@@ -431,6 +431,42 @@ const STORAGE_KEY_DOCK_MODE = 'cpr_combat_telemetry_dock_v2';
 const STORAGE_KEY_TELEMETRY_SIZE = 'cpr_telemetry_size_v1';
 const STORAGE_KEY_ACTIVE_CENTER = 'cpr_combat_active_center_modules_v1';
 const STORAGE_KEY_AUTO_EXPAND = 'cpr_telemetry_auto_expand_v1';
+const STORAGE_KEY_SHIELD_COVER = 'cpr_shield_cover_sdp_v1';
+const STORAGE_KEY_LEFT_PANELS_SIZE = 'cpr_left_panels_size_v1';
+
+export interface ShieldCoverState {
+  active: boolean;
+  name: string;
+  currentSdp: number;
+  maxSdp: number;
+  type: 'bulletproof_shield' | 'wood_cover' | 'metal_cover' | 'steel_cover' | 'custom';
+}
+
+export interface LeftPanelsConfig {
+  columnSpan: 3 | 4 | 5;
+  panelMode: Record<LeftPanelId, 'compact' | 'normal' | 'large' | 'auto_full' | 'custom'>;
+  panelCustomHeight: Record<LeftPanelId, number>;
+}
+
+const DEFAULT_LEFT_PANELS_CONFIG: LeftPanelsConfig = {
+  columnSpan: 3,
+  panelMode: {
+    vitals: 'normal',
+    armor: 'auto_full',
+    luck: 'normal',
+    injuries: 'normal',
+    cyberware: 'normal',
+    consumables: 'normal'
+  },
+  panelCustomHeight: {
+    vitals: 280,
+    armor: 520,
+    luck: 220,
+    injuries: 320,
+    cyberware: 340,
+    consumables: 320
+  }
+};
 
 interface CollapsibleHudCardProps {
   id: string;
@@ -572,7 +608,6 @@ export const CombatHudView: React.FC = () => {
   const setHp = useCharacterStore((state) => state.setHp);
   const ablateArmor = useCharacterStore((state) => state.ablateArmor);
   const repairArmor = useCharacterStore((state) => state.repairArmor);
-  const applyIncomingDamage = useCharacterStore((state) => state.applyIncomingDamage);
   const spendLuck = useCharacterStore((state) => state.spendLuck);
   const restoreLuck = useCharacterStore((state) => state.restoreLuck);
   const toggleLuckPip = useCharacterStore((state) => state.toggleLuckPip);
@@ -684,6 +719,155 @@ export const CombatHudView: React.FC = () => {
   const [isRightTrayCollapsed, setIsRightTrayCollapsed] = useState<boolean>(false);
   const [sidePreviewModule, setSidePreviewModule] = useState<RightPanelId | null>(null);
   const [isTrayDragOver, setIsTrayDragOver] = useState<boolean>(false);
+
+  const [leftPanelsConfig, setLeftPanelsConfig] = useState<LeftPanelsConfig>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_LEFT_PANELS_SIZE);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          columnSpan: [3, 4, 5].includes(parsed.columnSpan) ? parsed.columnSpan : 3,
+          panelMode: { ...DEFAULT_LEFT_PANELS_CONFIG.panelMode, ...(parsed.panelMode || {}) },
+          panelCustomHeight: { ...DEFAULT_LEFT_PANELS_CONFIG.panelCustomHeight, ...(parsed.panelCustomHeight || {}) }
+        };
+      }
+    } catch {}
+    return DEFAULT_LEFT_PANELS_CONFIG;
+  });
+
+  const leftColumnSpan = leftPanelsConfig.columnSpan;
+  const leftPanelSizeMode = leftPanelsConfig.panelMode;
+  const leftPanelCustomHeight = leftPanelsConfig.panelCustomHeight;
+
+  const setLeftColumnSpan = (span: 3 | 4 | 5) => {
+    setLeftPanelsConfig((prev) => {
+      const next = { ...prev, columnSpan: span };
+      localStorage.setItem(STORAGE_KEY_LEFT_PANELS_SIZE, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const setLeftPanelMode = (panelId: LeftPanelId, mode: 'compact' | 'normal' | 'large' | 'auto_full' | 'custom') => {
+    setLeftPanelsConfig((prev) => {
+      const next = {
+        ...prev,
+        panelMode: { ...prev.panelMode, [panelId]: mode }
+      };
+      localStorage.setItem(STORAGE_KEY_LEFT_PANELS_SIZE, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const adjustLeftPanelHeight = (panelId: LeftPanelId, delta: number) => {
+    setLeftPanelsConfig((prev) => {
+      const currentH = prev.panelCustomHeight[panelId] || 280;
+      const newH = Math.max(120, Math.min(800, currentH + delta));
+      const next = {
+        ...prev,
+        panelMode: { ...prev.panelMode, [panelId]: 'custom' as const },
+        panelCustomHeight: { ...prev.panelCustomHeight, [panelId]: newH }
+      };
+      localStorage.setItem(STORAGE_KEY_LEFT_PANELS_SIZE, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const handleLeftPanelResizeMouseDown = (e: React.MouseEvent, panelId: LeftPanelId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const startY = e.clientY;
+    const startH = leftPanelCustomHeight[panelId] || 280;
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      const deltaY = moveEvent.clientY - startY;
+      const newH = Math.max(120, Math.min(800, startH + deltaY));
+      setLeftPanelsConfig((prev) => {
+        const next = {
+          ...prev,
+          panelMode: { ...prev.panelMode, [panelId]: 'custom' as const },
+          panelCustomHeight: { ...prev.panelCustomHeight, [panelId]: newH }
+        };
+        localStorage.setItem(STORAGE_KEY_LEFT_PANELS_SIZE, JSON.stringify(next));
+        return next;
+      });
+    };
+
+    const onMouseUp = () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+  };
+
+  const [shieldCover, setShieldCover] = useState<ShieldCoverState>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_SHIELD_COVER);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {
+      active: false,
+      name: 'Escudo Antibalas',
+      currentSdp: 10,
+      maxSdp: 10,
+      type: 'bulletproof_shield'
+    };
+  });
+
+  const updateShieldCover = (patch: Partial<ShieldCoverState>) => {
+    setShieldCover((prev) => {
+      const next = { ...prev, ...patch };
+      localStorage.setItem(STORAGE_KEY_SHIELD_COVER, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const setShieldSdp = (sdp: number) => {
+    updateShieldCover({ currentSdp: Math.max(0, Math.min(shieldCover.maxSdp, sdp)) });
+  };
+
+  const repairShield = () => {
+    updateShieldCover({ currentSdp: shieldCover.maxSdp });
+  };
+
+  const equipShieldPreset = (preset: 'bulletproof_shield' | 'wood_cover' | 'metal_cover' | 'steel_cover') => {
+    let name = 'Escudo Antibalas';
+    let maxSdp = 10;
+    if (preset === 'wood_cover') {
+      name = 'Cobertura Madera / Puerta';
+      maxSdp = 15;
+    } else if (preset === 'metal_cover') {
+      name = 'Cobertura Vehículo / Metal';
+      maxSdp = 25;
+    } else if (preset === 'steel_cover') {
+      name = 'Cobertura Muro de Acero';
+      maxSdp = 35;
+    }
+    updateShieldCover({
+      active: true,
+      type: preset,
+      name,
+      maxSdp,
+      currentSdp: maxSdp
+    });
+  };
+
+  const setArmorSp = (location: 'head' | 'body', targetSp: number) => {
+    const current = location === 'head' ? (activeChar?.headArmor?.currentSp ?? 0) : (activeChar?.bodyArmor?.currentSp ?? 0);
+    const max = location === 'head' ? (activeChar?.headArmor?.maxSp ?? 0) : (activeChar?.bodyArmor?.maxSp ?? 0);
+    const clampedTarget = Math.max(0, Math.min(max, targetSp));
+    if (clampedTarget === max) {
+      repairArmor(location);
+    } else if (clampedTarget <= current) {
+      ablateArmor(location, current - clampedTarget);
+    } else {
+      repairArmor(location);
+      if (max > clampedTarget) {
+        ablateArmor(location, max - clampedTarget);
+      }
+    }
+  };
 
   const [telemetryAutoExpand, setTelemetryAutoExpand] = useState<boolean>(() => {
     try {
@@ -1010,6 +1194,11 @@ export const CombatHudView: React.FC = () => {
 
   const [incomingDamageInput, setIncomingDamageInput] = useState<number>(10);
   const [damageFeedback, setDamageFeedback] = useState<string | null>(null);
+  const [calcLocation, setCalcLocation] = useState<'shield' | 'body' | 'head'>('body');
+  const [calcAttackType, setCalcAttackType] = useState<'standard' | 'ap' | 'melee' | 'martial_arts' | 'brawling' | 'direct'>('standard');
+  const [calcIsCritical, setCalcIsCritical] = useState<boolean>(false);
+  const [calcPassExcess, setCalcPassExcess] = useState<boolean>(true);
+  const [showArmorRulesGuide, setShowArmorRulesGuide] = useState<boolean>(false);
   const [rackFilter, setRackFilter] = useState<'all' | 'weapons' | 'unarmed' | 'throwables' | 'drugs'>('all');
   const [selectedCatalogWeaponId, setSelectedCatalogWeaponId] = useState<string>(
     coreData.weapons?.[0]?.id || ''
@@ -1198,11 +1387,107 @@ export const CombatHudView: React.FC = () => {
     }
   };
 
-  // Handle incoming damage button
-  const handleApplyHit = (location: 'head' | 'body') => {
-    const res = applyIncomingDamage(incomingDamageInput, location);
-    setDamageFeedback(`Impacto ${location === 'head' ? 'Cabeza' : 'Torso'}: -${res.hpLost} HP, -${res.spAblated} SP`);
-    setTimeout(() => setDamageFeedback(null), 4000);
+  // Calculation variables for Interactive Damage Calculator
+  const calcRawSp = calcLocation === 'head' ? (activeChar?.headArmor?.currentSp ?? 0) : (activeChar?.bodyArmor?.currentSp ?? 0);
+  const calcEffectiveSp = calcAttackType === 'direct'
+    ? 0
+    : (calcAttackType === 'melee' || calcAttackType === 'martial_arts' ? Math.ceil(calcRawSp / 2) : calcRawSp);
+
+  const calcPenetratingDamage = Math.max(0, incomingDamageInput - calcEffectiveSp);
+  const calcSpAblation = (calcPenetratingDamage > 0 && calcAttackType !== 'direct')
+    ? (calcAttackType === 'ap' ? Math.min(calcRawSp, 2) : Math.min(calcRawSp, 1))
+    : 0;
+
+  let calcHpLoss = 0;
+  if (calcAttackType === 'direct') {
+    calcHpLoss = incomingDamageInput;
+  } else if (calcPenetratingDamage > 0) {
+    calcHpLoss = calcPenetratingDamage * (calcLocation === 'head' ? 2 : 1);
+  }
+  if (calcIsCritical) {
+    calcHpLoss += 5;
+  }
+
+  // Shield calculation
+  const calcShieldLoss = calcLocation === 'shield' ? Math.min(shieldCover.currentSdp, incomingDamageInput) : 0;
+  const calcNewShieldSdp = calcLocation === 'shield' ? Math.max(0, shieldCover.currentSdp - calcShieldLoss) : shieldCover.currentSdp;
+  const calcExcessDamage = (calcLocation === 'shield' && calcPassExcess) ? Math.max(0, incomingDamageInput - shieldCover.currentSdp) : 0;
+
+  const calcBodyRawSp = activeChar?.bodyArmor?.currentSp ?? 0;
+  const calcExcessEffectiveSp = calcAttackType === 'direct'
+    ? 0
+    : (calcAttackType === 'melee' || calcAttackType === 'martial_arts' ? Math.ceil(calcBodyRawSp / 2) : calcBodyRawSp);
+  const calcExcessPenetrating = Math.max(0, calcExcessDamage - calcExcessEffectiveSp);
+  const calcExcessSpAblation = (calcExcessPenetrating > 0 && calcAttackType !== 'direct')
+    ? (calcAttackType === 'ap' ? Math.min(calcBodyRawSp, 2) : Math.min(calcBodyRawSp, 1))
+    : 0;
+  let calcExcessHpLoss = 0;
+  if (calcExcessDamage > 0) {
+    calcExcessHpLoss = calcAttackType === 'direct' ? calcExcessDamage : calcExcessPenetrating;
+    if (calcIsCritical) calcExcessHpLoss += 5;
+  }
+
+  let calcExplanation = '';
+  if (calcLocation === 'shield') {
+    if (incomingDamageInput <= shieldCover.currentSdp) {
+      calcExplanation = `El escudo/cobertura detiene por completo el impacto recibiendo -${calcShieldLoss} SDP (quedan ${calcNewShieldSdp} SDP). 0 daño a la armadura y 0 daño a HP.`;
+    } else if (calcPassExcess) {
+      calcExplanation = `El ataque destruye el escudo (-${calcShieldLoss} SDP) y el exceso (${calcExcessDamage}) golpea el torso (SP efectivo: ${calcExcessEffectiveSp}). Sufre -${calcExcessSpAblation} SP y -${calcExcessHpLoss} HP.`;
+    } else {
+      calcExplanation = `El ataque destruye el escudo (-${calcShieldLoss} SDP). Como la regla estándar no pasa exceso, 0 daño a HP.`;
+    }
+  } else {
+    if (calcAttackType === 'direct') {
+      calcExplanation = `Daño directo ignora el 100% del blindaje (0 SP). 0 ablación a la armadura. -${calcHpLoss} HP directo.`;
+    } else if (calcPenetratingDamage > 0) {
+      calcExplanation = `El daño (${incomingDamageInput}) supera el SP efectivo (${calcEffectiveSp}${calcAttackType === 'melee' || calcAttackType === 'martial_arts' ? ' [50% por Melee/Artes Marciales]' : ''}) -> Sufre -${calcSpAblation} SP de ablación y -${calcHpLoss} HP${calcLocation === 'head' ? ' (daño penetrante ×2 a Cabeza)' : ''}${calcIsCritical ? ' (+5 por Crítico)' : ''}.`;
+    } else {
+      calcExplanation = `El daño (${incomingDamageInput}) NO supera el SP efectivo (${calcEffectiveSp}) -> El blindaje resiste por completo. 0 ablación de SP y 0 daño a HP.`;
+    }
+  }
+
+  const handleApplyCalculatedDamage = () => {
+    ensureTelemetryExpanded();
+    if (calcLocation === 'shield') {
+      if (calcShieldLoss > 0) {
+        setShieldSdp(calcNewShieldSdp);
+      }
+      if (calcExcessDamage > 0 && calcPassExcess) {
+        if (calcExcessSpAblation > 0) {
+          ablateArmor('body', calcExcessSpAblation);
+        }
+        if (calcExcessHpLoss > 0) {
+          adjustHp(-calcExcessHpLoss);
+        }
+      }
+    } else {
+      if (calcSpAblation > 0) {
+        ablateArmor(calcLocation, calcSpAblation);
+      }
+      if (calcHpLoss > 0) {
+        adjustHp(-calcHpLoss);
+      }
+    }
+
+    const entry: RollEntry = {
+      id: `dmg-calc-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      timestamp: new Date().toISOString(),
+      type: 'damage',
+      weaponName: `Impacto Recibido: ${calcAttackType.toUpperCase()}`,
+      damageFormula: `${incomingDamageInput} Dmg -> ${calcLocation === 'shield' ? 'Escudo/Cobertura' : calcLocation === 'head' ? 'Cabeza' : 'Torso'}`,
+      distanceLabel: calcLocation === 'shield' ? `SDP -${calcShieldLoss}` : `SP -${calcSpAblation}`,
+      diceResults: [],
+      baseDamageTotal: incomingDamageInput,
+      finalDamageTotal: calcLocation === 'shield' ? calcExcessHpLoss : calcHpLoss,
+      damageRolled: true
+    };
+    addRollEntry(entry);
+
+    const feedbackText = calcLocation === 'shield'
+      ? `💥 Escudo: -${calcShieldLoss} SDP${calcExcessHpLoss > 0 ? `, Torso: -${calcExcessSpAblation} SP, -${calcExcessHpLoss} HP` : ''}`
+      : `💥 ${calcLocation === 'head' ? 'Cabeza' : 'Torso'}: -${calcSpAblation} SP, -${calcHpLoss} HP`;
+    setDamageFeedback(feedbackText);
+    setTimeout(() => setDamageFeedback(null), 5000);
   };
 
   // Handle Step 1: Weapon Attack Check (1d10)
@@ -1805,6 +2090,131 @@ export const CombatHudView: React.FC = () => {
   const hasAnyInHandAttack = inHandWeapons.length > 0 || isBrawlingInHand || isMartialArtsInHand;
 
 
+  const getLeftColumnClass = () => {
+    if (leftColumnSpan === 5) return 'xl:col-span-5';
+    if (leftColumnSpan === 4) return 'xl:col-span-4';
+    return 'xl:col-span-3';
+  };
+
+  const getCenterColumnClass = () => {
+    if (isRightTrayCollapsed) {
+      if (leftColumnSpan === 5) return 'xl:col-span-6';
+      if (leftColumnSpan === 4) return 'xl:col-span-7';
+      return 'xl:col-span-8';
+    } else {
+      if (leftColumnSpan === 5) return 'xl:col-span-4';
+      if (leftColumnSpan === 4) return 'xl:col-span-5';
+      return 'xl:col-span-6';
+    }
+  };
+
+  const getLeftPanelStyle = (panelId: LeftPanelId, isAutoFullTriggered = false): React.CSSProperties | undefined => {
+    const mode = leftPanelSizeMode[panelId] || (isAutoFullTriggered ? 'auto_full' : 'normal');
+    if (mode === 'custom') {
+      const h = leftPanelCustomHeight[panelId] || 280;
+      return { maxHeight: `${h}px`, overflowY: 'auto' };
+    }
+    return undefined;
+  };
+
+  const getLeftPanelClass = (panelId: LeftPanelId, isAutoFullTriggered = false): string => {
+    const mode = leftPanelSizeMode[panelId] || (isAutoFullTriggered ? 'auto_full' : 'normal');
+    if (mode === 'compact') return 'max-h-[160px] overflow-y-auto pr-1';
+    if (mode === 'normal') return 'max-h-[280px] overflow-y-auto pr-1';
+    if (mode === 'large') return 'max-h-[480px] overflow-y-auto pr-1';
+    if (mode === 'auto_full') return 'max-h-none overflow-visible';
+    return 'pr-1';
+  };
+
+  const renderLeftPanelHeaderControls = (
+    panelId: LeftPanelId,
+    isAutoFullTriggered = false,
+    autoCount = 0,
+    extra?: React.ReactNode
+  ) => {
+    const activeMode = leftPanelSizeMode[panelId] || (isAutoFullTriggered ? 'auto_full' : 'normal');
+    return (
+      <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+        {extra}
+        {isAutoFullTriggered && (
+          <span className="text-[9px] font-mono-code font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 animate-pulse">
+            🔓 Auto-expandido ({autoCount})
+          </span>
+        )}
+        <div className="flex items-center gap-0.5 bg-[#141722] p-0.5 rounded border border-[#22283a]">
+          <button
+            type="button"
+            onClick={() => setLeftPanelMode(panelId, 'compact')}
+            className={`px-1 py-0.2 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+              activeMode === 'compact' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
+            }`}
+            title="Compacto (160px)"
+          >
+            S
+          </button>
+          <button
+            type="button"
+            onClick={() => setLeftPanelMode(panelId, 'normal')}
+            className={`px-1 py-0.2 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+              activeMode === 'normal' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
+            }`}
+            title="Normal (280px)"
+          >
+            M
+          </button>
+          <button
+            type="button"
+            onClick={() => setLeftPanelMode(panelId, 'large')}
+            className={`px-1 py-0.2 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+              activeMode === 'large' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
+            }`}
+            title="Grande (480px)"
+          >
+            L
+          </button>
+          <button
+            type="button"
+            onClick={() => setLeftPanelMode(panelId, 'auto_full')}
+            className={`px-1 py-0.2 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+              activeMode === 'auto_full' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
+            }`}
+            title="Todo (sin límite)"
+          >
+            ↕ Todo
+          </button>
+          <button
+            type="button"
+            onClick={() => adjustLeftPanelHeight(panelId, -40)}
+            className="px-1 py-0.2 text-[9px] font-mono-code text-slate-400 hover:text-white hover:bg-[#252c3e] rounded transition-colors cursor-pointer"
+            title="Reducir altura (-40px)"
+          >
+            -
+          </button>
+          <button
+            type="button"
+            onClick={() => adjustLeftPanelHeight(panelId, 40)}
+            className="px-1 py-0.2 text-[9px] font-mono-code text-slate-400 hover:text-white hover:bg-[#252c3e] rounded transition-colors cursor-pointer"
+            title="Aumentar altura (+40px)"
+          >
+            +
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderLeftPanelResizeHandle = (panelId: LeftPanelId) => (
+    <div
+      onMouseDown={(e) => handleLeftPanelResizeMouseDown(e, panelId)}
+      className="w-full py-0.5 mt-2 flex items-center justify-center cursor-row-resize bg-[#141620] hover:bg-cyan-950/60 border-t border-[#232738] text-[9px] text-slate-500 hover:text-cyan-400 font-mono-code select-none transition-colors group"
+      title="Arrastrar verticalmente para ajustar la altura del panel"
+    >
+      <span className="opacity-60 group-hover:opacity-100 flex items-center gap-1">
+        ────── 📏 Redimensionar ──────
+      </span>
+    </div>
+  );
+
   // Renderizadores de Paneles Modulares y Reordenables
   const renderLeftPanel = (id: LeftPanelId, index: number) => {
     const isCollapsed = !!collapsedBoxes[id];
@@ -1831,107 +2241,113 @@ export const CombatHudView: React.FC = () => {
             onDrop={() => handleDrop('left', 'vitals')}
             isDragOver={dragOverItem === 'vitals'}
             accentBorderClass={isSeriouslyWounded ? 'border-red-600/60 shadow-md shadow-red-950/40' : 'border-[#232736]'}
-            extraHeaderActions={
+            extraHeaderActions={renderLeftPanelHeaderControls(
+              'vitals',
+              false,
+              0,
               isSeriouslyWounded ? (
                 <span className="bg-[#dc2626]/20 border border-[#dc2626]/40 text-[#dc2626] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold flex items-center gap-1 animate-pulse">
                   <Flame className="w-3 h-3" /> GRAVE (-2)
                 </span>
               ) : null
-            }
+            )}
           >
-            
-        <div className="space-y-3">
-                    {/* HP Bar */}
-          <div className="mb-3 bg-[#171923] p-3 rounded-sm border border-[#222636]">
-            <div className="flex justify-between items-baseline mb-1">
-              <div className="flex items-center gap-1 font-tech text-xs font-bold text-white">
-                <Heart className="w-3.5 h-3.5 text-[#dc2626]" />
-                <span>PUNTOS DE VIDA</span>
-              </div>
-              <div className="font-mono-code text-xs">
-                <span className={`text-lg font-bold ${isSeriouslyWounded ? 'text-[#dc2626]' : 'text-white'}`}>
-                  {activeChar?.currentHp ?? 0}
-                </span>
-                <span className="text-[#64748b]"> / {maxHp}</span>
-              </div>
-            </div>
+            <div className={getLeftPanelClass('vitals')} style={getLeftPanelStyle('vitals')}>
+              <div className="space-y-3">
+                {/* HP Bar */}
+                <div className="mb-3 bg-[#171923] p-3 rounded-sm border border-[#222636]">
+                  <div className="flex justify-between items-baseline mb-1">
+                    <div className="flex items-center gap-1 font-tech text-xs font-bold text-white">
+                      <Heart className="w-3.5 h-3.5 text-[#dc2626]" />
+                      <span>PUNTOS DE VIDA</span>
+                    </div>
+                    <div className="font-mono-code text-xs">
+                      <span className={`text-lg font-bold ${isSeriouslyWounded ? 'text-[#dc2626]' : 'text-white'}`}>
+                        {activeChar?.currentHp ?? 0}
+                      </span>
+                      <span className="text-[#64748b]"> / {maxHp}</span>
+                    </div>
+                  </div>
 
-            <div className="w-full bg-[#0c0d12] h-3 rounded-xs overflow-hidden border border-[#262b3c] p-0.5">
-              <div 
-                className={`h-full transition-all duration-300 ${
-                  isMortallyWounded 
-                    ? 'bg-[#dc2626]' 
-                    : isSeriouslyWounded 
-                      ? 'bg-gradient-to-r from-[#dc2626] to-[#f59e0b]' 
-                      : 'bg-gradient-to-r from-[#059669] to-[#10b981]'
-                }`}
-                style={{ width: `${Math.max(0, Math.min(100, ((activeChar?.currentHp ?? 0) / maxHp) * 100))}%` }}
-              />
-            </div>
+                  <div className="w-full bg-[#0c0d12] h-3 rounded-xs overflow-hidden border border-[#262b3c] p-0.5">
+                    <div 
+                      className={`h-full transition-all duration-300 ${
+                        isMortallyWounded 
+                          ? 'bg-[#dc2626]' 
+                          : isSeriouslyWounded 
+                            ? 'bg-gradient-to-r from-[#dc2626] to-[#f59e0b]' 
+                            : 'bg-gradient-to-r from-[#059669] to-[#10b981]'
+                      }`}
+                      style={{ width: `${Math.max(0, Math.min(100, ((activeChar?.currentHp ?? 0) / maxHp) * 100))}%` }}
+                    />
+                  </div>
 
-            {/* Quick Adjust Buttons */}
-            <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-[#1f2332] text-xs font-mono-code">
-              <div className="flex gap-1">
-                <button 
-                  onClick={() => adjustHp(-5)}
-                  className="px-2 py-0.5 bg-[#222534] hover:bg-[#dc2626] hover:text-white border border-[#2c3246] rounded-xs font-bold transition-all active:scale-95 text-[#cbd5e1] text-[11px]"
-                >
-                  -5
-                </button>
-                <button 
-                  onClick={() => adjustHp(-1)}
-                  className="px-2 py-0.5 bg-[#222534] hover:bg-[#dc2626] hover:text-white border border-[#2c3246] rounded-xs font-bold transition-all active:scale-95 text-[#cbd5e1] text-[11px]"
-                >
-                  -1
-                </button>
-                <button 
-                  onClick={() => adjustHp(1)}
-                  className="px-2 py-0.5 bg-[#222534] hover:bg-[#10b981] hover:text-white border border-[#2c3246] rounded-xs font-bold transition-all active:scale-95 text-[#cbd5e1] text-[11px]"
-                >
-                  +1
-                </button>
-                <button 
-                  onClick={() => adjustHp(5)}
-                  className="px-2 py-0.5 bg-[#222534] hover:bg-[#10b981] hover:text-white border border-[#2c3246] rounded-xs font-bold transition-all active:scale-95 text-[#cbd5e1] text-[11px]"
-                >
-                  +5
-                </button>
+                  {/* Quick Adjust Buttons */}
+                  <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-[#1f2332] text-xs font-mono-code">
+                    <div className="flex gap-1">
+                      <button 
+                        onClick={() => adjustHp(-5)}
+                        className="px-2 py-0.5 bg-[#222534] hover:bg-[#dc2626] hover:text-white border border-[#2c3246] rounded-xs font-bold transition-all active:scale-95 text-[#cbd5e1] text-[11px]"
+                      >
+                        -5
+                      </button>
+                      <button 
+                        onClick={() => adjustHp(-1)}
+                        className="px-2 py-0.5 bg-[#222534] hover:bg-[#dc2626] hover:text-white border border-[#2c3246] rounded-xs font-bold transition-all active:scale-95 text-[#cbd5e1] text-[11px]"
+                      >
+                        -1
+                      </button>
+                      <button 
+                        onClick={() => adjustHp(1)}
+                        className="px-2 py-0.5 bg-[#222534] hover:bg-[#10b981] hover:text-white border border-[#2c3246] rounded-xs font-bold transition-all active:scale-95 text-[#cbd5e1] text-[11px]"
+                      >
+                        +1
+                      </button>
+                      <button 
+                        onClick={() => adjustHp(5)}
+                        className="px-2 py-0.5 bg-[#222534] hover:bg-[#10b981] hover:text-white border border-[#2c3246] rounded-xs font-bold transition-all active:scale-95 text-[#cbd5e1] text-[11px]"
+                      >
+                        +5
+                      </button>
+                    </div>
+                    <button 
+                      onClick={() => setHp(maxHp)}
+                      className="px-2 py-0.5 bg-[#1a1d28] hover:bg-[#10b981]/20 hover:border-[#10b981] border border-[#2b3042] text-[#94a3b8] hover:text-white rounded-xs transition-all active:scale-95 text-[10px]"
+                    >
+                      Max
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-2.5 bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="font-tech text-[11px] font-bold text-white uppercase flex items-center gap-1.5">
+                      <Package className="w-3.5 h-3.5 text-[#38bdf8]" /> ESTADO DE CARGA / SOBREPESO
+                    </span>
+                    {activeChar?.encumbranceMode && activeChar.encumbranceMode !== 'none' && (
+                      <span className="bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold animate-pulse">
+                        SOBREPESO ACTIVO
+                      </span>
+                    )}
+                  </div>
+                  <select
+                    value={activeChar?.encumbranceMode || 'none'}
+                    onChange={(e) => setEncumbranceMode(e.target.value as EncumbranceMode)}
+                    className="w-full bg-[#0f1016] border border-[#2e364c] text-white font-mono-code text-[11px] py-1 px-2 rounded focus:outline-none focus:border-[#38bdf8] cursor-pointer"
+                  >
+                    {(Object.keys(ENCUMBRANCE_MODES) as EncumbranceMode[]).map((key) => (
+                      <option key={key} value={key} className="bg-[#121319] text-white">
+                        {ENCUMBRANCE_MODES[key].label}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[10px] text-[#94a3b8] font-mono-code mt-1.5 leading-tight">
+                    {ENCUMBRANCE_MODES[activeChar?.encumbranceMode || 'none']?.description}
+                  </p>
+                </div>
               </div>
-              <button 
-                onClick={() => setHp(maxHp)}
-                className="px-2 py-0.5 bg-[#1a1d28] hover:bg-[#10b981]/20 hover:border-[#10b981] border border-[#2b3042] text-[#94a3b8] hover:text-white rounded-xs transition-all active:scale-95 text-[10px]"
-              >
-                Max
-              </button>
             </div>
-          </div>
-                    <div className="mt-2.5 bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="font-tech text-[11px] font-bold text-white uppercase flex items-center gap-1.5">
-                <Package className="w-3.5 h-3.5 text-[#38bdf8]" /> ESTADO DE CARGA / SOBREPESO
-              </span>
-              {activeChar?.encumbranceMode && activeChar.encumbranceMode !== 'none' && (
-                <span className="bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold animate-pulse">
-                  SOBREPESO ACTIVO
-                </span>
-              )}
-            </div>
-            <select
-              value={activeChar?.encumbranceMode || 'none'}
-              onChange={(e) => setEncumbranceMode(e.target.value as EncumbranceMode)}
-              className="w-full bg-[#0f1016] border border-[#2e364c] text-white font-mono-code text-[11px] py-1 px-2 rounded focus:outline-none focus:border-[#38bdf8] cursor-pointer"
-            >
-              {(Object.keys(ENCUMBRANCE_MODES) as EncumbranceMode[]).map((key) => (
-                <option key={key} value={key} className="bg-[#121319] text-white">
-                  {ENCUMBRANCE_MODES[key].label}
-                </option>
-              ))}
-            </select>
-            <p className="text-[10px] text-[#94a3b8] font-mono-code mt-1.5 leading-tight">
-              {ENCUMBRANCE_MODES[activeChar?.encumbranceMode || 'none']?.description}
-            </p>
-          </div>
-        </div>
+            {renderLeftPanelResizeHandle('vitals')}
 
           </CollapsibleHudCard>
         );
@@ -1943,7 +2359,7 @@ export const CombatHudView: React.FC = () => {
             id="armor"
             title="MATRIZ DE BLINDAJE & IMPACTOS"
             icon={<Shield className="w-4 h-4 text-[#38bdf8]" />}
-            summary={`Cab: ${activeChar?.headArmor?.currentSp ?? 0}/${activeChar?.headArmor?.maxSp ?? 0} | Tor: ${activeChar?.bodyArmor?.currentSp ?? 0}/${activeChar?.bodyArmor?.maxSp ?? 0} SP`}
+            summary={`Cab: ${activeChar?.headArmor?.currentSp ?? 0}/${activeChar?.headArmor?.maxSp ?? 0} | Tor: ${activeChar?.bodyArmor?.currentSp ?? 0}/${activeChar?.bodyArmor?.maxSp ?? 0} SP${shieldCover.active ? ` | Esc: ${shieldCover.currentSdp}/${shieldCover.maxSdp} SDP` : ''}`}
             isCollapsed={isCollapsed}
             onToggleCollapse={() => toggleBoxCollapse('armor')}
             canMoveUp={canMoveUp}
@@ -1954,113 +2370,599 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'armor')}
             onDrop={() => handleDrop('left', 'armor')}
             isDragOver={dragOverItem === 'armor'}
+            extraHeaderActions={renderLeftPanelHeaderControls('armor', false, 0)}
           >
-            
-        <div className="space-y-3">
-                    <div className="grid grid-cols-2 gap-2.5 mb-3">
-            {/* HEAD ARMOR */}
-            <div className="bg-[#171923] p-2.5 rounded-sm border border-[#222636]">
-              <div className="flex justify-between items-start mb-1.5">
-                <div>
-                  <span className="text-[9px] font-mono-code text-[#64748b] block uppercase">CABEZA</span>
-                  <span className="font-tech text-xs font-bold text-white block truncate max-w-[80px]">
-                    {activeChar?.headArmor?.name || 'Head'}
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="font-tech text-xl font-bold text-[#38bdf8] leading-none">
-                    {activeChar?.headArmor?.currentSp ?? 0}
-                  </span>
-                  <span className="text-[9px] text-[#64748b] block font-mono-code">
-                    /{activeChar?.headArmor?.maxSp ?? 0} <TacticalTooltip term="SP">SP</TacticalTooltip>
-                  </span>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-1 pt-1.5 border-t border-[#1f2332]">
-                <button
-                  onClick={() => ablateArmor('head', 1)}
-                  className="py-0.5 px-1 bg-[#dc2626]/10 hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/30 rounded-xs font-mono-code text-[10px] font-bold transition-all text-center"
-                >
-                  -1
-                </button>
-                <button
-                  onClick={() => repairArmor('head')}
-                  className="py-0.5 px-1 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-[10px] font-bold transition-all text-center"
-                >
-                  Reparar
-                </button>
-              </div>
-            </div>
+            <div className={getLeftPanelClass('armor')} style={getLeftPanelStyle('armor')}>
+              <div className="space-y-3">
+                {/* BLINDAJE CORPORAL Y CABEZA (SP PLATES INTERACTIVAS) */}
+                <div className="grid grid-cols-1 gap-2.5 mb-1">
+                  {/* CABEZA */}
+                  <div className="bg-[#171923] p-2.5 rounded-sm border border-[#222636]">
+                    <div className="flex justify-between items-start mb-1.5">
+                      <div>
+                        <span className="text-[9px] font-mono-code text-[#64748b] block uppercase">CABEZA</span>
+                        <span className="font-tech text-xs font-bold text-white block truncate max-w-[120px]">
+                          {activeChar?.headArmor?.name || 'Head'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-right">
+                          <span className="font-tech text-xl font-bold text-[#38bdf8] leading-none">
+                            {activeChar?.headArmor?.currentSp ?? 0}
+                          </span>
+                          <span className="text-[9px] text-[#64748b] block font-mono-code">
+                            /{activeChar?.headArmor?.maxSp ?? 0} <TacticalTooltip term="SP">SP</TacticalTooltip>
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <button
+                            type="button"
+                            onClick={() => ablateArmor('head', 1)}
+                            className="py-0.5 px-1.5 bg-[#dc2626]/20 hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/40 rounded-xs font-mono-code text-[10px] font-bold transition-all text-center cursor-pointer"
+                            title="Ablacionar 1 SP"
+                          >
+                            -1 SP
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => repairArmor('head')}
+                            className="py-0.5 px-1.5 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-[10px] font-bold transition-all text-center cursor-pointer"
+                            title="Reparar SP al máximo"
+                          >
+                            Reparar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
 
-            {/* BODY ARMOR */}
-            <div className="bg-[#171923] p-2.5 rounded-sm border border-[#222636]">
-              <div className="flex justify-between items-start mb-1.5">
-                <div>
-                  <span className="text-[9px] font-mono-code text-[#64748b] block uppercase">TORSO</span>
-                  <span className="font-tech text-xs font-bold text-white block truncate max-w-[80px]">
-                    {activeChar?.bodyArmor?.name || 'Body'}
-                  </span>
+                    {/* Visual Plate Badges Grid for Head SP */}
+                    <div className="pt-2 border-t border-[#1f2332]">
+                      <div className="text-[9px] font-mono-code text-slate-400 mb-1 flex items-center justify-between">
+                        <span>Placas de Blindaje (Click para fijar SP):</span>
+                        <span>{activeChar?.headArmor?.currentSp ?? 0} / {activeChar?.headArmor?.maxSp ?? 0}</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {Array.from({ length: Math.min(20, Math.max(activeChar?.headArmor?.maxSp ?? 0, activeChar?.headArmor?.currentSp ?? 0, 1)) }).map((_, i) => {
+                          const isIntact = i < (activeChar?.headArmor?.currentSp ?? 0);
+                          return (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={() => setArmorSp('head', i + 1)}
+                              className={`w-6 h-6 rounded-xs text-[10px] font-mono-code font-bold flex items-center justify-center transition-all cursor-pointer border ${
+                                isIntact
+                                  ? 'bg-cyan-950/60 border-cyan-500/60 text-cyan-300 hover:bg-cyan-900 shadow-xs'
+                                  : 'bg-[#181116] border-[#381a24] text-red-500/70 hover:bg-red-950/50'
+                              }`}
+                              title={`Fijar SP de Cabeza en ${i + 1} (${isIntact ? 'Intacta 🛡️' : 'Ablacionada 💥'})`}
+                            >
+                              {isIntact ? '🛡️' : '💥'}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* TORSO */}
+                  <div className="bg-[#171923] p-2.5 rounded-sm border border-[#222636]">
+                    <div className="flex justify-between items-start mb-1.5">
+                      <div>
+                        <span className="text-[9px] font-mono-code text-[#64748b] block uppercase">TORSO</span>
+                        <span className="font-tech text-xs font-bold text-white block truncate max-w-[120px]">
+                          {activeChar?.bodyArmor?.name || 'Body'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-right">
+                          <span className="font-tech text-xl font-bold text-[#38bdf8] leading-none">
+                            {activeChar?.bodyArmor?.currentSp ?? 0}
+                          </span>
+                          <span className="text-[9px] text-[#64748b] block font-mono-code">
+                            /{activeChar?.bodyArmor?.maxSp ?? 0} <TacticalTooltip term="SP">SP</TacticalTooltip>
+                          </span>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <button
+                            type="button"
+                            onClick={() => ablateArmor('body', 1)}
+                            className="py-0.5 px-1.5 bg-[#dc2626]/20 hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/40 rounded-xs font-mono-code text-[10px] font-bold transition-all text-center cursor-pointer"
+                            title="Ablacionar 1 SP"
+                          >
+                            -1 SP
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => repairArmor('body')}
+                            className="py-0.5 px-1.5 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-[10px] font-bold transition-all text-center cursor-pointer"
+                            title="Reparar SP al máximo"
+                          >
+                            Reparar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Visual Plate Badges Grid for Torso SP */}
+                    <div className="pt-2 border-t border-[#1f2332]">
+                      <div className="text-[9px] font-mono-code text-slate-400 mb-1 flex items-center justify-between">
+                        <span>Placas de Blindaje (Click para fijar SP):</span>
+                        <span>{activeChar?.bodyArmor?.currentSp ?? 0} / {activeChar?.bodyArmor?.maxSp ?? 0}</span>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {Array.from({ length: Math.min(20, Math.max(activeChar?.bodyArmor?.maxSp ?? 0, activeChar?.bodyArmor?.currentSp ?? 0, 1)) }).map((_, i) => {
+                          const isIntact = i < (activeChar?.bodyArmor?.currentSp ?? 0);
+                          return (
+                            <button
+                              key={i}
+                              type="button"
+                              onClick={() => setArmorSp('body', i + 1)}
+                              className={`w-6 h-6 rounded-xs text-[10px] font-mono-code font-bold flex items-center justify-center transition-all cursor-pointer border ${
+                                isIntact
+                                  ? 'bg-cyan-950/60 border-cyan-500/60 text-cyan-300 hover:bg-cyan-900 shadow-xs'
+                                  : 'bg-[#181116] border-[#381a24] text-red-500/70 hover:bg-red-950/50'
+                              }`}
+                              title={`Fijar SP de Torso en ${i + 1} (${isIntact ? 'Intacta 🛡️' : 'Ablacionada 💥'})`}
+                            >
+                              {isIntact ? '🛡️' : '💥'}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <span className="font-tech text-xl font-bold text-[#38bdf8] leading-none">
-                    {activeChar?.bodyArmor?.currentSp ?? 0}
-                  </span>
-                  <span className="text-[9px] text-[#64748b] block font-mono-code">
-                    /{activeChar?.bodyArmor?.maxSp ?? 0} <TacticalTooltip term="SP">SP</TacticalTooltip>
-                  </span>
+
+                {/* ESCUDO / COBERTURA SDP TRACKER */}
+                <div className="bg-[#141724] p-3 rounded-sm border border-[#252c42] mb-1 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base">🔰</span>
+                      <div>
+                        <span className="font-tech text-xs font-bold text-white block uppercase">
+                          {shieldCover.name}
+                        </span>
+                        <span className="text-[9px] font-mono-code text-slate-400">
+                          {shieldCover.active ? 'COBERTURA EQUIPADA / ACTIVA' : 'INACTIVO / GUARDADO'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right flex items-center gap-2">
+                      <div>
+                        <span className={`font-tech text-lg font-bold leading-none ${shieldCover.currentSdp > 0 ? 'text-amber-400' : 'text-red-500'}`}>
+                          {shieldCover.currentSdp}
+                        </span>
+                        <span className="text-[9px] text-[#64748b] block font-mono-code">
+                          /{shieldCover.maxSdp} SDP
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => updateShieldCover({ active: !shieldCover.active })}
+                        className={`px-2 py-0.5 text-[10px] font-mono-code rounded font-bold transition-all border cursor-pointer ${
+                          shieldCover.active
+                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                            : 'bg-[#1e2334] text-slate-400 border-[#2f3852]'
+                        }`}
+                      >
+                        {shieldCover.active ? 'ACTIVO' : 'ACTIVAR'}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Presets de Escudos / Coberturas */}
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => equipShieldPreset('bulletproof_shield')}
+                      className={`px-2 py-1 rounded-xs font-mono-code text-[9px] font-bold transition-all border cursor-pointer ${
+                        shieldCover.type === 'bulletproof_shield'
+                          ? 'bg-cyan-500 text-black border-cyan-400 font-bold'
+                          : 'bg-[#1b2030] text-slate-300 border-[#2b354e] hover:bg-[#252d44]'
+                      }`}
+                    >
+                      🛡️ Escudo Antibalas (10)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => equipShieldPreset('wood_cover')}
+                      className={`px-2 py-1 rounded-xs font-mono-code text-[9px] font-bold transition-all border cursor-pointer ${
+                        shieldCover.type === 'wood_cover'
+                          ? 'bg-cyan-500 text-black border-cyan-400 font-bold'
+                          : 'bg-[#1b2030] text-slate-300 border-[#2b354e] hover:bg-[#252d44]'
+                      }`}
+                    >
+                      🚪 Madera (15)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => equipShieldPreset('metal_cover')}
+                      className={`px-2 py-1 rounded-xs font-mono-code text-[9px] font-bold transition-all border cursor-pointer ${
+                        shieldCover.type === 'metal_cover'
+                          ? 'bg-cyan-500 text-black border-cyan-400 font-bold'
+                          : 'bg-[#1b2030] text-slate-300 border-[#2b354e] hover:bg-[#252d44]'
+                      }`}
+                    >
+                      🚗 Metal (25)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => equipShieldPreset('steel_cover')}
+                      className={`px-2 py-1 rounded-xs font-mono-code text-[9px] font-bold transition-all border cursor-pointer ${
+                        shieldCover.type === 'steel_cover'
+                          ? 'bg-cyan-500 text-black border-cyan-400 font-bold'
+                          : 'bg-[#1b2030] text-slate-300 border-[#2b354e] hover:bg-[#252d44]'
+                      }`}
+                    >
+                      🧱 Acero (35)
+                    </button>
+                  </div>
+
+                  {/* Visual Plate Badges Grid for Shield SDP */}
+                  <div className="pt-2 border-t border-[#1f2538]">
+                    <div className="flex items-center justify-between text-[9px] font-mono-code text-slate-400 mb-1">
+                      <span>Integridad SDP (Click para fijar SDP):</span>
+                      <button
+                        type="button"
+                        onClick={repairShield}
+                        className="text-emerald-400 hover:underline cursor-pointer"
+                      >
+                        Reparar SDP
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                      {Array.from({ length: Math.min(35, shieldCover.maxSdp) }).map((_, i) => {
+                        const isIntact = i < shieldCover.currentSdp;
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => setShieldSdp(i + 1)}
+                            className={`w-5 h-5 rounded-xs text-[9px] font-mono-code font-bold flex items-center justify-center transition-all cursor-pointer border ${
+                              isIntact
+                                ? 'bg-amber-950/60 border-amber-500/50 text-amber-300 hover:bg-amber-900'
+                                : 'bg-[#191114] border-[#381a24] text-red-500/70 hover:bg-red-950/40'
+                            }`}
+                            title={`Fijar SDP en ${i + 1} (${isIntact ? 'Intacto 🔰' : 'Destruido 💥'})`}
+                          >
+                            {isIntact ? '🔰' : '💥'}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-[#1e2538] text-xs font-mono-code">
+                      <div className="flex gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setShieldSdp(shieldCover.currentSdp - 5)}
+                          className="px-2 py-0.5 bg-[#1e2334] hover:bg-red-600 hover:text-white border border-[#2b334a] rounded-xs font-bold text-slate-300 text-[10px]"
+                        >
+                          -5
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShieldSdp(shieldCover.currentSdp - 1)}
+                          className="px-2 py-0.5 bg-[#1e2334] hover:bg-red-600 hover:text-white border border-[#2b334a] rounded-xs font-bold text-slate-300 text-[10px]"
+                        >
+                          -1
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShieldSdp(shieldCover.currentSdp + 1)}
+                          className="px-2 py-0.5 bg-[#1e2334] hover:bg-emerald-600 hover:text-white border border-[#2b334a] rounded-xs font-bold text-slate-300 text-[10px]"
+                        >
+                          +1
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setShieldSdp(shieldCover.currentSdp + 5)}
+                          className="px-2 py-0.5 bg-[#1e2334] hover:bg-emerald-600 hover:text-white border border-[#2b334a] rounded-xs font-bold text-slate-300 text-[10px]"
+                        >
+                          +5
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={repairShield}
+                        className="px-2 py-0.5 bg-[#1a231f] hover:bg-emerald-600 hover:text-white border border-emerald-600/40 text-emerald-300 rounded-xs text-[10px] font-bold"
+                      >
+                        Max SDP
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* CALCULADORA TÁCTICA INTERACTIVA DE DAÑO, SP Y SDP */}
+                <div className="bg-[#121520] p-3 rounded-sm border border-[#262c40] mb-1 space-y-3">
+                  <div className="flex items-center justify-between border-b border-[#20273a] pb-2">
+                    <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5">
+                      <Shield className="w-3.5 h-3.5 text-[#f59e0b]" /> CALCULADORA TÁCTICA DE IMPACTOS
+                    </span>
+                    {damageFeedback && (
+                      <span className="text-[10px] font-mono-code text-[#10b981] font-bold animate-fade-in">
+                        {damageFeedback}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Fila 1: Daño base con presets */}
+                  <div>
+                    <div className="flex items-center justify-between text-[10px] font-mono-code text-slate-400 mb-1">
+                      <span>Daño Bruto Entrante:</span>
+                      <span className="text-white font-bold">{incomingDamageInput} pts</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        min="0"
+                        max="99"
+                        value={incomingDamageInput}
+                        onChange={(e) => setIncomingDamageInput(Math.max(0, parseInt(e.target.value) || 0))}
+                        className="w-16 bg-[#0a0c12] border border-[#2e374f] text-white font-mono-code font-bold text-center py-1 rounded text-sm focus:outline-none focus:border-cyan-400"
+                      />
+                      <div className="flex flex-wrap gap-1 flex-1">
+                        {[5, 8, 10, 12, 15, 18, 22, 25].map((presetDmg) => (
+                          <button
+                            key={presetDmg}
+                            type="button"
+                            onClick={() => setIncomingDamageInput(presetDmg)}
+                            className={`px-1.5 py-0.5 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer border ${
+                              incomingDamageInput === presetDmg
+                                ? 'bg-cyan-500 text-black border-cyan-400'
+                                : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                            }`}
+                          >
+                            {presetDmg}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Fila 2: Localización del Blanco */}
+                  <div>
+                    <div className="text-[10px] font-mono-code text-slate-400 mb-1">Localización del Blanco:</div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setCalcLocation('shield')}
+                        className={`py-1 rounded-xs text-[10px] font-tech font-bold uppercase transition-all cursor-pointer border ${
+                          calcLocation === 'shield'
+                            ? 'bg-amber-500 text-black border-amber-400'
+                            : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                        }`}
+                      >
+                        🛡️ Escudo / Cob
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCalcLocation('body')}
+                        className={`py-1 rounded-xs text-[10px] font-tech font-bold uppercase transition-all cursor-pointer border ${
+                          calcLocation === 'body'
+                            ? 'bg-cyan-500 text-black border-cyan-400'
+                            : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                        }`}
+                      >
+                        🎽 Torso
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCalcLocation('head')}
+                        className={`py-1 rounded-xs text-[10px] font-tech font-bold uppercase transition-all cursor-pointer border ${
+                          calcLocation === 'head'
+                            ? 'bg-red-500 text-white border-red-400'
+                            : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                        }`}
+                      >
+                        🎯 Cabeza (×2)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Fila 3: Tipo de Ataque & Modificadores */}
+                  <div>
+                    <div className="text-[10px] font-mono-code text-slate-400 mb-1">Tipo de Ataque / Munición:</div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setCalcAttackType('standard')}
+                        className={`py-1 px-1 rounded-xs text-[9px] font-mono-code font-bold transition-all cursor-pointer border truncate ${
+                          calcAttackType === 'standard'
+                            ? 'bg-cyan-500 text-black border-cyan-400'
+                            : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                        }`}
+                        title="Estándar: 100% SP, -1 SP ablación si penetra"
+                      >
+                        Estándar (-1 SP)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCalcAttackType('ap')}
+                        className={`py-1 px-1 rounded-xs text-[9px] font-mono-code font-bold transition-all cursor-pointer border truncate ${
+                          calcAttackType === 'ap'
+                            ? 'bg-orange-500 text-black border-orange-400'
+                            : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                        }`}
+                        title="Perforante (AP): 100% SP, -2 SP ablación si penetra"
+                      >
+                        AP (-2 SP)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCalcAttackType('melee')}
+                        className={`py-1 px-1 rounded-xs text-[9px] font-mono-code font-bold transition-all cursor-pointer border truncate ${
+                          calcAttackType === 'melee'
+                            ? 'bg-purple-500 text-white border-purple-400'
+                            : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                        }`}
+                        title="Melee: Ignora 50% SP (redondeado hacia arriba)"
+                      >
+                        Melee (50% SP)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCalcAttackType('martial_arts')}
+                        className={`py-1 px-1 rounded-xs text-[9px] font-mono-code font-bold transition-all cursor-pointer border truncate ${
+                          calcAttackType === 'martial_arts'
+                            ? 'bg-purple-500 text-white border-purple-400'
+                            : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                        }`}
+                        title="Artes Marciales: Ignora 50% SP"
+                      >
+                        Artes Marc. (50%)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCalcAttackType('brawling')}
+                        className={`py-1 px-1 rounded-xs text-[9px] font-mono-code font-bold transition-all cursor-pointer border truncate ${
+                          calcAttackType === 'brawling'
+                            ? 'bg-blue-500 text-white border-blue-400'
+                            : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                        }`}
+                        title="Pelea callejera: 100% SP"
+                      >
+                        Brawling (100%)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setCalcAttackType('direct')}
+                        className={`py-1 px-1 rounded-xs text-[9px] font-mono-code font-bold transition-all cursor-pointer border truncate ${
+                          calcAttackType === 'direct'
+                            ? 'bg-red-600 text-white border-red-500'
+                            : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
+                        }`}
+                        title="Directo: Ignora 100% del blindaje (0 SP)"
+                      >
+                        Directo (0 SP)
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Fila 4: Switches de Crítico y Pasaje de Exceso */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-[#1e2538] text-[10px] font-mono-code">
+                    <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={calcIsCritical}
+                        onChange={(e) => setCalcIsCritical(e.target.checked)}
+                        className="rounded border-[#2e374f] text-cyan-500 focus:ring-0"
+                      />
+                      <span className={calcIsCritical ? 'text-red-400 font-bold' : 'text-slate-400'}>
+                        💥 Impacto Crítico (+5 HP directo)
+                      </span>
+                    </label>
+
+                    {calcLocation === 'shield' && (
+                      <label className="flex items-center gap-1.5 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={calcPassExcess}
+                          onChange={(e) => setCalcPassExcess(e.target.checked)}
+                          className="rounded border-[#2e374f] text-amber-500 focus:ring-0"
+                        />
+                        <span className={calcPassExcess ? 'text-amber-400 font-bold' : 'text-slate-400'}>
+                          Pasar daño sobrante a Torso
+                        </span>
+                      </label>
+                    )}
+                  </div>
+
+                  {/* Live Real-time Preview Card */}
+                  <div className="bg-[#0b0e14] p-2.5 rounded border border-[#1f2638] space-y-1.5 font-mono-code text-xs">
+                    <div className="flex items-center justify-between text-[11px] font-bold text-white border-b border-[#1b2132] pb-1">
+                      <span className="text-cyan-400 uppercase">Previsualización de Impacto:</span>
+                      <span className="text-amber-300">
+                        {calcLocation === 'shield'
+                          ? `SDP -${calcShieldLoss} | HP -${calcExcessHpLoss}`
+                          : `SP -${calcSpAblation} | HP -${calcHpLoss}`}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2 text-[10px] text-slate-300">
+                      <div>
+                        <span className="text-slate-500 block">Blindaje/SDP:</span>
+                        {calcLocation === 'shield' ? (
+                          <span className="font-bold text-amber-400">{shieldCover.currentSdp} → {calcNewShieldSdp} SDP</span>
+                        ) : (
+                          <span className="font-bold text-cyan-300">SP Efec: {calcEffectiveSp} (-{calcSpAblation} SP)</span>
+                        )}
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Penetrante:</span>
+                        <span className="font-bold text-white">
+                          {calcLocation === 'shield' ? (calcPassExcess ? `${calcExcessDamage} pts` : '0 (Escudo)') : `${calcPenetratingDamage} pts`}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Daño a HP:</span>
+                        <span className={`font-bold ${(calcLocation === 'shield' ? calcExcessHpLoss : calcHpLoss) > 0 ? 'text-red-400' : 'text-slate-400'}`}>
+                          -{calcLocation === 'shield' ? calcExcessHpLoss : calcHpLoss} HP
+                        </span>
+                      </div>
+                    </div>
+
+                    <p className="text-[10px] text-slate-400 leading-tight pt-1 border-t border-[#1b2132]">
+                      {calcExplanation}
+                    </p>
+                  </div>
+
+                  {/* 1-Click Execution Button */}
+                  <button
+                    type="button"
+                    onClick={handleApplyCalculatedDamage}
+                    className="w-full py-2 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-tech font-bold text-xs uppercase tracking-wider rounded-xs shadow-md transition-all active:scale-98 cursor-pointer flex items-center justify-center gap-1.5"
+                  >
+                    <span>💥 APLICAR IMPACTO (BAJAR SDP / SP / HP)</span>
+                  </button>
+                </div>
+
+                {/* ACORDEÓN DE REGLAS OFICIALES CP RED */}
+                <div className="border border-[#262c3e] rounded-sm bg-[#131622] overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setShowArmorRulesGuide(!showArmorRulesGuide)}
+                    className="w-full p-2 flex items-center justify-between text-left hover:bg-[#1a1f30] transition-colors cursor-pointer select-none"
+                  >
+                    <span className="font-tech text-[10px] font-bold text-cyan-300 flex items-center gap-1.5 uppercase">
+                      <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
+                      ¿CUÁNDO BAJA EL SP Y EL SDP? (REGLAS OFICIALES)
+                    </span>
+                    <span className="text-slate-400 text-xs font-mono-code font-bold">
+                      {showArmorRulesGuide ? '▲ Cerrar' : '▼ Leer Reglas'}
+                    </span>
+                  </button>
+
+                  {showArmorRulesGuide && (
+                    <div className="p-3 text-[11px] text-slate-300 font-mono-code leading-relaxed space-y-2 border-t border-[#202636] bg-[#0c0e16]">
+                      <div className="text-cyan-400 font-bold text-xs">
+                        📖 REGLAS OFICIALES DE BLINDAJE Y COBERTURAS (Manual Core pp. 183-187):
+                      </div>
+                      <p>
+                        <strong className="text-white">1. ¿Cuándo baja el SP de la Armadura (Ablación)?</strong><br />
+                        El SP solo se reduce en <strong>1 punto</strong> (o <strong>2 puntos</strong> si la munición es Perforante AP) si el daño bruto del ataque <strong>supera estrictamente el SP efectivo</strong> del blindaje. Si el daño es igual o menor al SP, el blindaje detiene todo el daño y el SP <strong>no sufre ablación</strong>.
+                      </p>
+                      <p>
+                        <strong className="text-white">2. Impactos en la Cabeza (Disparo Dirigido):</strong><br />
+                        Si el ataque impacta en la cabeza y el daño supera el SP de la cabeza, el daño que penetra el SP se <strong>multiplica por 2</strong> antes de restarse de los Puntos de Vida (HP).
+                      </p>
+                      <p>
+                        <strong className="text-white">3. Armas Melee y Artes Marciales vs Blindaje:</strong><br />
+                        Los ataques con armas cuerpo a cuerpo (Melee) y maniobras de Artes Marciales <strong>ignoran la mitad del SP del defensor</strong> (redondeado hacia arriba a favor del atacante). Por ejemplo, SP 11 se convierte en SP 6 efectivo. Sin embargo, la Pelea a Puñetazos (Brawling) NO ignora la mitad del SP; se mide contra el 100% del SP.
+                      </p>
+                      <p>
+                        <strong className="text-white">4. Escudos Antibalas y Coberturas (SDP vs SP):</strong><br />
+                        Los escudos y coberturas tienen Puntos de Daño Estructural (<strong>SDP</strong>), no SP. Detienen todo el daño de un ataque independientemente de la munición. Si un ataque hace 20 de daño a un escudo de 10 SDP, el escudo se destruye en el acto. En las <em>reglas estándar oficiales</em>, el escudo absorbe el impacto completo y el daño no pasa al personaje en ese tiro. Con la opción táctica avanzada activada en este deck, puedes elegir transferir el exceso de daño al torso.
+                      </p>
+                      <p>
+                        <strong className="text-white">5. Heridas Críticas:</strong><br />
+                        Toda tirada con al menos dos seises (6) en los dados de daño inflige una Herida Crítica, sumando <strong>+5 de daño directo a los HP</strong> que no puede ser detenido por el blindaje.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-1 pt-1.5 border-t border-[#1f2332]">
-                <button
-                  onClick={() => ablateArmor('body', 1)}
-                  className="py-0.5 px-1 bg-[#dc2626]/10 hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/30 rounded-xs font-mono-code text-[10px] font-bold transition-all text-center"
-                >
-                  -1
-                </button>
-                <button
-                  onClick={() => repairArmor('body')}
-                  className="py-0.5 px-1 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-[10px] font-bold transition-all text-center"
-                >
-                  Reparar
-                </button>
-              </div>
             </div>
-          </div>
-                    <div className="bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="font-tech text-[11px] font-bold text-white uppercase flex items-center gap-1">
-                <Shield className="w-3 h-3 text-[#f59e0b]" /> IMPACTO ENTRANTE
-              </span>
-              {damageFeedback && (
-                <span className="text-[9px] font-mono-code text-[#10b981] animate-fade-in">
-                  {damageFeedback}
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-1.5">
-              <input
-                type="number"
-                min="0"
-                max="99"
-                value={incomingDamageInput}
-                onChange={(e) => setIncomingDamageInput(Math.max(0, parseInt(e.target.value) || 0))}
-                className="w-12 bg-[#0f1016] border border-[#2e364c] text-white font-mono-code font-bold text-center py-0.5 rounded text-xs focus:outline-none focus:border-[#dc2626]"
-              />
-              <button
-                onClick={() => handleApplyHit('body')}
-                className="flex-1 py-1 bg-[#202434] hover:bg-[#dc2626] hover:text-white text-[10px] font-tech font-bold tracking-wider text-[#cbd5e1] border border-[#2f354c] rounded-xs transition-all active:scale-95"
-              >
-                TORSO
-              </button>
-              <button
-                onClick={() => handleApplyHit('head')}
-                className="flex-1 py-1 bg-[#202434] hover:bg-[#dc2626] hover:text-white text-[10px] font-tech font-bold tracking-wider text-[#cbd5e1] border border-[#2f354c] rounded-xs transition-all active:scale-95"
-              >
-                CABEZA
-              </button>
-            </div>
-          </div>
-        </div>
+            {renderLeftPanelResizeHandle('armor')}
 
           </CollapsibleHudCard>
         );
@@ -2083,73 +2985,80 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'luck')}
             onDrop={() => handleDrop('left', 'luck')}
             isDragOver={dragOverItem === 'luck'}
-            extraHeaderActions={
+            extraHeaderActions={renderLeftPanelHeaderControls(
+              'luck',
+              false,
+              0,
               <button
                 type="button"
                 onClick={restoreLuck}
-                className="text-[10px] text-[#64748b] hover:text-[#10b981] flex items-center gap-1 font-mono-code transition-colors"
+                className="text-[10px] text-[#64748b] hover:text-[#10b981] flex items-center gap-1 font-mono-code transition-colors cursor-pointer mr-1"
                 title="Restablecer Suerte a Stat Máximo"
               >
                 <RefreshCw className="w-2.5 h-2.5" /> Restaurar
               </button>
-            }
+            )}
           >
-            
-        <div className="space-y-3">
-                    <div className="flex flex-wrap items-center gap-1 mb-2.5 bg-[#171923] p-2 rounded border border-[#222636]">
-            {Array.from({ length: activeChar?.stats?.LUCK ?? 6 }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => toggleLuckPip(i + 1)}
-                title={`Fijar Suerte en ${i + 1}`}
-                className={`w-5 h-5 rounded-xs transition-all flex items-center justify-center font-mono-code text-[10px] font-bold ${
-                  i < (activeChar?.currentLuck ?? 0)
-                    ? 'bg-[#f59e0b] text-black shadow-sm shadow-[#f59e0b]/40'
-                    : 'bg-[#222534] text-[#64748b] hover:bg-[#2d3246]'
-                }`}
-              >
-                {i + 1}
-              </button>
-            ))}
-            <span className="ml-auto font-mono-code font-bold text-white text-xs">
-              {activeChar?.currentLuck ?? 0} / {activeChar?.stats?.LUCK ?? 0}
-            </span>
-          </div>
-                    <div className="bg-[#171923] p-2 rounded border border-[#222636] flex items-center justify-between">
-            <span className="text-[10px] font-mono-code text-[#94a3b8]">Invertir en Tiro:</span>
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => setLuckToSpend(Math.max(0, luckToSpendOnNextRoll - 1))}
-                className="w-5 h-5 bg-[#222534] hover:bg-[#dc2626] text-white rounded flex items-center justify-center font-bold"
-              >
-                <Minus className="w-3 h-3" />
-              </button>
-              <span className={`w-6 text-center font-mono-code font-bold text-xs ${
-                luckToSpendOnNextRoll > 0 ? 'text-[#f59e0b]' : 'text-[#64748b]'
-              }`}>
-                +{luckToSpendOnNextRoll}
-              </span>
-              <button
-                onClick={() => setLuckToSpend(Math.min(activeChar?.currentLuck ?? 0, luckToSpendOnNextRoll + 1))}
-                className="w-5 h-5 bg-[#222534] hover:bg-[#10b981] text-white rounded flex items-center justify-center font-bold"
-              >
-                <Plus className="w-3 h-3" />
-              </button>
+            <div className={getLeftPanelClass('luck')} style={getLeftPanelStyle('luck')}>
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-1 mb-2.5 bg-[#171923] p-2 rounded border border-[#222636]">
+                  {Array.from({ length: activeChar?.stats?.LUCK ?? 6 }).map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => toggleLuckPip(i + 1)}
+                      title={`Fijar Suerte en ${i + 1}`}
+                      className={`w-5 h-5 rounded-xs transition-all flex items-center justify-center font-mono-code text-[10px] font-bold ${
+                        i < (activeChar?.currentLuck ?? 0)
+                          ? 'bg-[#f59e0b] text-black shadow-sm shadow-[#f59e0b]/40'
+                          : 'bg-[#222534] text-[#64748b] hover:bg-[#2d3246]'
+                      }`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                  <span className="ml-auto font-mono-code font-bold text-white text-xs">
+                    {activeChar?.currentLuck ?? 0} / {activeChar?.stats?.LUCK ?? 0}
+                  </span>
+                </div>
+                <div className="bg-[#171923] p-2 rounded border border-[#222636] flex items-center justify-between">
+                  <span className="text-[10px] font-mono-code text-[#94a3b8]">Invertir en Tiro:</span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setLuckToSpend(Math.max(0, luckToSpendOnNextRoll - 1))}
+                      className="w-5 h-5 bg-[#222534] hover:bg-[#dc2626] text-white rounded flex items-center justify-center font-bold"
+                    >
+                      <Minus className="w-3 h-3" />
+                    </button>
+                    <span className={`w-6 text-center font-mono-code font-bold text-xs ${
+                      luckToSpendOnNextRoll > 0 ? 'text-[#f59e0b]' : 'text-[#64748b]'
+                    }`}>
+                      +{luckToSpendOnNextRoll}
+                    </span>
+                    <button
+                      onClick={() => setLuckToSpend(Math.min(activeChar?.currentLuck ?? 0, luckToSpendOnNextRoll + 1))}
+                      className="w-5 h-5 bg-[#222534] hover:bg-[#10b981] text-white rounded flex items-center justify-center font-bold"
+                    >
+                      <Plus className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+            {renderLeftPanelResizeHandle('luck')}
 
           </CollapsibleHudCard>
         );
 
-      case 'injuries':
+      case 'injuries': {
+        const injuriesCount = activeChar?.activeInjuries?.length ?? 0;
+        const isInjuriesAutoFull = injuriesCount > 3 && leftPanelSizeMode['injuries'] !== 'compact';
         return (
           <CollapsibleHudCard
             key="injuries"
             id="injuries"
-            title={`HERIDAS CRÍTICAS (${activeChar?.activeInjuries?.length ?? 0})`}
+            title={`HERIDAS CRÍTICAS (${injuriesCount})`}
             icon={<Skull className="w-3.5 h-3.5 text-[#dc2626]" />}
-            summary={`${activeChar?.activeInjuries?.length ?? 0} herida(s) activa(s)`}
+            summary={`${injuriesCount} herida(s) activa(s)`}
             isCollapsed={isCollapsed}
             onToggleCollapse={() => toggleBoxCollapse('injuries')}
             canMoveUp={canMoveUp}
@@ -2160,98 +3069,106 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'injuries')}
             onDrop={() => handleDrop('left', 'injuries')}
             isDragOver={dragOverItem === 'injuries'}
-            extraHeaderActions={
-              <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+            extraHeaderActions={renderLeftPanelHeaderControls(
+              'injuries',
+              isInjuriesAutoFull,
+              injuriesCount,
+              <div className="flex gap-1 mr-1" onClick={(e) => e.stopPropagation()}>
                 <button
                   type="button"
                   onClick={() => inflictRandomInjury('head')}
-                  className="px-1.5 py-0.5 bg-[#23181d] hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/40 rounded-xs font-mono-code text-[9px] font-bold transition-all"
+                  className="px-1.5 py-0.5 bg-[#23181d] hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/40 rounded-xs font-mono-code text-[9px] font-bold transition-all cursor-pointer"
                 >
                   + CABEZA
                 </button>
                 <button
                   type="button"
                   onClick={() => inflictRandomInjury('body')}
-                  className="px-1.5 py-0.5 bg-[#211f17] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] border border-[#f59e0b]/40 rounded-xs font-mono-code text-[9px] font-bold transition-all"
+                  className="px-1.5 py-0.5 bg-[#211f17] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] border border-[#f59e0b]/40 rounded-xs font-mono-code text-[9px] font-bold transition-all cursor-pointer"
                 >
                   + CUERPO
                 </button>
               </div>
-            }
+            )}
           >
-            
-                  {(activeChar?.activeInjuries?.length ?? 0) === 0 ? (
-            <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
-              Sin heridas críticas.
-            </div>
-          ) : (
-            <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1">
-              {activeChar.activeInjuries.map((inj) => (
-                <div
-                  key={inj.id}
-                  className={`p-2 rounded-xs border transition-all ${
-                    inj.isTreated
-                      ? 'bg-[#14191c] border-[#1d3328]'
-                      : 'bg-[#1c1619] border-[#3b1d24]'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-1.5 mb-1">
-                    <div className="flex items-center gap-1.5">
-                      <div className="p-1 bg-[#25151a] rounded-xs border border-[#3e1e26]">
-                        {renderInjuryIcon(inj.iconType)}
-                      </div>
-                      <div>
-                        <div className="font-tech text-xs font-bold text-white">{inj.name}</div>
-                        <div className="flex items-center gap-1.5 text-[9px] font-mono-code">
-                          <span className="text-[#64748b] uppercase">[{inj.location}]</span>
-                          {inj.isTreated ? (
-                            <span className="text-[#10b981] font-bold">TRATADA</span>
-                          ) : (
-                            <span className="text-[#dc2626] font-bold">ACTIVA</span>
-                          )}
+            <div className={getLeftPanelClass('injuries', isInjuriesAutoFull)} style={getLeftPanelStyle('injuries', isInjuriesAutoFull)}>
+              {injuriesCount === 0 ? (
+                <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
+                  Sin heridas críticas.
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {activeChar!.activeInjuries!.map((inj) => (
+                    <div
+                      key={inj.id}
+                      className={`p-2 rounded-xs border transition-all ${
+                        inj.isTreated
+                          ? 'bg-[#14191c] border-[#1d3328]'
+                          : 'bg-[#1c1619] border-[#3b1d24]'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-1.5 mb-1">
+                        <div className="flex items-center gap-1.5">
+                          <div className="p-1 bg-[#25151a] rounded-xs border border-[#3e1e26]">
+                            {renderInjuryIcon(inj.iconType)}
+                          </div>
+                          <div>
+                            <div className="font-tech text-xs font-bold text-white">{inj.name}</div>
+                            <div className="flex items-center gap-1.5 text-[9px] font-mono-code">
+                              <span className="text-[#64748b] uppercase">[{inj.location}]</span>
+                              {inj.isTreated ? (
+                                <span className="text-[#10b981] font-bold">TRATADA</span>
+                              ) : (
+                                <span className="text-[#dc2626] font-bold">ACTIVA</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button
+                            onClick={() => toggleTreatInjury(inj.id)}
+                            className={`p-0.5 rounded text-[10px] transition-colors cursor-pointer ${
+                              inj.isTreated 
+                                ? 'bg-[#10b981]/20 text-[#10b981] hover:bg-[#10b981]/40' 
+                                : 'bg-[#222534] text-[#94a3b8] hover:text-white'
+                            }`}
+                            title={inj.isTreated ? 'Marcar No Tratada' : 'Tratar Herida'}
+                          >
+                            <Check className="w-3 h-3" />
+                          </button>
+                          <button
+                            onClick={() => removeInjury(inj.id)}
+                            className="p-0.5 bg-[#222534] hover:bg-[#dc2626] text-[#94a3b8] hover:text-white rounded text-[10px] transition-colors cursor-pointer"
+                            title="Eliminar Herida"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
                         </div>
                       </div>
+                      <p className="text-[10px] text-[#cbd5e1] leading-tight font-sans">
+                        {inj.effect}
+                      </p>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => toggleTreatInjury(inj.id)}
-                        className={`p-0.5 rounded text-[10px] transition-colors ${
-                          inj.isTreated 
-                            ? 'bg-[#10b981]/20 text-[#10b981] hover:bg-[#10b981]/40' 
-                            : 'bg-[#222534] text-[#94a3b8] hover:text-white'
-                        }`}
-                        title={inj.isTreated ? 'Marcar No Tratada' : 'Tratar Herida'}
-                      >
-                        <Check className="w-3 h-3" />
-                      </button>
-                      <button
-                        onClick={() => removeInjury(inj.id)}
-                        className="p-0.5 bg-[#222534] hover:bg-[#dc2626] text-[#94a3b8] hover:text-white rounded text-[10px] transition-colors"
-                        title="Eliminar Herida"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-[10px] text-[#cbd5e1] leading-tight font-sans">
-                    {inj.effect}
-                  </p>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
+            {renderLeftPanelResizeHandle('injuries')}
 
           </CollapsibleHudCard>
         );
+      }
 
-      case 'cyberware':
+      case 'cyberware': {
+        const cyberwareCount = installedCyberware.length;
+        const isCyberwareAutoFull = cyberwareCount > 3 && leftPanelSizeMode['cyberware'] !== 'compact';
         return (
           <CollapsibleHudCard
             key="cyberware"
             id="cyberware"
-            title={`CIBERIMPLANTES (${installedCyberware.length})`}
+            title={`CIBERIMPLANTES (${cyberwareCount})`}
             icon={<Zap className="w-3.5 h-3.5 text-[#a855f7]" />}
-            summary={`${installedCyberware.length} implante(s) instalados`}
+            summary={`${cyberwareCount} implante(s) instalados`}
             isCollapsed={isCollapsed}
             onToggleCollapse={() => toggleBoxCollapse('cyberware')}
             canMoveUp={canMoveUp}
@@ -2262,39 +3179,46 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'cyberware')}
             onDrop={() => handleDrop('left', 'cyberware')}
             isDragOver={dragOverItem === 'cyberware'}
+            extraHeaderActions={renderLeftPanelHeaderControls('cyberware', isCyberwareAutoFull, cyberwareCount)}
           >
-            {installedCyberware.length === 0 ? (
-              <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
-                Sin ciberimplantes registrados en este personaje.
-              </div>
-            ) : (
-              <div className="space-y-1.5 max-h-[220px] overflow-y-auto pr-1">
-                {installedCyberware.map((c: any) => (
-                  <div key={c.id} className="p-2 bg-[#171923] border border-[#222636] rounded-xs font-mono-code text-[11px]">
-                    <div className="flex items-center justify-between font-bold text-white mb-0.5">
-                      <span className="text-[#a855f7]">{c.name}</span>
-                      <span className="text-[9px] text-[#64748b] uppercase">{c.type || 'Cyberware'}</span>
+            <div className={getLeftPanelClass('cyberware', isCyberwareAutoFull)} style={getLeftPanelStyle('cyberware', isCyberwareAutoFull)}>
+              {cyberwareCount === 0 ? (
+                <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
+                  Sin ciberimplantes registrados en este personaje.
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  {installedCyberware.map((c: any) => (
+                    <div key={c.id} className="p-2 bg-[#171923] border border-[#222636] rounded-xs font-mono-code text-[11px]">
+                      <div className="flex items-center justify-between font-bold text-white mb-0.5">
+                        <span className="text-[#a855f7]">{c.name}</span>
+                        <span className="text-[9px] text-[#64748b] uppercase">{c.type || 'Cyberware'}</span>
+                      </div>
+                      {c.description && (
+                        <p className="text-[10px] text-[#94a3b8] leading-tight line-clamp-2">
+                          {c.description}
+                        </p>
+                      )}
                     </div>
-                    {c.description && (
-                      <p className="text-[10px] text-[#94a3b8] leading-tight line-clamp-2">
-                        {c.description}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
+            </div>
+            {renderLeftPanelResizeHandle('cyberware')}
           </CollapsibleHudCard>
         );
+      }
 
-      case 'consumables':
+      case 'consumables': {
+        const drugsCount = (activeChar?.activeDrugs || []).length;
+        const isConsumablesAutoFull = drugsCount > 3 && leftPanelSizeMode['consumables'] !== 'compact';
         return (
           <CollapsibleHudCard
             key="consumables"
             id="consumables"
-            title={`DROGAS EN SANGRE (${(activeChar?.activeDrugs || []).length})`}
+            title={`DROGAS EN SANGRE (${drugsCount})`}
             icon={<Pill className="w-3.5 h-3.5 text-[#ec4899]" />}
-            summary={`${(activeChar?.activeDrugs || []).length} droga(s) activa(s)`}
+            summary={`${drugsCount} droga(s) activa(s)`}
             isCollapsed={isCollapsed}
             onToggleCollapse={() => toggleBoxCollapse('consumables')}
             canMoveUp={canMoveUp}
@@ -2305,39 +3229,43 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'consumables')}
             onDrop={() => handleDrop('left', 'consumables')}
             isDragOver={dragOverItem === 'consumables'}
+            extraHeaderActions={renderLeftPanelHeaderControls('consumables', isConsumablesAutoFull, drugsCount)}
           >
-            
-        {(activeChar?.activeDrugs || []).length === 0 ? (
-          <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
-            Sin drogas ni fármacos activos en el organismo.
-          </div>
-        ) : (
-                      <div className="space-y-2">
-              {activeChar.activeDrugs!.map((d) => (
-                <div key={d.id} className="bg-[#100d18] p-2 rounded border border-[#a855f7]/30 font-mono-code text-[11px]">
-                  <div className="flex items-center justify-between text-white font-bold mb-1">
-                    <span className="text-[#c084fc]">{d.name}</span>
-                    <button
-                      onClick={() => removeActiveDrug(d.id)}
-                      className="text-[9px] bg-[#dc2626]/20 hover:bg-[#dc2626] text-[#f87171] hover:text-white px-1.5 py-0.5 rounded transition-all"
-                    >
-                      Terminar
-                    </button>
-                  </div>
-                  <div className="text-[10px] text-[#cbd5e1] leading-tight space-y-0.5">
-                    <div><span className="text-[#64748b]">Duración:</span> {d.duration}</div>
-                    <div><span className="text-[#10b981]">Efecto:</span> {d.primaryEffect}</div>
-                    {d.secondaryEffect && (
-                      <div className="text-[#f43f5e]"><span className="text-[#64748b]">Resaca:</span> {d.secondaryEffect}</div>
-                    )}
-                  </div>
+            <div className={getLeftPanelClass('consumables', isConsumablesAutoFull)} style={getLeftPanelStyle('consumables', isConsumablesAutoFull)}>
+              {drugsCount === 0 ? (
+                <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
+                  Sin drogas ni fármacos activos en el organismo.
                 </div>
-              ))}
+              ) : (
+                <div className="space-y-2">
+                  {activeChar!.activeDrugs!.map((d) => (
+                    <div key={d.id} className="bg-[#100d18] p-2 rounded border border-[#a855f7]/30 font-mono-code text-[11px]">
+                      <div className="flex items-center justify-between text-white font-bold mb-1">
+                        <span className="text-[#c084fc]">{d.name}</span>
+                        <button
+                          onClick={() => removeActiveDrug(d.id)}
+                          className="text-[9px] bg-[#dc2626]/20 hover:bg-[#dc2626] text-[#f87171] hover:text-white px-1.5 py-0.5 rounded transition-all cursor-pointer"
+                        >
+                          Terminar
+                        </button>
+                      </div>
+                      <div className="text-[10px] text-[#cbd5e1] leading-tight space-y-0.5">
+                        <div><span className="text-[#64748b]">Duración:</span> {d.duration}</div>
+                        <div><span className="text-[#10b981]">Efecto:</span> {d.primaryEffect}</div>
+                        {d.secondaryEffect && (
+                          <div className="text-[#f43f5e]"><span className="text-[#64748b]">Resaca:</span> {d.secondaryEffect}</div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-        )}
+            {renderLeftPanelResizeHandle('consumables')}
 
           </CollapsibleHudCard>
         );
+      }
 
       default:
         return null;
@@ -5622,14 +6550,59 @@ export const CombatHudView: React.FC = () => {
 
       {/* GRID PRINCIPAL MODULAR Y REORDENABLE (3 ZONAS: BIO/DEFENSAS + CONFIGURADOR CENTRAL + BANDEJA TÁCTICA) */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
-        {/* COLUMNA IZQUIERDA: BIO & DEFENSAS (3 COLS EN PANTALLAS XL) */}
-        <div className="xl:col-span-3 space-y-4">
+        {/* COLUMNA IZQUIERDA: BIO & DEFENSAS */}
+        <div className={`${getLeftColumnClass()} space-y-4`}>
+          {/* Workspace Controls Header: Column Width Selector */}
+          <div className="chamfer-card bg-[#0e1017] border border-[#22283a] p-2 flex items-center justify-between text-xs font-mono-code select-none">
+            <span className="text-slate-400 font-bold uppercase text-[10px] flex items-center gap-1.5">
+              <span>📐 Ancho Columna:</span>
+            </span>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setLeftColumnSpan(3)}
+                className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                  leftColumnSpan === 3
+                    ? 'bg-cyan-500 text-black shadow-xs font-bold'
+                    : 'bg-[#181d2c] text-slate-400 hover:text-white border border-[#28324a]'
+                }`}
+                title="Columna izquierda de 3 columnas (Espacio Estándar)"
+              >
+                3 Cols
+              </button>
+              <button
+                type="button"
+                onClick={() => setLeftColumnSpan(4)}
+                className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                  leftColumnSpan === 4
+                    ? 'bg-cyan-500 text-black shadow-xs font-bold'
+                    : 'bg-[#181d2c] text-slate-400 hover:text-white border border-[#28324a]'
+                }`}
+                title="Columna izquierda de 4 columnas (Medio)"
+              >
+                4 Cols
+              </button>
+              <button
+                type="button"
+                onClick={() => setLeftColumnSpan(5)}
+                className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
+                  leftColumnSpan === 5
+                    ? 'bg-cyan-500 text-black shadow-xs font-bold'
+                    : 'bg-[#181d2c] text-slate-400 hover:text-white border border-[#28324a]'
+                }`}
+                title="Columna izquierda de 5 columnas (Ancho Máximo)"
+              >
+                5 Cols
+              </button>
+            </div>
+          </div>
+
           {leftColumnOrder.map((panelId, idx) => renderLeftPanel(panelId, idx))}
         </div>
 
-        {/* COLUMNA CENTRAL (CONFIGURABLE: 6 COLS O 8 SI BANDEJA ESTÁ COLAPSADA) */}
+        {/* COLUMNA CENTRAL (CONFIGURABLE Y ADAPTABLE AL ANCHO IZQUIERDO Y BANDEJA) */}
         <div
-          className={`${isRightTrayCollapsed ? 'xl:col-span-8' : 'xl:col-span-6'} space-y-4`}
+          className={`${getCenterColumnClass()} space-y-4`}
           onDragOver={(e) => e.preventDefault()}
           onDrop={() => {
             if (draggedItem && draggedItem.column === 'tray') {

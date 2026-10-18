@@ -16,12 +16,80 @@ import {
 } from 'lucide-react';
 import {
   VERSION_CHANGELOG_HISTORY,
+  type VersionChangelogEntry,
   ADDED_FEATURES_INVENTORY,
   PHASES_ROADMAP_OVERVIEW,
   PREMIUM_MODULES_STATUS,
   ARCHITECTURE_AND_GUIDE_DOCS,
   SYSTEM_METRICS_SUMMARY
 } from '../../data/systemDocsAndChangelogData';
+
+export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
+  {
+    version: 'v3.6.2',
+    date: '2026-10-18',
+    phase: 'Codex',
+    category: 'Combat HUD Ergonomics, Visual SP/SDP Plates, Damage Calculator & Workspace Sizing',
+    title: 'Matriz Visual de SP y SDP, Calculadora Táctica de Daño y Controles de Ancho de Workspace',
+    summary: 'Implementación de placas de blindaje visuales e interactivas (🛡️/💥) para Cabeza y Torso con click directo para fijar SP, rastreador de SDP de Escudo y Coberturas con presets oficiales, Calculadora Táctica de Impactos con previsualización en vivo según tipo de ataque y localización, acordeón de reglas oficiales de blindaje CP RED (pp. 183-187), selector de ancho de columna izquierda (3, 4, 5 columnas) con redimensionamiento reactivo de columna central, y controles de altura/auto-expansión inteligente con mouse resize handle.',
+    highlights: [
+      'Placas de blindaje tácticas interactivas con badges 🛡️/💥 para Cabeza y Torso con ajuste 1-click.',
+      'Rastreador de Coberturas y Escudo Antibalas con SDP dedicado, presets (10, 15, 25, 35 SDP) y persistencia local.',
+      'Calculadora Táctica de Daño en tiempo real: soporte para munición estándar (-1 SP), perforante AP (-2 SP), melee (50% SP), artes marciales (50% SP), brawling (100% SP) y daño directo (0% SP).',
+      'Previsualización reactiva de ablación de SP, pérdida de SDP y daño neto a HP con cálculo de multiplicador de cabeza (×2) y críticos (+5 HP).',
+      'Acordeón oficial de reglas CP RED integrado explicando la mecánica de ablación de SP, daño penetrante y absorción de escudos.',
+      'Controles de Workspace: selector de ancho de columna izquierda (3 Cols, 4 Cols, 5 Cols) con cálculo dinámico para el centro.',
+      'Controles de altura en tarjetas del panel izquierdo (S 160px, M 280px, L 480px, Todo, +/-, y grip de arrastre vertical 📏).',
+      'Auto-expansión inteligente con badge 🔓 Auto-expandido para heridas críticas, ciberware y consumibles.'
+    ],
+    filesTouched: [
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'PROJECT_STATUS_AND_ROADMAP.md'
+    ],
+    metricsBadge: 'v3.6.2 • SP/SDP Plates & Calculator • 0 Drift'
+  },
+  {
+    version: 'v3.6.1',
+    date: '2026-10-18',
+    phase: 'Codex',
+    category: 'Combat HUD Optimization & Modular Layout Architecture',
+    title: 'Optimización de Columna Central y Bandeja Táctica Lateral',
+    summary: 'Mejoras en la disposición de módulos modulares en el HUD de combate, desacoplamiento de paneles de telemetría y consolidación de presets tácticos.',
+    highlights: [
+      'Persistencia optimizada de posiciones de módulos centrales y bandeja lateral.',
+      'Docking avanzado de consola de telemetría (inline, split lateral y ventana flotante mini-HUD PIP).',
+      'Integración con drawer de Bestiario y Encuentros GM sin bloquear el flujo táctico.'
+    ],
+    filesTouched: [
+      'frontend/src/features/combat/CombatHudView.tsx'
+    ],
+    metricsBadge: 'v3.6.1 • HUD Layout & Docking • Operativo'
+  },
+  {
+    version: 'v3.6.0',
+    date: '2026-10-18',
+    phase: 'Codex',
+    category: 'Modular Combat HUD 3-Zone Architecture & Tactical Presets',
+    title: 'Arquitectura Modular de Combate en 3 Zonas y Presets Tácticos',
+    summary: 'Reestructuración completa del HUD de Combate en 3 columnas maestras reordenables: Bio & Defensas a la izquierda, Zona Central configurable por drag-and-drop, y Bandeja Lateral plegable de módulos tácticos.',
+    highlights: [
+      'Drag and drop completo para reordenar módulos tanto en la columna izquierda como en el centro.',
+      'Presets de configuración rápida en 1 clic (Esencial Tiro, Melee & Brawl, Netrunner Táctico, Maestro GM).',
+      'Persistencia total en localStorage de colapsos, orden de módulos y paneles anclados.'
+    ],
+    filesTouched: [
+      'frontend/src/features/combat/CombatHudView.tsx'
+    ],
+    metricsBadge: 'v3.6.0 • 3-Zone HUD • Modular Drag & Drop'
+  }
+];
+
+const FULL_VERSION_CHANGELOG: VersionChangelogEntry[] = [
+  ...LOCAL_CHANGELOG_EXTENSIONS,
+  ...VERSION_CHANGELOG_HISTORY
+];
 
 type ActiveDocsTab = 'changelog' | 'inventory' | 'roadmap' | 'architecture';
 
@@ -30,6 +98,9 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v3.6.2': true,
+    'v3.6.1': true,
+    'v3.6.0': true,
     'v3.5.0': true,
     'v3.4.5': true,
     'v3.4.0': true
@@ -55,7 +126,7 @@ export function SystemChangelogAndDocsView() {
 
   // Filtrado reactivo de versiones
   const filteredChangelogs = useMemo(() => {
-    return VERSION_CHANGELOG_HISTORY.filter((item) => {
+    return FULL_VERSION_CHANGELOG.filter((item) => {
       const matchesPhase = selectedPhaseFilter === 'Todas' || item.phase === selectedPhaseFilter;
       if (!matchesPhase) return false;
 
@@ -109,7 +180,7 @@ export function SystemChangelogAndDocsView() {
                 SYSTEM CODEX // DOCUMENTACIÓN MAESTRA
               </span>
               <span className="px-2 py-0.5 text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> v3.5.0 OPERATIVO
+                <CheckCircle2 className="w-3 h-3" /> v3.6.2 OPERATIVO
               </span>
             </div>
             <h1 className="text-2xl md:text-3xl font-tech font-bold text-white tracking-wider flex items-center gap-3">
@@ -117,7 +188,7 @@ export function SystemChangelogAndDocsView() {
               SISTEMA, ARQUITECTURA & CHANGELOG MAESTRO
             </h1>
             <p className="text-sm text-[#94a3b8] max-w-3xl leading-relaxed">
-              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v3.5.0), inventario de los 8 grandes
+              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v3.6.2), inventario de los 8 grandes
               módulos interactivos, estado del roadmap de Fases (0 a 5) con paridad de la Companion App, y especificación técnica de contratos.
             </p>
           </div>
