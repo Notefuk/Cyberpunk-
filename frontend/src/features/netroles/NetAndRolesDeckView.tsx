@@ -10,13 +10,24 @@ import {
   Trash2, 
   Sparkles, 
   Layers, 
-  Crosshair
+  Crosshair,
+  BookOpen,
+  ChevronDown,
+  ChevronRight,
+  Award,
+  Lock,
+  Unlock,
+  Swords,
+  Coins,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { 
   NET_ARCHITECTURE_PRESETS, 
   NET_ACTIONS_CATALOG, 
   QUICKHACKS_2077_CATALOG, 
+  QUICKHACKING_OFFICIAL_RULES_GUIDE,
   ROLES_INTERACTIVE_GUIDES, 
   VEHICLES_CATALOG, 
   generateRandomNetFloor,
@@ -25,9 +36,13 @@ import {
   type Quickhack2077,
   type VehicleSpec
 } from '../../data/netAndRolesData';
+import {
+  MARTIAL_ARTS_FORMS,
+  MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT
+} from '../../data/cyberfistsMartialArtsData';
 import type { SoloCombatAwarenessAllocation, OwnedVehicle } from '../../types/cyberpunk';
 
-type ActiveTab = 'netrunning' | 'quickhacks' | 'roles' | 'vehicles';
+type ActiveTab = 'netrunning' | 'quickhacks' | 'martial' | 'roles' | 'vehicles';
 
 export const NetAndRolesDeckView: React.FC = () => {
   const { 
@@ -39,7 +54,12 @@ export const NetAndRolesDeckView: React.FC = () => {
     updateVehicleArmorSp, 
     removeVehicleFromCharacter,
     updateMedtechLab,
-    updateTechProjects
+    updateTechProjects,
+    adjustImprovementPoints,
+    setInterfaceRankOverride,
+    trainMartialArtWithIp,
+    buyAndEquipMartialArtChip,
+    toggleEquipMartialArtChip
   } = useCharacterStore();
 
   const character = characters.find(c => c.id === activeCharacterId) || characters[0];
@@ -70,16 +90,18 @@ export const NetAndRolesDeckView: React.FC = () => {
   const allPresets = [...NET_ARCHITECTURE_PRESETS, ...customPresets];
   const activeArch = allPresets.find(p => p.id === selectedPresetId) || NET_ARCHITECTURE_PRESETS[0];
 
-  // NET Actions por turno según Rango de Interface
-  const interfaceRank = character.role === 'Netrunner' ? (character.roleRank || 4) : 0;
-  const netActionsPerTurn = interfaceRank >= 10 ? 5 : interfaceRank >= 7 ? 4 : interfaceRank >= 4 ? 3 : 2;
+  // NET Actions por turno según Rango de Interface activo
+  const activeInterfaceRank = character.interfaceRankOverride !== undefined
+    ? character.interfaceRankOverride
+    : (character.role === 'Netrunner' ? (character.roleRank || 4) : 0);
+  const netActionsPerTurn = activeInterfaceRank >= 10 ? 5 : activeInterfaceRank >= 7 ? 4 : activeInterfaceRank >= 4 ? 3 : 2;
 
   const handleRollNetAction = (actionName: string, dvStr: string) => {
     const d10 = Math.floor(Math.random() * 10) + 1;
     const isExplode = d10 === 10;
     const isFumble = d10 === 1;
     const extraDie = isExplode ? (Math.floor(Math.random() * 10) + 1) : isFumble ? (Math.floor(Math.random() * 10) + 1) : 0;
-    const totalRoll = d10 + (isExplode ? extraDie : 0) - (isFumble ? extraDie : 0) + interfaceRank;
+    const totalRoll = d10 + (isExplode ? extraDie : 0) - (isFumble ? extraDie : 0) + activeInterfaceRank;
     
     // Parse target DV if numeric
     const parsedDv = parseInt(dvStr.replace(/\D/g, ''), 10);
@@ -89,7 +111,7 @@ export const NetAndRolesDeckView: React.FC = () => {
     setActiveNetRollResult({
       action: actionName,
       roll: totalRoll,
-      formula: `1d10 (${d10}${isExplode ? ` + explota ${extraDie}` : ''}${isFumble ? ` - pifia ${extraDie}` : ''}) + Interface (${interfaceRank}) = ${totalRoll}`,
+      formula: `1d10 (${d10}${isExplode ? ` + explota ${extraDie}` : ''}${isFumble ? ` - pifia ${extraDie}` : ''}) + Interface (${activeInterfaceRank}) = ${totalRoll}`,
       success: hasDv ? success : undefined,
       text: hasDv ? (success ? `¡ÉXITO! Superó DV ${parsedDv}` : `FALLO. Requiere DV ${parsedDv}`) : 'Acción ejecutada'
     });
@@ -120,14 +142,34 @@ export const NetAndRolesDeckView: React.FC = () => {
   // ==========================================================================
   const [quickhackTierFilter, setQuickhackTierFilter] = useState<'All' | 'Simple' | 'Standard' | 'Difficult' | 'Advanced'>('All');
   const [quickhackRollLog, setQuickhackRollLog] = useState<{ qhName: string; roll: number; dv: number; success: boolean; damageRoll?: number; targetWillRoll?: number } | null>(null);
+  const [unlockAllQuickhacks, setUnlockAllQuickhacks] = useState<boolean>(false);
+  const [showQuickhackGuide, setShowQuickhackGuide] = useState<boolean>(false);
+
+  // ==========================================================================
+  // 3. ESTADO DE ARTES MARCIALES & IP
+  // ==========================================================================
+  const [showMartialArtsGuide, setShowMartialArtsGuide] = useState<boolean>(false);
+  const [martialCategoryFilter, setMartialCategoryFilter] = useState<'all' | 'core' | 'interface_red'>('all');
+  const [martialFeedback, setMartialFeedback] = useState<{ success: boolean; message: string } | null>(null);
 
   const filteredQuickhacks = quickhackTierFilter === 'All' 
     ? QUICKHACKS_2077_CATALOG 
     : QUICKHACKS_2077_CATALOG.filter(q => q.tier === quickhackTierFilter);
 
   const handleExecuteQuickhack = (qh: Quickhack2077) => {
+    const isLocked = !unlockAllQuickhacks && activeInterfaceRank < qh.requiredInterfaceRank;
+    if (isLocked) {
+      setQuickhackRollLog({
+        qhName: qh.name,
+        roll: 0,
+        dv: qh.dv,
+        success: false
+      });
+      return;
+    }
+
     const d10 = Math.floor(Math.random() * 10) + 1;
-    const total = d10 + interfaceRank;
+    const total = d10 + activeInterfaceRank;
     const success = total >= qh.dv;
 
     let dmg: number | undefined;
@@ -339,6 +381,18 @@ export const NetAndRolesDeckView: React.FC = () => {
           </button>
 
           <button
+            onClick={() => setActiveTab('martial')}
+            className={`px-3 py-1.5 rounded-xs font-tech text-xs font-bold uppercase transition-colors flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'martial'
+                ? 'bg-[#ef4444] text-white shadow-[0_0_10px_rgba(239,68,68,0.4)]'
+                : 'text-[#94a3b8] hover:text-white hover:bg-[#1a1f2e]'
+            }`}
+          >
+            <Swords className="w-3.5 h-3.5" />
+            <span>🥋 ARTES MARCIALES &amp; IP</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('roles')}
             className={`px-3 py-1.5 rounded-xs font-tech text-xs font-bold uppercase transition-colors flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'roles'
@@ -379,7 +433,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                   <span>ARQUITECTURAS DISPONIBLES ({allPresets.length})</span>
                 </span>
                 <span className="text-[10px] font-mono-code text-[#64748b]">
-                  Interface: <strong className="text-white">Rango {interfaceRank}</strong> ({netActionsPerTurn} Acciones/Turno)
+                  Interface: <strong className="text-white">Rango {activeInterfaceRank}</strong> ({netActionsPerTurn} Acciones/Turno)
                 </span>
               </div>
 
@@ -608,6 +662,180 @@ export const NetAndRolesDeckView: React.FC = () => {
       {/* ==================================================================== */}
       {activeTab === 'quickhacks' && (
         <div className="space-y-4">
+          {/* BANNER DE CONTROL DE INTERFACE & GUÍA OFICIAL */}
+          <div className="bg-[#0d1017] border border-[#1b2234] p-3.5 rounded-xs space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              {/* Selector / Indicador de Rango de Interface */}
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-[#f59e0b]/20 border border-[#f59e0b]/50 rounded-xs text-[#f59e0b]">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-tech text-xs font-bold text-[#f59e0b] uppercase tracking-wider">
+                      TU RANGO DE INTERFACE ACTIVO:
+                    </span>
+                    <span className="font-mono-code text-sm font-black text-white bg-[#1a2030] px-2 py-0.5 rounded-xs border border-[#2d3748]">
+                      Rango {activeInterfaceRank}
+                    </span>
+                    {character.interfaceRankOverride !== undefined && (
+                      <span className="text-[9px] font-mono-code bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.2 rounded-xs">
+                        Personalizado
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[10px] font-mono-code text-[#94a3b8]">
+                    {activeInterfaceRank >= 10 ? '5 NET Actions/Turno • Acceso a los 15 Quickhacks oficiales' :
+                     activeInterfaceRank >= 7 ? '4 NET Actions/Turno • Desbloquea Advanced (DV 12)' :
+                     activeInterfaceRank >= 4 ? '3 NET Actions/Turno • Desbloquea Difficult (DV 10)' :
+                     activeInterfaceRank >= 2 ? '2 NET Actions/Turno • Desbloquea Standard (DV 8)' :
+                     activeInterfaceRank >= 1 ? '2 NET Actions/Turno • Desbloquea Simple (DV 6)' :
+                     'Sin Interface • Necesitas al menos Rango 1 para desbloquear Quickhacks'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Botones de ajuste de Interface y Modo Libre */}
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-1 bg-[#141722] border border-[#222738] p-1 rounded-xs">
+                  <span className="text-[10px] font-mono-code text-[#94a3b8] px-1">Rango:</span>
+                  <button
+                    type="button"
+                    onClick={() => setInterfaceRankOverride(Math.max(0, activeInterfaceRank - 1))}
+                    className="w-6 h-6 bg-[#1a2030] hover:bg-red-500/40 text-white rounded-xs font-mono-code font-bold flex items-center justify-center transition-colors cursor-pointer"
+                    title="Reducir Rango de Interface"
+                  >
+                    -
+                  </button>
+                  <span className="w-6 text-center font-mono-code font-bold text-white text-xs">
+                    {activeInterfaceRank}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setInterfaceRankOverride(Math.min(10, activeInterfaceRank + 1))}
+                    className="w-6 h-6 bg-[#1a2030] hover:bg-emerald-500/40 text-white rounded-xs font-mono-code font-bold flex items-center justify-center transition-colors cursor-pointer"
+                    title="Aumentar Rango de Interface"
+                  >
+                    +
+                  </button>
+                  {character.interfaceRankOverride !== undefined && (
+                    <button
+                      type="button"
+                      onClick={() => setInterfaceRankOverride(character.role === 'Netrunner' ? (character.roleRank || 4) : 0)}
+                      className="text-[9px] font-mono-code text-[#94a3b8] hover:text-white px-1.5 py-0.5 hover:underline cursor-pointer"
+                      title="Restablecer a Rango canónico del personaje"
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setUnlockAllQuickhacks(!unlockAllQuickhacks)}
+                  className={`px-3 py-1.5 rounded-xs font-tech text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    unlockAllQuickhacks
+                      ? 'bg-emerald-500 text-black shadow-[0_0_10px_rgba(16,185,129,0.4)]'
+                      : 'bg-[#181d2a] text-[#94a3b8] hover:text-white border border-[#24293c]'
+                  }`}
+                >
+                  {unlockAllQuickhacks ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
+                  <span>{unlockAllQuickhacks ? '🔓 MODO LIBRE ACTIVO' : '🔒 DESBLOQUEO POR RANGO'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowQuickhackGuide(!showQuickhackGuide)}
+                  className="px-3 py-1.5 bg-[#181d2a] hover:bg-[#252c40] text-[#f59e0b] border border-[#f59e0b]/40 rounded-xs font-tech text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+                >
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>{showQuickhackGuide ? 'OCULTAR GUÍA' : 'GUÍA REGLAS CEMK 2077'}</span>
+                  {showQuickhackGuide ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Panel Desplegable de la Guía Oficial Canónica de Quickhacking */}
+            {showQuickhackGuide && (
+              <div className="pt-3 border-t border-[#1b2234] space-y-3 animate-fade-in text-xs font-mono-code">
+                <div className="bg-[#121622] p-3 rounded-xs border border-[#2a344d] space-y-2">
+                  <div className="flex items-center justify-between border-b border-[#242e44] pb-1.5">
+                    <span className="font-tech text-sm font-bold text-[#f59e0b] uppercase">
+                      📖 {QUICKHACKING_OFFICIAL_RULES_GUIDE.title}
+                    </span>
+                    <span className="text-[10px] text-slate-400">{QUICKHACKING_OFFICIAL_RULES_GUIDE.source}</span>
+                  </div>
+
+                  {/* Cómo funciona el desbloqueo */}
+                  <div className="space-y-1.5">
+                    <span className="font-bold text-white text-[11px] block">
+                      ⚡ {QUICKHACKING_OFFICIAL_RULES_GUIDE.howUnlockingWorks.title}:
+                    </span>
+                    <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                      {QUICKHACKING_OFFICIAL_RULES_GUIDE.howUnlockingWorks.summary}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                      {QUICKHACKING_OFFICIAL_RULES_GUIDE.howUnlockingWorks.ranks.map((rk, idx) => (
+                        <div key={idx} className="bg-[#0b0e17] p-2 rounded-xs border border-[#1b2234] space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-tech font-bold text-[#f59e0b] text-xs">{rk.interfaceRank}</span>
+                            <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1 rounded-xs font-bold">{rk.dv}</span>
+                          </div>
+                          <div className="text-[10px] font-bold text-white">{rk.tierName}</div>
+                          <div className="text-[10px] text-cyan-300 font-sans">
+                            {rk.unlockedHacks.join(', ')}
+                          </div>
+                          <p className="text-[9px] text-slate-400 leading-tight font-sans">{rk.notes}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Alcance, Brechas y Defensas */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2 border-t border-[#1e2638]">
+                    <div className="bg-[#0b0e17] p-2.5 rounded-xs border border-[#1b2234] space-y-1">
+                      <span className="font-bold text-[#00f5d4] block text-[10px] uppercase">
+                        🎯 {QUICKHACKING_OFFICIAL_RULES_GUIDE.rangeAndLineOfSight.title}
+                      </span>
+                      <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+                        <strong>Alcance:</strong> {QUICKHACKING_OFFICIAL_RULES_GUIDE.rangeAndLineOfSight.maxDistance}.
+                      </p>
+                      <p className="text-[10px] text-slate-400 leading-tight font-sans">
+                        {QUICKHACKING_OFFICIAL_RULES_GUIDE.rangeAndLineOfSight.lineOfSightRules}
+                      </p>
+                      <p className="text-[9px] text-[#00f5d4] leading-tight font-sans pt-1">
+                        ✓ {QUICKHACKING_OFFICIAL_RULES_GUIDE.rangeAndLineOfSight.freeActionConnection}
+                      </p>
+                    </div>
+
+                    <div className="bg-[#0b0e17] p-2.5 rounded-xs border border-[#1b2234] space-y-1">
+                      <span className="font-bold text-amber-400 block text-[10px] uppercase">
+                        💻 {QUICKHACKING_OFFICIAL_RULES_GUIDE.breachingAndPasswords.title}
+                      </span>
+                      <div className="space-y-0.5 text-[9px] text-slate-300 font-sans">
+                        {QUICKHACKING_OFFICIAL_RULES_GUIDE.breachingAndPasswords.breachProcedure.map((step, sIdx) => (
+                          <div key={sIdx}>{step}</div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-[#0b0e17] p-2.5 rounded-xs border border-[#1b2234] space-y-1">
+                      <span className="font-bold text-red-400 block text-[10px] uppercase">
+                        🛡️ {QUICKHACKING_OFFICIAL_RULES_GUIDE.selfIceAndDefense.title}
+                      </span>
+                      <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+                        <strong>Self-ICE:</strong> {QUICKHACKING_OFFICIAL_RULES_GUIDE.selfIceAndDefense.selfIceEffect}
+                      </p>
+                      <p className="text-[10px] text-amber-200 leading-relaxed font-sans">
+                        <strong>Expulsión:</strong> {QUICKHACKING_OFFICIAL_RULES_GUIDE.selfIceAndDefense.countermeasureAction}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Barra de Filtro de Tiers */}
           <div className="bg-[#0d1017] border border-[#1b2234] p-3 rounded-xs flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
@@ -620,7 +848,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                   onClick={() => setQuickhackTierFilter(tier)}
                   className={`px-2.5 py-1 text-xs font-mono-code font-bold rounded-xs transition-colors cursor-pointer ${
                     quickhackTierFilter === tier
-                      ? 'bg-[#f59e0b] text-black'
+                      ? 'bg-[#f59e0b] text-black font-bold'
                       : 'bg-[#161b26] text-[#94a3b8] hover:text-white'
                   }`}
                 >
@@ -647,7 +875,7 @@ export const NetAndRolesDeckView: React.FC = () => {
               </div>
               <div>
                 Resultado: <strong className={quickhackRollLog.success ? 'text-emerald-400' : 'text-red-400'}>
-                  {quickhackRollLog.success ? '¡OBJETIVO INFECTADO CON ÉXITO!' : 'HACKEO BLOQUEADO POR FIREWALL'}
+                  {quickhackRollLog.success ? '¡OBJETIVO INFECTADO CON ÉXITO!' : 'HACKEO BLOQUEADO POR FIREWALL O RANGO'}
                 </strong>
                 {quickhackRollLog.damageRoll !== undefined && (
                   <span className="ml-3 font-bold text-amber-300">Daño Infligido a HP: {quickhackRollLog.damageRoll} pts</span>
@@ -676,46 +904,532 @@ export const NetAndRolesDeckView: React.FC = () => {
 
           {/* Grilla de las 15 Cartas de Quickhacks */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {filteredQuickhacks.map(qh => (
-              <div
-                key={qh.id}
-                className="bg-[#0d1017] border border-[#1b2234] hover:border-[#f59e0b]/50 p-3.5 rounded-xs space-y-2.5 transition-colors flex flex-col justify-between"
-              >
+            {filteredQuickhacks.map(qh => {
+              const isLocked = !unlockAllQuickhacks && activeInterfaceRank < qh.requiredInterfaceRank;
+
+              return (
+                <div
+                  key={qh.id}
+                  className={`bg-[#0d1017] p-3.5 rounded-xs space-y-2.5 transition-all flex flex-col justify-between border ${
+                    isLocked 
+                      ? 'border-[#2d1b22] opacity-75' 
+                      : 'border-[#1b2234] hover:border-[#f59e0b]/60'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between gap-1 flex-wrap">
+                      <span className="font-tech text-sm font-bold text-white uppercase flex items-center gap-1.5">
+                        {isLocked ? <Lock className="w-3.5 h-3.5 text-red-400" /> : <Zap className="w-3.5 h-3.5 text-[#f59e0b]" />}
+                        <span>{qh.name}</span>
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <span className={`text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs font-bold ${
+                          qh.tier === 'Advanced' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                          qh.tier === 'Difficult' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+                          qh.tier === 'Standard' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' :
+                          'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                        }`}>
+                          {qh.tier} • DV {qh.dv}
+                        </span>
+                        <span className={`text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs font-bold ${
+                          isLocked 
+                            ? 'bg-red-950/60 text-red-400 border border-red-700/50' 
+                            : 'bg-emerald-950/60 text-emerald-300 border border-emerald-700/50'
+                        }`}>
+                          Req. Int {qh.requiredInterfaceRank}+
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-[10px] font-mono-code text-[#94a3b8] mt-1">
+                      <span>RAM: <strong className="text-white">{qh.ramCost}</strong></span>
+                      <span>Duración: <strong className="text-white">{qh.duration}</strong></span>
+                      {qh.damage && <span>Daño: <strong className="text-[#f59e0b]">{qh.damage}</strong></span>}
+                    </div>
+
+                    <p className="text-xs font-mono-code text-[#cbd5e1] mt-2 leading-relaxed">
+                      {qh.effect}
+                    </p>
+
+                    <p className="text-[10px] text-slate-500 italic mt-1 font-sans">
+                      {qh.loreDescription}
+                    </p>
+                  </div>
+
+                  <div className="pt-2 border-t border-[#1b2234]">
+                    {isLocked ? (
+                      <button
+                        type="button"
+                        disabled
+                        className="w-full py-1.5 bg-red-950/30 text-red-400/80 border border-red-800/40 font-tech font-bold text-xs uppercase tracking-wider rounded-xs cursor-not-allowed flex items-center justify-center gap-1.5"
+                        title={`Requiere Rango de Interface ${qh.requiredInterfaceRank} o activa el Modo Libre arriba`}
+                      >
+                        <Lock className="w-3.5 h-3.5" />
+                        <span>BLOQUEADO (REQ. INTERFACE {qh.requiredInterfaceRank}+)</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleExecuteQuickhack(qh)}
+                        className="w-full py-1.5 bg-[#f59e0b]/20 hover:bg-[#f59e0b] text-[#f59e0b] hover:text-black font-tech font-bold text-xs uppercase tracking-wider rounded-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <Zap className="w-3.5 h-3.5" />
+                        <span>EJECUTAR (1d10 + {activeInterfaceRank} vs DV {qh.dv})</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ==================================================================== */}
+      {/* 3. VISTA ARTES MARCIALES & ENTRENAMIENTO IP & CHIPWARE */}
+      {/* ==================================================================== */}
+      {activeTab === 'martial' && (
+        <div className="space-y-4">
+          {/* HEADER DEL CENTRO DE ARTES MARCIALES */}
+          <div className="bg-[#0d1017] border border-[#1b2234] p-4 rounded-xs space-y-3 shadow-xl">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-red-500/20 border border-red-500 rounded-xs text-red-400">
+                  <Swords className="w-6 h-6" />
+                </div>
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-tech text-sm font-bold text-white uppercase">{qh.name}</span>
-                    <span className={`text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs font-bold ${
-                      qh.tier === 'Advanced' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
-                      qh.tier === 'Difficult' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
-                      qh.tier === 'Standard' ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' :
-                      'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                    }`}>
-                      {qh.tier} • DV {qh.dv}
+                  <div className="flex items-center gap-2">
+                    <h2 className="font-tech text-base sm:text-lg font-black text-white tracking-wider uppercase">
+                      DOJO DE ARTES MARCIALES &amp; CHIPWARE // CYBERFISTS &amp; CORE
+                    </h2>
+                    <span className="text-[10px] font-mono-code bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded-full font-bold">
+                      27 FORMAS • 54 COMBOS
                     </span>
                   </div>
-
-                  <div className="flex items-center gap-3 text-[10px] font-mono-code text-[#94a3b8] mt-1">
-                    <span>RAM: <strong className="text-white">{qh.ramCost}</strong></span>
-                    <span>Duración: <strong className="text-white">{qh.duration}</strong></span>
-                    {qh.damage && <span>Daño: <strong className="text-[#f59e0b]">{qh.damage}</strong></span>}
-                  </div>
-
-                  <p className="text-xs font-mono-code text-[#cbd5e1] mt-2 leading-relaxed">
-                    {qh.effect}
+                  <p className="text-xs font-mono-code text-[#64748b]">
+                    Entrenamiento con IP (x2) • Skill Chips (Nivel 3 — 1,000 €$) • ROF 2 • Ignora 50% SP
                   </p>
                 </div>
+              </div>
 
-                <div className="pt-2 border-t border-[#1b2234]">
+              {/* Botón de Guía de Reglas Oficiales */}
+              <button
+                type="button"
+                onClick={() => setShowMartialArtsGuide(!showMartialArtsGuide)}
+                className="px-3 py-1.5 bg-[#181d2a] hover:bg-[#252c40] text-red-400 border border-red-500/40 rounded-xs font-tech text-xs font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>{showMartialArtsGuide ? 'OCULTAR MANUAL CANÓNICO' : 'MANUAL CANÓNICO (CORE PP. 112, 178-181, 360, 411)'}</span>
+                {showMartialArtsGuide ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+              </button>
+            </div>
+
+            {/* BARRA DE VITALS, IP & BILLETERA DEL PERSONAJE */}
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#1b2234] bg-[#111420] p-3 rounded-xs text-xs font-mono-code">
+              {/* Stats Físicos y Daño Base */}
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#94a3b8]">DEX:</span>
+                  <strong className="text-white font-tech text-sm">{character.stats.DEX || 6}</strong>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#94a3b8]">BODY:</span>
+                  <strong className="text-white font-tech text-sm">{character.stats.BODY || 6}</strong>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#94a3b8]">Daño Base Golpe:</span>
+                  <strong className="text-amber-400 font-bold">
+                    {(character.stats.BODY || 6) <= 4 ? '1d6' : (character.stats.BODY || 6) <= 6 ? '2d6' : (character.stats.BODY || 6) <= 10 ? '3d6' : '4d6'} Daño
+                  </strong>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#94a3b8]">Habilidad General:</span>
+                  <strong className="text-cyan-400 font-bold">Martial Arts {character.skills.martialArts || 0}</strong>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Coins className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="text-[#94a3b8]">Billetera:</span>
+                  <strong className="text-white">{character.eurodollars} €$</strong>
+                </div>
+              </div>
+
+              {/* GESTOR DE IMPROVEMENT POINTS (IP) */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 bg-[#0b0d14] border border-emerald-500/40 px-2.5 py-1 rounded-xs">
+                  <Award className="w-4 h-4 text-emerald-400" />
+                  <span className="text-slate-400">Puntos de Mejora:</span>
+                  <strong className="text-emerald-300 font-tech text-sm">
+                    {character.improvementPoints !== undefined ? character.improvementPoints : 120} IP
+                  </strong>
+                </div>
+
+                <div className="flex items-center gap-1 bg-[#141824] border border-[#222738] p-0.5 rounded-xs">
                   <button
-                    onClick={() => handleExecuteQuickhack(qh)}
-                    className="w-full py-1.5 bg-[#f59e0b]/20 hover:bg-[#f59e0b] text-[#f59e0b] hover:text-black font-tech font-bold text-xs uppercase tracking-wider rounded-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                    type="button"
+                    onClick={() => adjustImprovementPoints(-10)}
+                    className="px-1.5 py-0.5 bg-[#1b2234] hover:bg-red-500/40 text-[10px] text-white rounded-xs transition-colors cursor-pointer"
+                    title="Restar 10 IP"
                   >
-                    <Zap className="w-3.5 h-3.5" />
-                    <span>EJECUTAR (1d10 + {interfaceRank} vs DV {qh.dv})</span>
+                    -10
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => adjustImprovementPoints(10)}
+                    className="px-1.5 py-0.5 bg-[#1b2234] hover:bg-emerald-500/40 text-[10px] text-white rounded-xs transition-colors cursor-pointer"
+                    title="Añadir 10 IP"
+                  >
+                    +10
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => adjustImprovementPoints(50)}
+                    className="px-1.5 py-0.5 bg-[#1b2234] hover:bg-emerald-500/40 text-[10px] text-emerald-400 font-bold rounded-xs transition-colors cursor-pointer"
+                    title="Añadir 50 IP"
+                  >
+                    +50
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => adjustImprovementPoints(100)}
+                    className="px-1.5 py-0.5 bg-[#1b2234] hover:bg-emerald-500/40 text-[10px] text-cyan-300 font-bold rounded-xs transition-colors cursor-pointer"
+                    title="Añadir 100 IP"
+                  >
+                    +100
                   </button>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* MANUAL CANÓNICO DESPLEGABLE */}
+            {showMartialArtsGuide && (
+              <div className="pt-3 border-t border-[#1b2234] space-y-3 text-xs font-mono-code animate-fade-in">
+                <div className="bg-[#121622] p-3 rounded-xs border border-red-500/30 space-y-3">
+                  <div className="flex items-center justify-between border-b border-[#242e44] pb-1.5">
+                    <span className="font-tech text-sm font-bold text-red-400 uppercase">
+                      🥋 {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.title}
+                    </span>
+                    <span className="text-[10px] text-slate-400">{MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.sourceReferences}</span>
+                  </div>
+
+                  {/* 1. Naturaleza y x2 */}
+                  <div className="space-y-1">
+                    <span className="font-bold text-white text-[11px] block">
+                      ★ {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.overview.title}
+                    </span>
+                    <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                      {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.overview.definition}
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-1">
+                      <div className="p-2 bg-[#0b0e17] rounded-xs border border-[#1b2234] text-[10px] text-slate-300">
+                        <strong className="text-amber-400 block mb-0.5">Dificultad x2:</strong>
+                        {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.overview.difficultyMultiplier}
+                      </div>
+                      <div className="p-2 bg-[#0b0e17] rounded-xs border border-[#1b2234] text-[10px] text-slate-300">
+                        <strong className="text-cyan-400 block mb-0.5">27 Estilos Separados:</strong>
+                        {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.overview.whySeparateSkills}
+                      </div>
+                      <div className="p-2 bg-[#0b0e17] rounded-xs border border-[#1b2234] text-[10px] text-slate-300">
+                        <strong className="text-emerald-400 block mb-0.5">Requisito de Uso:</strong>
+                        {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.overview.requirementToUse}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. Mecánicas de Combate: ROF 2, 50% SP y Escala BODY */}
+                  <div className="pt-2 border-t border-[#1e2638] space-y-1.5">
+                    <span className="font-bold text-white text-[11px] block">
+                      ⚡ {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.combatMechanics.title}
+                    </span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      <div className="p-2 bg-[#0b0e17] rounded-xs border border-[#1b2234] text-[10px] text-slate-300 space-y-1">
+                        <strong className="text-red-400 block">ROF 2 &amp; Tirada:</strong>
+                        <p>{MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.combatMechanics.rateOfFire}</p>
+                      </div>
+                      <div className="p-2 bg-[#0b0e17] rounded-xs border border-[#1b2234] text-[10px] text-slate-300 space-y-1">
+                        <strong className="text-red-400 block">Ignora 50% de Armadura (SP):</strong>
+                        <p>{MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.combatMechanics.armorPenetrationRule}</p>
+                      </div>
+                    </div>
+
+                    {/* Tabla Oficial de Daño por BODY */}
+                    <div className="overflow-x-auto border border-[#1e2638] rounded-xs mt-1">
+                      <table className="w-full text-left text-[10px]">
+                        <thead className="bg-[#181d2c] text-red-300 uppercase">
+                          <tr>
+                            <th className="py-1 px-2.5">Rango de BODY</th>
+                            <th className="py-1 px-2.5">Daño Base de Golpe</th>
+                            <th className="py-1 px-2.5">Ejemplos Canónicos</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#1b2233]">
+                          {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.combatMechanics.bodyDamageScaleTable.map((row, rIdx) => (
+                            <tr key={rIdx} className="hover:bg-[#141824]/60">
+                              <td className="py-1 px-2.5 font-bold text-white">{row.bodyRange}</td>
+                              <td className="py-1 px-2.5 font-mono-code font-bold text-amber-400">{row.damageDice}</td>
+                              <td className="py-1 px-2.5 text-slate-400">{row.examples}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* 3. Las 3 Vías de Adquisición */}
+                  <div className="pt-2 border-t border-[#1e2638] space-y-1.5">
+                    <span className="font-bold text-white text-[11px] block">
+                      💰 {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.howToBuyAndAcquire.title}
+                    </span>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                      {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.howToBuyAndAcquire.methods.map((m) => (
+                        <div key={m.id} className="p-2.5 bg-[#0b0e17] rounded-xs border border-[#1b2234] space-y-1">
+                          <span className="font-tech text-xs font-bold text-amber-400 block">{m.name}</span>
+                          <span className="text-[9px] text-[#64748b] block">{m.sourcePage}</span>
+                          <div className="text-[10px] font-bold text-emerald-400">{m.costExplanation}</div>
+                          <p className="text-[10px] text-slate-300 leading-tight font-sans">{m.mechanicDetails}</p>
+                          {m.ipCostTable && (
+                            <div className="pt-1 border-t border-[#1a2030] text-[9px] text-slate-400 flex flex-wrap gap-1">
+                              {m.ipCostTable.map(ip => (
+                                <span key={ip.targetRank} className="bg-[#141926] px-1 py-0.2 rounded-xs border border-[#1e2638]">
+                                  R{ip.targetRank}: {ip.cost} IP
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Mensaje de retroalimentación de entrenamiento / chipware */}
+            {martialFeedback && (
+              <div className={`p-2.5 rounded-xs border text-xs font-mono-code flex items-center justify-between ${
+                martialFeedback.success
+                  ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-200'
+                  : 'bg-red-950/40 border-red-500/60 text-red-200'
+              }`}>
+                <div className="flex items-center gap-2">
+                  {martialFeedback.success ? <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" /> : <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />}
+                  <span>{martialFeedback.message}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setMartialFeedback(null)}
+                  className="text-xs text-slate-400 hover:text-white px-1.5"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* FILTRO DE CATEGORÍAS DE ARTES MARCIALES */}
+          <div className="bg-[#0d1017] border border-[#1b2234] p-3 rounded-xs flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="font-tech text-xs font-bold text-red-400 uppercase tracking-wider">
+                FILTRAR ESTILOS:
+              </span>
+              {[
+                { id: 'all', label: 'TODAS LAS FORMAS (27)' },
+                { id: 'core', label: 'CORE RULEBOOK (4)' },
+                { id: 'interface_red', label: 'CYBERFISTS // IR4 (23)' }
+              ].map(f => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setMartialCategoryFilter(f.id as any)}
+                  className={`px-2.5 py-1 text-xs font-mono-code font-bold rounded-xs transition-colors cursor-pointer ${
+                    martialCategoryFilter === f.id
+                      ? 'bg-red-600 text-white font-bold'
+                      : 'bg-[#161b26] text-[#94a3b8] hover:text-white'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            <span className="text-[10px] font-mono-code text-[#64748b]">
+              Mostrando {MARTIAL_ARTS_FORMS.filter(f => martialCategoryFilter === 'all' ? true : f.sourceBook === martialCategoryFilter).length} de 27 estilos
+            </span>
+          </div>
+
+          {/* GRILLA DE LAS 27 FORMAS DE ARTES MARCIALES */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {MARTIAL_ARTS_FORMS.filter(f => martialCategoryFilter === 'all' ? true : f.sourceBook === martialCategoryFilter).map(form => {
+              const naturalRank = character.knownMartialArts?.[form.id] || 0;
+              const isChipEquipped = (character.equippedMartialArtChips || []).includes(form.id);
+              const isChipOwned = (character.ownedMartialArtChips || []).includes(form.id);
+              const effectiveRank = Math.max(naturalRank, isChipEquipped ? 3 : 0);
+              const dex = character.stats.DEX || 6;
+              const totalAttack = dex + effectiveRank;
+
+              const nextRank = naturalRank + 1;
+              const ipCost = nextRank * 40;
+              const currentIp = character.improvementPoints !== undefined ? character.improvementPoints : 120;
+              const canTrain = currentIp >= ipCost && naturalRank < 10;
+
+              return (
+                <div
+                  key={form.id}
+                  className={`bg-[#0d1017] p-3.5 rounded-xs space-y-3 transition-all flex flex-col justify-between border ${
+                    effectiveRank > 0
+                      ? 'border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.15)]'
+                      : 'border-[#1b2234] hover:border-slate-700'
+                  }`}
+                >
+                  <div className="space-y-2">
+                    {/* Cabecera de la Forma */}
+                    <div className="flex items-center justify-between gap-1 flex-wrap">
+                      <span className="font-tech text-sm font-bold text-white uppercase flex items-center gap-1.5">
+                        <Swords className="w-4 h-4 text-red-500" />
+                        <span>{form.name}</span>
+                      </span>
+                      <span className={`text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs font-bold ${
+                        form.sourceBook === 'core'
+                          ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
+                          : 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
+                      }`}>
+                        {form.badge}
+                      </span>
+                    </div>
+
+                    {/* Estado de Maestría del Personaje */}
+                    <div className="bg-[#121622] p-2 rounded-xs border border-[#1f273c] space-y-1">
+                      <div className="flex items-center justify-between text-xs font-mono-code">
+                        <span className="text-slate-400">Rango Natural:</span>
+                        <strong className="text-white">Rango {naturalRank}/10</strong>
+                      </div>
+                      <div className="flex items-center justify-between text-xs font-mono-code">
+                        <span className="text-slate-400">Rango Efectivo:</span>
+                        <strong className={effectiveRank > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}>
+                          Rango {effectiveRank} {isChipEquipped && '(Chip +3)'}
+                        </strong>
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] font-mono-code pt-1 border-t border-[#1a2133]">
+                        <span className="text-slate-400">Ataque Total (DEX+Rango):</span>
+                        <span className="text-red-400 font-bold">1d10 + {totalAttack}</span>
+                      </div>
+                    </div>
+
+                    {/* Lore y Rol Táctico */}
+                    <p className="text-[11px] text-slate-300 font-sans leading-relaxed">
+                      {form.originAndFlavor}
+                    </p>
+                    <div className="text-[10px] font-mono-code text-[#94a3b8]">
+                      <span className="text-slate-500">Rol Táctico:</span> {form.tacticalRole}
+                    </div>
+
+                    {/* Los 2 Movimientos Especiales */}
+                    <div className="pt-2 border-t border-[#1b2234] space-y-1.5">
+                      <span className="text-[10px] font-tech font-bold text-red-400 uppercase tracking-wider block">
+                        ⚡ Movimientos Especiales ({form.moves.length}):
+                      </span>
+                      {form.moves.map(m => (
+                        <div key={m.id} className="bg-[#0b0e15] p-2 rounded-xs border border-[#1a2133] space-y-0.5 text-[10px] font-mono-code">
+                          <div className="flex items-center justify-between font-bold">
+                            <span className="text-white">{m.name}</span>
+                            <span className="text-amber-400">DV {m.resolutionDv}</span>
+                          </div>
+                          <div className="text-[9px] text-slate-400 font-sans leading-tight">
+                            <strong>Req:</strong> {m.requirements}
+                          </div>
+                          <div className="text-[9px] text-slate-300 font-sans leading-tight">
+                            {m.effectDescription}
+                          </div>
+                          {m.damageBonusOrFormula && (
+                            <div className="text-[9px] text-[#f59e0b] font-bold">
+                              Daño: {m.damageBonusOrFormula}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* ACCIONES DE ADQUISICIÓN: ENTRENAR CON IP & SKILL CHIP */}
+                  <div className="pt-2.5 border-t border-[#1b2234] space-y-2">
+                    {/* Botón de Entrenamiento con IP */}
+                    {naturalRank >= 10 ? (
+                      <div className="text-center py-1 bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 text-xs font-tech font-bold uppercase rounded-xs">
+                        ★ MAESTRÍA MÁXIMA (RANGO 10)
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const res = trainMartialArtWithIp(form.id, form.name);
+                          setMartialFeedback(res);
+                        }}
+                        disabled={!canTrain}
+                        className={`w-full py-1.5 px-2 rounded-xs font-tech text-xs font-bold uppercase transition-all flex items-center justify-center gap-1.5 ${
+                          canTrain
+                            ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-[0_0_8px_rgba(16,185,129,0.3)]'
+                            : 'bg-[#151926] text-slate-500 border border-[#222738] cursor-not-allowed'
+                        }`}
+                        title={canTrain ? `Gasta ${ipCost} IP para subir a Rango ${nextRank}` : `Necesitas ${ipCost} IP`}
+                      >
+                        <Award className="w-3.5 h-3.5" />
+                        <span>
+                          {canTrain
+                            ? `ENTRENAR RANGO ${nextRank} (${ipCost} IP)`
+                            : `FALTAN ${ipCost - currentIp} IP (REQ. ${ipCost} IP)`}
+                        </span>
+                      </button>
+                    )}
+
+                    {/* Botones de Skill Chip (Nivel 3 — 1,000 €$) */}
+                    <div className="space-y-1">
+                      {isChipOwned ? (
+                        <button
+                          type="button"
+                          onClick={() => toggleEquipMartialArtChip(form.id)}
+                          className={`w-full py-1 px-2 rounded-xs font-mono-code text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                            isChipEquipped
+                              ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400 hover:bg-cyan-500/30'
+                              : 'bg-[#151926] text-slate-400 border border-[#222738] hover:text-white'
+                          }`}
+                        >
+                          <Cpu className="w-3.5 h-3.5" />
+                          <span>
+                            {isChipEquipped
+                              ? '✓ CHIP INSERTADO EN SOCKET (QUITAR)'
+                              : '⚡ INSERTAR CHIP EN SOCKET (+3)'}
+                          </span>
+                        </button>
+                      ) : (
+                        <div className="grid grid-cols-2 gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const res = buyAndEquipMartialArtChip(form.id, form.name, false);
+                              setMartialFeedback(res);
+                            }}
+                            className="py-1 px-1 bg-[#1a2030] hover:bg-amber-600 hover:text-black text-amber-300 border border-amber-600/40 rounded-xs font-mono-code text-[10px] font-bold transition-colors cursor-pointer text-center"
+                            title="Comprar Skill Chip Nivel 3 por 1,000 €$ oficiales"
+                          >
+                            COMPRAR (1,000 €$)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const res = buyAndEquipMartialArtChip(form.id, form.name, true);
+                              setMartialFeedback(res);
+                            }}
+                            className="py-1 px-1 bg-[#151926] hover:bg-[#20273a] text-slate-400 hover:text-white border border-[#24293c] rounded-xs font-mono-code text-[10px] transition-colors cursor-pointer text-center"
+                            title="Asignar gratis (para personajes de creación con Chipware inicial)"
+                          >
+                            GRATIS (CREACIÓN)
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

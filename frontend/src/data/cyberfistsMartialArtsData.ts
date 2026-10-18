@@ -933,3 +933,99 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
 
 // Arreglo plano con los 54 movimientos para búsqueda, filtrado y disparo táctico directo en el HUD de Combate
 export const ALL_MARTIAL_ART_MOVES: MartialArtMove[] = MARTIAL_ARTS_FORMS.flatMap(form => form.moves);
+
+export interface MartialArtsOfficialManualText {
+  title: string;
+  sourceReferences: string;
+  overview: {
+    title: string;
+    definition: string;
+    difficultyMultiplier: string;
+    whySeparateSkills: string;
+    requirementToUse: string;
+  };
+  combatMechanics: {
+    title: string;
+    rateOfFire: string;
+    armorPenetrationRule: string;
+    bodyDamageScaleTable: Array<{
+      bodyRange: string;
+      damageDice: string;
+      examples: string;
+    }>;
+    specialMovesResolution: string;
+  };
+  howToBuyAndAcquire: {
+    title: string;
+    methods: Array<{
+      id: string;
+      name: string;
+      sourcePage: string;
+      costExplanation: string;
+      mechanicDetails: string;
+      ipCostTable?: Array<{ targetRank: number; cost: number }>;
+    }>;
+  };
+}
+
+export const MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT: MartialArtsOfficialManualText = {
+  title: 'Reglamento Oficial Canónico de Artes Marciales // Cyberpunk RED & Cyberfists',
+  sourceReferences: 'Cyberpunk RED Core Rulebook pp. 112, 178-181, 360, 411 • Interface RED Vol. 4 (Cyberfists of Fury)',
+  overview: {
+    title: 'Naturaleza de las Artes Marciales (Habilidad Difícil x2)',
+    definition: 'Martial Arts es la habilidad de combate cuerpo a cuerpo más mortífera y técnica de Night City. A diferencia del Brawling (pelea callejera basada en puñetazos desordenados y forcejeos), las Artes Marciales representan entrenamiento formal, biomecánica precisa y acondicionamiento muscular extremo.',
+    difficultyMultiplier: 'Coste Doble (x2): Al ser una habilidad avanzada de alta complejidad motriz, cada punto de Martial Arts cuesta el doble tanto en la creación de personaje (2 puntos de habilidad por nivel) como al entrenar durante la partida con Puntos de Mejora (Nivel Objetivo × 40 IP).',
+    whySeparateSkills: 'Cada una de las 27 Formas de Artes Marciales (Karate, Judo, Aikido, Taekwondo, Krav Maga, Capoeira, Wrestling, etc.) es una habilidad completamente separada e independiente en tu hoja. Tener Karate 6 no te otorga automáticamente puntos en Judo; debes aprender y entrenar cada estilo por separado.',
+    requirementToUse: 'Para poder empuñar un estilo en combate y desbloquear sus golpes o Movimientos Especiales, tu personaje DEBE tener al menos Rango 1 aprendido de forma natural O tener equipado un Skill Chip (Nivel 3) de esa forma en su Chipware Socket / Neuroport.'
+  },
+  combatMechanics: {
+    title: 'Mecánicas de Combate Canónicas: ROF 2, 50% SP & Movimientos Especiales',
+    rateOfFire: 'ROF 2 (2 Ataques por Acción): Al atacar con Artes Marciales, realizas dos ataques completos por cada Acción de Ataque en tu turno. Cada golpe se resuelve tirando 1d10 + DEX + Rango en ese Estilo de Arte Marcial contra 1d10 + DEX + Evasion del defensor.',
+    armorPenetrationRule: 'Ignora la Mitad de la Armadura (50% SP, Redondeado Hacia Arriba): Los golpes de Artes Marciales concentran la fuerza cinética en puntos de presión y juntas estructurales. Al calcular el daño, la armadura del defensor (SP de Cabeza o Cuerpo) se divide por 2 antes de restarla. Además, si al menos 1 punto de daño penetra el SP reducido, la armadura se ablaciona en 1 punto (o más si el movimiento lo especifica). ¡Brawling NO ignora armadura; choca contra el 100% del SP!',
+    bodyDamageScaleTable: [
+      { bodyRange: 'BODY 1 a 4', damageDice: '1d6 Daño Base', examples: 'Constitución frágil o clones de bajo tonelaje.' },
+      { bodyRange: 'BODY 5 a 6', damageDice: '2d6 Daño Base', examples: 'Físico estándar humano o edgerunner atlético.' },
+      { bodyRange: 'BODY 7 a 10', damageDice: '3d6 Daño Base', examples: 'Solos de asalto, ciberbrazos Gorilla o culturistas.' },
+      { bodyRange: 'BODY 11+ (FBC / Borg / Graf 3)', damageDice: '4d6 Daño Base', examples: 'Cuerpos Full Borg Conversion, Muscle & Bone Lace o Cyberware lineal.' }
+    ],
+    specialMovesResolution: 'Resolución de Movimientos Especiales (Special Moves): Cada forma otorga exactamente 2 Movimientos Especiales. Puedes intentar un Movimiento Especial una vez por turno. Si cumples su requisito táctico previo (Requirements, ej. haber impactado ambos golpes de ROF 2 o que el rival esté apresado), declaras la técnica y tiras 1d10 + DEX + Nivel en ese Estilo contra la DV del Movimiento (normalmente DV 15). Si tienes éxito, el combo se ejecuta causando heridas críticas automáticas, derribos o ablación destructiva.'
+  },
+  howToBuyAndAcquire: {
+    title: 'Las 3 Vías Oficiales para Aprender o Adquirir un Arte Marcial',
+    methods: [
+      {
+        id: 'creation',
+        name: '1. En Creación de Personaje (Puntos de Habilidad)',
+        sourcePage: 'Core Rulebook p. 86',
+        costExplanation: 'Cuesta 2 puntos de Habilidad por cada nivel (de tus 86 puntos de creación).',
+        mechanicDetails: 'Subir un estilo a Nivel 1 cuesta 2 puntos; Nivel 2 = 4 puntos; Nivel 3 = 6 puntos; Nivel 4 = 8 puntos; Nivel 5 = 10 puntos; hasta el tope inicial de Nivel 6 = 12 puntos de habilidad.'
+      },
+      {
+        id: 'improvement_points',
+        name: '2. Durante la Campaña con Puntos de Mejora (IP)',
+        sourcePage: 'Core Rulebook p. 411 (Tabla Oficial de IP)',
+        costExplanation: 'Al ser una habilidad x2, subir de nivel cuesta exactamente: Nivel Objetivo × 40 IP.',
+        mechanicDetails: 'Ganas IP al final de cada misión o sesión según el desempeño de tu personaje. Puedes invertir tus IP acumulados directamente para desbloquear o subir de rango cualquier estilo.',
+        ipCostTable: [
+          { targetRank: 1, cost: 40 },
+          { targetRank: 2, cost: 80 },
+          { targetRank: 3, cost: 120 },
+          { targetRank: 4, cost: 160 },
+          { targetRank: 5, cost: 200 },
+          { targetRank: 6, cost: 240 },
+          { targetRank: 7, cost: 280 },
+          { targetRank: 8, cost: 320 },
+          { targetRank: 9, cost: 360 },
+          { targetRank: 10, cost: 400 }
+        ]
+      },
+      {
+        id: 'skill_chip',
+        name: '3. Mediante Skill Chipware (Nivel 3 Instantáneo)',
+        sourcePage: 'Core Rulebook pp. 112, 360',
+        costExplanation: '1,000 €$ (Precio Oficial Very Expensive para habilidades x2)',
+        mechanicDetails: 'Requiere tener instalado un Chipware Socket (en 2045: Neural Link [500 €$] + Chipware Socket [500 €$]; en 2077: el Neuroport básico ya incluye 2 Chipware Sockets de serie). Mientras el Skill Chip esté insertado en tu ranura, tu mente recibe reflejos neurales descargados fijando tu Nivel en 3 (+3) en ese estilo específico de Arte Marcial si tu nivel natural es menor a 3. Esto habilita de inmediato los 2 ataques ROF 2 ignorando 50% SP y el acceso a sus 2 Movimientos Especiales.'
+      }
+    ]
+  }
+};

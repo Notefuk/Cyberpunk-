@@ -568,6 +568,10 @@ export interface CharacterSheet {
   vehicles?: OwnedVehicle[];
   techProjects?: TechMakerProject[];
   medtechLab?: MedtechCryoAndPharma;
+  improvementPoints?: number; // IP disponibles para mejorar habilidades/rol
+  interfaceRankOverride?: number; // Permite fijar/ajustar el rango de Interface (0-10) para desbloquear Quickhacks
+  ownedMartialArtChips?: string[]; // IDs de estilos cuyos Skill Chips (Nivel 3) fueron comprados/adquiridos
+  equippedMartialArtChips?: string[]; // IDs de Skill Chips de Artes Marciales actualmente insertados en Chipware Socket / Neuroport
 }
 
 export interface RollEntry {

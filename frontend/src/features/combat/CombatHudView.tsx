@@ -23,8 +23,8 @@ import {
 } from '../../engine/combatEngine';
 import type { WeaponItem, RollEntry, InventoryItem, EncumbranceMode, AimedShotTarget } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
-import { MARTIAL_ARTS_FORMS } from '../../data/cyberfistsMartialArtsData';
-import { QUICKHACKS_2077_CATALOG, type Quickhack2077 } from '../../data/netAndRolesData';
+import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
+import { QUICKHACKS_2077_CATALOG, QUICKHACKING_OFFICIAL_RULES_GUIDE, type Quickhack2077 } from '../../data/netAndRolesData';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
 import { EnemiesCompendiumPanel } from '../gm/EnemiesCompendiumPanel';
 import { 
@@ -59,6 +59,12 @@ import {
   Train,
   GripVertical,
   Maximize2,
+  Coins,
+  Cpu,
+  Award,
+  BookOpen,
+  Unlock,
+  Lock,
   Minimize2
 } from 'lucide-react';
 
@@ -411,10 +417,12 @@ const HeadshotCalculator: React.FC<HeadshotCalculatorProps> = ({ entry }) => {
 };
 
 export type LeftPanelId = 'vitals' | 'armor' | 'luck' | 'injuries' | 'cyberware' | 'consumables';
-export type RightPanelId = 'telemetry' | 'inHand' | 'rangefinder' | 'arsenalBelt' | 'martialArts' | 'roleQuickhacks';
+export type RightPanelId = 'telemetry' | 'inHand' | 'rangefinder' | 'arsenalBelt' | 'martialArts' | 'roleAbility' | 'quickhacks2077';
+export type HudSectionId = LeftPanelId | RightPanelId;
 
 const DEFAULT_LEFT_ORDER: LeftPanelId[] = ['vitals', 'armor', 'luck', 'injuries', 'cyberware', 'consumables'];
-const DEFAULT_RIGHT_ORDER: RightPanelId[] = ['telemetry', 'inHand', 'rangefinder', 'arsenalBelt', 'martialArts', 'roleQuickhacks'];
+const DEFAULT_RIGHT_ORDER: RightPanelId[] = ['telemetry', 'inHand', 'rangefinder', 'arsenalBelt', 'martialArts', 'roleAbility', 'quickhacks2077'];
+export const DEFAULT_HUD_ORDER: HudSectionId[] = [...DEFAULT_LEFT_ORDER, ...DEFAULT_RIGHT_ORDER];
 
 const STORAGE_KEY_LEFT_ORDER = 'cpr_combat_left_order_v2';
 const STORAGE_KEY_RIGHT_ORDER = 'cpr_combat_right_order_v2';
@@ -568,6 +576,11 @@ export const CombatHudView: React.FC = () => {
   const removeInjury = useCharacterStore((state) => state.removeInjury);
   const setEncumbranceMode = useCharacterStore((state) => state.setEncumbranceMode);
   const updateMartialArtRank = useCharacterStore((state) => state.updateMartialArtRank);
+  const adjustImprovementPoints = useCharacterStore((state) => state.adjustImprovementPoints);
+  const setInterfaceRankOverride = useCharacterStore((state) => state.setInterfaceRankOverride);
+  const trainMartialArtWithIp = useCharacterStore((state) => state.trainMartialArtWithIp);
+  const buyAndEquipMartialArtChip = useCharacterStore((state) => state.buyAndEquipMartialArtChip);
+  const toggleEquipMartialArtChip = useCharacterStore((state) => state.toggleEquipMartialArtChip);
   const updateSoloAllocation = useCharacterStore((state) => state.updateSoloAllocation);
 
   const selectedDistance = useCombatStore((state) => state.selectedDistance);
@@ -602,9 +615,16 @@ export const CombatHudView: React.FC = () => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_RIGHT_ORDER);
       if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length === DEFAULT_RIGHT_ORDER.length && DEFAULT_RIGHT_ORDER.every(id => parsed.includes(id))) {
-          return parsed;
+        let parsed = JSON.parse(saved) as string[];
+        if (Array.isArray(parsed)) {
+          // Backward compatibility: replace old 'roleQuickhacks' with 'roleAbility' and append 'quickhacks2077' if missing
+          parsed = parsed.map(id => (id === 'roleQuickhacks' ? 'roleAbility' : id));
+          if (!parsed.includes('quickhacks2077')) {
+            parsed.push('quickhacks2077');
+          }
+          if (DEFAULT_RIGHT_ORDER.every(id => parsed.includes(id as RightPanelId)) && parsed.length === DEFAULT_RIGHT_ORDER.length) {
+            return parsed as RightPanelId[];
+          }
         }
       }
     } catch {}
@@ -663,7 +683,8 @@ export const CombatHudView: React.FC = () => {
       rangefinder: true,
       arsenalBelt: true,
       martialArts: true,
-      roleQuickhacks: true
+      roleAbility: true,
+      quickhacks2077: true
     };
     setCollapsedBoxes(next);
     localStorage.setItem(STORAGE_KEY_COLLAPSED, JSON.stringify(next));
@@ -755,6 +776,11 @@ export const CombatHudView: React.FC = () => {
 
   const [quickhackSearch, setQuickhackSearch] = useState<string>('');
   const [quickhackTierFilter, setQuickhackTierFilter] = useState<string>('all');
+  const [unlockAllQuickhacks, setUnlockAllQuickhacks] = useState<boolean>(false);
+  const [showQuickhackGuide, setShowQuickhackGuide] = useState<boolean>(false);
+  const [showDojoModal, setShowDojoModal] = useState<boolean>(false);
+  const [showMartialArtsGuide, setShowMartialArtsGuide] = useState<boolean>(false);
+  const [martialFeedback, setMartialFeedback] = useState<{ success: boolean; message: string } | null>(null);
 
   // Accordion section states
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
@@ -879,6 +905,7 @@ export const CombatHudView: React.FC = () => {
   );
 
   // Calculations for Active Character
+  const activeInterfaceRank = activeChar?.interfaceRankOverride ?? (activeChar?.role === 'Netrunner' ? (activeChar.roleRank || 4) : 0);
   const effectiveBody = getEffectiveBody(activeChar);
   const maxHp = calculateMaxHp(effectiveBody, activeChar?.stats?.WILL ?? 6);
   const seriousWoundThresh = calculateSeriouslyWoundedThreshold(maxHp);
@@ -1120,7 +1147,9 @@ export const CombatHudView: React.FC = () => {
   // Cyberfists of Fury: Form Attack
   const handleCyberfistsFormAttack = (form: typeof MARTIAL_ARTS_FORMS[number]) => {
     ensureTelemetryExpanded();
-    const rank = activeChar?.knownMartialArts?.[form.id] ?? (activeChar?.skills?.martialArts ?? 0);
+    const naturalRank = activeChar?.knownMartialArts?.[form.id] ?? (activeChar?.skills?.martialArts ?? 0);
+    const isChipEquipped = (activeChar?.equippedMartialArtChips || []).includes(form.id);
+    const rank = isChipEquipped ? Math.max(3, naturalRank) : naturalRank;
     const soloPrecision = activeChar?.soloAllocation?.precisionAttack ?? 0;
     const dex = activeChar?.stats?.DEX ?? 6;
     const luckSpent = luckToSpendOnNextRoll;
@@ -1194,7 +1223,9 @@ export const CombatHudView: React.FC = () => {
   // Cyberfists of Fury: Special Move execution
   const handleExecuteMartialMove = (form: typeof MARTIAL_ARTS_FORMS[number], move: typeof MARTIAL_ARTS_FORMS[number]['moves'][number]) => {
     ensureTelemetryExpanded();
-    const rank = activeChar?.knownMartialArts?.[form.id] ?? (activeChar?.skills?.martialArts ?? 0);
+    const naturalRank = activeChar?.knownMartialArts?.[form.id] ?? (activeChar?.skills?.martialArts ?? 0);
+    const isChipEquipped = (activeChar?.equippedMartialArtChips || []).includes(form.id);
+    const rank = isChipEquipped ? Math.max(3, naturalRank) : naturalRank;
     const soloPrecision = activeChar?.soloAllocation?.precisionAttack ?? 0;
     const dex = activeChar?.stats?.DEX ?? 6;
     const luckSpent = luckToSpendOnNextRoll;
@@ -1283,7 +1314,7 @@ export const CombatHudView: React.FC = () => {
   // Netrunner: Launch Quickhack 2077
   const handleLaunchQuickhack = (qh: Quickhack2077) => {
     ensureTelemetryExpanded();
-    const roleRank = activeChar?.role === 'Netrunner' ? (activeChar.roleRank || 4) : (activeChar?.roleRank || 4);
+    const roleRank = activeInterfaceRank;
     const luckSpent = luckToSpendOnNextRoll;
     if (luckSpent > 0) {
       spendLuck(luckSpent);
@@ -3873,14 +3904,34 @@ export const CombatHudView: React.FC = () => {
           </CollapsibleHudCard>
         );
 
-      case 'martialArts':
+            case 'martialArts': {
+        const combatReadyForms = MARTIAL_ARTS_FORMS.filter((f) => {
+          const natural = activeChar?.knownMartialArts?.[f.id] ?? 0;
+          const chipped = (activeChar?.equippedMartialArtChips || []).includes(f.id);
+          return natural > 0 || chipped;
+        });
+
+        const activeForm =
+          combatReadyForms.find((f) => f.id === selectedMartialFormId) ||
+          combatReadyForms[0] ||
+          MARTIAL_ARTS_FORMS[0];
+
+        const naturalRank = activeChar?.knownMartialArts?.[activeForm.id] ?? 0;
+        const isChipEquipped = (activeChar?.equippedMartialArtChips || []).includes(activeForm.id);
+        const activeRank = isChipEquipped ? Math.max(3, naturalRank) : naturalRank;
+
+        const summaryText =
+          combatReadyForms.length > 0
+            ? `Estilo: ${activeForm.name} (R${activeRank})${isChipEquipped ? ' [Chip N3]' : ''}`
+            : 'Sin estilos aprendidos ni chips';
+
         return (
           <CollapsibleHudCard
             key="martialArts"
             id="martialArts"
-            title="CYBERFISTS OF FURY // 27 ARTES MARCIALES & 54 MOVIMIENTOS"
+            title="CYBERFISTS OF FURY // ARTES MARCIALES & COMBOS"
             icon={<Flame className="w-4 h-4 text-amber-400" />}
-            summary={`Estilo: ${MARTIAL_ARTS_FORMS.find(f => f.id === selectedMartialFormId)?.name || 'Aikido'}`}
+            summary={summaryText}
             isCollapsed={isCollapsed}
             onToggleCollapse={() => toggleBoxCollapse('martialArts')}
             canMoveUp={canMoveUp}
@@ -3891,237 +3942,545 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'martialArts')}
             onDrop={() => handleDrop('right', 'martialArts')}
             isDragOver={dragOverItem === 'martialArts'}
+            extraHeaderActions={
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDojoModal(!showDojoModal);
+                }}
+                className={`px-2 py-0.5 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                  showDojoModal
+                    ? 'bg-[#10b981] text-black shadow-sm'
+                    : 'bg-[#181f2f] hover:bg-[#25324c] text-emerald-400 border border-emerald-500/40'
+                }`}
+                title="Abrir Dojo de Artes Marciales, Entrenamiento IP y Chipware"
+              >
+                <span>🥋 DOJO</span>
+                <span className="text-[9px] opacity-80">{showDojoModal ? '▲' : '▼'}</span>
+              </button>
+            }
           >
-            
-                    <div className="mt-3 pt-3 border-t border-[#1f2230] space-y-3">
-              {/* Barra de Filtro & Búsqueda */}
-              <div className="flex flex-wrap items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Buscar estilo o combo..."
-                  value={martialArtSearch}
-                  onChange={(e) => setMartialArtSearch(e.target.value)}
-                  className="bg-[#0b0d14] border border-[#262c3e] text-white text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#10b981] flex-1 min-w-[150px] font-mono-code"
-                />
-                <div className="flex gap-1 text-[10px] font-mono-code font-bold">
-                  {(['all', 'core', 'interface_red'] as const).map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => setMartialArtCategoryFilter(cat)}
-                      className={`px-2 py-1 rounded transition-colors ${
-                        martialArtCategoryFilter === cat
-                          ? 'bg-[#10b981] text-black'
-                          : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
-                      }`}
-                    >
-                      {cat === 'all' ? 'TODAS (27)' : cat === 'core' ? 'CORE (4)' : 'CYBERFISTS (23)'}
-                    </button>
-                  ))}
+            <div className="space-y-3">
+              {/* FEEDBACK DE ACCIONES DE ARTES MARCIALES */}
+              {martialFeedback && (
+                <div
+                  className={`p-2.5 rounded text-xs font-mono-code flex items-center justify-between ${
+                    martialFeedback.success
+                      ? 'bg-emerald-950/70 border border-emerald-500/60 text-emerald-200'
+                      : 'bg-red-950/70 border border-red-500/60 text-red-200'
+                  }`}
+                >
+                  <span>{martialFeedback.message}</span>
+                  <button
+                    type="button"
+                    onClick={() => setMartialFeedback(null)}
+                    className="text-slate-400 hover:text-white px-1 text-xs cursor-pointer"
+                  >
+                    ✕
+                  </button>
                 </div>
-              </div>
+              )}
 
-              {/* Selector de Estilo */}
-              {(() => {
-                const filteredForms = MARTIAL_ARTS_FORMS.filter((f) => {
-                  const matchCat =
-                    martialArtCategoryFilter === 'all' ? true : f.sourceBook === martialArtCategoryFilter;
-                  const matchSearch =
-                    !martialArtSearch.trim() ||
-                    f.name.toLowerCase().includes(martialArtSearch.toLowerCase()) ||
-                    f.moves.some(
-                      (m) =>
-                        m.name.toLowerCase().includes(martialArtSearch.toLowerCase()) ||
-                        m.effectDescription.toLowerCase().includes(martialArtSearch.toLowerCase())
-                    );
-                  return matchCat && matchSearch;
-                });
-
-                const activeForm =
-                  filteredForms.find((f) => f.id === selectedMartialFormId) ||
-                  filteredForms[0] ||
-                  MARTIAL_ARTS_FORMS[0];
-                const activeRank =
-                  activeChar?.knownMartialArts?.[activeForm.id] ?? (activeChar?.skills?.martialArts ?? 0);
-
-                return (
-                  <div className="space-y-3">
-                    {/* Selector de Formas */}
+              {/* MODAL / PANEL DESPLEGABLE: DOJO DE ARTES MARCIALES & REGLAS OFICIALES */}
+              {showDojoModal && (
+                <div className="chamfer-card p-3.5 bg-[#0e111a] border-2 border-emerald-500/50 shadow-2xl space-y-3 animate-fade-in">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#232d44]">
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-mono-code text-[#94a3b8]">Estilo Activo:</span>
+                      <span className="text-lg">🥋</span>
+                      <div>
+                        <h4 className="font-tech text-xs font-bold text-white uppercase tracking-wider">
+                          DOJO DE ARTES MARCIALES & CHIPWARE // REGLAS OFICIALES
+                        </h4>
+                        <span className="text-[10px] text-slate-400 font-mono-code">
+                          Entrenamiento IP (Coste x2 = Próximo Nivel × 40 IP) • Skill Chips (Nivel 3 — 1,000 €$)
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      {/* Billetera y Puntos de Mejora */}
+                      <div className="flex items-center gap-2 bg-[#141824] border border-[#23293c] px-2 py-0.5 rounded text-xs font-mono-code">
+                        <Coins className="w-3.5 h-3.5 text-amber-400" />
+                        <span className="text-white font-bold">{activeChar?.eurodollars ?? 0} €$</span>
+                        <span className="text-slate-500">|</span>
+                        <Award className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-emerald-300 font-bold">{activeChar?.improvementPoints ?? 120} IP</span>
+                      </div>
+
+                      {/* Botones de ajuste de IP */}
+                      <div className="flex items-center gap-0.5 bg-[#141824] border border-[#23293c] p-0.5 rounded text-[10px] font-mono-code">
+                        <button
+                          type="button"
+                          onClick={() => adjustImprovementPoints(-10)}
+                          className="px-1.5 py-0.5 bg-[#1a2030] hover:bg-red-600/40 text-slate-300 rounded cursor-pointer"
+                          title="Restar 10 IP"
+                        >
+                          -10
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => adjustImprovementPoints(10)}
+                          className="px-1.5 py-0.5 bg-[#1a2030] hover:bg-emerald-600/40 text-emerald-300 rounded cursor-pointer"
+                          title="Añadir 10 IP"
+                        >
+                          +10
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => adjustImprovementPoints(50)}
+                          className="px-1.5 py-0.5 bg-[#1a2030] hover:bg-emerald-600/40 text-emerald-300 font-bold rounded cursor-pointer"
+                          title="Añadir 50 IP"
+                        >
+                          +50
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => adjustImprovementPoints(100)}
+                          className="px-1.5 py-0.5 bg-[#1a2030] hover:bg-cyan-600/40 text-cyan-300 font-bold rounded cursor-pointer"
+                          title="Añadir 100 IP"
+                        >
+                          +100
+                        </button>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setShowMartialArtsGuide(!showMartialArtsGuide)}
+                        className="px-2.5 py-1 bg-[#1a2336] hover:bg-[#25334f] text-[#38bdf8] border border-[#38bdf8]/40 rounded text-xs font-tech font-bold transition-all cursor-pointer flex items-center gap-1"
+                      >
+                        <BookOpen className="w-3.5 h-3.5" />
+                        <span>{showMartialArtsGuide ? 'OCULTAR MANUAL' : 'REGLAS OFICIALES'}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Manual Oficial de Artes Marciales */}
+                  {showMartialArtsGuide && (
+                    <div className="p-3 bg-[#121622] border border-[#27344e] rounded space-y-2.5 text-xs font-mono-code animate-fade-in max-h-[340px] overflow-y-auto pr-1">
+                      <div className="flex items-center justify-between border-b border-[#222c42] pb-1">
+                        <span className="font-tech text-sm font-bold text-amber-400">
+                          🥋 {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.title}
+                        </span>
+                        <span className="text-[10px] text-slate-400">
+                          {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.sourceReferences}
+                        </span>
+                      </div>
+
+                      <div className="space-y-1 text-slate-300 font-sans leading-relaxed text-[11px]">
+                        <p><strong>Definición:</strong> {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.overview.definition}</p>
+                        <p className="text-emerald-300"><strong>Dificultad (x2):</strong> {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.overview.difficultyMultiplier}</p>
+                        <p>{MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.overview.whySeparateSkills}</p>
+                        <p className="text-cyan-300">{MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.overview.requirementToUse}</p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 border-t border-[#1e263a]">
+                        <div className="bg-[#0b0e17] p-2 rounded border border-[#1b2234] space-y-1">
+                          <span className="font-tech text-xs font-bold text-white uppercase block">
+                            MECÁNICAS DE COMBATE (ROF 2 & 50% SP)
+                          </span>
+                          <p className="text-[10px] text-slate-300 font-sans">
+                            {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.combatMechanics.rateOfFire}
+                          </p>
+                          <p className="text-[10px] text-amber-300 font-sans">
+                            {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.combatMechanics.armorPenetrationRule}
+                          </p>
+                        </div>
+                        <div className="bg-[#0b0e17] p-2 rounded border border-[#1b2234] space-y-1">
+                          <span className="font-tech text-xs font-bold text-white uppercase block">
+                            ESCALA DE DAÑO SEGÚN STAT BODY
+                          </span>
+                          <div className="space-y-0.5 text-[9px] font-mono-code text-slate-300">
+                            {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.combatMechanics.bodyDamageScaleTable.map((row, idx) => (
+                              <div key={idx} className="flex justify-between border-b border-[#1b2234] py-0.5">
+                                <span className="text-slate-400">{row.bodyRange}:</span>
+                                <strong className="text-emerald-400">{row.damageDice}</strong>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-[#0b0e17] p-2 rounded border border-[#1b2234] space-y-1">
+                        <span className="font-tech text-xs font-bold text-amber-400 uppercase block">
+                          CÓMO ADQUIRIR Y ENTRENAR ARTES MARCIALES
+                        </span>
+                        <div className="space-y-1 text-[10px] text-slate-300 font-sans">
+                          {MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.howToBuyAndAcquire.methods.map((m, idx) => (
+                            <div key={idx}>
+                              <strong className="text-white">• {m.name}:</strong> {m.costExplanation} — {m.mechanicDetails}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Filtro y Búsqueda del Dojo */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Buscar estilo o combo en el Dojo..."
+                      value={martialArtSearch}
+                      onChange={(e) => setMartialArtSearch(e.target.value)}
+                      className="bg-[#0b0d14] border border-[#262c3e] text-white text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#10b981] flex-1 min-w-[150px] font-mono-code"
+                    />
+                    <div className="flex gap-1 text-[10px] font-mono-code font-bold">
+                      {(['all', 'core', 'interface_red'] as const).map((cat) => (
+                        <button
+                          key={cat}
+                          onClick={() => setMartialArtCategoryFilter(cat)}
+                          className={`px-2 py-1 rounded transition-colors cursor-pointer ${
+                            martialArtCategoryFilter === cat
+                              ? 'bg-[#10b981] text-black'
+                              : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
+                          }`}
+                        >
+                          {cat === 'all' ? 'TODAS (27)' : cat === 'core' ? 'CORE (4)' : 'CYBERFISTS (23)'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Lista de las 27 Formas para Entrenar / Comprar Chip */}
+                  <div className="space-y-2 max-h-[360px] overflow-y-auto pr-1">
+                    {MARTIAL_ARTS_FORMS.filter((f) => {
+                      const matchCat =
+                        martialArtCategoryFilter === 'all' ? true : f.sourceBook === martialArtCategoryFilter;
+                      const matchSearch =
+                        !martialArtSearch.trim() ||
+                        f.name.toLowerCase().includes(martialArtSearch.toLowerCase()) ||
+                        f.moves.some(
+                          (m) =>
+                            m.name.toLowerCase().includes(martialArtSearch.toLowerCase()) ||
+                            m.effectDescription.toLowerCase().includes(martialArtSearch.toLowerCase())
+                        );
+                      return matchCat && matchSearch;
+                    }).map((form) => {
+                      const naturalRank = activeChar?.knownMartialArts?.[form.id] ?? 0;
+                      const isChipOwned = (activeChar?.ownedMartialArtChips || []).includes(form.id);
+                      const isChipEquipped = (activeChar?.equippedMartialArtChips || []).includes(form.id);
+                      const effectiveRank = isChipEquipped ? Math.max(3, naturalRank) : naturalRank;
+                      const nextRank = naturalRank + 1;
+                      const ipCost = nextRank * 40;
+                      const currentIp = activeChar?.improvementPoints ?? 0;
+                      const canTrain = currentIp >= ipCost && naturalRank < 10;
+
+                      return (
+                        <div
+                          key={form.id}
+                          className={`p-2.5 rounded border transition-all ${
+                            effectiveRank > 0
+                              ? 'bg-[#121822] border-emerald-500/50 shadow-sm'
+                              : 'bg-[#10131d] border-[#1f2738]'
+                          }`}
+                        >
+                          <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
+                            <div className="flex items-center gap-2">
+                              <span className="font-tech text-xs font-bold text-white">{form.name}</span>
+                              <span className="text-[9px] font-mono-code px-1 rounded bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40">
+                                {form.badge}
+                              </span>
+                              {effectiveRank > 0 && (
+                                <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-emerald-500 text-black font-bold">
+                                  RANGO EFECTIVO: {effectiveRank}
+                                  {isChipEquipped && naturalRank < 3 ? ' (CHIP N3)' : ''}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[10px] font-mono-code text-[#94a3b8]">
+                              Rol: <span className="text-white">{form.tacticalRole}</span> • Stats: <span className="text-slate-300">{form.keyStats.join(', ')}</span>
+                            </div>
+                          </div>
+
+                          <div className="text-[10px] text-slate-300 italic font-sans mb-2 leading-relaxed">
+                            "{form.originAndFlavor}"
+                          </div>
+
+                          {/* Acciones de Adquisición */}
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 border-t border-[#1c2436]">
+                            {/* Entrenamiento con IP */}
+                            <div>
+                              {naturalRank >= 10 ? (
+                                <div className="text-center py-1 bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 text-[10px] font-tech font-bold uppercase rounded-xs">
+                                  ★ MAESTRÍA MÁXIMA (R10)
+                                </div>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const res = trainMartialArtWithIp(form.id, form.name);
+                                    setMartialFeedback(res);
+                                  }}
+                                  disabled={!canTrain}
+                                  className={`w-full py-1 px-2 rounded-xs font-tech text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-1 ${
+                                    canTrain
+                                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-sm'
+                                      : 'bg-[#151926] text-slate-500 border border-[#222738] cursor-not-allowed'
+                                  }`}
+                                  title={canTrain ? `Gasta ${ipCost} IP para subir a Rango ${nextRank}` : `Necesitas ${ipCost} IP (tienes ${currentIp})`}
+                                >
+                                  <Award className="w-3 h-3" />
+                                  <span>
+                                    {canTrain ? `ENTRENAR R${nextRank} (${ipCost} IP)` : `REQ. ${ipCost} IP`}
+                                  </span>
+                                </button>
+                              )}
+                            </div>
+
+                            {/* Skill Chip Nivel 3 */}
+                            <div>
+                              {isChipOwned ? (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleEquipMartialArtChip(form.id)}
+                                  className={`w-full py-1 px-2 rounded-xs font-mono-code text-[10px] font-bold transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                                    isChipEquipped
+                                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400 hover:bg-cyan-500/30'
+                                      : 'bg-[#151926] text-slate-400 border border-[#222738] hover:text-white'
+                                  }`}
+                                >
+                                  <Cpu className="w-3 h-3" />
+                                  <span>{isChipEquipped ? '✓ CHIP EQUIPADO' : '⚡ INSERTAR CHIP'}</span>
+                                </button>
+                              ) : (
+                                <div className="flex gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const res = buyAndEquipMartialArtChip(form.id, form.name, false);
+                                      setMartialFeedback(res);
+                                    }}
+                                    className="flex-1 py-1 px-1 bg-[#1a2030] hover:bg-amber-600 hover:text-black text-amber-300 border border-amber-600/40 rounded-xs font-mono-code text-[9px] font-bold transition-colors cursor-pointer text-center"
+                                    title="Comprar Skill Chip Nivel 3 por 1,000 €$"
+                                  >
+                                    CHIP 1,000 €$
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const res = buyAndEquipMartialArtChip(form.id, form.name, true);
+                                      setMartialFeedback(res);
+                                    }}
+                                    className="py-1 px-1.5 bg-[#151926] hover:bg-[#20273a] text-slate-400 hover:text-white border border-[#24293c] rounded-xs font-mono-code text-[9px] transition-colors cursor-pointer text-center"
+                                    title="Gratis en creación de personaje"
+                                  >
+                                    GRATIS
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Ajuste manual de rango */}
+                            <div className="flex items-center justify-end gap-1 font-mono-code text-[10px]">
+                              <span className="text-slate-400">R. Base:</span>
+                              <button
+                                type="button"
+                                onClick={() => updateMartialArtRank(form.id, Math.max(0, naturalRank - 1))}
+                                className="w-5 h-5 flex items-center justify-center bg-[#181d2a] hover:bg-red-600 text-white rounded cursor-pointer"
+                              >
+                                -
+                              </button>
+                              <span className="w-4 text-center font-bold text-white">{naturalRank}</span>
+                              <button
+                                type="button"
+                                onClick={() => updateMartialArtRank(form.id, Math.min(10, naturalRank + 1))}
+                                className="w-5 h-5 flex items-center justify-center bg-[#181d2a] hover:bg-emerald-600 text-white rounded cursor-pointer"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* SECCIÓN PRINCIPAL DE COMBATE: ESTILOS LISTOS PARA ATACAR */}
+              {combatReadyForms.length === 0 ? (
+                <div className="p-4 text-center bg-[#101420] border border-amber-500/40 rounded-xs space-y-2">
+                  <span className="text-2xl block">🥋</span>
+                  <h4 className="font-tech text-xs font-bold text-white uppercase">
+                    Sin Artes Marciales Aprendidas ni Skill Chips Equipados
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-mono-code max-w-md mx-auto leading-relaxed">
+                    Para usar Artes Marciales en combate necesitas entrenar un estilo con Puntos de Mejora (IP) o insertar un Skill Chip (Nivel 3) en tu Chipware Socket o Neuroport.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShowDojoModal(true)}
+                    className="px-3 py-1.5 bg-[#10b981] hover:bg-[#059669] text-black font-tech font-bold text-xs uppercase rounded transition-all shadow-md cursor-pointer"
+                  >
+                    🥋 Abrir Dojo de Artes Marciales & Chipware
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {/* Selector de Estilo Listo para Combate */}
+                  <div className="flex flex-wrap items-center justify-between gap-2 bg-[#0c0e16] p-2 rounded border border-[#1f2638]">
+                    <div className="flex items-center gap-2 flex-1 min-w-[200px]">
+                      <span className="text-[11px] font-mono-code text-[#94a3b8] shrink-0">Estilo Activo:</span>
                       <select
                         value={activeForm.id}
                         onChange={(e) => setSelectedMartialFormId(e.target.value)}
                         className="bg-[#0b0d14] border border-[#262c3e] text-[#10b981] font-tech font-bold text-xs rounded px-2 py-1 focus:outline-none focus:border-[#10b981] flex-1 cursor-pointer"
                       >
-                        {filteredForms.map((f) => {
-                          const userRank =
-                            activeChar?.knownMartialArts?.[f.id] ?? (activeChar?.skills?.martialArts ?? 0);
+                        {combatReadyForms.map((f) => {
+                          const nat = activeChar?.knownMartialArts?.[f.id] ?? 0;
+                          const chipped = (activeChar?.equippedMartialArtChips || []).includes(f.id);
+                          const eff = chipped ? Math.max(3, nat) : nat;
                           return (
                             <option key={f.id} value={f.id}>
-                              {f.name} {userRank > 0 ? `(Rango ${userRank})` : ''} - {f.badge}
+                              {f.name} (Rango {eff}{chipped && nat < 3 ? ' · Chip N3' : ''})
                             </option>
                           );
                         })}
                       </select>
                     </div>
 
-                    {/* Ficha del Estilo Seleccionado */}
-                    <div className="bg-[#0c0e14] p-3 rounded border border-[#1f2637] space-y-2.5">
-                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1b2130]">
-                        <div>
-                          <div className="font-tech text-sm font-bold text-white flex items-center gap-2">
-                            <span>{activeForm.name}</span>
-                            <span className="text-[9px] font-mono-code bg-[#10b981]/20 text-[#10b981] px-1.5 py-0.5 rounded border border-[#10b981]/40">
-                              {activeForm.badge}
-                            </span>
-                          </div>
-                          <div className="text-[10px] font-mono-code text-[#64748b] mt-0.5">
-                            Stats Clave: <strong className="text-[#94a3b8]">{activeForm.keyStats.join(', ')}</strong> • Rol: {activeForm.tacticalRole}
-                          </div>
-                        </div>
+                    <div className="flex items-center gap-1.5 text-xs font-mono-code">
+                      <span className="text-[#38bdf8] font-bold">Rango {activeRank}</span>
+                      {isChipEquipped && (
+                        <span className="text-[9px] bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 px-1.5 py-0.2 rounded font-bold">
+                          CHIPWARE SOCKET
+                        </span>
+                      )}
+                    </div>
+                  </div>
 
-                        {/* Rango del Personaje en el Estilo */}
-                        <div className="flex items-center gap-1.5 bg-[#141724] border border-[#252c40] px-2 py-1 rounded">
-                          <span className="text-[10px] font-mono-code text-[#94a3b8]">Rango Estilo:</span>
-                          <button
-                            onClick={() => updateMartialArtRank(activeForm.id, Math.max(0, activeRank - 1))}
-                            className="w-5 h-5 flex items-center justify-center bg-[#1f2334] hover:bg-[#dc2626] text-white rounded text-xs font-bold"
-                            title="Disminuir rango"
+                  {/* Ficha Táctica del Estilo Activo */}
+                  <div className="bg-[#0e111a] p-3 rounded border border-[#222a3d] space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="font-tech text-sm font-bold text-white flex items-center gap-1.5">
+                        <span>{activeForm.name}</span>
+                        <span className="text-[9px] font-mono-code px-1.5 py-0.2 rounded bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40">
+                          {activeForm.badge}
+                        </span>
+                      </div>
+                      <div className="text-[10px] font-mono-code text-[#94a3b8]">
+                        Stats Clave: <strong className="text-white">{activeForm.keyStats.join(', ')}</strong> • Rol: {activeForm.tacticalRole}
+                      </div>
+                    </div>
+
+                    <div className="text-[11px] font-sans text-[#cbd5e1] leading-relaxed italic bg-[#10131d] p-2 rounded border border-[#1c2233]">
+                      "{activeForm.originAndFlavor}"
+                    </div>
+
+                    {/* Botones de Ataque y Daño Básico del Estilo */}
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      <button
+                        onClick={() => handleCyberfistsFormAttack(activeForm)}
+                        className="py-1.5 px-2 bg-[#10b981] hover:bg-[#059669] text-black font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
+                      >
+                        <Target className="w-3.5 h-3.5" />
+                        <span>ATACAR ({activeForm.name.split(' ')[0]} R{activeRank})</span>
+                      </button>
+                      <button
+                        onClick={() => handleCyberfistsFormDamage(activeForm)}
+                        className="py-1.5 px-2 bg-[#181f2f] hover:bg-[#232d42] text-[#10b981] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1.5 border border-[#1f3b2d] cursor-pointer"
+                      >
+                        <Dices className="w-3.5 h-3.5" />
+                        <span>DAÑO ({unarmedDmg} · 50% SP)</span>
+                      </button>
+                    </div>
+
+                    {/* 2 Movimientos Especiales del Estilo */}
+                    <div className="pt-2 border-t border-[#1b2130] space-y-2">
+                      <div className="text-[10px] font-mono-code uppercase font-bold text-[#f59e0b] tracking-wider flex items-center gap-1">
+                        <Sparkles className="w-3 h-3" />
+                        MOVIMIENTOS ESPECIALES & COMBOS ({activeForm.moves.length})
+                      </div>
+
+                      <div className="space-y-2">
+                        {activeForm.moves.map((move) => (
+                          <div
+                            key={move.id}
+                            className="bg-[#121622] p-2.5 rounded border border-[#20273a] hover:border-[#10b981]/50 transition-colors space-y-1.5"
                           >
-                            -
-                          </button>
-                          <span className="font-mono-code text-xs font-bold text-[#10b981] px-1">
-                            {activeRank}
-                          </span>
-                          <button
-                            onClick={() => updateMartialArtRank(activeForm.id, activeRank + 1)}
-                            className="w-5 h-5 flex items-center justify-center bg-[#1f2334] hover:bg-[#10b981] text-white rounded text-xs font-bold"
-                            title="Aumentar rango"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="text-[11px] font-sans text-[#cbd5e1] leading-relaxed italic bg-[#10131d] p-2 rounded border border-[#1c2233]">
-                        "{activeForm.originAndFlavor}"
-                      </div>
-
-                      {/* Botones de Ataque y Daño Básico del Estilo */}
-                      <div className="grid grid-cols-2 gap-2 pt-1">
-                        <button
-                          onClick={() => handleCyberfistsFormAttack(activeForm)}
-                          className="py-1.5 px-2 bg-[#10b981] hover:bg-[#059669] text-black font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1.5 shadow-sm"
-                        >
-                          <Target className="w-3.5 h-3.5" />
-                          <span>ATACAR ({activeForm.name.split(' ')[0]})</span>
-                        </button>
-                        <button
-                          onClick={() => handleCyberfistsFormDamage(activeForm)}
-                          className="py-1.5 px-2 bg-[#181f2f] hover:bg-[#232d42] text-[#10b981] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1.5 border border-[#1f3b2d]"
-                        >
-                          <Dices className="w-3.5 h-3.5" />
-                          <span>DAÑO ({unarmedDmg})</span>
-                        </button>
-                      </div>
-
-                      {/* 2 Movimientos Especiales del Estilo */}
-                      <div className="pt-2 border-t border-[#1b2130] space-y-2">
-                        <div className="text-[10px] font-mono-code uppercase font-bold text-[#f59e0b] tracking-wider flex items-center gap-1">
-                          <Sparkles className="w-3 h-3" />
-                          MOVIMIENTOS ESPECIALES & COMBOS ({activeForm.moves.length})
-                        </div>
-
-                        <div className="space-y-2">
-                          {activeForm.moves.map((move) => (
-                            <div
-                              key={move.id}
-                              className="bg-[#121622] p-2.5 rounded border border-[#20273a] hover:border-[#10b981]/50 transition-colors space-y-1.5"
-                            >
-                              <div className="flex flex-wrap items-center justify-between gap-1">
-                                <div className="font-tech text-xs font-bold text-white flex items-center gap-1.5">
-                                  <span>{move.name}</span>
-                                  {move.criticalInjuryApplied && (
-                                    <span className="text-[9px] font-mono-code bg-[#dc2626]/20 text-[#f87171] px-1 py-0.2 rounded border border-[#dc2626]/40">
-                                      {move.criticalInjuryApplied}
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-[10px] font-mono-code font-bold text-[#38bdf8] bg-[#0c121e] px-1.5 py-0.5 rounded border border-[#1b2b40]">
-                                  DV {move.resolutionDv}
-                                </div>
-                              </div>
-
-                              <div className="text-[10px] font-mono-code text-[#94a3b8]">
-                                <strong className="text-[#f59e0b]">Requisito:</strong> {move.requirements}
-                              </div>
-
-                              <div className="text-[11px] font-sans text-[#cbd5e1] leading-relaxed">
-                                {move.effectDescription}
-                              </div>
-
-                              {move.damageBonusOrFormula && (
-                                <div className="text-[10px] font-mono-code text-[#10b981] font-bold">
-                                  Bono / Daño: {move.damageBonusOrFormula}
-                                </div>
-                              )}
-
-                              <div className="flex gap-2 pt-1">
-                                <button
-                                  onClick={() => handleExecuteMartialMove(activeForm, move)}
-                                  className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#10b981] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d]"
-                                >
-                                  <Target className="w-3 h-3" /> EJECUTAR COMBO (1d10 + DEX + {activeRank} vs DV {move.resolutionDv})
-                                </button>
-                                {move.damageBonusOrFormula && move.damageBonusOrFormula.includes('d') && (
-                                  <button
-                                    onClick={() => handleRollComboDamage(move)}
-                                    className="py-1 px-2 bg-[#291b22] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#441f28]"
-                                    title="Tirar dado de daño del combo"
-                                  >
-                                    <Dices className="w-3 h-3" /> TIRAR DAÑO
-                                  </button>
+                            <div className="flex flex-wrap items-center justify-between gap-1">
+                              <div className="font-tech text-xs font-bold text-white flex items-center gap-1.5">
+                                <span>{move.name}</span>
+                                {move.criticalInjuryApplied && (
+                                  <span className="text-[9px] font-mono-code bg-[#dc2626]/20 text-[#f87171] px-1 py-0.2 rounded border border-[#dc2626]/40">
+                                    {move.criticalInjuryApplied}
+                                  </span>
                                 )}
                               </div>
+                              <div className="text-[10px] font-mono-code font-bold text-[#38bdf8] bg-[#0c121e] px-1.5 py-0.5 rounded border border-[#1b2b40]">
+                                DV {move.resolutionDv}
+                              </div>
                             </div>
-                          ))}
-                        </div>
+
+                            <div className="text-[10px] font-mono-code text-[#94a3b8]">
+                              <strong className="text-[#f59e0b]">Requisito:</strong> {move.requirements}
+                            </div>
+
+                            <div className="text-[11px] font-sans text-[#cbd5e1] leading-relaxed">
+                              {move.effectDescription}
+                            </div>
+
+                            {move.damageBonusOrFormula && (
+                              <div className="text-[10px] font-mono-code text-[#10b981] font-bold">
+                                Bono / Daño: {move.damageBonusOrFormula}
+                              </div>
+                            )}
+
+                            <div className="flex gap-2 pt-1">
+                              <button
+                                onClick={() => handleExecuteMartialMove(activeForm, move)}
+                                className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#10b981] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d] cursor-pointer"
+                              >
+                                <Target className="w-3 h-3" /> EJECUTAR COMBO (1d10 + DEX + {activeRank} vs DV {move.resolutionDv})
+                              </button>
+                              {move.damageBonusOrFormula && move.damageBonusOrFormula.includes('d') && (
+                                <button
+                                  onClick={() => handleRollComboDamage(move)}
+                                  className="py-1 px-2 bg-[#291b22] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#441f28] cursor-pointer"
+                                  title="Tirar dado de daño del combo"
+                                >
+                                  <Dices className="w-3 h-3" /> TIRAR DAÑO
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
-                );
-              })()}
+                </div>
+              )}
             </div>
-
           </CollapsibleHudCard>
         );
+      }
 
-      case 'roleQuickhacks':
+      case 'roleAbility':
         return (
           <CollapsibleHudCard
-            key="roleQuickhacks"
-            id="roleQuickhacks"
-            title="ROL EN COMBATE // SOLO COMBAT AWARENESS & QUICKHACKS 2077"
+            key="roleAbility"
+            id="roleAbility"
+            title="ROL EN COMBATE // CAPACIDADES DE ROL"
             icon={<Zap className="w-4 h-4 text-emerald-400" />}
-            summary={`${activeChar?.role?.toUpperCase() || 'SOLO'} R${activeChar?.roleRank || 4} | Quickhacks 2077`}
+            summary={`${activeChar?.role?.toUpperCase() || 'SOLO'} R${activeChar?.roleRank || 4}`}
             isCollapsed={isCollapsed}
-            onToggleCollapse={() => toggleBoxCollapse('roleQuickhacks')}
+            onToggleCollapse={() => toggleBoxCollapse('roleAbility')}
             canMoveUp={canMoveUp}
             canMoveDown={canMoveDown}
-            onMoveUp={() => moveRightPanel('roleQuickhacks', 'up')}
-            onMoveDown={() => moveRightPanel('roleQuickhacks', 'down')}
-            onDragStart={() => handleDragStart('right', 'roleQuickhacks')}
-            onDragOver={(e) => handleDragOver(e, 'roleQuickhacks')}
-            onDrop={() => handleDrop('right', 'roleQuickhacks')}
-            isDragOver={dragOverItem === 'roleQuickhacks'}
+            onMoveUp={() => moveRightPanel('roleAbility', 'up')}
+            onMoveDown={() => moveRightPanel('roleAbility', 'down')}
+            onDragStart={() => handleDragStart('right', 'roleAbility')}
+            onDragOver={(e) => handleDragOver(e, 'roleAbility')}
+            onDrop={() => handleDrop('right', 'roleAbility')}
+            isDragOver={dragOverItem === 'roleAbility'}
             extraHeaderActions={
               <span className="text-[10px] font-mono-code text-[#38bdf8] bg-[#38bdf8]/10 px-2 py-0.5 rounded border border-[#38bdf8]/30">
                 {activeChar?.role?.toUpperCase() || 'SOLO'} R{activeChar?.roleRank || 4}
               </span>
             }
           >
-            
-                    <div className="mt-3 pt-3 border-t border-[#1f2230] space-y-4">
+            <div className="space-y-4">
               {/* SUBSECCIÓN 1: SOLO COMBAT AWARENESS */}
               <div className="bg-[#0e1017] p-3 rounded border border-[#22283a] space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1c2233]">
@@ -4168,8 +4527,8 @@ export const CombatHudView: React.FC = () => {
                   {/* Spot Weakness */}
                   <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
                     <div>
-                      <div className="text-white font-bold">Spot Weakness (+1 Daño)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1 daño primer golpe</div>
+                      <div className="text-white font-bold">Spot Weakness (+1 Dmg)</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1</div>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <button
@@ -4178,12 +4537,12 @@ export const CombatHudView: React.FC = () => {
                       >
                         -
                       </button>
-                      <span className="font-bold text-[#f59e0b] w-4 text-center">
+                      <span className="font-bold text-[#10b981] w-4 text-center">
                         {activeChar?.soloAllocation?.spotWeakness || 0}
                       </span>
                       <button
                         onClick={() => handleUpdateSoloField('spotWeakness', 1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#f59e0b] hover:text-black text-white rounded font-bold"
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#10b981] text-white rounded font-bold"
                       >
                         +
                       </button>
@@ -4194,7 +4553,7 @@ export const CombatHudView: React.FC = () => {
                   <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
                     <div>
                       <div className="text-white font-bold">Damage Deflection (-1 Dmg)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 2 pts por -1 daño primer impacto</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 2 pts por -1</div>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <button
@@ -4203,12 +4562,12 @@ export const CombatHudView: React.FC = () => {
                       >
                         -
                       </button>
-                      <span className="font-bold text-[#38bdf8] w-4 text-center">
+                      <span className="font-bold text-[#10b981] w-4 text-center">
                         {activeChar?.soloAllocation?.damageDeflection || 0}
                       </span>
                       <button
                         onClick={() => handleUpdateSoloField('damageDeflection', 1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#38bdf8] hover:text-black text-white rounded font-bold"
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#10b981] text-white rounded font-bold"
                       >
                         +
                       </button>
@@ -4219,7 +4578,7 @@ export const CombatHudView: React.FC = () => {
                   <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
                     <div>
                       <div className="text-white font-bold">Initiative Reaction (+1 Init)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1 iniciativa</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1</div>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <button
@@ -4228,12 +4587,12 @@ export const CombatHudView: React.FC = () => {
                       >
                         -
                       </button>
-                      <span className="font-bold text-white w-4 text-center">
+                      <span className="font-bold text-[#10b981] w-4 text-center">
                         {activeChar?.soloAllocation?.initiativeReaction || 0}
                       </span>
                       <button
                         onClick={() => handleUpdateSoloField('initiativeReaction', 1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-white hover:text-black text-white rounded font-bold"
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#10b981] text-white rounded font-bold"
                       >
                         +
                       </button>
@@ -4243,8 +4602,8 @@ export const CombatHudView: React.FC = () => {
                   {/* Threat Detection */}
                   <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
                     <div>
-                      <div className="text-white font-bold">Threat Detection (+1 Percep)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1 Perception</div>
+                      <div className="text-white font-bold">Threat Detection (+1 Perc)</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1</div>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <button
@@ -4253,12 +4612,12 @@ export const CombatHudView: React.FC = () => {
                       >
                         -
                       </button>
-                      <span className="font-bold text-[#c084fc] w-4 text-center">
+                      <span className="font-bold text-[#10b981] w-4 text-center">
                         {activeChar?.soloAllocation?.threatDetection || 0}
                       </span>
                       <button
                         onClick={() => handleUpdateSoloField('threatDetection', 1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#c084fc] hover:text-black text-white rounded font-bold"
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#10b981] text-white rounded font-bold"
                       >
                         +
                       </button>
@@ -4268,15 +4627,15 @@ export const CombatHudView: React.FC = () => {
                   {/* Fumble Recovery */}
                   <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
                     <div>
-                      <div className="text-white font-bold">Fumble Recovery (Ignora 1)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 4 pts (Sin pifias críticas)</div>
+                      <div className="text-white font-bold">Fumble Recovery (Ignora Pifia)</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 2 pts fijar activo</div>
                     </div>
                     <button
-                      onClick={() => handleUpdateSoloField('fumbleRecovery', !activeChar?.soloAllocation?.fumbleRecovery)}
-                      className={`px-2 py-1 rounded text-[10px] font-bold transition-all ${
+                      onClick={() => handleUpdateSoloField('fumbleRecovery', activeChar?.soloAllocation?.fumbleRecovery ? -2 : 2)}
+                      className={`px-2 py-0.5 rounded font-bold ${
                         activeChar?.soloAllocation?.fumbleRecovery
-                          ? 'bg-[#10b981] text-black font-bold'
-                          : 'bg-[#1f2434] text-[#64748b] hover:text-white'
+                          ? 'bg-[#10b981] text-black'
+                          : 'bg-[#1f2434] text-[#94a3b8]'
                       }`}
                     >
                       {activeChar?.soloAllocation?.fumbleRecovery ? 'ACTIVO' : 'INACTIVO'}
@@ -4284,71 +4643,287 @@ export const CombatHudView: React.FC = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </CollapsibleHudCard>
+        );
 
-              {/* SUBSECCIÓN 2: 15 QUICKHACKS OFICIALES 2077 */}
-              <div className="bg-[#0e1017] p-3 rounded border border-[#22283a] space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1c2233]">
-                  <div className="flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-[#38bdf8]" />
-                    <span className="font-tech text-xs font-bold text-white uppercase">
-                      NETRUNNER // QUICKHACKS 2077 (15 PROGRAMAS A 50M)
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-mono-code text-[#38bdf8]">
-                    Tirada: 1d10 + Rol ({activeChar?.roleRank || 4}) vs DV
+      case 'quickhacks2077':
+        return (
+          <CollapsibleHudCard
+            key="quickhacks2077"
+            id="quickhacks2077"
+            title="QUICKHACKS 2077 // CEMK NEUROPORT"
+            icon={<Cpu className="w-4 h-4 text-cyan-400" />}
+            summary={`Interface R${activeInterfaceRank} | 15 Hacks CEMK`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('quickhacks2077')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveRightPanel('quickhacks2077', 'up')}
+            onMoveDown={() => moveRightPanel('quickhacks2077', 'down')}
+            onDragStart={() => handleDragStart('right', 'quickhacks2077')}
+            onDragOver={(e) => handleDragOver(e, 'quickhacks2077')}
+            onDrop={() => handleDrop('right', 'quickhacks2077')}
+            isDragOver={dragOverItem === 'quickhacks2077'}
+            extraHeaderActions={
+              <div className="flex items-center gap-1 bg-[#141722] border border-[#222738] p-1 rounded-xs" onClick={(e) => e.stopPropagation()}>
+                <span className="text-[10px] font-mono-code text-[#94a3b8] px-1">Interface:</span>
+                <button
+                  type="button"
+                  onClick={() => setInterfaceRankOverride(Math.max(0, activeInterfaceRank - 1))}
+                  className="w-5 h-5 bg-[#1a2030] hover:bg-red-500/40 text-white rounded-xs font-mono-code font-bold flex items-center justify-center transition-colors cursor-pointer text-xs"
+                  title="Reducir Rango de Interface"
+                >
+                  -
+                </button>
+                <span className="w-5 text-center font-mono-code font-bold text-white text-xs">
+                  {activeInterfaceRank}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setInterfaceRankOverride(Math.min(10, activeInterfaceRank + 1))}
+                  className="w-5 h-5 bg-[#1a2030] hover:bg-emerald-500/40 text-white rounded-xs font-mono-code font-bold flex items-center justify-center transition-colors cursor-pointer text-xs"
+                  title="Aumentar Rango de Interface"
+                >
+                  +
+                </button>
+                {activeChar?.interfaceRankOverride !== undefined && (
+                  <button
+                    type="button"
+                    onClick={() => setInterfaceRankOverride(activeChar?.role === 'Netrunner' ? (activeChar.roleRank || 4) : 0)}
+                    className="text-[9px] font-mono-code text-[#94a3b8] hover:text-white px-1 hover:underline cursor-pointer"
+                    title="Restablecer al Rango canónico del personaje"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+            }
+          >
+            <div className="space-y-3">
+              {/* Controles de Modo Libre y Guía Oficial */}
+              <div className="flex flex-wrap items-center justify-between gap-2 bg-[#0e1017] p-2 rounded border border-[#22283a]">
+                <div className="flex items-center gap-2">
+                  <Terminal className="w-4 h-4 text-[#38bdf8]" />
+                  <span className="font-tech text-xs font-bold text-white uppercase">
+                    RED 2077 // TIRADA: 1d10 + INTERFACE (R{activeInterfaceRank}) vs DV
                   </span>
                 </div>
 
-                {/* Filtro y Búsqueda de Quickhacks */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="Buscar Quickhack (Overheat, Cyberware Malfunction...)"
-                    value={quickhackSearch}
-                    onChange={(e) => setQuickhackSearch(e.target.value)}
-                    className="bg-[#0b0d14] border border-[#262c3e] text-white text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#38bdf8] flex-1 min-w-[150px] font-mono-code"
-                  />
-                  <div className="flex gap-1 text-[10px] font-mono-code font-bold">
-                    {(['all', 'Simple', 'Standard', 'Difficult', 'Advanced'] as const).map((tier) => (
-                      <button
-                        key={tier}
-                        onClick={() => setQuickhackTierFilter(tier)}
-                        className={`px-1.5 py-0.5 rounded transition-colors ${
-                          quickhackTierFilter === tier
-                            ? 'bg-[#38bdf8] text-black'
-                            : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
-                        }`}
-                      >
-                        {tier === 'all' ? 'TODOS' : tier}
-                      </button>
-                    ))}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setUnlockAllQuickhacks(!unlockAllQuickhacks)}
+                    className={`px-2.5 py-1 rounded text-xs font-tech font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                      unlockAllQuickhacks
+                        ? 'bg-emerald-500 text-black shadow-sm'
+                        : 'bg-[#181d2a] text-[#94a3b8] hover:text-white border border-[#24293c]'
+                    }`}
+                    title="Alternar entre filtro estricto por rango o ver todos los hacks"
+                  >
+                    {unlockAllQuickhacks ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
+                    <span>{unlockAllQuickhacks ? '🔓 MODO LIBRE' : '🔒 DESBLOQUEO POR RANGO'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowQuickhackGuide(!showQuickhackGuide)}
+                    className="px-2.5 py-1 bg-[#1a2030] hover:bg-[#252f48] text-[#f59e0b] border border-[#f59e0b]/40 rounded text-xs font-tech font-bold transition-colors cursor-pointer flex items-center gap-1"
+                  >
+                    <BookOpen className="w-3.5 h-3.5" />
+                    <span>{showQuickhackGuide ? 'OCULTAR GUÍA' : '📖 REGLAS OFICIALES (CEMK)'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Tabla de Desbloqueo por Rango de Interface */}
+              <div className="bg-[#0c0f18] p-2.5 rounded border border-[#1e2638] text-[10px] font-mono-code space-y-1">
+                <div className="flex items-center justify-between text-slate-400 font-bold border-b border-[#1b2234] pb-1 mb-1">
+                  <span>TABLA DE DESBLOQUEO CANÓNICA CEMK</span>
+                  <span className="text-[#38bdf8]">Interface Actual: R{activeInterfaceRank}</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-center">
+                  <div
+                    className={`p-1.5 rounded border ${
+                      activeInterfaceRank >= 1
+                        ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
+                        : 'bg-[#121622] border-[#20273a] text-slate-500'
+                    }`}
+                  >
+                    <div className="font-bold">Rango 1+</div>
+                    <div className="text-[9px]">Simple [DV 6]</div>
+                  </div>
+                  <div
+                    className={`p-1.5 rounded border ${
+                      activeInterfaceRank >= 2
+                        ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
+                        : 'bg-[#121622] border-[#20273a] text-slate-500'
+                    }`}
+                  >
+                    <div className="font-bold">Rango 2-3+</div>
+                    <div className="text-[9px]">Standard [DV 8]</div>
+                  </div>
+                  <div
+                    className={`p-1.5 rounded border ${
+                      activeInterfaceRank >= 4
+                        ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
+                        : 'bg-[#121622] border-[#20273a] text-slate-500'
+                    }`}
+                  >
+                    <div className="font-bold">Rango 4+</div>
+                    <div className="text-[9px]">Difficult [DV 10]</div>
+                  </div>
+                  <div
+                    className={`p-1.5 rounded border ${
+                      activeInterfaceRank >= 7
+                        ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
+                        : 'bg-[#121622] border-[#20273a] text-slate-500'
+                    }`}
+                  >
+                    <div className="font-bold">Rango 7+</div>
+                    <div className="text-[9px]">Advanced [DV 12]</div>
                   </div>
                 </div>
+              </div>
 
-                {/* Lista de Quickhacks */}
-                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-                  {QUICKHACKS_2077_CATALOG.filter((qh) => {
-                    const matchTier = quickhackTierFilter === 'all' || qh.tier === quickhackTierFilter;
-                    const matchSearch =
-                      !quickhackSearch.trim() ||
-                      qh.name.toLowerCase().includes(quickhackSearch.toLowerCase()) ||
-                      qh.effect.toLowerCase().includes(quickhackSearch.toLowerCase());
-                    return matchTier && matchSearch;
-                  }).map((qh) => (
+              {/* Guía Oficial Completa de Quickhacking */}
+              {showQuickhackGuide && (
+                <div className="p-3 bg-[#121622] border border-[#2a344d] rounded space-y-2.5 text-xs font-mono-code animate-fade-in max-h-[360px] overflow-y-auto pr-1">
+                  <div className="flex items-center justify-between border-b border-[#242e44] pb-1.5">
+                    <span className="font-tech text-sm font-bold text-[#f59e0b] uppercase">
+                      📖 {QUICKHACKING_OFFICIAL_RULES_GUIDE.title}
+                    </span>
+                    <span className="text-[10px] text-slate-400">{QUICKHACKING_OFFICIAL_RULES_GUIDE.source}</span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <span className="font-bold text-white text-[11px] block">
+                      ⚡ {QUICKHACKING_OFFICIAL_RULES_GUIDE.howUnlockingWorks.title}:
+                    </span>
+                    <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                      {QUICKHACKING_OFFICIAL_RULES_GUIDE.howUnlockingWorks.summary}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                      {QUICKHACKING_OFFICIAL_RULES_GUIDE.howUnlockingWorks.ranks.map((rk, idx) => (
+                        <div key={idx} className="bg-[#0b0e17] p-2 rounded-xs border border-[#1b2234] space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="font-tech font-bold text-[#f59e0b] text-xs">{rk.interfaceRank}</span>
+                            <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1 rounded-xs font-bold">{rk.dv}</span>
+                          </div>
+                          <div className="text-[10px] font-bold text-white">{rk.tierName}</div>
+                          <div className="text-[10px] text-cyan-300 font-sans">{rk.unlockedHacks.join(', ')}</div>
+                          <p className="text-[9px] text-slate-400 leading-tight font-sans">{rk.notes}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-2 border-t border-[#1e2638]">
+                    <div className="bg-[#0b0e17] p-2.5 rounded-xs border border-[#1b2234] space-y-1">
+                      <span className="font-bold text-[#00f5d4] block text-[10px] uppercase">
+                        🎯 {QUICKHACKING_OFFICIAL_RULES_GUIDE.rangeAndLineOfSight.title}
+                      </span>
+                      <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+                        <strong>Alcance:</strong> {QUICKHACKING_OFFICIAL_RULES_GUIDE.rangeAndLineOfSight.maxDistance}.
+                      </p>
+                      <p className="text-[10px] text-slate-400 leading-tight font-sans">
+                        {QUICKHACKING_OFFICIAL_RULES_GUIDE.rangeAndLineOfSight.lineOfSightRules}
+                      </p>
+                      <p className="text-[9px] text-[#00f5d4] leading-tight font-sans pt-1">
+                        ✓ {QUICKHACKING_OFFICIAL_RULES_GUIDE.rangeAndLineOfSight.freeActionConnection}
+                      </p>
+                    </div>
+
+                    <div className="bg-[#0b0e17] p-2.5 rounded-xs border border-[#1b2234] space-y-1">
+                      <span className="font-bold text-amber-400 block text-[10px] uppercase">
+                        💻 {QUICKHACKING_OFFICIAL_RULES_GUIDE.breachingAndPasswords.title}
+                      </span>
+                      <div className="space-y-0.5 text-[9px] text-slate-300 font-sans">
+                        {QUICKHACKING_OFFICIAL_RULES_GUIDE.breachingAndPasswords.breachProcedure.map((step, sIdx) => (
+                          <div key={sIdx}>{step}</div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-[#0b0e17] p-2.5 rounded-xs border border-[#1b2234] space-y-1">
+                      <span className="font-bold text-red-400 block text-[10px] uppercase">
+                        🛡️ {QUICKHACKING_OFFICIAL_RULES_GUIDE.selfIceAndDefense.title}
+                      </span>
+                      <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+                        <strong>Self-ICE:</strong> {QUICKHACKING_OFFICIAL_RULES_GUIDE.selfIceAndDefense.selfIceEffect}
+                      </p>
+                      <p className="text-[10px] text-amber-200 leading-relaxed font-sans">
+                        <strong>Expulsión:</strong> {QUICKHACKING_OFFICIAL_RULES_GUIDE.selfIceAndDefense.countermeasureAction}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Filtro y Búsqueda de Quickhacks */}
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Buscar Quickhack (Overheat, Cyberware Malfunction...)"
+                  value={quickhackSearch}
+                  onChange={(e) => setQuickhackSearch(e.target.value)}
+                  className="bg-[#0b0d14] border border-[#262c3e] text-white text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#38bdf8] flex-1 min-w-[150px] font-mono-code"
+                />
+                <div className="flex gap-1 text-[10px] font-mono-code font-bold">
+                  {(['all', 'Simple', 'Standard', 'Difficult', 'Advanced'] as const).map((tier) => (
+                    <button
+                      key={tier}
+                      onClick={() => setQuickhackTierFilter(tier)}
+                      className={`px-1.5 py-0.5 rounded transition-colors cursor-pointer ${
+                        quickhackTierFilter === tier
+                          ? 'bg-[#38bdf8] text-black'
+                          : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
+                      }`}
+                    >
+                      {tier === 'all' ? 'TODOS' : tier}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Lista de Quickhacks con bloqueo visual por Rango */}
+              <div className="space-y-2 max-h-[340px] overflow-y-auto pr-1">
+                {QUICKHACKS_2077_CATALOG.filter((qh) => {
+                  const matchTier = quickhackTierFilter === 'all' || qh.tier === quickhackTierFilter;
+                  const matchSearch =
+                    !quickhackSearch.trim() ||
+                    qh.name.toLowerCase().includes(quickhackSearch.toLowerCase()) ||
+                    qh.effect.toLowerCase().includes(quickhackSearch.toLowerCase());
+                  return matchTier && matchSearch;
+                }).map((qh) => {
+                  const isUnlocked = unlockAllQuickhacks || activeInterfaceRank >= qh.requiredInterfaceRank;
+
+                  return (
                     <div
                       key={qh.id}
-                      className="bg-[#121520] p-2 rounded border border-[#1f2637] hover:border-[#38bdf8]/50 transition-colors space-y-1"
+                      className={`p-2.5 rounded border transition-all space-y-1.5 ${
+                        isUnlocked
+                          ? 'bg-[#121520] border-[#1f2637] hover:border-[#38bdf8]/50'
+                          : 'bg-[#0f1118] border-red-900/30 opacity-60'
+                      }`}
                     >
                       <div className="flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
-                          <span className="font-tech font-bold text-white">{qh.name}</span>
+                          <span className={`font-tech font-bold ${isUnlocked ? 'text-white' : 'text-slate-400'}`}>
+                            {qh.name}
+                          </span>
                           <span className="text-[9px] font-mono-code px-1 py-0.2 rounded bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/30">
                             {qh.tier}
                           </span>
+                          {!isUnlocked && (
+                            <span className="text-[9px] font-mono-code px-1.5 py-0.2 rounded bg-red-950/80 text-red-300 border border-red-700/60 font-bold flex items-center gap-1">
+                              <Lock className="w-2.5 h-2.5" /> REQ. INTERFACE R{qh.requiredInterfaceRank}
+                            </span>
+                          )}
                         </div>
                         <div className="flex items-center gap-2 text-[10px] font-mono-code">
                           <span className="text-[#38bdf8] font-bold">RAM: {qh.ramCost}</span>
-                          <span className="text-[#f59e0b] font-bold bg-[#1a1924] px-1 rounded border border-[#2b2738]">
+                          <span className="text-[#f59e0b] font-bold bg-[#1a1924] px-1.5 rounded border border-[#2b2738]">
                             DV {qh.dv}
                           </span>
                         </div>
@@ -4367,14 +4942,24 @@ export const CombatHudView: React.FC = () => {
                       <div className="flex gap-1.5 pt-1">
                         <button
                           onClick={() => handleLaunchQuickhack(qh)}
-                          className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d]"
+                          disabled={!isUnlocked}
+                          className={`flex-1 py-1 px-2 font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border ${
+                            isUnlocked
+                              ? 'bg-[#1b253b] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] border-[#293b5d] cursor-pointer'
+                              : 'bg-[#141722] text-slate-500 border-[#222738] cursor-not-allowed'
+                          }`}
                         >
-                          <Zap className="w-3 h-3" /> LANZAR QUICKHACK (1d10 + Rol vs DV {qh.dv})
+                          {isUnlocked ? <Zap className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                          <span>
+                            {isUnlocked
+                              ? `LANZAR QUICKHACK (1d10 + R${activeInterfaceRank} vs DV ${qh.dv})`
+                              : `BLOQUEADO (REQ. INTERFACE R${qh.requiredInterfaceRank})`}
+                          </span>
                         </button>
-                        {qh.damage && (
+                        {qh.damage && isUnlocked && (
                           <button
                             onClick={() => handleQuickhackDamage(qh)}
-                            className="py-1 px-2 bg-[#291b22] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#441f28]"
+                            className="py-1 px-2 bg-[#291b22] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#441f28] cursor-pointer"
                             title="Tirar daño del Quickhack"
                           >
                             <Dices className="w-3 h-3" /> DAÑO
@@ -4382,11 +4967,10 @@ export const CombatHudView: React.FC = () => {
                         )}
                       </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             </div>
-
           </CollapsibleHudCard>
         );
 

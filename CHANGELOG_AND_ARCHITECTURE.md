@@ -205,6 +205,32 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v3.6.0] - 2026-10-18 (Dedicated Quickhacks 2077 Interface Unlocking Zone & Martial Arts Dojo / IP / Skill Chip System)
+* **Category**: Combat Telemetry, Netrunning 2077, Martial Arts Engine & Skill Chip Progression
+* **Files Modified**:
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/netroles/NetAndRolesDeckView.tsx`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/data/netAndRolesData.ts`
+  - `frontend/src/data/cyberfistsMartialArtsData.ts`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/types/cyberpunk.ts`
+* **What Changed**:
+  1. **Zona Dedicada, Plegable y Arrastrable de Quickhacks 2077 (`quickhacks2077`)**:
+     - Nuevo panel flotante/arrastrable independiente en `CombatHudView.tsx` y `NetAndRolesDeckView.tsx` para lanzar hackeos rápidos sin saturar la consola central.
+     - **Desbloqueo Automático Escalonado por Rango de Interface**:
+       - *Rango 1+*: Quickhacks Simples (`Simple [DV 6]`: Reboot Optics, Weapon Glitch).
+       - *Rango 2-3+*: Quickhacks Estándar (`Standard [DV 8]`: Short Circuit, Overheat, Cyberware Malfunction).
+       - *Rango 4-6+*: Quickhacks Difíciles (`Difficult [DV 10]`: Memory Wipe, Synapse Burnout).
+       - *Rango 7+*: Quickhacks Avanzados (`Advanced [DV 12]`: Suicide, Cyberpsychosis).
+     - Incorporación en pantalla de la guía oficial completa de reglas de Quickhacking (`QUICKHACKING_OFFICIAL_RULES_GUIDE` del CEMK 2077).
+  2. **Sistema Integral de Adquisición, Entrenamiento (IP) y Chipware de Artes Marciales**:
+     - Nueva pestaña `🥋 DOJO & IP` en `StreetLabView.tsx` para entrenar estilos marciales mediante Puntos de Mejora (`IP`), equipar *Skill Chips Nivel 3* o adquirir licencias en el dojo.
+     - **Filtrado Estricto en Combate**: `CombatHudView.tsx` y `NetAndRolesDeckView.tsx` ahora muestran únicamente los estilos de combate que el edgerunner ha aprendido orgánicamente o equipado mediante Chipware en su zócalo neural.
+     - Inclusión del manual oficial completo de artes marciales extraído de los PDFs (`MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT` de *Interface RED Vol. 4*), detallando los requisitos de STATs, DVs y efectos de las 23 disciplinas y 46 movimientos especiales.
+
+---
+
 ### [v3.5.0] - 2026-10-18 (In-App System Codex, Interactive Changelog & Documentation Portal + 10/10 Markdown Docs Sync)
 * **Category**: System Codex, In-App Interactive Documentation & Comprehensive Docs Synchronization
 * **Files Modified / Created**:

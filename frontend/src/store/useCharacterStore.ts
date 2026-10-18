@@ -181,7 +181,11 @@ export const INITIAL_CHARACTER_V: CharacterSheet = {
   inventory: [],
   transactions: [],
   unarmedInHand: { brawling: true, martialArts: false },
-  activeDrugs: []
+  activeDrugs: [],
+  improvementPoints: 120,
+  knownMartialArts: { karate: 2 },
+  ownedMartialArtChips: [],
+  equippedMartialArtChips: []
 };
 
 export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
@@ -453,8 +457,15 @@ export interface CharacterStoreState {
   // Solo Combat Awareness
   updateSoloAllocation: (allocation: SoloCombatAwarenessAllocation) => void;
 
-  // Martial Arts
+  // Improvement Points (IP) & Interface Override
+  adjustImprovementPoints: (deltaIp: number) => void;
+  setInterfaceRankOverride: (rank: number) => void;
+
+  // Martial Arts Training & Skill Chips
   updateMartialArtRank: (formId: string, rank: number) => void;
+  trainMartialArtWithIp: (formId: string, formName: string) => { success: boolean; message: string };
+  buyAndEquipMartialArtChip: (formId: string, formName: string, freeGrant?: boolean) => { success: boolean; message: string };
+  toggleEquipMartialArtChip: (formId: string) => void;
 
   // Vehicles (Nomad Garage)
   addVehicleToCharacter: (vehicle: OwnedVehicle) => void;
@@ -1750,17 +1761,176 @@ export const useCharacterStore = create<CharacterStoreState>()(
         }));
       },
 
+      adjustImprovementPoints: (deltaIp: number) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentIp = c.improvementPoints !== undefined ? c.improvementPoints : 120;
+            return {
+              ...c,
+              improvementPoints: Math.max(0, currentIp + deltaIp)
+            };
+          })
+        }));
+      },
+
+      setInterfaceRankOverride: (rank: number) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              interfaceRankOverride: Math.max(0, Math.min(10, rank))
+            };
+          })
+        }));
+      },
+
       updateMartialArtRank: (formId: string, rank: number) => {
         set((state) => ({
           characters: state.characters.map((c) => {
             if (c.id !== state.activeCharacterId) return c;
             const currentForms = c.knownMartialArts || {};
+            const newForms = {
+              ...currentForms,
+              [formId]: Math.max(0, rank)
+            };
+            const maxRank = Math.max(0, ...Object.values(newForms));
             return {
               ...c,
-              knownMartialArts: {
-                ...currentForms,
-                [formId]: Math.max(0, rank)
+              knownMartialArts: newForms,
+              skills: {
+                ...c.skills,
+                martialArts: Math.max(c.skills?.martialArts || 0, maxRank)
               }
+            };
+          })
+        }));
+      },
+
+      trainMartialArtWithIp: (formId: string, formName: string) => {
+        const state = get();
+        const character = state.characters.find((c) => c.id === state.activeCharacterId);
+        if (!character) return { success: false, message: 'Personaje no encontrado.' };
+
+        const currentRank = character.knownMartialArts?.[formId] || 0;
+        if (currentRank >= 10) {
+          return { success: false, message: 'Ya alcanzaste el Rango máximo (10).' };
+        }
+        const nextRank = currentRank + 1;
+        const ipCost = nextRank * 40; // Core Rulebook p. 411 (Coste doble x2)
+        const currentIp = character.improvementPoints !== undefined ? character.improvementPoints : 120;
+
+        if (currentIp < ipCost) {
+          return {
+            success: false,
+            message: `IP insuficientes. Necesitas ${ipCost} IP para subir a Rango ${nextRank} (tienes ${currentIp} IP).`
+          };
+        }
+
+        const newForms = {
+          ...(character.knownMartialArts || {}),
+          [formId]: nextRank
+        };
+        const maxRank = Math.max(0, ...Object.values(newForms));
+
+        set((s) => ({
+          characters: s.characters.map((c) => {
+            if (c.id !== s.activeCharacterId) return c;
+            return {
+              ...c,
+              improvementPoints: currentIp - ipCost,
+              knownMartialArts: newForms,
+              skills: {
+                ...c.skills,
+                martialArts: Math.max(c.skills?.martialArts || 0, maxRank)
+              }
+            };
+          })
+        }));
+
+        return {
+          success: true,
+          message: `¡Entrenamiento completado! ${formName} subió a Rango ${nextRank} (-${ipCost} IP).`
+        };
+      },
+
+      buyAndEquipMartialArtChip: (formId: string, formName: string, freeGrant?: boolean) => {
+        const state = get();
+        const character = state.characters.find((c) => c.id === state.activeCharacterId);
+        if (!character) return { success: false, message: 'Personaje no encontrado.' };
+
+        const chipCost = freeGrant ? 0 : 1000;
+        if (!freeGrant && character.eurodollars < chipCost) {
+          return {
+            success: false,
+            message: `Saldo insuficiente. Un Skill Chip de Arte Marcial (x2) cuesta 1,000 €$ (tienes ${character.eurodollars} €$).`
+          };
+        }
+
+        const alreadyOwned = (character.ownedMartialArtChips || []).includes(formId);
+        const newOwned = alreadyOwned
+          ? (character.ownedMartialArtChips || [])
+          : [...(character.ownedMartialArtChips || []), formId];
+
+        const alreadyEquipped = (character.equippedMartialArtChips || []).includes(formId);
+        const newEquipped = alreadyEquipped
+          ? (character.equippedMartialArtChips || [])
+          : [...(character.equippedMartialArtChips || []), formId];
+
+        const chipItem: InventoryItem = {
+          id: `chip-${formId}-${Date.now()}`,
+          catalogId: `skill-chip-${formId}`,
+          name: `Skill Chip: ${formName} (+3)`,
+          category: 'gear',
+          cost: chipCost,
+          quantity: 1,
+          details: `Chipware Nivel 3 para ${formName}. Otorga Rango 3 en la habilidad mientras esté insertado en un Chipware Socket.`
+        };
+
+        const newTx: EurodollarTransaction[] = chipCost > 0 ? [
+          ...(character.transactions || []),
+          {
+            id: `tx-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            concept: `Compra de Skill Chip: ${formName} (+3)`,
+            amount: -chipCost,
+            balanceAfter: character.eurodollars - chipCost
+          }
+        ] : (character.transactions || []);
+
+        set((s) => ({
+          characters: s.characters.map((c) => {
+            if (c.id !== s.activeCharacterId) return c;
+            return {
+              ...c,
+              eurodollars: c.eurodollars - chipCost,
+              ownedMartialArtChips: newOwned,
+              equippedMartialArtChips: newEquipped,
+              inventory: [...(c.inventory || []), chipItem],
+              transactions: newTx
+            };
+          })
+        }));
+
+        return {
+          success: true,
+          message: `Skill Chip de ${formName} (+3) ${freeGrant ? 'adquirido' : 'comprado por 1,000 €$'} e insertado en Chipware Socket.`
+        };
+      },
+
+      toggleEquipMartialArtChip: (formId: string) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentEquipped = c.equippedMartialArtChips || [];
+            const isEquipped = currentEquipped.includes(formId);
+            const newEquipped = isEquipped
+              ? currentEquipped.filter((id) => id !== formId)
+              : [...currentEquipped, formId];
+            return {
+              ...c,
+              equippedMartialArtChips: newEquipped
             };
           })
         }));
@@ -1881,14 +2051,31 @@ export const useCharacterStore = create<CharacterStoreState>()(
           }
         }
 
-        const validActiveId = p.activeCharacterId && mergedCharacters.some((c) => c.id === p.activeCharacterId)
+        const sanitizedCharacters = mergedCharacters.map((c) => {
+          const updated = { ...c };
+          if (updated.improvementPoints === undefined) {
+            updated.improvementPoints = 120;
+          }
+          if ((updated.skills?.martialArts || 0) > 0 && (!updated.knownMartialArts || Object.keys(updated.knownMartialArts).length === 0)) {
+            updated.knownMartialArts = { karate: updated.skills.martialArts };
+          }
+          if (!updated.ownedMartialArtChips) {
+            updated.ownedMartialArtChips = [];
+          }
+          if (!updated.equippedMartialArtChips) {
+            updated.equippedMartialArtChips = [];
+          }
+          return updated;
+        });
+
+        const validActiveId = p.activeCharacterId && sanitizedCharacters.some((c) => c.id === p.activeCharacterId)
           ? p.activeCharacterId
-          : mergedCharacters.find((c) => c.handle.toLowerCase().includes('david'))?.id || mergedCharacters[0]?.id || currentState.activeCharacterId;
+          : sanitizedCharacters.find((c) => c.handle.toLowerCase().includes('david'))?.id || sanitizedCharacters[0]?.id || currentState.activeCharacterId;
 
         return {
           ...currentState,
           ...p,
-          characters: mergedCharacters.length > 0 ? mergedCharacters : currentState.characters,
+          characters: sanitizedCharacters.length > 0 ? sanitizedCharacters : currentState.characters,
           activeCharacterId: validActiveId
         };
       }

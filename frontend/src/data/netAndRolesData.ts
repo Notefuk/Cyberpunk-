@@ -316,6 +316,7 @@ export interface Quickhack2077 {
   damage?: string;
   effect: string;
   loreDescription: string;
+  requiredInterfaceRank: number;
 }
 
 export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
@@ -328,7 +329,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     duration: '2 Asaltos',
     damage: '2d6 Térmico por asalto',
     effect: 'Inyecta un bucle térmico que sobrecalienta los circuitos subcutáneos del objetivo, infligiendo 2d6 daño directo a HP por asalto.',
-    loreDescription: 'Quema los procesadores térmicos del Neuroport enemigo.'
+    loreDescription: 'Quema los procesadores térmicos del Neuroport enemigo.',
+    requiredInterfaceRank: 1
   },
   {
     id: 'qh-short-circuit',
@@ -339,7 +341,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     duration: 'Instantáneo',
     damage: '3d6 EMP a HP (x2 vs Drones/FBC)',
     effect: 'Descarga un pico de voltaje directo al sistema nervioso y servos. Causa 3d6 daño a HP, duplicándose contra drones y cuerpos Full Borg.',
-    loreDescription: 'El ataque predilecto para freír ciberware y robots.'
+    loreDescription: 'El ataque predilecto para freír ciberware y robots.',
+    requiredInterfaceRank: 1
   },
   {
     id: 'qh-optics-jammer',
@@ -349,7 +352,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     ramCost: 2,
     duration: '1 Asalto',
     effect: 'Ciega la visión del objetivo transmitiendo estática brillante. El objetivo sufre un penalizador de -4 a todas sus tiradas de ataque.',
-    loreDescription: 'Ciega temporalmente las retinas Kiroshi o biológicas con señal parásita.'
+    loreDescription: 'Ciega temporalmente las retinas Kiroshi o biológicas con señal parásita.',
+    requiredInterfaceRank: 1
   },
   {
     id: 'qh-weapon-glitch',
@@ -359,7 +363,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     ramCost: 2,
     duration: 'Hasta que se repare con 1 Acción',
     effect: 'Hackea el percutor electrónico del arma sostenida, trabándola de inmediato. Requiere una acción de Meatspace para despejar la recámara.',
-    loreDescription: 'Inutiliza el cargador de armas Smart o Power.'
+    loreDescription: 'Inutiliza el cargador de armas Smart o Power.',
+    requiredInterfaceRank: 1
   },
   {
     id: 'qh-lure',
@@ -369,7 +374,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     ramCost: 2,
     duration: '1 Asalto',
     effect: 'Emite una señal auditiva o visual falsa forzando al objetivo a abandonar su cobertura e investigar el punto señalado.',
-    loreDescription: 'Desaloja a centinelas sin alertar al resto del escuadrón.'
+    loreDescription: 'Desaloja a centinelas sin alertar al resto del escuadrón.',
+    requiredInterfaceRank: 1
   },
   {
     id: 'qh-cyberware-malfunction',
@@ -379,7 +385,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     ramCost: 4,
     duration: '1 Minuto',
     effect: 'Apaga temporalmente un implante de ciberware activo del objetivo (Sandevistan, Cyberarm, Kiroshi o Blindaje Subdérmico).',
-    loreDescription: 'Corta la alimentación eléctrica del implante seleccionado.'
+    loreDescription: 'Corta la alimentación eléctrica del implante seleccionado.',
+    requiredInterfaceRank: 2
   },
   {
     id: 'qh-contagion',
@@ -390,7 +397,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     duration: 'Instantáneo',
     damage: '2d6 Viral a HP',
     effect: 'Afecta al objetivo principal y salta automáticamente a un segundo objetivo enemigo situado a menos de 6 metros.',
-    loreDescription: 'Un gusano bio-viral que salta entre interfaces inalámbricas abiertas.'
+    loreDescription: 'Un gusano bio-viral que salta entre interfaces inalámbricas abiertas.',
+    requiredInterfaceRank: 2
   },
   {
     id: 'qh-sonic-shock',
@@ -400,7 +408,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     ramCost: 3,
     duration: '1 Minuto',
     effect: 'Ensordece totalmente al objetivo y corta su enlace de radiofrecuencia, impidiendo que escuche o pida refuerzos a sus aliados.',
-    loreDescription: 'Aísla acústica y telemáticamente a la víctima.'
+    loreDescription: 'Aísla acústica y telemáticamente a la víctima.',
+    requiredInterfaceRank: 2
   },
   {
     id: 'qh-cripple-movement',
@@ -410,7 +419,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     ramCost: 3,
     duration: '2 Asaltos',
     effect: 'Bloquea los actuadores de las piernas o extremidades motoras. Reduce la estadística MOVE del objetivo a 2.',
-    loreDescription: 'Inmoviliza a corredores rápidos y ciberpsicópatas.'
+    loreDescription: 'Inmoviliza a corredores rápidos y ciberpsicópatas.',
+    requiredInterfaceRank: 2
   },
   {
     id: 'qh-synapse-burnout',
@@ -421,7 +431,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     duration: 'Instantáneo',
     damage: '4d6 daño a HP + 1d6 por cada 10 HP que le falten al objetivo',
     effect: 'Descarga neurotrópica masiva. Causa más daño cuanto más herida esté la víctima, rematándola con brutalidad.',
-    loreDescription: 'Acelerador letal de daño neuronal terminal.'
+    loreDescription: 'Acelerador letal de daño neuronal terminal.',
+    requiredInterfaceRank: 2
   },
   {
     id: 'qh-detonate-grenade',
@@ -432,7 +443,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     duration: 'Instantáneo',
     damage: 'Daño completo de la granada detonada',
     effect: 'Sobrecarga el temporizador de una granada en el arnés de combate del objetivo, detonándola de forma inmediata sobre su propio cuerpo.',
-    loreDescription: 'Convierte el arsenal del enemigo en su propia tumba.'
+    loreDescription: 'Convierte el arsenal del enemigo en su propia tumba.',
+    requiredInterfaceRank: 4
   },
   {
     id: 'qh-memory-wipe',
@@ -442,7 +454,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     ramCost: 4,
     duration: '1 Asalto',
     effect: 'Borra temporalmente el estado de alerta del enemigo. El objetivo sale del combate y pierde su siguiente turno preguntándose qué ocurría.',
-    loreDescription: 'Reinicio táctico de memoria a corto plazo.'
+    loreDescription: 'Reinicio táctico de memoria a corto plazo.',
+    requiredInterfaceRank: 4
   },
   {
     id: 'qh-reboot-optics-mass',
@@ -452,7 +465,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     ramCost: 5,
     duration: '2 Asaltos',
     effect: 'Reinicia las ópticas cibernéticas de hasta 2 enemigos situados a menos de 4 metros, cegándolos por completo durante 2 asaltos.',
-    loreDescription: 'Apagón óptico coordinado para escuadras enteras.'
+    loreDescription: 'Apagón óptico coordinado para escuadras enteras.',
+    requiredInterfaceRank: 4
   },
   {
     id: 'qh-cyberpsychosis-protocol',
@@ -462,7 +476,8 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     ramCost: 7,
     duration: '2 Asaltos',
     effect: 'Induce un ataque de paranoia violenta. El objetivo debe atacar con su arma más dañina al aliado más cercano durante su siguiente turno.',
-    loreDescription: 'Desata el frenesí psicótico simulado en mentes con alto cromo.'
+    loreDescription: 'Desata el frenesí psicótico simulado en mentes con alto cromo.',
+    requiredInterfaceRank: 7
   },
   {
     id: 'qh-suicide',
@@ -473,9 +488,114 @@ export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
     duration: 'Instantáneo',
     damage: 'Disparo a la cabeza con su propia arma',
     effect: 'Invalida la voluntad motora del objetivo, obligándole a colocar su arma activa en la sien y apretar el gatillo con daño apuntado a la cabeza (x2 daño penetrante).',
-    loreDescription: 'El Quickhack definitivo de control absoluto.'
+    loreDescription: 'El Quickhack definitivo de control absoluto.',
+    requiredInterfaceRank: 7
   }
 ];
+
+export interface QuickhackingOfficialRulesGuide {
+  title: string;
+  source: string;
+  howUnlockingWorks: {
+    title: string;
+    summary: string;
+    ranks: Array<{
+      interfaceRank: string;
+      tierName: string;
+      dv: string;
+      unlockedHacks: string[];
+      notes: string;
+    }>;
+  };
+  rangeAndLineOfSight: {
+    title: string;
+    maxDistance: string;
+    lineOfSightRules: string;
+    neuroportRequirement: string;
+    freeActionConnection: string;
+  };
+  breachingAndPasswords: {
+    title: string;
+    netActionsPerTurn: Array<{
+      rankRange: string;
+      actions: number;
+    }>;
+    breachProcedure: string[];
+  };
+  selfIceAndDefense: {
+    title: string;
+    selfIceEffect: string;
+    countermeasureAction: string;
+    rebootRecovery: string;
+  };
+}
+
+export const QUICKHACKING_OFFICIAL_RULES_GUIDE: QuickhackingOfficialRulesGuide = {
+  title: 'Reglas Canónicas de Quickhacking Remoto // CEMK 2077',
+  source: 'Cyberpunk Edgerunners Mission Kit (CEMK 2077 Rulebook pp. 24-31)',
+  howUnlockingWorks: {
+    title: 'Desbloqueo de Quickhacks según Rango de Interface',
+    summary: 'A diferencia de los programas clásicos de 2045 que se compraban por separado, en la era 2077 los Netrunners militares y edgerunners acceden a las suites de daemons de combate directamente en función de su maestría en la habilidad de Rol Interface. Cada umbral desbloquea automáticamente toda la categoría correspondiente:',
+    ranks: [
+      {
+        interfaceRank: 'Rango Interface 1+',
+        tierName: 'Simple Quickhacks',
+        dv: 'DV 6',
+        unlockedHacks: ['Overheat', 'Short Circuit', 'Optics Jammer', 'Weapon Glitch', 'Lure'],
+        notes: 'Disponibles desde el primer instante en que aprendes la habilidad Interface. Daños térmicos básicos, chispazos EMP y cegamiento leve.'
+      },
+      {
+        interfaceRank: 'Rango Interface 2–3+',
+        tierName: 'Standard Quickhacks',
+        dv: 'DV 8',
+        unlockedHacks: ['Cyberware Malfunction', 'Contagion', 'Sonic Shock', 'Cripple Movement', 'Reboot Optics / Synapse Burnout'],
+        notes: 'Inmovilización motora, apagón de ciberimplantes activos, virus bio-contagiosos y aceleración de daño sináptico.'
+      },
+      {
+        interfaceRank: 'Rango Interface 4+',
+        tierName: 'Difficult Quickhacks',
+        dv: 'DV 10',
+        unlockedHacks: ['Detonate Grenade', 'Memory Wipe', 'Reboot Optics (Mass)'],
+        notes: 'Todo Netrunner inicial de Rango 4 (como Lucy o Kiwi) ya posee maestría en Simple, Standard y Difficult. Permite detonar arneses de granadas y borrar alertas.'
+      },
+      {
+        interfaceRank: 'Rango Interface 7+',
+        tierName: 'Advanced / Ultimate Quickhacks',
+        dv: 'DV 12',
+        unlockedHacks: ['Cyberpsychosis Protocol', 'Suicide', 'Puppet', 'System Reset'],
+        notes: 'La cumbre del ciberterrorismo: anulación absoluta de la autonomía motora del blanco, forzándolo a dispararse a la cabeza o aniquilar a sus propios compañeros.'
+      }
+    ]
+  },
+  rangeAndLineOfSight: {
+    title: 'Alcance Operativo & Línea de Visión (Meatspace)',
+    maxDistance: '50 metros (25 casillas tácticas)',
+    lineOfSightRules: 'El Netrunner debe tener línea de visión directa hacia el objetivo o hacia una cámara hackeada que lo enfoque. No atraviesa paredes sólidas sin retransmisión.',
+    neuroportRequirement: 'El objetivo debe portar un Neuroport activo o interfaz inalámbrica (en 2077, el 99% de los habitantes urbanos lo tiene de serie).',
+    freeActionConnection: 'En tu turno, conectarte a la frecuencia inalámbrica del Neuroport de un objetivo visible dentro de 50 metros se considera una Acción Gratuita (Free Action).'
+  },
+  breachingAndPasswords: {
+    title: 'Vulneración de Defensas & NET Actions por Turno',
+    netActionsPerTurn: [
+      { rankRange: 'Interface 1 a 3', actions: 2 },
+      { rankRange: 'Interface 4 a 6', actions: 3 },
+      { rankRange: 'Interface 7 a 9', actions: 4 },
+      { rankRange: 'Interface 10 (Master)', actions: 5 }
+    ],
+    breachProcedure: [
+      '1. Acción Gratuita: Estableces el enlace inalámbrico hacia el Neuroport del blanco (alcance 50m).',
+      '2. Primera NET Action: Si el blanco tiene Password o Firewall defensivo, tiras 1d10 + Interface contra el DV del Firewall para abrir la brecha.',
+      '3. Segunda NET Action: Declaras el Quickhack que deseas inyectar, gastas su coste de RAM y tiras 1d10 + Interface contra el DV del Quickhack.',
+      '4. Éxito: El daemon se compila e infecta los circuitos del Neuroport de inmediato, aplicando su efecto y daño.'
+    ]
+  },
+  selfIceAndDefense: {
+    title: 'Defensas del Objetivo: Self-ICE y Expulsión Activa',
+    selfIceEffect: 'El implante Self-ICE crea una capa de firewall autónomo que añade +2 a la DV de todos los Quickhacks hostiles dirigidos contra el portador o actúa como un Password defensivo automático de DV 8.',
+    countermeasureAction: 'En su turno, la víctima de un Quickhack continuo (como Overheat o Cyberware Malfunction) puede gastar 1 Acción de Meatspace para intentar expulsar el daemon tirando 1d10 + WILL + Concentration contra la tirada de Interface del Netrunner atacante.',
+    rebootRecovery: 'Alternativamente, el portador puede reiniciar manualmente su Neuroport con 1 Acción Completa, quedando ciego y desorientado durante 1 asalto pero purgando todos los daemons activos.'
+  }
+};
 
 // ============================================================================
 // 3. GUÍAS INTERACTIVAS Y METADATOS DE LOS 10 ROLES OFICIALES
