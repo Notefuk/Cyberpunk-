@@ -56,7 +56,10 @@ import {
   ChevronRight,
   Package,
   X,
-  Train
+  Train,
+  GripVertical,
+  Maximize2,
+  Minimize2
 } from 'lucide-react';
 
 const TacticalTooltip: React.FC<{
@@ -407,6 +410,135 @@ const HeadshotCalculator: React.FC<HeadshotCalculatorProps> = ({ entry }) => {
   );
 };
 
+export type LeftPanelId = 'vitals' | 'armor' | 'luck' | 'injuries' | 'cyberware' | 'consumables';
+export type RightPanelId = 'telemetry' | 'inHand' | 'rangefinder' | 'arsenalBelt' | 'martialArts' | 'roleQuickhacks';
+
+const DEFAULT_LEFT_ORDER: LeftPanelId[] = ['vitals', 'armor', 'luck', 'injuries', 'cyberware', 'consumables'];
+const DEFAULT_RIGHT_ORDER: RightPanelId[] = ['telemetry', 'inHand', 'rangefinder', 'arsenalBelt', 'martialArts', 'roleQuickhacks'];
+
+const STORAGE_KEY_LEFT_ORDER = 'cpr_combat_left_order_v2';
+const STORAGE_KEY_RIGHT_ORDER = 'cpr_combat_right_order_v2';
+const STORAGE_KEY_COLLAPSED = 'cpr_combat_collapsed_boxes_v2';
+const STORAGE_KEY_DOCK_MODE = 'cpr_combat_telemetry_dock_v2';
+
+interface CollapsibleHudCardProps {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  summary: React.ReactNode;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+  onDragStart: () => void;
+  onDragOver: (e: React.DragEvent) => void;
+  onDrop: () => void;
+  isDragOver: boolean;
+  children: React.ReactNode;
+  extraHeaderActions?: React.ReactNode;
+  accentBorderClass?: string;
+}
+
+const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
+  title,
+  icon,
+  summary,
+  isCollapsed,
+  onToggleCollapse,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp,
+  canMoveDown,
+  onDragStart,
+  onDragOver,
+  onDrop,
+  isDragOver,
+  children,
+  extraHeaderActions,
+  accentBorderClass = 'border-[#232736]'
+}) => {
+  return (
+    <div
+      draggable
+      onDragStart={onDragStart}
+      onDragOver={onDragOver}
+      onDrop={onDrop}
+      className={`chamfer-card transition-all duration-200 bg-[#121319] border ${
+        isDragOver
+          ? 'border-cyan-400 ring-2 ring-cyan-400/50 shadow-lg shadow-cyan-950/80'
+          : accentBorderClass
+      }`}
+    >
+      <div
+        onClick={onToggleCollapse}
+        className={`p-2.5 sm:p-3 flex items-center justify-between gap-2 cursor-pointer select-none group/header transition-colors hover:bg-[#161924] ${
+          isCollapsed ? '' : 'border-b border-[#1f2230]'
+        }`}
+      >
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <div
+            className="flex items-center gap-0.5 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span
+              title="Arrastrar para mover arriba o abajo"
+              className="cursor-grab active:cursor-grabbing p-1 text-slate-500 hover:text-cyan-400 transition-colors"
+            >
+              <GripVertical className="w-3.5 h-3.5" />
+            </span>
+            <button
+              type="button"
+              onClick={onMoveUp}
+              disabled={!canMoveUp}
+              title="Subir un lugar"
+              className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+            >
+              ▲
+            </button>
+            <button
+              type="button"
+              onClick={onMoveDown}
+              disabled={!canMoveDown}
+              title="Bajar un lugar"
+              className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors"
+            >
+              ▼
+            </button>
+          </div>
+
+          <span className="text-slate-500 group-hover/header:text-cyan-400 transition-colors shrink-0">
+            {isCollapsed ? (
+              <ChevronRight className="w-4 h-4" />
+            ) : (
+              <ChevronDown className="w-4 h-4 text-cyan-400" />
+            )}
+          </span>
+
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="shrink-0">{icon}</span>
+            <span className="font-tech text-xs font-bold tracking-wider text-white uppercase truncate group-hover/header:text-cyan-300 transition-colors">
+              {title}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          {isCollapsed && (
+            <div className="text-[10px] font-mono-code text-cyan-300 bg-[#0e121a] px-2 py-0.5 rounded border border-[#20293d] max-w-[180px] sm:max-w-[280px] truncate">
+              {summary}
+            </div>
+          )}
+          {extraHeaderActions}
+        </div>
+      </div>
+
+      {!isCollapsed && <div className="p-3.5 space-y-3">{children}</div>}
+    </div>
+  );
+};
+
 export const CombatHudView: React.FC = () => {
   // Store hooks
   const activeChar = useCharacterStore((state) => state.getActiveCharacter());
@@ -452,7 +584,162 @@ export const CombatHudView: React.FC = () => {
   const markAttackDamageRolled = useCombatStore((state) => state.markAttackDamageRolled);
   const clearRollHistory = useCombatStore((state) => state.clearRollHistory);
 
-  // Local state
+  // Local state: Reordenamiento, colapso y docking
+  const [leftColumnOrder, setLeftColumnOrder] = useState<LeftPanelId[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_LEFT_ORDER);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length === DEFAULT_LEFT_ORDER.length && DEFAULT_LEFT_ORDER.every(id => parsed.includes(id))) {
+          return parsed;
+        }
+      }
+    } catch {}
+    return DEFAULT_LEFT_ORDER;
+  });
+
+  const [rightColumnOrder, setRightColumnOrder] = useState<RightPanelId[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_RIGHT_ORDER);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length === DEFAULT_RIGHT_ORDER.length && DEFAULT_RIGHT_ORDER.every(id => parsed.includes(id))) {
+          return parsed;
+        }
+      }
+    } catch {}
+    return DEFAULT_RIGHT_ORDER;
+  });
+
+  const [collapsedBoxes, setCollapsedBoxes] = useState<Record<string, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_COLLAPSED);
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {};
+  });
+
+  const [telemetryDockMode, setTelemetryDockMode] = useState<'inline' | 'split_sticky' | 'floating_pip'>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_DOCK_MODE);
+      if (saved === 'inline' || saved === 'split_sticky' || saved === 'floating_pip') return saved;
+    } catch {}
+    return 'inline';
+  });
+
+  const [draggedItem, setDraggedItem] = useState<{ column: 'left' | 'right'; id: string } | null>(null);
+  const [dragOverItem, setDragOverItem] = useState<string | null>(null);
+
+  const toggleBoxCollapse = (boxId: string) => {
+    setCollapsedBoxes(prev => {
+      const next = { ...prev, [boxId]: !prev[boxId] };
+      localStorage.setItem(STORAGE_KEY_COLLAPSED, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const ensureTelemetryExpanded = () => {
+    if (collapsedBoxes['telemetry']) {
+      setCollapsedBoxes(prev => {
+        const next = { ...prev, telemetry: false };
+        localStorage.setItem(STORAGE_KEY_COLLAPSED, JSON.stringify(next));
+        return next;
+      });
+    }
+  };
+
+  const handleExpandAll = () => {
+    setCollapsedBoxes({});
+    localStorage.setItem(STORAGE_KEY_COLLAPSED, JSON.stringify({}));
+  };
+
+  const handleCollapseSecondary = () => {
+    const next: Record<string, boolean> = {
+      armor: true,
+      luck: true,
+      injuries: (activeChar?.activeInjuries?.length ?? 0) === 0,
+      cyberware: true,
+      consumables: true,
+      rangefinder: true,
+      arsenalBelt: true,
+      martialArts: true,
+      roleQuickhacks: true
+    };
+    setCollapsedBoxes(next);
+    localStorage.setItem(STORAGE_KEY_COLLAPSED, JSON.stringify(next));
+  };
+
+  const handleResetBoxOrder = () => {
+    setLeftColumnOrder(DEFAULT_LEFT_ORDER);
+    setRightColumnOrder(DEFAULT_RIGHT_ORDER);
+    localStorage.setItem(STORAGE_KEY_LEFT_ORDER, JSON.stringify(DEFAULT_LEFT_ORDER));
+    localStorage.setItem(STORAGE_KEY_RIGHT_ORDER, JSON.stringify(DEFAULT_RIGHT_ORDER));
+  };
+
+  const moveLeftPanel = (panelId: LeftPanelId, direction: 'up' | 'down') => {
+    const idx = leftColumnOrder.indexOf(panelId);
+    if (idx === -1) return;
+    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= leftColumnOrder.length) return;
+    const next = [...leftColumnOrder];
+    const temp = next[idx];
+    next[idx] = next[targetIdx];
+    next[targetIdx] = temp;
+    setLeftColumnOrder(next);
+    localStorage.setItem(STORAGE_KEY_LEFT_ORDER, JSON.stringify(next));
+  };
+
+  const moveRightPanel = (panelId: RightPanelId, direction: 'up' | 'down') => {
+    const idx = rightColumnOrder.indexOf(panelId);
+    if (idx === -1) return;
+    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= rightColumnOrder.length) return;
+    const next = [...rightColumnOrder];
+    const temp = next[idx];
+    next[idx] = next[targetIdx];
+    next[targetIdx] = temp;
+    setRightColumnOrder(next);
+    localStorage.setItem(STORAGE_KEY_RIGHT_ORDER, JSON.stringify(next));
+  };
+
+  const handleDragStart = (column: 'left' | 'right', id: string) => {
+    setDraggedItem({ column, id });
+  };
+
+  const handleDragOver = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    if (dragOverItem !== targetId) setDragOverItem(targetId);
+  };
+
+  const handleDrop = (targetColumn: 'left' | 'right', targetId: string) => {
+    if (!draggedItem) return;
+    if (draggedItem.column === targetColumn) {
+      if (targetColumn === 'left') {
+        const fromIdx = leftColumnOrder.indexOf(draggedItem.id as LeftPanelId);
+        const toIdx = leftColumnOrder.indexOf(targetId as LeftPanelId);
+        if (fromIdx !== -1 && toIdx !== -1 && fromIdx !== toIdx) {
+          const next = [...leftColumnOrder];
+          const [removed] = next.splice(fromIdx, 1);
+          next.splice(toIdx, 0, removed);
+          setLeftColumnOrder(next);
+          localStorage.setItem(STORAGE_KEY_LEFT_ORDER, JSON.stringify(next));
+        }
+      } else {
+        const fromIdx = rightColumnOrder.indexOf(draggedItem.id as RightPanelId);
+        const toIdx = rightColumnOrder.indexOf(targetId as RightPanelId);
+        if (fromIdx !== -1 && toIdx !== -1 && fromIdx !== toIdx) {
+          const next = [...rightColumnOrder];
+          const [removed] = next.splice(fromIdx, 1);
+          next.splice(toIdx, 0, removed);
+          setRightColumnOrder(next);
+          localStorage.setItem(STORAGE_KEY_RIGHT_ORDER, JSON.stringify(next));
+        }
+      }
+    }
+    setDraggedItem(null);
+    setDragOverItem(null);
+  };
+
   const [incomingDamageInput, setIncomingDamageInput] = useState<number>(10);
   const [damageFeedback, setDamageFeedback] = useState<string | null>(null);
   const [rackFilter, setRackFilter] = useState<'all' | 'weapons' | 'unarmed' | 'throwables' | 'drugs'>('all');
@@ -462,12 +749,10 @@ export const CombatHudView: React.FC = () => {
   const [isBestiaryDrawerOpen, setIsBestiaryDrawerOpen] = useState(false);
 
   // Módulos tácticos avanzados
-  const [isCyberfistsModuleOpen, setIsCyberfistsModuleOpen] = useState<boolean>(false);
   const [selectedMartialFormId, setSelectedMartialFormId] = useState<string>(MARTIAL_ARTS_FORMS[0]?.id || 'aikido');
   const [martialArtCategoryFilter, setMartialArtCategoryFilter] = useState<'all' | 'core' | 'interface_red'>('all');
   const [martialArtSearch, setMartialArtSearch] = useState<string>('');
 
-  const [isCombatRoleModuleOpen, setIsCombatRoleModuleOpen] = useState<boolean>(false);
   const [quickhackSearch, setQuickhackSearch] = useState<string>('');
   const [quickhackTierFilter, setQuickhackTierFilter] = useState<string>('all');
 
@@ -518,8 +803,6 @@ export const CombatHudView: React.FC = () => {
   const [showEquipDrugDropdown, setShowEquipDrugDropdown] = useState<boolean>(false);
 
   // Columna Central: Telémetro y Estación "En Mano"
-  const [isRangefinderOpen, setIsRangefinderOpen] = useState<boolean>(true);
-  const [isInHandStationOpen, setIsInHandStationOpen] = useState<boolean>(true);
   const [inHandExpanded, setInHandExpanded] = useState<Record<string, boolean>>({});
   const toggleInHandExpanded = (id: string) => {
     setInHandExpanded((prev) => ({
@@ -591,6 +874,10 @@ export const CombatHudView: React.FC = () => {
   const totalGrenadeCharges = ownedGrenades.reduce((sum, g) => sum + g.quantity, 0);
   const totalDrugCharges = ownedDrugs.reduce((sum, d) => sum + d.quantity, 0);
 
+  const installedCyberware = (coreData.cyberware || []).filter((c: any) =>
+    (activeChar?.installedCyberwareIds || []).includes(c.id)
+  );
+
   // Calculations for Active Character
   const effectiveBody = getEffectiveBody(activeChar);
   const maxHp = calculateMaxHp(effectiveBody, activeChar?.stats?.WILL ?? 6);
@@ -646,6 +933,7 @@ export const CombatHudView: React.FC = () => {
 
   // Handle Step 1: Weapon Attack Check (1d10)
   const handleAttackClick = (weapon: WeaponItem, instanceId: string) => {
+    ensureTelemetryExpanded();
     const isAuto = !!autofireByWeapon[instanceId];
     const ammoCost = isAuto ? 10 : (weapon.type === 'Melee' ? 0 : 1);
 
@@ -683,6 +971,7 @@ export const CombatHudView: React.FC = () => {
 
   // Handle Step 2: Damage Roll (Xd6)
   const handleDamageClick = (weapon: WeaponItem, instanceId: string) => {
+    ensureTelemetryExpanded();
     const isAuto = !!autofireByWeapon[instanceId];
     const recentHit = rollHistory.find(
       (r) => r.type === 'attack' && r.weaponInstanceId === instanceId && r.isHit
@@ -707,6 +996,7 @@ export const CombatHudView: React.FC = () => {
 
   // Unarmed: Brawling attack
   const handleBrawlingAttack = () => {
+    ensureTelemetryExpanded();
     const brawlingWeapon: WeaponItem = {
       id: 'unarmed-brawling',
       name: 'Puños (Brawling)',
@@ -737,12 +1027,14 @@ export const CombatHudView: React.FC = () => {
 
   // Unarmed: Brawling damage
   const handleBrawlingDamage = () => {
+    ensureTelemetryExpanded();
     const dmgEntry = createDamageRoll('Puños (Brawling)', unarmedDmg, false, 1, 'unarmed-brawling', aimedShotTarget);
     addRollEntry(dmgEntry);
   };
 
   // Unarmed: Grapple maneuver
   const handleGrapple = () => {
+    ensureTelemetryExpanded();
     const grappleWeapon: WeaponItem = {
       id: 'unarmed-grapple',
       name: '🤼 Presa / Agarre (Grapple)',
@@ -772,6 +1064,7 @@ export const CombatHudView: React.FC = () => {
 
   // Unarmed: Choke maneuver
   const handleChoke = () => {
+    ensureTelemetryExpanded();
     const bodyDmg = activeChar?.stats?.BODY ?? 6;
     const chokeEntry: RollEntry = {
       id: `roll-dmg-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
@@ -788,6 +1081,7 @@ export const CombatHudView: React.FC = () => {
 
   // Unarmed: Martial Arts attack
   const handleMartialArtsAttack = () => {
+    ensureTelemetryExpanded();
     const martialArtsWeapon: WeaponItem = {
       id: 'unarmed-martial-arts',
       name: 'Artes Marciales',
@@ -818,12 +1112,14 @@ export const CombatHudView: React.FC = () => {
 
   // Unarmed: Martial Arts damage
   const handleMartialArtsDamage = () => {
+    ensureTelemetryExpanded();
     const dmgEntry = createDamageRoll('Artes Marciales (Ignora 50% SP)', unarmedDmg, false, 1, 'unarmed-martial-arts', aimedShotTarget);
     addRollEntry(dmgEntry);
   };
 
   // Cyberfists of Fury: Form Attack
   const handleCyberfistsFormAttack = (form: typeof MARTIAL_ARTS_FORMS[number]) => {
+    ensureTelemetryExpanded();
     const rank = activeChar?.knownMartialArts?.[form.id] ?? (activeChar?.skills?.martialArts ?? 0);
     const soloPrecision = activeChar?.soloAllocation?.precisionAttack ?? 0;
     const dex = activeChar?.stats?.DEX ?? 6;
@@ -877,6 +1173,7 @@ export const CombatHudView: React.FC = () => {
 
   // Cyberfists of Fury: Form Damage
   const handleCyberfistsFormDamage = (form: typeof MARTIAL_ARTS_FORMS[number]) => {
+    ensureTelemetryExpanded();
     const spotBonus = activeChar?.soloAllocation?.spotWeakness ?? 0;
     const formulaLabel = spotBonus > 0 ? `${unarmedDmg} + ${spotBonus} (Spot Weakness)` : unarmedDmg;
     const dmgEntry = createDamageRoll(
@@ -896,6 +1193,7 @@ export const CombatHudView: React.FC = () => {
 
   // Cyberfists of Fury: Special Move execution
   const handleExecuteMartialMove = (form: typeof MARTIAL_ARTS_FORMS[number], move: typeof MARTIAL_ARTS_FORMS[number]['moves'][number]) => {
+    ensureTelemetryExpanded();
     const rank = activeChar?.knownMartialArts?.[form.id] ?? (activeChar?.skills?.martialArts ?? 0);
     const soloPrecision = activeChar?.soloAllocation?.precisionAttack ?? 0;
     const dex = activeChar?.stats?.DEX ?? 6;
@@ -949,6 +1247,7 @@ export const CombatHudView: React.FC = () => {
 
   // Cyberfists of Fury: Special Move combo damage
   const handleRollComboDamage = (move: typeof MARTIAL_ARTS_FORMS[number]['moves'][number]) => {
+    ensureTelemetryExpanded();
     const diceMatch = move.damageBonusOrFormula?.match(/(\d+d\d+)/i);
     const formula = diceMatch ? diceMatch[1] : unarmedDmg;
     const dmgEntry = createDamageRoll(
@@ -983,6 +1282,7 @@ export const CombatHudView: React.FC = () => {
 
   // Netrunner: Launch Quickhack 2077
   const handleLaunchQuickhack = (qh: Quickhack2077) => {
+    ensureTelemetryExpanded();
     const roleRank = activeChar?.role === 'Netrunner' ? (activeChar.roleRank || 4) : (activeChar?.roleRank || 4);
     const luckSpent = luckToSpendOnNextRoll;
     if (luckSpent > 0) {
@@ -1026,6 +1326,7 @@ export const CombatHudView: React.FC = () => {
 
   // Netrunner: Quickhack damage
   const handleQuickhackDamage = (qh: Quickhack2077) => {
+    ensureTelemetryExpanded();
     const diceMatch = qh.damage?.match(/(\d+d\d+)/i);
     const formula = diceMatch ? diceMatch[1] : '2d6';
     const dmgEntry = createDamageRoll(
@@ -1041,6 +1342,7 @@ export const CombatHudView: React.FC = () => {
 
   // Throw grenade action
   const handleThrowGrenade = (grenade: typeof TACTICAL_GRENADES[number]) => {
+    ensureTelemetryExpanded();
     const athletics = activeChar?.skills?.athletics ?? 0;
     const dex = activeChar?.stats?.DEX ?? 6;
     const luckSpent = luckToSpendOnNextRoll;
@@ -1088,6 +1390,7 @@ export const CombatHudView: React.FC = () => {
 
   // Grenade damage / effect trigger
   const handleGrenadeEffect = (grenade: typeof TACTICAL_GRENADES[number]) => {
+    ensureTelemetryExpanded();
     if (grenade.damage) {
       const dmg = createDamageRoll(grenade.name, grenade.damage, false, 1);
       addRollEntry(dmg);
@@ -1223,100 +1526,44 @@ export const CombatHudView: React.FC = () => {
   const isMartialArtsInHand = activeChar?.unarmedInHand?.martialArts ?? false;
   const hasAnyInHandAttack = inHandWeapons.length > 0 || isBrawlingInHand || isMartialArtsInHand;
 
-  return (
-    <div className="space-y-4">
-      {/* Barra Superior Táctica de Combate: Bestiario GM */}
-      <div className="chamfer-card p-2.5 bg-[#12141f] border border-[#242b3d] flex flex-wrap items-center justify-between gap-3 shadow-md">
-        <div className="flex items-center gap-2">
-          <Crosshair className="w-4 h-4 text-[#ef4444]" />
-          <span className="font-tech text-xs font-bold text-white uppercase tracking-wider">
-            SISTEMA DE COMBATE ACTIVO & ENCUENTROS
-          </span>
-          <span className="text-[10px] font-mono-code text-slate-400 hidden sm:inline">
-            • {activeChar?.handle || 'Sin Personaje Activo'}
-          </span>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              const oneshotTabBtn = document.querySelector('button:has(svg.lucide-train)') as HTMLButtonElement | null;
-              if (oneshotTabBtn) oneshotTabBtn.click();
-            }}
-            className="px-3 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm cursor-pointer bg-red-950/80 hover:bg-red-600 text-red-200 hover:text-white border border-red-700/80 shadow-md shadow-red-950/50"
-            title="Abrir Centro de Comando interactivo de Red Chrome Cargo"
+  // Renderizadores de Paneles Modulares y Reordenables
+  const renderLeftPanel = (id: LeftPanelId, index: number) => {
+    const isCollapsed = !!collapsedBoxes[id];
+    const canMoveUp = index > 0;
+    const canMoveDown = index < leftColumnOrder.length - 1;
+
+    switch (id) {
+      case 'vitals':
+        return (
+          <CollapsibleHudCard
+            key="vitals"
+            id="vitals"
+            title="BIOMONITOR & VITALES"
+            icon={<Activity className="w-4 h-4 text-[#dc2626]" />}
+            summary={`${activeChar?.currentHp ?? 0} / ${maxHp} HP${isSeriouslyWounded ? ' [GRAVE -2]' : ''}`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('vitals')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveLeftPanel('vitals', 'up')}
+            onMoveDown={() => moveLeftPanel('vitals', 'down')}
+            onDragStart={() => handleDragStart('left', 'vitals')}
+            onDragOver={(e) => handleDragOver(e, 'vitals')}
+            onDrop={() => handleDrop('left', 'vitals')}
+            isDragOver={dragOverItem === 'vitals'}
+            accentBorderClass={isSeriouslyWounded ? 'border-red-600/60 shadow-md shadow-red-950/40' : 'border-[#232736]'}
+            extraHeaderActions={
+              isSeriouslyWounded ? (
+                <span className="bg-[#dc2626]/20 border border-[#dc2626]/40 text-[#dc2626] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold flex items-center gap-1 animate-pulse">
+                  <Flame className="w-3 h-3" /> GRAVE (-2)
+                </span>
+              ) : null
+            }
           >
-            <Train className="w-3.5 h-3.5 text-red-400" />
-            <span>🚆 RED CHROME CARGO // THE HAMMERHEAD</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsBestiaryDrawerOpen((p) => !p)}
-            className={`px-3 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm cursor-pointer ${
-              isBestiaryDrawerOpen
-                ? 'bg-[#ef4444] text-white shadow-md shadow-[#ef4444]/30'
-                : 'bg-[#1e1728] hover:bg-[#c084fc] text-[#c084fc] hover:text-black border border-[#482d5e]'
-            }`}
-          >
-            <Skull className="w-3.5 h-3.5 text-amber-400" />
-            <span>👹 BESTIARIO & ENCUENTRO GM (44 ENEMIGOS)</span>
-            <span className="text-[10px] font-mono-code opacity-80">
-              {isBestiaryDrawerOpen ? '[ Plegar ]' : '[ Desplegar ]'}
-            </span>
-          </button>
-        </div>
-      </div>
-
-      {/* Sección Desplegable del Bestiario */}
-      {isBestiaryDrawerOpen && (
-        <div className="chamfer-card p-4 bg-[#0a0c13] border-2 border-amber-500/50 shadow-2xl space-y-3 animate-fade-in">
-          <div className="flex items-center justify-between pb-2 border-b border-[#23293c]">
-            <div className="flex items-center gap-2">
-              <Skull className="w-5 h-5 text-amber-400" />
-              <h3 className="font-tech text-sm font-bold text-white uppercase tracking-wider">
-                PANEL INTEGRADO DE BESTIARIO & ENCUENTRO GM
-              </h3>
-            </div>
-            <button
-              type="button"
-              onClick={() => setIsBestiaryDrawerOpen(false)}
-              className="px-2.5 py-1 bg-[#1a1e2a] hover:bg-red-600 text-slate-300 hover:text-white font-mono-code text-xs rounded transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              <X className="w-3.5 h-3.5" />
-              <span>Cerrar Bestiario</span>
-            </button>
-          </div>
-          <EnemiesCompendiumPanel />
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5">
-      
-      {/* =========================================================
-          COLUMNA IZQUIERDA (3 COLS): BIOMONITOR, SP, LUCK, DROGAS ACTIVAS, CRITS
-      ========================================================= */}
-      <div className="xl:col-span-3 space-y-4">
-        
-        {/* Vitals, HP & Ballistic Matrix */}
-        <div className="chamfer-card p-4 bg-[#121319] border border-[#232736]">
-          
-          <div className="flex items-center justify-between pb-2.5 mb-3 border-b border-[#1f2230]">
-            <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-[#dc2626]" />
-              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase">
-                BIOMONITOR & VITALES
-              </span>
-            </div>
-            {isSeriouslyWounded && (
-              <span className="bg-[#dc2626]/20 border border-[#dc2626]/40 text-[#dc2626] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold flex items-center gap-1 animate-pulse">
-                <Flame className="w-3 h-3" /> GRAVE (-2)
-              </span>
-            )}
-          </div>
-
-          {/* HP Bar */}
+            
+        <div className="space-y-3">
+                    {/* HP Bar */}
           <div className="mb-3 bg-[#171923] p-3 rounded-sm border border-[#222636]">
             <div className="flex justify-between items-baseline mb-1">
               <div className="flex items-center gap-1 font-tech text-xs font-bold text-white">
@@ -1380,9 +1627,59 @@ export const CombatHudView: React.FC = () => {
               </button>
             </div>
           </div>
+                    <div className="mt-2.5 bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="font-tech text-[11px] font-bold text-white uppercase flex items-center gap-1.5">
+                <Package className="w-3.5 h-3.5 text-[#38bdf8]" /> ESTADO DE CARGA / SOBREPESO
+              </span>
+              {activeChar?.encumbranceMode && activeChar.encumbranceMode !== 'none' && (
+                <span className="bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold animate-pulse">
+                  SOBREPESO ACTIVO
+                </span>
+              )}
+            </div>
+            <select
+              value={activeChar?.encumbranceMode || 'none'}
+              onChange={(e) => setEncumbranceMode(e.target.value as EncumbranceMode)}
+              className="w-full bg-[#0f1016] border border-[#2e364c] text-white font-mono-code text-[11px] py-1 px-2 rounded focus:outline-none focus:border-[#38bdf8] cursor-pointer"
+            >
+              {(Object.keys(ENCUMBRANCE_MODES) as EncumbranceMode[]).map((key) => (
+                <option key={key} value={key} className="bg-[#121319] text-white">
+                  {ENCUMBRANCE_MODES[key].label}
+                </option>
+              ))}
+            </select>
+            <p className="text-[10px] text-[#94a3b8] font-mono-code mt-1.5 leading-tight">
+              {ENCUMBRANCE_MODES[activeChar?.encumbranceMode || 'none']?.description}
+            </p>
+          </div>
+        </div>
 
-          {/* Armor Plates */}
-          <div className="grid grid-cols-2 gap-2.5 mb-3">
+          </CollapsibleHudCard>
+        );
+
+      case 'armor':
+        return (
+          <CollapsibleHudCard
+            key="armor"
+            id="armor"
+            title="MATRIZ DE BLINDAJE & IMPACTOS"
+            icon={<Shield className="w-4 h-4 text-[#38bdf8]" />}
+            summary={`Cab: ${activeChar?.headArmor?.currentSp ?? 0}/${activeChar?.headArmor?.maxSp ?? 0} | Tor: ${activeChar?.bodyArmor?.currentSp ?? 0}/${activeChar?.bodyArmor?.maxSp ?? 0} SP`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('armor')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveLeftPanel('armor', 'up')}
+            onMoveDown={() => moveLeftPanel('armor', 'down')}
+            onDragStart={() => handleDragStart('left', 'armor')}
+            onDragOver={(e) => handleDragOver(e, 'armor')}
+            onDrop={() => handleDrop('left', 'armor')}
+            isDragOver={dragOverItem === 'armor'}
+          >
+            
+        <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-2.5 mb-3">
             {/* HEAD ARMOR */}
             <div className="bg-[#171923] p-2.5 rounded-sm border border-[#222636]">
               <div className="flex justify-between items-start mb-1.5">
@@ -1451,9 +1748,7 @@ export const CombatHudView: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {/* Mini-Calculadora: Recibir Impacto Balístico */}
-          <div className="bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">
+                    <div className="bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">
             <div className="flex items-center justify-between mb-1.5">
               <span className="font-tech text-[11px] font-bold text-white uppercase flex items-center gap-1">
                 <Shield className="w-3 h-3 text-[#f59e0b]" /> IMPACTO ENTRANTE
@@ -1487,57 +1782,43 @@ export const CombatHudView: React.FC = () => {
               </button>
             </div>
           </div>
-
-          {/* Selector de Sobrepeso / Carga Situacional */}
-          <div className="mt-2.5 bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="font-tech text-[11px] font-bold text-white uppercase flex items-center gap-1.5">
-                <Package className="w-3.5 h-3.5 text-[#38bdf8]" /> ESTADO DE CARGA / SOBREPESO
-              </span>
-              {activeChar?.encumbranceMode && activeChar.encumbranceMode !== 'none' && (
-                <span className="bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold animate-pulse">
-                  SOBREPESO ACTIVO
-                </span>
-              )}
-            </div>
-            <select
-              value={activeChar?.encumbranceMode || 'none'}
-              onChange={(e) => setEncumbranceMode(e.target.value as EncumbranceMode)}
-              className="w-full bg-[#0f1016] border border-[#2e364c] text-white font-mono-code text-[11px] py-1 px-2 rounded focus:outline-none focus:border-[#38bdf8] cursor-pointer"
-            >
-              {(Object.keys(ENCUMBRANCE_MODES) as EncumbranceMode[]).map((key) => (
-                <option key={key} value={key} className="bg-[#121319] text-white">
-                  {ENCUMBRANCE_MODES[key].label}
-                </option>
-              ))}
-            </select>
-            <p className="text-[10px] text-[#94a3b8] font-mono-code mt-1.5 leading-tight">
-              {ENCUMBRANCE_MODES[activeChar?.encumbranceMode || 'none']?.description}
-            </p>
-          </div>
-
         </div>
 
-        {/* Luck Pool & Investment Selector */}
-        <div className="chamfer-card p-4 bg-[#121319] border border-[#232736]">
-          <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#1f2230]">
-            <div className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#f59e0b]" />
-              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase">
-                SUERTE (LUCK)
-              </span>
-            </div>
-            <button
-              onClick={restoreLuck}
-              className="text-[10px] text-[#64748b] hover:text-[#10b981] flex items-center gap-1 font-mono-code transition-colors"
-              title="Restablecer Suerte a Stat Máximo"
-            >
-              <RefreshCw className="w-2.5 h-2.5" /> Restaurar
-            </button>
-          </div>
+          </CollapsibleHudCard>
+        );
 
-          {/* Interactive Luck Pips */}
-          <div className="flex flex-wrap items-center gap-1 mb-2.5 bg-[#171923] p-2 rounded border border-[#222636]">
+      case 'luck':
+        return (
+          <CollapsibleHudCard
+            key="luck"
+            id="luck"
+            title="SUERTE (LUCK)"
+            icon={<Sparkles className="w-3.5 h-3.5 text-[#f59e0b]" />}
+            summary={`${activeChar?.currentLuck ?? 0} / ${activeChar?.stats?.LUCK ?? 0} pts (+${luckToSpendOnNextRoll})`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('luck')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveLeftPanel('luck', 'up')}
+            onMoveDown={() => moveLeftPanel('luck', 'down')}
+            onDragStart={() => handleDragStart('left', 'luck')}
+            onDragOver={(e) => handleDragOver(e, 'luck')}
+            onDrop={() => handleDrop('left', 'luck')}
+            isDragOver={dragOverItem === 'luck'}
+            extraHeaderActions={
+              <button
+                type="button"
+                onClick={restoreLuck}
+                className="text-[10px] text-[#64748b] hover:text-[#10b981] flex items-center gap-1 font-mono-code transition-colors"
+                title="Restablecer Suerte a Stat Máximo"
+              >
+                <RefreshCw className="w-2.5 h-2.5" /> Restaurar
+              </button>
+            }
+          >
+            
+        <div className="space-y-3">
+                    <div className="flex flex-wrap items-center gap-1 mb-2.5 bg-[#171923] p-2 rounded border border-[#222636]">
             {Array.from({ length: activeChar?.stats?.LUCK ?? 6 }).map((_, i) => (
               <button
                 key={i}
@@ -1556,9 +1837,7 @@ export const CombatHudView: React.FC = () => {
               {activeChar?.currentLuck ?? 0} / {activeChar?.stats?.LUCK ?? 0}
             </span>
           </div>
-
-          {/* Selector de Suerte para Próximo Tiro */}
-          <div className="bg-[#171923] p-2 rounded border border-[#222636] flex items-center justify-between">
+                    <div className="bg-[#171923] p-2 rounded border border-[#222636] flex items-center justify-between">
             <span className="text-[10px] font-mono-code text-[#94a3b8]">Invertir en Tiro:</span>
             <div className="flex items-center gap-1.5">
               <button
@@ -1582,68 +1861,48 @@ export const CombatHudView: React.FC = () => {
           </div>
         </div>
 
-        {/* Drogas en Sangre Activas (si existen) */}
-        {(activeChar?.activeDrugs || []).length > 0 && (
-          <div className="chamfer-card p-3.5 bg-[#17141f] border border-[#a855f7]/40 shadow-sm shadow-[#a855f7]/10">
-            <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#a855f7]/30">
-              <div className="flex items-center gap-1.5">
-                <Pill className="w-3.5 h-3.5 text-[#c084fc]" />
-                <span className="font-tech text-xs font-bold text-[#e9d5ff] uppercase tracking-wide">
-                  DROGAS ACTIVAS ({activeChar.activeDrugs!.length})
-                </span>
+          </CollapsibleHudCard>
+        );
+
+      case 'injuries':
+        return (
+          <CollapsibleHudCard
+            key="injuries"
+            id="injuries"
+            title={`HERIDAS CRÍTICAS (${activeChar?.activeInjuries?.length ?? 0})`}
+            icon={<Skull className="w-3.5 h-3.5 text-[#dc2626]" />}
+            summary={`${activeChar?.activeInjuries?.length ?? 0} herida(s) activa(s)`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('injuries')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveLeftPanel('injuries', 'up')}
+            onMoveDown={() => moveLeftPanel('injuries', 'down')}
+            onDragStart={() => handleDragStart('left', 'injuries')}
+            onDragOver={(e) => handleDragOver(e, 'injuries')}
+            onDrop={() => handleDrop('left', 'injuries')}
+            isDragOver={dragOverItem === 'injuries'}
+            extraHeaderActions={
+              <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
+                <button
+                  type="button"
+                  onClick={() => inflictRandomInjury('head')}
+                  className="px-1.5 py-0.5 bg-[#23181d] hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/40 rounded-xs font-mono-code text-[9px] font-bold transition-all"
+                >
+                  + CABEZA
+                </button>
+                <button
+                  type="button"
+                  onClick={() => inflictRandomInjury('body')}
+                  className="px-1.5 py-0.5 bg-[#211f17] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] border border-[#f59e0b]/40 rounded-xs font-mono-code text-[9px] font-bold transition-all"
+                >
+                  + CUERPO
+                </button>
               </div>
-            </div>
-            <div className="space-y-2">
-              {activeChar.activeDrugs!.map((d) => (
-                <div key={d.id} className="bg-[#100d18] p-2 rounded border border-[#a855f7]/30 font-mono-code text-[11px]">
-                  <div className="flex items-center justify-between text-white font-bold mb-1">
-                    <span className="text-[#c084fc]">{d.name}</span>
-                    <button
-                      onClick={() => removeActiveDrug(d.id)}
-                      className="text-[9px] bg-[#dc2626]/20 hover:bg-[#dc2626] text-[#f87171] hover:text-white px-1.5 py-0.5 rounded transition-all"
-                    >
-                      Terminar
-                    </button>
-                  </div>
-                  <div className="text-[10px] text-[#cbd5e1] leading-tight space-y-0.5">
-                    <div><span className="text-[#64748b]">Duración:</span> {d.duration}</div>
-                    <div><span className="text-[#10b981]">Efecto:</span> {d.primaryEffect}</div>
-                    {d.secondaryEffect && (
-                      <div className="text-[#f43f5e]"><span className="text-[#64748b]">Resaca:</span> {d.secondaryEffect}</div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Critical Injuries Console */}
-        <div className="chamfer-card p-4 bg-[#121319] border border-[#232736]">
-          <div className="flex items-center justify-between pb-2 mb-2.5 border-b border-[#1f2230]">
-            <div className="flex items-center gap-1.5">
-              <Skull className="w-3.5 h-3.5 text-[#dc2626]" />
-              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase">
-                HERIDAS CRÍTICAS ({activeChar?.activeInjuries?.length ?? 0})
-              </span>
-            </div>
-            <div className="flex gap-1">
-              <button
-                onClick={() => inflictRandomInjury('head')}
-                className="px-1.5 py-0.5 bg-[#23181d] hover:bg-[#dc2626] hover:text-white text-[#dc2626] border border-[#dc2626]/40 rounded-xs font-mono-code text-[9px] font-bold transition-all"
-              >
-                + CABEZA
-              </button>
-              <button
-                onClick={() => inflictRandomInjury('body')}
-                className="px-1.5 py-0.5 bg-[#211f17] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] border border-[#f59e0b]/40 rounded-xs font-mono-code text-[9px] font-bold transition-all"
-              >
-                + CUERPO
-              </button>
-            </div>
-          </div>
-
-          {(activeChar?.activeInjuries?.length ?? 0) === 0 ? (
+            }
+          >
+            
+                  {(activeChar?.activeInjuries?.length ?? 0) === 0 ? (
             <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
               Sin heridas críticas.
             </div>
@@ -1703,119 +1962,430 @@ export const CombatHudView: React.FC = () => {
               ))}
             </div>
           )}
-        </div>
 
-      </div>
+          </CollapsibleHudCard>
+        );
 
-      {/* =========================================================
-          COLUMNA CENTRAL (5 COLS): TELÉMETRO, ESTACIÓN "EN MANO", LOG DE TELEMETRÍA
-      ========================================================= */}
-      <div className="xl:col-span-5 space-y-4">
-        
-        {/* Telémetro Selector de Distancia */}
-        <div className="chamfer-card p-3.5 bg-[#121319] border border-[#232736]">
-          <div 
-            onClick={() => setIsRangefinderOpen(prev => !prev)}
-            className="flex items-center justify-between pb-1.5 border-b border-[#1f2230] cursor-pointer group select-none"
+      case 'cyberware':
+        return (
+          <CollapsibleHudCard
+            key="cyberware"
+            id="cyberware"
+            title={`CIBERIMPLANTES (${installedCyberware.length})`}
+            icon={<Zap className="w-3.5 h-3.5 text-[#a855f7]" />}
+            summary={`${installedCyberware.length} implante(s) instalados`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('cyberware')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveLeftPanel('cyberware', 'up')}
+            onMoveDown={() => moveLeftPanel('cyberware', 'down')}
+            onDragStart={() => handleDragStart('left', 'cyberware')}
+            onDragOver={(e) => handleDragOver(e, 'cyberware')}
+            onDrop={() => handleDrop('left', 'cyberware')}
+            isDragOver={dragOverItem === 'cyberware'}
           >
-            <div className="flex items-center gap-1.5">
-              {isRangefinderOpen ? (
-                <ChevronDown className="w-4 h-4 text-[#f59e0b]" />
-              ) : (
-                <ChevronRight className="w-4 h-4 text-[#64748b] group-hover:text-[#f59e0b]" />
-              )}
-              <Target className="w-4 h-4 text-[#f59e0b]" />
-              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase group-hover:text-[#f59e0b] transition-colors">
-                TELÉMETRO DE DISTANCIA
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-mono-code text-[#38bdf8] bg-[#141b29] border border-[#243552] px-2 py-0.5 rounded flex items-center gap-1">
-                <span className="text-[#94a3b8]">🎯 ACTIVA:</span>
-                <strong className="text-white">{selectedDistance}</strong>
-                {activeBracket && (
-                  <span className="text-[#64748b]">
-                    ({activeBracket.label.split('(')[1]?.replace(')', '') || activeBracket.label})
-                  </span>
-                )}
-              </span>
-
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsRangefinderOpen(prev => !prev);
-                }}
-                className="text-[10px] font-mono-code text-[#94a3b8] hover:text-white bg-[#1b1f2e] border border-[#272e42] px-2 py-0.5 rounded transition-all"
-              >
-                {isRangefinderOpen ? '▴ CERRAR TELÉMETRO' : '▾ ABRIR TELÉMETRO'}
-              </button>
-            </div>
-          </div>
-
-          {isRangefinderOpen && (
-            <div className="grid grid-cols-4 sm:grid-cols-8 gap-1 pt-2">
-              {RANGE_BRACKETS.map((b) => {
-                const isSelected = selectedDistance === b.range;
-                return (
-                  <button
-                    key={b.range}
-                    onClick={() => setSelectedDistance(b.range)}
-                    className={`p-1 rounded-xs border text-center transition-all ${
-                      isSelected 
-                        ? 'bg-[#dc2626] border-[#dc2626] text-white font-bold shadow-md shadow-[#dc2626]/20' 
-                        : 'bg-[#171923] border-[#242838] text-[#94a3b8] hover:border-[#3b425a] hover:text-white'
-                    }`}
-                  >
-                    <div className="font-tech text-[11px] font-bold leading-none">{b.range}</div>
-                    <div className="text-[8px] font-mono-code text-[#64748b] mt-0.5 leading-tight truncate">
-                      {b.label.split('(')[1]?.replace(')', '') || ''}
+            {installedCyberware.length === 0 ? (
+              <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
+                Sin ciberimplantes registrados en este personaje.
+              </div>
+            ) : (
+              <div className="space-y-1.5 max-h-[220px] overflow-y-auto pr-1">
+                {installedCyberware.map((c: any) => (
+                  <div key={c.id} className="p-2 bg-[#171923] border border-[#222636] rounded-xs font-mono-code text-[11px]">
+                    <div className="flex items-center justify-between font-bold text-white mb-0.5">
+                      <span className="text-[#a855f7]">{c.name}</span>
+                      <span className="text-[9px] text-[#64748b] uppercase">{c.type || 'Cyberware'}</span>
                     </div>
-                  </button>
-                );
-              })}
+                    {c.description && (
+                      <p className="text-[10px] text-[#94a3b8] leading-tight line-clamp-2">
+                        {c.description}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </CollapsibleHudCard>
+        );
+
+      case 'consumables':
+        return (
+          <CollapsibleHudCard
+            key="consumables"
+            id="consumables"
+            title={`DROGAS EN SANGRE (${(activeChar?.activeDrugs || []).length})`}
+            icon={<Pill className="w-3.5 h-3.5 text-[#ec4899]" />}
+            summary={`${(activeChar?.activeDrugs || []).length} droga(s) activa(s)`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('consumables')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveLeftPanel('consumables', 'up')}
+            onMoveDown={() => moveLeftPanel('consumables', 'down')}
+            onDragStart={() => handleDragStart('left', 'consumables')}
+            onDragOver={(e) => handleDragOver(e, 'consumables')}
+            onDrop={() => handleDrop('left', 'consumables')}
+            isDragOver={dragOverItem === 'consumables'}
+          >
+            
+        {(activeChar?.activeDrugs || []).length === 0 ? (
+          <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
+            Sin drogas ni fármacos activos en el organismo.
+          </div>
+        ) : (
+                      <div className="space-y-2">
+              {activeChar.activeDrugs!.map((d) => (
+                <div key={d.id} className="bg-[#100d18] p-2 rounded border border-[#a855f7]/30 font-mono-code text-[11px]">
+                  <div className="flex items-center justify-between text-white font-bold mb-1">
+                    <span className="text-[#c084fc]">{d.name}</span>
+                    <button
+                      onClick={() => removeActiveDrug(d.id)}
+                      className="text-[9px] bg-[#dc2626]/20 hover:bg-[#dc2626] text-[#f87171] hover:text-white px-1.5 py-0.5 rounded transition-all"
+                    >
+                      Terminar
+                    </button>
+                  </div>
+                  <div className="text-[10px] text-[#cbd5e1] leading-tight space-y-0.5">
+                    <div><span className="text-[#64748b]">Duración:</span> {d.duration}</div>
+                    <div><span className="text-[#10b981]">Efecto:</span> {d.primaryEffect}</div>
+                    {d.secondaryEffect && (
+                      <div className="text-[#f43f5e]"><span className="text-[#64748b]">Resaca:</span> {d.secondaryEffect}</div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
+        )}
+
+          </CollapsibleHudCard>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  const renderRightPanel = (id: RightPanelId, index: number, isFloating = false) => {
+    const isCollapsed = isFloating ? false : !!collapsedBoxes[id];
+    const canMoveUp = !isFloating && index > 0;
+    const canMoveDown = !isFloating && index < rightColumnOrder.length - 1;
+
+    switch (id) {
+      case 'telemetry':
+        return (
+          <CollapsibleHudCard
+            key="telemetry"
+            id="telemetry"
+            title="CONSOLA DE TELEMETRÍA (LOG DE TIRADAS)"
+            icon={<Terminal className="w-4 h-4 text-cyan-400" />}
+            summary={`${rollHistory.length} tiradas registradas`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('telemetry')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveRightPanel('telemetry', 'up')}
+            onMoveDown={() => moveRightPanel('telemetry', 'down')}
+            onDragStart={() => handleDragStart('right', 'telemetry')}
+            onDragOver={(e) => handleDragOver(e, 'telemetry')}
+            onDrop={() => handleDrop('right', 'telemetry')}
+            isDragOver={dragOverItem === 'telemetry'}
+            accentBorderClass="border-cyan-500/50 shadow-md shadow-cyan-950/30"
+            extraHeaderActions={
+              <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                <div className="flex items-center gap-0.5 bg-[#161a26] p-0.5 rounded border border-[#2b334a]">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTelemetryDockMode('inline');
+                      localStorage.setItem(STORAGE_KEY_DOCK_MODE, 'inline');
+                    }}
+                    className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors ${
+                      telemetryDockMode === 'inline' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
+                    }`}
+                    title="Anclar en columna principal"
+                  >
+                    📌 En Columna
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTelemetryDockMode('split_sticky');
+                      localStorage.setItem(STORAGE_KEY_DOCK_MODE, 'split_sticky');
+                    }}
+                    className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors ${
+                      telemetryDockMode === 'split_sticky' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
+                    }`}
+                    title="Anclar sticky lateral"
+                  >
+                    📐 Sticky
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTelemetryDockMode('floating_pip');
+                      localStorage.setItem(STORAGE_KEY_DOCK_MODE, 'floating_pip');
+                    }}
+                    className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors ${
+                      telemetryDockMode === 'floating_pip' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
+                    }`}
+                    title="Ventana flotante mini-HUD (PiP)"
+                  >
+                    🪟 Flotante
+                  </button>
+                </div>
+                {rollHistory.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={clearRollHistory}
+                    className="text-[10px] font-mono-code text-[#64748b] hover:text-[#dc2626] transition-colors px-1"
+                    title="Limpiar historial de tiradas"
+                  >
+                    LIMPIAR
+                  </button>
+                )}
+              </div>
+            }
+          >
+            
+        <div className={`space-y-2.5 ${isFloating ? 'max-h-[500px]' : 'max-h-[360px]'} overflow-y-auto pr-1`}>
+                      {rollHistory.length === 0 ? (
+              <div className="text-center py-8 text-[#64748b] font-mono-code text-xs">
+                Sin tiradas registradas. Selecciona una distancia y pulsa Atacar o Tirar Daño.
+              </div>
+            ) : (
+              rollHistory.map((entry) => (
+                <div
+                  key={entry.id}
+                  className={`p-2.5 rounded-xs border transition-all ${
+                    entry.needsExplosionClick
+                      ? 'bg-[#2b181b] border-[#dc2626] shadow-md shadow-[#dc2626]/20'
+                      : entry.type === 'attack'
+                        ? entry.isHit
+                          ? 'bg-[#141822] border-[#1d2d3e]'
+                          : 'bg-[#191418] border-[#301c24]'
+                        : 'bg-[#161724] border-[#262840]'
+                  }`}
+                >
+                  {/* Banner Explosivo Diferido */}
+                  {entry.needsExplosionClick && (
+                    <div className="mb-2 pb-1.5 border-b border-[#dc2626]/40 text-center animate-pulse">
+                      {entry.explosionType === 'crit_success' ? (
+                        <div className="bg-[#10b981]/20 border border-[#10b981] p-1.5 rounded-xs text-[#10b981] font-tech font-bold text-xs">
+                          <span className="flex items-center justify-center gap-1">
+                            <Zap className="w-3.5 h-3.5" /> ¡10 NATURAL! DADO EXPLOSIVO
+                          </span>
+                          <button
+                            onClick={() => triggerExplosionClick(entry.id)}
+                            className="mt-1 w-full py-1 bg-[#10b981] hover:bg-[#059669] text-black font-tech font-bold tracking-wider rounded text-xs chamfer-btn transition-all"
+                          >
+                            🎲 APRETAR PARA TIRAR 1d10 CRÍTICO
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="bg-[#dc2626]/20 border border-[#dc2626] p-1.5 rounded-xs text-[#dc2626] font-tech font-bold text-xs">
+                          ⚠️ ¡1 NATURAL! PIFIA CRÍTICA
+                          <button
+                            onClick={() => triggerExplosionClick(entry.id)}
+                            className="mt-1 w-full py-1 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold tracking-wider rounded text-xs chamfer-btn transition-all"
+                          >
+                            🎲 APRETAR PARA TIRAR 1d10 DE PIFIA
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Ataque */}
+                  {entry.type === 'attack' && (
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-tech text-xs font-bold text-white truncate max-w-[200px]">
+                          {entry.weaponName} {entry.isAutofire ? '[AUTOFIRE]' : ''}
+                        </span>
+                        <span className={`px-1.5 py-0.2 rounded-2xs text-[9px] font-mono-code font-bold ${
+                          entry.isHit 
+                            ? 'bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/30' 
+                            : 'bg-[#dc2626]/20 text-[#dc2626] border border-[#dc2626]/30'
+                        }`}>
+                          {entry.isHit ? `IMPACTO (DV ${entry.targetDv})` : `FALLO (DV ${entry.targetDv})`}
+                        </span>
+                      </div>
+
+                      <div className="text-[9px] font-mono-code text-[#38bdf8] mb-1">
+                        Distancia: {entry.distanceLabel}
+                      </div>
+
+                      <div className="text-[11px] font-mono-code text-[#94a3b8] bg-[#0e1017] p-1.5 rounded border border-[#1c2232] space-y-0.5">
+                        <div>
+                          Base: {entry.statVal ?? 0}+{entry.skillVal ?? 0}
+                          {(entry.penaltiesTotal ?? 0) > 0 && <span className="text-[#dc2626]"> -{entry.penaltiesTotal}</span>}
+                          {(entry.luckSpent ?? 0) > 0 && <span className="text-[#f59e0b]"> +{entry.luckSpent}L</span>}
+                          {' '}+ 1d10({entry.d10})
+                          {entry.critDie !== null && entry.critDie !== undefined && (
+                            <span className={entry.explosionType === 'crit_success' ? 'text-[#10b981] font-bold' : 'text-[#dc2626] font-bold'}>
+                              {' '}[{entry.explosionType === 'crit_success' ? `+${entry.critDie}` : `-${entry.critDie}`}]
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex justify-between items-baseline pt-0.5 border-t border-[#1c2232]">
+                          <span className="text-[#64748b]">Margen: {entry.margin !== undefined ? (entry.margin >= 0 ? `+${entry.margin}` : `${entry.margin}`) : 'N/A'}</span>
+                          <span className="text-white font-bold text-xs">TOTAL: {entry.totalAttack}</span>
+                        </div>
+                      </div>
+
+                      {entry.aimedShotTarget && entry.aimedShotTarget !== 'none' && (
+                        <div className="mt-1 p-1 bg-[#2b1016] rounded border border-[#ef4444]/40 flex flex-col gap-0.5 text-[10px] font-mono-code">
+                          <div className="flex items-center justify-between text-[#f87171] font-bold">
+                            <span className="flex items-center gap-1">
+                              <Crosshair className="w-3 h-3" />
+                              {entry.aimedShotLabel || 'DISPARO APUNTADO'} (-8)
+                            </span>
+                            <span className="text-[9px] uppercase tracking-wider text-rose-300">ROF 1</span>
+                          </div>
+                          {entry.aimedShotEffectSummary && (
+                            <div className="text-[9px] text-slate-300">
+                              {entry.aimedShotEffectSummary}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {entry.isAutofire && entry.isHit && (
+                        <div className="mt-1 p-1 bg-[#201d14] rounded border border-[#3b341d] flex items-center justify-between text-[11px] font-mono-code text-[#f59e0b]">
+                          <span>MULTIPLICADOR:</span>
+                          <span className="font-bold">×{entry.autofireMultiplier} (2d6)</span>
+                        </div>
+                      )}
+
+                      {!entry.needsExplosionClick && !entry.damageRolled && (
+                        <button
+                          onClick={() => {
+                            markAttackDamageRolled(entry.id);
+                            const dmg = createDamageRoll(
+                              entry.weaponName,
+                              entry.damageFormula || '3d6',
+                              entry.isAutofire,
+                              entry.autofireMultiplier,
+                              entry.weaponInstanceId,
+                              entry.aimedShotTarget || 'none'
+                            );
+                            addRollEntry(dmg);
+                          }}
+                          className="mt-1.5 w-full py-1 bg-[#22293c] hover:bg-[#38bdf8] hover:text-black border border-[#303c58] text-[#38bdf8] font-tech font-bold text-[11px] tracking-wider rounded-xs transition-all flex items-center justify-center gap-1"
+                        >
+                          <Dices className="w-3 h-3" />
+                          <span>TIRAR DAÑO ({entry.isAutofire ? `2d6 × ${entry.autofireMultiplier || 1}` : entry.damageFormula})</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Daño */}
+                  {entry.type === 'damage' && (
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-tech text-xs font-bold text-[#f59e0b]">
+                          💥 DAÑO: {entry.weaponName}
+                        </span>
+                        <span className="font-tech text-base font-bold text-white leading-none">
+                          {entry.finalDamageTotal} PTS
+                        </span>
+                      </div>
+
+                      {entry.aimedShotTarget && entry.aimedShotTarget !== 'none' && (
+                        <div className="mb-1.5 p-1 bg-[#2b1016] rounded border border-[#ef4444]/40 flex items-center justify-between text-[10px] font-mono-code text-[#f87171]">
+                          <span className="flex items-center gap-1 font-bold">
+                            <Crosshair className="w-3 h-3" />
+                            {entry.aimedShotLabel || 'DISPARO APUNTADO'}
+                          </span>
+                          {entry.aimedShotTarget === 'head' && (
+                            <span className="text-amber-400 font-bold">×2 DAÑO PENETRANTE</span>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="flex flex-wrap items-center gap-1 my-1.5">
+                        {entry.diceResults?.map((die, idx) => (
+                          <div
+                            key={idx}
+                            className={`w-6 h-6 rounded-xs flex items-center justify-center font-mono-code font-bold text-xs border ${
+                              die === 6
+                                ? 'bg-[#dc2626] border-[#f87171] text-white shadow-sm shadow-[#dc2626]/50'
+                                : 'bg-[#181a26] border-[#292e42] text-[#cbd5e1]'
+                            }`}
+                          >
+                            {die}
+                          </div>
+                        ))}
+                        {entry.critBonusDamage ? (
+                          <span className="text-[10px] font-mono-code text-[#dc2626] font-bold">
+                            +5 CRÍTICO
+                          </span>
+                        ) : null}
+                      </div>
+
+                      {entry.isCriticalInjuryTrigger && (
+                        <div className="mt-1.5 p-1.5 bg-[#2a141a] border border-[#dc2626] rounded-xs">
+                          <div className="font-tech text-[11px] font-bold text-[#dc2626] flex items-center gap-1 mb-1">
+                            <Skull className="w-3 h-3" /> ¡CRÍTICO EN DAÑO! (DOBLE 6+) → +5 DAÑO DIRECTO
+                          </div>
+                          <div className="grid grid-cols-2 gap-1">
+                            <button
+                              onClick={() => inflictRandomInjury('head')}
+                              className="py-0.5 px-1 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-mono-code text-[9px] font-bold rounded-xs transition-all text-center"
+                            >
+                              + GIRAR CABEZA
+                            </button>
+                            <button
+                              onClick={() => inflictRandomInjury('body')}
+                              className="py-0.5 px-1 bg-[#f59e0b] hover:bg-[#d97706] text-black font-mono-code text-[9px] font-bold rounded-xs transition-all text-center"
+                            >
+                              + GIRAR CUERPO
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {entry.aimedShotTarget === 'head' && (
+                        <HeadshotCalculator entry={entry} />
+                      )}
+                    </div>
+                  )}
+
+                  <div className="text-[8px] font-mono-code text-[#64748b] mt-1 text-right">
+                    {new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                  </div>
+                </div>
+              ))
+            )}
         </div>
 
-        {/* =======================================================
-            ESTACIÓN DE ATAQUE "EN MANO" (LISTO PARA ATACAR)
-        ======================================================= */}
-        <div className="space-y-4">
-          
-          <div 
-            onClick={() => setIsInHandStationOpen((prev) => !prev)}
-            className="flex items-center justify-between px-1 cursor-pointer group select-none"
-          >
-            <span className="font-tech text-xs font-bold text-[#38bdf8] uppercase tracking-wider flex items-center gap-1.5 group-hover:text-white transition-colors">
-              {isInHandStationOpen ? (
-                <ChevronDown className="w-3.5 h-3.5 text-[#38bdf8]" />
-              ) : (
-                <ChevronRight className="w-3.5 h-3.5 text-[#64748b] group-hover:text-[#38bdf8]" />
-              )}
-              <Crosshair className="w-3.5 h-3.5" /> ESTACIÓN DE ATAQUE "EN MANO"
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono-code text-[#64748b]">
-                {inHandWeapons.length + (isBrawlingInHand ? 1 : 0) + (isMartialArtsInHand ? 1 : 0)} ATAQUES LISTOS
-              </span>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsInHandStationOpen((prev) => !prev);
-                }}
-                className="text-[9px] font-mono-code text-[#38bdf8] bg-[#141b29] border border-[#243552] px-1.5 py-0.5 rounded hover:bg-[#1f2d45]"
-              >
-                {isInHandStationOpen ? 'Plegar' : 'Desplegar'}
-              </button>
-            </div>
-          </div>
+          </CollapsibleHudCard>
+        );
 
-          {isInHandStationOpen && (
-            <>
-              {!hasAnyInHandAttack && (
+      case 'inHand':
+        return (
+          <CollapsibleHudCard
+            key="inHand"
+            id="inHand"
+            title="ESTACIÓN DE ATAQUE // EN MANO"
+            icon={<Crosshair className="w-4 h-4 text-[#38bdf8]" />}
+            summary={`${inHandWeapons.length + (isBrawlingInHand ? 1 : 0) + (isMartialArtsInHand ? 1 : 0)} ataque(s) listo(s)`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('inHand')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveRightPanel('inHand', 'up')}
+            onMoveDown={() => moveRightPanel('inHand', 'down')}
+            onDragStart={() => handleDragStart('right', 'inHand')}
+            onDragOver={(e) => handleDragOver(e, 'inHand')}
+            onDrop={() => handleDrop('right', 'inHand')}
+            isDragOver={dragOverItem === 'inHand'}
+          >
+            
+        <div className="space-y-4">
+                        {!hasAnyInHandAttack && (
                 <div className="chamfer-card p-6 text-center text-[#64748b] font-mono-code text-xs bg-[#121319] border border-[#232736]">
                   No hay armas ni ataques seleccionados "En Mano".<br />
                   Usa el <strong>Rack Táctico de la derecha</strong> para poner armas o puños en mano.
@@ -2512,796 +3082,83 @@ export const CombatHudView: React.FC = () => {
                   )}
                 </div>
               )}
-            </>
-          )}
-
         </div>
 
-        {/* =======================================================
-            MÓDULO: CYBERFISTS OF FURY // 27 ARTES MARCIALES & 54 MOVIMIENTOS
-        ======================================================= */}
-        <div className="chamfer-card p-4 bg-[#121319] border border-[#232736]">
-          <button
-            type="button"
-            onClick={() => setIsCyberfistsModuleOpen(!isCyberfistsModuleOpen)}
-            className="w-full flex items-center justify-between text-left group"
+          </CollapsibleHudCard>
+        );
+
+      case 'rangefinder':
+        return (
+          <CollapsibleHudCard
+            key="rangefinder"
+            id="rangefinder"
+            title="TELÉMETRO DE DISTANCIA"
+            icon={<Target className="w-4 h-4 text-[#f59e0b]" />}
+            summary={`Distancia: ${selectedDistance}${activeBracket ? ` (${activeBracket.label.split('(')[1]?.replace(')', '') || activeBracket.label})` : ''}`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('rangefinder')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveRightPanel('rangefinder', 'up')}
+            onMoveDown={() => moveRightPanel('rangefinder', 'down')}
+            onDragStart={() => handleDragStart('right', 'rangefinder')}
+            onDragOver={(e) => handleDragOver(e, 'rangefinder')}
+            onDrop={() => handleDrop('right', 'rangefinder')}
+            isDragOver={dragOverItem === 'rangefinder'}
           >
-            <div className="flex items-center gap-2">
-              <span className="text-base">🥋</span>
-              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase group-hover:text-[#10b981] transition-colors">
-                CYBERFISTS OF FURY // 27 ARTES MARCIALES & 54 MOVIMIENTOS
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono-code text-[#10b981] bg-[#10b981]/10 px-2 py-0.5 rounded border border-[#10b981]/30">
-                27 FORMAS
-              </span>
-              {isCyberfistsModuleOpen ? (
-                <ChevronDown className="w-4 h-4 text-[#10b981]" />
-              ) : (
-                <ChevronRight className="w-4 h-4 text-[#64748b]" />
-              )}
-            </div>
-          </button>
-
-          {isCyberfistsModuleOpen && (
-            <div className="mt-3 pt-3 border-t border-[#1f2230] space-y-3">
-              {/* Barra de Filtro & Búsqueda */}
-              <div className="flex flex-wrap items-center gap-2">
-                <input
-                  type="text"
-                  placeholder="Buscar estilo o combo..."
-                  value={martialArtSearch}
-                  onChange={(e) => setMartialArtSearch(e.target.value)}
-                  className="bg-[#0b0d14] border border-[#262c3e] text-white text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#10b981] flex-1 min-w-[150px] font-mono-code"
-                />
-                <div className="flex gap-1 text-[10px] font-mono-code font-bold">
-                  {(['all', 'core', 'interface_red'] as const).map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => setMartialArtCategoryFilter(cat)}
-                      className={`px-2 py-1 rounded transition-colors ${
-                        martialArtCategoryFilter === cat
-                          ? 'bg-[#10b981] text-black'
-                          : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
-                      }`}
-                    >
-                      {cat === 'all' ? 'TODAS (27)' : cat === 'core' ? 'CORE (4)' : 'CYBERFISTS (23)'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Selector de Estilo */}
-              {(() => {
-                const filteredForms = MARTIAL_ARTS_FORMS.filter((f) => {
-                  const matchCat =
-                    martialArtCategoryFilter === 'all' ? true : f.sourceBook === martialArtCategoryFilter;
-                  const matchSearch =
-                    !martialArtSearch.trim() ||
-                    f.name.toLowerCase().includes(martialArtSearch.toLowerCase()) ||
-                    f.moves.some(
-                      (m) =>
-                        m.name.toLowerCase().includes(martialArtSearch.toLowerCase()) ||
-                        m.effectDescription.toLowerCase().includes(martialArtSearch.toLowerCase())
-                    );
-                  return matchCat && matchSearch;
-                });
-
-                const activeForm =
-                  filteredForms.find((f) => f.id === selectedMartialFormId) ||
-                  filteredForms[0] ||
-                  MARTIAL_ARTS_FORMS[0];
-                const activeRank =
-                  activeChar?.knownMartialArts?.[activeForm.id] ?? (activeChar?.skills?.martialArts ?? 0);
-
+            
+                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-1 pt-2">
+              {RANGE_BRACKETS.map((b) => {
+                const isSelected = selectedDistance === b.range;
                 return (
-                  <div className="space-y-3">
-                    {/* Selector de Formas */}
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-mono-code text-[#94a3b8]">Estilo Activo:</span>
-                      <select
-                        value={activeForm.id}
-                        onChange={(e) => setSelectedMartialFormId(e.target.value)}
-                        className="bg-[#0b0d14] border border-[#262c3e] text-[#10b981] font-tech font-bold text-xs rounded px-2 py-1 focus:outline-none focus:border-[#10b981] flex-1 cursor-pointer"
-                      >
-                        {filteredForms.map((f) => {
-                          const userRank =
-                            activeChar?.knownMartialArts?.[f.id] ?? (activeChar?.skills?.martialArts ?? 0);
-                          return (
-                            <option key={f.id} value={f.id}>
-                              {f.name} {userRank > 0 ? `(Rango ${userRank})` : ''} - {f.badge}
-                            </option>
-                          );
-                        })}
-                      </select>
+                  <button
+                    key={b.range}
+                    onClick={() => setSelectedDistance(b.range)}
+                    className={`p-1 rounded-xs border text-center transition-all ${
+                      isSelected 
+                        ? 'bg-[#dc2626] border-[#dc2626] text-white font-bold shadow-md shadow-[#dc2626]/20' 
+                        : 'bg-[#171923] border-[#242838] text-[#94a3b8] hover:border-[#3b425a] hover:text-white'
+                    }`}
+                  >
+                    <div className="font-tech text-[11px] font-bold leading-none">{b.range}</div>
+                    <div className="text-[8px] font-mono-code text-[#64748b] mt-0.5 leading-tight truncate">
+                      {b.label.split('(')[1]?.replace(')', '') || ''}
                     </div>
-
-                    {/* Ficha del Estilo Seleccionado */}
-                    <div className="bg-[#0c0e14] p-3 rounded border border-[#1f2637] space-y-2.5">
-                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1b2130]">
-                        <div>
-                          <div className="font-tech text-sm font-bold text-white flex items-center gap-2">
-                            <span>{activeForm.name}</span>
-                            <span className="text-[9px] font-mono-code bg-[#10b981]/20 text-[#10b981] px-1.5 py-0.5 rounded border border-[#10b981]/40">
-                              {activeForm.badge}
-                            </span>
-                          </div>
-                          <div className="text-[10px] font-mono-code text-[#64748b] mt-0.5">
-                            Stats Clave: <strong className="text-[#94a3b8]">{activeForm.keyStats.join(', ')}</strong> • Rol: {activeForm.tacticalRole}
-                          </div>
-                        </div>
-
-                        {/* Rango del Personaje en el Estilo */}
-                        <div className="flex items-center gap-1.5 bg-[#141724] border border-[#252c40] px-2 py-1 rounded">
-                          <span className="text-[10px] font-mono-code text-[#94a3b8]">Rango Estilo:</span>
-                          <button
-                            onClick={() => updateMartialArtRank(activeForm.id, Math.max(0, activeRank - 1))}
-                            className="w-5 h-5 flex items-center justify-center bg-[#1f2334] hover:bg-[#dc2626] text-white rounded text-xs font-bold"
-                            title="Disminuir rango"
-                          >
-                            -
-                          </button>
-                          <span className="font-mono-code text-xs font-bold text-[#10b981] px-1">
-                            {activeRank}
-                          </span>
-                          <button
-                            onClick={() => updateMartialArtRank(activeForm.id, activeRank + 1)}
-                            className="w-5 h-5 flex items-center justify-center bg-[#1f2334] hover:bg-[#10b981] text-white rounded text-xs font-bold"
-                            title="Aumentar rango"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="text-[11px] font-sans text-[#cbd5e1] leading-relaxed italic bg-[#10131d] p-2 rounded border border-[#1c2233]">
-                        "{activeForm.originAndFlavor}"
-                      </div>
-
-                      {/* Botones de Ataque y Daño Básico del Estilo */}
-                      <div className="grid grid-cols-2 gap-2 pt-1">
-                        <button
-                          onClick={() => handleCyberfistsFormAttack(activeForm)}
-                          className="py-1.5 px-2 bg-[#10b981] hover:bg-[#059669] text-black font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1.5 shadow-sm"
-                        >
-                          <Target className="w-3.5 h-3.5" />
-                          <span>ATACAR ({activeForm.name.split(' ')[0]})</span>
-                        </button>
-                        <button
-                          onClick={() => handleCyberfistsFormDamage(activeForm)}
-                          className="py-1.5 px-2 bg-[#181f2f] hover:bg-[#232d42] text-[#10b981] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1.5 border border-[#1f3b2d]"
-                        >
-                          <Dices className="w-3.5 h-3.5" />
-                          <span>DAÑO ({unarmedDmg})</span>
-                        </button>
-                      </div>
-
-                      {/* 2 Movimientos Especiales del Estilo */}
-                      <div className="pt-2 border-t border-[#1b2130] space-y-2">
-                        <div className="text-[10px] font-mono-code uppercase font-bold text-[#f59e0b] tracking-wider flex items-center gap-1">
-                          <Sparkles className="w-3 h-3" />
-                          MOVIMIENTOS ESPECIALES & COMBOS ({activeForm.moves.length})
-                        </div>
-
-                        <div className="space-y-2">
-                          {activeForm.moves.map((move) => (
-                            <div
-                              key={move.id}
-                              className="bg-[#121622] p-2.5 rounded border border-[#20273a] hover:border-[#10b981]/50 transition-colors space-y-1.5"
-                            >
-                              <div className="flex flex-wrap items-center justify-between gap-1">
-                                <div className="font-tech text-xs font-bold text-white flex items-center gap-1.5">
-                                  <span>{move.name}</span>
-                                  {move.criticalInjuryApplied && (
-                                    <span className="text-[9px] font-mono-code bg-[#dc2626]/20 text-[#f87171] px-1 py-0.2 rounded border border-[#dc2626]/40">
-                                      {move.criticalInjuryApplied}
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-[10px] font-mono-code font-bold text-[#38bdf8] bg-[#0c121e] px-1.5 py-0.5 rounded border border-[#1b2b40]">
-                                  DV {move.resolutionDv}
-                                </div>
-                              </div>
-
-                              <div className="text-[10px] font-mono-code text-[#94a3b8]">
-                                <strong className="text-[#f59e0b]">Requisito:</strong> {move.requirements}
-                              </div>
-
-                              <div className="text-[11px] font-sans text-[#cbd5e1] leading-relaxed">
-                                {move.effectDescription}
-                              </div>
-
-                              {move.damageBonusOrFormula && (
-                                <div className="text-[10px] font-mono-code text-[#10b981] font-bold">
-                                  Bono / Daño: {move.damageBonusOrFormula}
-                                </div>
-                              )}
-
-                              <div className="flex gap-2 pt-1">
-                                <button
-                                  onClick={() => handleExecuteMartialMove(activeForm, move)}
-                                  className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#10b981] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d]"
-                                >
-                                  <Target className="w-3 h-3" /> EJECUTAR COMBO (1d10 + DEX + {activeRank} vs DV {move.resolutionDv})
-                                </button>
-                                {move.damageBonusOrFormula && move.damageBonusOrFormula.includes('d') && (
-                                  <button
-                                    onClick={() => handleRollComboDamage(move)}
-                                    className="py-1 px-2 bg-[#291b22] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#441f28]"
-                                    title="Tirar dado de daño del combo"
-                                  >
-                                    <Dices className="w-3 h-3" /> TIRAR DAÑO
-                                  </button>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  </button>
                 );
-              })()}
+              })}
             </div>
-          )}
-        </div>
 
-        {/* =======================================================
-            MÓDULO: ROL EN COMBATE // SOLO COMBAT AWARENESS & QUICKHACKS 2077
-        ======================================================= */}
-        <div className="chamfer-card p-4 bg-[#121319] border border-[#232736]">
-          <button
-            type="button"
-            onClick={() => setIsCombatRoleModuleOpen(!isCombatRoleModuleOpen)}
-            className="w-full flex items-center justify-between text-left group"
+          </CollapsibleHudCard>
+        );
+
+      case 'arsenalBelt':
+        return (
+          <CollapsibleHudCard
+            key="arsenalBelt"
+            id="arsenalBelt"
+            title="RACK TÁCTICO & ARSENAL COMPLETO"
+            icon={<Swords className="w-4 h-4 text-[#38bdf8]" />}
+            summary={`${(activeChar?.equippedWeapons || []).length} armas | 💣 ${totalGrenadeCharges} | 💉 ${totalDrugCharges}`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('arsenalBelt')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveRightPanel('arsenalBelt', 'up')}
+            onMoveDown={() => moveRightPanel('arsenalBelt', 'down')}
+            onDragStart={() => handleDragStart('right', 'arsenalBelt')}
+            onDragOver={(e) => handleDragOver(e, 'arsenalBelt')}
+            onDrop={() => handleDrop('right', 'arsenalBelt')}
+            isDragOver={dragOverItem === 'arsenalBelt'}
+            extraHeaderActions={
+              <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#64748b]" onClick={(e) => e.stopPropagation()}>
+                <span>💣 {totalGrenadeCharges}</span>
+                <span>💉 {totalDrugCharges}</span>
+              </div>
+            }
           >
-            <div className="flex items-center gap-2">
-              <span className="text-base">⚡</span>
-              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase group-hover:text-[#38bdf8] transition-colors">
-                ROL EN COMBATE // SOLO COMBAT AWARENESS & QUICKHACKS 2077
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono-code text-[#38bdf8] bg-[#38bdf8]/10 px-2 py-0.5 rounded border border-[#38bdf8]/30">
-                {activeChar?.role?.toUpperCase() || 'SOLO'} R{activeChar?.roleRank || 4}
-              </span>
-              {isCombatRoleModuleOpen ? (
-                <ChevronDown className="w-4 h-4 text-[#38bdf8]" />
-              ) : (
-                <ChevronRight className="w-4 h-4 text-[#64748b]" />
-              )}
-            </div>
-          </button>
-
-          {isCombatRoleModuleOpen && (
-            <div className="mt-3 pt-3 border-t border-[#1f2230] space-y-4">
-              {/* SUBSECCIÓN 1: SOLO COMBAT AWARENESS */}
-              <div className="bg-[#0e1017] p-3 rounded border border-[#22283a] space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1c2233]">
-                  <div className="flex items-center gap-2">
-                    <Crosshair className="w-4 h-4 text-[#dc2626]" />
-                    <span className="font-tech text-xs font-bold text-white uppercase">
-                      SOLO // COMBAT AWARENESS (Puntos de Rol: {activeChar?.roleRank || 4})
-                    </span>
-                  </div>
-                  {activeChar?.soloAllocation?.precisionAttack ? (
-                    <span className="text-[10px] font-mono-code bg-[#10b981]/20 text-[#10b981] px-2 py-0.5 rounded border border-[#10b981]/40 font-bold animate-pulse">
-                      ¡Precision Attack Activo: +{activeChar.soloAllocation.precisionAttack} a Ataques!
-                    </span>
-                  ) : null}
-                </div>
-
-                {/* Controles de puntos de Solo */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono-code">
-                  {/* Precision Attack */}
-                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
-                    <div>
-                      <div className="text-white font-bold">Precision Attack (+1 Atk)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 3 pts por +1</div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => handleUpdateSoloField('precisionAttack', -1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
-                      >
-                        -
-                      </button>
-                      <span className="font-bold text-[#10b981] w-4 text-center">
-                        {activeChar?.soloAllocation?.precisionAttack || 0}
-                      </span>
-                      <button
-                        onClick={() => handleUpdateSoloField('precisionAttack', 1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#10b981] text-white rounded font-bold"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Spot Weakness */}
-                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
-                    <div>
-                      <div className="text-white font-bold">Spot Weakness (+1 Daño)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1 daño primer golpe</div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => handleUpdateSoloField('spotWeakness', -1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
-                      >
-                        -
-                      </button>
-                      <span className="font-bold text-[#f59e0b] w-4 text-center">
-                        {activeChar?.soloAllocation?.spotWeakness || 0}
-                      </span>
-                      <button
-                        onClick={() => handleUpdateSoloField('spotWeakness', 1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#f59e0b] hover:text-black text-white rounded font-bold"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Damage Deflection */}
-                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
-                    <div>
-                      <div className="text-white font-bold">Damage Deflection (-1 Dmg)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 2 pts por -1 daño primer impacto</div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => handleUpdateSoloField('damageDeflection', -1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
-                      >
-                        -
-                      </button>
-                      <span className="font-bold text-[#38bdf8] w-4 text-center">
-                        {activeChar?.soloAllocation?.damageDeflection || 0}
-                      </span>
-                      <button
-                        onClick={() => handleUpdateSoloField('damageDeflection', 1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#38bdf8] hover:text-black text-white rounded font-bold"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Initiative Reaction */}
-                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
-                    <div>
-                      <div className="text-white font-bold">Initiative Reaction (+1 Init)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1 iniciativa</div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => handleUpdateSoloField('initiativeReaction', -1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
-                      >
-                        -
-                      </button>
-                      <span className="font-bold text-white w-4 text-center">
-                        {activeChar?.soloAllocation?.initiativeReaction || 0}
-                      </span>
-                      <button
-                        onClick={() => handleUpdateSoloField('initiativeReaction', 1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-white hover:text-black text-white rounded font-bold"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Threat Detection */}
-                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
-                    <div>
-                      <div className="text-white font-bold">Threat Detection (+1 Percep)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1 Perception</div>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => handleUpdateSoloField('threatDetection', -1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
-                      >
-                        -
-                      </button>
-                      <span className="font-bold text-[#c084fc] w-4 text-center">
-                        {activeChar?.soloAllocation?.threatDetection || 0}
-                      </span>
-                      <button
-                        onClick={() => handleUpdateSoloField('threatDetection', 1)}
-                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#c084fc] hover:text-black text-white rounded font-bold"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Fumble Recovery */}
-                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
-                    <div>
-                      <div className="text-white font-bold">Fumble Recovery (Ignora 1)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 4 pts (Sin pifias críticas)</div>
-                    </div>
-                    <button
-                      onClick={() => handleUpdateSoloField('fumbleRecovery', !activeChar?.soloAllocation?.fumbleRecovery)}
-                      className={`px-2 py-1 rounded text-[10px] font-bold transition-all ${
-                        activeChar?.soloAllocation?.fumbleRecovery
-                          ? 'bg-[#10b981] text-black font-bold'
-                          : 'bg-[#1f2434] text-[#64748b] hover:text-white'
-                      }`}
-                    >
-                      {activeChar?.soloAllocation?.fumbleRecovery ? 'ACTIVO' : 'INACTIVO'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* SUBSECCIÓN 2: 15 QUICKHACKS OFICIALES 2077 */}
-              <div className="bg-[#0e1017] p-3 rounded border border-[#22283a] space-y-3">
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1c2233]">
-                  <div className="flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-[#38bdf8]" />
-                    <span className="font-tech text-xs font-bold text-white uppercase">
-                      NETRUNNER // QUICKHACKS 2077 (15 PROGRAMAS A 50M)
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-mono-code text-[#38bdf8]">
-                    Tirada: 1d10 + Rol ({activeChar?.roleRank || 4}) vs DV
-                  </span>
-                </div>
-
-                {/* Filtro y Búsqueda de Quickhacks */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <input
-                    type="text"
-                    placeholder="Buscar Quickhack (Overheat, Cyberware Malfunction...)"
-                    value={quickhackSearch}
-                    onChange={(e) => setQuickhackSearch(e.target.value)}
-                    className="bg-[#0b0d14] border border-[#262c3e] text-white text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#38bdf8] flex-1 min-w-[150px] font-mono-code"
-                  />
-                  <div className="flex gap-1 text-[10px] font-mono-code font-bold">
-                    {(['all', 'Simple', 'Standard', 'Difficult', 'Advanced'] as const).map((tier) => (
-                      <button
-                        key={tier}
-                        onClick={() => setQuickhackTierFilter(tier)}
-                        className={`px-1.5 py-0.5 rounded transition-colors ${
-                          quickhackTierFilter === tier
-                            ? 'bg-[#38bdf8] text-black'
-                            : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
-                        }`}
-                      >
-                        {tier === 'all' ? 'TODOS' : tier}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Lista de Quickhacks */}
-                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
-                  {QUICKHACKS_2077_CATALOG.filter((qh) => {
-                    const matchTier = quickhackTierFilter === 'all' || qh.tier === quickhackTierFilter;
-                    const matchSearch =
-                      !quickhackSearch.trim() ||
-                      qh.name.toLowerCase().includes(quickhackSearch.toLowerCase()) ||
-                      qh.effect.toLowerCase().includes(quickhackSearch.toLowerCase());
-                    return matchTier && matchSearch;
-                  }).map((qh) => (
-                    <div
-                      key={qh.id}
-                      className="bg-[#121520] p-2 rounded border border-[#1f2637] hover:border-[#38bdf8]/50 transition-colors space-y-1"
-                    >
-                      <div className="flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2">
-                          <span className="font-tech font-bold text-white">{qh.name}</span>
-                          <span className="text-[9px] font-mono-code px-1 py-0.2 rounded bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/30">
-                            {qh.tier}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-[10px] font-mono-code">
-                          <span className="text-[#38bdf8] font-bold">RAM: {qh.ramCost}</span>
-                          <span className="text-[#f59e0b] font-bold bg-[#1a1924] px-1 rounded border border-[#2b2738]">
-                            DV {qh.dv}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="text-[10px] font-sans text-[#94a3b8] leading-tight">
-                        {qh.effect}
-                      </div>
-
-                      {qh.damage && (
-                        <div className="text-[10px] font-mono-code text-[#10b981] font-bold">
-                          Daño: {qh.damage}
-                        </div>
-                      )}
-
-                      <div className="flex gap-1.5 pt-1">
-                        <button
-                          onClick={() => handleLaunchQuickhack(qh)}
-                          className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d]"
-                        >
-                          <Zap className="w-3 h-3" /> LANZAR QUICKHACK (1d10 + Rol vs DV {qh.dv})
-                        </button>
-                        {qh.damage && (
-                          <button
-                            onClick={() => handleQuickhackDamage(qh)}
-                            className="py-1 px-2 bg-[#291b22] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#441f28]"
-                            title="Tirar daño del Quickhack"
-                          >
-                            <Dices className="w-3 h-3" /> DAÑO
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* =======================================================
-            CONSOLA DE TELEMETRÍA (LOG DE TIRADAS)
-        ======================================================= */}
-        <div className="chamfer-card p-4 bg-[#121319] border border-[#232736]">
-          <div className="flex items-center justify-between pb-2 mb-3 border-b border-[#1f2230]">
-            <div className="flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-[#38bdf8]" />
-              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase">
-                CONSOLA DE TELEMETRÍA (LOG DE TIRADAS)
-              </span>
-            </div>
-            {rollHistory.length > 0 && (
-              <button
-                onClick={clearRollHistory}
-                className="text-[10px] font-mono-code text-[#64748b] hover:text-[#dc2626] transition-colors"
-              >
-                LIMPIAR
-              </button>
-            )}
-          </div>
-
-          <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
-            {rollHistory.length === 0 ? (
-              <div className="text-center py-8 text-[#64748b] font-mono-code text-xs">
-                Sin tiradas registradas. Selecciona una distancia y pulsa Atacar o Tirar Daño.
-              </div>
-            ) : (
-              rollHistory.map((entry) => (
-                <div
-                  key={entry.id}
-                  className={`p-2.5 rounded-xs border transition-all ${
-                    entry.needsExplosionClick
-                      ? 'bg-[#2b181b] border-[#dc2626] shadow-md shadow-[#dc2626]/20'
-                      : entry.type === 'attack'
-                        ? entry.isHit
-                          ? 'bg-[#141822] border-[#1d2d3e]'
-                          : 'bg-[#191418] border-[#301c24]'
-                        : 'bg-[#161724] border-[#262840]'
-                  }`}
-                >
-                  {/* Banner Explosivo Diferido */}
-                  {entry.needsExplosionClick && (
-                    <div className="mb-2 pb-1.5 border-b border-[#dc2626]/40 text-center animate-pulse">
-                      {entry.explosionType === 'crit_success' ? (
-                        <div className="bg-[#10b981]/20 border border-[#10b981] p-1.5 rounded-xs text-[#10b981] font-tech font-bold text-xs">
-                          <span className="flex items-center justify-center gap-1">
-                            <Zap className="w-3.5 h-3.5" /> ¡10 NATURAL! DADO EXPLOSIVO
-                          </span>
-                          <button
-                            onClick={() => triggerExplosionClick(entry.id)}
-                            className="mt-1 w-full py-1 bg-[#10b981] hover:bg-[#059669] text-black font-tech font-bold tracking-wider rounded text-xs chamfer-btn transition-all"
-                          >
-                            🎲 APRETAR PARA TIRAR 1d10 CRÍTICO
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="bg-[#dc2626]/20 border border-[#dc2626] p-1.5 rounded-xs text-[#dc2626] font-tech font-bold text-xs">
-                          ⚠️ ¡1 NATURAL! PIFIA CRÍTICA
-                          <button
-                            onClick={() => triggerExplosionClick(entry.id)}
-                            className="mt-1 w-full py-1 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold tracking-wider rounded text-xs chamfer-btn transition-all"
-                          >
-                            🎲 APRETAR PARA TIRAR 1d10 DE PIFIA
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Ataque */}
-                  {entry.type === 'attack' && (
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-tech text-xs font-bold text-white truncate max-w-[200px]">
-                          {entry.weaponName} {entry.isAutofire ? '[AUTOFIRE]' : ''}
-                        </span>
-                        <span className={`px-1.5 py-0.2 rounded-2xs text-[9px] font-mono-code font-bold ${
-                          entry.isHit 
-                            ? 'bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/30' 
-                            : 'bg-[#dc2626]/20 text-[#dc2626] border border-[#dc2626]/30'
-                        }`}>
-                          {entry.isHit ? `IMPACTO (DV ${entry.targetDv})` : `FALLO (DV ${entry.targetDv})`}
-                        </span>
-                      </div>
-
-                      <div className="text-[9px] font-mono-code text-[#38bdf8] mb-1">
-                        Distancia: {entry.distanceLabel}
-                      </div>
-
-                      <div className="text-[11px] font-mono-code text-[#94a3b8] bg-[#0e1017] p-1.5 rounded border border-[#1c2232] space-y-0.5">
-                        <div>
-                          Base: {entry.statVal ?? 0}+{entry.skillVal ?? 0}
-                          {(entry.penaltiesTotal ?? 0) > 0 && <span className="text-[#dc2626]"> -{entry.penaltiesTotal}</span>}
-                          {(entry.luckSpent ?? 0) > 0 && <span className="text-[#f59e0b]"> +{entry.luckSpent}L</span>}
-                          {' '}+ 1d10({entry.d10})
-                          {entry.critDie !== null && entry.critDie !== undefined && (
-                            <span className={entry.explosionType === 'crit_success' ? 'text-[#10b981] font-bold' : 'text-[#dc2626] font-bold'}>
-                              {' '}[{entry.explosionType === 'crit_success' ? `+${entry.critDie}` : `-${entry.critDie}`}]
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex justify-between items-baseline pt-0.5 border-t border-[#1c2232]">
-                          <span className="text-[#64748b]">Margen: {entry.margin !== undefined ? (entry.margin >= 0 ? `+${entry.margin}` : `${entry.margin}`) : 'N/A'}</span>
-                          <span className="text-white font-bold text-xs">TOTAL: {entry.totalAttack}</span>
-                        </div>
-                      </div>
-
-                      {entry.aimedShotTarget && entry.aimedShotTarget !== 'none' && (
-                        <div className="mt-1 p-1 bg-[#2b1016] rounded border border-[#ef4444]/40 flex flex-col gap-0.5 text-[10px] font-mono-code">
-                          <div className="flex items-center justify-between text-[#f87171] font-bold">
-                            <span className="flex items-center gap-1">
-                              <Crosshair className="w-3 h-3" />
-                              {entry.aimedShotLabel || 'DISPARO APUNTADO'} (-8)
-                            </span>
-                            <span className="text-[9px] uppercase tracking-wider text-rose-300">ROF 1</span>
-                          </div>
-                          {entry.aimedShotEffectSummary && (
-                            <div className="text-[9px] text-slate-300">
-                              {entry.aimedShotEffectSummary}
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {entry.isAutofire && entry.isHit && (
-                        <div className="mt-1 p-1 bg-[#201d14] rounded border border-[#3b341d] flex items-center justify-between text-[11px] font-mono-code text-[#f59e0b]">
-                          <span>MULTIPLICADOR:</span>
-                          <span className="font-bold">×{entry.autofireMultiplier} (2d6)</span>
-                        </div>
-                      )}
-
-                      {!entry.needsExplosionClick && !entry.damageRolled && (
-                        <button
-                          onClick={() => {
-                            markAttackDamageRolled(entry.id);
-                            const dmg = createDamageRoll(
-                              entry.weaponName,
-                              entry.damageFormula || '3d6',
-                              entry.isAutofire,
-                              entry.autofireMultiplier,
-                              entry.weaponInstanceId,
-                              entry.aimedShotTarget || 'none'
-                            );
-                            addRollEntry(dmg);
-                          }}
-                          className="mt-1.5 w-full py-1 bg-[#22293c] hover:bg-[#38bdf8] hover:text-black border border-[#303c58] text-[#38bdf8] font-tech font-bold text-[11px] tracking-wider rounded-xs transition-all flex items-center justify-center gap-1"
-                        >
-                          <Dices className="w-3 h-3" />
-                          <span>TIRAR DAÑO ({entry.isAutofire ? `2d6 × ${entry.autofireMultiplier || 1}` : entry.damageFormula})</span>
-                        </button>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Daño */}
-                  {entry.type === 'damage' && (
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-tech text-xs font-bold text-[#f59e0b]">
-                          💥 DAÑO: {entry.weaponName}
-                        </span>
-                        <span className="font-tech text-base font-bold text-white leading-none">
-                          {entry.finalDamageTotal} PTS
-                        </span>
-                      </div>
-
-                      {entry.aimedShotTarget && entry.aimedShotTarget !== 'none' && (
-                        <div className="mb-1.5 p-1 bg-[#2b1016] rounded border border-[#ef4444]/40 flex items-center justify-between text-[10px] font-mono-code text-[#f87171]">
-                          <span className="flex items-center gap-1 font-bold">
-                            <Crosshair className="w-3 h-3" />
-                            {entry.aimedShotLabel || 'DISPARO APUNTADO'}
-                          </span>
-                          {entry.aimedShotTarget === 'head' && (
-                            <span className="text-amber-400 font-bold">×2 DAÑO PENETRANTE</span>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex flex-wrap items-center gap-1 my-1.5">
-                        {entry.diceResults?.map((die, idx) => (
-                          <div
-                            key={idx}
-                            className={`w-6 h-6 rounded-xs flex items-center justify-center font-mono-code font-bold text-xs border ${
-                              die === 6
-                                ? 'bg-[#dc2626] border-[#f87171] text-white shadow-sm shadow-[#dc2626]/50'
-                                : 'bg-[#181a26] border-[#292e42] text-[#cbd5e1]'
-                            }`}
-                          >
-                            {die}
-                          </div>
-                        ))}
-                        {entry.critBonusDamage ? (
-                          <span className="text-[10px] font-mono-code text-[#dc2626] font-bold">
-                            +5 CRÍTICO
-                          </span>
-                        ) : null}
-                      </div>
-
-                      {entry.isCriticalInjuryTrigger && (
-                        <div className="mt-1.5 p-1.5 bg-[#2a141a] border border-[#dc2626] rounded-xs">
-                          <div className="font-tech text-[11px] font-bold text-[#dc2626] flex items-center gap-1 mb-1">
-                            <Skull className="w-3 h-3" /> ¡CRÍTICO EN DAÑO! (DOBLE 6+) → +5 DAÑO DIRECTO
-                          </div>
-                          <div className="grid grid-cols-2 gap-1">
-                            <button
-                              onClick={() => inflictRandomInjury('head')}
-                              className="py-0.5 px-1 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-mono-code text-[9px] font-bold rounded-xs transition-all text-center"
-                            >
-                              + GIRAR CABEZA
-                            </button>
-                            <button
-                              onClick={() => inflictRandomInjury('body')}
-                              className="py-0.5 px-1 bg-[#f59e0b] hover:bg-[#d97706] text-black font-mono-code text-[9px] font-bold rounded-xs transition-all text-center"
-                            >
-                              + GIRAR CUERPO
-                            </button>
-                          </div>
-                        </div>
-                      )}
-
-                      {entry.aimedShotTarget === 'head' && (
-                        <HeadshotCalculator entry={entry} />
-                      )}
-                    </div>
-                  )}
-
-                  <div className="text-[8px] font-mono-code text-[#64748b] mt-1 text-right">
-                    {new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
-
-      </div>
-
-      {/* =========================================================
-          COLUMNA DERECHA (4 COLS): RACK TÁCTICO DE FORMAS DE ATACAR & ÍTEMS ACTIVOS
-      ========================================================= */}
-      <div className="xl:col-span-4 space-y-4">
-        
-        <div className="chamfer-card p-4 bg-[#121319] border border-[#232736]">
-          
-          {/* Header del Rack */}
-          <div className="flex items-center justify-between pb-2 mb-3 border-b border-[#1f2230]">
-            <div className="flex items-center gap-2">
-              <Swords className="w-4 h-4 text-[#38bdf8]" />
-              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase">
-                RACK TÁCTICO & ACCIONES
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-[10px] font-mono-code text-[#64748b]">
-              <span>💣 {totalGrenadeCharges}</span>
-              <span>💉 {totalDrugCharges}</span>
-            </div>
-          </div>
-
-          {/* Filtros Rápidos */}
+            
+                  {/* Filtros Rápidos */}
           <div className="flex flex-wrap gap-1 mb-3">
             {[
               { id: 'all', label: 'TODO' },
@@ -4013,11 +3870,671 @@ export const CombatHudView: React.FC = () => {
 
           </div>
 
+          </CollapsibleHudCard>
+        );
+
+      case 'martialArts':
+        return (
+          <CollapsibleHudCard
+            key="martialArts"
+            id="martialArts"
+            title="CYBERFISTS OF FURY // 27 ARTES MARCIALES & 54 MOVIMIENTOS"
+            icon={<Flame className="w-4 h-4 text-amber-400" />}
+            summary={`Estilo: ${MARTIAL_ARTS_FORMS.find(f => f.id === selectedMartialFormId)?.name || 'Aikido'}`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('martialArts')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveRightPanel('martialArts', 'up')}
+            onMoveDown={() => moveRightPanel('martialArts', 'down')}
+            onDragStart={() => handleDragStart('right', 'martialArts')}
+            onDragOver={(e) => handleDragOver(e, 'martialArts')}
+            onDrop={() => handleDrop('right', 'martialArts')}
+            isDragOver={dragOverItem === 'martialArts'}
+          >
+            
+                    <div className="mt-3 pt-3 border-t border-[#1f2230] space-y-3">
+              {/* Barra de Filtro & Búsqueda */}
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Buscar estilo o combo..."
+                  value={martialArtSearch}
+                  onChange={(e) => setMartialArtSearch(e.target.value)}
+                  className="bg-[#0b0d14] border border-[#262c3e] text-white text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#10b981] flex-1 min-w-[150px] font-mono-code"
+                />
+                <div className="flex gap-1 text-[10px] font-mono-code font-bold">
+                  {(['all', 'core', 'interface_red'] as const).map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setMartialArtCategoryFilter(cat)}
+                      className={`px-2 py-1 rounded transition-colors ${
+                        martialArtCategoryFilter === cat
+                          ? 'bg-[#10b981] text-black'
+                          : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
+                      }`}
+                    >
+                      {cat === 'all' ? 'TODAS (27)' : cat === 'core' ? 'CORE (4)' : 'CYBERFISTS (23)'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Selector de Estilo */}
+              {(() => {
+                const filteredForms = MARTIAL_ARTS_FORMS.filter((f) => {
+                  const matchCat =
+                    martialArtCategoryFilter === 'all' ? true : f.sourceBook === martialArtCategoryFilter;
+                  const matchSearch =
+                    !martialArtSearch.trim() ||
+                    f.name.toLowerCase().includes(martialArtSearch.toLowerCase()) ||
+                    f.moves.some(
+                      (m) =>
+                        m.name.toLowerCase().includes(martialArtSearch.toLowerCase()) ||
+                        m.effectDescription.toLowerCase().includes(martialArtSearch.toLowerCase())
+                    );
+                  return matchCat && matchSearch;
+                });
+
+                const activeForm =
+                  filteredForms.find((f) => f.id === selectedMartialFormId) ||
+                  filteredForms[0] ||
+                  MARTIAL_ARTS_FORMS[0];
+                const activeRank =
+                  activeChar?.knownMartialArts?.[activeForm.id] ?? (activeChar?.skills?.martialArts ?? 0);
+
+                return (
+                  <div className="space-y-3">
+                    {/* Selector de Formas */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] font-mono-code text-[#94a3b8]">Estilo Activo:</span>
+                      <select
+                        value={activeForm.id}
+                        onChange={(e) => setSelectedMartialFormId(e.target.value)}
+                        className="bg-[#0b0d14] border border-[#262c3e] text-[#10b981] font-tech font-bold text-xs rounded px-2 py-1 focus:outline-none focus:border-[#10b981] flex-1 cursor-pointer"
+                      >
+                        {filteredForms.map((f) => {
+                          const userRank =
+                            activeChar?.knownMartialArts?.[f.id] ?? (activeChar?.skills?.martialArts ?? 0);
+                          return (
+                            <option key={f.id} value={f.id}>
+                              {f.name} {userRank > 0 ? `(Rango ${userRank})` : ''} - {f.badge}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+
+                    {/* Ficha del Estilo Seleccionado */}
+                    <div className="bg-[#0c0e14] p-3 rounded border border-[#1f2637] space-y-2.5">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1b2130]">
+                        <div>
+                          <div className="font-tech text-sm font-bold text-white flex items-center gap-2">
+                            <span>{activeForm.name}</span>
+                            <span className="text-[9px] font-mono-code bg-[#10b981]/20 text-[#10b981] px-1.5 py-0.5 rounded border border-[#10b981]/40">
+                              {activeForm.badge}
+                            </span>
+                          </div>
+                          <div className="text-[10px] font-mono-code text-[#64748b] mt-0.5">
+                            Stats Clave: <strong className="text-[#94a3b8]">{activeForm.keyStats.join(', ')}</strong> • Rol: {activeForm.tacticalRole}
+                          </div>
+                        </div>
+
+                        {/* Rango del Personaje en el Estilo */}
+                        <div className="flex items-center gap-1.5 bg-[#141724] border border-[#252c40] px-2 py-1 rounded">
+                          <span className="text-[10px] font-mono-code text-[#94a3b8]">Rango Estilo:</span>
+                          <button
+                            onClick={() => updateMartialArtRank(activeForm.id, Math.max(0, activeRank - 1))}
+                            className="w-5 h-5 flex items-center justify-center bg-[#1f2334] hover:bg-[#dc2626] text-white rounded text-xs font-bold"
+                            title="Disminuir rango"
+                          >
+                            -
+                          </button>
+                          <span className="font-mono-code text-xs font-bold text-[#10b981] px-1">
+                            {activeRank}
+                          </span>
+                          <button
+                            onClick={() => updateMartialArtRank(activeForm.id, activeRank + 1)}
+                            className="w-5 h-5 flex items-center justify-center bg-[#1f2334] hover:bg-[#10b981] text-white rounded text-xs font-bold"
+                            title="Aumentar rango"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="text-[11px] font-sans text-[#cbd5e1] leading-relaxed italic bg-[#10131d] p-2 rounded border border-[#1c2233]">
+                        "{activeForm.originAndFlavor}"
+                      </div>
+
+                      {/* Botones de Ataque y Daño Básico del Estilo */}
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <button
+                          onClick={() => handleCyberfistsFormAttack(activeForm)}
+                          className="py-1.5 px-2 bg-[#10b981] hover:bg-[#059669] text-black font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                        >
+                          <Target className="w-3.5 h-3.5" />
+                          <span>ATACAR ({activeForm.name.split(' ')[0]})</span>
+                        </button>
+                        <button
+                          onClick={() => handleCyberfistsFormDamage(activeForm)}
+                          className="py-1.5 px-2 bg-[#181f2f] hover:bg-[#232d42] text-[#10b981] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1.5 border border-[#1f3b2d]"
+                        >
+                          <Dices className="w-3.5 h-3.5" />
+                          <span>DAÑO ({unarmedDmg})</span>
+                        </button>
+                      </div>
+
+                      {/* 2 Movimientos Especiales del Estilo */}
+                      <div className="pt-2 border-t border-[#1b2130] space-y-2">
+                        <div className="text-[10px] font-mono-code uppercase font-bold text-[#f59e0b] tracking-wider flex items-center gap-1">
+                          <Sparkles className="w-3 h-3" />
+                          MOVIMIENTOS ESPECIALES & COMBOS ({activeForm.moves.length})
+                        </div>
+
+                        <div className="space-y-2">
+                          {activeForm.moves.map((move) => (
+                            <div
+                              key={move.id}
+                              className="bg-[#121622] p-2.5 rounded border border-[#20273a] hover:border-[#10b981]/50 transition-colors space-y-1.5"
+                            >
+                              <div className="flex flex-wrap items-center justify-between gap-1">
+                                <div className="font-tech text-xs font-bold text-white flex items-center gap-1.5">
+                                  <span>{move.name}</span>
+                                  {move.criticalInjuryApplied && (
+                                    <span className="text-[9px] font-mono-code bg-[#dc2626]/20 text-[#f87171] px-1 py-0.2 rounded border border-[#dc2626]/40">
+                                      {move.criticalInjuryApplied}
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-[10px] font-mono-code font-bold text-[#38bdf8] bg-[#0c121e] px-1.5 py-0.5 rounded border border-[#1b2b40]">
+                                  DV {move.resolutionDv}
+                                </div>
+                              </div>
+
+                              <div className="text-[10px] font-mono-code text-[#94a3b8]">
+                                <strong className="text-[#f59e0b]">Requisito:</strong> {move.requirements}
+                              </div>
+
+                              <div className="text-[11px] font-sans text-[#cbd5e1] leading-relaxed">
+                                {move.effectDescription}
+                              </div>
+
+                              {move.damageBonusOrFormula && (
+                                <div className="text-[10px] font-mono-code text-[#10b981] font-bold">
+                                  Bono / Daño: {move.damageBonusOrFormula}
+                                </div>
+                              )}
+
+                              <div className="flex gap-2 pt-1">
+                                <button
+                                  onClick={() => handleExecuteMartialMove(activeForm, move)}
+                                  className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#10b981] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d]"
+                                >
+                                  <Target className="w-3 h-3" /> EJECUTAR COMBO (1d10 + DEX + {activeRank} vs DV {move.resolutionDv})
+                                </button>
+                                {move.damageBonusOrFormula && move.damageBonusOrFormula.includes('d') && (
+                                  <button
+                                    onClick={() => handleRollComboDamage(move)}
+                                    className="py-1 px-2 bg-[#291b22] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#441f28]"
+                                    title="Tirar dado de daño del combo"
+                                  >
+                                    <Dices className="w-3 h-3" /> TIRAR DAÑO
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+
+          </CollapsibleHudCard>
+        );
+
+      case 'roleQuickhacks':
+        return (
+          <CollapsibleHudCard
+            key="roleQuickhacks"
+            id="roleQuickhacks"
+            title="ROL EN COMBATE // SOLO COMBAT AWARENESS & QUICKHACKS 2077"
+            icon={<Zap className="w-4 h-4 text-emerald-400" />}
+            summary={`${activeChar?.role?.toUpperCase() || 'SOLO'} R${activeChar?.roleRank || 4} | Quickhacks 2077`}
+            isCollapsed={isCollapsed}
+            onToggleCollapse={() => toggleBoxCollapse('roleQuickhacks')}
+            canMoveUp={canMoveUp}
+            canMoveDown={canMoveDown}
+            onMoveUp={() => moveRightPanel('roleQuickhacks', 'up')}
+            onMoveDown={() => moveRightPanel('roleQuickhacks', 'down')}
+            onDragStart={() => handleDragStart('right', 'roleQuickhacks')}
+            onDragOver={(e) => handleDragOver(e, 'roleQuickhacks')}
+            onDrop={() => handleDrop('right', 'roleQuickhacks')}
+            isDragOver={dragOverItem === 'roleQuickhacks'}
+            extraHeaderActions={
+              <span className="text-[10px] font-mono-code text-[#38bdf8] bg-[#38bdf8]/10 px-2 py-0.5 rounded border border-[#38bdf8]/30">
+                {activeChar?.role?.toUpperCase() || 'SOLO'} R{activeChar?.roleRank || 4}
+              </span>
+            }
+          >
+            
+                    <div className="mt-3 pt-3 border-t border-[#1f2230] space-y-4">
+              {/* SUBSECCIÓN 1: SOLO COMBAT AWARENESS */}
+              <div className="bg-[#0e1017] p-3 rounded border border-[#22283a] space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1c2233]">
+                  <div className="flex items-center gap-2">
+                    <Crosshair className="w-4 h-4 text-[#dc2626]" />
+                    <span className="font-tech text-xs font-bold text-white uppercase">
+                      SOLO // COMBAT AWARENESS (Puntos de Rol: {activeChar?.roleRank || 4})
+                    </span>
+                  </div>
+                  {activeChar?.soloAllocation?.precisionAttack ? (
+                    <span className="text-[10px] font-mono-code bg-[#10b981]/20 text-[#10b981] px-2 py-0.5 rounded border border-[#10b981]/40 font-bold animate-pulse">
+                      ¡Precision Attack Activo: +{activeChar.soloAllocation.precisionAttack} a Ataques!
+                    </span>
+                  ) : null}
+                </div>
+
+                {/* Controles de puntos de Solo */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono-code">
+                  {/* Precision Attack */}
+                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
+                    <div>
+                      <div className="text-white font-bold">Precision Attack (+1 Atk)</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 3 pts por +1</div>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => handleUpdateSoloField('precisionAttack', -1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="font-bold text-[#10b981] w-4 text-center">
+                        {activeChar?.soloAllocation?.precisionAttack || 0}
+                      </span>
+                      <button
+                        onClick={() => handleUpdateSoloField('precisionAttack', 1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#10b981] text-white rounded font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Spot Weakness */}
+                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
+                    <div>
+                      <div className="text-white font-bold">Spot Weakness (+1 Daño)</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1 daño primer golpe</div>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => handleUpdateSoloField('spotWeakness', -1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="font-bold text-[#f59e0b] w-4 text-center">
+                        {activeChar?.soloAllocation?.spotWeakness || 0}
+                      </span>
+                      <button
+                        onClick={() => handleUpdateSoloField('spotWeakness', 1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#f59e0b] hover:text-black text-white rounded font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Damage Deflection */}
+                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
+                    <div>
+                      <div className="text-white font-bold">Damage Deflection (-1 Dmg)</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 2 pts por -1 daño primer impacto</div>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => handleUpdateSoloField('damageDeflection', -1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="font-bold text-[#38bdf8] w-4 text-center">
+                        {activeChar?.soloAllocation?.damageDeflection || 0}
+                      </span>
+                      <button
+                        onClick={() => handleUpdateSoloField('damageDeflection', 1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#38bdf8] hover:text-black text-white rounded font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Initiative Reaction */}
+                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
+                    <div>
+                      <div className="text-white font-bold">Initiative Reaction (+1 Init)</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1 iniciativa</div>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => handleUpdateSoloField('initiativeReaction', -1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="font-bold text-white w-4 text-center">
+                        {activeChar?.soloAllocation?.initiativeReaction || 0}
+                      </span>
+                      <button
+                        onClick={() => handleUpdateSoloField('initiativeReaction', 1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-white hover:text-black text-white rounded font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Threat Detection */}
+                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
+                    <div>
+                      <div className="text-white font-bold">Threat Detection (+1 Percep)</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 1 pt por +1 Perception</div>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => handleUpdateSoloField('threatDetection', -1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#dc2626] text-white rounded font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="font-bold text-[#c084fc] w-4 text-center">
+                        {activeChar?.soloAllocation?.threatDetection || 0}
+                      </span>
+                      <button
+                        onClick={() => handleUpdateSoloField('threatDetection', 1)}
+                        className="w-5 h-5 flex items-center justify-center bg-[#1f2434] hover:bg-[#c084fc] hover:text-black text-white rounded font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Fumble Recovery */}
+                  <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
+                    <div>
+                      <div className="text-white font-bold">Fumble Recovery (Ignora 1)</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 4 pts (Sin pifias críticas)</div>
+                    </div>
+                    <button
+                      onClick={() => handleUpdateSoloField('fumbleRecovery', !activeChar?.soloAllocation?.fumbleRecovery)}
+                      className={`px-2 py-1 rounded text-[10px] font-bold transition-all ${
+                        activeChar?.soloAllocation?.fumbleRecovery
+                          ? 'bg-[#10b981] text-black font-bold'
+                          : 'bg-[#1f2434] text-[#64748b] hover:text-white'
+                      }`}
+                    >
+                      {activeChar?.soloAllocation?.fumbleRecovery ? 'ACTIVO' : 'INACTIVO'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* SUBSECCIÓN 2: 15 QUICKHACKS OFICIALES 2077 */}
+              <div className="bg-[#0e1017] p-3 rounded border border-[#22283a] space-y-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#1c2233]">
+                  <div className="flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-[#38bdf8]" />
+                    <span className="font-tech text-xs font-bold text-white uppercase">
+                      NETRUNNER // QUICKHACKS 2077 (15 PROGRAMAS A 50M)
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono-code text-[#38bdf8]">
+                    Tirada: 1d10 + Rol ({activeChar?.roleRank || 4}) vs DV
+                  </span>
+                </div>
+
+                {/* Filtro y Búsqueda de Quickhacks */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <input
+                    type="text"
+                    placeholder="Buscar Quickhack (Overheat, Cyberware Malfunction...)"
+                    value={quickhackSearch}
+                    onChange={(e) => setQuickhackSearch(e.target.value)}
+                    className="bg-[#0b0d14] border border-[#262c3e] text-white text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#38bdf8] flex-1 min-w-[150px] font-mono-code"
+                  />
+                  <div className="flex gap-1 text-[10px] font-mono-code font-bold">
+                    {(['all', 'Simple', 'Standard', 'Difficult', 'Advanced'] as const).map((tier) => (
+                      <button
+                        key={tier}
+                        onClick={() => setQuickhackTierFilter(tier)}
+                        className={`px-1.5 py-0.5 rounded transition-colors ${
+                          quickhackTierFilter === tier
+                            ? 'bg-[#38bdf8] text-black'
+                            : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
+                        }`}
+                      >
+                        {tier === 'all' ? 'TODOS' : tier}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Lista de Quickhacks */}
+                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                  {QUICKHACKS_2077_CATALOG.filter((qh) => {
+                    const matchTier = quickhackTierFilter === 'all' || qh.tier === quickhackTierFilter;
+                    const matchSearch =
+                      !quickhackSearch.trim() ||
+                      qh.name.toLowerCase().includes(quickhackSearch.toLowerCase()) ||
+                      qh.effect.toLowerCase().includes(quickhackSearch.toLowerCase());
+                    return matchTier && matchSearch;
+                  }).map((qh) => (
+                    <div
+                      key={qh.id}
+                      className="bg-[#121520] p-2 rounded border border-[#1f2637] hover:border-[#38bdf8]/50 transition-colors space-y-1"
+                    >
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="font-tech font-bold text-white">{qh.name}</span>
+                          <span className="text-[9px] font-mono-code px-1 py-0.2 rounded bg-[#38bdf8]/10 text-[#38bdf8] border border-[#38bdf8]/30">
+                            {qh.tier}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[10px] font-mono-code">
+                          <span className="text-[#38bdf8] font-bold">RAM: {qh.ramCost}</span>
+                          <span className="text-[#f59e0b] font-bold bg-[#1a1924] px-1 rounded border border-[#2b2738]">
+                            DV {qh.dv}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="text-[10px] font-sans text-[#94a3b8] leading-tight">
+                        {qh.effect}
+                      </div>
+
+                      {qh.damage && (
+                        <div className="text-[10px] font-mono-code text-[#10b981] font-bold">
+                          Daño: {qh.damage}
+                        </div>
+                      )}
+
+                      <div className="flex gap-1.5 pt-1">
+                        <button
+                          onClick={() => handleLaunchQuickhack(qh)}
+                          className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d]"
+                        >
+                          <Zap className="w-3 h-3" /> LANZAR QUICKHACK (1d10 + Rol vs DV {qh.dv})
+                        </button>
+                        {qh.damage && (
+                          <button
+                            onClick={() => handleQuickhackDamage(qh)}
+                            className="py-1 px-2 bg-[#291b22] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#441f28]"
+                            title="Tirar daño del Quickhack"
+                          >
+                            <Dices className="w-3 h-3" /> DAÑO
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </CollapsibleHudCard>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Barra Superior Táctica de Combate: Bestiario GM */}
+      <div className="chamfer-card p-2.5 bg-[#12141f] border border-[#242b3d] flex flex-wrap items-center justify-between gap-3 shadow-md">
+        <div className="flex items-center gap-2">
+          <Crosshair className="w-4 h-4 text-[#ef4444]" />
+          <span className="font-tech text-xs font-bold text-white uppercase tracking-wider">
+            SISTEMA DE COMBATE ACTIVO & ENCUENTROS
+          </span>
+          <span className="text-[10px] font-mono-code text-slate-400 hidden sm:inline">
+            • {activeChar?.handle || 'Sin Personaje Activo'}
+          </span>
         </div>
 
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              const oneshotTabBtn = document.querySelector('button:has(svg.lucide-train)') as HTMLButtonElement | null;
+              if (oneshotTabBtn) oneshotTabBtn.click();
+            }}
+            className="px-3 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm cursor-pointer bg-red-950/80 hover:bg-red-600 text-red-200 hover:text-white border border-red-700/80 shadow-md shadow-red-950/50"
+            title="Abrir Centro de Comando interactivo de Red Chrome Cargo"
+          >
+            <Train className="w-3.5 h-3.5 text-red-400" />
+            <span>🚆 RED CHROME CARGO // THE HAMMERHEAD</span>
+          </button>
+
+          {/* BOTONES GLOBALES DE COLAPSO Y REORDENAMIENTO */}
+          <button
+            type="button"
+            onClick={handleCollapseSecondary}
+            className="px-2.5 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-1.5 bg-[#171924] hover:bg-[#252a3b] text-slate-300 hover:text-white border border-[#2b334a] shadow-sm cursor-pointer"
+            title="Contraer paneles secundarios para vista táctica despejada"
+          >
+            <Minimize2 className="w-3.5 h-3.5 text-cyan-400" />
+            <span>🔼 Contraer Secundarias</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleExpandAll}
+            className="px-2.5 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-1.5 bg-[#171924] hover:bg-[#252a3b] text-slate-300 hover:text-white border border-[#2b334a] shadow-sm cursor-pointer"
+            title="Expandir todos los paneles del HUD de combate"
+          >
+            <Maximize2 className="w-3.5 h-3.5 text-emerald-400" />
+            <span>🔽 Expandir Todo</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleResetBoxOrder}
+            className="px-2.5 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-1.5 bg-[#171924] hover:bg-[#252a3b] text-slate-300 hover:text-white border border-[#2b334a] shadow-sm cursor-pointer"
+            title="Restablecer el orden por defecto de los paneles"
+          >
+            <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
+            <span>🔄 Restaurar Orden</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsBestiaryDrawerOpen((p) => !p)}
+            className={`px-3 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm cursor-pointer ${
+              isBestiaryDrawerOpen
+                ? 'bg-[#ef4444] text-white shadow-md shadow-[#ef4444]/30'
+                : 'bg-[#1e1728] hover:bg-[#c084fc] text-[#c084fc] hover:text-black border border-[#482d5e]'
+            }`}
+          >
+            <Skull className="w-3.5 h-3.5 text-amber-400" />
+            <span>👹 BESTIARIO & ENCUENTRO GM (44 ENEMIGOS)</span>
+            <span className="text-[10px] font-mono-code opacity-80">
+              {isBestiaryDrawerOpen ? '[ Plegar ]' : '[ Desplegar ]'}
+            </span>
+          </button>
+        </div>
       </div>
 
-    </div>
+      {/* Sección Desplegable del Bestiario */}
+      {isBestiaryDrawerOpen && (
+        <div className="chamfer-card p-4 bg-[#0a0c13] border-2 border-amber-500/50 shadow-2xl space-y-3 animate-fade-in">
+          <div className="flex items-center justify-between pb-2 border-b border-[#23293c]">
+            <div className="flex items-center gap-2">
+              <Skull className="w-5 h-5 text-amber-400" />
+              <h3 className="font-tech text-sm font-bold text-white uppercase tracking-wider">
+                PANEL INTEGRADO DE BESTIARIO & ENCUENTRO GM
+              </h3>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsBestiaryDrawerOpen(false)}
+              className="px-2.5 py-1 bg-[#1a1e2a] hover:bg-red-600 text-slate-300 hover:text-white font-mono-code text-xs rounded transition-colors flex items-center gap-1 cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Cerrar Bestiario</span>
+            </button>
+          </div>
+          <EnemiesCompendiumPanel />
+        </div>
+      )}
+
+
+      {/* GRID PRINCIPAL MODULAR Y REORDENABLE */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
+        {/* COLUMNA IZQUIERDA (4 COLS EN PANTALLAS XL) */}
+        <div className="xl:col-span-4 space-y-4">
+          {leftColumnOrder.map((panelId, idx) => renderLeftPanel(panelId, idx))}
+        </div>
+
+        {/* COLUMNA DERECHA / PRINCIPAL (8 COLS EN PANTALLAS XL) */}
+        <div className="xl:col-span-8 space-y-4">
+          {telemetryDockMode === 'split_sticky' ? (
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
+              <div className="xl:col-span-5 sticky top-3 space-y-4">
+                {renderRightPanel('telemetry', rightColumnOrder.indexOf('telemetry'))}
+              </div>
+              <div className="xl:col-span-7 space-y-4">
+                {rightColumnOrder
+                  .filter((id) => id !== 'telemetry')
+                  .map((panelId, idx) => renderRightPanel(panelId, idx))}
+              </div>
+            </div>
+          ) : telemetryDockMode === 'floating_pip' ? (
+            <div className="space-y-4">
+              {rightColumnOrder
+                .filter((id) => id !== 'telemetry')
+                .map((panelId, idx) => renderRightPanel(panelId, idx))}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {rightColumnOrder.map((panelId, idx) => renderRightPanel(panelId, idx))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* MODAL / PIP FLOTANTE PARA TELEMETRÍA SI ESTÁ EN MODO FLOATING_PIP */}
+      {telemetryDockMode === 'floating_pip' && (
+        <div className="fixed bottom-4 right-4 w-[460px] max-w-[calc(100vw-2rem)] z-50 shadow-2xl border-2 border-cyan-400/80 bg-[#0e1017]/95 backdrop-blur-md rounded-md overflow-hidden animate-fade-in">
+          {renderRightPanel('telemetry', 0, true)}
+        </div>
+      )}
     </div>
   );
 };

@@ -145,6 +145,11 @@ export const StreetLabView: React.FC = () => {
   const [expandedSkills, setExpandedSkills] = useState<Record<string, boolean>>({});
   const [allExpanded, setAllExpanded] = useState(false);
 
+  // Section collapse states for compact screen real estate
+  const [isStatsCollapsed, setIsStatsCollapsed] = useState(false);
+  const [isVitalsCollapsed, setIsVitalsCollapsed] = useState(false);
+  const [isSkillsCollapsed, setIsSkillsCollapsed] = useState(false);
+
   // Derived stats
   const bodyVal = activeChar?.stats?.BODY ?? 6;
   const willVal = activeChar?.stats?.WILL ?? 6;
@@ -516,111 +521,166 @@ export const StreetLabView: React.FC = () => {
       ========================================================= */}
       <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-2.5">
         
-        {/* Tira de 10 STATS */}
-        <div className="grid grid-cols-5 lg:grid-cols-10 gap-1.5">
-          {STAT_KEYS.map((stat, idx) => {
-            const val = activeChar?.stats?.[stat] ?? 6;
-            const penalty = getStatPenalty(stat);
-            const isRightSide = idx >= 5;
-
-            return (
-              <div
-                key={stat}
-                className="group/stat relative bg-[#151722] p-1.5 rounded border border-[#222636] text-center flex flex-col justify-between hover:border-[#38bdf8]/60 hover:z-[100] transition-all cursor-help"
-              >
-                {/* Tooltip táctico para principiantes hacia abajo interactivo */}
-                {STAT_TOOLTIPS[stat] && (
-                  <div
-                    className={`absolute top-full ${
-                      isRightSide ? 'right-0' : 'left-0'
-                    } pt-2 hidden group-hover/stat:block z-[110] w-64 text-left`}
-                  >
-                    <div className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code font-normal leading-relaxed p-2.5 rounded-xs border border-[#38bdf8]/60 shadow-xl shadow-black/90 relative">
-                      {/* Triángulo indicador arriba */}
-                      <div
-                        className={`w-2 h-2 bg-[#0b0e17] border-l border-t border-[#38bdf8]/60 rotate-45 absolute -top-1.5 ${
-                          isRightSide ? 'right-6' : 'left-6'
-                        }`}
-                      />
-                      <div className="font-tech font-bold text-[#38bdf8] uppercase text-xs mb-0.5">
-                        {stat} — {STAT_TOOLTIPS[stat].name}
-                      </div>
-                      <div className="text-[#cbd5e1] mb-1 font-sans">
-                        {STAT_TOOLTIPS[stat].shortSummary}
-                      </div>
-                      <div className="text-[#94a3b8] text-[9px] mb-1 leading-tight">
-                        {STAT_TOOLTIPS[stat].beginnerExplanation}
-                      </div>
-                      {STAT_TOOLTIPS[stat].mechanicalBreakpoints && STAT_TOOLTIPS[stat].mechanicalBreakpoints.length > 0 && (
-                        <div className="text-[9px] text-[#f59e0b] border-t border-[#1e293b] pt-1">
-                          {STAT_TOOLTIPS[stat].mechanicalBreakpoints[0]}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between text-[11px] font-tech text-[#94a3b8] px-0.5">
-                  <span className="font-bold text-white">{stat}</span>
-                  {penalty > 0 && (
-                    <span className="text-[#dc2626] font-mono-code text-[10px] font-bold">
-                      -{penalty}
-                    </span>
-                  )}
-                </div>
-
-                <div className="font-tech text-2xl font-bold text-[#dc2626] leading-none my-1">
-                  {val}
-                </div>
-
-                <div className="flex items-center justify-center gap-1 pt-1 border-t border-[#1e2230]">
-                  <button
-                    onClick={() => updateStat(stat, val - 1)}
-                    className="w-4 h-4 bg-[#202434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px]"
-                    title={`Reducir ${stat}`}
-                  >
-                    <Minus className="w-2.5 h-2.5" />
-                  </button>
-                  <button
-                    onClick={() => updateStat(stat, val + 1)}
-                    className="w-4 h-4 bg-[#202434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
-                    title={`Aumentar ${stat}`}
-                  >
-                    <Plus className="w-2.5 h-2.5" />
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+        {/* Cabecera / Toggle de los 10 STATS */}
+        <div className="flex items-center justify-between pb-1 border-b border-[#1f2230]">
+          <div 
+            onClick={() => setIsStatsCollapsed(prev => !prev)}
+            className="flex items-center gap-1.5 cursor-pointer select-none text-white hover:text-[#38bdf8] transition-colors"
+          >
+            {isStatsCollapsed ? (
+              <ChevronRight className="w-3.5 h-3.5 text-[#38bdf8]" />
+            ) : (
+              <ChevronDown className="w-3.5 h-3.5 text-[#38bdf8]" />
+            )}
+            <span className="font-tech text-xs font-bold uppercase tracking-wider">
+              ESTADÍSTICAS BÁSICAS (10 STATS)
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsStatsCollapsed(prev => !prev)}
+            className="text-[10px] font-mono-code text-[#94a3b8] hover:text-[#38bdf8] transition-colors cursor-pointer select-none"
+            title={isStatsCollapsed ? 'Desplegar panel de estadísticas' : 'Plegar panel de estadísticas'}
+          >
+            {isStatsCollapsed ? '[ ▸ Expandir STATS ]' : '[ ▾ Colapsar STATS ]'}
+          </button>
         </div>
 
+        {/* Tira de 10 STATS */}
+        {!isStatsCollapsed && (
+          <div className="grid grid-cols-5 lg:grid-cols-10 gap-1.5 animate-fade-in">
+            {STAT_KEYS.map((stat, idx) => {
+              const val = activeChar?.stats?.[stat] ?? 6;
+              const penalty = getStatPenalty(stat);
+              const isRightSide = idx >= 5;
+
+              return (
+                <div
+                  key={stat}
+                  className="group/stat relative bg-[#151722] p-1.5 rounded border border-[#222636] text-center flex flex-col justify-between hover:border-[#38bdf8]/60 hover:z-[100] transition-all cursor-help"
+                >
+                  {/* Tooltip táctico para principiantes hacia abajo interactivo */}
+                  {STAT_TOOLTIPS[stat] && (
+                    <div
+                      className={`absolute top-full ${
+                        isRightSide ? 'right-0' : 'left-0'
+                      } pt-2 hidden group-hover/stat:block z-[110] w-64 text-left`}
+                    >
+                      <div className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code font-normal leading-relaxed p-2.5 rounded-xs border border-[#38bdf8]/60 shadow-xl shadow-black/90 relative">
+                        {/* Triángulo indicador arriba */}
+                        <div
+                          className={`w-2 h-2 bg-[#0b0e17] border-l border-t border-[#38bdf8]/60 rotate-45 absolute -top-1.5 ${
+                            isRightSide ? 'right-6' : 'left-6'
+                          }`}
+                        />
+                        <div className="font-tech font-bold text-[#38bdf8] uppercase text-xs mb-0.5">
+                          {stat} — {STAT_TOOLTIPS[stat].name}
+                        </div>
+                        <div className="text-[#cbd5e1] mb-1 font-sans">
+                          {STAT_TOOLTIPS[stat].shortSummary}
+                        </div>
+                        <div className="text-[#94a3b8] text-[9px] mb-1 leading-tight">
+                          {STAT_TOOLTIPS[stat].beginnerExplanation}
+                        </div>
+                        {STAT_TOOLTIPS[stat].mechanicalBreakpoints && STAT_TOOLTIPS[stat].mechanicalBreakpoints.length > 0 && (
+                          <div className="text-[9px] text-[#f59e0b] border-t border-[#1e293b] pt-1">
+                            {STAT_TOOLTIPS[stat].mechanicalBreakpoints[0]}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between text-[11px] font-tech text-[#94a3b8] px-0.5">
+                    <span className="font-bold text-white">{stat}</span>
+                    {penalty > 0 && (
+                      <span className="text-[#dc2626] font-mono-code text-[10px] font-bold">
+                        -{penalty}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="font-tech text-2xl font-bold text-[#dc2626] leading-none my-1">
+                    {val}
+                  </div>
+
+                  <div className="flex items-center justify-center gap-1 pt-1 border-t border-[#1e2230]">
+                    <button
+                      onClick={() => updateStat(stat, val - 1)}
+                      className="w-4 h-4 bg-[#202434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px]"
+                      title={`Reducir ${stat}`}
+                    >
+                      <Minus className="w-2.5 h-2.5" />
+                    </button>
+                    <button
+                      onClick={() => updateStat(stat, val + 1)}
+                      className="w-4 h-4 bg-[#202434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
+                      title={`Aumentar ${stat}`}
+                    >
+                      <Plus className="w-2.5 h-2.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {/* Barra Fina de Estadísticas Derivadas */}
-        <div className="flex flex-wrap items-center justify-between gap-2 bg-[#171923] p-2 rounded border border-[#222636] text-xs font-mono-code">
-          <div className="flex items-center gap-1.5">
-            <Heart className="w-3.5 h-3.5 text-[#dc2626]" />
-            <span className="text-[#64748b]">MAX HP:</span>
-            <span className="text-white font-bold">{maxHp}</span>
-            <span className="text-[10px] text-[#64748b] hidden sm:inline">(10+5×⌈{bodyVal}+{willVal}⌉/2)</span>
+        <div className="space-y-1.5 pt-1 border-t border-[#1e2230]">
+          <div className="flex items-center justify-between">
+            <div 
+              onClick={() => setIsVitalsCollapsed(prev => !prev)}
+              className="flex items-center gap-1.5 cursor-pointer select-none text-[#94a3b8] hover:text-white transition-colors"
+            >
+              {isVitalsCollapsed ? (
+                <ChevronRight className="w-3 h-3 text-[#f59e0b]" />
+              ) : (
+                <ChevronDown className="w-3 h-3 text-[#f59e0b]" />
+              )}
+              <span className="text-[10px] font-bold uppercase tracking-wider font-tech">
+                SIGNOS VITALES Y DERIVADAS
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsVitalsCollapsed(prev => !prev)}
+              className="text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer select-none"
+              title={isVitalsCollapsed ? 'Desplegar signos vitales' : 'Plegar signos vitales'}
+            >
+              {isVitalsCollapsed ? '[ ▸ Expandir VITALES ]' : '[ ▾ Colapsar VITALES ]'}
+            </button>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <Activity className="w-3.5 h-3.5 text-[#f59e0b]" />
-            <span className="text-[#64748b]">GRAVE (-2):</span>
-            <span className="text-[#f59e0b] font-bold">&lt; {seriousWoundThresh} HP</span>
-          </div>
+          {!isVitalsCollapsed && (
+            <div className="flex flex-wrap items-center justify-between gap-2 bg-[#171923] p-2 rounded border border-[#222636] text-xs font-mono-code animate-fade-in">
+              <div className="flex items-center gap-1.5">
+                <Heart className="w-3.5 h-3.5 text-[#dc2626]" />
+                <span className="text-[#64748b]">MAX HP:</span>
+                <span className="text-white font-bold">{maxHp}</span>
+                <span className="text-[10px] text-[#64748b] hidden sm:inline">(10+5×⌈{bodyVal}+{willVal}⌉/2)</span>
+              </div>
 
-          <div className="flex items-center gap-1.5">
-            <Skull className="w-3.5 h-3.5 text-[#dc2626]" />
-            <span className="text-[#64748b]">DEATH SAVE:</span>
-            <span className="text-white font-bold">BASE {bodyVal}</span>
-            {deathSavePenalty > 0 && <span className="text-[#dc2626] font-bold">+{deathSavePenalty} Pen</span>}
-          </div>
+              <div className="flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-[#f59e0b]" />
+                <span className="text-[#64748b]">GRAVE (-2):</span>
+                <span className="text-[#f59e0b] font-bold">&lt; {seriousWoundThresh} HP</span>
+              </div>
 
-          <div className="flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-[#a855f7]" />
-            <span className="text-[#64748b]">HUMANIDAD:</span>
-            <span className="text-[#c084fc] font-bold">{activeChar?.currentHumanity ?? maxHumanity}/{maxHumanity}</span>
-          </div>
+              <div className="flex items-center gap-1.5">
+                <Skull className="w-3.5 h-3.5 text-[#dc2626]" />
+                <span className="text-[#64748b]">DEATH SAVE:</span>
+                <span className="text-white font-bold">BASE {bodyVal}</span>
+                {deathSavePenalty > 0 && <span className="text-[#dc2626] font-bold">+{deathSavePenalty} Pen</span>}
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#a855f7]" />
+                <span className="text-[#64748b]">HUMANIDAD:</span>
+                <span className="text-[#c084fc] font-bold">{activeChar?.currentHumanity ?? maxHumanity}/{maxHumanity}</span>
+              </div>
+            </div>
+          )}
         </div>
 
       </div>
@@ -636,20 +696,45 @@ export const StreetLabView: React.FC = () => {
           <div className="chamfer-card p-3.5 bg-[#121319] border border-[#232736]">
             
             {/* Header y Filtros */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-[#1f2230]">
-              <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+            <div className={`flex flex-wrap items-center justify-between gap-2 ${isSkillsCollapsed ? '' : 'pb-2.5 mb-2.5 border-b border-[#1f2230]'}`}>
+              <div 
+                onClick={() => setIsSkillsCollapsed(prev => !prev)}
+                className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase cursor-pointer select-none hover:text-[#38bdf8] transition-colors"
+              >
+                {isSkillsCollapsed ? (
+                  <ChevronRight className="w-4 h-4 text-[#38bdf8]" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-[#38bdf8]" />
+                )}
                 <Crosshair className="w-4 h-4 text-[#38bdf8]" />
                 <span>HABILIDADES ({filteredSkillKeys.length})</span>
               </div>
 
-              {/* Botón expandir/colapsar todas */}
-              <button
-                onClick={toggleAllExpanded}
-                className="text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors"
-              >
-                {allExpanded ? '▼ Colapsar Todas' : '▶ Expandir Todas'}
-              </button>
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setIsSkillsCollapsed(prev => !prev)}
+                  className="text-[10px] font-mono-code text-[#94a3b8] hover:text-[#38bdf8] transition-colors cursor-pointer select-none"
+                  title={isSkillsCollapsed ? 'Desplegar panel de habilidades' : 'Plegar panel de habilidades'}
+                >
+                  {isSkillsCollapsed ? '[ ▸ Expandir Panel ]' : '[ ▾ Plegar Panel ]'}
+                </button>
+
+                {!isSkillsCollapsed && (
+                  /* Botón expandir/colapsar todas */
+                  <button
+                    type="button"
+                    onClick={toggleAllExpanded}
+                    className="text-[10px] font-mono-code text-[#64748b] hover:text-[#38bdf8] transition-colors cursor-pointer select-none"
+                  >
+                    {allExpanded ? '▼ Colapsar Todas' : '▶ Expandir Todas'}
+                  </button>
+                )}
+              </div>
             </div>
+
+            {!isSkillsCollapsed && (
+              <>
 
             {/* Sub-pestañas de filtro de categoría */}
             <div className="flex flex-wrap gap-1 mb-3">
@@ -769,6 +854,8 @@ export const StreetLabView: React.FC = () => {
                 );
               })}
             </div>
+              </>
+            )}
 
           </div>
 

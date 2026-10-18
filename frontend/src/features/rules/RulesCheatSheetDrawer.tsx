@@ -37,6 +37,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
     'fbc-rules': true,
     'neuroport-2077': true
   });
+  const [collapsedRuleIds, setCollapsedRuleIds] = useState<Record<string, boolean>>({});
 
   // Close on Escape key
   useEffect(() => {
@@ -50,10 +51,90 @@ export const RulesCheatSheetDrawer: React.FC = () => {
   }, [isOpen]);
 
   const toggleSection = (id: string) => {
-    setExpandedSections(prev => ({
+    setExpandedSections(prev => {
+      const current = prev[id] !== false;
+      return {
+        ...prev,
+        [id]: !current
+      };
+    });
+  };
+
+  const isSectionExpanded = (id: string) => {
+    if (searchQuery.trim() !== '') return true;
+    return expandedSections[id] !== false;
+  };
+
+  const toggleRuleCollapse = (ruleId: string) => {
+    setCollapsedRuleIds(prev => ({
       ...prev,
-      [id]: !prev[id]
+      [ruleId]: !prev[ruleId]
     }));
+  };
+
+  const isRuleCollapsed = (ruleId: string) => {
+    if (searchQuery.trim() !== '') return false; // auto-expand cards during search
+    return !!collapsedRuleIds[ruleId];
+  };
+
+  const collapseAll = () => {
+    const newExpandedSecs: Record<string, boolean> = {
+      cover_table: false,
+      grapple_system: false,
+      aimed_shots: false,
+      hazards_environment: false,
+      healing_death_save: false,
+      turn_structure: false,
+      'fbc-rules': false,
+      'neuroport-2077': false
+    };
+    CHEAT_SHEET_SECTIONS.forEach(s => {
+      newExpandedSecs[s.id] = false;
+    });
+    EXPANSION_RULE_SYSTEMS.forEach(s => {
+      newExpandedSecs[s.id] = false;
+    });
+    setExpandedSections(newExpandedSecs);
+
+    const newCollapsedRules: Record<string, boolean> = {
+      cover_rules_explanation: true,
+      cover_materials_table: true
+    };
+    CHEAT_SHEET_SECTIONS.forEach(s => {
+      s.rules.forEach((_, idx) => {
+        newCollapsedRules[`${s.id}-${idx}`] = true;
+      });
+    });
+    EXPANSION_RULE_SYSTEMS.forEach(s => {
+      newCollapsedRules[`${s.id}-intro`] = true;
+      newCollapsedRules[`${s.id}-steps`] = true;
+      newCollapsedRules[`${s.id}-perks`] = true;
+      if (s.referenceTable) {
+        newCollapsedRules[`${s.id}-table`] = true;
+      }
+    });
+    setCollapsedRuleIds(newCollapsedRules);
+  };
+
+  const expandAll = () => {
+    const newExpandedSecs: Record<string, boolean> = {
+      cover_table: true,
+      grapple_system: true,
+      aimed_shots: true,
+      hazards_environment: true,
+      healing_death_save: true,
+      turn_structure: true,
+      'fbc-rules': true,
+      'neuroport-2077': true
+    };
+    CHEAT_SHEET_SECTIONS.forEach(s => {
+      newExpandedSecs[s.id] = true;
+    });
+    EXPANSION_RULE_SYSTEMS.forEach(s => {
+      newExpandedSecs[s.id] = true;
+    });
+    setExpandedSections(newExpandedSecs);
+    setCollapsedRuleIds({});
   };
 
   const categoriesConfig: { key: CheatCategory; label: string; icon: React.ReactNode }[] = [
@@ -239,6 +320,33 @@ export const RulesCheatSheetDrawer: React.FC = () => {
               );
             })}
           </div>
+
+          {/* Barra de Acciones Globales: Expandir / Comprimir */}
+          <div className="flex items-center justify-between pt-1 border-t border-[#1b2233] text-[10px]">
+            <span className="text-slate-400 font-mono-code flex items-center gap-1">
+              <span>Modo Acordeón:</span>
+            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={collapseAll}
+                className="px-2 py-0.5 bg-[#141824] hover:bg-[#1c2234] text-slate-300 hover:text-white border border-[#222b40] hover:border-cyan-500/50 rounded-xs font-mono-code font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+                title="Plegar todas las tarjetas de reglas y secciones"
+              >
+                <span>🔼</span>
+                <span>COMPRIMIR TODAS</span>
+              </button>
+              <button
+                type="button"
+                onClick={expandAll}
+                className="px-2 py-0.5 bg-[#141824] hover:bg-cyan-950/60 text-cyan-400 hover:text-cyan-300 border border-cyan-700/50 hover:border-cyan-500 rounded-xs font-mono-code font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+                title="Desplegar todas las tarjetas de reglas y secciones"
+              >
+                <span>🔽</span>
+                <span>EXPANDIR TODAS</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* CONTENIDO DESPLAZABLE DEL DRAWER */}
@@ -252,7 +360,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
               {/* Header Acordeón Coberturas */}
               <div
                 onClick={() => toggleSection('cover_table')}
-                className="p-3 bg-[#151a2a] hover:bg-[#1a2135] border-b border-[#222b40] flex items-center justify-between cursor-pointer transition-colors"
+                className="p-3 bg-[#151a2a] hover:bg-[#1a2135] border-b border-[#222b40] flex items-center justify-between cursor-pointer transition-colors select-none"
               >
                 <div className="flex items-center gap-2">
                   <ShieldAlert className="w-4 h-4 text-cyan-400" />
@@ -264,70 +372,109 @@ export const RulesCheatSheetDrawer: React.FC = () => {
                   </span>
                 </div>
                 <span className="text-slate-400">
-                  {expandedSections.cover_table ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                  {isSectionExpanded('cover_table') ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                 </span>
               </div>
 
-              {expandedSections.cover_table && (
+              {isSectionExpanded('cover_table') && (
                 <div className="p-3 space-y-3 text-xs">
                   {/* Explicación de la Regla Canónica de Cobertura */}
-                  <div className="bg-cyan-950/20 border border-cyan-500/30 p-2.5 rounded-xs text-[11px] text-slate-300 space-y-1.5">
-                    <div className="font-bold text-cyan-300 flex items-center gap-1.5">
-                      <span>🛡️ {COVER_RULES_EXPLANATION.title}</span>
+                  <div className="bg-cyan-950/20 border border-cyan-500/30 rounded-xs overflow-hidden">
+                    <div 
+                      onClick={() => toggleRuleCollapse('cover_rules_explanation')}
+                      className="p-2.5 flex items-center justify-between cursor-pointer select-none hover:bg-cyan-950/40 transition-colors font-bold text-cyan-300"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        {isRuleCollapsed('cover_rules_explanation') ? (
+                          <ChevronRight className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                        ) : (
+                          <ChevronDown className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                        )}
+                        <span>🛡️ {COVER_RULES_EXPLANATION.title}</span>
+                      </div>
+                      <span className="text-[9px] text-cyan-400/80 font-mono-code font-normal">
+                        {isRuleCollapsed('cover_rules_explanation') ? '[▸ Expandir Reglas]' : '[▾ Plegar Reglas]'}
+                      </span>
                     </div>
-                    <ul className="list-disc pl-4 space-y-1 text-[10px] text-slate-300">
-                      {COVER_RULES_EXPLANATION.keyRules.map((r, idx) => (
-                        <li key={idx} className="leading-relaxed">{r}</li>
-                      ))}
-                    </ul>
+
+                    {!isRuleCollapsed('cover_rules_explanation') && (
+                      <div className="px-3 pb-2.5 pt-0 border-t border-cyan-500/20">
+                        <ul className="list-disc pl-4 space-y-1 text-[10px] text-slate-300 pt-1.5">
+                          {COVER_RULES_EXPLANATION.keyRules.map((r, idx) => (
+                            <li key={idx} className="leading-relaxed">{r}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
 
                   {/* Tabla de Materiales */}
-                  <div className="overflow-x-auto border border-[#222b40] rounded-xs">
-                    <table className="w-full text-left text-[11px]">
-                      <thead className="bg-[#141824] text-slate-400 text-[10px] uppercase border-b border-[#222b40]">
-                        <tr>
-                          <th className="py-2 px-2.5">Material</th>
-                          <th className="py-2 px-2 text-center text-cyan-300">Fina</th>
-                          <th className="py-2 px-2 text-center text-cyan-400 font-bold">Gruesa</th>
-                          <th className="py-2 px-2.5">Ejemplos Canónicos</th>
-                          <th className="py-2 px-2.5 text-slate-400">Notas Tácticas</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-[#1b2233]">
-                        {filteredCoverItems.map((c) => (
-                          <tr key={c.id} className="hover:bg-[#141824]/60 transition-colors">
-                            <td className="py-2 px-2.5 font-bold text-white font-tech">
-                              {c.material}
-                            </td>
-                            <td className="py-2 px-2 text-center">
-                              <span className={`px-1.5 py-0.2 rounded-xs font-mono-code font-bold ${
-                                c.thinHp === '0 HP' 
-                                  ? 'bg-red-950/40 text-red-400 border border-red-700/40' 
-                                  : 'bg-cyan-950/40 text-cyan-300 border border-cyan-700/40'
-                              }`}>
-                                {c.thinHp}
-                              </span>
-                            </td>
-                            <td className="py-2 px-2 text-center">
-                              <span className={`px-1.5 py-0.2 rounded-xs font-mono-code font-bold ${
-                                c.thickHp === '0 HP' 
-                                  ? 'bg-red-950/40 text-red-400 border border-red-700/40' 
-                                  : 'bg-cyan-950/50 text-cyan-200 border border-cyan-600/50'
-                              }`}>
-                                {c.thickHp}
-                              </span>
-                            </td>
-                            <td className="py-2 px-2.5 text-slate-300 text-[10px] max-w-[160px]">
-                              {c.examples}
-                            </td>
-                            <td className="py-2 px-2.5 text-[10px] text-slate-400 max-w-[150px]">
-                              {c.notes}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div className="border border-[#222b40] rounded-xs overflow-hidden">
+                    <div 
+                      onClick={() => toggleRuleCollapse('cover_materials_table')}
+                      className="p-2 bg-[#141824] hover:bg-[#1a2135] border-b border-[#222b40] flex items-center justify-between cursor-pointer select-none transition-colors"
+                    >
+                      <div className="flex items-center gap-1.5 font-bold text-white text-[11px] font-tech">
+                        {isRuleCollapsed('cover_materials_table') ? (
+                          <ChevronRight className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                        ) : (
+                          <ChevronDown className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                        )}
+                        <span>MATRICES DE MATERIALES & HP ({filteredCoverItems.length})</span>
+                      </div>
+                      <span className="text-[9px] text-slate-400 font-mono-code">
+                        {isRuleCollapsed('cover_materials_table') ? '[▸ Expandir Tabla]' : '[▾ Plegar Tabla]'}
+                      </span>
+                    </div>
+
+                    {!isRuleCollapsed('cover_materials_table') && (
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-left text-[11px]">
+                          <thead className="bg-[#141824] text-slate-400 text-[10px] uppercase border-b border-[#222b40]">
+                            <tr>
+                              <th className="py-2 px-2.5">Material</th>
+                              <th className="py-2 px-2 text-center text-cyan-300">Fina</th>
+                              <th className="py-2 px-2 text-center text-cyan-400 font-bold">Gruesa</th>
+                              <th className="py-2 px-2.5">Ejemplos Canónicos</th>
+                              <th className="py-2 px-2.5 text-slate-400">Notas Tácticas</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-[#1b2233]">
+                            {filteredCoverItems.map((c) => (
+                              <tr key={c.id} className="hover:bg-[#141824]/60 transition-colors">
+                                <td className="py-2 px-2.5 font-bold text-white font-tech">
+                                  {c.material}
+                                </td>
+                                <td className="py-2 px-2 text-center">
+                                  <span className={`px-1.5 py-0.2 rounded-xs font-mono-code font-bold ${
+                                    c.thinHp === '0 HP' 
+                                      ? 'bg-red-950/40 text-red-400 border border-red-700/40' 
+                                      : 'bg-cyan-950/40 text-cyan-300 border border-cyan-700/40'
+                                  }`}>
+                                    {c.thinHp}
+                                  </span>
+                                </td>
+                                <td className="py-2 px-2 text-center">
+                                  <span className={`px-1.5 py-0.2 rounded-xs font-mono-code font-bold ${
+                                    c.thickHp === '0 HP' 
+                                      ? 'bg-red-950/40 text-red-400 border border-red-700/40' 
+                                      : 'bg-cyan-950/50 text-cyan-200 border border-cyan-600/50'
+                                  }`}>
+                                    {c.thickHp}
+                                  </span>
+                                </td>
+                                <td className="py-2 px-2.5 text-slate-300 text-[10px] max-w-[160px]">
+                                  {c.examples}
+                                </td>
+                                <td className="py-2 px-2.5 text-[10px] text-slate-400 max-w-[150px]">
+                                  {c.notes}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -338,7 +485,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
               SECCIONES DE REGLAS DINÁMICAS (GRAPPLE, AIMED, HAZARDS, ETC.)
           ========================================================= */}
           {filteredSections.map((sec) => {
-            const isExpanded = !!expandedSections[sec.id];
+            const isExpanded = isSectionExpanded(sec.id);
 
             return (
               <div 
@@ -348,7 +495,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
                 {/* Header Acordeón */}
                 <div
                   onClick={() => toggleSection(sec.id)}
-                  className="p-3 bg-[#151a2a] hover:bg-[#1a2135] border-b border-[#222b40] flex items-center justify-between cursor-pointer transition-colors"
+                  className="p-3 bg-[#151a2a] hover:bg-[#1a2135] border-b border-[#222b40] flex items-center justify-between cursor-pointer transition-colors select-none"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-base">{sec.icon}</span>
@@ -370,34 +517,53 @@ export const RulesCheatSheetDrawer: React.FC = () => {
                       {sec.summary}
                     </p>
 
-                    <div className="space-y-2.5">
-                      {sec.rules.map((rule, idx) => (
-                        <div 
-                          key={idx}
-                          className="p-2.5 bg-[#141824] border border-[#222b40] rounded-xs space-y-1.5"
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-bold text-white font-tech text-xs">
-                              {rule.title}
-                            </span>
-                            {rule.badge && (
-                              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-xs bg-cyan-950/60 text-cyan-300 border border-cyan-500/40 uppercase">
-                                {rule.badge}
-                              </span>
+                    <div className="space-y-2">
+                      {sec.rules.map((rule, idx) => {
+                        const ruleId = `${sec.id}-${idx}`;
+                        const isCardCollapsed = isRuleCollapsed(ruleId);
+
+                        return (
+                          <div 
+                            key={idx}
+                            className="bg-[#141824] border border-[#222b40] rounded-xs overflow-hidden transition-all"
+                          >
+                            <div
+                              onClick={() => toggleRuleCollapse(ruleId)}
+                              className="p-2.5 flex items-center justify-between gap-2 cursor-pointer hover:bg-[#181d2e] select-none transition-colors"
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                {isCardCollapsed ? (
+                                  <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                ) : (
+                                  <ChevronDown className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                                )}
+                                <span className="font-bold text-white font-tech text-xs truncate">
+                                  {rule.title}
+                                </span>
+                              </div>
+                              {rule.badge && (
+                                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-xs bg-cyan-950/60 text-cyan-300 border border-cyan-500/40 uppercase shrink-0">
+                                  {rule.badge}
+                                </span>
+                              )}
+                            </div>
+
+                            {!isCardCollapsed && (
+                              <div className="px-2.5 pb-2.5 pt-1 space-y-1.5 border-t border-[#1b2233]">
+                                <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                                  {rule.content}
+                                </p>
+
+                                {rule.mechanic && (
+                                  <div className="bg-[#0b0d13] border-l-2 border-cyan-400 p-1.5 text-[10px] text-cyan-300 font-mono-code font-bold rounded-r-xs">
+                                    ⚙️ {rule.mechanic}
+                                  </div>
+                                )}
+                              </div>
                             )}
                           </div>
-
-                          <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
-                            {rule.content}
-                          </p>
-
-                          {rule.mechanic && (
-                            <div className="bg-[#0b0d13] border-l-2 border-cyan-400 p-1.5 text-[10px] text-cyan-300 font-mono-code font-bold rounded-r-xs">
-                              ⚙️ {rule.mechanic}
-                            </div>
-                          )}
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
@@ -409,7 +575,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
               SECCIONES DE SISTEMAS EXPANDIDOS (2077 & FBC)
           ========================================================= */}
           {filteredSystems.map((sys) => {
-            const isExpanded = !!expandedSections[sys.id];
+            const isExpanded = isSectionExpanded(sys.id);
 
             return (
               <div 
@@ -419,7 +585,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
                 {/* Header Acordeón */}
                 <div
                   onClick={() => toggleSection(sys.id)}
-                  className="p-3 bg-[#151a2a] hover:bg-[#1a2135] border-b border-[#222b40] flex items-center justify-between cursor-pointer transition-colors"
+                  className="p-3 bg-[#151a2a] hover:bg-[#1a2135] border-b border-[#222b40] flex items-center justify-between cursor-pointer transition-colors select-none"
                 >
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-base">🦾</span>
@@ -440,74 +606,159 @@ export const RulesCheatSheetDrawer: React.FC = () => {
 
                 {isExpanded && (
                   <div className="p-3.5 space-y-3 text-xs">
-                    <div className="p-2.5 bg-[#141824] border-l-2 border-[#a855f7] rounded-r-xs space-y-1">
-                      <div className="text-[10px] font-bold text-[#c084fc] uppercase tracking-wider">
-                        ★ {sys.categoryBadge}
+                    {/* Intro / Badge */}
+                    <div className="bg-[#141824] border-l-2 border-[#a855f7] rounded-r-xs overflow-hidden">
+                      <div 
+                        onClick={() => toggleRuleCollapse(`${sys.id}-intro`)}
+                        className="p-2.5 flex items-center justify-between cursor-pointer select-none hover:bg-[#181d2e] transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          {isRuleCollapsed(`${sys.id}-intro`) ? (
+                            <ChevronRight className="w-3.5 h-3.5 text-[#c084fc] shrink-0" />
+                          ) : (
+                            <ChevronDown className="w-3.5 h-3.5 text-[#c084fc] shrink-0" />
+                          )}
+                          <span className="text-[10px] font-bold text-[#c084fc] uppercase tracking-wider">
+                            ★ {sys.categoryBadge}
+                          </span>
+                        </div>
+                        <span className="text-[9px] text-[#c084fc]/70 font-mono-code">
+                          {isRuleCollapsed(`${sys.id}-intro`) ? '[▸ Expandir]' : '[▾ Plegar]'}
+                        </span>
                       </div>
-                      <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
-                        {sys.introDescription}
-                      </p>
+
+                      {!isRuleCollapsed(`${sys.id}-intro`) && (
+                        <div className="px-2.5 pb-2.5 pt-0 border-t border-[#1b2233]">
+                          <p className="text-[11px] text-slate-300 leading-relaxed font-sans pt-1.5">
+                            {sys.introDescription}
+                          </p>
+                        </div>
+                      )}
                     </div>
 
                     {/* Paso a Paso */}
-                    <div className="space-y-1.5">
-                      <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block">
-                        ⚡ Pasos de Funcionamiento:
-                      </span>
-                      <div className="space-y-1">
-                        {sys.howItWorksSteps.map((step, idx) => (
-                          <div key={idx} className="p-2 bg-[#0e111a] border border-[#222b40] rounded-xs text-[10px] text-slate-300 leading-relaxed">
-                            {step}
-                          </div>
-                        ))}
+                    <div className="bg-[#10131e] border border-[#222b40] rounded-xs overflow-hidden">
+                      <div 
+                        onClick={() => toggleRuleCollapse(`${sys.id}-steps`)}
+                        className="p-2 bg-[#141824] hover:bg-[#181d2e] flex items-center justify-between cursor-pointer select-none transition-colors border-b border-[#222b40]"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          {isRuleCollapsed(`${sys.id}-steps`) ? (
+                            <ChevronRight className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                          ) : (
+                            <ChevronDown className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                          )}
+                          <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider">
+                            ⚡ Pasos de Funcionamiento ({sys.howItWorksSteps.length})
+                          </span>
+                        </div>
+                        <span className="text-[9px] text-amber-300/70 font-mono-code">
+                          {isRuleCollapsed(`${sys.id}-steps`) ? '[▸ Expandir]' : '[▾ Plegar]'}
+                        </span>
                       </div>
+
+                      {!isRuleCollapsed(`${sys.id}-steps`) && (
+                        <div className="p-2 space-y-1">
+                          {sys.howItWorksSteps.map((step, idx) => (
+                            <div key={idx} className="p-2 bg-[#0e111a] border border-[#222b40] rounded-xs text-[10px] text-slate-300 leading-relaxed">
+                              {step}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     {/* Ventajas y Riesgos */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                      <div className="p-2 bg-[#10b981]/5 border border-[#10b981]/30 rounded-xs space-y-1">
-                        <span className="text-[10px] font-bold text-[#10b981] uppercase block">
-                          ✓ Ventajas:
+                    <div className="bg-[#10131e] border border-[#222b40] rounded-xs overflow-hidden">
+                      <div 
+                        onClick={() => toggleRuleCollapse(`${sys.id}-perks`)}
+                        className="p-2 bg-[#141824] hover:bg-[#181d2e] flex items-center justify-between cursor-pointer select-none transition-colors border-b border-[#222b40]"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          {isRuleCollapsed(`${sys.id}-perks`) ? (
+                            <ChevronRight className="w-3.5 h-3.5 text-[#10b981] shrink-0" />
+                          ) : (
+                            <ChevronDown className="w-3.5 h-3.5 text-[#10b981] shrink-0" />
+                          )}
+                          <span className="text-[10px] font-bold text-[#10b981] uppercase tracking-wider">
+                            ⚖️ Ventajas y Riesgos Tácticos
+                          </span>
+                        </div>
+                        <span className="text-[9px] text-slate-400 font-mono-code">
+                          {isRuleCollapsed(`${sys.id}-perks`) ? '[▸ Expandir]' : '[▾ Plegar]'}
                         </span>
-                        <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-300">
-                          {sys.keyBenefits.map((b, bIdx) => (
-                            <li key={bIdx}>{b}</li>
-                          ))}
-                        </ul>
                       </div>
-                      <div className="p-2 bg-[#f43f5e]/5 border border-[#f43f5e]/30 rounded-xs space-y-1">
-                        <span className="text-[10px] font-bold text-[#f43f5e] uppercase block">
-                          ⚠ Riesgos y Costes:
-                        </span>
-                        <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-300">
-                          {sys.drawbacksAndRisks.map((d, dIdx) => (
-                            <li key={dIdx}>{d}</li>
-                          ))}
-                        </ul>
-                      </div>
+
+                      {!isRuleCollapsed(`${sys.id}-perks`) && (
+                        <div className="p-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <div className="p-2 bg-[#10b981]/5 border border-[#10b981]/30 rounded-xs space-y-1">
+                            <span className="text-[10px] font-bold text-[#10b981] uppercase block">
+                              ✓ Ventajas:
+                            </span>
+                            <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-300">
+                              {sys.keyBenefits.map((b, bIdx) => (
+                                <li key={bIdx}>{b}</li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div className="p-2 bg-[#f43f5e]/5 border border-[#f43f5e]/30 rounded-xs space-y-1">
+                            <span className="text-[10px] font-bold text-[#f43f5e] uppercase block">
+                              ⚠ Riesgos y Costes:
+                            </span>
+                            <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-300">
+                              {sys.drawbacksAndRisks.map((d, dIdx) => (
+                                <li key={dIdx}>{d}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {/* Tabla de Referencia si existe */}
                     {sys.referenceTable && (
-                      <div className="overflow-x-auto border border-[#222b40] rounded-xs mt-2">
-                        <table className="w-full text-left text-[10px]">
-                          <thead className="bg-[#141824] text-cyan-300 uppercase border-b border-[#222b40]">
-                            <tr>
-                              {sys.referenceTable.headers.map((h, hIdx) => (
-                                <th key={hIdx} className="py-1.5 px-2">{h}</th>
-                              ))}
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-[#1b2233]">
-                            {sys.referenceTable.rows.map((row, rIdx) => (
-                              <tr key={rIdx} className="hover:bg-[#141824]/60">
-                                {row.map((cell, cIdx) => (
-                                  <td key={cIdx} className="py-1.5 px-2 text-slate-300">{cell}</td>
+                      <div className="border border-[#222b40] rounded-xs overflow-hidden">
+                        <div 
+                          onClick={() => toggleRuleCollapse(`${sys.id}-table`)}
+                          className="p-2 bg-[#141824] hover:bg-[#181d2e] flex items-center justify-between cursor-pointer select-none transition-colors border-b border-[#222b40]"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            {isRuleCollapsed(`${sys.id}-table`) ? (
+                              <ChevronRight className="w-3.5 h-3.5 text-cyan-300 shrink-0" />
+                            ) : (
+                              <ChevronDown className="w-3.5 h-3.5 text-cyan-300 shrink-0" />
+                            )}
+                            <span className="text-[10px] font-bold text-cyan-300 uppercase tracking-wider">
+                              📊 Tabla de Especificaciones Canónicas
+                            </span>
+                          </div>
+                          <span className="text-[9px] text-cyan-400/70 font-mono-code">
+                            {isRuleCollapsed(`${sys.id}-table`) ? '[▸ Expandir]' : '[▾ Plegar]'}
+                          </span>
+                        </div>
+
+                        {!isRuleCollapsed(`${sys.id}-table`) && (
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-left text-[10px]">
+                              <thead className="bg-[#141824] text-cyan-300 uppercase border-b border-[#222b40]">
+                                <tr>
+                                  {sys.referenceTable.headers.map((h, hIdx) => (
+                                    <th key={hIdx} className="py-1.5 px-2">{h}</th>
+                                  ))}
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-[#1b2233]">
+                                {sys.referenceTable.rows.map((row, rIdx) => (
+                                  <tr key={rIdx} className="hover:bg-[#141824]/60">
+                                    {row.map((cell, cIdx) => (
+                                      <td key={cIdx} className="py-1.5 px-2 text-slate-300">{cell}</td>
+                                    ))}
+                                  </tr>
                                 ))}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
