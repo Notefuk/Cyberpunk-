@@ -26,7 +26,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 
 ---
 
-## 🗺️ Current Real Tree on Disk (`v2.0.0 - Phase 0 Overhaul`)
+## 🗺️ Current Real Tree on Disk (`v3.5.0 - Arquitectura Modular Completa Fases 0 a 3 + Oneshot & Codex`)
 
 ```text
 cpr-omni-deck/
@@ -41,6 +41,9 @@ cpr-omni-deck/
 │   ├── find_sections.py                  # Inspector de bookmarks y outline del PDF
 │   └── inspect_pdf_pages.py              # Inspector CLI UTF-8 de páginas por rango
 ├── frontend/
+│   ├── public/
+│   │   ├── hammerhead-map.png            # Plano esquemático canónico del tren Maglev Hammerhead (Red Chrome Cargo)
+│   │   └── screamsheet-p2.png            # Recorte canónico original del Screamsheet pág. 2
 │   ├── src/
 │   │   ├── components/
 │   │   │   └── ItemVisualPlaceholder.tsx # Frames militares tácticos SVG/Lucide por categoría
@@ -55,7 +58,8 @@ cpr-omni-deck/
 │   │   │   ├── netAndRolesData.ts        # Arquitecturas de red 2045, Quickhacks 2077 y 10 Habilidades de Rol
 │   │   │   ├── rangeTables.ts            # Matrices oficiales de DVs por metro y Autofire
 │   │   │   ├── redChromeCargoData.ts     # Misión oficial Red Chrome Cargo CEMK 2077 (mapa, escenas, botín)
-│   │   │   └── rulesCheatSheet.ts        # Machete canónico de reglas de combate, coberturas y asfixia
+│   │   │   ├── rulesCheatSheet.ts        # Machete canónico de reglas de combate, coberturas y asfixia
+│   │   │   └── systemDocsAndChangelogData.ts # Base de datos canónica de versiones, inventario y arquitectura
 │   │   ├── engine/
 │   │   │   ├── characterEngine.ts        # Motor matemático: HP máx, humanidad, penalizadores
 │   │   │   └── combatEngine.ts           # Motor de resolución: d10 explosivo, Xd6, doble 6 crítico
@@ -68,13 +72,15 @@ cpr-omni-deck/
 │   │   │   │   └── CharacterCreatorWizard.tsx # Asistente guiado de 6 pasos para creación de personajes
 │   │   │   ├── cyberware/
 │   │   │   │   └── CyberwareRipperdocView.tsx # Menú Ripperdoc 2077 con maniquí holográfico y ranuras
+│   │   │   ├── docs/
+│   │   │   │   └── SystemChangelogAndDocsView.tsx # Portal in-app de documentación, changelog e inventario
 │   │   │   ├── gm/
 │   │   │   │   ├── EnemiesCompendiumPanel.tsx # Bestiario con filtros por facción e inyección al combate
 │   │   │   │   └── FixerDeckView.tsx     # Consola GM Fixer con PIN, control global y monitor del equipo
 │   │   │   ├── layout/
 │   │   │   │   └── TopHudBar.tsx         # Barra superior persistente con vitals del edgerunner
 │   │   │   ├── netroles/
-│   │   │   │   └── NetAndRolesDeckView.tsx # Simulador Netrunning 2045, Quickhacks 2077 y 10 Roles
+│   │   │   │   └── NetAndRolesDeckView.tsx # Simulador Netrunning 2045, Quickhacks 2077, Garaje y 10 Roles
 │   │   │   ├── oneshot/
 │   │   │   │   └── RedChromeCargoView.tsx # Centro de mando táctico interactivo de Red Chrome Cargo CEMK
 │   │   │   ├── packs/
@@ -107,18 +113,18 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ### Fase 2 (v2.6 – v2.9): Disparos Apuntados, Creador Guiado, Biblioteca de Enemigos, Compendio y Expansión PDF [COMPLETADO]
 * Selector Interactivo de Disparos Apuntados (`CombatHudView.tsx` & `combatEngine.ts`):
   - Penalizador canónico `-8`, restricción ROF 1, Cabeza (`×2` daño penetrante), Pierna (`Broken Leg -4 MOVE`), Objeto Sostenido (`Disarm`).
-* Creador de Personajes Guiado Desde Cero (`src/features/creation/CharacterWizardModal.tsx`):
+* Creador de Personajes Guiado Desde Cero (`src/features/creator/CharacterCreatorWizard.tsx`):
   - 3 métodos oficiales (*Streetrat*, *Edgerunner*, *Complete Package*) + plantillas 2077 (*CEMK*).
   - Lifepath híbrido (tirada de dados o redacción libre) con módulo detallado de Enemigos.
   - Economía inicial (`2,550 €$` + `800 €$` moda), paquetes por Rol y toggle opcional "Empezar con Deuda / Vender el Alma".
   - Onboarding para novatos con hover tooltips explicativos en STATs, habilidades y conceptos de reglas.
-* Biblioteca Masiva de Enemigos y Jefes para el GM (`src/features/enemies/EnemiesCompendiumDrawer.tsx`):
+* Biblioteca Masiva de Enemigos y Jefes para el GM (`src/features/gm/EnemiesCompendiumPanel.tsx`):
   - Fichas pregeneradas listas para combate: Core Mooks/Lieutenants/Bosses, Hardened variants, Danger Gal Dossier, Tales of the RED, CEMK 2077, ciberpsicópatas y Adam Smasher.
   - Filtros por facción (Arasaka, Militech, Maelstrom, Tyger Claws, etc.), amenaza y era con inyección en 1 clic al combate.
-* Compendio Dedicado para Reglas Nuevas de Expansiones (`src/features/rules/ExpansionRulesView.tsx`):
+* Compendio Dedicado para Reglas Nuevas de Expansiones (`src/features/compendium/CompendiumView.tsx` & `src/data/expansionRulesData.ts`):
   - Full Body Conversions (FBC) de *Interface RED Vol 3*, Reglas Era 2077 de *CEMK* (Neuroport, armas Power/Tech/Smart, Ciberpsicosis), DLCs (*Hornet's Pharmacy*).
   - Descripciones contextuales e introductorias de lore y mecánicas en cada sistema.
-* Filtro de Libro Origen (`sourceBook`), Badges Visuales y Sinopsis de Manual (`src/components/SourceBadge.tsx` & `CompendiumView.tsx`):
+* Filtro de Libro Origen (`sourceBook`), Badges Visuales y Sinopsis de Manual (`src/features/compendium/CompendiumView.tsx`):
   - Filtro interactivo por manual con sinopsis de contenido y badges temáticos.
 * Extracción e integración de `data/black-chrome.cprpack.json`:
   - 170+ ítems de lujo, vehículos con SDP y armas exóticas.
@@ -126,16 +132,18 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
   - Reglas 2077 (Edgerunners Mission Kit): Neuroport integrado, armas Power/Tech/Smart y ciberpsicosis.
 * Extracción e integración de `data/danger-gal.cprpack.json` & `data/interface-red.cprpack.json`.
 
-### Fase 3 (v3.0 – v3.4): Sistemas Profundos & Funciones Premium Companion App [COMPLETADO]
-* `src/components/NetArchitectureRunner.tsx`:
+### Fase 3 (v3.0 – v3.5): Sistemas Profundos, Oneshot Oficial & Companion App [COMPLETADO]
+* `src/features/netroles/NetAndRolesDeckView.tsx` & `src/data/netAndRolesData.ts`:
   - Simulador piso a piso de Arquitecturas de Red (Archivos, Nodos de Control, Black ICE).
-* `src/features/quickhacks/QuickhacksDeck.tsx`:
-  - Gestor de memoria RAM y software de hackeo en combate para la era 2077.
-* Habilidades de Rol Específicas:
-  - Solos (Combat Awareness), Medtechs (Farmacia/Cirugía/Criogenia), Techs (Maker), Nomads (Moto).
+  - Gestor de memoria RAM y software de hackeo en combate para la era 2077 (Quickhacks).
+  - Habilidades de Rol Específicas: Solos (Combat Awareness), Medtechs (Farmacia/Cirugía/Criogenia), Techs (Maker), Nomads (Moto/Garaje).
+* `src/features/oneshot/RedChromeCargoView.tsx` & `src/data/redChromeCargoData.ts`:
+  - Centro de comando táctico interactivo para la aventura oficial Red Chrome Cargo CEMK 2077 (mapa del tren, grilla táctica de 4 vagones, Screamsheet original, 7 Edgerunners CEMK precargados, Mainframe NET de 5 pisos, botín y pago de Hornet).
+* `src/features/docs/SystemChangelogAndDocsView.tsx` & `src/data/systemDocsAndChangelogData.ts`:
+  - Portal in-app de documentación, registro interactivo de changelogs versión por versión (`v1.0.0` a `v3.5.0`), visor de inventario canónico y arquitectura técnica.
 * Paridad y Superación de Funciones Premium de Cyberpunk RED Companion App:
-  - `src/features/combat/EncounterManager.tsx`: Gestor táctico de encuentros y combate multiobjetivo con seguimiento dinámico de Mooks/Bosses e iniciativa.
-  - `src/features/vehicles/VehicleTracker.tsx`: Seguimiento de vehículos, monturas, SDP, blindaje y maniobras.
+  - Gestor táctico de encuentros y combate multiobjetivo con seguimiento dinámico de Mooks/Bosses e iniciativa en `CombatHudView.tsx` y `FixerDeckView.tsx`.
+  - Seguimiento de vehículos, monturas, SDP, blindaje y maniobras en la pestaña Garaje de `NetAndRolesDeckView.tsx`.
   - Creador y simulador de Arquitecturas de Red personalizadas multietapa con exportación.
   - Exportación e importación universal (JSON / PDF imprimible estilo hoja oficial).
   - Consola Fixer enriquecida: notas de sesión secretas, generador de botín y registro cronológico.
@@ -196,6 +204,33 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ---
 
 ## 📜 Master Version Changelog
+
+### [v3.5.0] - 2026-10-18 (In-App System Codex, Interactive Changelog & Documentation Portal + 10/10 Markdown Docs Sync)
+* **Category**: System Codex, In-App Interactive Documentation & Comprehensive Docs Synchronization
+* **Files Modified / Created**:
+  - `frontend/src/data/systemDocsAndChangelogData.ts`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `frontend/src/features/layout/TopHudBar.tsx`
+  - `frontend/src/App.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `CONTENT_CHECKLIST.md`
+  - `README.md`
+  - `frontend/README.md`
+* **What Changed**:
+  1. **Portal Interactivo de Documentación, Changelogs e Inventario In-App (`SystemChangelogAndDocsView.tsx` & `systemDocsAndChangelogData.ts`)**:
+     - Nueva pestaña oficial en el TopHudBar (`📜 DOCS & CHANGELOG`) para consultar toda la documentación arquitectónica, inventario de mecánicas y registro histórico sin salir del navegador.
+     - **Vista de Historial de Versiones**: Visor interactivo y filtrable de todas las versiones desde `v1.0.0` hasta `v3.5.0` con desglose por categoría, fecha, archivos afectados y listas de cambios.
+     - **Inventario Canónico de Contenido**: Resumen en vivo de los 391+ ítems oficiales, 8 sistemas de reglas de expansiones, 44+ enemigos y 118 PNJs de Danger Gal Dossier, 23 artes marciales con 46 movimientos, 13 cuerpos FBC y 16 ciberwares de *Going Metal*.
+     - **Visualizador de Arquitectura Técnica**: Esquema interactivo de dependencias (Zustand Stores, Motores desacoplados `characterEngine`/`combatEngine`, Flujo COMP/CON y Árbol real del proyecto).
+     - **Estado del Roadmap en Vivo**: Monitoreo de fases completadas (Fases 0 a 3 + Oneshot) y detalle de especificaciones para Fases 4 y 5.
+  2. **Consolidación y Auditoría 10/10 de la Documentación Markdown del Repositorio**:
+     - Sincronización total entre `CHANGELOG_AND_ARCHITECTURE.md`, `CONTENT_CHECKLIST.md`, `README.md` y `frontend/README.md`.
+     - Actualización del árbol real de disco reflejando `public/hammerhead-map.png`, `public/screamsheet-p2.png`, `systemDocsAndChangelogData.ts` y `SystemChangelogAndDocsView.tsx`.
+     - Alineación definitiva de componentes consolidados en todas las fases del Roadmap (`CharacterCreatorWizard.tsx`, `EnemiesCompendiumPanel.tsx`, `NetAndRolesDeckView.tsx`, `RedChromeCargoView.tsx`, `SystemChangelogAndDocsView.tsx`).
+     - Creación de la guía técnica del Frontend en `frontend/README.md` documentando la arquitectura `React 19 + TypeScript 5.8 + Vite 6 + Tailwind v4 + Zustand 5`.
+     - Actualización del `README.md` raíz con enlace al despliegue web en vivo (`https://notefuk.github.io/Cyberpunk-/`), resumen de las 9 pestañas del sistema, guía de arranque local y flujo de despliegue.
+
+---
 
 ### [v3.4.5] - 2026-10-17 (Oneshot Command Center: RED CHROME CARGO [CEMK 2077 Edition] + Precarga de los 7 Edgerunners CEMK)
 * **Category**: Official Adventure Engine, Oneshot Operations & Roster Automation

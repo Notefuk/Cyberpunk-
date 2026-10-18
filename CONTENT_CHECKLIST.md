@@ -198,7 +198,7 @@
 
 ---
 
-## 🧠 FASE 3 (v3.0 – v3.4): Sistemas Profundos (Netrunning 2045, Quickhacks 2077, Roles) y Funciones Premium Companion App [COMPLETADO]
+## 🧠 FASE 3 (v3.0 – v3.5): Sistemas Profundos, Oneshot Oficial & Companion App [COMPLETADO]
 - [x] **Maniquí Anatómico de Ciberware & Menú Ripperdoc (`CyberwareRipperdocView.tsx`)**:
   - Silueta holográfica en A-Pose con flechas conectoras hacia las 8 zonas corporales + Fashionware.
   - Ranuras de opción visuales estilo 2077 con ilustraciones vectoriales, telemetría de Humanidad/SP e instalador Ripperdoc con tirada Xd6.
@@ -228,6 +228,20 @@
   - Completar los 118 PNJs oficiales en sus 15 facciones en el bestiario táctico (`EnemiesCompendiumPanel.tsx`).
   - Flujo de creación de PNJs personalizados (*New Workflow for Custom NPCs*) integrado en la Consola Fixer (`FixerDeckView.tsx`).
   - Tema visual "Danger Gal" (neón rosa/magenta/negro) y nuevos retratos de personajes oficiales.
+- [x] **Aventura Oneshot Oficial `RED CHROME CARGO (CEMK 2077 Edition)` (`RedChromeCargoView.tsx` & `redChromeCargoData.ts`)**:
+  - Mapa original canónico extraído del PDF oficial (`hammerhead-map.png`) con visor zoom pantalla completa y grilla táctica de 4 vagones (*Rear, Middle, Front, Driver*).
+  - Screamsheet original de Night City Today (`screamsheet-p2.png`) con traducción bilingüe inglés/español y Modo Jugadores sin spoilers de GM.
+  - Precarga automática de los 7 Edgerunners oficiales de CEMK 2077 en el Roster (David, Lucy, Rebecca, Maine, Kiwi, Falco, Pilar).
+  - Escalado dinámico por cantidad de jugadores (2 a 7 PJs) y selector de era (2077 CEMK vs 2045 Clásico).
+  - Fichas maestras tácticas de enemigos (Guardias de la Red Chrome Legion, Oficial y Torreta Automática) con armaduras SP, armas, ciberware 2077 con vulnerabilidades de Quickhacks y loot saqueable con 1 clic al inventario de los PJs.
+  - Mainframe NET de 5 pisos interactivo con Black ICE *Hellhound* (20 REZ), Eye-Dee de Manifiesto Militar Militech y control de torreta.
+  - Las 4 Cajas de Hornet con asignación de cargadores (2 manos ocupadas) y pago automático de Hornet (`2,000 €$` a cada jugador).
+- [x] **Portal Interactivo de Changelogs, Inventario de Contenido y Documentación (`SystemChangelogAndDocsView.tsx` & `systemDocsAndChangelogData.ts`)**:
+  - Nueva pestaña permanente `📜 DOCS & CHANGELOG` en la barra superior del Omni-Deck para consultar toda la documentación sin salir de la app.
+  - Registro interactivo y buscable versión por versión desde la `v1.0.0` hasta la `v3.5.0` con clasificación por categoría, impacto y archivos modificados.
+  - Inventario en vivo del catálogo total: 391+ ítems oficiales, 8 sistemas de reglas de expansiones, 44+ enemigos y 118 PNJs de Danger Gal Dossier, 23 artes marciales y 46 movimientos especiales.
+  - Visualizador de arquitectura técnica desacoplada (Zustand Stores, Motores matemáticos puros, Flujo COMP/CON y Árbol de archivos).
+  - Monitor en vivo del Roadmap de desarrollo por fases (Fases 0 a 3 completadas, especificaciones para Fases 4 y 5).
 
 ---
 

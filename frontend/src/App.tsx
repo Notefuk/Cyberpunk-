@@ -8,7 +8,8 @@ import {
   Cpu,
   UserPlus,
   Network,
-  Train
+  Train,
+  FileText
 } from 'lucide-react';
 import { useCharacterStore } from './store/useCharacterStore';
 import { TopHudBar } from './features/layout/TopHudBar';
@@ -22,8 +23,9 @@ import { FixerDeckView } from './features/gm/FixerDeckView';
 import { NetAndRolesDeckView } from './features/netroles/NetAndRolesDeckView';
 import { RedChromeCargoView } from './features/oneshot/RedChromeCargoView';
 import { RulesCheatSheetDrawer } from './features/rules/RulesCheatSheetDrawer';
+import { SystemChangelogAndDocsView } from './features/docs/SystemChangelogAndDocsView';
 
-type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'oneshot' | 'creator';
+type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'oneshot' | 'creator' | 'docs';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('combat');
@@ -95,6 +97,11 @@ export default function App() {
       id: 'creator',
       label: 'CREAR PJ // WIZARD',
       icon: <UserPlus className="w-4 h-4" />
+    },
+    {
+      id: 'docs',
+      label: '📜 DOCS & CHANGELOG',
+      icon: <FileText className="w-4 h-4 text-cyan-400" />
     }
   ];
 
@@ -147,6 +154,7 @@ export default function App() {
         {activeTab === 'packs' && <DataPacksView />}
         {activeTab === 'gm' && <FixerDeckView />}
         {activeTab === 'oneshot' && <RedChromeCargoView />}
+        {activeTab === 'docs' && <SystemChangelogAndDocsView />}
       </main>
 
       {/* Rules Cheat Sheet Drawer persistente */}
