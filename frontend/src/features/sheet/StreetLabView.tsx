@@ -18,6 +18,7 @@ import { STAT_TOOLTIPS } from '../../data/characterCreationData';
 import { CharacterCreatorWizard } from '../creator/CharacterCreatorWizard';
 import { CHARACTER_PORTRAITS_CATALOG } from '../../data/netAndRolesData';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
+import { CEMK_FOLIO_METADATA_MAP } from '../../data/cemkFolioPremadesData';
 import { 
   User, 
   Plus, 
@@ -162,6 +163,12 @@ export const StreetLabView: React.FC = () => {
   const [isStatsCollapsed, setIsStatsCollapsed] = useState(false);
   const [isVitalsCollapsed, setIsVitalsCollapsed] = useState(false);
   const [isSkillsCollapsed, setIsSkillsCollapsed] = useState(false);
+
+  // CEMK Folio Dossier Accordion State
+  const [isFolioDossierOpen, setIsFolioDossierOpen] = useState(false);
+  const [folioDossierTab, setFolioDossierTab] = useState<'skills' | 'role_rules' | 'arsenal' | 'backstory'>('skills');
+  const [folioSkillSearch, setFolioSkillSearch] = useState('');
+  const [folioSkillStatFilter, setFolioSkillStatFilter] = useState('ALL');
 
   // Derived stats
   const bodyVal = activeChar?.stats?.BODY ?? 6;
@@ -313,6 +320,7 @@ export const StreetLabView: React.FC = () => {
 
           {/* Retrato / Avatar Cyberpunk Activo */}
           {(() => {
+            const folioMeta = activeChar?.id ? CEMK_FOLIO_METADATA_MAP[activeChar.id] : null;
             const currentPortrait =
               CHARACTER_PORTRAITS_CATALOG.find((p) => p.id === activeChar?.portraitId) ||
               CHARACTER_PORTRAITS_CATALOG[0];
@@ -324,21 +332,40 @@ export const StreetLabView: React.FC = () => {
                   type="button"
                   onClick={() => setIsPortraitModalOpen(true)}
                   className="flex items-center gap-1.5 p-1 bg-[#171924] hover:bg-[#202434] rounded border border-[#2c3246] hover:border-[#38bdf8] transition-all group/avatar"
-                  title="Cambiar Retrato Oficial del Personaje"
+                  title={folioMeta ? `Folio Oficial CEMK 2077: ${folioMeta.name}` : "Cambiar Retrato Oficial del Personaje"}
                 >
-                  <div
-                    className="w-7 h-7 rounded-sm flex items-center justify-center font-bold text-xs shadow-sm"
-                    style={{ backgroundColor: `${currentPortrait.accentColor}25`, color: currentPortrait.accentColor }}
-                  >
-                    {currentPortrait.name.substring(0, 2).toUpperCase()}
-                  </div>
+                  {folioMeta?.tokenUrl ? (
+                    <img
+                      src={folioMeta.tokenUrl}
+                      alt={folioMeta.name}
+                      className="w-7 h-7 rounded-sm object-cover border border-amber-500/70 shadow-sm bg-[#0a0d15]"
+                    />
+                  ) : (
+                    <div
+                      className="w-7 h-7 rounded-sm flex items-center justify-center font-bold text-xs shadow-sm"
+                      style={{ backgroundColor: `${currentPortrait.accentColor}25`, color: currentPortrait.accentColor }}
+                    >
+                      {currentPortrait.name.substring(0, 2).toUpperCase()}
+                    </div>
+                  )}
                   <div className="text-left hidden md:block">
                     <div className="text-[10px] font-mono-code font-bold text-white group-hover/avatar:text-[#38bdf8] truncate max-w-[90px]">
-                      {currentPortrait.name.split(' ')[0]}
+                      {folioMeta ? folioMeta.name : currentPortrait.name.split(' ')[0]}
                     </div>
-                    <div className="text-[8px] font-mono-code text-[#64748b]">RETRATO</div>
+                    <div className="text-[8px] font-mono-code text-[#64748b]">
+                      {folioMeta ? 'FOLIO 2077' : 'RETRATO'}
+                    </div>
                   </div>
                 </button>
+
+                {folioMeta && (
+                  <span
+                    className="bg-amber-950/60 border border-amber-500/70 text-amber-300 font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold flex items-center gap-1"
+                    title={`Folio Canónico CEMK 2077 (${folioMeta.role}): ${folioMeta.archetype2077}`}
+                  >
+                    📋 FOLIO
+                  </span>
+                )}
 
                 {isFbc && (
                   <span
@@ -528,6 +555,260 @@ export const StreetLabView: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* =========================================================
+          BLOQUE 1.5: DOSSIER OFICIAL CEMK FOLIO (4 PÁGINAS)
+      ========================================================= */}
+      {activeChar?.id && CEMK_FOLIO_METADATA_MAP[activeChar.id] && (() => {
+        const meta = CEMK_FOLIO_METADATA_MAP[activeChar.id];
+        const skillsList = meta.fullSkillsTable;
+        const filteredSkills = skillsList.filter((sk) => {
+          const matchesSearch = sk.name.toLowerCase().includes(folioSkillSearch.toLowerCase());
+          const matchesStat = folioSkillStatFilter === 'ALL' || sk.stat.toUpperCase() === folioSkillStatFilter.toUpperCase();
+          return matchesSearch && matchesStat;
+        });
+
+        return (
+          <div className="chamfer-card p-3 bg-[#0d101a] border border-amber-500/70 space-y-3 shadow-xl animate-fade-in font-mono-code">
+            {/* Banner Header Táctico */}
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#232c42]">
+              <div className="flex items-center gap-2.5">
+                {meta.tokenUrl && (
+                  <img
+                    src={meta.tokenUrl}
+                    alt={meta.name}
+                    className="w-10 h-10 rounded object-cover border border-amber-500/80 shadow bg-[#090b12]"
+                  />
+                )}
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-tech text-xs sm:text-sm font-bold text-amber-300 uppercase tracking-wider">
+                      📋 DOSSIER OFICIAL CEMK FOLIO (4 PÁGINAS: 66 SKILLS CANÓNICAS, REGLAS DE ROL & ARSENAL 2077)
+                    </span>
+                    <span className="text-[9px] px-1.5 py-0.5 bg-amber-950/80 border border-amber-500/80 text-amber-300 font-bold rounded">
+                      OFICIAL 2077
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#94a3b8] mt-0.5">
+                    <strong className="text-white">{meta.name}</strong> • {meta.role} (Rango {activeChar.roleRank}) — <span className="text-cyan-400">{meta.archetype2077}</span>
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsFolioDossierOpen(!isFolioDossierOpen)}
+                className="px-2.5 py-1 bg-[#161d2e] hover:bg-[#202b44] text-amber-300 border border-amber-600/70 rounded-xs font-tech text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow"
+              >
+                {isFolioDossierOpen ? (
+                  <>
+                    <ChevronDown className="w-3.5 h-3.5" />
+                    <span>[ ▴ Ocultar Dossier ]</span>
+                  </>
+                ) : (
+                  <>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                    <span>[ ▾ Desplegar Dossier Completo ]</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Contenido Acordeón Desplegable */}
+            {isFolioDossierOpen && (
+              <div className="space-y-3.5 pt-1 animate-fade-in text-xs">
+                {/* 4 Pestañas del Dossier */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 bg-[#090b12] rounded border border-[#1a2234]">
+                  <button
+                    onClick={() => setFolioDossierTab('skills')}
+                    className={`py-1.5 px-2 rounded text-xs font-tech font-bold transition-all cursor-pointer text-center ${
+                      folioDossierTab === 'skills'
+                        ? 'bg-amber-950/80 border border-amber-500 text-amber-200 shadow'
+                        : 'text-slate-400 hover:text-white hover:bg-[#141926]'
+                    }`}
+                  >
+                    1. 📊 66 SKILLS CANÓNICAS
+                  </button>
+                  <button
+                    onClick={() => setFolioDossierTab('role_rules')}
+                    className={`py-1.5 px-2 rounded text-xs font-tech font-bold transition-all cursor-pointer text-center ${
+                      folioDossierTab === 'role_rules'
+                        ? 'bg-amber-950/80 border border-amber-500 text-amber-200 shadow'
+                        : 'text-slate-400 hover:text-white hover:bg-[#141926]'
+                    }`}
+                  >
+                    2. ⚡ REGLAS DE ROL 2077
+                  </button>
+                  <button
+                    onClick={() => setFolioDossierTab('arsenal')}
+                    className={`py-1.5 px-2 rounded text-xs font-tech font-bold transition-all cursor-pointer text-center ${
+                      folioDossierTab === 'arsenal'
+                        ? 'bg-amber-950/80 border border-amber-500 text-amber-200 shadow'
+                        : 'text-slate-400 hover:text-white hover:bg-[#141926]'
+                    }`}
+                  >
+                    3. ⚔️ ARSENAL & CROMO
+                  </button>
+                  <button
+                    onClick={() => setFolioDossierTab('backstory')}
+                    className={`py-1.5 px-2 rounded text-xs font-tech font-bold transition-all cursor-pointer text-center ${
+                      folioDossierTab === 'backstory'
+                        ? 'bg-amber-950/80 border border-amber-500 text-amber-200 shadow'
+                        : 'text-slate-400 hover:text-white hover:bg-[#141926]'
+                    }`}
+                  >
+                    4. 📖 BIOGRAFÍA & TRASFONDO
+                  </button>
+                </div>
+
+                {/* PESTAÑA 1: 66 SKILLS CANÓNICAS (LVL + STAT = BASE) */}
+                {folioDossierTab === 'skills' && (
+                  <div className="bg-[#090b12] border border-[#1a2234] p-3 rounded space-y-2.5">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#182033] pb-2">
+                      <div>
+                        <span className="font-tech text-xs font-bold text-amber-400 uppercase tracking-wide block">
+                          MATRIZ OFICIAL DE 66 HABILIDADES (CEMK PÁGS. 1-2)
+                        </span>
+                        <span className="text-[10px] text-[#64748b]">
+                          Cálculo exacto: LVL Entrenado + Valor STAT = BASE Canónica
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        value={folioSkillSearch}
+                        onChange={(e) => setFolioSkillSearch(e.target.value)}
+                        placeholder="Buscar habilidad..."
+                        className="bg-[#121624] border border-[#232f48] text-white text-[10px] px-2 py-1 rounded w-40 focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+
+                    {/* Filtros de STAT */}
+                    <div className="flex flex-wrap items-center gap-1 text-[9px]">
+                      {['ALL', 'INT', 'REF', 'DEX', 'TECH', 'COOL', 'WILL', 'EMP', 'BODY'].map((st) => (
+                        <button
+                          key={st}
+                          onClick={() => setFolioSkillStatFilter(st)}
+                          className={`px-2 py-0.5 rounded cursor-pointer transition-all ${
+                            folioSkillStatFilter === st
+                              ? 'bg-amber-600 text-white font-bold'
+                              : 'bg-[#121624] text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {st}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Tabla de Skills */}
+                    <div className="max-h-60 overflow-y-auto border border-[#182033] rounded">
+                      <table className="w-full text-left text-[10px]">
+                        <thead className="bg-[#121624] text-[#94a3b8] uppercase sticky top-0 border-b border-[#1f293d]">
+                          <tr>
+                            <th className="p-1.5">Habilidad</th>
+                            <th className="p-1.5 text-center">Stat</th>
+                            <th className="p-1.5 text-center">Nivel (LVL)</th>
+                            <th className="p-1.5 text-center">Valor Stat</th>
+                            <th className="p-1.5 text-center font-bold text-amber-300">Base Canónica</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#141a29]">
+                          {filteredSkills.map((sk, idx) => {
+                            const statVal = activeChar.stats[sk.stat as keyof typeof activeChar.stats] ?? (sk.base - sk.lvl);
+                            const isTrained = sk.lvl > 0;
+                            return (
+                              <tr
+                                key={idx}
+                                className={`transition-colors ${
+                                  isTrained
+                                    ? 'bg-amber-950/20 hover:bg-amber-950/40 text-amber-100 font-medium'
+                                    : 'hover:bg-[#101420] text-slate-400'
+                                }`}
+                              >
+                                <td className="p-1.5 font-medium flex items-center gap-1">
+                                  {isTrained && <span className="text-amber-400">✦</span>}
+                                  <span>{sk.name}</span>
+                                </td>
+                                <td className="p-1.5 text-center text-[#94a3b8] font-mono">{sk.stat}</td>
+                                <td className="p-1.5 text-center font-bold">
+                                  {isTrained ? (
+                                    <span className="text-amber-300 bg-amber-950/80 px-1.5 py-0.2 rounded border border-amber-800/60">
+                                      {sk.lvlStr || sk.lvl}
+                                    </span>
+                                  ) : (
+                                    <span className="text-slate-500">—</span>
+                                  )}
+                                </td>
+                                <td className="p-1.5 text-center text-slate-400">{statVal}</td>
+                                <td className="p-1.5 text-center font-bold text-white bg-[#0e1320]">
+                                  {sk.base}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* PESTAÑA 2: REGLAS DE ROL CEMK 2077 */}
+                {folioDossierTab === 'role_rules' && (
+                  <div className="bg-[#090b12] border border-[#1a2234] p-3 rounded space-y-2">
+                    <span className="font-tech text-xs font-bold text-cyan-400 uppercase tracking-wide block">
+                      HABILIDAD DE ROL: {activeChar.roleAbilityName} (RANGO {activeChar.roleRank})
+                    </span>
+                    <p className="text-slate-300 text-[11px] leading-relaxed bg-[#121624] p-2.5 rounded border border-[#1e273a]">
+                      {meta.roleAbilitySummary}
+                    </p>
+                    <div className="pt-1">
+                      <span className="font-tech text-[10px] text-amber-400 uppercase block mb-1">
+                        NOTAS TÁCTICAS DEL ARQUETIPO:
+                      </span>
+                      <p className="text-[#94a3b8] text-[10px] leading-relaxed">
+                        {activeChar.notes}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* PESTAÑA 3: ARSENAL & CROMO 2077 */}
+                {folioDossierTab === 'arsenal' && (
+                  <div className="bg-[#090b12] border border-[#1a2234] p-3 rounded space-y-2">
+                    <span className="font-tech text-xs font-bold text-cyan-400 uppercase tracking-wide block">
+                      ARSENAL, CIBERWARE Y REGLAS 2077 (CEMK PÁGS. 3-4)
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                      {meta.equipmentSummary.map((item, idx) => (
+                        <div key={idx} className="bg-[#121624] p-2 rounded border border-[#1e273a] flex items-start gap-1.5">
+                          <span className="text-amber-400 mt-0.5">•</span>
+                          <span className="text-slate-200 text-[10px]">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {meta.combatStyle && (
+                      <p className="text-[10px] text-[#94a3b8] pt-1">
+                        <strong className="text-cyan-400">Estilo Táctico:</strong> {meta.combatStyle}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* PESTAÑA 4: BIOGRAFÍA & TRASFONDO */}
+                {folioDossierTab === 'backstory' && (
+                  <div className="bg-[#090b12] border border-[#1a2234] p-3 rounded space-y-2">
+                    <span className="font-tech text-xs font-bold text-amber-400 uppercase tracking-wide block">
+                      BIOGRAFÍA CANÓNICA (CEMK FOLIOS PÁGS. 1-2)
+                    </span>
+                    <p className="text-slate-300 text-[11px] leading-relaxed bg-[#121624] p-3 rounded border border-[#1e273a]">
+                      {meta.backstory}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* =========================================================
           BLOQUE 2: CINTA TÁCTICA HORIZONTAL DE LOS 10 STATS + DERIVADAS

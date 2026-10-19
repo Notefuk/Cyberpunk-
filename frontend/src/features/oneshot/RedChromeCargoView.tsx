@@ -18,9 +18,15 @@ import {
   Skull,
   Maximize2,
   X,
-  FileText
+  FileText,
+  Sparkles,
+  Award
 } from 'lucide-react';
-import { useCharacterStore } from '../../store/useCharacterStore';
+import { useCharacterStore, buildCemk2077Characters } from '../../store/useCharacterStore';
+import {
+  CEMK_FOLIO_PREMADE_CHARACTERS,
+  CEMK_FOLIO_METADATA_MAP
+} from '../../data/cemkFolioPremadesData';
 import {
   RED_CHROME_SCREAMSHEET,
   RED_CHROME_BRIEFING,
@@ -36,7 +42,7 @@ import {
 } from '../../data/redChromeCargoData';
 import { QUICKHACKS_2077_CATALOG } from '../../data/netAndRolesData';
 
-type RightColumnTab = 'enemies_loot' | 'mainframe_crates' | 'screamsheet_gm';
+type RightColumnTab = 'enemies_loot' | 'mainframe_crates' | 'screamsheet_gm' | 'premade_edgerunners';
 
 interface ActiveEnemyInstance {
   instanceId: string;
@@ -58,6 +64,8 @@ export const RedChromeCargoView: React.FC = () => {
   const {
     characters,
     getActiveCharacter,
+    setActiveCharacter,
+    syncOrRestoreCemkFolioCharacters,
     loadCemk2077PartyRoster,
     gmPayAllCharacters,
     addEurodollarTransaction,
@@ -70,6 +78,10 @@ export const RedChromeCargoView: React.FC = () => {
   // ESTADO GENERAL
   // ============================================================================
   const [rightTab, setRightTab] = useState<RightColumnTab>('enemies_loot');
+  const [edgerunnerRosterTab, setEdgerunnerRosterTab] = useState<'cemk_folios' | 'anime_crew'>('cemk_folios');
+  const [viewingDossierCharId, setViewingDossierCharId] = useState<string | null>(null);
+  const [skillSearchQuery, setSkillSearchQuery] = useState<string>('');
+  const [skillStatFilter, setSkillStatFilter] = useState<string>('ALL');
   const [partySize, setPartySize] = useState<number>(4);
   const [conversionMode, setConversionMode] = useState<'2077' | '2045'>('2077');
   const [isTrainAlerted, setIsTrainAlerted] = useState<boolean>(false);
@@ -901,8 +913,8 @@ export const RedChromeCargoView: React.FC = () => {
         ==================================================================== */}
         <div className="xl:col-span-7 space-y-3.5">
 
-          {/* BARRA DE LAS 3 PESTAÑAS PRINCIPALES */}
-          <div className="grid grid-cols-3 gap-1 bg-[#0b0e17] p-1.5 rounded-xs border border-[#1f2638]">
+          {/* BARRA DE LAS 4 PESTAÑAS PRINCIPALES */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 bg-[#0b0e17] p-1.5 rounded-xs border border-[#1f2638]">
             <button
               onClick={() => setRightTab('enemies_loot')}
               className={`py-2 px-2 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all cursor-pointer text-center truncate ${
@@ -921,7 +933,7 @@ export const RedChromeCargoView: React.FC = () => {
                   : 'text-[#94a3b8] hover:text-white hover:bg-[#151926]'
               }`}
             >
-              2. 💻 MAINFRAME & 4 CAJAS
+              2. 💻 MAINFRAME & CAJAS
             </button>
             <button
               onClick={() => setRightTab('screamsheet_gm')}
@@ -932,6 +944,16 @@ export const RedChromeCargoView: React.FC = () => {
               }`}
             >
               3. 📰 SCREAMSHEET & GM
+            </button>
+            <button
+              onClick={() => setRightTab('premade_edgerunners')}
+              className={`py-2 px-2 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all cursor-pointer text-center truncate ${
+                rightTab === 'premade_edgerunners'
+                  ? 'bg-cyan-600 text-white shadow-md shadow-cyan-950'
+                  : 'text-[#94a3b8] hover:text-cyan-300 hover:bg-[#151926]'
+              }`}
+            >
+              4. 👥 PREMADES 2077
             </button>
           </div>
 
@@ -1699,9 +1721,605 @@ export const RedChromeCargoView: React.FC = () => {
             </div>
           )}
 
+          {/* ==================================================================
+              PESTAÑA 4: PREMADES 2077 (CEMK FOLIOS & BANDA DEL ANIME)
+          ================================================================== */}
+          {rightTab === 'premade_edgerunners' && (
+            <div className="space-y-4 animate-fade-in font-mono-code">
+              
+              {/* SELECTOR DE ROSTER DUAL + ACCIONES DE RESTAURACIÓN */}
+              <div className="bg-[#0e111a] border border-[#1f2638] p-3 rounded-xs space-y-2.5 shadow-xl">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#1b2234] pb-2">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-cyan-400" />
+                    <span className="font-tech text-xs font-bold text-white uppercase tracking-wider">
+                      ROSTERS OFICIALES EDGERUNNERS 2077
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => {
+                        syncOrRestoreCemkFolioCharacters();
+                        showToast('🔄 Folios Canónicos CEMK restaurados al estado de fábrica.', 'success');
+                      }}
+                      className="px-2 py-1 bg-[#121624] hover:bg-[#1a2236] border border-cyan-800/80 text-cyan-300 text-[10px] rounded transition-all cursor-pointer flex items-center gap-1"
+                      title="Restaura copias canónicas de los 7 Folios oficiales CEMK"
+                    >
+                      <RotateCcw className="w-3 h-3 text-cyan-400" />
+                      <span>Restaurar Folios</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        loadCemk2077PartyRoster();
+                        showToast('🎬 Banda del Anime cargada en la memoria.', 'success');
+                      }}
+                      className="px-2 py-1 bg-[#121624] hover:bg-[#1a2236] border border-amber-800/80 text-amber-300 text-[10px] rounded transition-all cursor-pointer flex items-center gap-1"
+                      title="Carga los 7 PJs de la banda de David Martinez"
+                    >
+                      <Sparkles className="w-3 h-3 text-amber-400" />
+                      <span>Cargar Anime Crew</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Sub-selector de Roster */}
+                <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#090b12] rounded border border-[#1a2234]">
+                  <button
+                    onClick={() => setEdgerunnerRosterTab('cemk_folios')}
+                    className={`py-1.5 px-2 text-xs font-tech font-bold rounded transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                      edgerunnerRosterTab === 'cemk_folios'
+                        ? 'bg-cyan-950/80 border border-cyan-500 text-cyan-200 shadow-sm'
+                        : 'text-slate-400 hover:text-white hover:bg-[#141926]'
+                    }`}
+                  >
+                    <span>📋 ROSTER OFICIAL CEMK FOLIOS (7 PJs)</span>
+                  </button>
+                  <button
+                    onClick={() => setEdgerunnerRosterTab('anime_crew')}
+                    className={`py-1.5 px-2 text-xs font-tech font-bold rounded transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                      edgerunnerRosterTab === 'anime_crew'
+                        ? 'bg-amber-950/80 border border-amber-500 text-amber-200 shadow-sm'
+                        : 'text-slate-400 hover:text-white hover:bg-[#141926]'
+                    }`}
+                  >
+                    <span>🎬 BANDA DEL ANIME (7 PJs)</span>
+                  </button>
+                </div>
+
+                <p className="text-[11px] text-[#94a3b8]">
+                  {edgerunnerRosterTab === 'cemk_folios'
+                    ? 'Personajes canónicos extraídos de las 28 páginas de CEMK-Edgerunners-Character-Folios-Letter_2024-05-22.pdf con tokens oficiales, matriz de 66 habilidades y armamento 2077.'
+                    : 'Tripulación oficial del anime Cyberpunk: Edgerunners (David, Lucy, Rebecca, Maine, Kiwi, Falco, Pilar) adaptada para misiones en Night City 2077.'}
+                </p>
+              </div>
+
+              {/* LISTA DE TARJETAS DE PERSONAJES */}
+              <div className="space-y-3">
+                {edgerunnerRosterTab === 'cemk_folios' ? (
+                  CEMK_FOLIO_PREMADE_CHARACTERS.map((folio) => {
+                    const currentChar = characters.find((c) => c.id === folio.id) || folio;
+                    const meta = CEMK_FOLIO_METADATA_MAP[folio.id];
+                    const isActive = activeChar?.id === currentChar.id;
+
+                    return (
+                      <div
+                        key={folio.id}
+                        className={`bg-[#0d101a] border rounded-xs p-3 transition-all ${
+                          isActive
+                            ? 'border-cyan-500 shadow-lg shadow-cyan-950/40 ring-1 ring-cyan-500/50'
+                            : 'border-[#1e2538] hover:border-[#2f3b57]'
+                        }`}
+                      >
+                        {/* Cabecera Tarjeta */}
+                        <div className="flex items-start justify-between gap-3 pb-2 border-b border-[#182033]">
+                          <div className="flex items-center gap-3">
+                            {meta?.tokenUrl ? (
+                              <img
+                                src={meta.tokenUrl}
+                                alt={meta.name}
+                                className="w-12 h-12 rounded object-cover border border-cyan-500/60 shadow-md bg-[#090b12]"
+                              />
+                            ) : (
+                              <div className="w-12 h-12 rounded bg-cyan-950/60 border border-cyan-600/50 flex items-center justify-center font-bold text-cyan-300 font-tech text-base">
+                                {folio.handle.substring(0, 2).toUpperCase()}
+                              </div>
+                            )}
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-tech text-sm font-bold text-white tracking-wide">
+                                  {meta ? meta.name : folio.handle}
+                                </h4>
+                                <span className="text-[10px] px-1.5 py-0.2 bg-cyan-950/80 border border-cyan-700/60 text-cyan-300 font-bold rounded">
+                                  {folio.role} {folio.roleRank}
+                                </span>
+                                {isActive && (
+                                  <span className="text-[9px] px-1.5 py-0.2 bg-emerald-950/80 border border-emerald-500 text-emerald-300 font-bold rounded animate-pulse">
+                                    🟢 EN USO
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-cyan-400 font-medium line-clamp-1">
+                                {meta?.archetype2077 || folio.roleAbilityName}
+                              </p>
+                              <span className="text-[9px] text-[#64748b]">
+                                Folio Oficial 2077 • ID: {folio.id}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col items-end gap-1">
+                            {isActive ? (
+                              <span className="px-3 py-1 bg-emerald-600 text-white font-tech font-bold text-xs rounded shadow">
+                                ✓ JUGANDO
+                              </span>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setActiveCharacter(currentChar.id);
+                                  showToast(`🎮 Ahora jugando como ${currentChar.handle}`, 'success');
+                                }}
+                                className="px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white font-tech font-bold text-xs rounded transition-all cursor-pointer shadow-md shadow-cyan-950"
+                              >
+                                🎮 JUGAR
+                              </button>
+                            )}
+                            <button
+                              onClick={() => setViewingDossierCharId(currentChar.id)}
+                              className="text-[10px] text-cyan-400 hover:text-cyan-200 underline cursor-pointer mt-0.5"
+                            >
+                              Ver 66 Skills & Dossier ▸
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Fila de Estadísticas Tácticas */}
+                        <div className="grid grid-cols-4 sm:grid-cols-5 gap-1.5 py-2 text-center text-[10px] border-b border-[#161c2c]">
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b]">
+                            <span className="text-[#64748b] block text-[9px]">HP ACTUAL</span>
+                            <span className="font-bold text-emerald-400">{currentChar.currentHp}</span>
+                          </div>
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b]">
+                            <span className="text-[#64748b] block text-[9px]">BLINDAJE</span>
+                            <span className="font-bold text-amber-300">
+                              C:{currentChar.headArmor.currentSp} / T:{currentChar.bodyArmor.currentSp}
+                            </span>
+                          </div>
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b]">
+                            <span className="text-[#64748b] block text-[9px]">HUMANIDAD</span>
+                            <span className="font-bold text-purple-300">{currentChar.currentHumanity}</span>
+                          </div>
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b]">
+                            <span className="text-[#64748b] block text-[9px]">EUROCASH</span>
+                            <span className="font-bold text-emerald-300">€${currentChar.eurodollars}</span>
+                          </div>
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b] col-span-4 sm:col-span-1">
+                            <span className="text-[#64748b] block text-[9px]">ROL ABILITY</span>
+                            <span className="font-bold text-cyan-300 truncate block" title={folio.roleAbilityName}>
+                              {folio.roleAbilityName}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Mini Barra de los 10 STATS */}
+                        <div className="grid grid-cols-5 sm:grid-cols-10 gap-1 py-1.5 text-center text-[9px] border-b border-[#141a29]">
+                          {Object.entries(currentChar.stats).map(([k, v]) => (
+                            <div key={k} className="bg-[#0a0d15] p-0.5 rounded border border-[#171e2e]">
+                              <span className="text-[#64748b] block text-[8px]">{k}</span>
+                              <span className="font-bold text-slate-200">{v}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Habilidad de Rol y Resumen */}
+                        <div className="py-2 space-y-1 text-[11px]">
+                          <div className="text-slate-300 flex items-start gap-1">
+                            <Award className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                            <span>
+                              <strong className="text-amber-300">Regla de Rol:</strong> {meta?.roleAbilitySummary || folio.notes}
+                            </span>
+                          </div>
+                          {meta?.combatStyle && (
+                            <div className="text-slate-400 text-[10px] pl-4">
+                              <span className="text-cyan-400">Estilo:</span> {meta.combatStyle}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Armas y Ciberware 2077 */}
+                        <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[#141a29]">
+                          <span className="text-[9px] text-[#64748b] uppercase">Arsenal:</span>
+                          {(currentChar.equippedWeapons || []).map((w, idx) => (
+                            <span
+                              key={idx}
+                              className="text-[9px] px-1.5 py-0.5 bg-[#121828] border border-cyan-900/60 text-cyan-200 rounded"
+                            >
+                              ⚔️ {w.name} ({w.damage})
+                            </span>
+                          ))}
+                          {currentChar.hasNeuroport && (
+                            <span className="text-[9px] px-1.5 py-0.5 bg-indigo-950/70 border border-indigo-700/60 text-indigo-300 rounded">
+                              🌐 Neuroport 2077
+                            </span>
+                          )}
+                          <span className="text-[9px] px-1.5 py-0.5 bg-[#161a28] border border-[#232b40] text-slate-300 rounded">
+                            🦾 {currentChar.installedCyberwareIds.length} Ciberimplantes
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  buildCemk2077Characters().map((animeChar) => {
+                    const currentChar =
+                      characters.find(
+                        (c) =>
+                          c.id === animeChar.id ||
+                          c.handle.toLowerCase().includes(animeChar.handle.split(' ')[0].toLowerCase())
+                      ) || animeChar;
+                    const isActive = activeChar?.id === currentChar.id;
+
+                    return (
+                      <div
+                        key={animeChar.id}
+                        className={`bg-[#0d101a] border rounded-xs p-3 transition-all ${
+                          isActive
+                            ? 'border-amber-500 shadow-lg shadow-amber-950/40 ring-1 ring-amber-500/50'
+                            : 'border-[#1e2538] hover:border-[#2f3b57]'
+                        }`}
+                      >
+                        {/* Cabecera Tarjeta Anime */}
+                        <div className="flex items-start justify-between gap-3 pb-2 border-b border-[#182033]">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded bg-amber-950/60 border border-amber-600/60 flex items-center justify-center font-bold text-amber-300 font-tech text-base">
+                              {animeChar.handle.substring(0, 2).toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h4 className="font-tech text-sm font-bold text-white tracking-wide">
+                                  {animeChar.handle}
+                                </h4>
+                                <span className="text-[10px] px-1.5 py-0.2 bg-amber-950/80 border border-amber-700/60 text-amber-300 font-bold rounded">
+                                  {animeChar.role} {animeChar.roleRank}
+                                </span>
+                                {isActive && (
+                                  <span className="text-[9px] px-1.5 py-0.2 bg-emerald-950/80 border border-emerald-500 text-emerald-300 font-bold rounded animate-pulse">
+                                    🟢 EN USO
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-[11px] text-amber-400 font-medium line-clamp-1">
+                                Edgerunners Anime Crew • {animeChar.roleAbilityName}
+                              </p>
+                              <span className="text-[9px] text-[#64748b]">ID: {currentChar.id}</span>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col items-end gap-1">
+                            {isActive ? (
+                              <span className="px-3 py-1 bg-emerald-600 text-white font-tech font-bold text-xs rounded shadow">
+                                ✓ JUGANDO
+                              </span>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setActiveCharacter(currentChar.id);
+                                  showToast(`🎮 Ahora jugando como ${currentChar.handle}`, 'success');
+                                }}
+                                className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white font-tech font-bold text-xs rounded transition-all cursor-pointer shadow-md shadow-amber-950"
+                              >
+                                🎮 JUGAR
+                              </button>
+                            )}
+                            <button
+                              onClick={() => setViewingDossierCharId(currentChar.id)}
+                              className="text-[10px] text-amber-400 hover:text-amber-200 underline cursor-pointer mt-0.5"
+                            >
+                              Ver Habilidades ▸
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Fila de Estadísticas Tácticas */}
+                        <div className="grid grid-cols-4 sm:grid-cols-5 gap-1.5 py-2 text-center text-[10px] border-b border-[#161c2c]">
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b]">
+                            <span className="text-[#64748b] block text-[9px]">HP ACTUAL</span>
+                            <span className="font-bold text-emerald-400">{currentChar.currentHp}</span>
+                          </div>
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b]">
+                            <span className="text-[#64748b] block text-[9px]">BLINDAJE</span>
+                            <span className="font-bold text-amber-300">
+                              C:{currentChar.headArmor.currentSp} / T:{currentChar.bodyArmor.currentSp}
+                            </span>
+                          </div>
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b]">
+                            <span className="text-[#64748b] block text-[9px]">HUMANIDAD</span>
+                            <span className="font-bold text-purple-300">{currentChar.currentHumanity}</span>
+                          </div>
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b]">
+                            <span className="text-[#64748b] block text-[9px]">EUROCASH</span>
+                            <span className="font-bold text-emerald-300">€${currentChar.eurodollars}</span>
+                          </div>
+                          <div className="bg-[#121624] p-1 rounded border border-[#1d263b] col-span-4 sm:col-span-1">
+                            <span className="text-[#64748b] block text-[9px]">ROL ABILITY</span>
+                            <span className="font-bold text-amber-300 truncate block">
+                              {animeChar.roleAbilityName}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Mini Barra de los 10 STATS */}
+                        <div className="grid grid-cols-5 sm:grid-cols-10 gap-1 py-1.5 text-center text-[9px] border-b border-[#141a29]">
+                          {Object.entries(currentChar.stats).map(([k, v]) => (
+                            <div key={k} className="bg-[#0a0d15] p-0.5 rounded border border-[#171e2e]">
+                              <span className="text-[#64748b] block text-[8px]">{k}</span>
+                              <span className="font-bold text-slate-200">{v}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Armas y Ciberware */}
+                        <div className="flex flex-wrap items-center gap-1.5 pt-2">
+                          <span className="text-[9px] text-[#64748b] uppercase">Arsenal:</span>
+                          {(currentChar.equippedWeapons || []).map((w, idx) => (
+                            <span
+                              key={idx}
+                              className="text-[9px] px-1.5 py-0.5 bg-[#121828] border border-amber-900/60 text-amber-200 rounded"
+                            >
+                              ⚔️ {w.name} ({w.damage})
+                            </span>
+                          ))}
+                          <span className="text-[9px] px-1.5 py-0.5 bg-[#161a28] border border-[#232b40] text-slate-300 rounded">
+                            🦾 {currentChar.installedCyberwareIds.length} Ciberimplantes
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+            </div>
+          )}
+
         </div>
 
       </div>
+
+      {/* ========================================================================
+          MODAL DE DOSSIER OFICIAL & 66 SKILLS CANÓNICAS (CEMK 2077)
+      ======================================================================== */}
+      {viewingDossierCharId && (() => {
+        const modalChar =
+          characters.find((c) => c.id === viewingDossierCharId) ||
+          CEMK_FOLIO_PREMADE_CHARACTERS.find((c) => c.id === viewingDossierCharId) ||
+          buildCemk2077Characters().find((c) => c.id === viewingDossierCharId);
+        const modalMeta = CEMK_FOLIO_METADATA_MAP[viewingDossierCharId];
+
+        if (!modalChar) return null;
+
+        const skillsList = modalMeta?.fullSkillsTable || (modalChar.skills ? Object.entries(modalChar.skills).map(([sName, lvl]) => ({
+          name: sName,
+          stat: 'SKILL',
+          lvl: Number(lvl) || 0,
+          lvlStr: String(lvl),
+          base: Number(lvl) || 0
+        })) : []);
+
+        const filteredSkills = skillsList.filter((sk) => {
+          const matchesSearch = sk.name.toLowerCase().includes(skillSearchQuery.toLowerCase());
+          const matchesStat = skillStatFilter === 'ALL' || sk.stat.toUpperCase() === skillStatFilter.toUpperCase();
+          return matchesSearch && matchesStat;
+        });
+
+        return (
+          <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 font-mono-code">
+            <div className="bg-[#0b0e17] border border-cyan-500/80 p-4 sm:p-6 rounded-xs max-w-4xl w-full max-h-[90vh] flex flex-col space-y-4 shadow-2xl">
+              
+              {/* Header Modal */}
+              <div className="flex items-start justify-between border-b border-[#1f293d] pb-3">
+                <div className="flex items-center gap-3">
+                  {modalMeta?.tokenUrl ? (
+                    <img
+                      src={modalMeta.tokenUrl}
+                      alt={modalMeta.name}
+                      className="w-14 h-14 rounded object-cover border-2 border-cyan-400 shadow-md bg-[#090b12]"
+                    />
+                  ) : (
+                    <div className="w-14 h-14 rounded bg-cyan-950 border-2 border-cyan-500 flex items-center justify-center font-bold text-cyan-300 font-tech text-lg">
+                      {modalChar.handle.substring(0, 2).toUpperCase()}
+                    </div>
+                  )}
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-tech text-lg font-bold text-white uppercase tracking-wider">
+                        {modalMeta ? modalMeta.name : modalChar.handle}
+                      </h3>
+                      <span className="text-xs px-2 py-0.5 bg-cyan-950 border border-cyan-600 text-cyan-300 font-bold rounded">
+                        {modalChar.role} {modalChar.roleRank}
+                      </span>
+                    </div>
+                    <p className="text-xs text-cyan-400 font-medium">
+                      {modalMeta?.archetype2077 || modalChar.roleAbilityName}
+                    </p>
+                    <span className="text-[10px] text-[#64748b]">
+                      Folio Oficial CEMK 2077 • ID: {modalChar.id}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setViewingDossierCharId(null)}
+                  className="text-slate-400 hover:text-white text-lg font-bold p-1 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Contenido Scrolleable */}
+              <div className="overflow-y-auto space-y-4 pr-1 text-xs">
+                
+                {/* 1. Trasfondo & Biografía */}
+                {modalMeta?.backstory && (
+                  <div className="bg-[#0f1320] border border-[#1f293d] p-3 rounded space-y-1">
+                    <span className="font-tech text-xs font-bold text-amber-400 uppercase tracking-wider block">
+                      📖 BIOGRAFÍA Y TRASFONDO CANÓNICO (PÁGINA 1-2 DEL FOLIO)
+                    </span>
+                    <p className="text-slate-300 leading-relaxed text-[11px]">
+                      {modalMeta.backstory}
+                    </p>
+                  </div>
+                )}
+
+                {/* 2. Reglas de Rol y Combate */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="bg-[#0f1320] border border-[#1f293d] p-2.5 rounded space-y-1">
+                    <span className="font-tech text-[11px] font-bold text-cyan-400 uppercase block">
+                      ⚡ HABILIDAD DE ROL: {modalChar.roleAbilityName} (RANGO {modalChar.roleRank})
+                    </span>
+                    <p className="text-slate-300 text-[10px] leading-relaxed">
+                      {modalMeta?.roleAbilitySummary || modalChar.notes}
+                    </p>
+                  </div>
+                  <div className="bg-[#0f1320] border border-[#1f293d] p-2.5 rounded space-y-1">
+                    <span className="font-tech text-[11px] font-bold text-cyan-400 uppercase block">
+                      🎯 ESTILO TÁCTICO & ARSENAL
+                    </span>
+                    <p className="text-slate-300 text-[10px] leading-relaxed">
+                      {modalMeta?.combatStyle || 'Especialista en combate urbano y operaciones callejeras.'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* 3. Equipamiento Resumido */}
+                {modalMeta?.equipmentSummary && (
+                  <div className="bg-[#0f1320] border border-[#1f293d] p-2.5 rounded space-y-1.5">
+                    <span className="font-tech text-[11px] font-bold text-cyan-400 uppercase block">
+                      📦 EQUIPO Y CIBERWARE CANÓNICO (PÁGINA 3-4 DEL FOLIO)
+                    </span>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[10px] text-slate-300">
+                      {modalMeta.equipmentSummary.map((eq, idx) => (
+                        <li key={idx} className="flex items-start gap-1.5 bg-[#090b12] p-1.5 rounded border border-[#171e2e]">
+                          <span className="text-cyan-400">•</span>
+                          <span>{eq}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* 4. Tabla de 66 Habilidades Canónicas */}
+                <div className="bg-[#090b12] border border-[#1f293d] p-3 rounded space-y-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#182033] pb-2">
+                    <span className="font-tech text-xs font-bold text-cyan-400 uppercase tracking-wider">
+                      📊 MATRIZ CANÓNICA DE HABILIDADES ({skillsList.length} SKILLS — LVL + STAT = BASE)
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          value={skillSearchQuery}
+                          onChange={(e) => setSkillSearchQuery(e.target.value)}
+                          placeholder="Buscar skill..."
+                          className="bg-[#121624] border border-[#232f48] text-white text-[10px] px-2 py-1 rounded w-36 focus:outline-none focus:border-cyan-500"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Filtros rápidos por STAT */}
+                  <div className="flex flex-wrap items-center gap-1 text-[9px]">
+                    {['ALL', 'INT', 'REF', 'DEX', 'TECH', 'COOL', 'WILL', 'EMP', 'BODY'].map((st) => (
+                      <button
+                        key={st}
+                        onClick={() => setSkillStatFilter(st)}
+                        className={`px-2 py-0.5 rounded cursor-pointer transition-all ${
+                          skillStatFilter === st
+                            ? 'bg-cyan-600 text-white font-bold'
+                            : 'bg-[#121624] text-slate-400 hover:text-white'
+                        }`}
+                      >
+                        {st}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Tabla */}
+                  <div className="max-h-64 overflow-y-auto border border-[#171e2e] rounded">
+                    <table className="w-full text-left text-[10px]">
+                      <thead className="bg-[#121624] text-[#94a3b8] uppercase sticky top-0 border-b border-[#1f293d]">
+                        <tr>
+                          <th className="p-1.5">Habilidad</th>
+                          <th className="p-1.5 text-center">Stat</th>
+                          <th className="p-1.5 text-center">Nivel (LVL)</th>
+                          <th className="p-1.5 text-center">Valor Stat</th>
+                          <th className="p-1.5 text-center font-bold text-cyan-300">Base Canónica</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#141a29]">
+                        {filteredSkills.map((sk, idx) => {
+                          const statVal = modalChar.stats[sk.stat as keyof typeof modalChar.stats] ?? (sk.base - sk.lvl);
+                          const isTrained = sk.lvl > 0;
+                          return (
+                            <tr
+                              key={idx}
+                              className={`transition-colors ${
+                                isTrained
+                                  ? 'bg-cyan-950/20 hover:bg-cyan-950/40 text-cyan-100 font-medium'
+                                  : 'hover:bg-[#101420] text-slate-400'
+                              }`}
+                            >
+                              <td className="p-1.5 font-medium flex items-center gap-1">
+                                {isTrained && <span className="text-cyan-400">✦</span>}
+                                <span>{sk.name}</span>
+                              </td>
+                              <td className="p-1.5 text-center text-[#94a3b8] font-mono">{sk.stat}</td>
+                              <td className="p-1.5 text-center font-bold">
+                                {isTrained ? (
+                                  <span className="text-cyan-300 bg-cyan-950/80 px-1.5 py-0.2 rounded border border-cyan-800/60">
+                                    {sk.lvlStr || sk.lvl}
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-500">—</span>
+                                )}
+                              </td>
+                              <td className="p-1.5 text-center text-slate-400">{statVal}</td>
+                              <td className="p-1.5 text-center font-bold text-white bg-[#0e1320]">
+                                {sk.base}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Footer Modal */}
+              <div className="flex items-center justify-between pt-3 border-t border-[#1f293d]">
+                <button
+                  onClick={() => {
+                    setActiveCharacter(modalChar.id);
+                    setViewingDossierCharId(null);
+                    showToast(`🎮 Ahora jugando como ${modalChar.handle}`, 'success');
+                  }}
+                  className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white font-tech font-bold text-xs rounded transition-all cursor-pointer shadow-lg shadow-cyan-950"
+                >
+                  🎮 SELECCIONAR Y JUGAR CON ESTE PERSONAJE
+                </button>
+                <button
+                  onClick={() => setViewingDossierCharId(null)}
+                  className="px-3 py-1.5 bg-[#182030] hover:bg-[#222c42] text-slate-300 text-xs rounded transition-all cursor-pointer"
+                >
+                  Cerrar Dossier
+                </button>
+              </div>
+
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ========================================================================
           MODAL DE QUICKHACKS 2077

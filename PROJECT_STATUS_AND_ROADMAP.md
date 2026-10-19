@@ -1,18 +1,19 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v3.6.2 OPERATIVO`**  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v3.7.0 OPERATIVO`**  
 > **FECHA DE CORTE**: 2026-10-18  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 
 ---
 
-## 📊 1. Resumen Ejecutivo de Estado (v3.6.2)
+## 📊 1. Resumen Ejecutivo de Estado (v3.7.0)
 
 CPR Omni-Deck es una plataforma táctica digital offline-first de alta fidelidad diseñada según la filosofía de arquitectura desacoplada COMP/CON de Lancer RPG. La aplicación actúa como un HUD de combate dinámico, un laboratorio de ciberware/equipo callejero, un asistente de Netrunning y un portal integral de gestión para Árbitros y Edgerunners de Cyberpunk RED.
 
 ### Métricas de Desarrollo en Vivo:
 * **Ítems del Catálogo Multi-Libro**: 391+ ítems oficiales indexados sin pérdidas.
+* **Folios Canónicos CEMK 2077**: 7 personajes oficiales pregenerados (28 páginas CEMK), 66 habilidades completas por folio con desglose `LVL + STAT = BASE`, y 7 tokens PNG oficiales.
 * **Módulos de Sistema Principales**: 8 sistemas completamente integrados y operativos.
 * **Enemigos y Facciones GM**: 44 perfiles base + 15 facciones oficiales (118 PNJs de Danger Gal Dossier).
 * **Disciplinas Marciales y Movimientos**: 23 artes marciales y 46 movimientos especiales (Interface RED Vol. 4).
@@ -21,18 +22,18 @@ CPR Omni-Deck es una plataforma táctica digital offline-first de alta fidelidad
 
 ---
 
-## 🛠️ 2. Módulos del Sistema Operativos (v3.6.2)
+## 🛠️ 2. Módulos del Sistema Operativos (v3.7.0)
 
 | # | Módulo | Componente Principal | Estado | Descripción Funcional |
 |---|--------|----------------------|:------:|-----------------------|
 | 1 | **Motor de Combate & HUD Táctico** | `CombatHudView.tsx` | **100% OPERATIVO** | Grid modular reordenable en 3 zonas (Bio/Defensas, Centro configurable, Bandeja lateral), tiradas D10 con explosiones/pifias, DVs automáticos por distancia y tabla de armas, selector de ancho de columna (3, 4, 5 cols). |
 | 2 | **Matriz Visual SP/SDP & Calculadora** | `CombatHudView.tsx` | **100% OPERATIVO** | Placas interactivas (`🛡️/💥`) para Cabeza y Torso, monitor SDP de Coberturas/Escudos (`🔰/💥`), Calculadora de Impactos con soporte para AP, Melee, Artes Marciales, Brawling y Críticos, y guía oficial integrada (pp. 183-187). |
 | 3 | **Creador de Personajes & Lifepath** | `CharacterCreatorWizard.tsx` | **100% OPERATIVO** | Wizard de 6 pasos (Concepto/Rol, STATs por 3 métodos, Habilidades, Lifepath con tiradas 1d10, Equipo inicial por Rol y Exportación en formato oficial). |
-| 4 | **Street Lab, Dojo & Inventario** | `StreetLabView.tsx` | **100% OPERATIVO** | Gestión de Eurodólares, inventario, instalación de ciberware con pérdida de Humanidad, zócalo neural con Chipware y Dojo de Artes Marciales para invertir Puntos de Mejora (IP). |
+| 4 | **Street Lab, Dojo & Inventario** | `StreetLabView.tsx` | **100% OPERATIVO** | Gestión de Eurodólares, inventario, instalación de ciberware con pérdida de Humanidad, zócalo neural con Chipware, Dojo de Artes Marciales (IP), y acordeón de Dossier Canónico CEMK 2077 (4 páginas: 66 skills, rol, arsenal y bio). |
 | 5 | **Netrunning & 10 Habilidades de Rol** | `NetAndRolesDeckView.tsx` | **100% OPERATIVO** | Simulador de arquitectura de Red 2045 con programas Black ICE, consola de Quickhacking CEMK 2077 con cola de memoria RAM y terminal interactivo para las 10 Habilidades de Rol oficiales. |
 | 6 | **Bestiario GM & Encuentros** | `EnemiesCompendiumPanel.tsx` | **100% OPERATIVO** | Catálogo de 44 enemigos base y 15 facciones con inyección directa de perfiles de combate en el HUD táctico y generador de goons al vuelo. |
-| 7 | **Misión Oficial CEMK 2077** | `RedChromeCargoView.tsx` | **100% OPERATIVO** | Misión interactiva *Red Chrome Cargo* con mapa esquemático SVG del tren Maglev Hammerhead, tablero de escenas, spawneo de enemigos y botín de la Cyberware Militech. |
-| 8 | **Codex & Documentación Maestra** | `SystemChangelogAndDocsView.tsx` | **100% OPERATIVO** | Portal in-app de documentación, registro cronológico versión por versión (`v1.0.0` a `v3.6.2`), inventario de sistemas y contratos técnicos. |
+| 7 | **Misión Oficial CEMK 2077 & Hub de Folios** | `RedChromeCargoView.tsx` | **100% OPERATIVO** | Misión interactiva *Red Chrome Cargo* con mapa Maglev Hammerhead, tablero de escenas, spawneo de enemigos, botín y pestaña 4 con selector dual de Edgerunners 2077 (7 Folios CEMK + 7 Anime Crew) con modal de 66 habilidades. |
+| 8 | **Codex & Documentación Maestra** | `SystemChangelogAndDocsView.tsx` | **100% OPERATIVO** | Portal in-app de documentación, registro cronológico versión por versión (`v1.0.0` a `v3.7.0`), inventario de sistemas y contratos técnicos. |
 
 ---
 
@@ -46,7 +47,8 @@ flowchart TD
     F3 --> F_ONE[Fase Oneshot: Red Chrome Cargo CEMK]
     F_ONE --> F_CODEX[Fase Codex: Documentación & Changelogs]
     F_CODEX --> F_ERGO[v3.6.x: Ergonomía HUD, SP/SDP & Calculadora]
-    F_ERGO --> F4[Fase 4: Pantalla GM Avanzada & Campaña]
+    F_ERGO --> F_FOLIO[v3.7.0: Folios Canónicos CEMK 2077 & Dossier]
+    F_FOLIO --> F4[Fase 4: Pantalla GM Avanzada & Campaña]
     F4 --> F5[Fase 5: PWA Offline Sync & Multi-Device]
 
     style F0 fill:#059669,stroke:#10b981,color:#fff
@@ -55,7 +57,8 @@ flowchart TD
     style F3 fill:#059669,stroke:#10b981,color:#fff
     style F_ONE fill:#059669,stroke:#10b981,color:#fff
     style F_CODEX fill:#059669,stroke:#10b981,color:#fff
-    style F_ERGO fill:#0891b2,stroke:#06b6d4,color:#fff
+    style F_ERGO fill:#059669,stroke:#10b981,color:#fff
+    style F_FOLIO fill:#0891b2,stroke:#06b6d4,color:#fff
     style F4 fill:#1e293b,stroke:#475569,color:#94a3b8
     style F5 fill:#1e293b,stroke:#475569,color:#94a3b8
 ```

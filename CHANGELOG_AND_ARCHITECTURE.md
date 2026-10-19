@@ -26,7 +26,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 
 ---
 
-## 🗺️ Current Real Tree on Disk (`v3.6.2 - Arquitectura Modular Completa Fases 0 a 3 + Oneshot & Codex + HUD Ergonomics`)
+## 🗺️ Current Real Tree on Disk (`v3.7.0 - Integración 7 Folios CEMK 2077, 66 Skills Canónicas & Red Chrome Cargo Hub`)
 
 ```text
 cpr-omni-deck/
@@ -43,11 +43,13 @@ cpr-omni-deck/
 ├── frontend/
 │   ├── public/
 │   │   ├── hammerhead-map.png            # Plano esquemático canónico del tren Maglev Hammerhead (Red Chrome Cargo)
-│   │   └── screamsheet-p2.png            # Recorte canónico original del Screamsheet pág. 2
+│   │   ├── screamsheet-p2.png            # Recorte canónico original del Screamsheet pág. 2
+│   │   └── tokens/cemk/                  # 7 tokens oficiales PNG recortados de folios canónicos CEMK
 │   ├── src/
 │   │   ├── components/
 │   │   │   └── ItemVisualPlaceholder.tsx # Frames militares tácticos SVG/Lucide por categoría
 │   │   ├── data/
+│   │   │   ├── cemkFolioPremadesData.ts  # 7 Folios oficiales CEMK 2077 (28 págs, 66 skills, armas y cromo)
 │   │   │   ├── characterCreationData.ts  # Catálogo canónico de creación, Lifepath, pregenerados y deuda
 │   │   │   ├── core-rules.cprpack.json   # Catálogo maestro multi-libro (368 ítems canónicos)
 │   │   │   ├── criticalInjuries.ts       # Tablas oficiales 2d6 de heridas críticas (Head/Body)
@@ -204,6 +206,36 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ---
 
 ## 📜 Master Version Changelog
+
+### [v3.7.0] - 2026-10-18 (CEMK 2077 Folio Premades Roster, 28-Page Canonical Skills & Red Chrome Cargo Hub)
+* **Category**: CEMK 2077 Folio Premades Roster, 28-Page Canonical Skills & Red Chrome Cargo Hub
+* **Files Modified**:
+  - `frontend/src/data/cemkFolioPremadesData.ts`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/features/oneshot/RedChromeCargoView.tsx`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+* **What Changed**:
+  1. **Conversión 100% Canónica de los 7 Folios Oficiales CEMK 2077 (28 Páginas)**:
+     - Conversión estricta de las 28 páginas oficiales de `CEMK-Edgerunners-Character-Folios-Letter_2024-05-22.pdf`.
+     - 7 personajes listos para combate: Hardpoint (Solo), Wrench (Nomad), Connect (Fixer), Bluescreen/Scribe (Netrunner), Insurance/Retro (Medtech), Thorn/Bullseye (Rockerboy) y Maven/Slider (Tech).
+     - Matriz de 66 habilidades canónicas por personaje con fórmula matemática canónica `LVL Entrenado + Valor STAT = BASE Canónica`.
+     - Armamento 2077 completo (Arasaka Masamune, Malorian Arms 3516, Mantis Blades, Gorilla Arms, Smart Weapons, Tech Weapons) y cromo de grado militar (Moore Tech Berserk, Sandevistan, Cyberware suite universal Neuroport 2077).
+     - Inclusión de los 7 tokens oficiales en `public/tokens/cemk/`.
+  2. **Persistencia y Sincronización en `useCharacterStore`**:
+     - `DEFAULT_CHARACTERS` ahora incluye los 7 Folios oficiales, el personaje canónico V y los 7 Edgerunners de la tripulación del anime.
+     - Implementación de `syncOrRestoreCemkFolioCharacters()` para restablecer los folios canónicos al estado de fábrica sin alterar personajes personalizados creados por el usuario en `localStorage`.
+     - Fusión automática en `persist.merge` garantizando que cualquier usuario existente reciba los folios canónicos de inmediato.
+  3. **Pestaña 4 en Red Chrome Cargo (`4. 👥 PREMADES 2077`)**:
+     - Selector de roster dual: `📋 ROSTER OFICIAL CEMK FOLIOS (7 PJs)` vs `🎬 BANDA DEL ANIME (7 PJs)`.
+     - Tarjetas tácticas completas con avatar/token oficial, badges de HP, SP Cabeza/Torso, Humanidad, Eurodólares, 10 STATS, armas en mano y ciberimplantes.
+     - Botón de 1-click para seleccionar personaje activo (`🎮 JUGAR CON ESTE PJ`).
+     - Modal de Dossier de 66 habilidades con buscador reactivo, filtros rápidos por STAT y visualización de biografía/trasfondo canónico.
+  4. **Dossier Canónico Desplegable en `StreetLabView`**:
+     - Visualización del token oficial del personaje folio en el avatar de cabecera con badge `📋 FOLIO`.
+     - Acordeón prominente `📋 DOSSIER OFICIAL CEMK FOLIO (4 PÁGINAS: 66 SKILLS CANÓNICAS, REGLAS DE ROL & ARSENAL 2077)` con 4 pestañas interactivas: 66 skills canónicas, reglas de rol 2077, arsenal/cromo 2077 y biografía canónica completa.
 
 ### [v3.6.1] - 2026-10-18 (Resizable Telemetry Window & 3-Zone Right Tactical Module Dock with Bidirectional Drag & Drop)
 * **Category**: Combat HUD Ergonomics, Window Resizing & Modular Workspace Customization

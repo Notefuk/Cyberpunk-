@@ -26,6 +26,34 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v3.7.0',
+    date: '2026-10-18',
+    phase: 'Codex',
+    category: 'CEMK 2077 Folio Premades Roster, 28-Page Canonical Skills & Red Chrome Cargo Hub',
+    title: 'Integración Canónica de los 7 Folios Oficiales CEMK 2077, Dossier de 4 Páginas y Roster Dual en Red Chrome Cargo',
+    summary: 'Conversión e integración 100% canónica de los 7 personajes pregenerados oficiales del Cyberpunk: Edgerunners Mission Kit (Hardpoint Solo, Wrench Nomad, Connect Fixer, Bluescreen/Scribe Netrunner, Insurance/Retro Medtech, Thorn/Bullseye Rockerboy, Maven/Slider Tech) a partir de las 28 páginas oficiales de CEMK-Edgerunners-Character-Folios-Letter_2024-05-22.pdf. Incluye tokens oficiales en public/tokens/cemk, matriz completa de 66 habilidades por folio (LVL + STAT = BASE), armamento 2077 con propiedades especiales Power/Tech/Smart weapons, suite universal Neuroport 2077, 4ta pestaña en Red Chrome Cargo con selector de roster dual (Folios CEMK vs Banda del Anime Edgerunners), y dossier canónico desplegable de 4 páginas en StreetLabView.',
+    highlights: [
+      'Ingesta canónica de los 7 Folios oficiales CEMK (28 páginas): Hardpoint, Wrench, Connect, Bluescreen, Insurance, Thorn y Maven.',
+      'Matriz oficial de 66 habilidades por personaje con cálculo estricto LVL Entrenado + Valor STAT = BASE Canónica.',
+      'Arsenal y Ciberware 2077 con reglas especiales: armas Power (ricochet/críticos +5), Mantis Blades monomoleculares (ignora 50% SP), implantes Berserk Moore Tech, Gorilla Arms y suite universal Neuroport 2077.',
+      'Tokens oficiales integrados en public/tokens/cemk y visualizados en avatares tácticos de StreetLabView y RedChromeCargoView.',
+      'Cuarta pestaña en Red Chrome Cargo (4. 👥 PREMADES 2077) con selector dual: Roster Oficial CEMK Folios (7 PJs) vs Banda del Anime (7 PJs).',
+      'Modal de Dossier Canónico de 66 habilidades con buscador en tiempo real, filtros por STAT y selección de PJ a un clic.',
+      'Acordeón prominente en StreetLabView: Dossier Oficial CEMK Folio (4 páginas: 66 skills, reglas de rol, arsenal y biografía).',
+      'Mecanismo de sincronización y restauración segura en useCharacterStore (syncOrRestoreCemkFolioCharacters) con persistencia en localStorage sin afectar fichas de usuario.'
+    ],
+    filesTouched: [
+      'frontend/src/data/cemkFolioPremadesData.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/features/oneshot/RedChromeCargoView.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'PROJECT_STATUS_AND_ROADMAP.md'
+    ],
+    metricsBadge: 'v3.7.0 • CEMK 2077 Folio Roster & Dossier • 0 Drift'
+  },
+  {
     version: 'v3.6.2',
     date: '2026-10-18',
     phase: 'Codex',
@@ -98,6 +126,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v3.7.0': true,
     'v3.6.2': true,
     'v3.6.1': true,
     'v3.6.0': true,
@@ -180,7 +209,7 @@ export function SystemChangelogAndDocsView() {
                 SYSTEM CODEX // DOCUMENTACIÓN MAESTRA
               </span>
               <span className="px-2 py-0.5 text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> v3.6.2 OPERATIVO
+                <CheckCircle2 className="w-3 h-3" /> v3.7.0 OPERATIVO
               </span>
             </div>
             <h1 className="text-2xl md:text-3xl font-tech font-bold text-white tracking-wider flex items-center gap-3">
@@ -188,7 +217,7 @@ export function SystemChangelogAndDocsView() {
               SISTEMA, ARQUITECTURA & CHANGELOG MAESTRO
             </h1>
             <p className="text-sm text-[#94a3b8] max-w-3xl leading-relaxed">
-              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v3.6.2), inventario de los 8 grandes
+              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v3.7.0), inventario de los 8 grandes
               módulos interactivos, estado del roadmap de Fases (0 a 5) con paridad de la Companion App, y especificación técnica de contratos.
             </p>
           </div>

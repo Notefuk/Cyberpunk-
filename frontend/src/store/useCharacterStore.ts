@@ -28,6 +28,7 @@ import {
   PREGEN_TEMPLATES,
   buildCharacterSheetFromPregen as instantiatePregenCharacter
 } from '../data/characterCreationData';
+import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
 
 function mapInjuryIcon(icon: string): ActiveCriticalInjury['iconType'] {
   if (icon === 'heart' || icon === 'throat') return 'organ';
@@ -331,22 +332,25 @@ export function buildCemk2077Characters(): CharacterSheet[] {
   });
 }
 
+export const DEFAULT_CHARACTERS: CharacterSheet[] = [
+  ...CEMK_FOLIO_PREMADE_CHARACTERS,
+  INITIAL_CHARACTER_V,
+  ...buildCemk2077Characters()
+];
+
 export function loadInitialCharacters(): { characters: CharacterSheet[]; activeCharacterId: string } {
-  const cemk = buildCemk2077Characters();
-  const initial = [INITIAL_CHARACTER_V, ...cemk];
   const deduped: CharacterSheet[] = [];
   const seen = new Set<string>();
-  for (const c of initial) {
-    const norm = c.handle.toLowerCase();
-    if (!seen.has(norm)) {
-      seen.add(norm);
-      deduped.push(c);
+  for (const c of DEFAULT_CHARACTERS) {
+    if (!seen.has(c.id)) {
+      seen.add(c.id);
+      deduped.push({ ...c });
     }
   }
-  const david = deduped.find((c) => c.handle.toLowerCase().includes('david'));
+  const hardpoint = deduped.find((c) => c.id === 'cemk-folio-hardpoint');
   return {
     characters: deduped,
-    activeCharacterId: david?.id || deduped[0]?.id || INITIAL_CHARACTER_V.id
+    activeCharacterId: hardpoint?.id || deduped[0]?.id || INITIAL_CHARACTER_V.id
   };
 }
 
@@ -481,6 +485,7 @@ export interface CharacterStoreState {
 
   // CEMK 2077 Roster & Party actions
   loadCemk2077PartyRoster: () => void;
+  syncOrRestoreCemkFolioCharacters: () => void;
 }
 
 const initialRoster = loadInitialCharacters();
@@ -2028,6 +2033,35 @@ export const useCharacterStore = create<CharacterStoreState>()(
             activeCharacterId: state.activeCharacterId || (david ? david.id : newCharacters[0]?.id) || ''
           };
         });
+      },
+
+      syncOrRestoreCemkFolioCharacters: () => {
+        set((state) => {
+          const folioMap = new Map(CEMK_FOLIO_PREMADE_CHARACTERS.map((f) => [f.id, f]));
+          const updatedChars: CharacterSheet[] = [];
+          const processedFolioIds = new Set<string>();
+
+          for (const c of state.characters) {
+            if (folioMap.has(c.id)) {
+              // Restore fresh template copy from canon data
+              updatedChars.push({ ...folioMap.get(c.id)! });
+              processedFolioIds.add(c.id);
+            } else {
+              updatedChars.push(c);
+            }
+          }
+
+          // Inject any missing Folios
+          for (const folio of CEMK_FOLIO_PREMADE_CHARACTERS) {
+            if (!processedFolioIds.has(folio.id)) {
+              updatedChars.push({ ...folio });
+            }
+          }
+
+          return {
+            characters: updatedChars
+          };
+        });
       }
     }),
     {
@@ -2039,9 +2073,20 @@ export const useCharacterStore = create<CharacterStoreState>()(
         const p = persistedState as Partial<CharacterStoreState>;
         const persistedChars: CharacterSheet[] = Array.isArray(p.characters) ? p.characters : [];
 
-        // Ensure the 7 CEMK 2077 characters are present in characters roster
-        const cemkChars = buildCemk2077Characters();
+        // Auto-inyección automática en localStorage existente:
+        // Asegura la presencia inmutable de los 7 Folios Oficiales CEMK 2077 sin sobreescribir fichas de usuario
         const mergedCharacters = [...persistedChars];
+        const existingIds = new Set(mergedCharacters.map((c) => c.id));
+
+        for (const folio of CEMK_FOLIO_PREMADE_CHARACTERS) {
+          if (!existingIds.has(folio.id)) {
+            mergedCharacters.push({ ...folio });
+            existingIds.add(folio.id);
+          }
+        }
+
+        // Ensure the 7 CEMK 2077 anime crew characters are present in characters roster
+        const cemkChars = buildCemk2077Characters();
         const existingHandles = new Set(mergedCharacters.map((c) => c.handle.toLowerCase()));
 
         for (const cemk of cemkChars) {
@@ -2070,7 +2115,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
 
         const validActiveId = p.activeCharacterId && sanitizedCharacters.some((c) => c.id === p.activeCharacterId)
           ? p.activeCharacterId
-          : sanitizedCharacters.find((c) => c.handle.toLowerCase().includes('david'))?.id || sanitizedCharacters[0]?.id || currentState.activeCharacterId;
+          : sanitizedCharacters.find((c) => c.id === 'cemk-folio-hardpoint')?.id || sanitizedCharacters[0]?.id || currentState.activeCharacterId;
 
         return {
           ...currentState,
