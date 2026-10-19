@@ -6,6 +6,12 @@ import type { WeaponItem, ArmorItem } from '../../types/cyberpunk';
 import { RANGE_BRACKETS, WEAPON_RANGE_PROFILES, getWeaponProfileKey } from '../../data/rangeTables';
 import { getAutofireRulesSummary } from '../../engine/characterEngine';
 import { SOURCEBOOKS_CATALOG, EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
+import {
+  getWeaponClassAndRebuildInfo,
+  getAmmoTypeTooltip as getAmmoTooltipInfo,
+  getCyberwareCategoryTooltip,
+  type WeaponClassAndRebuildInfo
+} from '../../data/weaponAndCyberwareTooltips';
 import type { SourceBookId } from '../../data/enemiesCatalog';
 import { 
   Search, 
@@ -133,6 +139,133 @@ export const renderSourceBookBadge = (sourceBook?: string) => {
         </span>
       );
   }
+};
+
+const QUICK_AMMO_TYPES = [
+  'Basic',
+  'Armor-Piercing',
+  'Expansive',
+  'Incendiary',
+  'Smart',
+  'Rubber',
+  'EMP',
+  'Biotoxin',
+  'Poison',
+  'Sleep'
+];
+
+const WeaponClassTooltip: React.FC<{
+  weaponInfo: WeaponClassAndRebuildInfo;
+  notes?: string;
+  children: React.ReactNode;
+  className?: string;
+}> = ({ weaponInfo, notes, children, className = '' }) => {
+  return (
+    <span className={`group/wtip relative inline-flex items-center cursor-help ${className}`}>
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden group-hover/wtip:flex flex-col z-50 w-72 text-left">
+        <span className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code p-2.5 rounded-xs border border-cyan-500/70 shadow-2xl space-y-1">
+          <div className="font-tech text-xs font-bold text-cyan-300 uppercase flex items-center justify-between border-b border-[#1f2638] pb-1">
+            <span>{weaponInfo.weaponClass}</span>
+            {weaponInfo.rebuildBadge && (
+              <span className="text-[9px] text-amber-300">{weaponInfo.rebuildBadge}</span>
+            )}
+          </div>
+          <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+            {weaponInfo.weaponClassTooltip}
+          </p>
+          {weaponInfo.rebuildTooltip && (
+            <div className="pt-1 border-t border-[#1f2638] text-[9px] text-amber-300/90 leading-tight">
+              <strong>Regla Especial:</strong> {weaponInfo.rebuildTooltip}
+            </div>
+          )}
+          {notes && (
+            <div className="pt-1 border-t border-[#1f2638] text-[9px] text-slate-400 italic">
+              <strong>Notas:</strong> {notes}
+            </div>
+          )}
+        </span>
+        <span className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-cyan-500/70 rotate-45 -mt-1 ml-4" />
+      </span>
+    </span>
+  );
+};
+
+const AmmoHoverTooltip: React.FC<{
+  ammoIdOrName: string;
+  children: React.ReactNode;
+  className?: string;
+}> = ({ ammoIdOrName, children, className = '' }) => {
+  const ammoInfo = getAmmoTooltipInfo(ammoIdOrName);
+  if (!ammoInfo) return <>{children}</>;
+
+  return (
+    <span className={`group/atip relative inline-flex items-center cursor-help ${className}`}>
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/atip:flex flex-col items-center z-50 w-72 text-left">
+        <span className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code p-2.5 rounded-xs border border-amber-500/70 shadow-2xl space-y-1">
+          <div className="flex items-center justify-between border-b border-[#252016] pb-1">
+            <span className="font-tech text-xs font-bold text-amber-300 uppercase">
+              {ammoInfo.name}
+            </span>
+            <span className="text-[9px] text-emerald-400 font-bold bg-emerald-950/60 px-1 rounded border border-emerald-500/30">
+              {ammoInfo.costEb} eb / {ammoInfo.perUnits}u
+            </span>
+          </div>
+          <div className="text-[10px] text-cyan-300 font-bold">
+            ⚡ {ammoInfo.combatEffect}
+          </div>
+          <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+            {ammoInfo.ruleExplanation}
+          </p>
+          <div className="text-[9px] text-[#64748b] pt-0.5 border-t border-[#1f2638]">
+            Fuente: {ammoInfo.source}
+          </div>
+        </span>
+        <span className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-amber-500/70 rotate-45 -mt-1" />
+      </span>
+    </span>
+  );
+};
+
+const CyberCategoryTooltip: React.FC<{
+  category: string;
+  children: React.ReactNode;
+  className?: string;
+}> = ({ category, children, className = '' }) => {
+  const catInfo = getCyberwareCategoryTooltip(category);
+  if (!catInfo) return <>{children}</>;
+
+  return (
+    <span className={`group/ctip relative inline-flex items-center cursor-help ${className}`}>
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden group-hover/ctip:flex flex-col z-50 w-72 text-left">
+        <span className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code p-2.5 rounded-xs border border-purple-500/70 shadow-2xl space-y-1">
+          <div className="flex items-center justify-between border-b border-[#231b30] pb-1">
+            <span className="font-tech text-xs font-bold text-purple-300 uppercase">
+              {catInfo.categoryName}
+            </span>
+            <span className="text-[9px] text-purple-400 font-bold bg-purple-950/60 px-1 rounded border border-purple-500/30">
+              {catInfo.installationSite}
+            </span>
+          </div>
+          <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+            {catInfo.description}
+          </p>
+          <div className="text-[9px] text-amber-300 pt-0.5 border-t border-[#1f2638]">
+            <strong>Requisito:</strong> {catInfo.baseRequirement}
+          </div>
+          <div className="text-[9px] text-cyan-300">
+            <strong>Ranuras:</strong> {catInfo.slotsInfo}
+          </div>
+          <div className="text-[9px] text-rose-300">
+            <strong>Pérdida HL:</strong> {catInfo.humanityLossRule}
+          </div>
+        </span>
+        <span className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-purple-500/70 rotate-45 -mt-1 ml-4" />
+      </span>
+    </span>
+  );
 };
 
 export const CompendiumView: React.FC = () => {
@@ -396,6 +529,7 @@ export const CompendiumView: React.FC = () => {
       const profileKey = getWeaponProfileKey(item.name, item.type);
       const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
       const autofireRules = getAutofireRulesSummary(item as WeaponItem);
+      const weaponInfo = getWeaponClassAndRebuildInfo(item);
 
       // Sweet spots
       let minDv: number | null = null;
@@ -421,11 +555,59 @@ export const CompendiumView: React.FC = () => {
 
       return (
         <div className="space-y-2.5 font-mono-code text-xs">
+          {/* Clasificación de Subtipo & Rebuild 2077 */}
+          <div className="flex items-center gap-2 flex-wrap bg-[#0e111a] p-2 rounded-xs border border-[#1e2538]">
+            <span className="text-[10px] text-slate-400 font-bold uppercase">Clasificación:</span>
+            <WeaponClassTooltip weaponInfo={weaponInfo} notes={item.notes}>
+              <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-cyan-950/60 text-cyan-300 border border-cyan-500/40 font-bold hover:border-cyan-400">
+                {weaponInfo.weaponClass}
+              </span>
+            </WeaponClassTooltip>
+            {weaponInfo.rebuildBadge && (
+              <WeaponClassTooltip weaponInfo={weaponInfo} notes={item.notes}>
+                <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-500/40 font-bold hover:border-amber-400">
+                  {weaponInfo.rebuildBadge}
+                </span>
+              </WeaponClassTooltip>
+            )}
+            <span className="text-[10px] text-slate-400">
+              Skill: <strong className="text-white">{weaponInfo.skillDisplayName}</strong>
+            </span>
+          </div>
+
+          {/* Explicación de Regla de Subtipo / Rebuild */}
+          <div className="text-[10px] text-slate-300 bg-[#0a0d14] p-2 rounded-xs border border-[#1a2133] leading-relaxed">
+            <p>{weaponInfo.weaponClassTooltip}</p>
+            {weaponInfo.rebuildTooltip && (
+              <p className="mt-1 pt-1 border-t border-[#1a2133] text-amber-300/90">
+                <strong>Regla Especial 2077:</strong> {weaponInfo.rebuildTooltip}
+              </p>
+            )}
+          </div>
+
           {/* Notes / Description */}
           {item.notes && (
             <p className="text-[#cbd5e1] text-[11px] leading-relaxed bg-[#0b0e17] p-2 rounded-xs border border-[#1e2337]">
               {item.notes}
             </p>
+          )}
+
+          {/* Compatibilidad de Munición Táctica (solo a distancia) */}
+          {!isMelee && (
+            <div className="bg-[#0b0e17] border border-[#262c3e] rounded-xs p-2 space-y-1.5">
+              <span className="font-bold text-[#f59e0b] text-[10px] uppercase block">
+                ⚡ Compatibilidad de Munición Táctica:
+              </span>
+              <div className="flex items-center gap-1 flex-wrap">
+                {QUICK_AMMO_TYPES.map((ammo) => (
+                  <AmmoHoverTooltip key={ammo} ammoIdOrName={ammo}>
+                    <span className="text-[8.5px] font-mono-code px-1.5 py-0.5 rounded bg-[#131622] text-amber-300/90 border border-[#262d40] hover:border-amber-500/60 cursor-help">
+                      {ammo}
+                    </span>
+                  </AmmoHoverTooltip>
+                ))}
+              </div>
+            </div>
           )}
 
           {/* MELEE MECHANICS */}
@@ -679,7 +861,7 @@ export const CompendiumView: React.FC = () => {
               </span>
             </div>
             <div className="flex flex-wrap gap-2 text-[9px] text-[#94a3b8] pt-0.5">
-              <span>Tipo: <strong className="text-[#f1f5f9]">{item.type}</strong></span>
+              <span>Tipo: <CyberCategoryTooltip category={item.type || 'Cyberware'}><strong className="text-[#a855f7] bg-purple-950/40 px-1 py-0.5 rounded border border-purple-500/30 cursor-help hover:border-purple-400">{item.type || 'Cyberware'}</strong></CyberCategoryTooltip></span>
               <span>•</span>
               <span>
                 Instalación requerida: <strong className="text-[#a855f7]">{item.install}</strong> (
@@ -790,7 +972,59 @@ export const CompendiumView: React.FC = () => {
       );
     }
 
-    // Default for programs, ammo, attachments, gear
+    if (category === 'ammunition') {
+      return (
+        <div className="space-y-2.5 font-mono-code text-xs">
+          <p className="text-[#cbd5e1] text-[11px] leading-relaxed bg-[#0b0e17] p-2 rounded-xs border border-[#1e2337]">
+            {item.description}
+          </p>
+
+          <div className="bg-[#fbbf24]/10 border border-[#fbbf24]/30 rounded-xs p-2 text-[10px] space-y-1.5">
+            <div className="flex items-center justify-between text-[#fbbf24] font-bold">
+              <span>🎯 BALÍSTICA & COMPATIBILIDAD CANÓNICA</span>
+              <span className="bg-[#fbbf24]/20 px-1.5 py-0.2 rounded-xs border border-[#fbbf24]/40">
+                {item.costTier || 'Básico'}
+              </span>
+            </div>
+            <div>
+              <AmmoHoverTooltip ammoIdOrName={item.name}>
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#fef08a] bg-amber-950/40 px-2 py-0.5 rounded border border-amber-500/40 cursor-help hover:border-amber-400">
+                  <span>ℹ️ REGLAS COMPLETAS DE MUNICIÓN: {item.name}</span>
+                </span>
+              </AmmoHoverTooltip>
+            </div>
+            <p className="text-[9px] text-[#94a3b8] leading-tight">
+              Pasa el cursor sobre la insignia superior para consultar las reglas completas de daño, efectos de estado, blindaje y armas compatibles.
+            </p>
+          </div>
+
+          <div className="pt-2 border-t border-[#1e2337] flex flex-wrap items-center justify-end gap-1.5">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAcquire(item.id, item.name, item.cost, 'buy', () => {});
+              }}
+              className="px-2.5 py-1 bg-[#10b981]/20 hover:bg-[#10b981] border border-[#10b981] text-[#10b981] hover:text-[#0b0e17] rounded-xs text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+              title={`Comprar por ${item.cost} €$`}
+            >
+              💳 COMPRAR (-{item.cost} €$)
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAcquire(item.id, item.name, item.cost, 'loot', () => {});
+              }}
+              className="px-2.5 py-1 bg-[#38bdf8]/20 hover:bg-[#38bdf8] border border-[#38bdf8] text-[#38bdf8] hover:text-[#0b0e17] rounded-xs text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
+              title="Obtener gratis (Loot / 0 €$)"
+            >
+              🎁 GRATIS / LOOT (0 €$)
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // Default for programs, attachments, gear
     return (
       <div className="space-y-2.5 font-mono-code text-xs">
         <p className="text-[#cbd5e1] text-[11px] leading-relaxed bg-[#0b0e17] p-2 rounded-xs border border-[#1e2337]">
@@ -1418,9 +1652,11 @@ export const CompendiumView: React.FC = () => {
 
                       {/* Stat Pills */}
                       <div className="flex flex-wrap items-center gap-1 text-[10px] font-mono-code">
-                        <span className="px-1.5 py-0.2 bg-[#a855f7]/15 text-[#a855f7] rounded-xs font-bold border border-[#a855f7]/30">
-                          {cyber.type}
-                        </span>
+                        <CyberCategoryTooltip category={cyber.type || 'Cyberware'}>
+                          <span className="px-1.5 py-0.2 bg-[#a855f7]/15 text-[#a855f7] rounded-xs font-bold border border-[#a855f7]/30 cursor-help hover:border-[#a855f7]">
+                            {cyber.type}
+                          </span>
+                        </CyberCategoryTooltip>
                         <span className="px-1.5 py-0.2 bg-[#181b2a] text-[#f43f5e] rounded-xs border border-[#262c3e]">
                           <TacticalTooltip term="HL">HL: {cyber.humanityLoss}</TacticalTooltip>
                         </span>
@@ -1568,9 +1804,11 @@ export const CompendiumView: React.FC = () => {
                       <div className="flex items-center justify-between gap-1.5 min-h-[26px]">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={ammo.name}>
-                              {ammo.name}
-                            </h4>
+                            <AmmoHoverTooltip ammoIdOrName={ammo.name}>
+                              <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech cursor-help hover:text-amber-300" title={ammo.name}>
+                                {ammo.name}
+                              </h4>
+                            </AmmoHoverTooltip>
                             {renderSourceBookBadge(ammo.sourceBook)}
                           </div>
                         </div>
@@ -2039,9 +2277,11 @@ export const CompendiumView: React.FC = () => {
                           <div className="text-[10px] text-[#64748b] truncate max-w-[200px] pl-3.5">{c.description}</div>
                         </td>
                         <td className="py-1.5 px-2">
-                          <span className="text-[10px] px-1.5 py-0.2 rounded-xs bg-[#a855f7]/15 text-[#a855f7] border border-[#a855f7]/30 font-bold">
-                            {c.type}
-                          </span>
+                          <CyberCategoryTooltip category={c.type || 'Cyberware'}>
+                            <span className="text-[10px] px-1.5 py-0.2 rounded-xs bg-[#a855f7]/15 text-[#a855f7] border border-[#a855f7]/30 font-bold cursor-help hover:border-[#a855f7]">
+                              {c.type}
+                            </span>
+                          </CyberCategoryTooltip>
                         </td>
                         <td className="py-1.5 px-2">
                           {renderSourceBookBadge(c.sourceBook)}
@@ -2156,7 +2396,9 @@ export const CompendiumView: React.FC = () => {
                         <td className="py-1.5 px-3 font-bold text-[#f1f5f9] font-tech text-xs truncate max-w-[200px]">
                           <div className="flex items-center gap-1.5">
                             <span className="text-[#64748b] text-[10px]">{isExpanded ? '▾' : '▸'}</span>
-                            <span>{am.name}</span>
+                            <AmmoHoverTooltip ammoIdOrName={am.name}>
+                              <span className="cursor-help hover:text-amber-300">{am.name}</span>
+                            </AmmoHoverTooltip>
                           </div>
                         </td>
                         <td className="py-1.5 px-2">

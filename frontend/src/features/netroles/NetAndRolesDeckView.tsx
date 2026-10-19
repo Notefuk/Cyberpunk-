@@ -151,6 +151,8 @@ export const NetAndRolesDeckView: React.FC = () => {
   const [showMartialArtsGuide, setShowMartialArtsGuide] = useState<boolean>(false);
   const [martialCategoryFilter, setMartialCategoryFilter] = useState<'all' | 'core' | 'interface_red'>('all');
   const [martialFeedback, setMartialFeedback] = useState<{ success: boolean; message: string } | null>(null);
+  const [openMartialForms, setOpenMartialForms] = useState<Record<string, boolean>>({});
+  const toggleMartialForm = (id: string) => setOpenMartialForms(prev => ({ ...prev, [id]: !prev[id] }));
 
   const filteredQuickhacks = quickhackTierFilter === 'All' 
     ? QUICKHACKS_2077_CATALOG 
@@ -1270,163 +1272,187 @@ export const NetAndRolesDeckView: React.FC = () => {
               const ipCost = nextRank * 40;
               const currentIp = character.improvementPoints !== undefined ? character.improvementPoints : 120;
               const canTrain = currentIp >= ipCost && naturalRank < 10;
+              const isOpen = !!openMartialForms[form.id];
+              const sourceLabel = form.sourceBook === 'core' ? 'Core Rulebook' : 'Cyberfists of Fury';
 
               return (
                 <div
                   key={form.id}
-                  className={`bg-[#0d1017] p-3.5 rounded-xs space-y-3 transition-all flex flex-col justify-between border ${
+                  className={`bg-[#0d1017] rounded-xs transition-all flex flex-col justify-between border overflow-hidden ${
                     effectiveRank > 0
                       ? 'border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.15)]'
                       : 'border-[#1b2234] hover:border-slate-700'
                   }`}
                 >
-                  <div className="space-y-2">
-                    {/* Cabecera de la Forma */}
-                    <div className="flex items-center justify-between gap-1 flex-wrap">
-                      <span className="font-tech text-sm font-bold text-white uppercase flex items-center gap-1.5">
-                        <Swords className="w-4 h-4 text-red-500" />
+                  {/* Cabecera Plegable: Nombre • Stats Clave • Fuente */}
+                  <button
+                    type="button"
+                    onClick={() => toggleMartialForm(form.id)}
+                    className="w-full p-3 flex items-center justify-between gap-2 text-left hover:bg-[#121622] transition-colors cursor-pointer select-none"
+                  >
+                    <div className="flex items-center gap-2 flex-wrap min-w-0">
+                      <span className="font-tech text-xs sm:text-sm font-bold text-white uppercase flex items-center gap-1.5 truncate">
+                        <Swords className="w-3.5 h-3.5 text-red-500 shrink-0" />
                         <span>{form.name}</span>
                       </span>
-                      <span className={`text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs font-bold ${
+                      <span className="text-[10px] font-mono-code text-emerald-400">
+                        DEX (x2) • ROF 2 • 50% SP • Nvl {effectiveRank}
+                      </span>
+                      <span className={`text-[9px] font-mono-code px-1.5 py-0.2 rounded-xs font-bold ${
                         form.sourceBook === 'core'
                           ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
                           : 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
                       }`}>
-                        {form.badge}
+                        Fuente ({sourceLabel})
                       </span>
+                      {effectiveRank > 0 && (
+                        <span className="text-[9px] font-mono-code px-1.5 py-0.2 rounded-xs bg-emerald-500 text-black font-bold">
+                          R{effectiveRank} {isChipEquipped && '(Chip +3)'}
+                        </span>
+                      )}
                     </div>
-
-                    {/* Estado de Maestría del Personaje */}
-                    <div className="bg-[#121622] p-2 rounded-xs border border-[#1f273c] space-y-1">
-                      <div className="flex items-center justify-between text-xs font-mono-code">
-                        <span className="text-slate-400">Rango Natural:</span>
-                        <strong className="text-white">Rango {naturalRank}/10</strong>
-                      </div>
-                      <div className="flex items-center justify-between text-xs font-mono-code">
-                        <span className="text-slate-400">Rango Efectivo:</span>
-                        <strong className={effectiveRank > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}>
-                          Rango {effectiveRank} {isChipEquipped && '(Chip +3)'}
-                        </strong>
-                      </div>
-                      <div className="flex items-center justify-between text-[11px] font-mono-code pt-1 border-t border-[#1a2133]">
-                        <span className="text-slate-400">Ataque Total (DEX+Rango):</span>
-                        <span className="text-red-400 font-bold">1d10 + {totalAttack}</span>
-                      </div>
+                    <div className="shrink-0 text-slate-400">
+                      {isOpen ? <ChevronDown className="w-4 h-4 text-emerald-400" /> : <ChevronRight className="w-4 h-4" />}
                     </div>
+                  </button>
 
-                    {/* Lore y Rol Táctico */}
-                    <p className="text-[11px] text-slate-300 font-sans leading-relaxed">
-                      {form.originAndFlavor}
-                    </p>
-                    <div className="text-[10px] font-mono-code text-[#94a3b8]">
-                      <span className="text-slate-500">Rol Táctico:</span> {form.tacticalRole}
-                    </div>
+                  {/* Cuerpo Desplegable Completo */}
+                  {isOpen && (
+                    <div className="p-3.5 pt-0 border-t border-[#1a2133] space-y-3 mt-1">
+                      <div className="space-y-2 pt-1">
+                        {/* Estado de Maestría del Personaje */}
+                        <div className="bg-[#121622] p-2 rounded-xs border border-[#1f273c] space-y-1">
+                          <div className="flex items-center justify-between text-xs font-mono-code">
+                            <span className="text-slate-400">Rango Natural:</span>
+                            <strong className="text-white">Rango {naturalRank}/10</strong>
+                          </div>
+                          <div className="flex items-center justify-between text-xs font-mono-code">
+                            <span className="text-slate-400">Rango Efectivo:</span>
+                            <strong className={effectiveRank > 0 ? 'text-emerald-400 font-bold' : 'text-slate-500'}>
+                              Rango {effectiveRank} {isChipEquipped && '(Chip +3)'}
+                            </strong>
+                          </div>
+                          <div className="flex items-center justify-between text-[11px] font-mono-code pt-1 border-t border-[#1a2133]">
+                            <span className="text-slate-400">Ataque Total (DEX+Rango):</span>
+                            <span className="text-red-400 font-bold">1d10 + {totalAttack}</span>
+                          </div>
+                        </div>
 
-                    {/* Los 2 Movimientos Especiales */}
-                    <div className="pt-2 border-t border-[#1b2234] space-y-1.5">
-                      <span className="text-[10px] font-tech font-bold text-red-400 uppercase tracking-wider block">
-                        ⚡ Movimientos Especiales ({form.moves.length}):
-                      </span>
-                      {form.moves.map(m => (
-                        <div key={m.id} className="bg-[#0b0e15] p-2 rounded-xs border border-[#1a2133] space-y-0.5 text-[10px] font-mono-code">
-                          <div className="flex items-center justify-between font-bold">
-                            <span className="text-white">{m.name}</span>
-                            <span className="text-amber-400">DV {m.resolutionDv}</span>
+                        {/* Lore y Rol Táctico */}
+                        <p className="text-[11px] text-slate-300 font-sans leading-relaxed">
+                          {form.originAndFlavor}
+                        </p>
+                        <div className="text-[10px] font-mono-code text-[#94a3b8]">
+                          <span className="text-slate-500">Rol Táctico:</span> {form.tacticalRole}
+                        </div>
+
+                        {/* Los 2 Movimientos Especiales */}
+                        <div className="pt-2 border-t border-[#1b2234] space-y-1.5">
+                          <span className="text-[10px] font-tech font-bold text-red-400 uppercase tracking-wider block">
+                            ⚡ Movimientos Especiales ({form.moves.length}):
+                          </span>
+                          {form.moves.map(m => (
+                            <div key={m.id} className="bg-[#0b0e15] p-2 rounded-xs border border-[#1a2133] space-y-0.5 text-[10px] font-mono-code">
+                              <div className="flex items-center justify-between font-bold">
+                                <span className="text-white">{m.name}</span>
+                                <span className="text-amber-400">DV {m.resolutionDv}</span>
+                              </div>
+                              <div className="text-[9px] text-slate-400 font-sans leading-tight">
+                                <strong>Req:</strong> {m.requirements}
+                              </div>
+                              <div className="text-[9px] text-slate-300 font-sans leading-tight">
+                                {m.effectDescription}
+                              </div>
+                              {m.damageBonusOrFormula && (
+                                <div className="text-[9px] text-[#f59e0b] font-bold">
+                                  Daño: {m.damageBonusOrFormula}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* ACCIONES DE ADQUISICIÓN: ENTRENAR CON IP & SKILL CHIP */}
+                      <div className="pt-2.5 border-t border-[#1b2234] space-y-2">
+                        {/* Botón de Entrenamiento con IP */}
+                        {naturalRank >= 10 ? (
+                          <div className="text-center py-1 bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 text-xs font-tech font-bold uppercase rounded-xs">
+                            ★ MAESTRÍA MÁXIMA (RANGO 10)
                           </div>
-                          <div className="text-[9px] text-slate-400 font-sans leading-tight">
-                            <strong>Req:</strong> {m.requirements}
-                          </div>
-                          <div className="text-[9px] text-slate-300 font-sans leading-tight">
-                            {m.effectDescription}
-                          </div>
-                          {m.damageBonusOrFormula && (
-                            <div className="text-[9px] text-[#f59e0b] font-bold">
-                              Daño: {m.damageBonusOrFormula}
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const res = trainMartialArtWithIp(form.id, form.name);
+                              setMartialFeedback(res);
+                            }}
+                            disabled={!canTrain}
+                            className={`w-full py-1.5 px-2 rounded-xs font-tech text-xs font-bold uppercase transition-all flex items-center justify-center gap-1.5 ${
+                              canTrain
+                                ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-[0_0_8px_rgba(16,185,129,0.3)]'
+                                : 'bg-[#151926] text-slate-500 border border-[#222738] cursor-not-allowed'
+                            }`}
+                            title={canTrain ? `Gasta ${ipCost} IP para subir a Rango ${nextRank}` : `Necesitas ${ipCost} IP`}
+                          >
+                            <Award className="w-3.5 h-3.5" />
+                            <span>
+                              {canTrain
+                                ? `ENTRENAR RANGO ${nextRank} (${ipCost} IP)`
+                                : `FALTAN ${ipCost - currentIp} IP (REQ. ${ipCost} IP)`}
+                            </span>
+                          </button>
+                        )}
+
+                        {/* Botones de Skill Chip (Nivel 3 — 1,000 €$) */}
+                        <div className="space-y-1">
+                          {isChipOwned ? (
+                            <button
+                              type="button"
+                              onClick={() => toggleEquipMartialArtChip(form.id)}
+                              className={`w-full py-1 px-2 rounded-xs font-mono-code text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                                isChipEquipped
+                                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400 hover:bg-cyan-500/30'
+                                  : 'bg-[#151926] text-slate-400 border border-[#222738] hover:text-white'
+                              }`}
+                            >
+                              <Cpu className="w-3.5 h-3.5" />
+                              <span>
+                                {isChipEquipped
+                                  ? '✓ CHIP INSERTADO EN SOCKET (QUITAR)'
+                                  : '⚡ INSERTAR CHIP EN SOCKET (+3)'}
+                              </span>
+                            </button>
+                          ) : (
+                            <div className="grid grid-cols-2 gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const res = buyAndEquipMartialArtChip(form.id, form.name, false);
+                                  setMartialFeedback(res);
+                                }}
+                                className="py-1 px-1 bg-[#1a2030] hover:bg-amber-600 hover:text-black text-amber-300 border border-amber-600/40 rounded-xs font-mono-code text-[10px] font-bold transition-colors cursor-pointer text-center"
+                                title="Comprar Skill Chip Nivel 3 por 1,000 €$ oficiales"
+                              >
+                                COMPRAR (1,000 €$)
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const res = buyAndEquipMartialArtChip(form.id, form.name, true);
+                                  setMartialFeedback(res);
+                                }}
+                                className="py-1 px-1 bg-[#151926] hover:bg-[#20273a] text-slate-400 hover:text-white border border-[#24293c] rounded-xs font-mono-code text-[10px] transition-colors cursor-pointer text-center"
+                                title="Asignar gratis (para personajes de creación con Chipware inicial)"
+                              >
+                                GRATIS (CREACIÓN)
+                              </button>
                             </div>
                           )}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* ACCIONES DE ADQUISICIÓN: ENTRENAR CON IP & SKILL CHIP */}
-                  <div className="pt-2.5 border-t border-[#1b2234] space-y-2">
-                    {/* Botón de Entrenamiento con IP */}
-                    {naturalRank >= 10 ? (
-                      <div className="text-center py-1 bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 text-xs font-tech font-bold uppercase rounded-xs">
-                        ★ MAESTRÍA MÁXIMA (RANGO 10)
                       </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const res = trainMartialArtWithIp(form.id, form.name);
-                          setMartialFeedback(res);
-                        }}
-                        disabled={!canTrain}
-                        className={`w-full py-1.5 px-2 rounded-xs font-tech text-xs font-bold uppercase transition-all flex items-center justify-center gap-1.5 ${
-                          canTrain
-                            ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-[0_0_8px_rgba(16,185,129,0.3)]'
-                            : 'bg-[#151926] text-slate-500 border border-[#222738] cursor-not-allowed'
-                        }`}
-                        title={canTrain ? `Gasta ${ipCost} IP para subir a Rango ${nextRank}` : `Necesitas ${ipCost} IP`}
-                      >
-                        <Award className="w-3.5 h-3.5" />
-                        <span>
-                          {canTrain
-                            ? `ENTRENAR RANGO ${nextRank} (${ipCost} IP)`
-                            : `FALTAN ${ipCost - currentIp} IP (REQ. ${ipCost} IP)`}
-                        </span>
-                      </button>
-                    )}
-
-                    {/* Botones de Skill Chip (Nivel 3 — 1,000 €$) */}
-                    <div className="space-y-1">
-                      {isChipOwned ? (
-                        <button
-                          type="button"
-                          onClick={() => toggleEquipMartialArtChip(form.id)}
-                          className={`w-full py-1 px-2 rounded-xs font-mono-code text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                            isChipEquipped
-                              ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400 hover:bg-cyan-500/30'
-                              : 'bg-[#151926] text-slate-400 border border-[#222738] hover:text-white'
-                          }`}
-                        >
-                          <Cpu className="w-3.5 h-3.5" />
-                          <span>
-                            {isChipEquipped
-                              ? '✓ CHIP INSERTADO EN SOCKET (QUITAR)'
-                              : '⚡ INSERTAR CHIP EN SOCKET (+3)'}
-                          </span>
-                        </button>
-                      ) : (
-                        <div className="grid grid-cols-2 gap-1.5">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const res = buyAndEquipMartialArtChip(form.id, form.name, false);
-                              setMartialFeedback(res);
-                            }}
-                            className="py-1 px-1 bg-[#1a2030] hover:bg-amber-600 hover:text-black text-amber-300 border border-amber-600/40 rounded-xs font-mono-code text-[10px] font-bold transition-colors cursor-pointer text-center"
-                            title="Comprar Skill Chip Nivel 3 por 1,000 €$ oficiales"
-                          >
-                            COMPRAR (1,000 €$)
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const res = buyAndEquipMartialArtChip(form.id, form.name, true);
-                              setMartialFeedback(res);
-                            }}
-                            className="py-1 px-1 bg-[#151926] hover:bg-[#20273a] text-slate-400 hover:text-white border border-[#24293c] rounded-xs font-mono-code text-[10px] transition-colors cursor-pointer text-center"
-                            title="Asignar gratis (para personajes de creación con Chipware inicial)"
-                          >
-                            GRATIS (CREACIÓN)
-                          </button>
-                        </div>
-                      )}
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}

@@ -18,7 +18,7 @@ import { StreetLabView } from './features/sheet/StreetLabView';
 import { CharacterCreatorWizard } from './features/creator/CharacterCreatorWizard';
 import { CyberwareRipperdocView } from './features/cyberware/CyberwareRipperdocView';
 import { CompendiumView } from './features/compendium/CompendiumView';
-import { DataPacksView } from './features/packs/DataPacksView';
+import { DataPackManagerView } from './features/datapacks/DataPackManagerView';
 import { FixerDeckView } from './features/gm/FixerDeckView';
 import { NetAndRolesDeckView } from './features/netroles/NetAndRolesDeckView';
 import { RedChromeCargoView } from './features/oneshot/RedChromeCargoView';
@@ -151,7 +151,7 @@ export default function App() {
         {activeTab === 'cyberware' && <CyberwareRipperdocView />}
         {activeTab === 'netroles' && <NetAndRolesDeckView />}
         {activeTab === 'compendium' && <CompendiumView />}
-        {activeTab === 'packs' && <DataPacksView />}
+        {activeTab === 'packs' && <DataPackManagerView onNavigateTab={(tab) => setActiveTab(tab)} />}
         {activeTab === 'gm' && <FixerDeckView />}
         {activeTab === 'oneshot' && <RedChromeCargoView />}
         {activeTab === 'docs' && <SystemChangelogAndDocsView />}

@@ -35,6 +35,9 @@ import {
   ABOUT_FBCS_GUIDE,
   type FbcBody
 } from '../../data/goingMetalFbcData';
+import {
+  getCyberwareCategoryTooltip
+} from '../../data/weaponAndCyberwareTooltips';
 
 export interface CyberwareItemData {
   id: string;
@@ -236,6 +239,7 @@ export function CyberwareRipperdocView() {
   const [hlMode, setHlMode] = useState<'average' | 'roll'>('average');
   const [diceRollPreview, setDiceRollPreview] = useState<{ [cyberId: string]: { total: number; rolls: number[]; diceDesc: string } }>({});
   const [toastFeedback, setToastFeedback] = useState<{ message: string; type: 'success' | 'warn' | 'info' } | null>(null);
+  const [hoveredCategoryTooltipKey, setHoveredCategoryTooltipKey] = useState<string | null>(null);
 
   // GOING METAL (Full Body Conversion) State
   const [isGoingMetalOpen, setIsGoingMetalOpen] = useState(false);
@@ -445,6 +449,48 @@ export function CyberwareRipperdocView() {
     );
   };
 
+  const renderCategoryFloatingTooltip = (categoryKey: string) => {
+    const cat = getCyberwareCategoryTooltip(categoryKey);
+    if (!cat) return null;
+
+    return (
+      <div className="absolute left-0 top-full mt-2 z-50 w-80 sm:w-96 p-3.5 bg-[#0b0d14]/98 backdrop-blur-md border border-[#00f5d4] shadow-[0_12px_36px_rgba(0,0,0,0.95)] rounded-xs pointer-events-none text-left animate-in fade-in duration-150">
+        <div className="flex items-center justify-between border-b border-[#1f2638] pb-1.5 mb-2">
+          <span className="font-tech text-xs font-bold text-[#00f5d4] uppercase tracking-wider flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#00f5d4]" />
+            {cat.categoryName}
+          </span>
+          <span className="text-[9px] font-mono-code px-2 py-0.5 rounded bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40 font-bold uppercase">
+            {cat.installationSite}
+          </span>
+        </div>
+        <p className="text-[11px] text-[#cbd5e1] leading-relaxed mb-2.5 font-sans">
+          {cat.description}
+        </p>
+        <div className="grid grid-cols-2 gap-1.5 text-[10px] font-mono-code bg-[#06080d] p-2 rounded border border-[#1a1f30]">
+          <div>
+            <span className="text-[#64748b] block font-bold">BASE REQUERIDO:</span>
+            <span className="text-white">{cat.baseRequirement}</span>
+          </div>
+          <div>
+            <span className="text-[#64748b] block font-bold">CAPACIDAD / SLOTS:</span>
+            <span className="text-[#38bdf8]">{cat.slotsInfo}</span>
+          </div>
+          <div className="col-span-2 pt-1.5 border-t border-[#151926]">
+            <span className="text-[#f59e0b] block font-bold">PÉRDIDA DE HUMANIDAD:</span>
+            <span className="text-[#e2e8f0]">{cat.humanityLossRule}</span>
+          </div>
+        </div>
+        {cat.keyExamples.length > 0 && (
+          <div className="mt-2 text-[9px] font-mono-code text-[#94a3b8] flex items-center gap-1">
+            <span className="text-[#64748b]">Ejemplos: </span>
+            <span className="text-slate-300">{cat.keyExamples.join(' • ')}</span>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderZoneBlock = (zoneKey: AnatomicalZoneKey) => {
     const zoneCfg = ZONE_CONFIGS[zoneKey];
     const installed = getInstalledInZone(zoneKey);
@@ -469,13 +515,19 @@ export function CyberwareRipperdocView() {
             <span className="p-1 rounded-2xs bg-[#171a26] border border-[#23283a]">
               {zoneCfg.icon}
             </span>
-            <div>
-              <h4 className="font-tech text-xs sm:text-sm font-bold text-white tracking-wider flex items-center gap-1.5">
+            <div 
+              className="relative cursor-help"
+              onMouseEnter={() => setHoveredCategoryTooltipKey(zoneKey)}
+              onMouseLeave={() => setHoveredCategoryTooltipKey(null)}
+            >
+              <h4 className="font-tech text-xs sm:text-sm font-bold text-white tracking-wider flex items-center gap-1.5 hover:text-[#00f5d4] transition-colors">
                 {zoneCfg.title}
+                <Info className="w-3 h-3 text-[#64748b]" />
               </h4>
               <p className="text-[10px] font-mono-code text-[#64748b] uppercase tracking-tighter">
                 {zoneCfg.sub}
               </p>
+              {hoveredCategoryTooltipKey === zoneKey && renderCategoryFloatingTooltip(zoneKey)}
             </div>
           </div>
           <div className="flex items-center gap-1.5">
@@ -599,10 +651,15 @@ export function CyberwareRipperdocView() {
             <div className="p-2.5 bg-[#e11d48]/20 border border-[#e11d48] rounded-xs text-[#ff0055]">
               <Binary className="w-6 h-6" />
             </div>
-            <div>
+            <div
+              className="relative cursor-help"
+              onMouseEnter={() => setHoveredCategoryTooltipKey('fbc')}
+              onMouseLeave={() => setHoveredCategoryTooltipKey(null)}
+            >
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="font-tech text-base sm:text-lg font-black text-white tracking-wider uppercase">
+                <h2 className="font-tech text-base sm:text-lg font-black text-white tracking-wider uppercase hover:text-[#00f5d4] transition-colors flex items-center gap-1.5">
                   🦾 GOING METAL // FULL BODY CONVERSION
+                  <Info className="w-3.5 h-3.5 text-[#64748b]" />
                 </h2>
                 <span className="text-[10px] font-mono-code bg-[#e11d48]/20 text-[#ff0055] border border-[#e11d48]/40 px-2 py-0.5 rounded-full font-bold">
                   INTERFACE RED VOL. 3
@@ -616,6 +673,7 @@ export function CyberwareRipperdocView() {
               <p className="text-xs font-mono-code text-[#94a3b8] mt-0.5">
                 13 Cuerpos FBC Canónicos • 16 Implantes Cyborg • Regla Biopod (0 HL al intercambiar) • Manual de Campo
               </p>
+              {hoveredCategoryTooltipKey === 'fbc' && renderCategoryFloatingTooltip('fbc')}
             </div>
           </div>
 
@@ -1079,6 +1137,64 @@ export function CyberwareRipperdocView() {
             )}
           </div>
         )}
+      </div>
+
+      {/* ========================================================================= */}
+      {/* CATEGORÍAS DE CIBERWARE OFICIALES // TOOLTIPS FLOTANTES CLAROS */}
+      {/* ========================================================================= */}
+      <div className="bg-[#0e111a] border border-[#1e2436] p-3 rounded-xs space-y-2">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1">
+          <span className="text-[10px] font-mono-code text-[#00f5d4] uppercase font-bold tracking-wider flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#00f5d4]" />
+            CATEGORÍAS DE CIBERWARE (PASA EL MOUSE PARA VER REGLAS, SLOTS Y HUMANIDAD)
+          </span>
+          <span className="text-[9px] font-mono-code text-[#64748b]">
+            9 CATEGORÍAS CANÓNICAS CP RED & GOING METAL
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {[
+            { key: 'fashionware', label: 'Fashionware (0 HL)', icon: <Sparkles className="w-3 h-3 text-[#f59e0b]" />, color: 'border-[#f59e0b]/40 text-[#f59e0b]' },
+            { key: 'neuralware', label: 'Neuralware (Neural Link)', icon: <Cpu className="w-3 h-3 text-[#38bdf8]" />, color: 'border-[#38bdf8]/40 text-[#38bdf8]' },
+            { key: 'cyberoptics', label: 'Cyberoptics (Cybereye)', icon: <Eye className="w-3 h-3 text-[#38bdf8]" />, color: 'border-[#38bdf8]/40 text-[#38bdf8]' },
+            { key: 'cyberaudio', label: 'Cyberaudio (Suite)', icon: <Ear className="w-3 h-3 text-[#a855f7]" />, color: 'border-[#a855f7]/40 text-[#a855f7]' },
+            { key: 'internal', label: 'Internal Body', icon: <Heart className="w-3 h-3 text-[#ef4444]" />, color: 'border-[#ef4444]/40 text-[#ef4444]' },
+            { key: 'external', label: 'External Body (Armor)', icon: <Shield className="w-3 h-3 text-[#00f5d4]" />, color: 'border-[#00f5d4]/40 text-[#00f5d4]' },
+            { key: 'cyberlimbs', label: 'Cyberlimbs (Arms/Legs)', icon: <Zap className="w-3 h-3 text-[#f59e0b]" />, color: 'border-[#f59e0b]/40 text-[#f59e0b]' },
+            { key: 'borgware', label: 'Borgware (-4 Max HL)', icon: <AlertTriangle className="w-3 h-3 text-[#e11d48]" />, color: 'border-[#e11d48]/40 text-[#ff0055]' },
+            { key: 'fbc', label: 'FBC / Going Metal (-14 HL)', icon: <Binary className="w-3 h-3 text-[#e11d48]" />, color: 'border-[#e11d48]/40 text-[#ff0055]' }
+          ].map((cat) => {
+            const isHovered = hoveredCategoryTooltipKey === cat.key;
+            return (
+              <div
+                key={cat.key}
+                className="relative"
+                onMouseEnter={() => setHoveredCategoryTooltipKey(cat.key)}
+                onMouseLeave={() => setHoveredCategoryTooltipKey(null)}
+              >
+                <button
+                  onClick={() => {
+                    if (cat.key === 'fbc') {
+                      setIsGoingMetalOpen(true);
+                    } else if (cat.key === 'cyberlimbs') {
+                      setSelectedZone('cyberarms');
+                    } else {
+                      setSelectedZone(cat.key as AnatomicalZoneKey);
+                    }
+                  }}
+                  className={`px-2.5 py-1 rounded-2xs text-[11px] font-mono-code font-bold uppercase border bg-[#121520] hover:bg-[#1a2030] transition-all flex items-center gap-1.5 cursor-pointer ${
+                    cat.color
+                  } ${isHovered ? 'shadow-[0_0_12px_rgba(0,245,212,0.3)] border-[#00f5d4]' : ''}`}
+                >
+                  {cat.icon}
+                  <span>{cat.label}</span>
+                </button>
+                {isHovered && renderCategoryFloatingTooltip(cat.key)}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* 5-COLUMN MAIN RIPPERDOC WORKSTATION GRID */}

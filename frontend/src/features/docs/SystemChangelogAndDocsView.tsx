@@ -26,6 +26,33 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v3.8.0',
+    date: '2026-10-19',
+    phase: 'Codex',
+    category: 'Weapons, Cyberware & Ammo Tooltips Engine, 2077 Rebuild System & Collapsible Martial Arts Deck',
+    title: 'Motor Táctico de Tooltips para Armas, Ciberware y Municiones, Reconstrucción 2077 y Cartas Colapsables de Artes Marciales',
+    summary: 'Integración integral de la biblioteca oficial de reglas y tooltips canónicos (weaponAndCyberwareTooltips.ts) en toda la suite táctica de Night City: StreetLabView, CombatHudView, NetAndRolesDeckView y CompendiumView. Incorpora insignias y modales explicativos para subclases de armas (Power, Tech, Smart, Exóticas, Melée pesada), insignias doradas de armas CEMK 2077 reconstruidas a partir de análogos clásicos 2045 con sus reglas especiales (penetración monomolecular, sobrecarga EMP, tracking inteligente), barra de municiones activas con selector táctico rápido (10 tipos canónicos con reglas y costes por caja), tooltips canónicos de ciberware clasificados por categoría anatómica/clínica, y rediseño ergonómico de las 27 formas de Artes Marciales a tarjetas colapsables compactas.',
+    highlights: [
+      'Motor de Tooltips de Armas: Detección canónica de subclases de armas con explicaciones de reglas balísticas, modo de disparo y blindaje.',
+      'Sistema de Reconstrucción CEMK 2077: Insignias doradas y tooltips dedicados para armas 2077 adaptadas de bases 2045 (ej. Malorian Arms 3516, Arasaka Tamayura, Budget Arms Carnage, Militech Crusher).',
+      'Selector Rápido de Municiones en Arsenal y HUD: Barra interactiva de 10 municiones canónicas (Basic, AP, Expansive, Incendiary, Smart, Rubber, EMP, Biotoxin, Poison, Sleep) con actualización de tipo de munición y popup de coste/efecto.',
+      'Tooltips Canónicos de Ciberware: Categorización contextual anatómica (Neuroport, Neuralware, Cyberoptics, Cyberaudio, Cyberarm, Cyberleg, Internal/External Cyberware, Borgware) con coste de HL e instalación requerida.',
+      'Artes Marciales Colapsables (27 estilos): Cabeceras ultracompactas con fórmula estándar "Nombre • Stats (DEX x2 • ROF 2 • 50% SP) • Fuente" y despliegue interactivo en StreetLab, Combat HUD y Net & Roles Deck.',
+      'Sincronización Total en Compendio: Vistas de tarjetas y tabla enriquecidas con tooltips balísticos de munición, clasificación de ciberware y subclases de armas.',
+      'Espacio de Trabajo de Combate Limpio: Inicialización de sesión con centro táctico despejado (cpr_combat_active_center_v3) para máxima adaptabilidad operativa.'
+    ],
+    filesTouched: [
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/roles/NetAndRolesDeckView.tsx',
+      'frontend/src/features/compendium/CompendiumView.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'PROJECT_STATUS_AND_ROADMAP.md'
+    ],
+    metricsBadge: 'v3.8.0 • Tooltips Engine & 2077 Rebuild • Operativo'
+  },
+  {
     version: 'v3.7.0',
     date: '2026-10-18',
     phase: 'Codex',
@@ -126,6 +153,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v3.8.0': true,
     'v3.7.0': true,
     'v3.6.2': true,
     'v3.6.1': true,
@@ -209,7 +237,7 @@ export function SystemChangelogAndDocsView() {
                 SYSTEM CODEX // DOCUMENTACIÓN MAESTRA
               </span>
               <span className="px-2 py-0.5 text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> v3.7.0 OPERATIVO
+                <CheckCircle2 className="w-3 h-3" /> v3.8.0 OPERATIVO
               </span>
             </div>
             <h1 className="text-2xl md:text-3xl font-tech font-bold text-white tracking-wider flex items-center gap-3">
@@ -217,7 +245,7 @@ export function SystemChangelogAndDocsView() {
               SISTEMA, ARQUITECTURA & CHANGELOG MAESTRO
             </h1>
             <p className="text-sm text-[#94a3b8] max-w-3xl leading-relaxed">
-              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v3.7.0), inventario de los 8 grandes
+              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v3.8.0), inventario de los 8 grandes
               módulos interactivos, estado del roadmap de Fases (0 a 5) con paridad de la Companion App, y especificación técnica de contratos.
             </p>
           </div>

@@ -26,7 +26,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 
 ---
 
-## 🗺️ Current Real Tree on Disk (`v3.7.0 - Integración 7 Folios CEMK 2077, 66 Skills Canónicas & Red Chrome Cargo Hub`)
+## 🗺️ Current Real Tree on Disk (`v3.8.0 - Motor de Tooltips Canónicos de Armas, Ciberware y Municiones, Reconstrucción 2077 y Cartas Colapsables de Artes Marciales`)
 
 ```text
 cpr-omni-deck/
@@ -61,7 +61,8 @@ cpr-omni-deck/
 │   │   │   ├── rangeTables.ts            # Matrices oficiales de DVs por metro y Autofire
 │   │   │   ├── redChromeCargoData.ts     # Misión oficial Red Chrome Cargo CEMK 2077 (mapa, escenas, botín)
 │   │   │   ├── rulesCheatSheet.ts        # Machete canónico de reglas de combate, coberturas y asfixia
-│   │   │   └── systemDocsAndChangelogData.ts # Base de datos canónica de versiones, inventario y arquitectura
+│   │   │   ├── systemDocsAndChangelogData.ts # Base de datos canónica de versiones, inventario y arquitectura
+│   │   │   └── weaponAndCyberwareTooltips.ts # Diccionario canónico de tooltips de armas, ciberware y municiones
 │   │   ├── engine/
 │   │   │   ├── characterEngine.ts        # Motor matemático: HP máx, humanidad, penalizadores
 │   │   │   └── combatEngine.ts           # Motor de resolución: d10 explosivo, Xd6, doble 6 crítico
@@ -85,8 +86,8 @@ cpr-omni-deck/
 │   │   │   │   └── NetAndRolesDeckView.tsx # Simulador Netrunning 2045, Quickhacks 2077, Garaje y 10 Roles
 │   │   │   ├── oneshot/
 │   │   │   │   └── RedChromeCargoView.tsx # Centro de mando táctico interactivo de Red Chrome Cargo CEMK
-│   │   │   ├── packs/
-│   │   │   │   └── DataPacksView.tsx     # Gestor de paquetes .cprpack estilo COMP/CON
+│   │   │   ├── datapacks/
+│   │   │   │   └── DataPackManagerView.tsx # Gestor interactivo de paquetes .cprpack estilo COMP/CON
 │   │   │   ├── rules/
 │   │   │   │   └── RulesCheatSheetDrawer.tsx # Drawer táctico deslizable con machete de reglas de mesa
 │   │   │   └── sheet/
@@ -206,6 +207,37 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ---
 
 ## 📜 Master Version Changelog
+
+### [v3.8.0] - 2026-10-19 (Weapons, Cyberware & Ammo Tooltips Engine, 2077 Rebuild System & Collapsible Martial Arts Deck)
+* **Category**: Weapons, Cyberware & Ammo Tooltips Engine, 2077 Rebuild System & Collapsible Martial Arts Deck
+* **Files Modified**:
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/roles/NetAndRolesDeckView.tsx`
+  - `frontend/src/features/compendium/CompendiumView.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+* **What Changed**:
+  1. **Motor Táctico de Tooltips para Armas y Subclases Canónicas (`weaponAndCyberwareTooltips.ts`)**:
+     - Detección reactiva y automática de subclases de armamento (Power Weapons, Tech Weapons, Smart Weapons, Armas Exóticas, Melée Pesada y Armas de Asta).
+     - Despliegue de tooltips militares tácticos con explicación detallada de mecánicas de penetración, daño, modos de disparo, reducción de cobertura y reglas oficiales de combate.
+  2. **Sistema de Insignias y Reglas para Armas CEMK 2077 Reconstruidas (`rebuildBadge` & `rebuildTooltip`)**:
+     - Identificación e integración de insignias doradas tácticas para armas CEMK 2077 adaptadas de bases clásicas 2045 (ej. *Malorian Arms 3516*, *Arasaka Tamayura*, *Budget Arms Carnage*, *Militech Crusher*, *Militech Achilles*).
+     - Visualización del origen de reconstrucción y advertencias tácticas de compatibilidad balística en StreetLabView, CombatHudView y CompendiumView.
+  3. **Barra Táctica y Selector Rápido de 10 Tipos de Munición Canónica**:
+     - Selector rápido en tiempo real para 10 municiones oficiales: *Basic*, *Armor-Piercing (AP)*, *Expansive*, *Incendiary*, *Smart*, *Rubber*, *EMP*, *Biotoxin*, *Poison* y *Sleep*.
+     - Actualización instantánea de la munición activa en el store del personaje (`setWeaponAmmoType`).
+     - Tooltips contextuales interactivos con daño, efectos de estado, ablación de SP y coste por caja de unidades.
+  4. **Tooltips Anatómicos y Clínicos de Ciberware**:
+     - Categorización táctica universal por ranura y tipo de instalación: *Neuroport 2077*, *Neuralware*, *Cyberoptics*, *Cyberaudio*, *Cyberarm*, *Cyberleg*, *Internal Cyberware*, *External Cyberware* y *Borgware*.
+     - Resumen in-situ de costo de Humanidad (HL) y nivel clínico de instalación requerida (Mall, Clinic, Hospital).
+  5. **Rediseño Ergonómico de las 27 Formas de Artes Marciales a Cartas Colapsables**:
+     - Conversión completa de las 27 disciplinas marciales (*Core Rulebook* y *Cyberfists of Fury / Interface RED Vol 4*) a formato de tarjetas colapsables ultracompactas.
+     - Cabecera plegada limpia y estandarizada: `Nombre • Stats (DEX x2 • ROF 2 • 50% SP • Nvl X) • Fuente (Core Rulebook / Cyberfists of Fury)`.
+     - Implementado de forma unificada en `StreetLabView.tsx` (Dojo & Estilos Activos), `CombatHudView.tsx` (Modal Dojo) y `NetAndRolesDeckView.tsx` (Catálogo Maestro).
+  6. **Espacio de Trabajo de Combate Limpio al Iniciar Sesión**:
+     - Migración de clave de persistencia del HUD a `cpr_combat_active_center_v3` inicializando por defecto con centro despejado para máxima claridad táctica.
 
 ### [v3.7.0] - 2026-10-18 (CEMK 2077 Folio Premades Roster, 28-Page Canonical Skills & Red Chrome Cargo Hub)
 * **Category**: CEMK 2077 Folio Premades Roster, 28-Page Canonical Skills & Red Chrome Cargo Hub

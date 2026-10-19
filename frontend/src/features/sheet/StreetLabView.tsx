@@ -19,6 +19,12 @@ import { CharacterCreatorWizard } from '../creator/CharacterCreatorWizard';
 import { CHARACTER_PORTRAITS_CATALOG } from '../../data/netAndRolesData';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
 import { CEMK_FOLIO_METADATA_MAP } from '../../data/cemkFolioPremadesData';
+import {
+  getWeaponClassAndRebuildInfo,
+  getAmmoTypeTooltip as getAmmoTooltipInfo,
+  getCyberwareCategoryTooltip,
+  type WeaponClassAndRebuildInfo
+} from '../../data/weaponAndCyberwareTooltips';
 import { 
   User, 
   Plus, 
@@ -99,6 +105,133 @@ const TacticalTooltip: React.FC<{
   );
 };
 
+const QUICK_AMMO_TYPES = [
+  'Basic',
+  'Armor-Piercing',
+  'Expansive',
+  'Incendiary',
+  'Smart',
+  'Rubber',
+  'EMP',
+  'Biotoxin',
+  'Poison',
+  'Sleep'
+];
+
+const WeaponClassTooltip: React.FC<{
+  weaponInfo: WeaponClassAndRebuildInfo;
+  notes?: string;
+  children: React.ReactNode;
+  className?: string;
+}> = ({ weaponInfo, notes, children, className = '' }) => {
+  return (
+    <span className={`group/wtip relative inline-flex items-center cursor-help ${className}`}>
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden group-hover/wtip:flex flex-col z-50 w-72 text-left">
+        <span className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code p-2.5 rounded-xs border border-cyan-500/70 shadow-2xl space-y-1">
+          <div className="font-tech text-xs font-bold text-cyan-300 uppercase flex items-center justify-between border-b border-[#1f2638] pb-1">
+            <span>{weaponInfo.weaponClass}</span>
+            {weaponInfo.rebuildBadge && (
+              <span className="text-[9px] text-amber-300">{weaponInfo.rebuildBadge}</span>
+            )}
+          </div>
+          <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+            {weaponInfo.weaponClassTooltip}
+          </p>
+          {weaponInfo.rebuildTooltip && (
+            <div className="pt-1 border-t border-[#1f2638] text-[9px] text-amber-300/90 leading-tight">
+              <strong>Regla Especial:</strong> {weaponInfo.rebuildTooltip}
+            </div>
+          )}
+          {notes && (
+            <div className="pt-1 border-t border-[#1f2638] text-[9px] text-slate-400 italic">
+              <strong>Notas:</strong> {notes}
+            </div>
+          )}
+        </span>
+        <span className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-cyan-500/70 rotate-45 -mt-1 ml-4" />
+      </span>
+    </span>
+  );
+};
+
+const AmmoHoverTooltip: React.FC<{
+  ammoIdOrName: string;
+  children: React.ReactNode;
+  className?: string;
+}> = ({ ammoIdOrName, children, className = '' }) => {
+  const ammoInfo = getAmmoTooltipInfo(ammoIdOrName);
+  if (!ammoInfo) return <>{children}</>;
+
+  return (
+    <span className={`group/atip relative inline-flex items-center cursor-help ${className}`}>
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/atip:flex flex-col items-center z-50 w-72 text-left">
+        <span className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code p-2.5 rounded-xs border border-amber-500/70 shadow-2xl space-y-1">
+          <div className="flex items-center justify-between border-b border-[#252016] pb-1">
+            <span className="font-tech text-xs font-bold text-amber-300 uppercase">
+              {ammoInfo.name}
+            </span>
+            <span className="text-[9px] text-emerald-400 font-bold bg-emerald-950/60 px-1 rounded border border-emerald-500/30">
+              {ammoInfo.costEb} eb / {ammoInfo.perUnits}u
+            </span>
+          </div>
+          <div className="text-[10px] text-cyan-300 font-bold">
+            ⚡ {ammoInfo.combatEffect}
+          </div>
+          <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+            {ammoInfo.ruleExplanation}
+          </p>
+          <div className="text-[9px] text-[#64748b] pt-0.5 border-t border-[#1f2638]">
+            Fuente: {ammoInfo.source}
+          </div>
+        </span>
+        <span className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-amber-500/70 rotate-45 -mt-1" />
+      </span>
+    </span>
+  );
+};
+
+const CyberCategoryTooltip: React.FC<{
+  category: string;
+  children: React.ReactNode;
+  className?: string;
+}> = ({ category, children, className = '' }) => {
+  const catInfo = getCyberwareCategoryTooltip(category);
+  if (!catInfo) return <>{children}</>;
+
+  return (
+    <span className={`group/ctip relative inline-flex items-center cursor-help ${className}`}>
+      {children}
+      <span className="pointer-events-none absolute bottom-full left-0 mb-2 hidden group-hover/ctip:flex flex-col z-50 w-72 text-left">
+        <span className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code p-2.5 rounded-xs border border-purple-500/70 shadow-2xl space-y-1">
+          <div className="flex items-center justify-between border-b border-[#231b30] pb-1">
+            <span className="font-tech text-xs font-bold text-purple-300 uppercase">
+              {catInfo.categoryName}
+            </span>
+            <span className="text-[9px] text-purple-400 font-bold bg-purple-950/60 px-1 rounded border border-purple-500/30">
+              {catInfo.installationSite}
+            </span>
+          </div>
+          <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+            {catInfo.description}
+          </p>
+          <div className="text-[9px] text-amber-300 pt-0.5 border-t border-[#1f2638]">
+            <strong>Requisito:</strong> {catInfo.baseRequirement}
+          </div>
+          <div className="text-[9px] text-cyan-300">
+            <strong>Ranuras:</strong> {catInfo.slotsInfo}
+          </div>
+          <div className="text-[9px] text-rose-300">
+            <strong>Pérdida HL:</strong> {catInfo.humanityLossRule}
+          </div>
+        </span>
+        <span className="w-1.5 h-1.5 bg-[#0b0e17] border-r border-b border-purple-500/70 rotate-45 -mt-1 ml-4" />
+      </span>
+    </span>
+  );
+};
+
 export const StreetLabView: React.FC = () => {
   const characters = useCharacterStore((state) => state.characters);
   const activeCharacterId = useCharacterStore((state) => state.activeCharacterId);
@@ -112,6 +245,7 @@ export const StreetLabView: React.FC = () => {
   const repairArmor = useCharacterStore((state) => state.repairArmor);
   const reloadWeapon = useCharacterStore((state) => state.reloadWeapon);
   const unequipWeapon = useCharacterStore((state) => state.unequipWeapon);
+  const setWeaponAmmoType = useCharacterStore((state) => state.setWeaponAmmoType);
   const toggleCyberwareInstall = useCharacterStore((state) => state.toggleCyberwareInstall);
   const updateInventoryQuantity = useCharacterStore((state) => state.updateInventoryQuantity);
   const addEurodollarTransaction = useCharacterStore((state) => state.addEurodollarTransaction);
@@ -153,6 +287,8 @@ export const StreetLabView: React.FC = () => {
   const [martialArtSearch, setMartialArtSearch] = useState('');
   const [martialArtCategoryFilter, setMartialArtCategoryFilter] = useState<'all' | 'core' | 'interface_red'>('all');
   const [martialFeedback, setMartialFeedback] = useState<{ success: boolean; message: string } | null>(null);
+  const [openMartialArtForms, setOpenMartialArtForms] = useState<Record<string, boolean>>({});
+  const toggleMartialArtForm = (id: string) => setOpenMartialArtForms(prev => ({ ...prev, [id]: !prev[id] }));
 
   // Skill filter and accordion state
   const [skillFilter, setSkillFilter] = useState<SkillFilterCategory>('all');
@@ -1290,57 +1426,119 @@ export const StreetLabView: React.FC = () => {
                     activeChar.equippedWeapons.map((w) => {
                       const breakdown = calculateWeaponAttackBreakdown(activeChar, w);
                       const isRanged = w.type === 'Ranged';
+                      const weaponInfo = getWeaponClassAndRebuildInfo(w);
+                      const currentAmmo = w.ammoType || 'Basic';
 
                       return (
                         <div
                           key={w.instanceId}
-                          className="p-2 bg-[#171923] hover:bg-[#1a1d2a] border border-[#222636] rounded-xs flex items-center justify-between gap-2"
+                          className="p-2.5 bg-[#171923] hover:bg-[#1a1d2a] border border-[#222636] rounded-xs space-y-2 transition-colors"
                         >
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="font-tech text-sm font-bold text-white truncate">
-                                {w.name}
-                              </span>
-                              <span className="text-[10px] font-mono-code bg-[#1f2434] text-[#38bdf8] px-1 rounded">
-                                {w.damage}
-                              </span>
+                          {/* Fila Principal: Nombre, Daño, Base, Acciones */}
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="font-tech text-sm font-bold text-white truncate">
+                                  {w.name}
+                                </span>
+                                <span className="text-[10px] font-mono-code bg-[#1f2434] text-[#38bdf8] px-1 rounded">
+                                  {w.damage}
+                                </span>
+                                <WeaponClassTooltip weaponInfo={weaponInfo} notes={w.notes}>
+                                  <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-cyan-950/60 text-cyan-300 border border-cyan-500/40 font-bold hover:border-cyan-400">
+                                    {weaponInfo.weaponClass}
+                                  </span>
+                                </WeaponClassTooltip>
+                                {weaponInfo.rebuildBadge && (
+                                  <WeaponClassTooltip weaponInfo={weaponInfo} notes={w.notes}>
+                                    <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-500/40 font-bold hover:border-amber-400">
+                                      {weaponInfo.rebuildBadge}
+                                    </span>
+                                  </WeaponClassTooltip>
+                                )}
+                              </div>
+                              <div className="text-[10px] font-mono-code text-[#64748b] flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                <TacticalTooltip term="ROF"><span>ROF {w.rof}</span></TacticalTooltip>
+                                <span>•</span>
+                                <span className="text-slate-300">{weaponInfo.skillDisplayName || breakdown.skillLabel}</span>
+                                {isRanged && (
+                                  <>
+                                    <span>•</span>
+                                    <TacticalTooltip term="MAG"><span className="text-white font-bold">{w.currentMag}/{w.standardMag}</span></TacticalTooltip>
+                                  </>
+                                )}
+                              </div>
                             </div>
-                            <div className="text-[10px] font-mono-code text-[#64748b] flex items-center gap-1.5 mt-0.5">
-                              <TacticalTooltip term="ROF"><span>ROF {w.rof}</span></TacticalTooltip>
-                              <span>•</span>
-                              <span>{breakdown.skillLabel}</span>
+
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <span className="font-mono-code text-xs font-bold bg-[#142320] text-[#10b981] border border-[#1b3f36] px-1.5 py-0.5 rounded">
+                                Base {breakdown.netBase}
+                              </span>
+
                               {isRanged && (
-                                <>
-                                  <span>•</span>
-                                  <TacticalTooltip term="MAG"><span className="text-white font-bold">{w.currentMag}/{w.standardMag}</span></TacticalTooltip>
-                                </>
+                                <button
+                                  type="button"
+                                  onClick={() => reloadWeapon(w.instanceId)}
+                                  className="p-1 bg-[#202534] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] rounded transition-colors"
+                                  title="Recargar cargador"
+                                >
+                                  <RefreshCw className="w-3 h-3" />
+                                </button>
                               )}
+
+                              <button
+                                type="button"
+                                onClick={() => unequipWeapon(w.instanceId)}
+                                className="p-1 bg-[#22181d] hover:bg-[#dc2626] text-[#dc2626] hover:text-white rounded transition-colors"
+                                title="Desequipar arma"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <span className="font-mono-code text-xs font-bold bg-[#142320] text-[#10b981] border border-[#1b3f36] px-1.5 py-0.5 rounded">
-                              Base {breakdown.netBase}
-                            </span>
+                          {/* Notas del arma si existen */}
+                          {w.notes && (
+                            <div className="text-[10px] text-slate-400 italic bg-[#0f111a] px-2 py-1 rounded border border-[#1b2030]">
+                              {w.notes}
+                            </div>
+                          )}
 
-                            {isRanged && (
-                              <button
-                                onClick={() => reloadWeapon(w.instanceId)}
-                                className="p-1 bg-[#202534] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] rounded transition-colors"
-                                title="Recargar cargador"
-                              >
-                                <RefreshCw className="w-3 h-3" />
-                              </button>
-                            )}
-
-                            <button
-                              onClick={() => unequipWeapon(w.instanceId)}
-                              className="p-1 bg-[#22181d] hover:bg-[#dc2626] text-[#dc2626] hover:text-white rounded transition-colors"
-                              title="Desequipar arma"
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </button>
-                          </div>
+                          {/* Barra de Munición Táctica (solo para armas a distancia) */}
+                          {isRanged && (
+                            <div className="pt-1.5 border-t border-[#1e2333] flex flex-wrap items-center justify-between gap-1.5">
+                              <div className="flex items-center gap-1">
+                                <span className="text-[9px] font-mono-code text-slate-400 uppercase font-bold">
+                                  Munición:
+                                </span>
+                                <AmmoHoverTooltip ammoIdOrName={currentAmmo}>
+                                  <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
+                                    {currentAmmo}
+                                  </span>
+                                </AmmoHoverTooltip>
+                              </div>
+                              <div className="flex items-center gap-1 flex-wrap">
+                                {QUICK_AMMO_TYPES.map((ammo) => {
+                                  const isActive = currentAmmo.toLowerCase() === ammo.toLowerCase();
+                                  return (
+                                    <AmmoHoverTooltip key={ammo} ammoIdOrName={ammo}>
+                                      <button
+                                        type="button"
+                                        onClick={() => setWeaponAmmoType(w.instanceId, ammo)}
+                                        className={`px-1.5 py-0.5 rounded text-[8.5px] font-mono-code transition-colors cursor-pointer ${
+                                          isActive
+                                            ? 'bg-amber-500 text-black font-bold shadow-xs'
+                                            : 'bg-[#121520] text-slate-400 hover:text-white border border-[#232a3c] hover:border-slate-500'
+                                        }`}
+                                      >
+                                        {ammo}
+                                      </button>
+                                    </AmmoHoverTooltip>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })
@@ -1378,14 +1576,19 @@ export const StreetLabView: React.FC = () => {
                             <div className="font-tech text-sm font-bold text-white truncate">
                               {name}
                             </div>
-                            <div className="text-[10px] font-mono-code text-[#a855f7]">
-                              {type} • <TacticalTooltip term="HL">HL: {hl}</TacticalTooltip>
+                            <div className="text-[10px] font-mono-code text-[#a855f7] flex items-center gap-1">
+                              <CyberCategoryTooltip category={type}>
+                                <span className="hover:underline cursor-help">{type}</span>
+                              </CyberCategoryTooltip>
+                              <span>•</span>
+                              <TacticalTooltip term="HL"><span>HL: {hl}</span></TacticalTooltip>
                             </div>
                           </div>
 
                           <button
+                            type="button"
                             onClick={() => toggleCyberwareInstall(id)}
-                            className="text-[10px] font-mono-code text-[#dc2626] hover:underline shrink-0"
+                            className="text-[10px] font-mono-code text-[#dc2626] hover:underline shrink-0 cursor-pointer"
                           >
                             Desinstalar
                           </button>
@@ -2099,41 +2302,55 @@ export const StreetLabView: React.FC = () => {
                           const effectiveRank = isChipEquipped ? Math.max(3, naturalRank) : naturalRank;
                           const dex = activeChar?.stats?.DEX ?? 6;
                           const totalAttack = dex + effectiveRank;
+                          const isOpen = !!openMartialArtForms[`active_${form.id}`];
+                          const sourceLabel = form.sourceBook === 'core' ? 'Core Rulebook' : 'Cyberfists of Fury';
 
                           return (
                             <div
                               key={form.id}
-                              className="p-2.5 rounded bg-[#151a27] border border-emerald-500/50 shadow-sm space-y-1.5"
+                              className="rounded bg-[#151a27] border border-emerald-500/50 shadow-sm overflow-hidden"
                             >
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-1.5">
-                                  <span className="font-tech text-xs font-bold text-white">{form.name}</span>
-                                  <span className="text-[9px] font-mono-code px-1 rounded bg-[#10b981]/20 text-emerald-300 border border-emerald-500/40">
-                                    {form.badge}
+                              <button
+                                type="button"
+                                onClick={() => toggleMartialArtForm(`active_${form.id}`)}
+                                className="w-full p-2.5 flex items-center justify-between gap-2 text-left hover:bg-[#1a2133] transition-colors cursor-pointer"
+                              >
+                                <div className="flex items-center gap-2 flex-wrap min-w-0">
+                                  <span className="font-tech text-xs font-bold text-white truncate">
+                                    {form.name}
+                                  </span>
+                                  <span className="text-[10px] font-mono-code text-emerald-400">
+                                    DEX (x2) • ROF 2 • 50% SP • Nvl {effectiveRank}
+                                  </span>
+                                  <span className="text-[9px] font-mono-code px-1.5 py-0.2 rounded bg-[#10b981]/20 text-emerald-300 border border-emerald-500/40">
+                                    Fuente ({sourceLabel})
                                   </span>
                                 </div>
-                                <span className="text-[10px] font-mono-code px-1.5 py-0.5 rounded bg-emerald-500 text-black font-bold">
-                                  RANGO {effectiveRank}
-                                  {isChipEquipped && naturalRank < 3 ? ' (CHIP +3)' : ''}
-                                </span>
-                              </div>
+                                <div className="shrink-0 text-slate-400">
+                                  {isOpen ? <ChevronDown className="w-4 h-4 text-emerald-400" /> : <ChevronRight className="w-4 h-4" />}
+                                </div>
+                              </button>
 
-                              <div className="flex items-center justify-between text-[11px] font-mono-code bg-[#0d1018] p-1.5 rounded border border-[#1d2436]">
-                                <span className="text-slate-400">Tirada de Ataque:</span>
-                                <span className="text-red-400 font-bold">1d10 + {totalAttack} (DEX {dex} + R{effectiveRank})</span>
-                              </div>
-
-                              <div className="space-y-1 pt-1 border-t border-[#1d2436]">
-                                {form.moves.map((m) => (
-                                  <div
-                                    key={m.id}
-                                    className="text-[10px] font-mono-code flex items-center justify-between bg-[#0e111a] px-2 py-1 rounded border border-[#1b2234]"
-                                  >
-                                    <span className="text-white font-bold">{m.name}</span>
-                                    <span className="text-amber-400 font-bold">DV {m.resolutionDv}</span>
+                              {isOpen && (
+                                <div className="p-2.5 pt-0 border-t border-[#1e2438] space-y-2 mt-1">
+                                  <div className="flex items-center justify-between text-[11px] font-mono-code bg-[#0d1018] p-1.5 rounded border border-[#1d2436]">
+                                    <span className="text-slate-400">Tirada de Ataque:</span>
+                                    <span className="text-red-400 font-bold">1d10 + {totalAttack} (DEX {dex} + R{effectiveRank})</span>
                                   </div>
-                                ))}
-                              </div>
+
+                                  <div className="space-y-1 pt-1 border-t border-[#1d2436]">
+                                    {form.moves.map((m) => (
+                                      <div
+                                        key={m.id}
+                                        className="text-[10px] font-mono-code flex items-center justify-between bg-[#0e111a] px-2 py-1 rounded border border-[#1b2234]"
+                                      >
+                                        <span className="text-white font-bold">{m.name}</span>
+                                        <span className="text-amber-400 font-bold">DV {m.resolutionDv}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           );
                         })}
@@ -2194,170 +2411,192 @@ export const StreetLabView: React.FC = () => {
                     const canTrain = currentIp >= ipCost && naturalRank < 10;
                     const dex = activeChar?.stats?.DEX ?? 6;
                     const totalAttack = dex + effectiveRank;
+                    const isOpen = !!openMartialArtForms[`catalog_${form.id}`];
+                    const sourceLabel = form.sourceBook === 'core' ? 'Core Rulebook' : 'Cyberfists of Fury';
 
                     return (
                       <div
                         key={form.id}
-                        className={`p-3 rounded border transition-all ${
+                        className={`rounded border transition-all overflow-hidden ${
                           effectiveRank > 0
                             ? 'bg-[#121824] border-emerald-500/50 shadow-md'
                             : 'bg-[#10131d] border-[#1f2738]'
                         }`}
                       >
-                        {/* Cabecera de la Forma */}
-                        <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1.5">
-                          <div className="flex items-center gap-2">
-                            <span className="font-tech text-xs sm:text-sm font-bold text-white">{form.name}</span>
-                            <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40">
-                              {form.badge}
+                        {/* Cabecera Plegable: Nombre • Stats Clave • Fuente */}
+                        <button
+                          type="button"
+                          onClick={() => toggleMartialArtForm(`catalog_${form.id}`)}
+                          className="w-full p-2.5 flex items-center justify-between gap-2 text-left hover:bg-[#161c28] transition-colors cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2 flex-wrap min-w-0">
+                            <span className="font-tech text-xs sm:text-sm font-bold text-white truncate">
+                              {form.name}
+                            </span>
+                            <span className="text-[10px] font-mono-code text-emerald-400">
+                              DEX (x2) • ROF 2 • 50% SP • Nvl {effectiveRank}
+                            </span>
+                            <span className="text-[9px] font-mono-code px-1.5 py-0.2 rounded bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40">
+                              Fuente ({sourceLabel})
                             </span>
                             {effectiveRank > 0 && (
-                              <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-emerald-500 text-black font-bold">
+                              <span className="text-[9px] font-mono-code px-1.5 py-0.2 rounded bg-emerald-500 text-black font-bold">
                                 EFECTIVO: R{effectiveRank}
                                 {isChipEquipped && naturalRank < 3 ? ' (CHIP +3)' : ''}
                               </span>
                             )}
                           </div>
-                          <div className="text-[10px] font-mono-code text-[#94a3b8]">
-                            Rol: <span className="text-white">{form.tacticalRole}</span> • Stats: <span className="text-slate-300">{form.keyStats.join(', ')}</span>
+                          <div className="shrink-0 text-slate-400">
+                            {isOpen ? <ChevronDown className="w-4 h-4 text-emerald-400" /> : <ChevronRight className="w-4 h-4" />}
                           </div>
-                        </div>
+                        </button>
 
-                        {/* Lore y Trasfondo */}
-                        <div className="text-[11px] text-slate-300 italic font-sans mb-2 leading-relaxed bg-[#0b0e15] p-2 rounded border border-[#182030]">
-                          "{form.originAndFlavor}"
-                        </div>
+                        {/* Contenido Desplegable Completo */}
+                        {isOpen && (
+                          <div className="p-3 pt-0 border-t border-[#1a2233] space-y-2 mt-1">
+                            <div className="text-[10px] font-mono-code text-[#94a3b8] flex items-center gap-1.5 pt-1">
+                              <span>Rol: <span className="text-white">{form.tacticalRole}</span></span>
+                              <span>•</span>
+                              <span>Stats: <span className="text-slate-300">{form.keyStats.join(', ')}</span></span>
+                            </div>
 
-                        {/* Movimientos Especiales */}
-                        <div className="space-y-1.5 mb-2.5">
-                          <span className="text-[10px] font-tech font-bold text-red-400 uppercase tracking-wider block">
-                            ⚡ Movimientos Especiales ({form.moves.length}):
-                          </span>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                            {form.moves.map((m) => (
-                              <div
-                                key={m.id}
-                                className="bg-[#0b0e16] p-2 rounded-xs border border-[#1d2538] space-y-0.5 text-[10px] font-mono-code"
-                              >
-                                <div className="flex items-center justify-between font-bold">
-                                  <span className="text-white">{m.name}</span>
-                                  <span className="text-amber-400">DV {m.resolutionDv}</span>
-                                </div>
-                                <div className="text-[9px] text-slate-400 font-sans leading-tight">
-                                  <strong>Req:</strong> {m.requirements}
-                                </div>
-                                <div className="text-[9px] text-slate-300 font-sans leading-tight">
-                                  {m.effectDescription}
-                                </div>
-                                {m.damageBonusOrFormula && (
-                                  <div className="text-[9px] text-amber-300 font-bold">
-                                    Daño: {m.damageBonusOrFormula}
+                            {/* Lore y Trasfondo */}
+                            <div className="text-[11px] text-slate-300 italic font-sans leading-relaxed bg-[#0b0e15] p-2 rounded border border-[#182030]">
+                              "{form.originAndFlavor}"
+                            </div>
+
+                            {/* Movimientos Especiales */}
+                            <div className="space-y-1.5">
+                              <span className="text-[10px] font-tech font-bold text-red-400 uppercase tracking-wider block">
+                                ⚡ Movimientos Especiales ({form.moves.length}):
+                              </span>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                                {form.moves.map((m) => (
+                                  <div
+                                    key={m.id}
+                                    className="bg-[#0b0e16] p-2 rounded-xs border border-[#1d2538] space-y-0.5 text-[10px] font-mono-code"
+                                  >
+                                    <div className="flex items-center justify-between font-bold">
+                                      <span className="text-white">{m.name}</span>
+                                      <span className="text-amber-400">DV {m.resolutionDv}</span>
+                                    </div>
+                                    <div className="text-[9px] text-slate-400 font-sans leading-tight">
+                                      <strong>Req:</strong> {m.requirements}
+                                    </div>
+                                    <div className="text-[9px] text-slate-300 font-sans leading-tight">
+                                      {m.effectDescription}
+                                    </div>
+                                    {m.damageBonusOrFormula && (
+                                      <div className="text-[9px] text-amber-300 font-bold">
+                                        Daño: {m.damageBonusOrFormula}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Fila de Estado y Acciones: IP + Skill Chip + Rango Manual */}
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#1c2436] items-center">
+                              {/* Entrenamiento con IP */}
+                              <div>
+                                {naturalRank >= 10 ? (
+                                  <div className="text-center py-1.5 bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 text-[10px] font-tech font-bold uppercase rounded-xs">
+                                    ★ MAESTRÍA MÁXIMA (R10)
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const res = trainMartialArtWithIp(form.id, form.name);
+                                      setMartialFeedback(res);
+                                    }}
+                                    disabled={!canTrain}
+                                    className={`w-full py-1.5 px-2 rounded-xs font-tech text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-1 ${
+                                      canTrain
+                                        ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-sm'
+                                        : 'bg-[#151926] text-slate-500 border border-[#222738] cursor-not-allowed'
+                                    }`}
+                                    title={canTrain ? `Gasta ${ipCost} IP para subir a Rango ${nextRank}` : `Necesitas ${ipCost} IP (tienes ${currentIp})`}
+                                  >
+                                    <Award className="w-3.5 h-3.5" />
+                                    <span>
+                                      {canTrain ? `ENTRENAR R${nextRank} (${ipCost} IP)` : `REQ. ${ipCost} IP`}
+                                    </span>
+                                  </button>
+                                )}
+                              </div>
+
+                              {/* Skill Chip Nivel 3 */}
+                              <div>
+                                {isChipOwned ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => toggleEquipMartialArtChip(form.id)}
+                                    className={`w-full py-1.5 px-2 rounded-xs font-mono-code text-[10px] font-bold transition-all flex items-center justify-center gap-1 cursor-pointer ${
+                                      isChipEquipped
+                                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400 hover:bg-cyan-500/30'
+                                        : 'bg-[#151926] text-slate-400 border border-[#222738] hover:text-white'
+                                    }`}
+                                  >
+                                    <Cpu className="w-3.5 h-3.5" />
+                                    <span>{isChipEquipped ? '✓ CHIP EQUIPADO' : '⚡ INSERTAR CHIP'}</span>
+                                  </button>
+                                ) : (
+                                  <div className="flex gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const res = buyAndEquipMartialArtChip(form.id, form.name, false);
+                                        setMartialFeedback(res);
+                                      }}
+                                      className="flex-1 py-1.5 px-1 bg-[#1a2030] hover:bg-amber-600 hover:text-black text-amber-300 border border-amber-600/40 rounded-xs font-mono-code text-[9px] font-bold transition-colors cursor-pointer text-center"
+                                      title="Comprar Skill Chip Nivel 3 por 1,000 €$"
+                                    >
+                                      CHIP 1,000 €$
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const res = buyAndEquipMartialArtChip(form.id, form.name, true);
+                                        setMartialFeedback(res);
+                                      }}
+                                      className="py-1.5 px-2 bg-[#151926] hover:bg-[#20273a] text-slate-400 hover:text-white border border-[#24293c] rounded-xs font-mono-code text-[9px] transition-colors cursor-pointer text-center"
+                                      title="Gratis en creación de personaje"
+                                    >
+                                      GRATIS
+                                    </button>
                                   </div>
                                 )}
                               </div>
-                            ))}
-                          </div>
-                        </div>
 
-                        {/* Fila de Estado y Acciones: IP + Skill Chip + Rango Manual */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#1c2436] items-center">
-                          {/* Entrenamiento con IP */}
-                          <div>
-                            {naturalRank >= 10 ? (
-                              <div className="text-center py-1.5 bg-emerald-950/40 text-emerald-400 border border-emerald-800/40 text-[10px] font-tech font-bold uppercase rounded-xs">
-                                ★ MAESTRÍA MÁXIMA (R10)
+                              {/* Ajuste manual de rango & Ataque Total */}
+                              <div className="flex items-center justify-between gap-1 font-mono-code text-[10px] bg-[#0b0e16] p-1 rounded border border-[#1b2234]">
+                                <div className="flex items-center gap-1">
+                                  <span className="text-slate-400">R. Base:</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => updateMartialArtRank(form.id, Math.max(0, naturalRank - 1))}
+                                    className="w-5 h-5 flex items-center justify-center bg-[#181d2a] hover:bg-red-600 text-white rounded cursor-pointer"
+                                  >
+                                    -
+                                  </button>
+                                  <span className="w-4 text-center font-bold text-white">{naturalRank}</span>
+                                  <button
+                                    type="button"
+                                    onClick={() => updateMartialArtRank(form.id, Math.min(10, naturalRank + 1))}
+                                    className="w-5 h-5 flex items-center justify-center bg-[#181d2a] hover:bg-emerald-600 text-white rounded cursor-pointer"
+                                  >
+                                    +
+                                  </button>
+                                </div>
+                                <div className="text-right">
+                                  <span className="text-red-400 font-bold">1d10+{totalAttack}</span>
+                                </div>
                               </div>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const res = trainMartialArtWithIp(form.id, form.name);
-                                  setMartialFeedback(res);
-                                }}
-                                disabled={!canTrain}
-                                className={`w-full py-1.5 px-2 rounded-xs font-tech text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-1 ${
-                                  canTrain
-                                    ? 'bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-sm'
-                                    : 'bg-[#151926] text-slate-500 border border-[#222738] cursor-not-allowed'
-                                }`}
-                                title={canTrain ? `Gasta ${ipCost} IP para subir a Rango ${nextRank}` : `Necesitas ${ipCost} IP (tienes ${currentIp})`}
-                              >
-                                <Award className="w-3.5 h-3.5" />
-                                <span>
-                                  {canTrain ? `ENTRENAR R${nextRank} (${ipCost} IP)` : `REQ. ${ipCost} IP`}
-                                </span>
-                              </button>
-                            )}
-                          </div>
-
-                          {/* Skill Chip Nivel 3 */}
-                          <div>
-                            {isChipOwned ? (
-                              <button
-                                type="button"
-                                onClick={() => toggleEquipMartialArtChip(form.id)}
-                                className={`w-full py-1.5 px-2 rounded-xs font-mono-code text-[10px] font-bold transition-all flex items-center justify-center gap-1 cursor-pointer ${
-                                  isChipEquipped
-                                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400 hover:bg-cyan-500/30'
-                                    : 'bg-[#151926] text-slate-400 border border-[#222738] hover:text-white'
-                                }`}
-                              >
-                                <Cpu className="w-3.5 h-3.5" />
-                                <span>{isChipEquipped ? '✓ CHIP EQUIPADO' : '⚡ INSERTAR CHIP'}</span>
-                              </button>
-                            ) : (
-                              <div className="flex gap-1">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const res = buyAndEquipMartialArtChip(form.id, form.name, false);
-                                    setMartialFeedback(res);
-                                  }}
-                                  className="flex-1 py-1.5 px-1 bg-[#1a2030] hover:bg-amber-600 hover:text-black text-amber-300 border border-amber-600/40 rounded-xs font-mono-code text-[9px] font-bold transition-colors cursor-pointer text-center"
-                                  title="Comprar Skill Chip Nivel 3 por 1,000 €$"
-                                >
-                                  CHIP 1,000 €$
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    const res = buyAndEquipMartialArtChip(form.id, form.name, true);
-                                    setMartialFeedback(res);
-                                  }}
-                                  className="py-1.5 px-2 bg-[#151926] hover:bg-[#20273a] text-slate-400 hover:text-white border border-[#24293c] rounded-xs font-mono-code text-[9px] transition-colors cursor-pointer text-center"
-                                  title="Gratis en creación de personaje"
-                                >
-                                  GRATIS
-                                </button>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Ajuste manual de rango & Ataque Total */}
-                          <div className="flex items-center justify-between gap-1 font-mono-code text-[10px] bg-[#0b0e16] p-1 rounded border border-[#1b2234]">
-                            <div className="flex items-center gap-1">
-                              <span className="text-slate-400">R. Base:</span>
-                              <button
-                                type="button"
-                                onClick={() => updateMartialArtRank(form.id, Math.max(0, naturalRank - 1))}
-                                className="w-5 h-5 flex items-center justify-center bg-[#181d2a] hover:bg-red-600 text-white rounded cursor-pointer"
-                              >
-                                -
-                              </button>
-                              <span className="w-4 text-center font-bold text-white">{naturalRank}</span>
-                              <button
-                                type="button"
-                                onClick={() => updateMartialArtRank(form.id, Math.min(10, naturalRank + 1))}
-                                className="w-5 h-5 flex items-center justify-center bg-[#181d2a] hover:bg-emerald-600 text-white rounded cursor-pointer"
-                              >
-                                +
-                              </button>
-                            </div>
-                            <div className="text-right">
-                              <span className="text-red-400 font-bold">1d10+{totalAttack}</span>
                             </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     );
                   })}

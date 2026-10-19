@@ -1,39 +1,40 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v3.7.0 OPERATIVO`**  
-> **FECHA DE CORTE**: 2026-10-18  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v3.8.0 OPERATIVO`**  
+> **FECHA DE CORTE**: 2026-10-19  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 
 ---
 
-## 📊 1. Resumen Ejecutivo de Estado (v3.7.0)
+## 📊 1. Resumen Ejecutivo de Estado (v3.8.0)
 
 CPR Omni-Deck es una plataforma táctica digital offline-first de alta fidelidad diseñada según la filosofía de arquitectura desacoplada COMP/CON de Lancer RPG. La aplicación actúa como un HUD de combate dinámico, un laboratorio de ciberware/equipo callejero, un asistente de Netrunning y un portal integral de gestión para Árbitros y Edgerunners de Cyberpunk RED.
 
 ### Métricas de Desarrollo en Vivo:
 * **Ítems del Catálogo Multi-Libro**: 391+ ítems oficiales indexados sin pérdidas.
 * **Folios Canónicos CEMK 2077**: 7 personajes oficiales pregenerados (28 páginas CEMK), 66 habilidades completas por folio con desglose `LVL + STAT = BASE`, y 7 tokens PNG oficiales.
+* **Motor Táctico de Tooltips & Reconstrucción 2077**: Biblioteca canónica de subclases de armas, insignias de armas 2077 reconstruidas desde análogos 2045, selector de 10 municiones con coste/efectos y categorización anatómica de ciberware.
+* **Disciplinas Marciales Ergonómicas**: 27 artes marciales colapsables en formato compacto con fórmula estándar `Nombre • Stats • Fuente` (Core Rulebook + Interface RED Vol. 4).
 * **Módulos de Sistema Principales**: 8 sistemas completamente integrados y operativos.
 * **Enemigos y Facciones GM**: 44 perfiles base + 15 facciones oficiales (118 PNJs de Danger Gal Dossier).
-* **Disciplinas Marciales y Movimientos**: 23 artes marciales y 46 movimientos especiales (Interface RED Vol. 4).
 * **Chasis e Implantes de Conversión Total (FBC)**: 13 cuerpos FBC y 16 ciberwares de cuerpo completo (*Going Metal*).
-* **Módulos de Ergonomía Táctica**: Matriz de Blindaje SP/SDP, Calculadora Táctica de Daño en tiempo real y Workspace reconfigurable en 3, 4 o 5 columnas.
+* **Módulos de Ergonomía Táctica**: Matriz de Blindaje SP/SDP, Calculadora Táctica de Daño en tiempo real y Workspace reconfigurable en 3, 4 o 5 columnas con arranque de centro despejado (`cpr_combat_active_center_v3`).
 
 ---
 
-## 🛠️ 2. Módulos del Sistema Operativos (v3.7.0)
+## 🛠️ 2. Módulos del Sistema Operativos (v3.8.0)
 
 | # | Módulo | Componente Principal | Estado | Descripción Funcional |
 |---|--------|----------------------|:------:|-----------------------|
-| 1 | **Motor de Combate & HUD Táctico** | `CombatHudView.tsx` | **100% OPERATIVO** | Grid modular reordenable en 3 zonas (Bio/Defensas, Centro configurable, Bandeja lateral), tiradas D10 con explosiones/pifias, DVs automáticos por distancia y tabla de armas, selector de ancho de columna (3, 4, 5 cols). |
+| 1 | **Motor de Combate & HUD Táctico** | `CombatHudView.tsx` | **100% OPERATIVO** | Grid modular reordenable en 3 zonas, tiradas D10 con explosiones/pifias, selector rápido de municiones (10 tipos), tooltips tácticos de subclases de armas/reconstrucción 2077 y Dojo modal con 27 artes marciales colapsables. |
 | 2 | **Matriz Visual SP/SDP & Calculadora** | `CombatHudView.tsx` | **100% OPERATIVO** | Placas interactivas (`🛡️/💥`) para Cabeza y Torso, monitor SDP de Coberturas/Escudos (`🔰/💥`), Calculadora de Impactos con soporte para AP, Melee, Artes Marciales, Brawling y Críticos, y guía oficial integrada (pp. 183-187). |
 | 3 | **Creador de Personajes & Lifepath** | `CharacterCreatorWizard.tsx` | **100% OPERATIVO** | Wizard de 6 pasos (Concepto/Rol, STATs por 3 métodos, Habilidades, Lifepath con tiradas 1d10, Equipo inicial por Rol y Exportación en formato oficial). |
-| 4 | **Street Lab, Dojo & Inventario** | `StreetLabView.tsx` | **100% OPERATIVO** | Gestión de Eurodólares, inventario, instalación de ciberware con pérdida de Humanidad, zócalo neural con Chipware, Dojo de Artes Marciales (IP), y acordeón de Dossier Canónico CEMK 2077 (4 páginas: 66 skills, rol, arsenal y bio). |
-| 5 | **Netrunning & 10 Habilidades de Rol** | `NetAndRolesDeckView.tsx` | **100% OPERATIVO** | Simulador de arquitectura de Red 2045 con programas Black ICE, consola de Quickhacking CEMK 2077 con cola de memoria RAM y terminal interactivo para las 10 Habilidades de Rol oficiales. |
+| 4 | **Street Lab, Dojo & Arsenal** | `StreetLabView.tsx` | **100% OPERATIVO** | Gestión de Eurodólares, arsenal con selector rápido de munición activa, tooltips anatómicos de ciberware, 27 artes marciales colapsables en cabeceras compactas y Dossier Canónico CEMK 2077 (4 páginas: 66 skills, rol, arsenal y bio). |
+| 5 | **Netrunning & 10 Habilidades de Rol** | `NetAndRolesDeckView.tsx` | **100% OPERATIVO** | Simulador de arquitectura de Red 2045 con programas Black ICE, consola de Quickhacking CEMK 2077 con cola de memoria RAM, 27 artes marciales colapsables y terminal interactivo para las 10 Habilidades de Rol oficiales. |
 | 6 | **Bestiario GM & Encuentros** | `EnemiesCompendiumPanel.tsx` | **100% OPERATIVO** | Catálogo de 44 enemigos base y 15 facciones con inyección directa de perfiles de combate en el HUD táctico y generador de goons al vuelo. |
 | 7 | **Misión Oficial CEMK 2077 & Hub de Folios** | `RedChromeCargoView.tsx` | **100% OPERATIVO** | Misión interactiva *Red Chrome Cargo* con mapa Maglev Hammerhead, tablero de escenas, spawneo de enemigos, botín y pestaña 4 con selector dual de Edgerunners 2077 (7 Folios CEMK + 7 Anime Crew) con modal de 66 habilidades. |
-| 8 | **Codex & Documentación Maestra** | `SystemChangelogAndDocsView.tsx` | **100% OPERATIVO** | Portal in-app de documentación, registro cronológico versión por versión (`v1.0.0` a `v3.7.0`), inventario de sistemas y contratos técnicos. |
+| 8 | **Codex, Compendio & Documentación** | `SystemChangelogAndDocsView.tsx` / `CompendiumView.tsx` | **100% OPERATIVO** | Compendio con tooltips canónicos para subclases de armas, insignias de reconstrucción 2077, tooltips de munición y ciberware, portal in-app de documentación y registro cronológico (`v1.0.0` a `v3.8.0`). |
 
 ---
 
@@ -48,7 +49,8 @@ flowchart TD
     F_ONE --> F_CODEX[Fase Codex: Documentación & Changelogs]
     F_CODEX --> F_ERGO[v3.6.x: Ergonomía HUD, SP/SDP & Calculadora]
     F_ERGO --> F_FOLIO[v3.7.0: Folios Canónicos CEMK 2077 & Dossier]
-    F_FOLIO --> F4[Fase 4: Pantalla GM Avanzada & Campaña]
+    F_FOLIO --> F_TOOLTIP[v3.8.0: Motor Tooltips, Reconstrucción 2077 & Artes Marciales]
+    F_TOOLTIP --> F4[Fase 4: Pantalla GM Avanzada & Campaña]
     F4 --> F5[Fase 5: PWA Offline Sync & Multi-Device]
 
     style F0 fill:#059669,stroke:#10b981,color:#fff
@@ -58,7 +60,8 @@ flowchart TD
     style F_ONE fill:#059669,stroke:#10b981,color:#fff
     style F_CODEX fill:#059669,stroke:#10b981,color:#fff
     style F_ERGO fill:#059669,stroke:#10b981,color:#fff
-    style F_FOLIO fill:#0891b2,stroke:#06b6d4,color:#fff
+    style F_FOLIO fill:#059669,stroke:#10b981,color:#fff
+    style F_TOOLTIP fill:#0891b2,stroke:#06b6d4,color:#fff
     style F4 fill:#1e293b,stroke:#475569,color:#94a3b8
     style F5 fill:#1e293b,stroke:#475569,color:#94a3b8
 ```
@@ -98,6 +101,16 @@ flowchart TD
   - **Monitor SDP de Escudos & Coberturas**: Rastreador de Puntos de Daño Estructural con presets oficiales (Escudo Antibalas 10 SDP, Madera 15 SDP, Metal 25 SDP, Acero 35 SDP).
   - **Calculadora Táctica de Daño en Tiempo Real**: Soporte completo para munición estándar (-1 SP), perforante AP (-2 SP), armas melee (50% SP), artes marciales (50% SP), brawling (100% SP) y daño directo (0% SP), cálculo de multiplicador de cabeza (×2) y críticos (+5 HP).
   - **Acordeón Oficial de Reglas CP RED**: Guía integrada con citas exactas del manual Core pp. 183-187.
+
+### ✅ Actualización v3.8.0: Motor Táctico de Tooltips, Reconstrucción 2077 & Artes Marciales Colapsables (COMPLETADA)
+* **Objetivo**: Integrar tooltips de reglas canónicas para armas, ciberware y municiones, soportar armas CEMK 2077 reconstruidas y compactar las 27 artes marciales en cartas colapsables.
+* **Entregables**:
+  - **Motor de Tooltips de Armas**: Subclases detectadas en vivo (Power, Tech, Smart, Exóticas, Melée pesada) con reglas de modo de disparo y mitigación de cobertura.
+  - **Sistema de Reconstrucción CEMK 2077**: Insignias doradas y tooltips dedicados para armas 2077 reconstruidas sobre análogos 2045 (Malorian Arms 3516, Arasaka Tamayura, Budget Arms Carnage, Militech Crusher).
+  - **Selector Rápido de Munición**: Barra de 10 tipos de munición canónica en Arsenal y HUD de combate con conmutador activo (`setWeaponAmmoType`) y tooltips de reglas/costes.
+  - **Tooltips Anatómicos de Ciberware**: Categorías anatómicas (Neuroport, Neuralware, Cyberoptics, Cyberaudio, Cyberarm, Cyberleg, Internal, External, Borgware) con coste HL y nivel clínico.
+  - **27 Artes Marciales Colapsables**: Cabeceras compactas `Nombre • Stats • Fuente` con acordeón interactivo en StreetLab, HUD de combate y Net & Roles Deck.
+  - **Inicio de HUD Limpio**: Clave `cpr_combat_active_center_v3` por defecto vacía para un centro táctico despejado al arrancar sesión.
 
 ### ⏳ Fase 4: Pantalla del Árbitro (GM Master Screen) & Tracker de Campaña (EN ROADMAP)
 * **Objetivo**: Dotar al Árbitro de herramientas para coordinar iniciativas grupales, seguimiento de campaña y estado del equipo.
