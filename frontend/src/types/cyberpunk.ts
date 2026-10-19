@@ -283,6 +283,7 @@ export interface WeaponItem {
   sourceBookTitle?: string;
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
+  rebuild2077?: 'standard' | 'power' | 'smart' | 'tech';
 }
 
 export interface ArmorItem {
@@ -382,6 +383,7 @@ export interface EquippedWeapon extends WeaponItem {
   loadedAmmoType: string;
   inHand?: boolean;
   reserveAmmo?: number;
+  rebuild2077?: 'standard' | 'power' | 'smart' | 'tech';
 }
 
 export interface ActiveCriticalInjury {
@@ -546,6 +548,7 @@ export interface CharacterSheet {
   skills: Record<CombatSkillKey, number>;
   equippedWeapons: EquippedWeapon[];
   installedCyberwareIds: string[];
+  empDisabledCyberwareIds?: string[];
   activeInjuries: ActiveCriticalInjury[];
   eurodollars: number;
   inventory?: InventoryItem[];

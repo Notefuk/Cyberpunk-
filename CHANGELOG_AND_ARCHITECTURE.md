@@ -26,7 +26,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 
 ---
 
-## 🗺️ Current Real Tree on Disk (`v3.8.0 - Motor de Tooltips Canónicos de Armas, Ciberware y Municiones, Reconstrucción 2077 y Cartas Colapsables de Artes Marciales`)
+## 🗺️ Current Real Tree on Disk (`v3.9.0 - Taller de Reconstrucción CEMK 2077, Gestor de Averías/EMP, Progresión de Rol 1-10, Motor de Descanso/Reparación y Filtro de Decluttering del HUD`)
 
 ```text
 cpr-omni-deck/
@@ -155,10 +155,27 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
   - **`Cyberfists of Fury` (Artes Marciales Avanzadas)**: 23 nuevas formas de artes marciales y 46 movimientos especiales integrados en `CombatHudView.tsx` con evaluación de requisitos de STATs y DVs.
   - **`Danger Gal Dossier` (Facciones, NPCs & Tema)**: 118 PNJs oficiales en 15 facciones en `EnemiesCompendiumPanel.tsx`, flujo de creación de PNJs custom en `FixerDeckView.tsx`, tema visual "Danger Gal" y nuevos retratos de personajes oficiales.
 
-### Fase 4 (v3.5 – v3.9): VTT Táctico, Clima, Homebrew y Audio/VFX
+### Fase 4 (v3.9.x – v4.0): GM Role Master Control Deck, Tracker de Iniciativa, Orquestación de Roles & Campaña
+* **GM Role Master Control Deck (`GmRoleMasterControlState`)**:
+  - Consola central para el Árbitro para orquestar y arbitrar en tiempo real las 10 Habilidades de Rol oficiales de Cyberpunk RED:
+    - **Solo (Combat Awareness)**: Priorización de amenazas y bonificaciones de spotter en telemetría.
+    - **Netrunner (Interface)**: Topología de arquitectura de red activa, seguimiento de pisos y nivel de alerta de Black ICE.
+    - **Tech (Maker)**: Cronómetros y cálculo de DVs para Jury Rig, Field Upgrade, Fabrication e Invention.
+    - **Medtech (Medicine)**: Seguimiento de lotes de síntesis de fármacos, crioterapia activa y días de terapia.
+    - **Media (Credibility)**: Gestión de rumores, publicaciones en la Red y verificación de fuentes.
+    - **Exec (Teamwork)**: Gestión de nóminas, lealtad y cobertura de operativos corporativos subordinados.
+    - **Lawman (Backup)**: Tiempos de respuesta de refuerzos policiales y tiradas de radio de auxilio.
+    - **Fixer (Operator)**: Arbitraje de disponibilidad de mercados negros, contactos y márgenes de regateo.
+    - **Nomad (Moto)**: Mantenimiento de vehículos del clan, mejoras mecánicas y soporte de convoy.
+    - **Rockerboy (Charismatic Impact)**: Tamaño de audiencia, categoría del local y economía de favores de fans.
+* **Tracker Táctico de Iniciativa de Combate**:
+  - Secuencia de turnos multiobjetivo con inserción fluida de PNJs desde el catálogo de 44 enemigos base y 118 operativos de *Danger Gal Dossier*.
+* **Generador de Encuentros & Peligros Ambientales**:
+  - Tablas de calor urbano por distrito de Night City y condiciones climáticas extremas (lluvia ácida, smog tóxico, tormenta electromagnética).
+* **Gestor de Economía y Campaña**:
+  - Registro de deudas, alquileres mensuales (Container, Cube, Studio, Penthouse) y estilo de vida (Core pg. 377).
 * `src/components/MiniVTT.tsx`:
   - Rejilla táctil 2x2m con obstáculos y regla de distancia en metros vinculada a tabla de DVs.
-* Generador de Condiciones Atmosféricas y Clima de Night City (Lluvia ácida, smog rojo, calor radiactivo).
 * `src/components/HomebrewBuilderModal.tsx`:
   - Creador universal de armas, drogas y ciberware casero con algoritmo de conversión 2020 a RED.
 * `src/utils/sfx.ts` & `src/utils/vfx.ts`:
@@ -207,6 +224,38 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ---
 
 ## 📜 Master Version Changelog
+
+### [v3.9.0] - 2026-10-19 (CEMK 2077 Weapon Rebuild Workshop, EMP Cyberware Manager, Role Rank 1-10 Progression, Resting & Armor Repair, Combat Clutter Filter)
+* **Category**: Weapon Rebuild Engine, EMP/Malfunction Systems, Role Progression, Natural Healing & Combat Ergonomics
+* **Files Modified**:
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `AI_CONTEXT_HANDOFF.md`
+* **What Changed**:
+  1. **Taller Interactivo de Reconstrucción de Armas CEMK 2077 (`convertWeaponRebuild2077`)**:
+     - Conversión táctica bidireccional de armas clásicas 2045 en sus análogos tecnológicos 2077 (*Smart, Tech, Power*) con cálculo de coste de conversión y sincronización reactiva en el inventario activo.
+     - Soportado e integrado tanto en `StreetLabView.tsx` (Arsenal) como en `CombatHudView.tsx` (Estación En Mano y Cinturón Táctico).
+  2. **Toggles Tácticos de Combate 2077 en Tiempo Real**:
+     - Modificadores interactivos integrados en el HUD de combate:
+       - **Smart Cover Bypass**: -4 a las tiradas del defensor para intentar esquivar o refugiarse tras cobertura frente a armas guiadas inteligentes.
+       - **Power Ricochet**: -4 a la tirada de ataque para ejecutar disparos calculados de rebote balístico en esquinas y paredes.
+       - **Tech Charge Shot**: Ignora un 50% de SP adicional de blindaje mediante pulso electromagnético concentrado antes de evaluar penetración.
+  3. **Gestor de Malfunciones & Pulso Electromagnético (EMP) en Ciberware (`toggleEmpDisableCyberware`, `clearAllEmpDisabledCyberware`)**:
+     - Protocolo de resistencia ante ataques EMP con tirada canónica `TECH + Cybertech + 1d10 vs DV 15` y registro de telemetría militar.
+     - Desactivación y encendido selectivo de implantes afectados con insignia de alerta visual `⚡ EMP OFF`, anulando dinámicamente sus bonificaciones a estadísticas y habilidades.
+     - Botón de Reinicio Maestro (`Reboot Todo`) para restaurar la totalidad de sistemas cibernéticos tras mantenimiento.
+  4. **Pestaña Táctica de Progresión de Habilidad de Rol Rango 1-10 (`StreetLabView.tsx`)**:
+     - Selector directo de Rango 1 a 10 con actualización reactiva de metadatos de ficha (`updateCharacterMeta({ roleRank })`).
+     - Despliegue de fichas completas de los 10 roles oficiales con estadística asociada, resumen mecánico canónico, fórmulas de tirada y árbol de progresión multinivel (`ROLE_ABILITIES_COMPLETE_PROGRESSION`) destacando rangos activos, desbloqueados y bloqueados.
+  5. **Motor de Descanso Natural & Reparación de Blindaje (Core Rulebook pp. 140, 222-223)**:
+     - Descanso y Sanación: Selector rápido de días de reposo (1, 3, 7 días), multiplicador de Anticuerpos Mejorados (×2) y Cámara Criogénica (+BODY/día) ejecutando la acción `restAndHealDays`.
+     - Matriz de Reparación de Blindaje: Control táctico para Cabeza y Torso con opciones de parche rápido (-1 punto de daño de SP) o restauración completa (`repairCharacterArmor`), acompañado de la tabla oficial de DV de Tech y tiempos reglamentarios.
+  6. **Filtro de Decluttering en Bandeja Derecha del HUD de Combate (`disabledRightModules`)**:
+     - Selector desplegable de visibilidad con persistencia local (`cpr_combat_disabled_right_modules_v1`) para silenciar o mostrar selectivamente cualquiera de los 7 módulos secundarios del HUD.
+     - Modo atenuado con conmutador individual `Eye`/`EyeOff` por tarjeta para maximizar la concentración en combate táctico.
 
 ### [v3.8.0] - 2026-10-19 (Weapons, Cyberware & Ammo Tooltips Engine, 2077 Rebuild System & Collapsible Martial Arts Deck)
 * **Category**: Weapons, Cyberware & Ammo Tooltips Engine, 2077 Rebuild System & Collapsible Martial Arts Deck

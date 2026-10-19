@@ -79,6 +79,7 @@ export const NetAndRolesDeckView: React.FC = () => {
     }
   });
   const [currentFloorIndex, setCurrentFloorIndex] = useState<number>(0);
+  const [unlockedNetFloors, setUnlockedNetFloors] = useState<number[]>([1]);
   const [activeNetRollResult, setActiveNetRollResult] = useState<{ action: string; roll: number; formula: string; success?: boolean; text?: string } | null>(null);
   const [rezzedPrograms, setRezzedPrograms] = useState<Record<string, boolean>>({
     'Armor': true,
@@ -446,6 +447,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                     onClick={() => {
                       setSelectedPresetId(preset.id);
                       setCurrentFloorIndex(0);
+                      setUnlockedNetFloors([1]);
                     }}
                     className={`p-2.5 rounded-xs text-left transition-all border cursor-pointer ${
                       selectedPresetId === preset.id
@@ -554,14 +556,24 @@ export const NetAndRolesDeckView: React.FC = () => {
 
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setCurrentFloorIndex(Math.max(0, currentFloorIndex - 1))}
+                    onClick={() => {
+                      const nextIdx = Math.max(0, currentFloorIndex - 1);
+                      setCurrentFloorIndex(nextIdx);
+                      const flNum = nextIdx + 1;
+                      setUnlockedNetFloors(prev => (prev.includes(flNum) ? prev : [...prev, flNum]));
+                    }}
                     disabled={currentFloorIndex === 0}
                     className="px-2.5 py-1 bg-[#1a2030] hover:bg-[#00f5d4] hover:text-black text-xs font-tech font-bold rounded-xs disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                   >
                     ↑ SUBIR
                   </button>
                   <button
-                    onClick={() => setCurrentFloorIndex(Math.min(activeArch.floors.length - 1, currentFloorIndex + 1))}
+                    onClick={() => {
+                      const nextIdx = Math.min(activeArch.floors.length - 1, currentFloorIndex + 1);
+                      setCurrentFloorIndex(nextIdx);
+                      const flNum = nextIdx + 1;
+                      setUnlockedNetFloors(prev => (prev.includes(flNum) ? prev : [...prev, flNum]));
+                    }}
                     disabled={currentFloorIndex === activeArch.floors.length - 1}
                     className="px-2.5 py-1 bg-[#1a2030] hover:bg-[#00f5d4] hover:text-black text-xs font-tech font-bold rounded-xs disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
                   >
@@ -570,10 +582,123 @@ export const NetAndRolesDeckView: React.FC = () => {
                 </div>
               </div>
 
+              {/* 👑 CONTROL DEL MASTER (GM): DESBLOQUEAR / OCULTAR PISOS NET */}
+              <div className="bg-[#0b0e17] border border-cyan-500/40 p-3 rounded-xs space-y-2.5">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-tech text-xs font-bold text-amber-300 uppercase">
+                      👑 CONTROL DEL MASTER (GM): DESBLOQUEAR / OCULTAR PISOS NET
+                    </span>
+                    <span className="text-[9px] font-mono-code text-cyan-300 bg-cyan-950/80 px-1.5 py-0.5 rounded border border-cyan-700/50">
+                      Niebla de Guerra
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const nextLocked = activeArch.floors
+                          .map((f) => f.floorNumber)
+                          .find((fn) => !unlockedNetFloors.includes(fn));
+                        if (nextLocked) {
+                          setUnlockedNetFloors((prev) => [...prev, nextLocked]);
+                        }
+                      }}
+                      className="px-2 py-0.5 bg-cyan-950 hover:bg-cyan-800 text-cyan-200 border border-cyan-600/60 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer"
+                      title="Desbloquear siguiente piso bloqueado"
+                    >
+                      🔓 Desbloquear Siguiente Piso
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUnlockedNetFloors(activeArch.floors.map((f) => f.floorNumber))}
+                      className="px-2 py-0.5 bg-purple-950 hover:bg-purple-800 text-purple-200 border border-purple-600/60 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer"
+                      title="Revelar todos los pisos (Modo GM)"
+                    >
+                      👁️ Revelar Todos (Modo GM)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUnlockedNetFloors([1])}
+                      className="px-2 py-0.5 bg-red-950 hover:bg-red-800 text-red-200 border border-red-600/60 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer"
+                      title="Ocultar pisos del 2 en adelante para los jugadores"
+                    >
+                      🔒 Ocultar Todos (Modo Jugador)
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-wrap pt-1.5 border-t border-[#1b2234]">
+                  {activeArch.floors.map((fl) => {
+                    const isUn = unlockedNetFloors.includes(fl.floorNumber);
+                    return (
+                      <button
+                        key={`gm-floor-${fl.floorNumber}`}
+                        type="button"
+                        onClick={() => {
+                          setUnlockedNetFloors((prev) =>
+                            isUn ? prev.filter((fn) => fn !== fl.floorNumber) : [...prev, fl.floorNumber]
+                          );
+                        }}
+                        className={`px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold border transition-all cursor-pointer ${
+                          isUn
+                            ? 'bg-emerald-950/70 text-emerald-300 border-emerald-600/60 hover:bg-emerald-900'
+                            : 'bg-red-950/50 text-red-400 border-red-800/50 hover:bg-red-900'
+                        }`}
+                      >
+                        {isUn ? `🔓 Piso ${fl.floorNumber}` : `🔒 Piso ${fl.floorNumber}`}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Escalera de pisos */}
               <div className="space-y-2">
                 {activeArch.floors.map((fl, idx) => {
                   const isCurrent = idx === currentFloorIndex;
+                  const isUnlocked = unlockedNetFloors.includes(fl.floorNumber);
+
+                  if (!isUnlocked) {
+                    return (
+                      <div
+                        key={`floor-${idx}`}
+                        onClick={() => {
+                          setCurrentFloorIndex(idx);
+                          setUnlockedNetFloors((prev) => (prev.includes(fl.floorNumber) ? prev : [...prev, fl.floorNumber]));
+                        }}
+                        className="p-3 rounded-xs border border-red-950/60 bg-[#0b0d14] hover:border-red-500/40 opacity-75 hover:opacity-100 transition-all cursor-pointer flex items-center justify-between gap-3"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-6 h-6 rounded-xs flex items-center justify-center font-mono-code text-xs font-bold bg-[#171b26] text-red-400 border border-red-900/50">
+                            🔒
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-tech text-xs font-bold text-red-400 uppercase tracking-wide">
+                                🔒 PISO #{fl.floorNumber}: NODO ENCRIPTADO (CONTENIDO OCULTO PARA EL NETRUNNER)
+                              </span>
+                            </div>
+                            <span className="text-[10px] font-mono-code text-slate-400 block mt-0.5">
+                              Contenido protegido tras niebla de guerra. Se revela al entrar físicamente a este piso, usar Pathfinder exitoso o al desbloquearlo el Master.
+                            </span>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setUnlockedNetFloors((prev) => [...prev, fl.floorNumber]);
+                          }}
+                          className="px-2 py-0.5 bg-red-950/70 hover:bg-red-800 text-red-300 border border-red-700/60 rounded-xs text-[10px] font-mono-code font-bold cursor-pointer shrink-0"
+                        >
+                          🔓 Desbloquear
+                        </button>
+                      </div>
+                    );
+                  }
+
                   return (
                     <div
                       key={`floor-${idx}`}

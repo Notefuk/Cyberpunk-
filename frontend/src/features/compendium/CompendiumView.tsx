@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import coreData from '../../data/core-rules.cprpack.json';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
@@ -281,6 +281,10 @@ export const CompendiumView: React.FC = () => {
   const [spendMoneyMode, setSpendMoneyMode] = useState<boolean>(true);
   const [feedback, setFeedback] = useState<FeedbackState | null>(null);
 
+  // Sorting Controls
+  const [sortBy, setSortBy] = useState<'name' | 'cost' | 'sourceBook' | 'category'>('name');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
   // Search & Filters for Systems
   const [systemSearchQuery, setSystemSearchQuery] = useState<string>('');
   const [systemSourceFilter, setSystemSourceFilter] = useState<string>('all');
@@ -413,81 +417,136 @@ export const CompendiumView: React.FC = () => {
     { key: 'gear', label: 'Equipo', count: bookFilteredItems.gear.length, icon: <Package className="w-3.5 h-3.5" /> }
   ];
 
+  const parseItemCost = (cost: any): number => {
+    if (typeof cost === 'number') return cost;
+    if (!cost) return 0;
+    const num = parseFloat(String(cost).replace(/[^\d.]/g, ''));
+    return isNaN(num) ? 0 : num;
+  };
+
+  const getItemCategoryName = (item: any, defaultCat: string): string => {
+    if (item.type) return String(item.type);
+    if (item.category) return String(item.category);
+    if (item.class) return String(item.class);
+    return defaultCat;
+  };
+
+  const sortItems = useCallback(<T extends Record<string, any>>(items: T[], categoryName: string): T[] => {
+    return [...items].sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === 'name') {
+        const nameA = (a.name || '').toLowerCase();
+        const nameB = (b.name || '').toLowerCase();
+        comparison = nameA.localeCompare(nameB);
+      } else if (sortBy === 'cost') {
+        const costA = parseItemCost(a.cost);
+        const costB = parseItemCost(b.cost);
+        comparison = costA - costB;
+      } else if (sortBy === 'sourceBook') {
+        const srcA = (a.sourceBook || 'core').toLowerCase();
+        const srcB = (b.sourceBook || 'core').toLowerCase();
+        comparison = srcA.localeCompare(srcB);
+      } else if (sortBy === 'category') {
+        const catA = getItemCategoryName(a, categoryName).toLowerCase();
+        const catB = getItemCategoryName(b, categoryName).toLowerCase();
+        comparison = catA.localeCompare(catB);
+      }
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+  }, [sortBy, sortDirection]);
+
+  const handleHeaderSortClick = (field: 'name' | 'cost' | 'sourceBook' | 'category') => {
+    if (sortBy === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortBy(field);
+      setSortDirection('asc');
+    }
+  };
+
   const filteredWeapons = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'weapons') return [];
     const q = searchQuery.toLowerCase();
-    return bookFilteredItems.weapons.filter((item: any) =>
+    const list = bookFilteredItems.weapons.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.skill?.toLowerCase().includes(q) ||
       item.notes?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory, bookFilteredItems]);
+    return sortItems(list, 'Arma');
+  }, [searchQuery, selectedCategory, bookFilteredItems, sortItems]);
 
   const filteredArmor = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'armor') return [];
     const q = searchQuery.toLowerCase();
-    return bookFilteredItems.armor.filter((item: any) =>
+    const list = bookFilteredItems.armor.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory, bookFilteredItems]);
+    return sortItems(list, 'Blindaje');
+  }, [searchQuery, selectedCategory, bookFilteredItems, sortItems]);
 
   const filteredCyberware = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'cyberware') return [];
     const q = searchQuery.toLowerCase();
-    return bookFilteredItems.cyberware.filter((item: any) =>
+    const list = bookFilteredItems.cyberware.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.type?.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory, bookFilteredItems]);
+    return sortItems(list, 'Ciberware');
+  }, [searchQuery, selectedCategory, bookFilteredItems, sortItems]);
 
   const filteredPrograms = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'programs') return [];
     const q = searchQuery.toLowerCase();
-    return bookFilteredItems.programs.filter((item: any) =>
+    const list = bookFilteredItems.programs.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.class?.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory, bookFilteredItems]);
+    return sortItems(list, 'Programa');
+  }, [searchQuery, selectedCategory, bookFilteredItems, sortItems]);
 
   const filteredAmmo = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'ammunition') return [];
     const q = searchQuery.toLowerCase();
-    return bookFilteredItems.ammunition.filter((item: any) =>
+    const list = bookFilteredItems.ammunition.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory, bookFilteredItems]);
+    return sortItems(list, 'Munición');
+  }, [searchQuery, selectedCategory, bookFilteredItems, sortItems]);
 
   const filteredAttachments = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'attachments') return [];
     const q = searchQuery.toLowerCase();
-    return bookFilteredItems.attachments.filter((item: any) =>
+    const list = bookFilteredItems.attachments.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory, bookFilteredItems]);
+    return sortItems(list, 'Accesorio');
+  }, [searchQuery, selectedCategory, bookFilteredItems, sortItems]);
 
   const filteredDrugs = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'drugs') return [];
     const q = searchQuery.toLowerCase();
-    return bookFilteredItems.drugs.filter((item: any) =>
+    const list = bookFilteredItems.drugs.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.primaryEffect?.toLowerCase().includes(q) ||
       item.secondaryEffect?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory, bookFilteredItems]);
+    return sortItems(list, 'Droga');
+  }, [searchQuery, selectedCategory, bookFilteredItems, sortItems]);
 
   const filteredGear = useMemo(() => {
     if (selectedCategory !== 'all' && selectedCategory !== 'gear') return [];
     const q = searchQuery.toLowerCase();
-    return bookFilteredItems.gear.filter((item: any) =>
+    const list = bookFilteredItems.gear.filter((item: any) =>
       item.name.toLowerCase().includes(q) ||
       item.description?.toLowerCase().includes(q)
     );
-  }, [searchQuery, selectedCategory, bookFilteredItems]);
+    return sortItems(list, 'Equipo');
+  }, [searchQuery, selectedCategory, bookFilteredItems, sortItems]);
 
   const totalResults = 
     filteredWeapons.length + 
@@ -1265,6 +1324,31 @@ export const CompendiumView: React.FC = () => {
                 <span>🎁 LOOT (0 €$)</span>
               </button>
             </div>
+          </div>
+
+          {/* Sorting Controls */}
+          <div className="flex items-center gap-1.5 bg-[#181b2a] border border-[#262c3e] px-2 py-1 rounded-xs">
+            <span className="text-[10px] text-[#64748b] font-mono-code font-bold uppercase whitespace-nowrap">
+              Ordenar por:
+            </span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-[#0f111a] border border-[#262c3e] text-white text-[10px] font-mono-code rounded-xs px-1.5 py-0.5 focus:outline-hidden focus:border-[#38bdf8] cursor-pointer"
+            >
+              <option value="name">Nombre</option>
+              <option value="cost">Costo €$</option>
+              <option value="sourceBook">Manual / Fuente</option>
+              <option value="category">Categoría / Tipo</option>
+            </select>
+            <button
+              type="button"
+              onClick={() => setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')}
+              className="px-1.5 py-0.5 bg-[#0f111a] hover:bg-[#38bdf8]/20 border border-[#262c3e] hover:border-[#38bdf8] text-[#38bdf8] text-[10px] font-mono-code font-bold rounded-xs transition-colors cursor-pointer"
+              title={sortDirection === 'asc' ? 'Ascendente (A→Z / Menor a Mayor)' : 'Descendente (Z→A / Mayor a Menor)'}
+            >
+              {sortDirection === 'asc' ? '▲ ASC' : '▼ DESC'}
+            </button>
           </div>
 
           {/* View Mode Toggle: Compact Cards vs Dense Table */}
@@ -2090,11 +2174,55 @@ export const CompendiumView: React.FC = () => {
             <table className="w-full text-left font-mono-code text-xs">
               <thead className="bg-[#181b2a] border-b border-[#262c3e] text-[#64748b] text-[10px] uppercase">
                 <tr>
-                  <th className="py-2 px-3">Nombre</th>
-                  <th className="py-2 px-2">Categoría</th>
-                  <th className="py-2 px-2">Manual</th>
+                  <th
+                    onClick={() => handleHeaderSortClick('name')}
+                    className="py-2 px-3 cursor-pointer hover:text-white transition-colors select-none"
+                    title="Ordenar por Nombre (A→Z / Z→A)"
+                  >
+                    <div className="flex items-center gap-1">
+                      <span>Nombre</span>
+                      {sortBy === 'name' && (
+                        <span className="text-[#38bdf8] font-bold">{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                      )}
+                    </div>
+                  </th>
+                  <th
+                    onClick={() => handleHeaderSortClick('category')}
+                    className="py-2 px-2 cursor-pointer hover:text-white transition-colors select-none"
+                    title="Ordenar por Categoría / Tipo (A→Z / Z→A)"
+                  >
+                    <div className="flex items-center gap-1">
+                      <span>Categoría</span>
+                      {sortBy === 'category' && (
+                        <span className="text-[#38bdf8] font-bold">{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                      )}
+                    </div>
+                  </th>
+                  <th
+                    onClick={() => handleHeaderSortClick('sourceBook')}
+                    className="py-2 px-2 cursor-pointer hover:text-white transition-colors select-none"
+                    title="Ordenar por Manual / Fuente (A→Z / Z→A)"
+                  >
+                    <div className="flex items-center gap-1">
+                      <span>Manual</span>
+                      {sortBy === 'sourceBook' && (
+                        <span className="text-[#38bdf8] font-bold">{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                      )}
+                    </div>
+                  </th>
                   <th className="py-2 px-2">Datos Clave (Stats / Efectos)</th>
-                  <th className="py-2 px-2 text-right">Costo</th>
+                  <th
+                    onClick={() => handleHeaderSortClick('cost')}
+                    className="py-2 px-2 text-right cursor-pointer hover:text-white transition-colors select-none"
+                    title="Ordenar por Costo €$ (Menor a Mayor / Mayor a Menor)"
+                  >
+                    <div className="flex items-center justify-end gap-1">
+                      <span>Costo</span>
+                      {sortBy === 'cost' && (
+                        <span className="text-[#38bdf8] font-bold">{sortDirection === 'asc' ? '▲' : '▼'}</span>
+                      )}
+                    </div>
+                  </th>
                   <th className="py-2 px-3 text-right">Acción</th>
                 </tr>
               </thead>

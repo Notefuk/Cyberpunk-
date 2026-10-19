@@ -385,8 +385,13 @@ export interface CharacterStoreState {
   removeActiveDrug: (id: string) => void;
   equipWeaponFromCatalog: (weapon: WeaponItem) => void;
   unequipWeapon: (weaponInstanceId: string) => void;
+  convertWeaponRebuild2077: (weaponInstanceId: string, rebuildType: 'standard' | 'power' | 'smart' | 'tech', costEurobucks: number) => void;
   equipArmorFromCatalog: (armor: ArmorItem, location: 'head' | 'body' | 'both') => void;
+  repairCharacterArmor: (location: 'head' | 'body' | 'both', spAmountOrFull: 'full' | number, costEurobucks?: number) => void;
   toggleCyberwareInstall: (cyberwareId: string, humanityCostAvg?: number) => void;
+  toggleEmpDisableCyberware: (cyberwareId: string) => void;
+  clearAllEmpDisabledCyberware: () => void;
+  restAndHealDays: (days: number, hasEnhancedAntibodies?: boolean, inCryotank?: boolean) => void;
   installCyberwareAdvanced: (params: {
     cyberwareId: string;
     cyberwareName: string;
@@ -1007,6 +1012,162 @@ export const useCharacterStore = create<CharacterStoreState>()(
                 }
               : c
           )
+        }));
+      },
+
+      convertWeaponRebuild2077: (
+        weaponInstanceId: string,
+        rebuildType: 'standard' | 'power' | 'smart' | 'tech',
+        costEurobucks: number
+      ) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            const updatedWeapons = c.equippedWeapons.map(w => {
+              if (w.instanceId !== weaponInstanceId) return w;
+              const currentNotes = (w.notes || '')
+                .replace(/\s*\[Rebuild:\s*(Power|Smart|Tech|Standard)\]/gi, '')
+                .trim();
+              const newNotes =
+                rebuildType !== 'standard'
+                  ? currentNotes
+                    ? `${currentNotes} [Rebuild: ${rebuildType.toUpperCase()}]`
+                    : `[Rebuild: ${rebuildType.toUpperCase()}]`
+                  : currentNotes;
+              return {
+                ...w,
+                rebuild2077: rebuildType,
+                notes: newNotes
+              };
+            });
+
+            let newBalance = c.eurodollars || 0;
+            let newTransactions = c.transactions || [];
+            if (costEurobucks > 0) {
+              newBalance = Math.max(0, newBalance - costEurobucks);
+              const tx: EurodollarTransaction = {
+                id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                timestamp: new Date().toISOString(),
+                concept: `Conversión 2077 Rebuild: ${rebuildType.toUpperCase()}`,
+                amount: -costEurobucks,
+                balanceAfter: newBalance
+              };
+              newTransactions = [tx, ...newTransactions].slice(0, 50);
+            }
+
+            return {
+              ...c,
+              equippedWeapons: updatedWeapons,
+              eurodollars: newBalance,
+              transactions: newTransactions
+            };
+          })
+        }));
+      },
+
+      repairCharacterArmor: (
+        location: 'head' | 'body' | 'both',
+        spAmountOrFull: 'full' | number,
+        costEurobucks = 0
+      ) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            let newHeadSp = c.headArmor.currentSp;
+            let newBodySp = c.bodyArmor.currentSp;
+
+            if (location === 'head' || location === 'both') {
+              if (spAmountOrFull === 'full') {
+                newHeadSp = c.headArmor.maxSp;
+              } else {
+                newHeadSp = Math.min(c.headArmor.maxSp, newHeadSp + spAmountOrFull);
+              }
+            }
+
+            if (location === 'body' || location === 'both') {
+              if (spAmountOrFull === 'full') {
+                newBodySp = c.bodyArmor.maxSp;
+              } else {
+                newBodySp = Math.min(c.bodyArmor.maxSp, newBodySp + spAmountOrFull);
+              }
+            }
+
+            let newBalance = c.eurodollars || 0;
+            let newTransactions = c.transactions || [];
+            if (costEurobucks > 0) {
+              newBalance = Math.max(0, newBalance - costEurobucks);
+              const tx: EurodollarTransaction = {
+                id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                timestamp: new Date().toISOString(),
+                concept: `Reparación de Blindaje (${location})`,
+                amount: -costEurobucks,
+                balanceAfter: newBalance
+              };
+              newTransactions = [tx, ...newTransactions].slice(0, 50);
+            }
+
+            return {
+              ...c,
+              headArmor: {
+                ...c.headArmor,
+                currentSp: newHeadSp
+              },
+              bodyArmor: {
+                ...c.bodyArmor,
+                currentSp: newBodySp
+              },
+              eurodollars: newBalance,
+              transactions: newTransactions
+            };
+          })
+        }));
+      },
+
+      toggleEmpDisableCyberware: (cyberwareId: string) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            const currentList = c.empDisabledCyberwareIds || [];
+            const isAlreadyDisabled = currentList.includes(cyberwareId);
+            const updated = isAlreadyDisabled
+              ? currentList.filter(id => id !== cyberwareId)
+              : [...currentList, cyberwareId];
+            return {
+              ...c,
+              empDisabledCyberwareIds: updated
+            };
+          })
+        }));
+      },
+
+      clearAllEmpDisabledCyberware: () => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              empDisabledCyberwareIds: []
+            };
+          })
+        }));
+      },
+
+      restAndHealDays: (days: number, hasEnhancedAntibodies = false, inCryotank = false) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            const effBody = getEffectiveBody(c);
+            const mult = (hasEnhancedAntibodies ? 2 : 1) + (inCryotank ? 1 : 0);
+            const healAmount = Math.max(1, effBody) * mult * Math.max(1, days);
+            const maxHp = calculateMaxHp(effBody, c.stats?.WILL ?? 0);
+            const newHp = Math.min(maxHp, (c.currentHp || 0) + healAmount);
+            return {
+              ...c,
+              currentHp: newHp
+            };
+          })
         }));
       },
 

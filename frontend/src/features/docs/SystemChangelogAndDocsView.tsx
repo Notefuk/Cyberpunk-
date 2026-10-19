@@ -26,6 +26,32 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v3.9.0',
+    date: '2026-10-19',
+    phase: 'Codex',
+    category: 'CEMK 2077 Weapon Rebuild Workshop, EMP Cyberware Manager, Role Rank 1-10 Progression, Resting & Armor Repair, Combat Clutter Filter',
+    title: 'Taller de Reconstrucción CEMK 2077, Gestor de Averías/EMP, Progresión de Rol 1-10, Motor de Descanso/Reparación y Filtro de Decluttering del HUD',
+    summary: 'Implementación integral de los 5 grandes sistemas operativos de v3.9.0: Taller interactivo de Reconstrucción CEMK 2077 para transformar armas base 2045 en sus análogos futuristas 2077 (Smart, Tech, Power) con toggles tácticos de combate (Bypass de Cobertura Smart, Rebote Power en esquinas, Disparo Cargado Tech); Gestor de Averías y Pulsos EMP en Ciberware con protocolo de resistencia TECH + Cybertech vs DV 15, desactivación selectiva por implante (insignia ⚡ EMP OFF) y neutralización dinámica de bonos a stats; Pestaña táctica de Progresión de Habilidad de Rol Rango 1-10 en StreetLabView con visualización de árbol de desbloqueos canónicos (ROLE_ABILITIES_COMPLETE_PROGRESSION); Pestaña y controles en vivo de Descanso Natural y Reparación de Blindaje (Core pp. 140, 222-223) con multiplicadores de anticuerpos mejorados y criotanque; y Sistema de Filtro de Decluttering persistente en la bandeja derecha del HUD de combate para silenciar y ocultar módulos secundarios a voluntad del usuario.',
+    highlights: [
+      'Taller de Reconstrucción de Armas CEMK 2077: Dropdown interactivo en StreetLab y Combat HUD para convertir armas 2045 a sus variantes 2077 (Malorian 3516, Arasaka Tamayura, Carnage, Crusher, etc.) con coste de conversión y sincronización de estado.',
+      'Toggles Tácticos de Combate 2077: Modificadores activos en mano: Smart Cover Bypass (-4 al esquivar cobertura), Power Ricochet (-4 para impactar tras esquinas) y Tech Charge Shot (penetra 50% SP adicional).',
+      'Gestor de Malfunciones & Pulso EMP: Control de impacto de pulso electromagnético en Ciberware con tirada de resistencia TECH + Cybertech + 1d10 vs DV 15, selector por implante y botón de reinicio maestro con telemetría en tiempo real.',
+      'Progresión de Habilidad de Rol Rango 1-10: Nueva pestaña en StreetLabView con selector de rango activo, descripción mecánica, fórmulas de tirada y árbol de progresión completo para los 10 roles oficiales.',
+      'Motor de Descanso Natural & Reparación de Blindaje: Recuperación de HP por días de reposo (BODY/día, ×2 con Enhanced Antibodies, +BODY con Cryotank) y panel de reparación de SP de cabeza y torso con tabla de DVs de Tech.',
+      'Filtro de Decluttering de la Bandeja Derecha: Selector interactivo con persistencia local (cpr_combat_disabled_right_modules_v1) para ocultar o atenuar cualquiera de los 7 módulos tácticos laterales.',
+      'Especificación Arquitectónica de Fase 4: Documentación del Master Control Deck del Árbitro para orquestación de las 10 Habilidades de Rol, iniciativa grupal y seguimiento de campaña.'
+    ],
+    filesTouched: [
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'AI_CONTEXT_HANDOFF.md'
+    ],
+    metricsBadge: 'v3.9.0 • Rebuild Workshop, EMP & Role Progression • Operativo'
+  },
+  {
     version: 'v3.8.0',
     date: '2026-10-19',
     phase: 'Codex',
@@ -153,6 +179,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v3.9.0': true,
     'v3.8.0': true,
     'v3.7.0': true,
     'v3.6.2': true,
@@ -237,7 +264,7 @@ export function SystemChangelogAndDocsView() {
                 SYSTEM CODEX // DOCUMENTACIÓN MAESTRA
               </span>
               <span className="px-2 py-0.5 text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> v3.8.0 OPERATIVO
+                <CheckCircle2 className="w-3 h-3" /> v3.9.0 OPERATIVO
               </span>
             </div>
             <h1 className="text-2xl md:text-3xl font-tech font-bold text-white tracking-wider flex items-center gap-3">
@@ -245,7 +272,7 @@ export function SystemChangelogAndDocsView() {
               SISTEMA, ARQUITECTURA & CHANGELOG MAESTRO
             </h1>
             <p className="text-sm text-[#94a3b8] max-w-3xl leading-relaxed">
-              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v3.8.0), inventario de los 8 grandes
+              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v3.9.0), inventario de los 8 grandes
               módulos interactivos, estado del roadmap de Fases (0 a 5) con paridad de la Companion App, y especificación técnica de contratos.
             </p>
           </div>
@@ -672,7 +699,37 @@ export function SystemChangelogAndDocsView() {
       {activeTab === 'architecture' && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-4">
-            {ARCHITECTURE_AND_GUIDE_DOCS.map((doc, idx) => (
+            {[
+              {
+                title: 'FASE 4 // ARQUITECTURA DEL GM ROLE MASTER CONTROL DECK',
+                badge: 'FASE 4 • ROADMAP & SPECS TÉCNICAS',
+                description: 'Especificación de ingeniería para la consola de mando del Árbitro: orquestación de las 10 Habilidades de Rol oficiales de Cyberpunk RED, combinada con Tracker Táctico de Iniciativa multi-participante, inyección reactiva de amenazas desde Danger Gal Dossier y control de cronogramas de fabricación y terapia.',
+                codeSnippet: `// Contrato de Integración de Habilidades de Rol en Consola GM (Fase 4)
+export interface GmRoleMasterControlState {
+  // Solo: Detección y priorización de amenazas en telemetría
+  soloCombatAwareness: { activeThreats: string[]; spotterBonus: number };
+  // Netrunner: Arquitectura de Red activa, topología de pisos y Black ICE
+  netrunnerTopology: { activeArchitectureId: string; currentFloor: number; iceAlertLevel: 'low' | 'alert' | 'lockdown' };
+  // Tech: Tiempos de fabricación Maker (Jury Rig, Field Upgrade, Fabrication, Invention)
+  techTimers: Array<{ itemId: string; daysRemaining: number; techDv: number; projectType: string }>;
+  // Medtech: Lotes de fármacos y crioterapia activa
+  medtechBatches: Array<{ patientName: string; therapyDaysLeft: number; pharmaceuticals: string[] }>;
+  // Lawman & Exec: Backup response timers y nóminas de operativos corporativos
+  lawmanBackupTimer: { turnsUntilArrival: number; backupTier: number } | null;
+  execTeamLoyalty: Array<{ memberId: string; loyaltyScore: number; monthlyCost: number }>;
+  // Fixer & Rockerboy: Arbitraje de alcance de mercado negro y favor de multitudes
+  fixerOperatorMarket: { availableTiers: string[]; haggleMargin: number };
+  rockerboyCrowdFavor: { audienceSize: number; currentVenueTier: number; activeFavor: string };
+}`,
+                details: [
+                  'Orquestación de las 10 Habilidades de Rol: Arbitraje centralizado de Combat Awareness (Solo), Interface (Netrunner), Maker (Tech), Medicine (Medtech), Credibility (Media), Teamwork (Exec), Backup (Lawman), Operator (Fixer), Moto (Nomad) y Charismatic Impact (Rockerboy).',
+                  'Tracker Táctico de Iniciativa Multi-Participante: Integración fluida entre personajes de jugadores, goons procedurales y bosses de Danger Gal Dossier.',
+                  'Generador de Encuentros & Peligro Urbano: Tablas de calor por zona de Night City (Executive Zone, Upper Marina, Watson Sub-Districts, Combat Zone) con tiradas climáticas y de radiación.',
+                  'Gestor de Deuda, Alquiler y Estilo de Vida: Cobro automatizado de rentas (Cargo Container, Cube Hotel, Studio, Penthouse) y liquidación de cuotas corporativas.'
+                ]
+              },
+              ...ARCHITECTURE_AND_GUIDE_DOCS
+            ].map((doc, idx) => (
               <div
                 key={idx}
                 className="border border-[#1f2438] bg-[#0d0f17] p-5 chamfer-2 space-y-3"

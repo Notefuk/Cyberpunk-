@@ -23,6 +23,9 @@ import {
   getWeaponClassAndRebuildInfo,
   getAmmoTypeTooltip as getAmmoTooltipInfo,
   getCyberwareCategoryTooltip,
+  CEMK_WEAPON_REBUILD_SYSTEM_GUIDE,
+  RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE,
+  ROLE_ABILITIES_COMPLETE_PROGRESSION,
   type WeaponClassAndRebuildInfo
 } from '../../data/weaponAndCyberwareTooltips';
 import { 
@@ -261,6 +264,11 @@ export const StreetLabView: React.FC = () => {
   const buyAndEquipMartialArtChip = useCharacterStore((state) => state.buyAndEquipMartialArtChip);
   const toggleEquipMartialArtChip = useCharacterStore((state) => state.toggleEquipMartialArtChip);
   const updateMartialArtRank = useCharacterStore((state) => state.updateMartialArtRank);
+  const convertWeaponRebuild2077 = useCharacterStore((state) => state.convertWeaponRebuild2077);
+  const toggleEmpDisableCyberware = useCharacterStore((state) => state.toggleEmpDisableCyberware);
+  const clearAllEmpDisabledCyberware = useCharacterStore((state) => state.clearAllEmpDisabledCyberware);
+  const restAndHealDays = useCharacterStore((state) => state.restAndHealDays);
+  const repairCharacterArmor = useCharacterStore((state) => state.repairCharacterArmor);
 
   const activeChar = getActiveCharacter();
 
@@ -277,10 +285,21 @@ export const StreetLabView: React.FC = () => {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   // Right column tab, wallet & debt state
-  const [rightColTab, setRightColTab] = useState<'combat' | 'inventory' | 'wallet' | 'bio' | 'dojo'>('combat');
+  const [rightColTab, setRightColTab] = useState<'combat' | 'inventory' | 'wallet' | 'bio' | 'dojo' | 'roleAbility' | 'restingRepair'>('combat');
   const [walletConcept, setWalletConcept] = useState('');
   const [walletAmount, setWalletAmount] = useState<number>(100);
   const [debtPayAmount, setDebtPayAmount] = useState<number>(500);
+
+  // Rebuild 2077 and Resting/Repair state
+  const [openRebuildWorkshops, setOpenRebuildWorkshops] = useState<Record<string, boolean>>({});
+  const toggleRebuildWorkshop = (instanceId: string) =>
+    setOpenRebuildWorkshops((prev) => ({ ...prev, [instanceId]: !prev[instanceId] }));
+  const [rebuildFreeMode, setRebuildFreeMode] = useState<boolean>(false);
+  const [restDays, setRestDays] = useState<number>(1);
+  const [restAntibodies, setRestAntibodies] = useState<boolean>(false);
+  const [restCryotank, setRestCryotank] = useState<boolean>(false);
+  const [restFeedback, setRestFeedback] = useState<string | null>(null);
+  const [repairFeedback, setRepairFeedback] = useState<string | null>(null);
 
   // Dojo state
   const [showMartialArtsGuide, setShowMartialArtsGuide] = useState(false);
@@ -1353,7 +1372,29 @@ export const StreetLabView: React.FC = () => {
               }`}
             >
               <Award className="w-3.5 h-3.5 text-emerald-400 group-hover:text-white" />
-              <span>🥋 DOJO &amp; IP</span>
+              <span>🥋 DOJO</span>
+            </button>
+
+            <button
+              onClick={() => setRightColTab('roleAbility')}
+              className={`flex-1 py-1 px-1.5 rounded-2xs font-tech text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                rightColTab === 'roleAbility'
+                  ? 'bg-purple-600 text-white font-bold shadow-sm'
+                  : 'text-[#94a3b8] hover:text-white hover:bg-[#1a1d2c]'
+              }`}
+            >
+              <span>🎭 ROL ({activeChar?.roleRank ?? 4})</span>
+            </button>
+
+            <button
+              onClick={() => setRightColTab('restingRepair')}
+              className={`flex-1 py-1 px-1.5 rounded-2xs font-tech text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                rightColTab === 'restingRepair'
+                  ? 'bg-cyan-600 text-white font-bold shadow-sm'
+                  : 'text-[#94a3b8] hover:text-white hover:bg-[#1a1d2c]'
+              }`}
+            >
+              <span>🛏️ DESCANSO</span>
             </button>
           </div>
 
@@ -1539,6 +1580,129 @@ export const StreetLabView: React.FC = () => {
                               </div>
                             </div>
                           )}
+
+                          {/* Panel Desplegable: Taller de Conversión CEMK 2077 */}
+                          <div className="pt-2 border-t border-[#1e2333] space-y-2">
+                            <div className="flex items-center justify-between">
+                              <button
+                                type="button"
+                                onClick={() => toggleRebuildWorkshop(w.instanceId)}
+                                className="flex items-center gap-1.5 text-[10px] font-tech font-bold uppercase tracking-wider text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+                              >
+                                <span>{openRebuildWorkshops[w.instanceId] ? '▾' : '▸'}</span>
+                                <span>🔧 TALLER DE CONVERSIÓN CEMK 2077 (POWER / SMART / TECH REBUILD)</span>
+                              </button>
+                              {w.rebuild2077 && w.rebuild2077 !== 'standard' && (
+                                <span className="text-[9px] font-mono-code px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold uppercase">
+                                  {w.rebuild2077} ACTIVO
+                                </span>
+                              )}
+                            </div>
+
+                            {openRebuildWorkshops[w.instanceId] && (
+                              <div className="p-2.5 bg-[#0e1017] border border-amber-500/30 rounded-xs space-y-2.5 text-[10px] font-mono-code animate-fade-in">
+                                <div className="space-y-1">
+                                  <div className="font-tech text-xs font-bold text-amber-300 uppercase">
+                                    {CEMK_WEAPON_REBUILD_SYSTEM_GUIDE.title}
+                                  </div>
+                                  <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+                                    {CEMK_WEAPON_REBUILD_SYSTEM_GUIDE.conversionRulesSummary}
+                                  </p>
+                                </div>
+
+                                {/* Modo de Coste: Pagar 500 eb vs Libre */}
+                                <div className="flex items-center justify-between bg-[#151926] p-1.5 rounded border border-[#232c42]">
+                                  <span className="text-slate-400 text-[10px]">Coste de conversión:</span>
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => setRebuildFreeMode(false)}
+                                      className={`px-2 py-0.5 rounded text-[9px] font-bold transition-all cursor-pointer ${
+                                        !rebuildFreeMode
+                                          ? 'bg-amber-500 text-black font-bold'
+                                          : 'bg-[#1a1e2d] text-slate-400 hover:text-white'
+                                      }`}
+                                    >
+                                      💰 Pagar 500 €$
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setRebuildFreeMode(true)}
+                                      className={`px-2 py-0.5 rounded text-[9px] font-bold transition-all cursor-pointer ${
+                                        rebuildFreeMode
+                                          ? 'bg-cyan-500 text-black font-bold'
+                                          : 'bg-[#1a1e2d] text-slate-400 hover:text-white'
+                                      }`}
+                                    >
+                                      🔓 Libre (0 €$)
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Opciones de Rebuild */}
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                                  {CEMK_WEAPON_REBUILD_SYSTEM_GUIDE.rebuildOptions.map((opt) => {
+                                    const isCurrent = w.rebuild2077 === opt.type;
+                                    return (
+                                      <div
+                                        key={opt.type}
+                                        className={`p-2 rounded border space-y-1.5 flex flex-col justify-between ${
+                                          isCurrent
+                                            ? 'bg-amber-950/40 border-amber-500 text-white'
+                                            : 'bg-[#12141f] border-[#22283a] text-slate-300'
+                                        }`}
+                                      >
+                                        <div className="space-y-1">
+                                          <div className="flex items-center justify-between font-tech font-bold text-xs text-amber-300">
+                                            <span>{opt.name}</span>
+                                            {isCurrent && <span className="text-[9px] text-emerald-400 font-bold">✓ ACTIVO</span>}
+                                          </div>
+                                          <p className="text-[9px] text-slate-400 leading-tight">
+                                            {opt.combatRules}
+                                          </p>
+                                          <div className="text-[9px] text-cyan-300 leading-tight">
+                                            ⚡ <strong>Especial:</strong> {opt.specialAbility}
+                                          </div>
+                                        </div>
+
+                                        <button
+                                          type="button"
+                                          disabled={isCurrent}
+                                          onClick={() =>
+                                            convertWeaponRebuild2077(
+                                              w.instanceId,
+                                              opt.type as any,
+                                              rebuildFreeMode ? 0 : 500
+                                            )
+                                          }
+                                          className={`w-full py-1 rounded text-[10px] font-tech font-bold uppercase transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                                            isCurrent
+                                              ? 'bg-slate-800 text-slate-500 border border-slate-700'
+                                              : 'bg-amber-500 hover:bg-amber-400 text-black shadow-xs'
+                                          }`}
+                                        >
+                                          {isCurrent ? 'Instalado' : `Convertir (${rebuildFreeMode ? '0 €$' : '500 €$'})`}
+                                        </button>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+
+                                {/* Botón para Restaurar a Estándar 2045 */}
+                                {w.rebuild2077 && w.rebuild2077 !== 'standard' && (
+                                  <div className="pt-1.5 border-t border-[#1e2333] flex justify-end">
+                                    <button
+                                      type="button"
+                                      onClick={() => convertWeaponRebuild2077(w.instanceId, 'standard', 0)}
+                                      className="px-2.5 py-1 bg-[#1a1e2d] hover:bg-red-950/60 hover:text-red-300 text-slate-400 border border-[#2b334a] rounded text-[10px] font-mono-code transition-colors cursor-pointer"
+                                    >
+                                      🔄 Restaurar a Arma Estándar 2045 (Quitar Rebuild)
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       );
                     })
@@ -1548,9 +1712,28 @@ export const StreetLabView: React.FC = () => {
 
               {/* 3. Cyberware Instalado */}
               <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
-                <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase pb-1.5 mb-2 border-b border-[#1f2230]">
-                  <Cpu className="w-3.5 h-3.5 text-[#a855f7]" />
-                  <span>CIBERWARE INSTALADO ({activeChar?.installedCyberwareIds?.length ?? 0})</span>
+                <div className="flex items-center justify-between pb-1.5 mb-2 border-b border-[#1f2230] flex-wrap gap-1.5">
+                  <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+                    <Cpu className="w-3.5 h-3.5 text-[#a855f7]" />
+                    <span>CIBERWARE INSTALADO ({activeChar?.installedCyberwareIds?.length ?? 0})</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    {(activeChar?.empDisabledCyberwareIds || []).length > 0 && (
+                      <span className="text-[9px] font-mono-code px-1.5 py-0.2 rounded bg-red-950/60 text-red-400 border border-red-500/50 font-bold animate-pulse">
+                        ⚡ {(activeChar?.empDisabledCyberwareIds || []).length} OFF (EMP)
+                      </span>
+                    )}
+                    {(activeChar?.empDisabledCyberwareIds || []).length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => clearAllEmpDisabledCyberware()}
+                        className="px-2 py-0.5 rounded text-[9px] font-mono-code bg-[#1a2030] hover:bg-emerald-950/60 text-emerald-400 border border-emerald-500/40 transition-colors cursor-pointer"
+                        title="Reiniciar todo el ciberware y restaurar energía"
+                      >
+                        🔄 Reiniciar Todo
+                      </button>
+                    )}
+                  </div>
                 </div>
 
                 <div className="space-y-1.5 max-h-[220px] overflow-y-auto pr-1">
@@ -1566,15 +1749,27 @@ export const StreetLabView: React.FC = () => {
                       const name = cyber?.name || id;
                       const hl = cyber?.humanityLoss || '2d6 (7)';
                       const type = cyber?.type || 'Prótesis';
+                      const isEmpDisabled = (activeChar?.empDisabledCyberwareIds || []).includes(id);
 
                       return (
                         <div
                           key={id}
-                          className="p-2 bg-[#171923] border border-[#222636] rounded-xs flex items-center justify-between gap-2"
+                          className={`p-2 rounded-xs flex items-center justify-between gap-2 border transition-all ${
+                            isEmpDisabled
+                              ? 'bg-[#1b1014] border-red-500/60'
+                              : 'bg-[#171923] border-[#222636]'
+                          }`}
                         >
                           <div>
-                            <div className="font-tech text-sm font-bold text-white truncate">
-                              {name}
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-tech text-sm font-bold text-white truncate">
+                                {name}
+                              </span>
+                              {isEmpDisabled && (
+                                <span className="text-[8px] font-mono-code px-1 rounded bg-red-950 text-red-400 border border-red-500/40 font-bold">
+                                  ⚡ APAGADO
+                                </span>
+                              )}
                             </div>
                             <div className="text-[10px] font-mono-code text-[#a855f7] flex items-center gap-1">
                               <CyberCategoryTooltip category={type}>
@@ -1585,13 +1780,28 @@ export const StreetLabView: React.FC = () => {
                             </div>
                           </div>
 
-                          <button
-                            type="button"
-                            onClick={() => toggleCyberwareInstall(id)}
-                            className="text-[10px] font-mono-code text-[#dc2626] hover:underline shrink-0 cursor-pointer"
-                          >
-                            Desinstalar
-                          </button>
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => toggleEmpDisableCyberware(id)}
+                              className={`px-1.5 py-0.5 rounded text-[9px] font-mono-code font-bold transition-all cursor-pointer border ${
+                                isEmpDisabled
+                                  ? 'bg-red-950/60 text-red-300 border-red-500 hover:bg-red-900/60'
+                                  : 'bg-[#141724] text-slate-400 border-[#23293c] hover:text-white hover:border-slate-500'
+                              }`}
+                              title={isEmpDisabled ? 'Ciberware apagado por EMP / Malfunction. Clic para reactivar.' : 'Simular apagado por EMP o Quickhack'}
+                            >
+                              {isEmpDisabled ? '⚡ EMP OFF' : '🟢 ACTIVO'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => toggleCyberwareInstall(id)}
+                              className="text-[10px] font-mono-code text-[#dc2626] hover:underline cursor-pointer ml-1"
+                            >
+                              Desinstalar
+                            </button>
+                          </div>
                         </div>
                       );
                     })
@@ -2600,6 +2810,398 @@ export const StreetLabView: React.FC = () => {
                       </div>
                     );
                   })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: HABILIDAD DE ROL (RANGOS 1 AL 10) */}
+          {rightColTab === 'roleAbility' && (() => {
+            const roleData = ROLE_ABILITIES_COMPLETE_PROGRESSION[activeChar?.role || 'Solo'] || ROLE_ABILITIES_COMPLETE_PROGRESSION['Solo'];
+            const currentRoleRank = activeChar?.roleRank ?? 4;
+
+            return (
+              <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-3 animate-fade-in">
+                {/* Cabecera del Rol */}
+                <div className="flex items-center justify-between pb-2 border-b border-[#1f2230] flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <Award className="w-4 h-4 text-purple-400" />
+                    <div>
+                      <span className="font-tech text-sm font-bold text-white uppercase">
+                        {roleData.abilityName}
+                      </span>
+                      <span className="ml-2 text-[10px] font-mono-code px-1.5 py-0.5 rounded bg-purple-950/60 text-purple-300 border border-purple-500/40">
+                        ROL: {activeChar?.role || 'Solo'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Selector y ajuste de Rango 1-10 */}
+                  <div className="flex items-center gap-1.5 bg-[#171a26] px-2 py-1 rounded border border-[#232a3d]">
+                    <span className="text-[10px] font-mono-code text-slate-400 font-bold uppercase">
+                      Rango Actual:
+                    </span>
+                    <button
+                      type="button"
+                      disabled={currentRoleRank <= 1}
+                      onClick={() => updateCharacterMeta({ roleRank: Math.max(1, currentRoleRank - 1) })}
+                      className="w-5 h-5 flex items-center justify-center bg-[#20273a] hover:bg-purple-600 text-white rounded text-xs font-bold transition-colors disabled:opacity-30 cursor-pointer"
+                    >
+                      -
+                    </button>
+                    <span className="w-6 text-center font-mono-code font-bold text-purple-300 text-xs">
+                      {currentRoleRank}
+                    </span>
+                    <button
+                      type="button"
+                      disabled={currentRoleRank >= 10}
+                      onClick={() => updateCharacterMeta({ roleRank: Math.min(10, currentRoleRank + 1) })}
+                      className="w-5 h-5 flex items-center justify-center bg-[#20273a] hover:bg-purple-600 text-white rounded text-xs font-bold transition-colors disabled:opacity-30 cursor-pointer"
+                    >
+                      +
+                    </button>
+                    <select
+                      value={currentRoleRank}
+                      onChange={(e) => updateCharacterMeta({ roleRank: Number(e.target.value) })}
+                      aria-label="Seleccionar rango de rol del personaje"
+                      className="ml-1 bg-[#0f1118] text-purple-300 font-mono-code text-[10px] px-1 py-0.5 rounded border border-[#2b334d]"
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((r) => (
+                        <option key={r} value={r}>
+                          Rango {r}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Resumen & Mecánicas de la Habilidad */}
+                <div className="p-2.5 bg-[#171924] rounded border border-[#222738] space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between text-[11px] font-mono-code text-slate-300">
+                    <span className="text-purple-300 font-bold">Estadística Asociada: {roleData.statUsed}</span>
+                    <span className="text-slate-400">{roleData.summary}</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 leading-relaxed font-sans border-t border-[#222738] pt-1.5">
+                    {roleData.mechanicsOverview}
+                  </p>
+                </div>
+
+                {/* Lista de Progresión Rango 1 al 10 */}
+                <div className="space-y-1.5">
+                  <div className="text-[10px] font-mono-code text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                    <span>Árbol de Progresión (Rangos 1 al 10):</span>
+                  </div>
+
+                  <div className="space-y-1.5 max-h-[500px] overflow-y-auto pr-1">
+                    {roleData.ranks.map((rk) => {
+                      const isCurrent = rk.rank === currentRoleRank;
+                      const isUnlocked = rk.rank <= currentRoleRank;
+
+                      return (
+                        <div
+                          key={rk.rank}
+                          className={`p-2 rounded border transition-all ${
+                            isCurrent
+                              ? 'bg-purple-950/50 border-purple-500 shadow-sm'
+                              : isUnlocked
+                              ? 'bg-[#151824] border-purple-900/40 opacity-90'
+                              : 'bg-[#0f1118] border-[#1f2434] opacity-50'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={`w-5 h-5 rounded flex items-center justify-center font-mono-code text-xs font-bold shrink-0 ${
+                                  isCurrent
+                                    ? 'bg-purple-500 text-black'
+                                    : isUnlocked
+                                    ? 'bg-purple-900 text-purple-200'
+                                    : 'bg-[#1e2230] text-slate-500'
+                                }`}
+                              >
+                                {rk.rank}
+                              </span>
+                              <span className="font-tech text-xs font-bold text-white">
+                                {rk.title}
+                              </span>
+                            </div>
+
+                            <span className="text-[9px] font-mono-code font-bold px-1.5 py-0.5 rounded uppercase">
+                              {isCurrent ? (
+                                <span className="bg-purple-500/20 text-purple-300 border border-purple-500/40 px-1 rounded">
+                                  ★ ACTIVO
+                                </span>
+                              ) : isUnlocked ? (
+                                <span className="text-emerald-400">✓ Desbloqueado</span>
+                              ) : (
+                                <span className="text-slate-600">Bloqueado</span>
+                              )}
+                            </span>
+                          </div>
+
+                          <p className="mt-1 text-[10px] font-mono-code text-slate-300 pl-7 leading-relaxed">
+                            {rk.unlocks}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* TAB 7: DESCANSO, CURACIÓN Y REPARACIÓN DE BLINDAJE */}
+          {rightColTab === 'restingRepair' && (
+            <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-4 animate-fade-in">
+              {/* Encabezado */}
+              <div className="flex items-center justify-between pb-2 border-b border-[#1f2230]">
+                <div className="flex items-center gap-2 font-tech text-xs font-bold text-white uppercase">
+                  <Activity className="w-4 h-4 text-cyan-400" />
+                  <span>DESCANSO TÁCTICO, REGENERACIÓN Y REPARACIÓN</span>
+                </div>
+                <span className="text-[9px] font-mono-code text-cyan-400/80">
+                  REGLAS OFICIALES CP RED (CORE pp. 140 & 222)
+                </span>
+              </div>
+
+              {/* Mensajes de Feedback si aplican */}
+              {restFeedback && (
+                <div className="p-2 bg-emerald-950/70 border border-emerald-500/60 rounded text-emerald-300 text-[11px] font-mono-code flex items-center gap-2 animate-fade-in">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+                  <span>{restFeedback}</span>
+                </div>
+              )}
+              {repairFeedback && (
+                <div className="p-2 bg-amber-950/70 border border-amber-500/60 rounded text-amber-300 text-[11px] font-mono-code flex items-center gap-2 animate-fade-in">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-amber-400" />
+                  <span>{repairFeedback}</span>
+                </div>
+              )}
+
+              {/* SECCIÓN 1: Descanso y Curación Natural */}
+              <div className="p-3 bg-[#161925] border border-[#232a3d] rounded space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-tech text-xs font-bold text-cyan-300 uppercase flex items-center gap-1.5">
+                    <Heart className="w-3.5 h-3.5 text-red-400" />
+                    1. Descanso y Curación Natural (Regeneración de HP)
+                  </span>
+                  <span className="text-[10px] font-mono-code text-slate-400">
+                    HP Actual: <strong className="text-white">{activeChar?.currentHp}</strong> / {calculateMaxHp(activeChar?.stats?.BODY ?? 6, activeChar?.stats?.WILL ?? 6)}
+                  </span>
+                </div>
+
+                <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
+                  {RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE.restingAndHealing.rules[0].description} Requiere al menos 8 horas de sueño ininterrumpido y actividad ligera.
+                </p>
+
+                {/* Controles de Descanso */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                  {/* Selector de días */}
+                  <div className="bg-[#10131d] p-2 rounded border border-[#1e2335] space-y-1">
+                    <label className="text-[10px] font-mono-code text-slate-400 uppercase font-bold block">
+                      Días de Descanso:
+                    </label>
+                    <div className="flex items-center gap-1">
+                      {[1, 3, 7].map((d) => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => setRestDays(d)}
+                          className={`flex-1 py-1 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer ${
+                            restDays === d
+                              ? 'bg-cyan-500 text-black'
+                              : 'bg-[#1b2030] text-slate-300 hover:text-white'
+                          }`}
+                        >
+                          {d}d
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Modificador: Enhanced Antibodies */}
+                  <div className="bg-[#10131d] p-2 rounded border border-[#1e2335] flex items-center justify-between">
+                    <div>
+                      <div className="text-[10px] font-mono-code text-white font-bold">
+                        Enhanced Antibodies
+                      </div>
+                      <div className="text-[9px] text-slate-400">Duplica curación (2× BODY)</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setRestAntibodies(!restAntibodies)}
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer ${
+                        restAntibodies
+                          ? 'bg-emerald-500 text-black'
+                          : 'bg-[#1b2030] text-slate-400 border border-[#2b334a]'
+                      }`}
+                    >
+                      {restAntibodies ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+
+                  {/* Modificador: Cryotank / Cuidado Médico */}
+                  <div className="bg-[#10131d] p-2 rounded border border-[#1e2335] flex items-center justify-between">
+                    <div>
+                      <div className="text-[10px] font-mono-code text-white font-bold">
+                        Tanque Criogénico
+                      </div>
+                      <div className="text-[9px] text-slate-400">+BODY adicional/día</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setRestCryotank(!restCryotank)}
+                      className={`px-2 py-0.5 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer ${
+                        restCryotank
+                          ? 'bg-cyan-500 text-black'
+                          : 'bg-[#1b2030] text-slate-400 border border-[#2b334a]'
+                      }`}
+                    >
+                      {restCryotank ? 'ON' : 'OFF'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Previsualización y Botón de Ejecutar Descanso */}
+                {(() => {
+                  const effBody = activeChar?.stats?.BODY ?? 6;
+                  const mult = (restAntibodies ? 2 : 1) + (restCryotank ? 1 : 0);
+                  const ratePerDay = Math.max(1, effBody) * mult;
+                  const totalPreview = ratePerDay * Math.max(1, restDays);
+
+                  return (
+                    <div className="pt-2 flex items-center justify-between flex-wrap gap-2 border-t border-[#1f2638]">
+                      <div className="text-[10px] font-mono-code text-slate-300">
+                        Tasa: <strong className="text-cyan-300">+{ratePerDay} HP/día</strong> • Total estimado: <strong className="text-emerald-400">+{totalPreview} HP</strong> ({restDays} día{restDays > 1 ? 's' : ''})
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          restAndHealDays(restDays, restAntibodies, restCryotank);
+                          setRestFeedback(`Descanso completado: +${totalPreview} HP recuperados tras ${restDays} día(s) de descanso.`);
+                          setTimeout(() => setRestFeedback(null), 4000);
+                        }}
+                        className="px-3 py-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded font-tech text-xs font-bold uppercase transition-all shadow-md cursor-pointer flex items-center gap-1.5"
+                      >
+                        <Heart className="w-3.5 h-3.5" />
+                        <span>Ejecutar Descanso ({restDays}d)</span>
+                      </button>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* SECCIÓN 2: Taller de Reparación de Blindaje */}
+              <div className="p-3 bg-[#161925] border border-[#232a3d] rounded space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-tech text-xs font-bold text-amber-300 uppercase flex items-center gap-1.5">
+                    <Shield className="w-3.5 h-3.5 text-amber-400" />
+                    2. Taller de Reparación de Armaduras (Restaurar SP)
+                  </span>
+                  <span className="text-[10px] font-mono-code text-slate-400">
+                    Habilidades: <strong className="text-amber-300">Basic Tech / Cybertech</strong>
+                  </span>
+                </div>
+
+                {/* Estado Actual del Blindaje */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {/* Cabeza */}
+                  <div className="p-2.5 bg-[#10131d] rounded border border-[#1e2335] flex items-center justify-between">
+                    <div>
+                      <div className="text-[10px] font-mono-code text-slate-400 uppercase">
+                        Cabeza: {activeChar?.headArmor?.name || 'Head Armor'}
+                      </div>
+                      <div className="font-mono-code text-xs font-bold text-white mt-0.5">
+                        SP: <span className="text-cyan-400">{activeChar?.headArmor?.currentSp}</span> / {activeChar?.headArmor?.maxSp}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={!activeChar?.headArmor || activeChar.headArmor.currentSp >= activeChar.headArmor.maxSp}
+                      onClick={() => {
+                        repairCharacterArmor('head', 'full', 0);
+                        setRepairFeedback(`Armadura de cabeza reparada a ${activeChar?.headArmor?.maxSp} SP.`);
+                        setTimeout(() => setRepairFeedback(null), 4000);
+                      }}
+                      className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:cursor-not-allowed text-black font-tech text-xs font-bold uppercase rounded transition-all cursor-pointer"
+                    >
+                      Reparar Cabeza
+                    </button>
+                  </div>
+
+                  {/* Torso */}
+                  <div className="p-2.5 bg-[#10131d] rounded border border-[#1e2335] flex items-center justify-between">
+                    <div>
+                      <div className="text-[10px] font-mono-code text-slate-400 uppercase">
+                        Torso: {activeChar?.bodyArmor?.name || 'Body Armor'}
+                      </div>
+                      <div className="font-mono-code text-xs font-bold text-white mt-0.5">
+                        SP: <span className="text-cyan-400">{activeChar?.bodyArmor?.currentSp}</span> / {activeChar?.bodyArmor?.maxSp}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={!activeChar?.bodyArmor || activeChar.bodyArmor.currentSp >= activeChar.bodyArmor.maxSp}
+                      onClick={() => {
+                        repairCharacterArmor('body', 'full', 0);
+                        setRepairFeedback(`Armadura de torso reparada a ${activeChar?.bodyArmor?.maxSp} SP.`);
+                        setTimeout(() => setRepairFeedback(null), 4000);
+                      }}
+                      className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:cursor-not-allowed text-black font-tech text-xs font-bold uppercase rounded transition-all cursor-pointer"
+                    >
+                      Reparar Torso
+                    </button>
+                  </div>
+                </div>
+
+                {/* Botón de Reparar Todo el Blindaje */}
+                <div className="flex justify-end pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      repairCharacterArmor('both', 'full', 0);
+                      setRepairFeedback('Todo el blindaje (Cabeza y Torso) ha sido reparado a su SP máximo.');
+                      setTimeout(() => setRepairFeedback(null), 4000);
+                    }}
+                    className="px-3 py-1 bg-[#1c2235] hover:bg-emerald-600 hover:text-white text-emerald-400 border border-emerald-500/40 rounded text-[11px] font-mono-code font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span>🛡️ Reparar Todo el Blindaje (Cabeza + Torso)</span>
+                  </button>
+                </div>
+
+                {/* Tabla Canónica de Reparación de Armaduras (Core p. 140) */}
+                <div className="space-y-1.5 pt-2 border-t border-[#1f2638]">
+                  <div className="text-[10px] font-mono-code text-slate-400 font-bold uppercase">
+                    Tabla Oficial de Reparación de Armaduras (Core Rulebook p. 140):
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left font-mono-code text-[10px] border border-[#22283a]">
+                      <thead className="bg-[#111420] text-slate-400 border-b border-[#22283a]">
+                        <tr>
+                          <th className="p-1.5">Categoría de Coste</th>
+                          <th className="p-1.5">Ejemplos</th>
+                          <th className="p-1.5 text-center">DV</th>
+                          <th className="p-1.5">Tiempo de Trabajo</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-[#1e2333]">
+                        {RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE.armorRepair.table.map((row) => (
+                          <tr key={row.costTier} className="hover:bg-[#1a1f30]/50 text-slate-300">
+                            <td className="p-1.5 font-bold text-amber-300">{row.costTier}</td>
+                            <td className="p-1.5 text-slate-400">{row.examples}</td>
+                            <td className="p-1.5 text-center font-bold text-cyan-400">DV {row.dv}</td>
+                            <td className="p-1.5 text-slate-300">{row.repairTime}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Nota sobre Nanomateriales Cibernéticos */}
+                  <div className="p-2 bg-[#10131d] rounded border border-cyan-500/30 text-[10px] font-mono-code text-cyan-300">
+                    💡 <strong>Subdermal Armor & Skin Weave:</strong> {RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE.armorRepair.cyberwareRegeneration.rule}
+                  </div>
                 </div>
               </div>
             </div>

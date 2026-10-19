@@ -126,11 +126,31 @@ export function getWeaponClassAndRebuildInfo(weapon: any): WeaponClassAndRebuild
   }
 
   // Determinar Rebuild 2077 si aplica
+  const rebuildOverride = weapon.rebuild2077;
   let rebuildType: 'power' | 'tech' | 'smart' | 'exotic' | null = null;
   let rebuildBadge: string | undefined = undefined;
   let rebuildTooltip: string | undefined = undefined;
 
-  if (techType === 'power' || notes.includes('power weapon') || name.includes('(power)')) {
+  if (rebuildOverride === 'power') {
+    rebuildType = 'power';
+    rebuildBadge = '💥 POWER REBUILD 2077';
+    rebuildTooltip =
+      'Tecnología Power 2077: Proyectiles cinéticos pesados. +5 al daño adicional de Heridas Críticas. Permite disparos con rebote (ricochet) contra paredes o techos con un penalizador de -4 a la tirada (o penalizador 0 si se utiliza un Coprocesador Balístico).';
+  } else if (rebuildOverride === 'tech') {
+    rebuildType = 'tech';
+    rebuildBadge = '⚡ TECH REBUILD 2077';
+    rebuildTooltip =
+      'Tecnología Tech 2077: Aceleración electromagnética tipo Gauss/Railgun. Equipada con visor de detección de siluetas tras Cobertura Delgada (Thin Cover). Sacrificando la Acción de Movimiento, el tirador Carga el arma. El Disparo Cargado atraviesa coberturas delgadas e ignora la mitad del blindaje SP del defensor (redondeado hacia arriba).';
+  } else if (rebuildOverride === 'smart') {
+    rebuildType = 'smart';
+    rebuildBadge = '🎯 SMART REBUILD 2077';
+    rebuildTooltip =
+      'Tecnología Smart 2077: Micro-misiles teledirigidos con enlace neuronal. Otorga +1 permanente a Tiradas de Ataque cuando se enlaza mediante Neuroport y Subdermal Grip / Smart Link. Si se utiliza Munición Smart Mejorada, si el disparo falla por 5 o menos, permite una tirada inmediata de segunda oportunidad con 14 + 1d10 contra el DV original.';
+  } else if (rebuildOverride === 'standard') {
+    rebuildType = null;
+    rebuildBadge = undefined;
+    rebuildTooltip = undefined;
+  } else if (techType === 'power' || notes.includes('power weapon') || name.includes('(power)')) {
     rebuildType = 'power';
     rebuildBadge = '💥 POWER REBUILD 2077';
     rebuildTooltip =
@@ -514,3 +534,367 @@ export function getAmmoTypeTooltip(ammoName: string): AmmoTypeTooltip | undefine
   
   return AMMO_TYPE_TOOLTIPS.basic;
 }
+
+// ----------------------------------------------------------------------------
+// 4. GUÍA OFICIAL DEL SISTEMA DE REBUILDS 2077 (CEMK pp. 30-33)
+// ----------------------------------------------------------------------------
+
+export interface RebuildSystemOption {
+  type: 'power' | 'smart' | 'tech';
+  name: string;
+  badge: string;
+  costEb: number;
+  costTier: string;
+  attachmentSlots: number;
+  prerequisites: string;
+  combatRules: string;
+  specialAbility: string;
+  makerFabrication: {
+    skill: string;
+    dv: number;
+    time: string;
+    materialsCostEb: number;
+  };
+  notes: string;
+}
+
+export const CEMK_WEAPON_REBUILD_SYSTEM_GUIDE = {
+  title: 'Sistema Canónico de Rebuilds de Armamento CEMK 2077 (pp. 30-33)',
+  description:
+    'Cualquier arma de fuego estándar convencional puede ser transformada en una variante de última tecnología 2077 (Power, Smart o Tech) mediante reacondicionamiento técnico en taller o compra directa.',
+  conversionRulesSummary:
+    'Un arma convertida mediante Rebuild 2077 pasa a costar 500 €$ adicionales (Categoría Expensive), gana 2 ranuras de accesorios dedicadas y adopta la tecnología de disparo elegida. Un Tech con la habilidad Maker puede fabricar la conversión con una tirada de DV 17 y 1 semana de trabajo (250 €$ en materiales).',
+  rebuildOptions: [
+    {
+      type: 'power',
+      name: 'Power Rebuild 2077',
+      badge: '💥 POWER REBUILD 2077',
+      costEb: 500,
+      costTier: 'Expensive',
+      attachmentSlots: 2,
+      prerequisites: 'Arma de fuego estándar (pistola, subfusil, escopeta o fusil).',
+      combatRules:
+        'Dispara munición cinética de alta densidad. Permite disparos con rebote (Ricochet) en superficies duras (paredes, techos, suelo) ignorando coberturas completas con un penalizador de -4 a la tirada (o penalizador 0 si se cuenta con Ballistic Coprocessor cibernético).',
+      specialAbility: '+5 al daño adicional cuando se inflige una Herida Crítica (Critical Injury).',
+      makerFabrication: {
+        skill: 'Maker (Upgrade / Fabrication Expertise)',
+        dv: 17,
+        time: '1 semana',
+        materialsCostEb: 250
+      },
+      notes: 'No compatible con armas Exóticas o armas Melee.'
+    },
+    {
+      type: 'smart',
+      name: 'Smart Rebuild 2077',
+      badge: '🎯 SMART REBUILD 2077',
+      costEb: 500,
+      costTier: 'Expensive',
+      attachmentSlots: 2,
+      prerequisites: 'Requiere Neuroport con interfaz Smart Link o Subdermal Grip con enlace cibernético + Targeting Scope.',
+      combatRules:
+        'Balas giroscópicas guiadas por micro-propulsores y giroscopio interno. Otorga un bono pasivo de +1 a todas las tiradas de Ataque. Permite disparar alrededor de coberturas a objetivos fuera de línea de visión directa con un penalizador de -4.',
+      specialAbility:
+        'Con Munición Smart Especializada: si el disparo falla por 5 o menos puntos respecto al DV objetivo, realiza un reroll automático inmediato (14 + 1d10 contra el DV original).',
+      makerFabrication: {
+        skill: 'Maker (Upgrade / Fabrication Expertise)',
+        dv: 17,
+        time: '1 semana',
+        materialsCostEb: 250
+      },
+      notes: 'Si el enlace neuronal es interrumpido o interferido (EMP/Microwaver), opera como un arma convencional sin bonos.'
+    },
+    {
+      type: 'tech',
+      name: 'Tech Rebuild 2077',
+      badge: '⚡ TECH REBUILD 2077',
+      costEb: 500,
+      costTier: 'Expensive',
+      attachmentSlots: 2,
+      prerequisites: 'Batería interna de condensadores electromagnéticos y cañón con bobinas de aceleración Gauss.',
+      combatRules:
+        'Equipada con visor de detección de siluetas térmicas/electromagnéticas a través de Coberturas Delgadas (placas de yeso, madera, puertas ligeras, chapa de metal).',
+      specialAbility:
+        'Acción Completa "Charge Shot" (Disparo Cargado): Sacrifica la Acción de Movimiento para cargar los condensadores. El disparo atraviesa coberturas delgadas e ignora el 50% del blindaje SP del defensor (redondeado hacia arriba).',
+      makerFabrication: {
+        skill: 'Maker (Upgrade / Fabrication Expertise)',
+        dv: 17,
+        time: '1 semana',
+        materialsCostEb: 250
+      },
+      notes: 'Consume 2 proyectiles o 1 carga de celda energética por cada disparo cargado.'
+    }
+  ] as RebuildSystemOption[]
+};
+
+// ----------------------------------------------------------------------------
+// 5. GUÍA OFICIAL DE DESCANSO, CURACIÓN Y REPARACIÓN DE ARMADURAS
+// ----------------------------------------------------------------------------
+
+export const RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE = {
+  restingAndHealing: {
+    title: 'Reglas Canónicas de Descanso y Curación (CP RED Core pp. 222-224)',
+    rules: [
+      {
+        type: 'Natural Rest (Descanso Natural)',
+        healingRate: '+BODY HP por día completo',
+        requirements: 'Al menos 8 horas de sueño ininterrumpido y solo actividad ligera.',
+        description: 'El personaje recupera tantos Puntos de Vida (HP) por día de descanso como su estadística BODY base.'
+      },
+      {
+        type: 'Enhanced Antibodies (Ciberware)',
+        healingRate: '2 × BODY HP por día completo',
+        requirements: 'Ciberware Enhanced Antibodies instalado en el cuerpo.',
+        description: 'Duplica la tasa natural de curación biológica diaria del cuerpo.'
+      },
+      {
+        type: 'Speedheal (Fármaco Medtech)',
+        healingRate: 'Inmediato: BODY + WILL HP',
+        requirements: 'Inyección de Speedheal (1 dosis cada 24 horas máximo).',
+        description: 'Acelera metabólicamente la regeneración celular. El uso reiterado dentro de 24h produce 1 daño a la Humanidad y causa fatiga severa.'
+      },
+      {
+        type: 'Cryotank (Cámara Criogénica Medtech)',
+        healingRate: '2 × BODY HP por día de criocura',
+        requirements: 'Acceso a un Cryotank operado por un Medtech cualificado.',
+        description: 'Mantiene al paciente en coma inducido con nutrientes biológicos y oxígeno hiperbárico, duplicando la tasa de regeneración celular.'
+      },
+      {
+        type: 'Estabilización y Curación de Heridas Críticas',
+        healingRate: 'Tiempo variable (días o semanas) tras Tratamiento Quirúrgico',
+        requirements: 'First Aid / Paramedic para Estabilizar (DV según lesión), Surgery para Tratar.',
+        description: 'Una herida estabilizada ya no causa sangrado continuo ni empeora. Una vez tratada quirúrgicamente con éxito por un cirujano/Medtech, cura de forma natural en el número de días o semanas especificado en la tabla de Heridas Críticas.'
+      }
+    ]
+  },
+  armorRepair: {
+    title: 'Reglas Canónicas de Reparación de Armaduras (CP RED Core p. 140 & Black Chrome)',
+    explanation:
+      'Un personaje con la habilidad apropiada (Basic Tech para armaduras convencionales, Cybertech para blindaje corporal cibernético) puede reparar armaduras ablacionadas restaurando su SP completo.',
+    table: [
+      { costTier: 'Cheap (10-20 €$)', examples: 'Ropa blindada improvisada, Parches balísticos', dv: 9, repairTime: '1 Hora', skill: 'Basic Tech' },
+      { costTier: 'Everyday / Costly (50-100 €$)', examples: 'Kevlar® (SP 7)', dv: 13, repairTime: '6 Horas', skill: 'Basic Tech' },
+      { costTier: 'Premium (500 €$)', examples: 'Light Armorjack (SP 11)', dv: 17, repairTime: '1 Día (8 horas de trabajo)', skill: 'Basic Tech' },
+      { costTier: 'Expensive (1,000 €$)', examples: 'Medium Armorjack (SP 12), Heavy Armorjack (SP 13)', dv: 21, repairTime: '1 Semana', skill: 'Basic Tech' },
+      { costTier: 'Very Expensive (5,000 €$)', examples: 'Flak (SP 15), Metalgear® (SP 18)', dv: 24, repairTime: '2 Semanas', skill: 'Basic Tech' },
+      { costTier: 'Luxury / Super Luxury (10,000+ €$)', examples: 'Trajes blindados de alta costura, Exoarmaduras', dv: 29, repairTime: '1 Mes', skill: 'Basic Tech' }
+    ],
+    cyberwareRegeneration: {
+      type: 'Subdermal Armor & Skin Weave',
+      rule: 'El blindaje dérmico cibernético regenera +1 SP por día de descanso natural sin requerir tirada de Basic Tech, gracias a sus nanomateriales biocompatibles autorreparables.'
+    }
+  }
+};
+
+// ----------------------------------------------------------------------------
+// 6. PROGRESIÓN COMPLETA DE HABILIDADES DE LOS 10 ROLES (RANGOS 1 AL 10)
+// ----------------------------------------------------------------------------
+
+export interface RoleRankProgression {
+  rank: number;
+  title: string;
+  unlocks: string;
+}
+
+export interface RoleAbilityProgression {
+  role: string;
+  abilityName: string;
+  summary: string;
+  statUsed: string;
+  mechanicsOverview: string;
+  ranks: RoleRankProgression[];
+}
+
+export const ROLE_ABILITIES_COMPLETE_PROGRESSION: Record<string, RoleAbilityProgression> = {
+  Solo: {
+    role: 'Solo',
+    abilityName: 'Combat Awareness (Conciencia de Combate)',
+    summary: 'Instinto táctico marcial que permite reasignar puntos de combate cada turno.',
+    statUsed: 'REF / DEX',
+    mechanicsOverview: 'Al inicio del combate o con 1 Acción en tu turno, distribuyes tus puntos de Combat Awareness (igual a tu Rango de Rol) libremente entre 5 sub-habilidades tácticas: Damage Absorption, Solo Initiative, Threat Detection, Precision Attack y Spot Weakness.',
+    ranks: [
+      { rank: 1, title: 'Matón de Callejón (Street Scum)', unlocks: '1 punto de Combat Awareness. Acceso básico a +1 Iniciativa o +1 Ataque/Daño.' },
+      { rank: 2, title: 'Mercenario Novato (Local Muscle)', unlocks: '2 puntos de Combat Awareness. Puedes absorber 2 puntos de daño de tu primer impacto por ronda.' },
+      { rank: 3, title: 'Guardaespaldas Confiable (Enforcer)', unlocks: '3 puntos de Combat Awareness. Mayor flexibilidad para dividir entre Iniciativa y Ataque.' },
+      { rank: 4, title: 'Operativo Curtido (Seasoned Merc)', unlocks: '4 puntos de Combat Awareness. Desbloquea bonos significativos contra emboscadas y trampas.' },
+      { rank: 5, title: 'Veterano de Escuadrón (Veteran Gunner)', unlocks: '5 puntos de Combat Awareness. Permite anular 5 puntos de daño del primer ataque enemigo recibido.' },
+      { rank: 6, title: 'Asesino de Élite (Elite Hitman)', unlocks: '6 puntos de Combat Awareness. Capacidad de superar casi siempre la iniciativa de oponentes estándar.' },
+      { rank: 7, title: 'Especialista Táctico (Tactical Specialist)', unlocks: '7 puntos de Combat Awareness. Bono acumulable de +3 o +4 a tiradas de impacto en momentos decisivos.' },
+      { rank: 8, title: 'Máquina de Guerra (War Machine)', unlocks: '8 puntos de Combat Awareness. Absorción masiva de daño y letalidad quirúrgica contra blindajes pesados.' },
+      { rank: 9, title: 'Leyenda del Afterlife (Afterlife Legend)', unlocks: '9 puntos de Combat Awareness. Dominio total del campo de batalla; anticipa cualquier emboscada.' },
+      { rank: 10, title: 'Cibermonstruo Imparable (Solo Prime)', unlocks: '10 puntos de Combat Awareness. Nivel Morgan Blackhand: +10 puntos para distribuir a discreción.' }
+    ]
+  },
+  Netrunner: {
+    role: 'Netrunner',
+    abilityName: 'Interface (Interfaz)',
+    summary: 'Conexión neuronal directa con el ciberespacio y arquitecturas de red.',
+    statUsed: 'INT / Interface',
+    mechanicsOverview: 'Permite interactuar con Cyberdecks y Neuroports. Otorga Net Actions en tu turno (2 acciones en rangos 1-3, 3 acciones en rangos 4-6, 4 acciones en rangos 7-10). Rige tiradas de Pathfinder, Scanner, Backdoor, Cloak, Control, Eye-Dee, Virus y combate de Black ICE.',
+    ranks: [
+      { rank: 1, title: 'Script Kiddie', unlocks: '2 Net Actions/turno. DV Virus base 7. Capacidad de explorar 1 piso de red con Pathfinder.' },
+      { rank: 2, title: 'Hacker de Azotea (Console Jockey)', unlocks: '2 Net Actions/turno. DV Virus 8. Mayor fiabilidad al atravesar contraseñas básicas.' },
+      { rank: 3, title: 'Ciberbuzo Urbano (Net Diver)', unlocks: '2 Net Actions/turno. DV Virus 9. Capacidad de eludir Black ICE defensivo ligero.' },
+      { rank: 4, title: 'Corredor de Sombras (Shadow Runner)', unlocks: '¡Desbloquea 3 Net Actions/turno! DV Virus 10. Puede controlar torretas y cámaras en paralelo.' },
+      { rank: 5, title: 'Explorador Profundo (Deep Navigator)', unlocks: '3 Net Actions/turno. DV Virus 11. Detección y mapeo de hasta 5 pisos de red en 1 tirada de Pathfinder.' },
+      { rank: 6, title: 'Infiltrador de Mainframes (System Slicer)', unlocks: '3 Net Actions/turno. DV Virus 12. Creación de virus personalizados destructivos.' },
+      { rank: 7, title: 'Fantasma en la Red (Ghost in the Wire)', unlocks: '¡Desbloquea 4 Net Actions/turno! DV Virus 13. Ataques simultáneos y destrucción de Black ICE de élite.' },
+      { rank: 8, title: 'Maestro de Arquitecturas (Architecture Overlord)', unlocks: '4 Net Actions/turno. DV Virus 14. Escribe virus capaces de fundir servidores enteros.' },
+      { rank: 9, title: 'Cibermístico del Data Pool (Data Deity)', unlocks: '4 Net Actions/turno. DV Virus 15. Invisibilidad virtual casi indetectable por I.C.E. corporativo.' },
+      { rank: 10, title: 'Avatar del Ciberespacio (Bartmoss Legacy)', unlocks: '4 Net Actions/turno. DV Virus 16+. Capacidad de desafiar las fortalezas de datos de Arasaka y Militech.' }
+    ]
+  },
+  Tech: {
+    role: 'Tech',
+    abilityName: 'Maker (Creador)',
+    summary: 'Genio artesanal, reparación, modificación y fabricación de ciberware, armas y vehículos.',
+    statUsed: 'TECH',
+    mechanicsOverview: 'Otorga puntos de Maker para asignar entre 4 especialidades: Field Expertise (reparaciones rápidas en combate), Upgrade Fabrication (mejorar estadísticas de objetos), Invention Expertise (diseñar equipo inédito) y Fabrication Expertise (fabricar objetos a mitad de precio).',
+    ranks: [
+      { rank: 1, title: 'Chatarrero (Grease Monkey)', unlocks: '2 puntos de Maker. Reparaciones de campo improvisadas (+1) y fabricación de consumibles baratos.' },
+      { rank: 2, title: 'Técnico de Taller (Bench Tech)', unlocks: '4 puntos de Maker. Fabricación de armas cotidianas y mejoras simples de cargador o blindaje.' },
+      { rank: 3, title: 'Modder Callejero (Street Customizer)', unlocks: '6 puntos de Maker. Instalación de accesorios especializados y personalización ergonómica.' },
+      { rank: 4, title: 'Ingeniero Práctico (Practical Engineer)', unlocks: '8 puntos de Maker. Fabricación de armas Premium (500 €$) y blindaje Light Armorjack.' },
+      { rank: 5, title: 'Maestro Artesano (Master Craftsman)', unlocks: '10 puntos de Maker. Fabricación de equipo Expensive (1,000 €$) y Rebuilds CEMK 2077 (DV 17).' },
+      { rank: 6, title: 'Innovador Clandestino (Black-Market Fabricator)', unlocks: '12 puntos de Maker. Invención de prototipos cibernéticos no catalogados.' },
+      { rank: 7, title: 'Arquitecto Tecnológico (Tech Architect)', unlocks: '14 puntos de Maker. Fabricación de vehículos y exoarmaduras de alta gama.' },
+      { rank: 8, title: 'Visionario Cibernético (Cybernetic Visionary)', unlocks: '16 puntos de Maker. Mejoras legendarias: +1 ROF o añadir ranuras adicionales a implantes.' },
+      { rank: 9, title: 'Forjador del Futuro (Apex Fabricator)', unlocks: '18 puntos de Maker. Creación de blindaje Metalgear y chasis de Full Body Conversion.' },
+      { rank: 10, title: 'Demiurgo de Night City (Technological God)', unlocks: '20 puntos de Maker. Todo invento puede fabricarse; ninguna tecnología está fuera de su alcance.' }
+    ]
+  },
+  Medtech: {
+    role: 'Medtech',
+    abilityName: 'Medicine (Medicina)',
+    summary: 'Cirugía de trauma, farmacéutica avanzada y crioterapia intensiva.',
+    statUsed: 'TECH',
+    mechanicsOverview: 'Distribuye puntos de Medicina entre 3 ramas: Surgery (reparación y trasplante de órganos, amputaciones, ciberware invasivo), Medical Tech / Pharmaceuticals (síntesis de Speedheal, Boost, Blue Glass) y Cryosystem Operation (estabilización en criotanque y regeneración acelerada).',
+    ranks: [
+      { rank: 1, title: 'Camillero de Choque (Trauma Orderly)', unlocks: '2 puntos de Medicina. Acceso a 1 dosis de Speedheal sintetizada por semana o cirugía básica.' },
+      { rank: 2, title: 'Técnico de Emergencias (EMT Responded)', unlocks: '4 puntos de Medicina. Operación de Cryotank portátil y cura de heridas críticas leves.' },
+      { rank: 3, title: 'Enfermero de Combate (Combat Nurse)', unlocks: '6 puntos de Medicina. Síntesis de fármacos estimulantes y estabilización garantizada.' },
+      { rank: 4, title: 'Médico Residente (Field Doctor)', unlocks: '8 puntos de Medicina. Síntesis de Speedheal y Boost. Tratamiento quirúrgico de huesos rotos (DV 15).' },
+      { rank: 5, title: 'Cirujano de Trauma (Trauma Surgeon)', unlocks: '10 puntos de Medicina. Reemplazo de extremidades orgánicas y tratamiento de órganos colapsados.' },
+      { rank: 6, title: 'Especialista en Farmacia (Bio-Pharma Specialist)', unlocks: '12 puntos de Medicina. Capacidad de mantener a múltiples pacientes en criosuspensión simultánea.' },
+      { rank: 7, title: 'Cirujano Mayor (Chief Surgeon)', unlocks: '14 puntos de Medicina. Instalación de Borgware invasivo y cirugías de emergencia a corazón abierto en combate.' },
+      { rank: 8, title: 'Director Médico de Clínica (Clinic Director)', unlocks: '16 puntos de Medicina. Síntesis de antibióticos biotecnológicos que anulan toxinas corporales.' },
+      { rank: 9, title: 'Director de Trauma Team (Trauma Team Director)', unlocks: '18 puntos de Medicina. Procedimientos de Biopod e inicio de conversiones FBC completas.' },
+      { rank: 10, title: 'Milagroso de la Carne (Miracle Worker)', unlocks: '20 puntos de Medicina. Puede devolver a la vida a personajes muertos clínicamente hace minutos.' }
+    ]
+  },
+  Media: {
+    role: 'Media',
+    abilityName: 'Credibility (Credibilidad)',
+    summary: 'Acceso periodístico, obtención de primicias y publicación de reportajes que conmocionan a la opinión pública.',
+    statUsed: 'COOL / INT',
+    mechanicsOverview: 'Al investigar o publicar, tira Credibility + 1d10 contra DV para convencer a testigos, obtener rumores fidedignos de fuentes corporativas y publicar noticias que fuerzan a corporaciones o autoridades a actuar.',
+    ranks: [
+      { rank: 1, title: 'Blogger Callejero (Screamer)', unlocks: 'Credibility 1. Acceso a rumores barriales de bajo nivel y fuentes anónimas en la Zona de Combate.' },
+      { rank: 2, title: 'Corresponsal Independiente (Freelance Stringer)', unlocks: 'Credibility 2. Capacidad de conseguir pases de prensa de nivel local y entrevistas con pandilleros.' },
+      { rank: 3, title: 'Reportero de Guardia (Cub Reporter)', unlocks: 'Credibility 3. Detección de mentiras oficiales y acceso a informes de radio de la policía.' },
+      { rank: 4, title: 'Periodista de Investigación (Investigative Journalist)', unlocks: 'Credibility 4. Publicación en el Data Pool local; puede desacreditar a figuras públicas menores.' },
+      { rank: 5, title: 'Editor de Sección (Beat Editor)', unlocks: 'Credibility 5. Red de informantes en corporaciones secundarias y protección legal básica.' },
+      { rank: 6, title: 'Presentador de Noticias (Anchorperson)', unlocks: 'Credibility 6. Reportajes con impacto en toda la ciudad; convocatorias de protestas masivas.' },
+      { rank: 7, title: 'Columnista Célebre (Celebrity Columnist)', unlocks: 'Credibility 7. Contactos de alto nivel con ejecutivos y políticos; acceso a conferencias de prensa exclusivas.' },
+      { rank: 8, title: 'Investigador Pulitzer (Pulitzer Hunter)', unlocks: 'Credibility 8. Sus publicaciones causan caídas en la bolsa de valores y despidos de directivos.' },
+      { rank: 9, title: 'Voz de la Verdad (Voice of Truth)', unlocks: 'Credibility 9. Protección de informantes blindada; la policía no se atreve a censurarlo sin consecuencias.' },
+      { rank: 10, title: 'Icono Mediático Global (Media Tycoon)', unlocks: 'Credibility 10. Puede derrocar administraciones municipales y obligar a megacorporaciones a pedir perdón.' }
+    ]
+  },
+  Exec: {
+    role: 'Exec',
+    abilityName: 'Teamwork (Trabajo en Equipo)',
+    summary: 'Respaldo corporativo, vivienda pagada, seguro médico y subordinados leales.',
+    statUsed: 'COOL',
+    mechanicsOverview: 'Otorga un paquete corporativo (trajes ejecutivos, vivienda en Zona Corporativa, trauma team plateado) y el reclutamiento de miembros de equipo leales (Driver, Bodyguard, Netrunner, Technician) cuyos salarios paga la corporación.',
+    ranks: [
+      { rank: 1, title: 'Oficinista Jr. (Junior Associate)', unlocks: 'Vivienda corporativa tipo Estudio y ropa de negocios estándar. 0 subordinados.' },
+      { rank: 2, title: 'Analista de División (Account Rep)', unlocks: 'Acceso al comedor ejecutivo y transporte corporativo para misiones de la empresa.' },
+      { rank: 3, title: 'Gerente Adjunto (Assistant Manager)', unlocks: 'Apartamento corporativo de 2 habitaciones. Desbloquea tu 1er Subordinado (ej. Bodyguard o Conductor).' },
+      { rank: 4, title: 'Gerente de Proyectos (Project Manager)', unlocks: 'Coche de empresa y cuenta de gastos corporativos para reuniones (500 €$/mes).' },
+      { rank: 5, title: 'Director de Departamento (Department Head)', unlocks: 'Desbloquea tu 2do Subordinado (ej. Netrunner o Técnico de taller). Suite corporativa de lujo.' },
+      { rank: 6, title: 'Subdirector de Operaciones (Senior Director)', unlocks: 'Cobertura médica Trauma Team Silver para ti y tus agentes. Aumento de nivel de lealtad de equipo.' },
+      { rank: 7, title: 'Vicepresidente de Área (Vice President)', unlocks: 'Desbloquea tu 3er Subordinado. Residencia en Beaverville o Zona Corporativa de máxima seguridad.' },
+      { rank: 8, title: 'Vicepresidente Senior (Senior VP)', unlocks: 'Aerodeslizador AV-4 con piloto disponible para viajes de negocios. Custodia armada corporativa.' },
+      { rank: 9, title: 'Miembro del Consejo (Board Member)', unlocks: 'Cobertura médica Trauma Team Executive Platinum. Acceso a fondos negros corporativos.' },
+      { rank: 10, title: 'Director Ejecutivo / CEO (Corporate Overlord)', unlocks: 'Suite Penthouse en lo más alto de la torre corporativa. 4 subordinados de élite leales a muerte.' }
+    ]
+  },
+  Lawman: {
+    role: 'Lawman',
+    abilityName: 'Backup (Refuerzos)',
+    summary: 'Capacidad de pedir asistencia armada por radio a patrullas, SWAT o MAX-TAC.',
+    statUsed: 'WILL',
+    mechanicsOverview: 'Tira 1d10. Si el resultado es igual o menor a tu Rango de Backup, los refuerzos responden y llegan en 1d6 rondas de combate. El tipo y letalidad de la unidad depende de tu rango.',
+    ranks: [
+      { rank: 1, title: 'Agente Novato (Rookie Beat Cop)', unlocks: 'Backup 1. 2 agentes de patrulla novatos (Medium Pistols, Kevlar SP 7). Respuesta en 1d6 rondas.' },
+      { rank: 2, title: 'Patrullero (Patrolman)', unlocks: 'Backup 2. Probabilidad 20% de respuesta. Patrulleros armados con Heavy Pistols.' },
+      { rank: 3, title: 'Oficial Primero (Senior Officer)', unlocks: 'Backup 3. Probabilidad 30% de respuesta. Patrulla armada con escopeta de apoyo.' },
+      { rank: 4, title: 'Detective de Distrito (District Detective)', unlocks: 'Backup 4. Despacho de 2 oficiales veteranos (Armorjack SP 11, Heavy SMGs o Escopetas).' },
+      { rank: 5, title: 'Sargento de Calle (Street Sergeant)', unlocks: 'Backup 5. 50% de probabilidad. Llegada en coche patrulla blindado Cruiser.' },
+      { rank: 6, title: 'Teniente de Comisaría (Lieutenant)', unlocks: 'Backup 6. 60% de probabilidad. Unidad táctica C-SWAT ligera con rifles de asalto.' },
+      { rank: 7, title: 'Capitán de SWAT (SWAT Captain)', unlocks: 'Backup 7. Despacho de 4 agentes SWAT fuertemente armados (Flak SP 15, Assault Rifles).' },
+      { rank: 8, title: 'Comandante de Operaciones (Tactical Commander)', unlocks: 'Backup 8. 80% de probabilidad de respuesta rápida. Vehículos blindados antidisturbios.' },
+      { rank: 9, title: 'Inspector General (Chief Inspector)', unlocks: 'Backup 9. 90% de probabilidad. Despacho de escuadra de MAX-TAC (Ciberpsicópatas con licencia).' },
+      { rank: 10, title: 'Comisionado de Policía (Police Chief / MAX-TAC Commander)', unlocks: 'Backup 10. ¡Respuesta 100% garantizada! Escuadrón completo de MAX-TAC / C-SWAT con AV blindado.' }
+    ]
+  },
+  Fixer: {
+    role: 'Fixer',
+    abilityName: 'Operator (Operador)',
+    summary: 'Red de contactos, contrabando, regateo de precios y acceso a Mercados de Medianoche.',
+    statUsed: 'COOL',
+    mechanicsOverview: 'Se divide en 3 áreas: Contacts (determina el alcance de tu red de clientes e influencias), Haggling (ahorro o sobreprecio al comprar y vender) y Sourcing (acceso a comprar objetos de alto coste fuera del mercado común).',
+    ranks: [
+      { rank: 1, title: 'Revendedor de Esquina (Street Peddler)', unlocks: 'Operator 1. Puede localizar objetos Cheap y Everyday (hasta 100 €$). Contactos locales de barrio.' },
+      { rank: 2, title: 'Tráfico de Maletero (Bootlegger)', unlocks: 'Operator 2. Regateo básico: +/- 10% en tratos selectos. Acceso a munición estándar en volumen.' },
+      { rank: 3, title: 'Intermediario de Barrio (Local Broker)', unlocks: 'Operator 3. Puede conseguir objetos Costly y Premium (hasta 500 €$). Red en 2 distritos.' },
+      { rank: 4, title: 'Fixer Establecido (Connected Broker)', unlocks: 'Operator 4. Acceso a objetos Expensive (hasta 1,000 €$). Puede organizar Midnight Markets locales.' },
+      { rank: 5, title: 'Mercader de Sombras (Shadow Merchant)', unlocks: 'Operator 5. Regateo habitual de +/- 20%. Acceso a armamento militar y drogas de diseño.' },
+      { rank: 6, title: 'Señor del Mercado Negro (Black-Market Boss)', unlocks: 'Operator 6. Localiza objetos Very Expensive (hasta 5,000 €$) como chasis FBC o Metalgear.' },
+      { rank: 7, title: 'Operador de Élite (Elite Operator)', unlocks: 'Operator 7. Conexiones con contrabandistas internacionales y aerolíneas de carga clandestinas.' },
+      { rank: 8, title: 'Corredor de Alianzas (Alliance Broker)', unlocks: 'Operator 8. Puede adquirir objetos Luxury (hasta 10,000 €$). Organiza Midnight Markets exclusivos.' },
+      { rank: 9, title: 'Socio del Afterlife (Afterlife Kingpin)', unlocks: 'Operator 9. Mueve cargamentos de armas pesadas y ciberware militar de grado corporativo.' },
+      { rank: 10, title: 'Amo de los Contratos (Night City Shadow Emperor)', unlocks: 'Operator 10. Nivel Rogue Amendiares: puede conseguir cualquier objeto Super Luxury del planeta.' }
+    ]
+  },
+  Nomad: {
+    role: 'Nomad',
+    abilityName: 'Moto (Motor)',
+    summary: 'Acceso a vehículos de la Familia Nómada, modificaciones y personalizaciones mecánicas.',
+    statUsed: 'REF / TECH',
+    mechanicsOverview: 'Cada rango en Moto te permite sumar 1 vehículo al garaje familiar o añadir 1 mejora especializada (Heavy Chassis, NOS, Blindaje SP, Montura de Armas Pesadas, Camuflaje, etc.) a tus vehículos de tierra, mar o aire.',
+    ranks: [
+      { rank: 1, title: 'Cachorro de Clan (Pack Cub)', unlocks: 'Moto 1. Acceso a 1 Vehículo Terrestre básico (Compact Car o Moto) o 1 mejora de garaje.' },
+      { rank: 2, title: 'Explorador de Carretera (Outrider)', unlocks: 'Moto 2. 2 opciones de vehículo/mejora. Permite instalar mejoras de navegación todoterreno.' },
+      { rank: 3, title: 'Conductor de Caravana (Convoy Driver)', unlocks: 'Moto 3. Acceso a vehículos tipo Sedán o Pickup de carga. Reparaciones en convoy familiar.' },
+      { rank: 4, title: 'Piloto de Pistas (Highway Runner)', unlocks: 'Moto 4. 4 opciones. Acceso a Jet Ski o lanchas fueraborda para rutas fluviales.' },
+      { rank: 5, title: 'Guerrero del Camino (Road Warrior)', unlocks: 'Moto 5. Acceso a blindaje corporal reforzado en vehículos y monturas de ametralladora.' },
+      { rank: 6, title: 'Jefe de Escuadrón (Squad Leader)', unlocks: 'Moto 6. 6 opciones. Acceso a Camiones Pesados (Heavy Groundcar / Semirremolque) o Girocópteros.' },
+      { rank: 7, title: 'Capitán de Caravana (Caravan Captain)', unlocks: 'Moto 7. Vehículos de transporte masivo equipados con torretas controladas por cable.' },
+      { rank: 8, title: 'Jefe de Taller Nómada (Chief Gearhead)', unlocks: 'Moto 8. 8 opciones. Acceso a Aerodeslizadores AV-4 o lanchas blindadas de combate.' },
+      { rank: 9, title: 'Señor del Asfalto (Highway Legend)', unlocks: 'Moto 9. Conducción en condiciones extremas y velocidad sobrehumana con NOS militar.' },
+      { rank: 10, title: 'Jefe de Familia / Aldecaldo (Nomad Clan Chieftain)', unlocks: 'Moto 10. Toda una flota nómada a tu disposición con vehículos armados y helicópteros.' }
+    ]
+  },
+  Rockerboy: {
+    role: 'Rockerboy',
+    abilityName: 'Charismatic Impact (Impacto Carismático)',
+    summary: 'Magnetismo escénico, movilización de multitudes y devoción incondicional de los fanáticos.',
+    statUsed: 'COOL',
+    mechanicsOverview: 'Tira Charismatic Impact + 1d10 contra el DV según el tamaño de la audiencia o la dificultad de la petición. Puede convencer a un fan individual o a cientos de personas de ayudarte, conseguirte refugio, armar un motín o enfrentarse a la policía.',
+    ranks: [
+      { rank: 1, title: 'Músico de Garaje (Open-Mic Rebel)', unlocks: 'Impact 1. Afecta a un fan individual con DV 8. Puede conseguir bebidas gratis o firmas de apoyo.' },
+      { rank: 2, title: 'Artista Callejero (Busker)', unlocks: 'Impact 2. Puede convencer a un fan de hacer un favor menor (llevar un paquete, prestar un auto).' },
+      { rank: 3, title: 'Banda Local (Club Headliner)', unlocks: 'Impact 3. Afecta a grupos pequeños (hasta 6 fans). Refugio temporal en casa de un seguidor.' },
+      { rank: 4, title: 'Fenómeno Indie (Indie Sensation)', unlocks: 'Impact 4. Afecta a audiencias de 10-20 personas. Capaz de crear un tumulto que bloquee una calle.' },
+      { rank: 5, title: 'Estrella en Ascenso (Rising Star)', unlocks: 'Impact 5. Fanáticos devotos dispuestos a distraer guardias o esconder equipo clandestino.' },
+      { rank: 6, title: 'Héroe Contracultural (Counterculture Hero)', unlocks: 'Impact 6. Afecta a grupos de 100 personas. Puede convencer a un fan de cometer un delito menor por ti.' },
+      { rank: 7, title: 'Icono del Rock (Rock Icon)', unlocks: 'Impact 7. Multitudes de 500 personas. Capacidad de provocar disturbios contra una corporación rival.' },
+      { rank: 8, title: 'Voz de la Generación (Voice of a Generation)', unlocks: 'Impact 8. Fanáticos dispuestos a arriesgar su integridad física para protegerte de la policía.' },
+      { rank: 9, title: 'Mito Viviente (Living Myth)', unlocks: 'Impact 9. Movilización de miles de personas en conciertos callejeros clandestinos.' },
+      { rank: 10, title: 'Leyenda Inmortal (Johnny Silverhand Tier)', unlocks: 'Impact 10. Con un discurso puede iniciar una revolución armada contra las torres de Arasaka.' }
+    ]
+  }
+};
+

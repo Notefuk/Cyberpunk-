@@ -29,6 +29,7 @@ import {
   getWeaponClassAndRebuildInfo,
   getAmmoTypeTooltip as getAmmoTooltipInfo,
   getCyberwareCategoryTooltip,
+  CEMK_WEAPON_REBUILD_SYSTEM_GUIDE,
   type WeaponClassAndRebuildInfo
 } from '../../data/weaponAndCyberwareTooltips';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
@@ -44,6 +45,7 @@ import {
   Skull, 
   Brain, 
   Eye, 
+  EyeOff,
   Bone, 
   HeartCrack, 
   AlertOctagon, 
@@ -439,6 +441,7 @@ const STORAGE_KEY_ACTIVE_CENTER = 'cpr_combat_active_center_v3';
 const STORAGE_KEY_AUTO_EXPAND = 'cpr_telemetry_auto_expand_v1';
 const STORAGE_KEY_SHIELD_COVER = 'cpr_shield_cover_sdp_v1';
 const STORAGE_KEY_LEFT_PANELS_SIZE = 'cpr_left_panels_size_v1';
+const STORAGE_KEY_DISABLED_RIGHT_MODULES = 'cpr_combat_disabled_right_modules_v1';
 
 const QUICK_AMMO_TYPES = [
   'Basic',
@@ -768,6 +771,11 @@ export const CombatHudView: React.FC = () => {
   const buyAndEquipMartialArtChip = useCharacterStore((state) => state.buyAndEquipMartialArtChip);
   const toggleEquipMartialArtChip = useCharacterStore((state) => state.toggleEquipMartialArtChip);
   const updateSoloAllocation = useCharacterStore((state) => state.updateSoloAllocation);
+  const convertWeaponRebuild2077 = useCharacterStore((state) => state.convertWeaponRebuild2077);
+  const toggleEmpDisableCyberware = useCharacterStore((state) => state.toggleEmpDisableCyberware);
+  const clearAllEmpDisabledCyberware = useCharacterStore((state) => state.clearAllEmpDisabledCyberware);
+  const restAndHealDays = useCharacterStore((state) => state.restAndHealDays);
+  const repairCharacterArmor = useCharacterStore((state) => state.repairCharacterArmor);
 
   const selectedDistance = useCombatStore((state) => state.selectedDistance);
   const setSelectedDistance = useCombatStore((state) => state.setSelectedDistance);
@@ -855,6 +863,43 @@ export const CombatHudView: React.FC = () => {
   const [isRightTrayCollapsed, setIsRightTrayCollapsed] = useState<boolean>(false);
   const [sidePreviewModule, setSidePreviewModule] = useState<RightPanelId | null>(null);
   const [isTrayDragOver, setIsTrayDragOver] = useState<boolean>(false);
+
+  const [disabledRightModules, setDisabledRightModules] = useState<RightPanelId[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_DISABLED_RIGHT_MODULES);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {}
+    return [];
+  });
+
+  const toggleDisableRightModule = (modId: RightPanelId) => {
+    setDisabledRightModules((prev) => {
+      const exists = prev.includes(modId);
+      const next = exists ? prev.filter((id) => id !== modId) : [...prev, modId];
+      try {
+        localStorage.setItem(STORAGE_KEY_DISABLED_RIGHT_MODULES, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const [showRightModulesFilter, setShowRightModulesFilter] = useState(false);
+  const [empFeedback, setEmpFeedback] = useState<string | null>(null);
+  const [combatRestDays, setCombatRestDays] = useState<number>(1);
+  const [combatRestAntibodies, setCombatRestAntibodies] = useState<boolean>(false);
+  const [combatRestCryotank, setCombatRestCryotank] = useState<boolean>(false);
+  const [combatRestFeedback, setCombatRestFeedback] = useState<string | null>(null);
+  const [combatRepairFeedback, setCombatRepairFeedback] = useState<string | null>(null);
+  const [smartCoverBypass, setSmartCoverBypass] = useState<Record<string, boolean>>({});
+  const [powerRicochetActive, setPowerRicochetActive] = useState<Record<string, boolean>>({});
+  const [techChargeShotActive, setTechChargeShotActive] = useState<Record<string, boolean>>({});
+  const [openRebuildWorkshopsCombat, setOpenRebuildWorkshopsCombat] = useState<Record<string, boolean>>({});
+  const toggleRebuildWorkshopCombat = (instanceId: string) => {
+    setOpenRebuildWorkshopsCombat((prev) => ({ ...prev, [instanceId]: !prev[instanceId] }));
+  };
 
   const [leftPanelsConfig, setLeftPanelsConfig] = useState<LeftPanelsConfig>(() => {
     try {
@@ -2481,6 +2526,88 @@ export const CombatHudView: React.FC = () => {
                     {ENCUMBRANCE_MODES[activeChar?.encumbranceMode || 'none']?.description}
                   </p>
                 </div>
+
+                {/* Mini Descanso y Curación Canónica */}
+                <div className="mt-2.5 bg-[#141824] p-2.5 rounded-sm border border-[#232a3d] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-tech text-[11px] font-bold text-cyan-300 uppercase flex items-center gap-1.5">
+                      <Heart className="w-3.5 h-3.5 text-red-400" /> DESCANSO Y RECUPERACIÓN (CANON CORE p. 222)
+                    </span>
+                    <span className="text-[10px] font-mono-code text-slate-400">
+                      BODY: {effectiveBody}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-1.5 text-[10px] font-mono-code">
+                    <div className="flex items-center gap-1 bg-[#0f1118] p-1 rounded border border-[#1e2335]">
+                      <span className="text-slate-400">Días:</span>
+                      {[1, 3, 7].map((d) => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => setCombatRestDays(d)}
+                          className={`flex-1 py-0.5 rounded font-bold cursor-pointer transition-all ${
+                            combatRestDays === d ? 'bg-cyan-500 text-black' : 'bg-[#181d2a] text-slate-400 hover:text-white'
+                          }`}
+                        >
+                          {d}d
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setCombatRestAntibodies(!combatRestAntibodies)}
+                      className={`p-1 rounded text-center border font-bold cursor-pointer transition-all ${
+                        combatRestAntibodies ? 'bg-emerald-500 text-black border-emerald-400' : 'bg-[#0f1118] text-slate-400 border-[#1e2335]'
+                      }`}
+                      title="Enhanced Antibodies duplica la tasa (2× BODY)"
+                    >
+                      Antibodies: {combatRestAntibodies ? '2×' : '1×'}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setCombatRestCryotank(!combatRestCryotank)}
+                      className={`p-1 rounded text-center border font-bold cursor-pointer transition-all ${
+                        combatRestCryotank ? 'bg-cyan-500 text-black border-cyan-400' : 'bg-[#0f1118] text-slate-400 border-[#1e2335]'
+                      }`}
+                      title="Cámara Criogénica suma +BODY adicional por día"
+                    >
+                      Cryo: {combatRestCryotank ? '+BODY' : 'OFF'}
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1 border-t border-[#1e2335]">
+                    {(() => {
+                      const mult = (combatRestAntibodies ? 2 : 1) + (combatRestCryotank ? 1 : 0);
+                      const totalGain = effectiveBody * mult * combatRestDays;
+                      return (
+                        <>
+                          <span className="text-[10px] font-mono-code text-emerald-400">
+                            Recupera: +{totalGain} HP ({combatRestDays}d)
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              restAndHealDays(combatRestDays, combatRestAntibodies, combatRestCryotank);
+                              setCombatRestFeedback(`+${totalGain} HP recuperados tras ${combatRestDays} día(s).`);
+                              setTimeout(() => setCombatRestFeedback(null), 4000);
+                            }}
+                            className="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-tech text-xs font-bold uppercase transition-all cursor-pointer"
+                          >
+                            🛌 Descansar
+                          </button>
+                        </>
+                      );
+                    })()}
+                  </div>
+                  {combatRestFeedback && (
+                    <div className="text-[10px] font-mono-code text-emerald-300 bg-emerald-950/60 p-1 rounded border border-emerald-500/40">
+                      ✓ {combatRestFeedback}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             {renderLeftPanelResizeHandle('vitals')}
@@ -3096,6 +3223,58 @@ export const CombatHudView: React.FC = () => {
                     </div>
                   )}
                 </div>
+
+                {/* Barra Táctica de Reparación Rápida de Armaduras */}
+                <div className="bg-[#121622] p-2.5 rounded border border-[#21293e] space-y-2 mt-2">
+                  <div className="flex items-center justify-between text-[10px] font-mono-code">
+                    <span className="font-tech text-xs font-bold text-amber-300 uppercase flex items-center gap-1">
+                      <Shield className="w-3.5 h-3.5 text-amber-400" /> TALLER RÁPIDO DE REPARACIÓN DE BLINDAJE
+                    </span>
+                    <span className="text-slate-400">Core p. 140</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5 text-[10px] font-mono-code">
+                    <button
+                      type="button"
+                      disabled={!activeChar?.headArmor || activeChar.headArmor.currentSp >= activeChar.headArmor.maxSp}
+                      onClick={() => {
+                        repairCharacterArmor('head', 'full', 0);
+                        setCombatRepairFeedback('Cabeza reparada al 100% SP.');
+                        setTimeout(() => setCombatRepairFeedback(null), 3000);
+                      }}
+                      className="py-1 px-1.5 bg-[#1b2234] hover:bg-amber-500 hover:text-black disabled:opacity-40 disabled:cursor-not-allowed text-amber-300 border border-amber-500/30 rounded font-bold transition-all cursor-pointer truncate"
+                    >
+                      🛡️ Reparar Cabeza
+                    </button>
+                    <button
+                      type="button"
+                      disabled={!activeChar?.bodyArmor || activeChar.bodyArmor.currentSp >= activeChar.bodyArmor.maxSp}
+                      onClick={() => {
+                        repairCharacterArmor('body', 'full', 0);
+                        setCombatRepairFeedback('Torso reparado al 100% SP.');
+                        setTimeout(() => setCombatRepairFeedback(null), 3000);
+                      }}
+                      className="py-1 px-1.5 bg-[#1b2234] hover:bg-amber-500 hover:text-black disabled:opacity-40 disabled:cursor-not-allowed text-amber-300 border border-amber-500/30 rounded font-bold transition-all cursor-pointer truncate"
+                    >
+                      🛡️ Reparar Torso
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        repairCharacterArmor('both', 'full', 0);
+                        setCombatRepairFeedback('Todo el blindaje reparado al 100% SP.');
+                        setTimeout(() => setCombatRepairFeedback(null), 3000);
+                      }}
+                      className="py-1 px-1.5 bg-[#18261e] hover:bg-emerald-600 hover:text-white text-emerald-400 border border-emerald-500/40 rounded font-bold transition-all cursor-pointer truncate"
+                    >
+                      🛡️ Reparar Todo
+                    </button>
+                  </div>
+                  {combatRepairFeedback && (
+                    <div className="text-[10px] font-mono-code text-emerald-300 bg-emerald-950/60 p-1 rounded border border-emerald-500/40">
+                      ✓ {combatRepairFeedback}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             {renderLeftPanelResizeHandle('armor')}
@@ -3298,13 +3477,47 @@ export const CombatHudView: React.FC = () => {
       case 'cyberware': {
         const cyberwareCount = installedCyberware.length;
         const isCyberwareAutoFull = cyberwareCount > 3 && leftPanelSizeMode['cyberware'] !== 'compact';
+        const empDisabledCount = (activeChar?.empDisabledCyberwareIds || []).length;
+
+        const handleEmpResistanceRoll = () => {
+          ensureTelemetryExpanded();
+          const techStat = activeChar?.stats?.TECH ?? 6;
+          const cybertechSkill = activeChar?.skills?.cybertech ?? 2;
+          const d10 = Math.floor(Math.random() * 10) + 1;
+          const total = techStat + cybertechSkill + d10;
+          const isSuccess = total >= 15;
+
+          const entry: RollEntry = {
+            id: `emp-resist-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+            timestamp: new Date().toISOString(),
+            type: 'skill',
+            weaponName: '⚡ Resistencia a EMP / Malfunction',
+            statName: 'TECH',
+            statVal: techStat,
+            skillName: 'Cybertech',
+            skillVal: cybertechSkill,
+            d10,
+            totalAttack: total,
+            targetDv: 15,
+            isHit: isSuccess
+          };
+          addRollEntry(entry);
+
+          setEmpFeedback(
+            isSuccess
+              ? `✅ ¡ÉXITO! Tiraste ${total} vs DV 15 (TECH ${techStat} + Cybertech ${cybertechSkill} + d10 ${d10}). Tu ciberware resiste el pulso.`
+              : `❌ ¡FALLO! Tiraste ${total} vs DV 15 (TECH ${techStat} + Cybertech ${cybertechSkill} + d10 ${d10}). Tu ciberware sufre apagado o avería.`
+          );
+          setTimeout(() => setEmpFeedback(null), 6000);
+        };
+
         return (
           <CollapsibleHudCard
             key="cyberware"
             id="cyberware"
             title={`CIBERIMPLANTES (${cyberwareCount})`}
             icon={<Zap className="w-3.5 h-3.5 text-[#a855f7]" />}
-            summary={`${cyberwareCount} implante(s) instalados`}
+            summary={`${cyberwareCount} implante(s) instalados${empDisabledCount > 0 ? ` | ⚡ ${empDisabledCount} OFF` : ''}`}
             isCollapsed={isCollapsed}
             onToggleCollapse={() => toggleBoxCollapse('cyberware')}
             canMoveUp={canMoveUp}
@@ -3318,29 +3531,111 @@ export const CombatHudView: React.FC = () => {
             extraHeaderActions={renderLeftPanelHeaderControls('cyberware', isCyberwareAutoFull, cyberwareCount)}
           >
             <div className={getLeftPanelClass('cyberware', isCyberwareAutoFull)} style={getLeftPanelStyle('cyberware', isCyberwareAutoFull)}>
+              {/* Barra de Gestión de EMP y Averías */}
+              <div className="p-2 bg-[#10121c] rounded border border-[#21273c] space-y-2 mb-2">
+                <div className="flex items-center justify-between flex-wrap gap-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-tech text-xs font-bold text-purple-300 uppercase flex items-center gap-1">
+                      <Zap className="w-3.5 h-3.5 text-purple-400" /> RESISTENCIA A EMP (DV 15)
+                    </span>
+                    {empDisabledCount > 0 && (
+                      <span className="text-[9px] font-mono-code px-1.5 py-0.2 rounded bg-red-950/80 text-red-400 border border-red-500/50 font-bold animate-pulse">
+                        ⚡ {empDisabledCount} APAGADOS
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={handleEmpResistanceRoll}
+                      className="px-2 py-0.5 rounded text-[10px] font-mono-code font-bold bg-[#1a2136] hover:bg-purple-600 hover:text-white text-purple-300 border border-purple-500/40 transition-colors cursor-pointer flex items-center gap-1"
+                      title="Chequeo canónico de resistencia contra pulsos EMP (TECH + Cybertech + 1d10 vs DV 15)"
+                    >
+                      <Dices className="w-3 h-3" />
+                      <span>Tirada vs DV 15</span>
+                    </button>
+
+                    {empDisabledCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => clearAllEmpDisabledCyberware()}
+                        className="px-2 py-0.5 rounded text-[10px] font-mono-code font-bold bg-[#15241d] hover:bg-emerald-600 hover:text-white text-emerald-400 border border-emerald-500/40 transition-colors cursor-pointer"
+                        title="Reiniciar todo el ciberware apagado y restaurar energía"
+                      >
+                        🔄 Reiniciar Todo
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {empFeedback && (
+                  <div className="text-[10px] font-mono-code p-1.5 rounded border border-[#2d3855] bg-[#141826] text-slate-200">
+                    {empFeedback}
+                  </div>
+                )}
+              </div>
+
               {cyberwareCount === 0 ? (
                 <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
                   Sin ciberimplantes registrados en este personaje.
                 </div>
               ) : (
                 <div className="space-y-1.5">
-                  {installedCyberware.map((c: any) => (
-                    <div key={c.id} className="p-2 bg-[#171923] border border-[#222636] rounded-xs font-mono-code text-[11px]">
-                      <div className="flex items-center justify-between font-bold text-white mb-0.5">
-                        <span className="text-[#a855f7]">{c.name}</span>
-                        <CyberCategoryTooltip category={c.type || 'Cyberware'}>
-                          <span className="text-[9px] text-[#a855f7] bg-purple-950/40 px-1 py-0.5 rounded border border-purple-500/30 uppercase cursor-help hover:border-purple-400">
-                            {c.type || 'Cyberware'}
-                          </span>
-                        </CyberCategoryTooltip>
+                  {installedCyberware.map((c: any) => {
+                    const isEmpDisabled = (activeChar?.empDisabledCyberwareIds || []).includes(c.id);
+
+                    return (
+                      <div
+                        key={c.id}
+                        className={`p-2 rounded-xs font-mono-code text-[11px] border transition-all ${
+                          isEmpDisabled
+                            ? 'bg-[#1b1014] border-red-500/70 shadow-xs'
+                            : 'bg-[#171923] border-[#222636]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between font-bold text-white mb-0.5 gap-2">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className={isEmpDisabled ? 'text-red-400 line-through truncate' : 'text-[#a855f7] truncate'}>
+                              {c.name}
+                            </span>
+                            {isEmpDisabled && (
+                              <span className="text-[8px] font-mono-code px-1 rounded bg-red-950 text-red-300 border border-red-500/50 font-bold shrink-0">
+                                ⚡ EMP OFF
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <CyberCategoryTooltip category={c.type || 'Cyberware'}>
+                              <span className="text-[9px] text-[#a855f7] bg-purple-950/40 px-1 py-0.5 rounded border border-purple-500/30 uppercase cursor-help hover:border-purple-400">
+                                {c.type || 'Cyberware'}
+                              </span>
+                            </CyberCategoryTooltip>
+
+                            <button
+                              type="button"
+                              onClick={() => toggleEmpDisableCyberware(c.id)}
+                              className={`px-1.5 py-0.5 rounded text-[9px] font-mono-code font-bold transition-all cursor-pointer border ${
+                                isEmpDisabled
+                                  ? 'bg-red-950/80 text-red-300 border-red-500 hover:bg-red-900'
+                                  : 'bg-[#121522] text-slate-400 border-[#252c42] hover:text-white hover:border-slate-500'
+                              }`}
+                              title={isEmpDisabled ? 'Ciberware apagado. Clic para reactivar.' : 'Simular apagado por EMP o Quickhack'}
+                            >
+                              {isEmpDisabled ? '⚡ OFF' : '🟢 ON'}
+                            </button>
+                          </div>
+                        </div>
+
+                        {c.description && (
+                          <p className="text-[10px] text-[#94a3b8] leading-tight line-clamp-2">
+                            {c.description}
+                          </p>
+                        )}
                       </div>
-                      {c.description && (
-                        <p className="text-[10px] text-[#94a3b8] leading-tight line-clamp-2">
-                          {c.description}
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -4101,6 +4396,122 @@ export const CombatHudView: React.FC = () => {
                         </button>
                       </div>
                     </div>
+
+                    {/* Barra de Rebuild 2077: Badges y Toggles de Combate */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1 text-[10px] font-mono-code">
+                      {weaponInfo.rebuildBadge && (
+                        <span className="px-1.5 py-0.5 rounded bg-amber-950/70 text-amber-300 border border-amber-500/50 font-bold uppercase">
+                          {weaponInfo.rebuildBadge}
+                        </span>
+                      )}
+
+                      {w.rebuild2077 === 'smart' && (
+                        <button
+                          type="button"
+                          onClick={() => setSmartCoverBypass(prev => ({ ...prev, [w.instanceId]: !prev[w.instanceId] }))}
+                          className={`px-2 py-0.5 rounded border transition-all cursor-pointer font-bold ${
+                            smartCoverBypass[w.instanceId]
+                              ? 'bg-cyan-500 text-black border-cyan-400'
+                              : 'bg-[#121622] text-cyan-300 border-cyan-500/40 hover:bg-[#1a2030]'
+                          }`}
+                          title="Bypass de cobertura (-4 tirada, ignora línea de visión directa)"
+                        >
+                          🎯 Cobertura Smart (-4): {smartCoverBypass[w.instanceId] ? 'ACTIVO' : 'OFF'}
+                        </button>
+                      )}
+
+                      {w.rebuild2077 === 'power' && (
+                        <button
+                          type="button"
+                          onClick={() => setPowerRicochetActive(prev => ({ ...prev, [w.instanceId]: !prev[w.instanceId] }))}
+                          className={`px-2 py-0.5 rounded border transition-all cursor-pointer font-bold ${
+                            powerRicochetActive[w.instanceId]
+                              ? 'bg-amber-500 text-black border-amber-400'
+                              : 'bg-[#1c1417] text-amber-300 border-amber-500/40 hover:bg-[#281b20]'
+                          }`}
+                          title="Rebote cinético / Ricochet (-4 tirada, +5 daño en herida crítica)"
+                        >
+                          💥 Ricochet Rebote (-4): {powerRicochetActive[w.instanceId] ? 'ACTIVO' : 'OFF'}
+                        </button>
+                      )}
+
+                      {w.rebuild2077 === 'tech' && (
+                        <button
+                          type="button"
+                          onClick={() => setTechChargeShotActive(prev => ({ ...prev, [w.instanceId]: !prev[w.instanceId] }))}
+                          className={`px-2 py-0.5 rounded border transition-all cursor-pointer font-bold ${
+                            techChargeShotActive[w.instanceId]
+                              ? 'bg-emerald-500 text-black border-emerald-400'
+                              : 'bg-[#101c18] text-emerald-300 border-emerald-500/40 hover:bg-[#162922]'
+                          }`}
+                          title="Disparo Cargado (Ignora 50% SP o penetra coberturas finas)"
+                        >
+                          ⚡ Disparo Cargado (50% SP): {techChargeShotActive[w.instanceId] ? 'ACTIVO' : 'OFF'}
+                        </button>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={() => toggleRebuildWorkshopCombat(w.instanceId)}
+                        className="ml-auto px-2 py-0.5 rounded text-[9px] bg-[#1a1f30] hover:bg-amber-500 hover:text-black text-amber-300 border border-amber-500/40 transition-colors cursor-pointer"
+                        title="Abrir taller de conversión Rebuild 2077 para esta arma"
+                      >
+                        🔧 Rebuild Workshop
+                      </button>
+                    </div>
+
+                    {/* Desplegable Taller de Rebuild 2077 */}
+                    {openRebuildWorkshopsCombat[w.instanceId] && (
+                      <div className="p-2.5 bg-[#0d0f17] border border-amber-500/40 rounded space-y-2 animate-fade-in text-[10px] font-mono-code">
+                        <div className="flex items-center justify-between">
+                          <span className="font-tech text-xs font-bold text-amber-300 uppercase">
+                            🔧 TALLER DE REBUILD 2077 // {w.name}
+                          </span>
+                          <span className="text-[9px] text-slate-400">
+                            Estado: <strong className="text-white uppercase">{w.rebuild2077 || 'Estándar 2045'}</strong>
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
+                          {CEMK_WEAPON_REBUILD_SYSTEM_GUIDE.rebuildOptions.map((opt) => {
+                            const isCurrent = w.rebuild2077 === opt.type;
+                            return (
+                              <div
+                                key={opt.type}
+                                className={`p-1.5 rounded border flex flex-col justify-between gap-1.5 ${
+                                  isCurrent ? 'bg-amber-950/50 border-amber-500 text-white' : 'bg-[#131622] border-[#22283a] text-slate-300'
+                                }`}
+                              >
+                                <div>
+                                  <div className="font-tech font-bold text-xs text-amber-300">{opt.name}</div>
+                                  <div className="text-[9px] text-slate-400 line-clamp-2 mt-0.5">{opt.specialAbility}</div>
+                                </div>
+                                <button
+                                  type="button"
+                                  disabled={isCurrent}
+                                  onClick={() => convertWeaponRebuild2077(w.instanceId, opt.type as any, 0)}
+                                  className={`w-full py-0.5 rounded text-[9px] font-tech font-bold uppercase transition-all cursor-pointer ${
+                                    isCurrent ? 'bg-slate-800 text-slate-500' : 'bg-amber-500 hover:bg-amber-400 text-black'
+                                  }`}
+                                >
+                                  {isCurrent ? 'Instalado' : 'Convertir (Gratis)'}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {w.rebuild2077 && w.rebuild2077 !== 'standard' && (
+                          <div className="flex justify-end pt-1 border-t border-[#1e2333]">
+                            <button
+                              type="button"
+                              onClick={() => convertWeaponRebuild2077(w.instanceId, 'standard', 0)}
+                              className="px-2 py-0.5 bg-[#161a26] hover:bg-red-950 text-slate-400 hover:text-red-300 border border-[#272e42] rounded text-[9px] transition-colors cursor-pointer"
+                            >
+                              🔄 Restaurar a Estándar 2045
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Fila 2: Botones de Disparo / Ataque Siempre a Mano */}
                     <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 pt-2 border-t border-[#1f2334]">
@@ -4937,6 +5348,44 @@ export const CombatHudView: React.FC = () => {
                                     />
                                   </div>
                                 )}
+
+                                {/* Taller Rebuild 2077 en Rack Táctico */}
+                                <div className="pt-2 border-t border-[#1a1f2e] space-y-1.5">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[10px] font-tech font-bold text-amber-300 uppercase">
+                                      🔧 Rebuild 2077 ({w.rebuild2077 ? w.rebuild2077.toUpperCase() : 'Estándar 2045'})
+                                    </span>
+                                  </div>
+                                  <div className="grid grid-cols-3 gap-1">
+                                    {(['power', 'smart', 'tech'] as const).map((rType) => {
+                                      const isCur = w.rebuild2077 === rType;
+                                      return (
+                                        <button
+                                          key={rType}
+                                          type="button"
+                                          disabled={isCur}
+                                          onClick={() => convertWeaponRebuild2077(w.instanceId, rType, 0)}
+                                          className={`py-1 rounded text-[9px] font-tech font-bold uppercase transition-all cursor-pointer ${
+                                            isCur
+                                              ? 'bg-amber-500 text-black shadow-xs'
+                                              : 'bg-[#151928] hover:bg-amber-500/20 text-slate-300 border border-[#232b3f]'
+                                          }`}
+                                        >
+                                          {isCur ? `✓ ${rType}` : `+ ${rType}`}
+                                        </button>
+                                      );
+                                    })}
+                                  </div>
+                                  {w.rebuild2077 && w.rebuild2077 !== 'standard' && (
+                                    <button
+                                      type="button"
+                                      onClick={() => convertWeaponRebuild2077(w.instanceId, 'standard', 0)}
+                                      className="text-[9px] text-slate-400 hover:text-red-400 hover:underline cursor-pointer block"
+                                    >
+                                      Quitar Rebuild (Restaurar 2045)
+                                    </button>
+                                  )}
+                                </div>
 
                                 <div className="pt-2 border-t border-[#1a1f2e] flex items-center justify-between">
                                   <span className="text-[10px] font-mono-code text-[#64748b]">
@@ -7003,15 +7452,73 @@ export const CombatHudView: React.FC = () => {
                     {activeCenterModules.length}/7
                   </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setIsRightTrayCollapsed(true)}
-                  className="p-1 rounded bg-[#161a26] hover:bg-[#252c3e] text-slate-400 hover:text-white transition-colors cursor-pointer"
-                  title="Plegar a barra delgada"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowRightModulesFilter(!showRightModulesFilter)}
+                    className={`px-1.5 py-0.5 rounded text-[9px] font-mono-code transition-colors cursor-pointer border ${
+                      disabledRightModules.length > 0
+                        ? 'bg-red-950/80 text-red-300 border-red-500/60 font-bold'
+                        : 'bg-[#161a26] hover:bg-[#252c3e] text-slate-400 hover:text-white border-[#2b334a]'
+                    }`}
+                    title="Filtro de decluttering: Ocultar o mostrar módulos de la bandeja derecha"
+                  >
+                    ⚙️ Filtro {disabledRightModules.length > 0 ? `(${disabledRightModules.length} OFF)` : ''}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsRightTrayCollapsed(true)}
+                    className="p-1 rounded bg-[#161a26] hover:bg-[#252c3e] text-slate-400 hover:text-white transition-colors cursor-pointer"
+                    title="Plegar a barra delgada"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
+
+              {/* Panel de Filtro de Decluttering */}
+              {showRightModulesFilter && (
+                <div className="p-2.5 bg-[#0a0c13] border border-cyan-500/40 rounded space-y-1.5 text-[10px] font-mono-code animate-fade-in">
+                  <div className="flex items-center justify-between text-slate-300 font-bold pb-1 border-b border-[#1f2538]">
+                    <span>👁️ VISIBILIDAD DE MÓDULOS</span>
+                    {disabledRightModules.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDisabledRightModules([]);
+                          localStorage.setItem(STORAGE_KEY_DISABLED_RIGHT_MODULES, JSON.stringify([]));
+                        }}
+                        className="text-[9px] text-cyan-400 hover:underline cursor-pointer"
+                      >
+                        Mostrar Todos
+                      </button>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    {RIGHT_MODULES_METADATA.map((m) => {
+                      const isHidden = disabledRightModules.includes(m.id);
+                      return (
+                        <div key={m.id} className="flex items-center justify-between py-0.5">
+                          <span className={isHidden ? 'text-slate-500 line-through' : 'text-white'}>
+                            {m.shortTitle}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => toggleDisableRightModule(m.id)}
+                            className={`px-1.5 py-0.2 rounded text-[9px] font-bold border transition-colors cursor-pointer ${
+                              isHidden
+                                ? 'bg-red-950/60 text-red-400 border-red-500/50'
+                                : 'bg-emerald-950/60 text-emerald-400 border-emerald-500/50'
+                            }`}
+                          >
+                            {isHidden ? 'Oculto' : 'Visible'}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* Botones de Preset 1-Click */}
               <div className="space-y-1">
@@ -7093,6 +7600,7 @@ export const CombatHudView: React.FC = () => {
               {RIGHT_MODULES_METADATA.map((mod) => {
                 const isActive = activeCenterModules.includes(mod.id);
                 const isPreviewing = sidePreviewModule === mod.id;
+                const isModuleDisabled = disabledRightModules.includes(mod.id);
 
                 return (
                   <div
@@ -7100,7 +7608,9 @@ export const CombatHudView: React.FC = () => {
                     draggable
                     onDragStart={() => handleDragStart('tray', mod.id)}
                     className={`chamfer-card p-2.5 rounded transition-all ${
-                      isActive
+                      isModuleDisabled
+                        ? 'opacity-40 bg-[#0a0b10] border border-red-950 hover:opacity-75'
+                        : isActive
                         ? 'bg-[#121522] border border-cyan-500/40 shadow-sm'
                         : 'bg-[#0d0f16] border border-[#1f2434] hover:border-[#2f374e] opacity-85 hover:opacity-100'
                     }`}
@@ -7118,15 +7628,31 @@ export const CombatHudView: React.FC = () => {
                           {mod.shortTitle}
                         </span>
                       </div>
-                      <span
-                        className={`text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded shrink-0 ${
-                          isActive
-                            ? 'bg-cyan-950 text-cyan-300 border border-cyan-600/50'
-                            : 'bg-[#161a24] text-slate-500 border border-[#232838]'
-                        }`}
-                      >
-                        {isActive ? '✅ CENTRO' : '💤 BANDEJA'}
-                      </span>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => toggleDisableRightModule(mod.id)}
+                          className={`p-0.5 rounded transition-colors cursor-pointer border ${
+                            isModuleDisabled
+                              ? 'bg-red-950/80 text-red-400 border-red-500/50'
+                              : 'bg-[#141724] text-slate-400 hover:text-white border-[#242b3e]'
+                          }`}
+                          title={isModuleDisabled ? 'Módulo silenciado / oculto. Clic para reactivar.' : 'Silenciar módulo (clutter filter)'}
+                        >
+                          {isModuleDisabled ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+                        </button>
+                        <span
+                          className={`text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded shrink-0 ${
+                            isModuleDisabled
+                              ? 'bg-red-950/60 text-red-400 border border-red-500/40'
+                              : isActive
+                              ? 'bg-cyan-950 text-cyan-300 border border-cyan-600/50'
+                              : 'bg-[#161a24] text-slate-500 border border-[#232838]'
+                          }`}
+                        >
+                          {isModuleDisabled ? '🚫 SILENCIADO' : isActive ? '✅ CENTRO' : '💤 BANDEJA'}
+                        </span>
+                      </div>
                     </div>
 
                     <div className="text-[10px] font-mono-code text-slate-400 mb-1.5 truncate">

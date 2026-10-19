@@ -335,7 +335,7 @@ export const RedChromeCargoView: React.FC = () => {
     manifestRevealed: boolean;
     netActionLog: string[];
   }>({
-    unlockedFloors: [],
+    unlockedFloors: [1],
     hellhoundRez: 20,
     manifestRevealed: false,
     netActionLog: ['[NET] Interfaz con cable físico (Interface Plugs) lista en Middle Car.']
@@ -1353,9 +1353,140 @@ export const RedChromeCargoView: React.FC = () => {
                   </span>
                 </div>
 
+                {/* 👑 CONTROL DEL MASTER (GM): DESBLOQUEAR / OCULTAR PISOS NET */}
+                <div className="bg-[#0b0e17] border border-cyan-500/40 p-2.5 rounded-xs space-y-2">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-tech text-xs font-bold text-amber-300 uppercase">
+                        👑 CONTROL DEL MASTER (GM): DESBLOQUEAR / OCULTAR PISOS NET
+                      </span>
+                      <span className="text-[9px] font-mono-code text-cyan-300 bg-cyan-950/80 px-1.5 py-0.2 rounded border border-cyan-700/50">
+                        Niebla de Guerra
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nextLocked = HAMMERHEAD_MAINFRAME_NET.floors
+                            .map((f) => f.floorNumber)
+                            .find((fn) => !mainframeProgress.unlockedFloors.includes(fn));
+                          if (nextLocked) {
+                            setMainframeProgress((prev) => ({
+                              ...prev,
+                              unlockedFloors: [...prev.unlockedFloors, nextLocked]
+                            }));
+                          }
+                        }}
+                        className="px-2 py-0.5 bg-cyan-950 hover:bg-cyan-800 text-cyan-200 border border-cyan-600/60 rounded text-[9px] font-mono-code font-bold transition-all cursor-pointer"
+                        title="Desbloquear siguiente piso bloqueado"
+                      >
+                        🔓 Desbloquear Siguiente Piso
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setMainframeProgress((prev) => ({
+                            ...prev,
+                            unlockedFloors: HAMMERHEAD_MAINFRAME_NET.floors.map((f) => f.floorNumber)
+                          }))
+                        }
+                        className="px-2 py-0.5 bg-purple-950 hover:bg-purple-800 text-purple-200 border border-purple-600/60 rounded text-[9px] font-mono-code font-bold transition-all cursor-pointer"
+                        title="Revelar todos los pisos (Modo GM)"
+                      >
+                        👁️ Revelar Todos (Modo GM)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setMainframeProgress((prev) => ({
+                            ...prev,
+                            unlockedFloors: [1]
+                          }))
+                        }
+                        className="px-2 py-0.5 bg-red-950 hover:bg-red-800 text-red-200 border border-red-600/60 rounded text-[9px] font-mono-code font-bold transition-all cursor-pointer"
+                        title="Ocultar pisos del 2 en adelante para los jugadores"
+                      >
+                        🔒 Ocultar Todos (Modo Jugador)
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 flex-wrap pt-1.5 border-t border-[#1a253a]">
+                    {HAMMERHEAD_MAINFRAME_NET.floors.map((fl) => {
+                      const isUn = mainframeProgress.unlockedFloors.includes(fl.floorNumber);
+                      return (
+                        <button
+                          key={`gm-hammerhead-${fl.floorNumber}`}
+                          type="button"
+                          onClick={() => {
+                            setMainframeProgress((prev) => ({
+                              ...prev,
+                              unlockedFloors: isUn
+                                ? prev.unlockedFloors.filter((fn) => fn !== fl.floorNumber)
+                                : [...prev.unlockedFloors, fl.floorNumber]
+                            }));
+                          }}
+                          className={`px-2 py-0.5 rounded text-[9px] font-mono-code font-bold border transition-all cursor-pointer ${
+                            isUn
+                              ? 'bg-emerald-950/70 text-emerald-300 border-emerald-600/60 hover:bg-emerald-900'
+                              : 'bg-red-950/50 text-red-400 border-red-800/50 hover:bg-red-900'
+                          }`}
+                        >
+                          {isUn ? `🔓 Piso ${fl.floorNumber}` : `🔒 Piso ${fl.floorNumber}`}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
                   {HAMMERHEAD_MAINFRAME_NET.floors.map(fl => {
                     const isUnlocked = mainframeProgress.unlockedFloors.includes(fl.floorNumber);
+
+                    if (!isUnlocked) {
+                      return (
+                        <div
+                          key={fl.floorNumber}
+                          className="p-2 rounded border border-red-950/60 bg-[#0b0e17] flex flex-col justify-between space-y-1.5 opacity-75 hover:opacity-100 hover:border-red-500/40 transition-all cursor-pointer"
+                          onClick={() => {
+                            setMainframeProgress(prev => ({
+                              ...prev,
+                              unlockedFloors: [...prev.unlockedFloors, fl.floorNumber]
+                            }));
+                          }}
+                        >
+                          <div>
+                            <div className="flex items-center justify-between border-b border-red-900/40 pb-1">
+                              <span className="text-[10px] font-bold text-red-400">PISO {fl.floorNumber}</span>
+                              <Lock className="w-3 h-3 text-red-400" />
+                            </div>
+                            <strong className="text-red-300 text-[11px] block mt-1 line-clamp-2">
+                              🔒 PISO #{fl.floorNumber}: NODO ENCRIPTADO (CONTENIDO OCULTO PARA EL NETRUNNER)
+                            </strong>
+                            <span className="text-[9px] text-slate-400 block mt-1 leading-snug">
+                              Contenido protegido tras niebla de guerra. Solo se revela al entrar físicamente a este piso, escanearlo con Pathfinder o cuando el Master lo desbloquea.
+                            </span>
+                          </div>
+                          <div className="pt-1 border-t border-red-900/30">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setMainframeProgress(prev => ({
+                                  ...prev,
+                                  unlockedFloors: [...prev.unlockedFloors, fl.floorNumber]
+                                }));
+                              }}
+                              className="w-full py-1 bg-red-950 hover:bg-red-900 text-red-200 border border-red-700/60 rounded text-[9px] font-bold cursor-pointer"
+                            >
+                              🔓 Desbloquear Piso
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    }
 
                     return (
                       <div

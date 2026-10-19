@@ -34,6 +34,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
     hazards_environment: true,
     healing_death_save: true,
     turn_structure: true,
+    turn_all_actions: true,
     'fbc-rules': true,
     'neuroport-2077': true
   });
@@ -85,6 +86,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
       hazards_environment: false,
       healing_death_save: false,
       turn_structure: false,
+      turn_all_actions: false,
       'fbc-rules': false,
       'neuroport-2077': false
     };
@@ -124,6 +126,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
       hazards_environment: true,
       healing_death_save: true,
       turn_structure: true,
+      turn_all_actions: true,
       'fbc-rules': true,
       'neuroport-2077': true
     };
@@ -200,6 +203,12 @@ export const RulesCheatSheetDrawer: React.FC = () => {
 
   const showCoverTable = (selectedCategory === 'all' || selectedCategory === 'cover') && 
     (searchQuery.trim() === '' || filteredCoverItems.length > 0 || 'cobertura'.includes(searchQuery.toLowerCase()));
+
+  const showTurnActions = (selectedCategory === 'all' || selectedCategory === 'turn') &&
+    (searchQuery.trim() === '' || 
+      'todas las acciones en tu turno move action free hold discreción gm'.includes(searchQuery.toLowerCase()) ||
+      'attack aimed shot autofire suppressive fire grab choke throw reload run get up prone hold action stabilize first aid use an object use a skill vehicle maneuver net action quickhack tech charge power ricochet smart lock'.includes(searchQuery.toLowerCase()) ||
+      'acciones no escritas ventana mesa cobertura desenfundar botiquin emboscada recargar puerta'.includes(searchQuery.toLowerCase()));
 
   return (
     <>
@@ -352,6 +361,349 @@ export const RulesCheatSheetDrawer: React.FC = () => {
         {/* CONTENIDO DESPLAZABLE DEL DRAWER */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           
+          {/* =========================================================
+              ⏱️ TODAS LAS ACCIONES EN TU TURNO (MOVE, ACTION, FREE, HOLD & DISCRECIÓN DEL GM)
+          ========================================================= */}
+          {showTurnActions && (
+            <div className="bg-[#10131e] border border-cyan-500/40 rounded-xs overflow-hidden shadow-xl">
+              {/* Header Acordeón Principal */}
+              <div
+                onClick={() => toggleSection('turn_all_actions')}
+                className="p-3 bg-gradient-to-r from-[#131b2e] via-[#18233c] to-[#10131e] hover:bg-[#1c2948] border-b border-cyan-500/40 flex items-center justify-between cursor-pointer transition-colors select-none"
+              >
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-cyan-400" />
+                  <span className="font-tech text-xs font-bold text-white uppercase tracking-wider">
+                    ⏱️ TODAS LAS ACCIONES EN TU TURNO (MOVE, ACTION, FREE, HOLD & DISCRECIÓN DEL GM)
+                  </span>
+                  <span className="text-[10px] text-cyan-400 bg-cyan-950/80 px-1.5 py-0.2 rounded-xs border border-cyan-600/40 font-mono-code font-bold">
+                    Core pp. 168-175 + CEMK
+                  </span>
+                </div>
+                <span className="text-slate-400">
+                  {isSectionExpanded('turn_all_actions') ? <ChevronDown className="w-4 h-4 text-cyan-400" /> : <ChevronRight className="w-4 h-4" />}
+                </span>
+              </div>
+
+              {isSectionExpanded('turn_all_actions') && (
+                <div className="p-3.5 space-y-4 text-xs font-sans">
+                  {/* Resumen de Estructura de Turno */}
+                  <div className="bg-[#0b0e17] p-3 rounded-xs border border-cyan-500/30 text-[11px] text-slate-300 leading-relaxed font-mono-code">
+                    <p>
+                      Cada Ronda de Combate dura exactamente <strong className="text-cyan-400">3 segundos</strong>. En tu Turno dispones de:
+                    </p>
+                    <ul className="list-disc pl-4 mt-1.5 space-y-1 text-slate-300">
+                      <li><strong className="text-emerald-400">1 Acción de Movimiento (Move Action):</strong> Puedes fraccionarla antes, durante o después de tu Acción Estándar.</li>
+                      <li><strong className="text-amber-400">1 Acción Estándar (Standard Action):</strong> El impacto principal de tu turno (atacar, usar habilidad, hackear, etc.).</li>
+                      <li><strong className="text-purple-400">Acciones Gratuitas (Free Actions):</strong> Acciones instantáneas como tirarse al suelo o gritar una frase corta.</li>
+                      <li><strong className="text-cyan-400">Acción Sostenida (Hold Action):</strong> Preparar una acción con un detonante condicional observable.</li>
+                    </ul>
+                  </div>
+
+                  {/* 1. ACCIONES DE MOVIMIENTO */}
+                  <div className="bg-[#0c101c] border border-emerald-500/30 rounded-xs overflow-hidden">
+                    <div
+                      onClick={() => toggleRuleCollapse('turn_move_actions')}
+                      className="p-2.5 bg-emerald-950/20 hover:bg-emerald-950/40 flex items-center justify-between cursor-pointer select-none border-b border-emerald-500/30 text-emerald-300 font-bold"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        {isRuleCollapsed('turn_move_actions') ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                        <span>🏃 1. ACCIONES DE MOVIMIENTO (MOVE ACTIONS)</span>
+                      </div>
+                      <span className="text-[9px] font-mono-code font-normal text-emerald-400">
+                        {isRuleCollapsed('turn_move_actions') ? '[▸ Desplegar]' : '[▾ Plegar]'}
+                      </span>
+                    </div>
+
+                    {!isRuleCollapsed('turn_move_actions') && (
+                      <div className="p-3 space-y-2 font-mono-code text-[11px]">
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs">
+                          <strong className="text-white block">Movimiento Estándar:</strong>
+                          <span className="text-slate-300">
+                            Te desplazas hasta tantos metros/casillas como tu valor de <span className="text-emerald-400 font-bold">MOVE</span>. Puedes dividir libremente el movimiento: por ejemplo, salir 2m de cobertura, disparar tu arma (Acción Estándar) y retroceder 2m de nuevo tras cobertura.
+                          </span>
+                        </div>
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs">
+                          <strong className="text-white block">Gatear / Arrastrarse (Crawl - Prone):</strong>
+                          <span className="text-slate-300">
+                            Si estás derribado (Prone), solo puedes avanzar a la <span className="text-amber-400 font-bold">mitad de tu MOVE</span> (redondeado hacia abajo) arrastrándote por el piso.
+                          </span>
+                        </div>
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs">
+                          <strong className="text-white block">Trepar, Nadar y Terreno Difícil:</strong>
+                          <span className="text-slate-300">
+                            Avanzar por escaleras verticales, aguas turbulentas o escombros densos cuesta el <span className="text-cyan-400 font-bold">doble de movimiento</span> (cada metro avanzado consume 2 metros de tu MOVE). Saltos de longitud o altura extremos requieren tirada de Athletics.
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 2. TODAS LAS ACCIONES ESTÁNDAR CANÓNICAS */}
+                  <div className="bg-[#0c101c] border border-amber-500/30 rounded-xs overflow-hidden">
+                    <div
+                      onClick={() => toggleRuleCollapse('turn_standard_actions')}
+                      className="p-2.5 bg-amber-950/20 hover:bg-amber-950/40 flex items-center justify-between cursor-pointer select-none border-b border-amber-500/30 text-amber-300 font-bold"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        {isRuleCollapsed('turn_standard_actions') ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                        <span>⚔️ 2. TODAS LAS ACCIONES ESTÁNDAR (STANDARD ACTIONS - 1 POR TURNO)</span>
+                      </div>
+                      <span className="text-[9px] font-mono-code font-normal text-amber-400">
+                        {isRuleCollapsed('turn_standard_actions') ? '[▸ Desplegar]' : '[▾ Plegar]'}
+                      </span>
+                    </div>
+
+                    {!isRuleCollapsed('turn_standard_actions') && (
+                      <div className="p-3 grid grid-cols-1 md:grid-cols-2 gap-2 font-mono-code text-[10px]">
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-amber-300 block">💥 Attack (Ataque Estándar)</strong>
+                          <span className="text-slate-300">
+                            Realizar ataques cuerpo a cuerpo (Melee / Brawling / Martial Arts con ROF 2 o 1) o a distancia (Handguns, Shoulder Arms, Heavy Weapons según su ROF). Si el arma es ROF 2, puedes atacar 2 veces con 1 sola Acción.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-red-400 block">🎯 Aimed Shot (-8 a la Tirada)</strong>
+                          <span className="text-slate-300">
+                            Ataque quirúrgico con penalizador de -8. Consume 1 Acción completa (independiente del ROF). A Cabeza (¡todo el daño que supere el blindaje se multiplica x2!), Manos (desarma), Piernas (-4 MOVE), Ojos (ceguera). Prohibido con Autofire o perdigones.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-amber-400 block">🔥 Autofire (Fuego Automático)</strong>
+                          <span className="text-slate-300">
+                            Consume 10 proyectiles de golpe. Tiras REF + Autofire + 1d10 contra la tabla de distancias de Autofire. Si impactas, tiras 2d6 y multiplicas el total por el margen de éxito (hasta el máximo multiplicador del arma).
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-amber-400 block">🛑 Suppressive Fire (Fuego de Supresión)</strong>
+                          <span className="text-slate-300">
+                            Ráfaga en cono de 6x6m hasta 25m (10 proyectiles). Tiras Autofire contra la Concentración de todos los defensores en el área (WILL + Concentration + 1d10). Quien falle debe usar su siguiente Acción de Movimiento para buscar cobertura.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-cyan-300 block">🤼 Grab / Choke / Throw (Brawling)</strong>
+                          <span className="text-slate-300">
+                            <strong>Grab:</strong> Requiere 1 mano libre (Brawling vs Brawling o Evasion). Inmoviliza al blanco.<br />
+                            <strong>Choke:</strong> Con el blanco agarrado, inflige BODY de daño directo a HP (ignora SP). Turno 3 = Inconsciente.<br />
+                            <strong>Throw:</strong> Lanza al blanco al suelo. Daño directo a HP y queda derribado (Prone).
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-cyan-300 block">🔄 Reload (Recargar)</strong>
+                          <span className="text-slate-300">
+                            Remplazar el cargador gastado o alimentar proyectiles hasta la capacidad estándar completa del arma. Cuesta 1 Acción Estándar completa.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-blue-300 block">🛡️ Equip / Drop Shield</strong>
+                          <span className="text-slate-300">
+                            Equipar un escudo antibalas (Bulletproof Shield de 10 HP) en un brazo libre cuesta 1 Acción Estándar. Soltarlo para liberar el brazo es Acción Gratuita (Free Action).
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-emerald-300 block">⚡ Run (Carrera a Toda Velocidad)</strong>
+                          <span className="text-slate-300">
+                            Sacrificas tu Acción Estándar para realizar un segundo desplazamiento igual a tu valor completo de MOVE en metros (duplica tu desplazamiento en la ronda).
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-purple-300 block">🧍 Get Up from Prone (¡Cuesta 1 Acción Completa!)</strong>
+                          <span className="text-slate-300">
+                            Ponerte de pie cuando estás derribado en el suelo cuesta <strong className="text-red-400">1 Acción Estándar completa</strong> según las reglas canónicas de CPR Core. En el suelo sufres -2 a combate cuerpo a cuerpo y eres blanco fácil.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-yellow-300 block">⏳ Hold Action (Acción Sostenida / Preparada)</strong>
+                          <span className="text-slate-300">
+                            Declaras un detonante específico ("Si alguien cruza la puerta...") y una acción concreta ("...disparo mi escopeta"). Si ocurre antes de tu próximo turno, se activa de inmediato. ¡Si no se detona, se pierde y expira!
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-rose-300 block">💉 Stabilize / First Aid</strong>
+                          <span className="text-slate-300">
+                            Tratar a un aliado Moribundo (Mortally Wounded) o con Herida Crítica con tirada de First Aid o Paramedic contra el DV correspondiente para frenar hemorragias y salvarle la vida.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-slate-200 block">🔧 Use an Object (Usar un Objeto / Terminal)</strong>
+                          <span className="text-slate-300">
+                            Pulsar una consola de seguridad, forzar cerraduras con ganzúas, abrir una puerta blindada, inyectar un autoinyector médico o accionar un detonador de carga explosiva.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-slate-200 block">🧠 Use a Skill (Uso Activo de Habilidad)</strong>
+                          <span className="text-slate-300">
+                            Cualquier tirada de habilidad que demande esfuerzo o concentración activa (ej. Perception activa para detectar francotiradores camuflados, Cybertech para diagnóstico en combate, etc.).
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-sky-300 block">🏎️ Vehicle Maneuver (Maniobra de Vehículo)</strong>
+                          <span className="text-slate-300">
+                            Embestir a otro vehículo (Ram), realizar trompos de emergencia o esquivar fuego concentrado mediante tirada de Drive Land Vehicle o Pilot Air Vehicle.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-cyan-400 block">🌐 Net Action / Quickhack</strong>
+                          <span className="text-slate-300">
+                            Los Netrunners disponen de 2 a 4 Net Actions por turno según su Interface (Pathfinder, Scanner, Backdoor, Control, Eye-Dee, Zap). En la era 2077 con Neuroport, permite cargar Quickhacks neuronales a 50m.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-amber-300 block">⚡ Tech Charge Shot (CEMK 2077)</strong>
+                          <span className="text-slate-300">
+                            Sacrifica la Acción de Movimiento para cargar los condensadores Gauss de un arma Tech. El disparo atraviesa cobertura delgada e ignora el 50% del blindaje SP del defensor.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-orange-300 block">💥 Power Ricochet (CEMK 2077)</strong>
+                          <span className="text-slate-300">
+                            Disparo cinético que rebota contra paredes o techos con penalizador de -4 (o 0 con Coprocesador Balístico), ignorando coberturas completas del blanco.
+                          </span>
+                        </div>
+
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
+                          <strong className="text-cyan-300 block">🎯 Smart Lock (CEMK 2077)</strong>
+                          <span className="text-slate-300">
+                            Con Neuroport y Smart Link, guía micro-misiles alrededor de esquinas contra objetivos fuera de línea de visión directa a -4 a la tirada de ataque.
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 3. ACCIONES GRATUITAS */}
+                  <div className="bg-[#0c101c] border border-purple-500/30 rounded-xs overflow-hidden">
+                    <div
+                      onClick={() => toggleRuleCollapse('turn_free_actions')}
+                      className="p-2.5 bg-purple-950/20 hover:bg-purple-950/40 flex items-center justify-between cursor-pointer select-none border-b border-purple-500/30 text-purple-300 font-bold"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        {isRuleCollapsed('turn_free_actions') ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                        <span>💨 3. ACCIONES GRATUITAS (FREE ACTIONS - SIN COSTE)</span>
+                      </div>
+                      <span className="text-[9px] font-mono-code font-normal text-purple-400">
+                        {isRuleCollapsed('turn_free_actions') ? '[▸ Desplegar]' : '[▾ Plegar]'}
+                      </span>
+                    </div>
+
+                    {!isRuleCollapsed('turn_free_actions') && (
+                      <div className="p-3 space-y-2 font-mono-code text-[11px]">
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs">
+                          <strong className="text-emerald-400 block">Tirarse al Suelo (Drop Prone):</strong>
+                          <span className="text-slate-300">
+                            Tirarse al suelo es <strong className="text-emerald-400">100% GRATUITO</strong> en cualquier momento de tu turno. Te permite beneficiarte de parapetos bajos o trincheras contra fuego lejano (¡pero recuerda que levantarte costará 1 Acción Estándar!).
+                          </span>
+                        </div>
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs">
+                          <strong className="text-purple-300 block">Hablar / Gritar una frase corta:</strong>
+                          <span className="text-slate-300">
+                            Comunicarse brevemente por voz o comlink táctico (hasta 3-4 palabras como &ldquo;¡Fuego de apoyo!&rdquo; o &ldquo;¡A la izquierda!&rdquo;).
+                          </span>
+                        </div>
+                        <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs">
+                          <strong className="text-cyan-300 block">Soltar un objeto o arma:</strong>
+                          <span className="text-slate-300">
+                            Abrir la mano y dejar caer lo que sostienes al suelo no cuesta acción. Desenfundar otra arma enfundada en tu cartuchera es parte fluida del ataque.
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 4. DISCRECIÓN DEL GM Y CASOS DE MESA */}
+                  <div className="bg-[#0c101c] border border-cyan-500/40 rounded-xs overflow-hidden">
+                    <div
+                      onClick={() => toggleRuleCollapse('turn_gm_discretion')}
+                      className="p-2.5 bg-cyan-950/20 hover:bg-cyan-950/40 flex items-center justify-between cursor-pointer select-none border-b border-cyan-500/30 text-cyan-300 font-bold"
+                    >
+                      <div className="flex items-center gap-1.5">
+                        {isRuleCollapsed('turn_gm_discretion') ? <ChevronRight className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                        <span>⚖️ 4. EJEMPLOS DE ACCIONES NO ESCRITAS & DISCRECIÓN DEL GM (IMPENDING GM DISCRETION)</span>
+                      </div>
+                      <span className="text-[9px] font-mono-code font-normal text-cyan-400">
+                        {isRuleCollapsed('turn_gm_discretion') ? '[▸ Desplegar]' : '[▾ Plegar]'}
+                      </span>
+                    </div>
+
+                    {!isRuleCollapsed('turn_gm_discretion') && (
+                      <div className="p-3 space-y-2.5 font-mono-code text-[11px]">
+                        <p className="text-[10px] text-slate-400 italic">
+                          Cuando un jugador intenta maniobras no listadas explícitamente en el manual, el Game Master determina el coste en acción y el DV según esta jurisprudencia de mesa:
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10px]">
+                          <div className="p-2 bg-[#0e121e] border border-[#1e263d] rounded-xs space-y-1">
+                            <strong className="text-cyan-300 block">1. Saltar por una ventana de cristal / Deslizarse por un capó</strong>
+                            <span className="text-emerald-400 font-bold block">Coste: Move Action + Athletics DV 13/15</span>
+                            <span className="text-slate-300 block">Si tiene éxito, cruza como parte de su movimiento. Si falla, cae Prone al otro lado y sufre 1d6 daño por cristales rotos.</span>
+                          </div>
+
+                          <div className="p-2 bg-[#0e121e] border border-[#1e263d] rounded-xs space-y-1">
+                            <strong className="text-cyan-300 block">2. Volcar una mesa pesada para improvisar cobertura</strong>
+                            <span className="text-amber-400 font-bold block">Coste: 1 Acción Estándar (o Free Action si BODY ≥ 8)</span>
+                            <span className="text-slate-300 block">Otorga de inmediato 15 HP de cobertura gruesa de madera/metal en esa casilla para parapetarse.</span>
+                          </div>
+
+                          <div className="p-2 bg-[#0e121e] border border-[#1e263d] rounded-xs space-y-1">
+                            <strong className="text-cyan-300 block">3. Levantar un arma del suelo vs Desenfundar</strong>
+                            <span className="text-amber-400 font-bold block">Coste: 1 Acción Estándar (o Move Action a criterio del GM)</span>
+                            <span className="text-slate-300 block">Desenfundar de la cartuchera es gratis como parte del ataque; recoger un fusil del suelo bajo fuego requiere agacharse y estabilizarse.</span>
+                          </div>
+
+                          <div className="p-2 bg-[#0e121e] border border-[#1e263d] rounded-xs space-y-1">
+                            <strong className="text-cyan-300 block">4. Lanzar un cargador o botiquín a un compañero a 6m</strong>
+                            <span className="text-amber-400 font-bold block">Coste: 1 Acción Estándar (Athletics DV 13)</span>
+                            <span className="text-slate-300 block">El receptor con 1 mano libre puede atraparlo como Free Action superando Athletics / Evasion DV 13. Si falla, cae al suelo en su casilla.</span>
+                          </div>
+
+                          <div className="p-2 bg-[#0e121e] border border-[#1e263d] rounded-xs space-y-1">
+                            <strong className="text-cyan-300 block">5. Escanear activamente buscando francotiradores o emboscadas</strong>
+                            <span className="text-amber-400 font-bold block">Coste: 1 Acción Estándar + Perception vs Stealth del rival</span>
+                            <span className="text-slate-300 block">En medio del tiroteo activo, localizar un tirador oculto tras humo o cobertura requiere concentración deliberada.</span>
+                          </div>
+
+                          <div className="p-2 bg-[#0e121e] border border-[#1e263d] rounded-xs space-y-1">
+                            <strong className="text-cyan-300 block">6. Recargar armas pesadas complejas o cambiar munición especial</strong>
+                            <span className="text-amber-400 font-bold block">Coste: 1 Acción Estándar (+ Basic Tech DV 13 si está trabada)</span>
+                            <span className="text-slate-300 block">Alimentar una cinta en una ametralladora o desatascar un tambor rotatorio en combate requiere tirada técnica si sufrió una pifia previa.</span>
+                          </div>
+
+                          <div className="p-2 bg-[#0e121e] border border-[#1e263d] rounded-xs space-y-1">
+                            <strong className="text-cyan-300 block">7. Hablar de más en los 3 segundos de turno</strong>
+                            <span className="text-purple-400 font-bold block">Coste: Frase corta = Free Action | Discurso = 1 Acción Estándar</span>
+                            <span className="text-slate-300 block">Gritar &ldquo;¡Cúbreme!&rdquo; es gratis. Una negociación prolongada con rehenes o un monólogo dramático consume la Acción del turno + tirada de Persuasion/Cool.</span>
+                          </div>
+
+                          <div className="p-2 bg-[#0e121e] border border-[#1e263d] rounded-xs space-y-1">
+                            <strong className="text-cyan-300 block">8. Sostener una puerta cerrada con el hombro contra enemigos</strong>
+                            <span className="text-amber-400 font-bold block">Coste: 1 Acción Estándar continuada cada turno</span>
+                            <span className="text-slate-300 block">Tirada opuesta de Athletics / Brawling (con bono por BODY) contra la fuerza combinada de los asaltantes para impedir que la abran.</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* =========================================================
               TABLA CANÓNICA DE COBERTURAS (CORE PÁG. 182)
           ========================================================= */}
@@ -768,7 +1120,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
           })}
 
           {/* Estado vacío cuando la búsqueda no da resultados */}
-          {!showCoverTable && filteredSections.length === 0 && filteredSystems.length === 0 && (
+          {!showCoverTable && !showTurnActions && filteredSections.length === 0 && filteredSystems.length === 0 && (
             <div className="p-8 text-center bg-[#10131e] border border-[#222b40] rounded-xs space-y-2">
               <p className="text-xs text-slate-400">
                 No se encontraron reglas ni sistemas que coincidan con &ldquo;{searchQuery}&rdquo;.
