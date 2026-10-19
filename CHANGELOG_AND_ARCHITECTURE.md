@@ -188,27 +188,40 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ### 💎 Índice de Módulos Premium por Nombre (Paridad Companion App)
 > Especificaciones derivadas directamente de las capturas de la Companion App oficial. Este índice mantiene el desglose por pack independiente y deja preparado el espacio para las próximas capturas enviadas por el usuario.
 
-* **1. `GOING METAL` (Full Body Conversions Completo)**:
-  - *(Nota: En Fase 2 ya se implementó la sección explicativa "About FBCs", la Biovaina y los primeros 7 cuerpos FBC).*
-  - **13 Cuerpos FBC (`13 FBC Bodies`)**: Añadir los 6 chasis FBC restantes para llegar a los 13 oficiales.
-  - **16 Nuevas Piezas de Cyberware FBC (`16 New Pieces of Cyberware`)**: Implantes exclusivos y adaptados para cuerpos cyborg.
-  - **Nuevo Linear Frame Externo (`New External Linear Frame`)** y **Nuevo Tipo de Granada (`New Grenade Type`)**.
-  - **Modo Interactivo FBC en Hoja de Personaje y Ripperdoc**: Conmutador para transformar un personaje activo en Full Body Conversion aplicando automáticamente sus reglas de chasis intercambiable, inmunidades y cálculo de Humanidad/Reparación.
-* **2. `NIGHT CITY 2045` (Atlas Interactivo, Distritos, Facciones y Plot Hooks)**:
-  - **Mapa Interactivo de Night City 2045 (`Interactive Map of Night City`)** en SVG/Canvas.
-  - **25 Distritos Buscables (`25 Searchable Districts`)** y **700+ Ubicaciones Buscables (`700+ Searchable Locations`)** con filtros por tipo (*Médico, Transporte, Night Markets, Corporativo, Ripperdocs, Bares, etc.*).
-  - **73 Facciones Buscables (`73 Searchable Factions`)** asociadas a sus guaridas y zonas de influencia directamente en el mapa interactivo.
-  - **112 Nuevos PNJs de Distrito (`112 New NPCs`)** vinculados a su distrito correspondiente.
-  - **130 Ganchos de Trama / Misiones (`130 Plot Hooks`)** para inspirar a GMs y jugadores.
-  - **Ubicaciones Personalizadas (`Custom Locations`)**: Capacidad de añadir ubicaciones propias al mapa interactivo y compartirlas/hacerlas buscables para los jugadores de la sesión.
+* **1. `GOING METAL` (Auditoría de Paridad Completa — Full Body Conversions)**:
+  - **✅ Ya Implementado (Fase 3)**:
+    - **Addition of Full Body Conversions**: Arquitectura canónica de FBC con chasis desacoplado del cerebro orgánico.
+    - **13 Cuerpos FBC (`13 FBC Bodies`)**: Los 13 chasis oficiales completos (Aquarius, Dragoon, Enforcer, Samson, Wingman, Gemini, Spyder, etc.).
+    - **16 Nuevas Piezas de Cyberware FBC (`16 New Pieces of Cyberware`)**: Implantes exclusivos y adaptados para cuerpos cyborg.
+    - **About FBCs Section**: Guía canónica de lore, protocolos de instalación y conversión en compendio.
+    - **Modo Interactivo FBC en Hoja de Personaje y Ripperdoc**: Conmutador para transformar un personaje activo en Full Body Conversion aplicando automáticamente sus reglas de chasis intercambiable, inmunidades y cálculo de Humanidad/Reparación.
+  - **⏳ Pendiente de Cierre Going Metal**:
+    - **Verificar/añadir el `New External Linear Frame` específico**: Comprobar y dar de alta la variante canónica externa individualizada de Going Metal si no figura ya como Linear Frame independiente.
+    - **Verificar/añadir el `New Grenade Type`**: Comprobar y dar de alta el tipo específico de granada de Going Metal (Laser/Chaff o variante especializada) en el catálogo de arrojables.
+* **2. `NIGHT CITY 2045` (Interactive Atlas & Campaign Gazetteer — Planeado para Fase 5 / Premium Expansion)**:
+  - **Interactive map of Night City**: Mapa interactivo de Night City en SVG/Canvas con controles de navegación táctica.
+  - **700+ searchable Locations**: Más de 700 ubicaciones canónicas buscables con ficha detallada.
+  - **25 searchable Districts**: 25 distritos buscables con límites territoriales georreferenciados.
+  - **Ability to filter locations by medical, transportation, etc.**: Filtros por categoría de servicio (médico, transporte, armerías, Night Markets, corporativo, ripperdocs, etc.).
+  - **73 searchable Factions, with their associated hangout locations on the interactive map**: 73 facciones buscables con guaridas y zonas de influencia desplegables en el mapa interactivo.
+  - **112 new NPCs, each with their corresponding district**: 112 nuevos PNJs indexados y vinculados a su distrito territorial correspondiente.
+  - **130 plot hooks to inspire GMs and players**: 130 ganchos narrativos y semillas de misiones listos para detonar en mesa.
+  - **Interactive map automatically unlocks for your players while hosting an online session**: Desbloqueo automático del mapa interactivo para jugadores conectados en sesión remota/local.
+  - **Ability to add your own custom locations to the interactive map**: Capacidad de dar de alta ubicaciones personalizadas (Custom Locations) con coordenadas y notas.
+  - **Custom locations visible and searchable for players connected to online session**: Ubicaciones personalizadas visibles y buscables en tiempo real para los jugadores de la sesión.
 * **3. `CYBERFISTS OF FURY` (Artes Marciales Completas — *Interface RED Vol. 4*)**:
   - **23 Nuevas Formas/Estilos de Artes Marciales (`23 New Martial Art Forms`)** (además de Aikido, Karate, Judo y Taekwondo del Core Book).
   - **46 Nuevos Movimientos Especiales de Artes Marciales (`46 New Martial Art Moves`)** integrados en el HUD de Combate para ejecutar llaves, golpes especiales y combos con sus requisitos de STATS y DVs.
-* **4. `SOLO OF FORTUNE` (Armaduras de Poder ACPA & Arsenal Pesado)**:
-  - **Tipo de Armadura ACPA (`ACPA Armor Type` — *Assisted Combat Personnel Armor*)** y **Constructor Personalizado de ACPA (`Custom ACPA Builder`)**.
-  - **10 Modelos de ACPA (`10 ACPAs`)** listos para equipar y pilotar.
-  - **13 Nuevas Armas (`13 New Weapons`)**, **8 Nuevos Accesorios de Armas (`8 New Weapon Attachments`)** y **15 Nuevas Tablas de Rango de Armas (`15 New Weapon Range Tables`)**.
-  - **12 Nuevas Municiones y Explosivos (`12 New Ammunition & Explosives`)**, **3 Nuevos Sets de Armadura (`3 New Armor Sets`)** y **10 Nuevas Piezas de Equipo (`10 New Pieces of Gear`)**.
+* **4. `SOLO OF FORTUNE` (ACPA Power Armor & Heavy Ordinance Expansion — Planeado para Fase 5 / Premium Expansion)**:
+  - **ACPA Armor Type (Assisted Combat Personnel Armor)**: Nuevo tipo canónico de armadura pesada asistida con reglas de integridad de chasis.
+  - **Custom ACPA Builder**: Taller de ensamblaje modular para diseñar, configurar y costear armaduras de poder personalizadas.
+  - **10 ACPAs**: 10 chasis oficiales completos de ACPA listos para equipar y pilotar.
+  - **13 New Weapons**: 13 nuevas armas militares y pesadas de alto calibre.
+  - **8 New Weapon Attachments**: 8 nuevos accesorios tácticos especializados para armamento ACPA y militar.
+  - **15 New Weapon Range Tables**: 15 nuevas tablas y matrices de rango de combate por metro adaptadas a armamento pesado.
+  - **12 New Ammunition & Explosives**: 12 tipos de municiones especiales, proyectiles pesados y explosivos de demolición.
+  - **3 New Armor Sets**: 3 nuevos conjuntos de blindaje corporal táctico.
+  - **10 New Pieces of Gear**: 10 nuevas piezas de equipo especializado para operadores pesados.
 * **5. `DANGER GAL DOSSIER` (Expansión Completa de Facciones, Creador de NPCs y Tema Visual)**:
   - *(Nota: En Fase 2 ya se integró una primera tanda de operativos y armas de Danger Gal).*
   - **Completar los 118 PNJs Oficiales (`118 New NPCs`)** distribuidos en las **15 Facciones (`15 Factions`)**.

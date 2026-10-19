@@ -160,34 +160,47 @@
 
 > **ALCANCE Y METODOLOGÍA**: Estos 5 módulos corresponden a los paquetes de expansión Premium de la *Cyberpunk RED Companion App* identificados en las capturas de pantalla del usuario. Para garantizar máxima fidelidad y cero duplicación, esta sección desglosa las adiciones pendientes específicas paquete por paquete, integrándose directamente con la arquitectura del Omni-Deck en **Fase 3** y **Fase 4**.
 
-### 1. `GOING METAL` (Full Body Conversions Completo)
+### 1. `GOING METAL` (Auditoría de Paridad Completa — *Interface RED Vol. 3*)
 *Módulo de conversión a cuerpo completo y cibernética de alta gama (*Interface RED Vol. 3*).*
-*(Nota: En Fase 2 ya se implementó la sección explicativa "About FBCs", la Biovaina y los primeros 7 cuerpos FBC).*
-- [x] **Completar los 13 Cuerpos FBC (`13 FBC Bodies`)**: Añadir los 6 chasis FBC restantes para llegar a los 13 oficiales.
-- [x] **16 Nuevas Piezas de Cyberware FBC (`16 New Pieces of Cyberware`)**: Implantes exclusivos y adaptados para cuerpos cyborg.
-- [x] **Nuevo Linear Frame Externo (`New External Linear Frame`)** y **Nuevo Tipo de Granada (`New Grenade Type`)**.
-- [x] **Modo Interactivo FBC en Hoja de Personaje y Ripperdoc**: Conmutador para transformar un personaje activo en Full Body Conversion aplicando automáticamente sus reglas de chasis intercambiable, inmunidades y cálculo de Humanidad/Reparación.
+* **✅ Ya Implementado (Fase 3)**:
+  - [x] **Addition of Full Body Conversions**: Arquitectura canónica de FBC con chasis desacoplado del cerebro orgánico.
+  - [x] **13 Cuerpos FBC (`13 FBC Bodies`)**: Los 13 chasis oficiales completos (Aquarius, Dragoon, Enforcer, Samson, Wingman, Gemini, Spyder, etc.).
+  - [x] **16 Nuevas Piezas de Cyberware FBC (`16 New Pieces of Cyberware`)**: Implantes exclusivos y adaptados para cuerpos cyborg.
+  - [x] **About FBCs Section**: Sección canónica explicativa en compendio sobre lore, conversión y biovainas.
+  - [x] **Modo Interactivo FBC en Hoja de Personaje y Ripperdoc**: Conmutador para transformar un personaje activo en Full Body Conversion aplicando automáticamente sus reglas de chasis intercambiable, inmunidades y cálculo de Humanidad/Reparación.
+* **⏳ Pendiente de Cierre Going Metal**:
+  - [ ] **Verificar/añadir el `New External Linear Frame` específico**: Comprobar y dar de alta la variante canónica externa individualizada de Going Metal si no figura ya como Linear Frame independiente.
+  - [ ] **Verificar/añadir el `New Grenade Type`**: Comprobar y dar de alta el tipo específico de granada de Going Metal (Laser/Chaff o variante especializada) en el catálogo de arrojables.
 
-### 2. `NIGHT CITY 2045` (Atlas Interactivo, Distritos, Facciones y Plot Hooks)
-*Módulo de cartografía urbana, geopolítica distrital y generador narrativo de misiones.*
-- [ ] **Mapa Interactivo de Night City 2045 (`Interactive Map of Night City`)**.
-- [ ] **25 Distritos Buscables (`25 Searchable Districts`)** y **700+ Ubicaciones Buscables (`700+ Searchable Locations`)** con filtros por tipo (*Médico, Transporte, Night Markets, Corporativo, Ripperdocs, Bares, etc.*).
-- [ ] **73 Facciones Buscables (`73 Searchable Factions`)** asociadas a sus guaridas y zonas de influencia directamente en el mapa interactivo.
-- [ ] **112 Nuevos PNJs de Distrito (`112 New NPCs`)** vinculados a su distrito correspondiente.
-- [ ] **130 Ganchos de Trama / Misiones (`130 Plot Hooks`)** para inspirar a GMs y jugadores.
-- [ ] **Ubicaciones Personalizadas (`Custom Locations`)**: Capacidad de añadir ubicaciones propias al mapa interactivo y compartirlas/hacerlas buscables para los jugadores de la sesión.
+### 2. `NIGHT CITY 2045` (Interactive Atlas & Campaign Gazetteer — Planeado para Fase 5 / Premium Expansion)
+*Módulo integral de cartografía táctica urbana, geopolítica distrital y generador narrativo de misiones para Director de Juego y jugadores.*
+- [ ] **Interactive map of Night City**: Atlas interactivo en formato vectorial SVG/Canvas con navegación táctica y zoom fluido.
+- [ ] **700+ searchable Locations**: Más de 700 localizaciones canónicas indexadas y buscables al instante.
+- [ ] **25 searchable Districts**: Cobertura exhaustiva de los 25 distritos de Night City 2045 con límites georreferenciados.
+- [ ] **Ability to filter locations by medical, transportation, etc.**: Filtros por categoría de servicio (médico, transporte, armerías, Night Markets, corporativo, ripperdocs, etc.).
+- [ ] **73 searchable Factions, with their associated hangout locations on the interactive map**: 73 facciones urbanas con sus guaridas y zonas de influencia desplegables en el mapa interactivo.
+- [ ] **112 new NPCs, each with their corresponding district**: 112 nuevos personajes no jugadores indexados y vinculados a su distrito territorial.
+- [ ] **130 plot hooks to inspire GMs and players**: 130 ganchos narrativos y semillas de misiones listos para detonar en mesa.
+- [ ] **Interactive map automatically unlocks for your players while hosting an online session**: Desbloqueo automático del mapa interactivo para jugadores conectados en sesión remota/local.
+- [ ] **Ability to add your own custom locations to the interactive map**: Herramienta de autor para dar de alta ubicaciones personalizadas (Custom Locations) con coordenadas y notas.
+- [ ] **Custom locations visible and searchable for players connected to online session**: Sincronización en vivo de ubicaciones personalizadas para que sean visibles y buscables por los jugadores.
 
 ### 3. `CYBERFISTS OF FURY` (Artes Marciales Completas — *Interface RED Vol. 4*)
 *Módulo de combate desarmado avanzado, disciplinas milenarias y técnicas especiales de combate cuerpo a cuerpo.*
 - [x] **23 Nuevas Formas/Estilos de Artes Marciales (`23 New Martial Art Forms`)** (además de Aikido, Karate, Judo y Taekwondo del Core Book).
 - [x] **46 Nuevos Movimientos Especiales de Artes Marciales (`46 New Martial Art Moves`)** integrados en el HUD de Combate para ejecutar llaves, golpes especiales y combos con sus requisitos de STATS y DVs.
 
-### 4. `SOLO OF FORTUNE` (Armaduras de Poder ACPA & Arsenal Pesado)
-*Módulo de guerra pesada corporativa, exoesqueletos blindados y balística militar de vanguardia.*
-- [ ] **Tipo de Armadura ACPA (`ACPA Armor Type` — *Assisted Combat Personnel Armor*)** y **Constructor Personalizado de ACPA (`Custom ACPA Builder`)**.
-- [ ] **10 Modelos de ACPA (`10 ACPAs`)** listos para equipar y pilotar.
-- [ ] **13 Nuevas Armas (`13 New Weapons`)**, **8 Nuevos Accesorios de Armas (`8 New Weapon Attachments`)** y **15 Nuevas Tablas de Rango de Armas (`15 New Weapon Range Tables`)**.
-- [ ] **12 Nuevas Municiones y Explosivos (`12 New Ammunition & Explosives`)**, **3 Nuevos Sets de Armadura (`3 New Armor Sets`)** y **10 Nuevas Piezas de Equipo (`10 New Pieces of Gear`)**.
+### 4. `SOLO OF FORTUNE` (ACPA Power Armor & Heavy Ordinance Expansion — Planeado para Fase 5 / Premium Expansion)
+*Módulo de exoesqueletos blindados pesados, tecnología militar de vanguardia y balística pesada corporativa.*
+- [ ] **ACPA Armor Type (Assisted Combat Personnel Armor)**: Nueva categoría canónica de blindaje de combate asistido con reglas estructurales de chasis.
+- [ ] **Custom ACPA Builder**: Taller de ensamblaje modular para diseñar, configurar y costear armaduras de poder personalizadas.
+- [ ] **10 ACPAs**: 10 chasis oficiales completos de ACPA listos para equipar, tripular y desplegar en combate.
+- [ ] **13 New Weapons**: 13 nuevas armas militares y pesadas de grado bélico.
+- [ ] **8 New Weapon Attachments**: 8 nuevos accesorios tácticos especializados para armamento ACPA y militar.
+- [ ] **15 New Weapon Range Tables**: 15 nuevas matrices y tablas de rango de combate por metro adaptadas a armamento pesado.
+- [ ] **12 New Ammunition & Explosives**: 12 tipos de municiones especiales, proyectiles pesados y explosivos de demolición.
+- [ ] **3 New Armor Sets**: 3 nuevos conjuntos completos de blindaje corporal táctico.
+- [ ] **10 New Pieces of Gear**: 10 nuevas piezas de equipo especializado para operadores pesados.
 
 ### 5. `DANGER GAL DOSSIER` (Expansión Completa de Facciones, Creador de NPCs y Tema Visual)
 *Módulo de inteligencia civil, agencias de detectives, facciones encubiertas y diseño de encuentros.*

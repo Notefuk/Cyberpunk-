@@ -845,16 +845,18 @@ export interface PremiumModuleStatus {
 
 export const PREMIUM_MODULES_STATUS: PremiumModuleStatus[] = [
   {
-    name: '1. GOING METAL (Full Body Conversions Completo)',
+    name: '1. GOING METAL (Auditoría de Paridad Completa)',
     sourceBook: 'Interface RED Vol. 3',
     status: 'COMPLETADO',
     badgeColor: 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10',
-    summary: 'Módulo de conversión a cuerpo completo cibernético con la Biovaina (Biopod), los 13 chasis FBC oficiales, 16 implantes borg, Linear Frame externo Omega y toggle interactivo en Ripperdoc.',
+    summary: 'Módulo de conversión a cuerpo completo cibernético con la Biovaina (Biopod), los 13 chasis FBC oficiales, 16 implantes borg, About FBCs section y auditoría de paridad.',
     features: [
-      '13 Cuerpos FBC oficiales canónicos: Aquarius, Dragoon, Enforcer, Samson, Wingman, Gemini, Spyder, etc.',
-      '16 piezas exclusivas de cyberware borg y blindaje de titanio.',
-      'Linear Frame Externo Omega y granada especializada Laser/Chaff.',
-      'Conmutador interactivo FBC en Street Lab y Ripperdoc con cálculo de reparación y humanidad.'
+      '✅ Ya Implementado (Fase 3): Addition of Full Body Conversions y Biovaina (Biopod).',
+      '✅ Ya Implementado (Fase 3): 13 FBC Bodies canónicos completos (Aquarius, Dragoon, Enforcer, Samson, Wingman, Gemini, Spyder, etc.).',
+      '✅ Ya Implementado (Fase 3): 16 New Pieces of Cyberware adaptados a chasis cyborg.',
+      '✅ Ya Implementado (Fase 3): About FBCs Section con reglas completas de instalación y lore.',
+      '⏳ Pendiente de Cierre Going Metal: Verificar/añadir el New External Linear Frame específico si requiere individualización.',
+      '⏳ Pendiente de Cierre Going Metal: Verificar/añadir el New Grenade Type específico de Going Metal.'
     ]
   },
   {
@@ -882,29 +884,40 @@ export const PREMIUM_MODULES_STATUS: PremiumModuleStatus[] = [
     ]
   },
   {
-    name: '4. NIGHT CITY 2045 (Atlas Interactivo, Distritos & Misiones)',
-    sourceBook: 'Night City 2045 & Worldbook',
+    name: '4. NIGHT CITY 2045 (Interactive Atlas & Campaign Gazetteer)',
+    sourceBook: 'Night City 2045 (Fase 5 / Premium Expansion)',
     status: 'PENDIENTE',
     badgeColor: 'border-amber-500/30 text-amber-400 bg-amber-500/10',
-    summary: 'Cartografía urbana interactiva de Night City en 2045 con navegación en SVG/Canvas, 25 distritos, 700+ ubicaciones buscables, 73 facciones georreferenciadas y generador de plot hooks.',
+    summary: 'Cartografía urbana interactiva de Night City en 2045 con navegación táctica SVG/Canvas, 25 distritos, 700+ ubicaciones, 73 facciones, 112 NPCs y 130 plot hooks.',
     features: [
-      'Mapa interactivo de Night City 2045 en SVG/Canvas con zoom táctico.',
-      '25 distritos buscables y 700+ ubicaciones con filtros por categoría (Médico, Night Markets, etc.).',
-      '73 facciones con guaridas georreferenciadas y 112 nuevos PNJs de distrito.',
-      '130 ganchos de trama (plot hooks) y creador de ubicaciones personalizadas (Custom Locations).'
+      'Interactive map of Night City en SVG/Canvas con zoom táctico.',
+      '700+ searchable Locations con ficha detallada y coordenadas.',
+      '25 searchable Districts con límites territoriales.',
+      'Ability to filter locations by medical, transportation, etc.',
+      '73 searchable Factions, with their associated hangout locations on the interactive map.',
+      '112 new NPCs, each with their corresponding district.',
+      '130 plot hooks to inspire GMs and players.',
+      'Interactive map automatically unlocks for your players while hosting an online session.',
+      'Ability to add your own custom locations to the interactive map.',
+      'Custom locations visible and searchable for players connected to online session.'
     ]
   },
   {
-    name: '5. SOLO OF FORTUNE (Armaduras de Poder ACPA & Arsenal Militar)',
-    sourceBook: 'Solo of Fortune & Black Chrome Military',
+    name: '5. SOLO OF FORTUNE (ACPA Power Armor & Heavy Ordinance Expansion)',
+    sourceBook: 'Solo of Fortune (Fase 5 / Premium Expansion)',
     status: 'PENDIENTE',
     badgeColor: 'border-amber-500/30 text-amber-400 bg-amber-500/10',
-    summary: 'Exoesqueletos blindados ACPA (Assisted Combat Personnel Armor), constructor personalizado de ACPA, 10 modelos oficiales y armamento pesado militar.',
+    summary: 'Exoesqueletos blindados ACPA (Assisted Combat Personnel Armor), taller modular de construcción ACPA, 10 modelos oficiales y armamento pesado bélico.',
     features: [
-      'Soporte para tipo de armadura ACPA y Constructor Personalizado de ACPA.',
-      '10 modelos de ACPA equipables y pilotables.',
-      '13 nuevas armas pesadas, 8 accesorios, 15 tablas de rango dedicadas y 12 municiones y explosivos.',
-      '3 nuevos sets de blindaje militar y 10 piezas de equipo táctico pesado.'
+      'ACPA Armor Type (Assisted Combat Personnel Armor).',
+      'Custom ACPA Builder para diseño y personalización de armaduras de poder.',
+      '10 ACPAs oficiales listos para tripular y combatir.',
+      '13 New Weapons militares de alto calibre.',
+      '8 New Weapon Attachments tácticos para armamento ACPA.',
+      '15 New Weapon Range Tables de combate pesado.',
+      '12 New Ammunition & Explosives y munición pesada.',
+      '3 New Armor Sets completos de blindaje táctico militar.',
+      '10 New Pieces of Gear para operadores de blindaje asistido.'
     ]
   }
 ];

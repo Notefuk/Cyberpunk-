@@ -679,7 +679,7 @@ export function SystemChangelogAndDocsView() {
               <span className="px-2.5 py-0.5 text-xs font-mono font-bold uppercase bg-amber-950/80 text-amber-400 border border-amber-500/30">
                 💎 PARIDAD COMPANION APP // 5 MÓDULOS PREMIUM
               </span>
-              <span className="text-xs text-[#64748b] font-mono">3 Integrados • 2 en Fase 4</span>
+              <span className="text-xs text-[#64748b] font-mono">3 Integrados • 2 Planeados (Fase 5 / Premium Expansion)</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
