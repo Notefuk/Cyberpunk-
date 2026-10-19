@@ -26,6 +26,32 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.0.0',
+    date: '2026-10-19',
+    phase: 'Codex',
+    category: 'Weapon Attachments Engine, Maker Tech Upgrade Workshop, Armor +1 SP & Official Role/Tech Lifepath',
+    title: 'Motor Canónico de Accesorios de Armas (13 Tipos), Taller Maker de Mejoras de Armas y Blindaje (+1 SP) y Lifepath de Rol Específico (10 Roles + Tech p. 55)',
+    summary: 'Implementación canónica integral de la Fase 4 de CPR Omni-Deck: Sistema completo de los 13 accesorios de armas oficiales (Core pp. 342-344: Bayoneta con ataque melee 1d6 ROF 2, Cargadores Ampliado y Tambor con recálculo dinámico por categoría, Smartgun Link, Silenciador, Visor Infrarrojo/NV que ignora oscuridad/humo, Mirilla Telescópica que suma +1 a 51m+, Escopeta y Lanzagranadas acoplados con ataques secundarios balísticos en mano, y Rebuilds 2077 Power/Tech/Smart que consumen ranuras); Regla de 3 ranuras canónicas (0 en armas exóticas/melee); Taller interactivo de Especialización de Mejoras Tech Maker (Core p. 148: Calidad Excelente +1 ataque, +1 ranura extra, Ocultable, Optimización balística +1 daño/invención) con cálculo de coste de materiales (50% base), tabla de DV y tiempo requerido por coste, y tirada d10 vs DV oficial; Refuerzo de Blindaje Tech (+1 SP máx y actual en cabeza y cuerpo); y expansión del Lifepath a los 10 Roles con tablas canónicas y las 6 tablas completas del Tech Lifepath (Core p. 55).',
+    highlights: [
+      'Motor Canónico de Accesorios de Armas: Catálogo oficial de 13 accesorios (Bayonet, Extended Mag, Drum Mag, Smartgun Link, Silencer, IR/NV Scope, Sniping Scope, Underbarrel Shotgun, Underbarrel Grenade Launcher, etc.) con cálculo estricto de ranuras (3 máx, 0 en exóticas/melee).',
+      'Ataques Secundarios de Accesorios Acoplados: Integración en Combat HUD de disparos y golpes para Bayoneta (1d6 Melee ROF 2), Escopeta Acoplada (3d6 Shells) y Lanzagranadas Acoplado (6d6) directamente desde el arma en mano.',
+      'Cálculo Dinámico de Munición por Accesorio: Cargadores extendidos y de tambor recalculan la capacidad según la categoría y calibre exacto del arma con sincronización de estado.',
+      'Taller Maker: Upgrade Expertise (Core p. 148): 4 mejoras de armas (Calidad Excelente +1 ataque, +1 ranura adicional, diseño ocultable, daño balístico/invención) y refuerzo de armadura (+1 SP máximo y actual) con deducción de eurodólares, tiempos y DVs por coste.',
+      'Pase de Distancia al Desglose de Ataque: La mirilla telescópica aplica +1 al ataque automáticamente a distancias de 51m o superiores.',
+      'Lifepath Específico de Rol (10 Roles): Preguntas y tablas canónicas para Rockerboy, Solo, Netrunner, Tech, Medtech, Media, Exec, Lawman, Fixer y Nomad con selectores y tiradas de dados individuales.',
+      'Tech Lifepath Completo (Core p. 55): Modal interactivo con las 6 tablas oficiales (Especialidad, Socio vs Solo, Espacio de Trabajo, Clientes Principales, Proveedores y Quién te Busca).'
+    ],
+    filesTouched: [
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'AI_CONTEXT_HANDOFF.md'
+    ],
+    metricsBadge: 'v4.0.0 • Weapon Attachments, Tech Maker & Role Lifepath • Operativo'
+  },
+  {
     version: 'v3.9.0',
     date: '2026-10-19',
     phase: 'Codex',
@@ -179,6 +205,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.0.0': true,
     'v3.9.0': true,
     'v3.8.0': true,
     'v3.7.0': true,
@@ -264,7 +291,7 @@ export function SystemChangelogAndDocsView() {
                 SYSTEM CODEX // DOCUMENTACIÓN MAESTRA
               </span>
               <span className="px-2 py-0.5 text-xs font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> v3.9.0 OPERATIVO
+                <CheckCircle2 className="w-3 h-3" /> v4.0.0 OPERATIVO
               </span>
             </div>
             <h1 className="text-2xl md:text-3xl font-tech font-bold text-white tracking-wider flex items-center gap-3">
@@ -272,7 +299,7 @@ export function SystemChangelogAndDocsView() {
               SISTEMA, ARQUITECTURA & CHANGELOG MAESTRO
             </h1>
             <p className="text-sm text-[#94a3b8] max-w-3xl leading-relaxed">
-              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v3.9.0), inventario de los 8 grandes
+              Auditoría integral versión por versión de CPR Omni-Deck (v1.0.0 a v4.0.0), inventario de los 8 grandes
               módulos interactivos, estado del roadmap de Fases (0 a 5) con paridad de la Companion App, y especificación técnica de contratos.
             </p>
           </div>

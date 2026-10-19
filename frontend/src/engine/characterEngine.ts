@@ -2,10 +2,12 @@ import type {
   CharacterSheet,
   CombatSkillKey,
   EncumbranceMode,
+  EquippedWeapon,
   StatKey,
   WeaponItem
 } from '../types/cyberpunk';
 import { SKILL_METADATA } from '../types/cyberpunk';
+import { calculateWeaponAttachmentBonuses } from '../data/weaponAttachmentsAndTechData';
 
 export const ENCUMBRANCE_MODES: Record<
   EncumbranceMode,
@@ -89,6 +91,8 @@ export interface WeaponAttackBreakdown {
   injuryPenalty: number;
   encumbrancePenalty?: number;
   soloPrecisionBonus?: number;
+  attachmentBonus?: number;
+  attachmentBreakdown?: string[];
   totalPenalty: number;
   penaltyBreakdown: string[];
   netBase: number;
@@ -105,7 +109,8 @@ export function getEffectiveBody(character: CharacterSheet): number {
 export function calculateWeaponAttackBreakdown(
   character: CharacterSheet,
   weapon: WeaponItem,
-  isAutofire?: boolean
+  isAutofire?: boolean,
+  distanceMeters?: number
 ): WeaponAttackBreakdown {
   const skillKey = mapWeaponSkillToKey(weapon.skill, isAutofire);
   const skillMeta = SKILL_METADATA[skillKey];
@@ -185,8 +190,17 @@ export function calculateWeaponAttackBreakdown(
     penaltyBreakdown.push(`[Combat Awareness] Precision Attack: +${soloPrecisionBonus}`);
   }
 
+  // 6. Bonificador de Accesorios y Tech Upgrade
+  const equippedWep = weapon as EquippedWeapon;
+  const attachmentData = calculateWeaponAttachmentBonuses(equippedWep, distanceMeters);
+  const attachmentBonus = attachmentData.attackBonus;
+  const attachmentBreakdown = attachmentData.bonusBreakdown;
+  for (const bonusText of attachmentBreakdown) {
+    penaltyBreakdown.push(`[Accesorio/Mejora] ${bonusText}`);
+  }
+
   const totalPenalty = armorPenalty + seriousWoundPenalty + injuryPenalty + encumbrancePenalty;
-  const netBase = statVal + skillVal - totalPenalty + soloPrecisionBonus;
+  const netBase = statVal + skillVal - totalPenalty + soloPrecisionBonus + attachmentBonus;
 
   return {
     statKey,
@@ -199,6 +213,8 @@ export function calculateWeaponAttackBreakdown(
     injuryPenalty,
     encumbrancePenalty,
     soloPrecisionBonus,
+    attachmentBonus,
+    attachmentBreakdown,
     totalPenalty,
     penaltyBreakdown,
     netBase

@@ -21,7 +21,7 @@ import {
   createDamageRoll,
   AIMED_SHOT_OPTIONS
 } from '../../engine/combatEngine';
-import type { WeaponItem, RollEntry, InventoryItem, EncumbranceMode, AimedShotTarget } from '../../types/cyberpunk';
+import type { WeaponItem, RollEntry, InventoryItem, EncumbranceMode, AimedShotTarget, TechWeaponUpgradeType } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
 import { QUICKHACKS_2077_CATALOG, QUICKHACKING_OFFICIAL_RULES_GUIDE, type Quickhack2077 } from '../../data/netAndRolesData';
@@ -32,6 +32,11 @@ import {
   CEMK_WEAPON_REBUILD_SYSTEM_GUIDE,
   type WeaponClassAndRebuildInfo
 } from '../../data/weaponAndCyberwareTooltips';
+import {
+  WEAPON_ATTACHMENTS_CATALOG,
+  calculateWeaponSlotCapacity,
+  TECH_MAKER_UPGRADE_OPTIONS
+} from '../../data/weaponAttachmentsAndTechData';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
 import { EnemiesCompendiumPanel } from '../gm/EnemiesCompendiumPanel';
 import { 
@@ -776,6 +781,10 @@ export const CombatHudView: React.FC = () => {
   const clearAllEmpDisabledCyberware = useCharacterStore((state) => state.clearAllEmpDisabledCyberware);
   const restAndHealDays = useCharacterStore((state) => state.restAndHealDays);
   const repairCharacterArmor = useCharacterStore((state) => state.repairCharacterArmor);
+  const installWeaponAttachment = useCharacterStore((state) => state.installWeaponAttachment);
+  const removeWeaponAttachment = useCharacterStore((state) => state.removeWeaponAttachment);
+  const applyTechUpgradeToWeapon = useCharacterStore((state) => state.applyTechUpgradeToWeapon);
+  const applyTechUpgradeToArmor = useCharacterStore((state) => state.applyTechUpgradeToArmor);
 
   const selectedDistance = useCombatStore((state) => state.selectedDistance);
   const setSelectedDistance = useCombatStore((state) => state.setSelectedDistance);
@@ -1453,8 +1462,8 @@ export const CombatHudView: React.FC = () => {
       [id]: prev[id] !== undefined ? !prev[id] : false
     }));
   };
-  const [inHandSubTab, setInHandSubTab] = useState<Record<string, 'ammo' | 'dv' | 'autofire' | 'all'>>({});
-  const setWeaponSubTab = (id: string, tab: 'ammo' | 'dv' | 'autofire' | 'all') => {
+  const [inHandSubTab, setInHandSubTab] = useState<Record<string, 'ammo' | 'dv' | 'autofire' | 'attachments' | 'all'>>({});
+  const setWeaponSubTab = (id: string, tab: 'ammo' | 'dv' | 'autofire' | 'attachments' | 'all') => {
     setInHandSubTab((prev) => ({ ...prev, [id]: tab }));
   };
 
@@ -1854,6 +1863,144 @@ export const CombatHudView: React.FC = () => {
   const handleMartialArtsDamage = () => {
     ensureTelemetryExpanded();
     const dmgEntry = createDamageRoll('Artes Marciales (Ignora 50% SP)', unarmedDmg, false, 1, 'unarmed-martial-arts', aimedShotTarget);
+    addRollEntry(dmgEntry);
+  };
+
+  // Attachment Secondary Attacks (Bayonet, Underbarrel Shotgun, Underbarrel Grenade Launcher)
+  const handleAttachmentBayonetAttack = (parentWeapon: WeaponItem) => {
+    ensureTelemetryExpanded();
+    const bayonetWeapon: WeaponItem = {
+      id: `bayonet-${parentWeapon.id}`,
+      name: `🗡️ Bayoneta (${parentWeapon.name})`,
+      type: 'Melee',
+      skill: 'Melee Weapon',
+      damage: '1d6',
+      rof: 2,
+      hands: parentWeapon.hands || 2,
+      concealable: false,
+      cost: 100
+    };
+    const luckSpent = luckToSpendOnNextRoll;
+    if (luckSpent > 0) {
+      spendLuck(luckSpent);
+      setLuckToSpend(0);
+    }
+    const entry = createInitialAttackRoll(activeChar, bayonetWeapon, {
+      targetDv: 13,
+      distanceLabel: 'Cuerpo a cuerpo (Melee)',
+      luckSpent,
+      weaponInstanceId: `bayonet-${parentWeapon.id}`,
+      aimedShotTarget
+    });
+    addRollEntry(entry);
+  };
+
+  const handleAttachmentBayonetDamage = (parentWeapon: WeaponItem) => {
+    ensureTelemetryExpanded();
+    const dmgEntry = createDamageRoll(
+      `🗡️ Bayoneta (${parentWeapon.name})`,
+      '1d6',
+      false,
+      1,
+      `bayonet-${parentWeapon.id}`,
+      aimedShotTarget
+    );
+    addRollEntry(dmgEntry);
+  };
+
+  const handleAttachmentUnderbarrelSgAttack = (parentWeapon: WeaponItem) => {
+    ensureTelemetryExpanded();
+    const sgWeapon: WeaponItem = {
+      id: `ubsg-${parentWeapon.id}`,
+      name: `💥 Escopeta Acoplada (${parentWeapon.name})`,
+      type: 'Ranged',
+      skill: 'Shoulder Arms',
+      damage: '3d6',
+      rof: 1,
+      hands: 2,
+      concealable: false,
+      cost: 500,
+      standardMag: 2,
+      ammoType: 'Shotgun Shell'
+    };
+    const currentDv = getDvForWeapon(sgWeapon, selectedDistance, false);
+    if (currentDv === null) {
+      alert(`El objetivo a ${selectedDistance} está fuera de alcance para la escopeta acoplada.`);
+      return;
+    }
+    const luckSpent = luckToSpendOnNextRoll;
+    if (luckSpent > 0) {
+      spendLuck(luckSpent);
+      setLuckToSpend(0);
+    }
+    const entry = createInitialAttackRoll(activeChar, sgWeapon, {
+      targetDv: currentDv,
+      distanceLabel: selectedDistance,
+      luckSpent,
+      weaponInstanceId: `ubsg-${parentWeapon.id}`,
+      aimedShotTarget
+    });
+    addRollEntry(entry);
+  };
+
+  const handleAttachmentUnderbarrelSgDamage = (parentWeapon: WeaponItem) => {
+    ensureTelemetryExpanded();
+    const dmgEntry = createDamageRoll(
+      `💥 Escopeta Acoplada (${parentWeapon.name})`,
+      '3d6',
+      false,
+      1,
+      `ubsg-${parentWeapon.id}`,
+      aimedShotTarget
+    );
+    addRollEntry(dmgEntry);
+  };
+
+  const handleAttachmentUnderbarrelGlAttack = (parentWeapon: WeaponItem) => {
+    ensureTelemetryExpanded();
+    const glWeapon: WeaponItem = {
+      id: `ubgl-${parentWeapon.id}`,
+      name: `💣 Lanzagranadas Acoplado (${parentWeapon.name})`,
+      type: 'Ranged',
+      skill: 'Heavy Weapons',
+      damage: '6d6',
+      rof: 1,
+      hands: 2,
+      concealable: false,
+      cost: 500,
+      standardMag: 1,
+      ammoType: 'Grenade'
+    };
+    const currentDv = getDvForWeapon(glWeapon, selectedDistance, false);
+    if (currentDv === null) {
+      alert(`El objetivo a ${selectedDistance} está fuera de alcance para el lanzagranadas acoplado.`);
+      return;
+    }
+    const luckSpent = luckToSpendOnNextRoll;
+    if (luckSpent > 0) {
+      spendLuck(luckSpent);
+      setLuckToSpend(0);
+    }
+    const entry = createInitialAttackRoll(activeChar, glWeapon, {
+      targetDv: currentDv,
+      distanceLabel: selectedDistance,
+      luckSpent,
+      weaponInstanceId: `ubgl-${parentWeapon.id}`,
+      aimedShotTarget
+    });
+    addRollEntry(entry);
+  };
+
+  const handleAttachmentUnderbarrelGlDamage = (parentWeapon: WeaponItem) => {
+    ensureTelemetryExpanded();
+    const dmgEntry = createDamageRoll(
+      `💣 Lanzagranadas Acoplado (${parentWeapon.name})`,
+      '6d6',
+      false,
+      1,
+      `ubgl-${parentWeapon.id}`,
+      aimedShotTarget
+    );
     addRollEntry(dmgEntry);
   };
 
@@ -2704,6 +2851,23 @@ export const CombatHudView: React.FC = () => {
                           );
                         })}
                       </div>
+
+                      {/* Mejora Tech Maker +1 SP Cabeza */}
+                      <div className="mt-2 pt-1.5 border-t border-[#1e2333] flex items-center justify-between text-[10px]">
+                        <span className="text-slate-400">Mejora Tech:</span>
+                        <button
+                          type="button"
+                          onClick={() => applyTechUpgradeToArmor('head', !activeChar?.headArmor?.techUpgradedSp, 0)}
+                          className={`px-1.5 py-0.5 rounded text-[9px] font-bold border transition-colors cursor-pointer ${
+                            activeChar?.headArmor?.techUpgradedSp
+                              ? 'bg-amber-500 text-black border-amber-400'
+                              : 'bg-[#121622] text-amber-300 border-amber-500/40 hover:bg-[#1a2030]'
+                          }`}
+                          title="Mejora Tech Maker: +1 SP Máximo (Upgrade Expertise)"
+                        >
+                          {activeChar?.headArmor?.techUpgradedSp ? '🛠️ +1 SP ACTIVO' : '🛠️ +1 SP Tech'}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
@@ -2771,6 +2935,23 @@ export const CombatHudView: React.FC = () => {
                             </button>
                           );
                         })}
+                      </div>
+
+                      {/* Mejora Tech Maker +1 SP Torso */}
+                      <div className="mt-2 pt-1.5 border-t border-[#1e2333] flex items-center justify-between text-[10px]">
+                        <span className="text-slate-400">Mejora Tech:</span>
+                        <button
+                          type="button"
+                          onClick={() => applyTechUpgradeToArmor('body', !activeChar?.bodyArmor?.techUpgradedSp, 0)}
+                          className={`px-1.5 py-0.5 rounded text-[9px] font-bold border transition-colors cursor-pointer ${
+                            activeChar?.bodyArmor?.techUpgradedSp
+                              ? 'bg-amber-500 text-black border-amber-400'
+                              : 'bg-[#121622] text-amber-300 border-amber-500/40 hover:bg-[#1a2030]'
+                          }`}
+                          title="Mejora Tech Maker: +1 SP Máximo (Upgrade Expertise)"
+                        >
+                          {activeChar?.bodyArmor?.techUpgradedSp ? '🛠️ +1 SP ACTIVO' : '🛠️ +1 SP Tech'}
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -4271,7 +4452,10 @@ export const CombatHudView: React.FC = () => {
                 const hasMag = (w.standardMag ?? 0) > 0;
                 const isAuto = !!autofireByWeapon[w.instanceId];
                 const autofireRules = getAutofireRulesSummary(w);
-                const breakdown = calculateWeaponAttackBreakdown(activeChar, w, isAuto);
+                const distMeters = typeof selectedDistance === 'number'
+                  ? selectedDistance
+                  : parseInt((selectedDistance as string)?.match(/\d+/)?.[0] || '0', 10);
+                const breakdown = calculateWeaponAttackBreakdown(activeChar, w, isAuto, distMeters);
                 const currentDv = getDvForWeapon(w, selectedDistance, isAuto);
                 const profileKey = getWeaponProfileKey(w.name, w.type);
                 const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
@@ -4374,6 +4558,34 @@ export const CombatHudView: React.FC = () => {
                               Base: +{netBaseWithLuck}{aimedPenalty > 0 ? ' (-8)' : ''}
                             </span>
                           </div>
+
+                          {/* Ranuras de Accesorios & Badges de Attachments */}
+                          {(() => {
+                            const slotInfo = calculateWeaponSlotCapacity(w);
+                            const atts = w.installedAttachments ?? [];
+                            return (
+                              <div className="flex items-center gap-1.5 flex-wrap mt-1">
+                                <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-[#161a26] text-slate-300 border border-[#2b334a]">
+                                  🔩 RANURAS: <span className={slotInfo.remainingSlots === 0 ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold'}>{slotInfo.usedSlots}/{slotInfo.maxSlots} SLOTS</span>
+                                  {w.techUpgrade === 'extra_slot' && <span className="text-cyan-400 ml-1">(+1 Tech)</span>}
+                                  {slotInfo.isExotic && w.techUpgrade !== 'extra_slot' && <span className="text-amber-400 ml-1">(Exótica: 0 slots)</span>}
+                                </span>
+                                {w.techUpgrade && w.techUpgrade !== 'none' && (
+                                  <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-cyan-950/70 text-cyan-300 border border-cyan-500/40 font-bold">
+                                    🛠️ {TECH_MAKER_UPGRADE_OPTIONS.find((o) => o.id === w.techUpgrade)?.label || w.techUpgrade}
+                                  </span>
+                                )}
+                                {atts.map((attId) => {
+                                  const attObj = WEAPON_ATTACHMENTS_CATALOG.find((a) => a.id === attId);
+                                  return (
+                                    <span key={attId} className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-purple-950/60 text-purple-300 border border-purple-500/30">
+                                      🔩 {attObj?.name.split(' (')[0] || attId}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })()}
                         </div>
                       </div>
 
@@ -4556,6 +4768,89 @@ export const CombatHudView: React.FC = () => {
                       )}
                     </div>
 
+                    {/* Ataques Secundarios de Accesorios Acoplados (Bayoneta, Escopeta, Lanzagranadas) */}
+                    {(() => {
+                      const installed = w.installedAttachments ?? [];
+                      const hasBayonet = installed.includes('att-bayonet');
+                      const hasSg = installed.includes('att-underbarrel-sg');
+                      const hasGl = installed.includes('att-underbarrel-gl');
+
+                      if (!hasBayonet && !hasSg && !hasGl) return null;
+
+                      return (
+                        <div className="pt-2 border-t border-[#1a1f2e] space-y-1.5">
+                          <div className="text-[10px] font-mono-code font-bold text-amber-300 uppercase flex items-center gap-1">
+                            <span>⚔️ Ataques Secundarios de Accesorios Acoplados:</span>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {hasBayonet && (
+                              <div className="p-1.5 bg-[#121622] border border-cyan-500/30 rounded flex items-center justify-between gap-1">
+                                <span className="text-[9.5px] font-mono-code text-cyan-300 font-bold truncate">🗡️ Bayoneta (1d6 Melee)</span>
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleAttachmentBayonetAttack(w)}
+                                    className="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white font-tech font-bold text-[9px] rounded cursor-pointer"
+                                  >
+                                    Atacar (DV 13)
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleAttachmentBayonetDamage(w)}
+                                    className="px-2 py-0.5 bg-[#1b2234] hover:bg-[#28334e] text-cyan-300 border border-cyan-500/40 font-tech font-bold text-[9px] rounded cursor-pointer"
+                                  >
+                                    Daño 1d6
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                            {hasSg && (
+                              <div className="p-1.5 bg-[#121622] border border-amber-500/30 rounded flex items-center justify-between gap-1">
+                                <span className="text-[9.5px] font-mono-code text-amber-300 font-bold truncate">💥 Escopeta (3d6 Shell)</span>
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleAttachmentUnderbarrelSgAttack(w)}
+                                    className="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white font-tech font-bold text-[9px] rounded cursor-pointer"
+                                  >
+                                    Disparar
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleAttachmentUnderbarrelSgDamage(w)}
+                                    className="px-2 py-0.5 bg-[#1b2234] hover:bg-[#28334e] text-amber-300 border border-amber-500/40 font-tech font-bold text-[9px] rounded cursor-pointer"
+                                  >
+                                    Daño 3d6
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                            {hasGl && (
+                              <div className="p-1.5 bg-[#121622] border border-red-500/30 rounded flex items-center justify-between gap-1">
+                                <span className="text-[9.5px] font-mono-code text-red-300 font-bold truncate">💣 Lanzagranadas (6d6)</span>
+                                <div className="flex items-center gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleAttachmentUnderbarrelGlAttack(w)}
+                                    className="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white font-tech font-bold text-[9px] rounded cursor-pointer"
+                                  >
+                                    Disparar
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleAttachmentUnderbarrelGlDamage(w)}
+                                    className="px-2 py-0.5 bg-[#1b2234] hover:bg-[#28334e] text-red-300 border border-red-500/40 font-tech font-bold text-[9px] rounded cursor-pointer"
+                                  >
+                                    Daño 6d6
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                     {/* Dropdown Desplegable del Arma en Mano (Sub-pestañas tácticas) */}
                     {isExpanded && (
                       <div className="pt-2 border-t border-[#1f2434] space-y-3 animate-fade-in">
@@ -4595,6 +4890,17 @@ export const CombatHudView: React.FC = () => {
                             }`}
                           >
                             🔥 AUTOFIRE & DATOS TÉCNICOS
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setWeaponSubTab(w.instanceId, 'attachments')}
+                            className={`px-2 py-1 rounded text-[10px] font-mono-code font-bold transition-all ${
+                              currentSubTab === 'attachments'
+                                ? 'bg-[#38bdf8] text-black shadow-sm'
+                                : 'bg-[#181b26] text-[#94a3b8] hover:text-white border border-[#232738]'
+                            }`}
+                          >
+                            🔩 ACCESORIOS & TECH ({(w.installedAttachments?.length ?? 0) + (w.techUpgrade && w.techUpgrade !== 'none' ? 1 : 0)})
                           </button>
                           <button
                             type="button"
@@ -4801,6 +5107,142 @@ export const CombatHudView: React.FC = () => {
                               <div className="bg-[#141724] p-2 rounded border border-[#232a3d]">
                                 <span className="text-[#64748b] block">OCULTABLE:</span>
                                 <strong className="text-white">{w.concealable ? 'Sí' : 'No'}</strong>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* SECCIÓN D: ACCESORIOS & TECH UPGRADES */}
+                        {(currentSubTab === 'attachments' || currentSubTab === 'all') && (
+                          <div className="p-3 bg-[#10121a] rounded border border-[#22283a] space-y-3">
+                            <div className="flex items-center justify-between pb-1 border-b border-[#1b202e]">
+                              <span className="font-tech text-xs font-bold text-[#38bdf8] flex items-center gap-1.5 uppercase">
+                                🔩 ACCESORIOS & TALLER TECH // {w.name}
+                              </span>
+                              {(() => {
+                                const slotCap = calculateWeaponSlotCapacity(w);
+                                return (
+                                  <span className="text-[9px] font-mono-code text-slate-400">
+                                    Ranuras: <strong className="text-white">{slotCap.usedSlots}/{slotCap.maxSlots}</strong> ({slotCap.remainingSlots} libres)
+                                  </span>
+                                );
+                              })()}
+                            </div>
+
+                            {/* 1. Accesorios Instalados */}
+                            <div className="space-y-1.5">
+                              <div className="text-[10px] font-mono-code text-slate-400 uppercase">Accesorios Instalados:</div>
+                              {(w.installedAttachments ?? []).length === 0 ? (
+                                <div className="text-[10px] font-mono-code text-slate-500 italic p-1.5 bg-[#0b0d13] rounded border border-[#1a1f2e]">
+                                  Ningún accesorio instalado en esta arma.
+                                </div>
+                              ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                                  {(w.installedAttachments ?? []).map((attId) => {
+                                    const att = WEAPON_ATTACHMENTS_CATALOG.find((a) => a.id === attId);
+                                    return (
+                                      <div key={attId} className="p-2 bg-[#141824] rounded border border-cyan-500/40 flex items-center justify-between gap-1.5">
+                                        <div className="min-w-0">
+                                          <div className="font-tech text-xs font-bold text-white truncate">{att?.name || attId}</div>
+                                          <div className="text-[9px] text-slate-400 font-mono-code">{att?.slots || 1} slot(s) • {att?.cost || 100} €$</div>
+                                        </div>
+                                        <button
+                                          type="button"
+                                          onClick={() => removeWeaponAttachment(w.instanceId, attId)}
+                                          className="px-1.5 py-0.5 bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-500/40 rounded text-[9px] font-bold font-mono-code shrink-0 cursor-pointer"
+                                          title="Desinstalar accesorio"
+                                        >
+                                          ✕ Quitar
+                                        </button>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* 2. Catálogo Rápido de Accesorios Disponibles */}
+                            {(() => {
+                              const slotCap = calculateWeaponSlotCapacity(w);
+                              const availableToInstall = WEAPON_ATTACHMENTS_CATALOG.filter((att) => {
+                                const isInstalled = (w.installedAttachments ?? []).includes(att.id);
+                                const canFit = slotCap.remainingSlots >= att.slots;
+                                const isEligible = att.eligibleWeaponTypes.length === 0 || 
+                                  att.eligibleWeaponTypes.some((t) => t.toLowerCase() === (w.skill || '').toLowerCase() || t.toLowerCase() === (w.type || '').toLowerCase());
+                                const hasIncompatible = (w.installedAttachments ?? []).some((id) => att.incompatibleWith.includes(id));
+                                return !isInstalled && canFit && isEligible && !hasIncompatible;
+                              });
+
+                              return (
+                                <div className="space-y-1.5 pt-1.5 border-t border-[#1a1f2e]">
+                                  <div className="text-[10px] font-mono-code text-slate-400 uppercase">Instalar Nuevo Accesorio:</div>
+                                  {slotCap.remainingSlots === 0 ? (
+                                    <div className="text-[10px] font-mono-code text-amber-400 italic p-1.5 bg-[#0b0d13] rounded border border-[#1a1f2e]">
+                                      Sin ranuras disponibles ({slotCap.usedSlots}/{slotCap.maxSlots} ocupadas). Mejora con Tech Maker o quita un accesorio.
+                                    </div>
+                                  ) : availableToInstall.length === 0 ? (
+                                    <div className="text-[10px] font-mono-code text-slate-500 italic p-1.5 bg-[#0b0d13] rounded border border-[#1a1f2e]">
+                                      No hay más accesorios compatibles para las ranuras libres ({slotCap.remainingSlots} slots).
+                                    </div>
+                                  ) : (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-48 overflow-y-auto">
+                                      {availableToInstall.map((att) => (
+                                        <div key={att.id} className="p-1.5 bg-[#0d0f17] rounded border border-[#1e2436] flex items-center justify-between gap-1 text-[9.5px]">
+                                          <div className="min-w-0 flex-1">
+                                            <span className="font-tech font-bold text-white block truncate">{att.name}</span>
+                                            <span className="text-[8.5px] text-slate-400 font-mono-code">{att.slots} slot(s) • {att.cost} €$</span>
+                                          </div>
+                                          <button
+                                            type="button"
+                                            onClick={() => installWeaponAttachment(w.instanceId, att.id, 0)}
+                                            className="px-2 py-0.5 bg-cyan-700 hover:bg-cyan-600 text-white font-mono-code font-bold rounded text-[9px] shrink-0 cursor-pointer"
+                                          >
+                                            + Instalar
+                                          </button>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })()}
+
+                            {/* 3. Mejora Tech Maker */}
+                            <div className="space-y-1.5 pt-1.5 border-t border-[#1a1f2e]">
+                              <div className="flex items-center justify-between text-[10px] font-mono-code">
+                                <span className="text-amber-300 font-bold uppercase">🛠️ Mejora Tech Maker (Upgrade Expertise):</span>
+                                {w.techUpgrade && w.techUpgrade !== 'none' && (
+                                  <button
+                                    type="button"
+                                    onClick={() => applyTechUpgradeToWeapon(w.instanceId, 'none', 0)}
+                                    className="text-[9px] text-red-400 hover:text-red-300 underline cursor-pointer"
+                                  >
+                                    Quitar Mejora Actual
+                                  </button>
+                                )}
+                              </div>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                                {TECH_MAKER_UPGRADE_OPTIONS.filter((o) => o.targetType === 'weapon').map((opt) => {
+                                  const isCurrent = w.techUpgrade === opt.id;
+                                  return (
+                                    <button
+                                      key={opt.id}
+                                      type="button"
+                                      onClick={() => applyTechUpgradeToWeapon(w.instanceId, isCurrent ? 'none' : (opt.id as TechWeaponUpgradeType), 0)}
+                                      className={`p-1.5 rounded text-left border transition-all cursor-pointer ${
+                                        isCurrent
+                                          ? 'bg-amber-950/60 border-amber-500 text-white'
+                                          : 'bg-[#0d0f17] border-[#1e2436] text-slate-300 hover:border-slate-500'
+                                      }`}
+                                    >
+                                      <div className="font-tech text-[10px] font-bold text-amber-300 flex items-center justify-between">
+                                        <span>{opt.label}</span>
+                                        {isCurrent && <span className="text-[8px] bg-amber-500 text-black px-1 rounded font-bold">ACTIVO</span>}
+                                      </div>
+                                      <div className="text-[8.5px] text-slate-400 line-clamp-1 mt-0.5">{opt.description}</div>
+                                    </button>
+                                  );
+                                })}
                               </div>
                             </div>
                           </div>
@@ -5247,6 +5689,33 @@ export const CombatHudView: React.FC = () => {
                                       </>
                                     )}
                                   </div>
+
+                                  {/* Indicador de ranuras y badges de accesorios */}
+                                  {(() => {
+                                    const slotCap = calculateWeaponSlotCapacity(w);
+                                    const atts = w.installedAttachments ?? [];
+                                    return (
+                                      <div className="flex items-center gap-1 flex-wrap mt-0.5">
+                                        <span className="text-[8.5px] font-mono-code px-1 py-0.2 rounded bg-[#161a26] text-slate-400 border border-[#2b334a]">
+                                          🔩 {slotCap.usedSlots}/{slotCap.maxSlots} slots
+                                          {w.techUpgrade === 'extra_slot' && <span className="text-cyan-400 ml-0.5">(+1 Tech)</span>}
+                                        </span>
+                                        {w.techUpgrade && w.techUpgrade !== 'none' && (
+                                          <span className="text-[8.5px] font-mono-code px-1 py-0.2 rounded bg-cyan-950/70 text-cyan-300 border border-cyan-500/40 font-bold">
+                                            🛠️ {TECH_MAKER_UPGRADE_OPTIONS.find((o) => o.id === w.techUpgrade)?.label || w.techUpgrade}
+                                          </span>
+                                        )}
+                                        {atts.map((attId) => {
+                                          const attObj = WEAPON_ATTACHMENTS_CATALOG.find((a) => a.id === attId);
+                                          return (
+                                            <span key={attId} className="text-[8.5px] font-mono-code px-1 py-0.2 rounded bg-purple-950/60 text-purple-300 border border-purple-500/30">
+                                              {attObj?.name.split(' (')[0] || attId}
+                                            </span>
+                                          );
+                                        })}
+                                      </div>
+                                    );
+                                  })()}
                                 </div>
                               </button>
 
@@ -5385,6 +5854,99 @@ export const CombatHudView: React.FC = () => {
                                       Quitar Rebuild (Restaurar 2045)
                                     </button>
                                   )}
+                                </div>
+
+                                {/* Accesorios & Tech Upgrade en Arsenal Belt */}
+                                <div className="pt-2 border-t border-[#1a1f2e] space-y-2">
+                                  <div className="flex items-center justify-between text-[10px] font-mono-code">
+                                    <span className="font-tech text-cyan-300 font-bold uppercase">🔩 ACCESORIOS & TECH:</span>
+                                    {(() => {
+                                      const slotCap = calculateWeaponSlotCapacity(w);
+                                      return (
+                                        <span className="text-slate-400">
+                                          {slotCap.usedSlots}/{slotCap.maxSlots} slots ({slotCap.remainingSlots} libres)
+                                        </span>
+                                      );
+                                    })()}
+                                  </div>
+
+                                  {/* Accesorios Instalados */}
+                                  <div className="flex flex-wrap gap-1">
+                                    {(w.installedAttachments ?? []).length === 0 ? (
+                                      <span className="text-[9px] text-slate-500 italic font-mono-code">Sin accesorios</span>
+                                    ) : (
+                                      (w.installedAttachments ?? []).map((attId) => {
+                                        const att = WEAPON_ATTACHMENTS_CATALOG.find((a) => a.id === attId);
+                                        return (
+                                          <span key={attId} className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-purple-950/60 text-purple-300 border border-purple-500/40 text-[9px] font-mono-code">
+                                            <span>{att?.name.split(' (')[0] || attId}</span>
+                                            <button
+                                              type="button"
+                                              onClick={() => removeWeaponAttachment(w.instanceId, attId)}
+                                              className="text-red-400 hover:text-red-300 font-bold ml-0.5 cursor-pointer"
+                                              title="Quitar accesorio"
+                                            >
+                                              ✕
+                                            </button>
+                                          </span>
+                                        );
+                                      })
+                                    )}
+                                  </div>
+
+                                  {/* Instalar Accesorio Rápido */}
+                                  {(() => {
+                                    const slotCap = calculateWeaponSlotCapacity(w);
+                                    const available = WEAPON_ATTACHMENTS_CATALOG.filter((att) => {
+                                      const isInstalled = (w.installedAttachments ?? []).includes(att.id);
+                                      const canFit = slotCap.remainingSlots >= att.slots;
+                                      const isEligible = att.eligibleWeaponTypes.length === 0 || 
+                                        att.eligibleWeaponTypes.some((t) => t.toLowerCase() === (w.skill || '').toLowerCase() || t.toLowerCase() === (w.type || '').toLowerCase());
+                                      const hasIncompatible = (w.installedAttachments ?? []).some((id) => att.incompatibleWith.includes(id));
+                                      return !isInstalled && canFit && isEligible && !hasIncompatible;
+                                    });
+
+                                    if (slotCap.remainingSlots === 0 || available.length === 0) return null;
+
+                                    return (
+                                      <div className="flex items-center gap-1.5 pt-1">
+                                        <select
+                                          defaultValue=""
+                                          onChange={(e) => {
+                                            if (e.target.value) {
+                                              installWeaponAttachment(w.instanceId, e.target.value, 0);
+                                              e.target.value = '';
+                                            }
+                                          }}
+                                          className="flex-1 bg-[#12141f] border border-[#2b334a] text-slate-300 text-[9px] rounded px-1.5 py-0.5 font-mono-code"
+                                        >
+                                          <option value="">+ Añadir accesorio...</option>
+                                          {available.map((att) => (
+                                            <option key={att.id} value={att.id}>
+                                              {att.name} ({att.slots} slot, {att.cost} eb)
+                                            </option>
+                                          ))}
+                                        </select>
+                                      </div>
+                                    );
+                                  })()}
+
+                                  {/* Mejora Tech Maker Rápida */}
+                                  <div className="flex items-center justify-between gap-1 pt-1 border-t border-[#1a1f2e] text-[9.5px] font-mono-code">
+                                    <span className="text-amber-300">Mejora Tech:</span>
+                                    <select
+                                      value={w.techUpgrade || 'none'}
+                                      onChange={(e) => applyTechUpgradeToWeapon(w.instanceId, e.target.value as TechWeaponUpgradeType, 0)}
+                                      className="bg-[#12141f] border border-amber-500/40 text-amber-200 text-[9px] rounded px-1.5 py-0.5 font-mono-code"
+                                    >
+                                      <option value="none">Sin Mejora Tech</option>
+                                      {TECH_MAKER_UPGRADE_OPTIONS.filter((o) => o.targetType === 'weapon').map((opt) => (
+                                        <option key={opt.id} value={opt.id}>
+                                          🛠️ {opt.label}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
                                 </div>
 
                                 <div className="pt-2 border-t border-[#1a1f2e] flex items-center justify-between">

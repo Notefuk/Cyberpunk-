@@ -377,6 +377,8 @@ export interface AmmoItem {
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
 
+export type TechWeaponUpgradeType = 'none' | 'excellent_quality' | 'extra_slot' | 'concealable' | 'invention_damage_mod';
+
 export interface EquippedWeapon extends WeaponItem {
   instanceId: string;
   currentMag: number;
@@ -384,6 +386,11 @@ export interface EquippedWeapon extends WeaponItem {
   inHand?: boolean;
   reserveAmmo?: number;
   rebuild2077?: 'standard' | 'power' | 'smart' | 'tech';
+  installedAttachments?: string[];
+  techUpgrade?: TechWeaponUpgradeType;
+  baseStandardMag?: number;
+  underbarrelSgAmmo?: number;
+  underbarrelGlAmmo?: number;
 }
 
 export interface ActiveCriticalInjury {
@@ -456,6 +463,7 @@ export interface CharacterLifepath {
   tragicLoveAffairs: string[];
   enemies: LifepathEnemy[];
   roleLifepath: Record<string, string>;
+  roleSpecificLifepath?: Record<string, string>;
   lifeGoal: string;
 }
 
@@ -538,12 +546,14 @@ export interface CharacterSheet {
     maxSp: number;
     currentSp: number;
     penalty: number;
+    techUpgradedSp?: boolean;
   };
   bodyArmor: {
     name: string;
     maxSp: number;
     currentSp: number;
     penalty: number;
+    techUpgradedSp?: boolean;
   };
   skills: Record<CombatSkillKey, number>;
   equippedWeapons: EquippedWeapon[];

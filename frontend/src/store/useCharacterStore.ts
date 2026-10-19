@@ -19,6 +19,7 @@ import type {
   SoloCombatAwarenessAllocation,
   StatKey,
   TechMakerProject,
+  TechWeaponUpgradeType,
   WeaponItem
 } from '../types/cyberpunk';
 import { calculateMaxHp, getEffectiveBody } from '../engine/characterEngine';
@@ -29,6 +30,10 @@ import {
   buildCharacterSheetFromPregen as instantiatePregenCharacter
 } from '../data/characterCreationData';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
+import {
+  WEAPON_ATTACHMENTS_CATALOG,
+  calculateModifiedMagazineSize
+} from '../data/weaponAttachmentsAndTechData';
 
 function mapInjuryIcon(icon: string): ActiveCriticalInjury['iconType'] {
   if (icon === 'heart' || icon === 'throat') return 'organ';
@@ -491,6 +496,13 @@ export interface CharacterStoreState {
   // CEMK 2077 Roster & Party actions
   loadCemk2077PartyRoster: () => void;
   syncOrRestoreCemkFolioCharacters: () => void;
+
+  // Weapon Attachments & Tech Maker Upgrades
+  installWeaponAttachment: (weaponInstanceId: string, attachmentId: string, costEurobucks: number) => void;
+  removeWeaponAttachment: (weaponInstanceId: string, attachmentId: string) => void;
+  applyTechUpgradeToWeapon: (weaponInstanceId: string, upgradeType: TechWeaponUpgradeType, materialCostEurobucks: number) => void;
+  applyTechUpgradeToArmor: (location: 'head' | 'body', enable: boolean, materialCostEurobucks: number) => void;
+  updateRoleSpecificLifepath: (key: string, value: string) => void;
 }
 
 const initialRoster = loadInitialCharacters();
@@ -1061,6 +1073,291 @@ export const useCharacterStore = create<CharacterStoreState>()(
               equippedWeapons: updatedWeapons,
               eurodollars: newBalance,
               transactions: newTransactions
+            };
+          })
+        }));
+      },
+
+      installWeaponAttachment: (
+        weaponInstanceId: string,
+        attachmentId: string,
+        costEurobucks: number
+      ) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            const att = WEAPON_ATTACHMENTS_CATALOG.find(a => a.id === attachmentId);
+            const incomp = att?.incompatibleWith ?? [];
+
+            const updatedWeapons = c.equippedWeapons.map(w => {
+              if (w.instanceId !== weaponInstanceId) return w;
+
+              const baseMag = w.baseStandardMag ?? w.standardMag ?? 0;
+              const prev = w.installedAttachments ?? [];
+              const filtered = prev.filter(id => !incomp.includes(id) && id !== attachmentId);
+              const updatedAttachments = [...filtered, attachmentId];
+
+              const tempWep: EquippedWeapon = {
+                ...w,
+                installedAttachments: updatedAttachments,
+                baseStandardMag: baseMag
+              };
+              const newStandardMag = calculateModifiedMagazineSize(tempWep, baseMag);
+
+              let rebuild2077 = w.rebuild2077;
+              if (att?.rebuild2077) {
+                rebuild2077 = att.rebuild2077;
+              }
+
+              let underbarrelSgAmmo = w.underbarrelSgAmmo;
+              if (attachmentId === 'att-underbarrel-sg' && underbarrelSgAmmo === undefined) {
+                underbarrelSgAmmo = 2;
+              }
+
+              let underbarrelGlAmmo = w.underbarrelGlAmmo;
+              if (attachmentId === 'att-underbarrel-gl' && underbarrelGlAmmo === undefined) {
+                underbarrelGlAmmo = 1;
+              }
+
+              return {
+                ...w,
+                baseStandardMag: baseMag,
+                installedAttachments: updatedAttachments,
+                standardMag: newStandardMag,
+                currentMag: Math.min(newStandardMag, w.currentMag ?? newStandardMag),
+                rebuild2077,
+                underbarrelSgAmmo,
+                underbarrelGlAmmo
+              };
+            });
+
+            let newBalance = c.eurodollars || 0;
+            let newTransactions = c.transactions || [];
+            if (costEurobucks > 0) {
+              newBalance = Math.max(0, newBalance - costEurobucks);
+              const tx: EurodollarTransaction = {
+                id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                timestamp: new Date().toISOString(),
+                concept: `Instalar accesorio: ${att?.name || attachmentId}`,
+                amount: -costEurobucks,
+                balanceAfter: newBalance
+              };
+              newTransactions = [tx, ...newTransactions].slice(0, 50);
+            }
+
+            return {
+              ...c,
+              equippedWeapons: updatedWeapons,
+              eurodollars: newBalance,
+              transactions: newTransactions
+            };
+          })
+        }));
+      },
+
+      removeWeaponAttachment: (weaponInstanceId: string, attachmentId: string) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            const att = WEAPON_ATTACHMENTS_CATALOG.find(a => a.id === attachmentId);
+
+            const updatedWeapons = c.equippedWeapons.map(w => {
+              if (w.instanceId !== weaponInstanceId) return w;
+
+              const prev = w.installedAttachments ?? [];
+              const updatedAttachments = prev.filter(id => id !== attachmentId);
+              const baseMag = w.baseStandardMag ?? w.standardMag ?? 0;
+
+              const tempWep: EquippedWeapon = {
+                ...w,
+                installedAttachments: updatedAttachments,
+                baseStandardMag: baseMag
+              };
+              const newStandardMag = calculateModifiedMagazineSize(tempWep, baseMag);
+
+              let rebuild2077 = w.rebuild2077;
+              if (att?.rebuild2077 && rebuild2077 === att.rebuild2077) {
+                rebuild2077 = undefined;
+              }
+
+              return {
+                ...w,
+                installedAttachments: updatedAttachments,
+                standardMag: newStandardMag,
+                currentMag: Math.min(newStandardMag, w.currentMag ?? newStandardMag),
+                rebuild2077
+              };
+            });
+
+            return {
+              ...c,
+              equippedWeapons: updatedWeapons
+            };
+          })
+        }));
+      },
+
+      applyTechUpgradeToWeapon: (
+        weaponInstanceId: string,
+        upgradeType: TechWeaponUpgradeType,
+        materialCostEurobucks: number
+      ) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            const updatedWeapons = c.equippedWeapons.map(w => {
+              if (w.instanceId !== weaponInstanceId) return w;
+              const isConcealable = upgradeType === 'concealable' ? true : w.concealable;
+              return {
+                ...w,
+                techUpgrade: upgradeType,
+                concealable: isConcealable
+              };
+            });
+
+            let newBalance = c.eurodollars || 0;
+            let newTransactions = c.transactions || [];
+            if (materialCostEurobucks > 0) {
+              newBalance = Math.max(0, newBalance - materialCostEurobucks);
+              const tx: EurodollarTransaction = {
+                id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                timestamp: new Date().toISOString(),
+                concept: `Maker Tech Upgrade (Arma: ${upgradeType})`,
+                amount: -materialCostEurobucks,
+                balanceAfter: newBalance
+              };
+              newTransactions = [tx, ...newTransactions].slice(0, 50);
+            }
+
+            return {
+              ...c,
+              equippedWeapons: updatedWeapons,
+              eurodollars: newBalance,
+              transactions: newTransactions
+            };
+          })
+        }));
+      },
+
+      applyTechUpgradeToArmor: (
+        location: 'head' | 'body',
+        enable: boolean,
+        materialCostEurobucks: number
+      ) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            let updatedHeadArmor = { ...c.headArmor };
+            let updatedBodyArmor = { ...c.bodyArmor };
+
+            if (location === 'head') {
+              const currentUpgraded = !!c.headArmor.techUpgradedSp;
+              if (enable && !currentUpgraded) {
+                updatedHeadArmor = {
+                  ...c.headArmor,
+                  techUpgradedSp: true,
+                  maxSp: c.headArmor.maxSp + 1,
+                  currentSp: c.headArmor.currentSp + 1
+                };
+              } else if (!enable && currentUpgraded) {
+                const nextMax = Math.max(0, c.headArmor.maxSp - 1);
+                updatedHeadArmor = {
+                  ...c.headArmor,
+                  techUpgradedSp: false,
+                  maxSp: nextMax,
+                  currentSp: Math.max(0, Math.min(nextMax, c.headArmor.currentSp))
+                };
+              }
+            } else if (location === 'body') {
+              const currentUpgraded = !!c.bodyArmor.techUpgradedSp;
+              if (enable && !currentUpgraded) {
+                updatedBodyArmor = {
+                  ...c.bodyArmor,
+                  techUpgradedSp: true,
+                  maxSp: c.bodyArmor.maxSp + 1,
+                  currentSp: c.bodyArmor.currentSp + 1
+                };
+              } else if (!enable && currentUpgraded) {
+                const nextMax = Math.max(0, c.bodyArmor.maxSp - 1);
+                updatedBodyArmor = {
+                  ...c.bodyArmor,
+                  techUpgradedSp: false,
+                  maxSp: nextMax,
+                  currentSp: Math.max(0, Math.min(nextMax, c.bodyArmor.currentSp))
+                };
+              }
+            }
+
+            let newBalance = c.eurodollars || 0;
+            let newTransactions = c.transactions || [];
+            if (materialCostEurobucks > 0) {
+              newBalance = Math.max(0, newBalance - materialCostEurobucks);
+              const tx: EurodollarTransaction = {
+                id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+                timestamp: new Date().toISOString(),
+                concept: `Maker Tech Upgrade (Blindaje ${location.toUpperCase()}: ${enable ? '+1 SP' : 'Retirado'})`,
+                amount: -materialCostEurobucks,
+                balanceAfter: newBalance
+              };
+              newTransactions = [tx, ...newTransactions].slice(0, 50);
+            }
+
+            return {
+              ...c,
+              headArmor: updatedHeadArmor,
+              bodyArmor: updatedBodyArmor,
+              eurodollars: newBalance,
+              transactions: newTransactions
+            };
+          })
+        }));
+      },
+
+      updateRoleSpecificLifepath: (key: string, value: string) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+
+            const existingLifepath: CharacterLifepath = c.lifepath || {
+              culturalRegion: '',
+              personality: '',
+              clothingStyle: '',
+              hairstyle: '',
+              affectation: '',
+              valueMost: '',
+              feelAboutPeople: '',
+              valuedPerson: '',
+              valuedPossession: '',
+              familyBackground: '',
+              childhoodEnvironment: '',
+              familyCrisis: '',
+              friends: [],
+              tragicLoveAffairs: [],
+              enemies: [],
+              roleLifepath: {},
+              lifeGoal: ''
+            };
+
+            const updatedRoleSpecific = {
+              ...(existingLifepath.roleSpecificLifepath || {}),
+              [key]: value
+            };
+            const updatedRoleLifepath = {
+              ...(existingLifepath.roleLifepath || {}),
+              [key]: value
+            };
+
+            return {
+              ...c,
+              lifepath: {
+                ...existingLifepath,
+                roleSpecificLifepath: updatedRoleSpecific,
+                roleLifepath: updatedRoleLifepath
+              }
             };
           })
         }));

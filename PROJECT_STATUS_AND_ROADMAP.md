@@ -1,19 +1,22 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v3.9.0 OPERATIVO`**  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v4.0.0 OPERATIVO`**  
 > **FECHA DE CORTE**: 2026-10-19  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 
 ---
 
-## 📊 1. Resumen Ejecutivo de Estado (v3.9.0)
+## 📊 1. Resumen Ejecutivo de Estado (v4.0.0)
 
 CPR Omni-Deck es una plataforma táctica digital offline-first de alta fidelidad diseñada según la filosofía de arquitectura desacoplada COMP/CON de Lancer RPG. La aplicación actúa como un HUD de combate dinámico, un laboratorio de ciberware/equipo callejero, un asistente de Netrunning y un portal integral de gestión para Árbitros y Edgerunners de Cyberpunk RED.
 
 ### Métricas de Desarrollo en Vivo:
 * **Ítems del Catálogo Multi-Libro**: 391+ ítems oficiales indexados sin pérdidas.
 * **Folios Canónicos CEMK 2077**: 7 personajes oficiales pregenerados (28 páginas CEMK), 66 habilidades completas por folio con desglose `LVL + STAT = BASE`, y 7 tokens PNG oficiales.
+* **Catálogo Canónico de Accesorios de Armas**: 23 aditamentos oficiales indexados con ranuras requeridas (0 a 3), costes y restricciones de categoría de arma.
+* **Sistema Maker de Mejoras Tech**: Extra slot de accesorios, +1 SP de armadura (Cabeza y Torso), bonificaciones de calidad/daño/ROF con matriz de DVs y tiempos de fabricación oficiales (Core pp. 147-148).
+* **Lifepaths Específicos de Rol**: 10 trasfondos oficiales de rol (Rockero, Solo, Netrunner, Tech, Medtech, Media, Ley, Ejecutivo, Fixer, Nómada) con tiradas 1d10 o selección directa.
 * **Taller de Reconstrucción de Armas CEMK 2077**: Conversión 2045 a 2077 (Smart, Tech, Power) con toggles tácticos de combate (Bypass de Cobertura Smart, Rebote Power, Disparo Cargado Tech 50% SP).
 * **Gestor de Averías & Pulso EMP de Ciberware**: Protocolo de resistencia ante EMP (`TECH + Cybertech + 1d10 vs DV 15`), selector de implantes con insignia `⚡ EMP OFF` y anulación dinámica de bonos.
 * **Progresión de Rol Rango 1-10**: Visualizador de árbol de 10 rangos oficiales (`ROLE_ABILITIES_COMPLETE_PROGRESSION`) y selector rápido en Street Lab.
@@ -27,18 +30,18 @@ CPR Omni-Deck es una plataforma táctica digital offline-first de alta fidelidad
 
 ---
 
-## 🛠️ 2. Módulos del Sistema Operativos (v3.9.0)
+## 🛠️ 2. Módulos del Sistema Operativos (v4.0.0)
 
 | # | Módulo | Componente Principal | Estado | Descripción Funcional |
 |---|--------|----------------------|:------:|-----------------------|
-| 1 | **Motor de Combate & HUD Táctico** | `CombatHudView.tsx` | **100% OPERATIVO** | Grid modular en 3 zonas, tiradas D10, selector de municiones (10 tipos), toggles tácticos 2077 (Smart bypass, Power ricochet, Tech charge shot), gestor de averías/EMP con tirada vs DV 15, reparación/descanso rápido y filtro de decluttering de bandeja derecha (`disabledRightModules`). |
+| 1 | **Motor de Combate & HUD Táctico** | `CombatHudView.tsx` | **100% OPERATIVO** | Grid modular en 3 zonas, tiradas D10, selector de municiones (10 tipos), toggles tácticos 2077 (Smart bypass, Power ricochet, Tech charge shot), gestor de averías/EMP con tirada vs DV 15, reparación/descanso rápido, filtro de decluttering (`disabledRightModules`), gestión y ataques secundarios de accesorios instalados (Bayoneta, Escopeta Bajo Cañón, Lanzagranadas Bajo Cañón) y mejora Maker Tech +1 SP en Cabeza/Torso. |
 | 2 | **Matriz Visual SP/SDP & Calculadora** | `CombatHudView.tsx` | **100% OPERATIVO** | Placas interactivas (`🛡️/💥`) para Cabeza y Torso, monitor SDP de Coberturas/Escudos (`🔰/💥`), Calculadora de Impactos con soporte para AP, Melee, Artes Marciales, Brawling y Críticos, y guía oficial integrada (pp. 183-187). |
 | 3 | **Creador de Personajes & Lifepath** | `CharacterCreatorWizard.tsx` | **100% OPERATIVO** | Wizard de 6 pasos (Concepto/Rol, STATs por 3 métodos, Habilidades, Lifepath con tiradas 1d10, Equipo inicial por Rol y Exportación en formato oficial). |
-| 4 | **Street Lab, Arsenal & Roles** | `StreetLabView.tsx` | **100% OPERATIVO** | Gestión de Eurodólares, Taller de Reconstrucción de Armas 2077, gestor de malfunciones/EMP en ciberware, pestañas dedicadas de Progresión de Rol Rango 1-10 y Descanso Natural/Reparación de Blindaje, 27 artes marciales colapsables y Dossier Canónico CEMK 2077. |
+| 4 | **Street Lab, Arsenal & Roles** | `StreetLabView.tsx` | **100% OPERATIVO** | Gestión de Eurodólares, Taller de Reconstrucción de Armas 2077, gestor de malfunciones/EMP en ciberware, pestañas de Progresión de Rol 1-10, Descanso/Reparación, Lifepaths de Rol, gestión e instalación de los 23 accesorios de armas con capacidad de slots y mejoras Maker Tech (+1 Slot, +1 SP, daño, ROF). |
 | 5 | **Netrunning & 10 Habilidades de Rol** | `NetAndRolesDeckView.tsx` | **100% OPERATIVO** | Simulador de arquitectura de Red 2045 con programas Black ICE, consola de Quickhacking CEMK 2077 con cola de memoria RAM, 27 artes marciales colapsables y terminal interactivo para las 10 Habilidades de Rol oficiales. |
 | 6 | **Bestiario GM & Encuentros** | `EnemiesCompendiumPanel.tsx` | **100% OPERATIVO** | Catálogo de 44 enemigos base y 15 facciones con inyección directa de perfiles de combate en el HUD táctico y generador de goons al vuelo. |
 | 7 | **Misión Oficial CEMK 2077 & Hub de Folios** | `RedChromeCargoView.tsx` | **100% OPERATIVO** | Misión interactiva *Red Chrome Cargo* con mapa Maglev Hammerhead, tablero de escenas, spawneo de enemigos, botín y pestaña 4 con selector dual de Edgerunners 2077 (7 Folios CEMK + 7 Anime Crew) con modal de 66 habilidades. |
-| 8 | **Codex, Compendio & Documentación** | `SystemChangelogAndDocsView.tsx` / `CompendiumView.tsx` | **100% OPERATIVO** | Compendio con tooltips canónicos para subclases de armas, insignias de reconstrucción 2077, tooltips de munición y ciberware, portal in-app de documentación y registro cronológico (`v1.0.0` a `v3.9.0`). |
+| 8 | **Codex, Compendio & Documentación** | `SystemChangelogAndDocsView.tsx` / `CompendiumView.tsx` | **100% OPERATIVO** | Compendio con tooltips canónicos para subclases de armas, insignias de reconstrucción 2077, tooltips de munición y ciberware, portal in-app de documentación y registro cronológico (`v1.0.0` a `v4.0.0`). |
 
 ---
 
@@ -55,7 +58,8 @@ flowchart TD
     F_ERGO --> F_FOLIO[v3.7.0: Folios Canónicos CEMK 2077 & Dossier]
     F_FOLIO --> F_TOOLTIP[v3.8.0: Motor Tooltips & Reconstrucción 2077]
     F_TOOLTIP --> F_REBUILD[v3.9.0: Rebuild Workshop, EMP, Roles & Repair]
-    F_REBUILD --> F4[Fase 4: GM Role Master Control Deck & Campaña]
+    F_REBUILD --> F_ATTACH[v4.0.0: Accesorios, Maker Tech & Role Lifepaths]
+    F_ATTACH --> F4[Fase 4: GM Role Master Control Deck & Campaña]
     F4 --> F5[Fase 5: PWA Offline Sync & Multi-Device]
 
     style F0 fill:#059669,stroke:#10b981,color:#fff
@@ -67,7 +71,8 @@ flowchart TD
     style F_ERGO fill:#059669,stroke:#10b981,color:#fff
     style F_FOLIO fill:#059669,stroke:#10b981,color:#fff
     style F_TOOLTIP fill:#059669,stroke:#10b981,color:#fff
-    style F_REBUILD fill:#0891b2,stroke:#06b6d4,color:#fff
+    style F_REBUILD fill:#059669,stroke:#10b981,color:#fff
+    style F_ATTACH fill:#0891b2,stroke:#06b6d4,color:#fff
     style F4 fill:#1e293b,stroke:#475569,color:#94a3b8
     style F5 fill:#1e293b,stroke:#475569,color:#94a3b8
 ```
@@ -127,6 +132,22 @@ flowchart TD
   - **Pestaña de Progresión de Rol Rango 1-10**: Visualizador jerárquico de los 10 rangos de habilidad de rol (`ROLE_ABILITIES_COMPLETE_PROGRESSION`), resumen de reglas y selector interactivo con actualización en `StreetLabView.tsx`.
   - **Motor de Descanso Natural & Reparación de Blindaje**: Módulo de reposo por días (BODY/día, ×2 con Enhanced Antibodies, +BODY con Cryotank) y panel de reparación de SP de cabeza y torso basado en la tabla de DVs de Tech (Core pp. 140, 222-223).
   - **Filtro de Decluttering de Bandeja Derecha**: Conmutador de visibilidad (`disabledRightModules`) y modo atenuado en `CombatHudView.tsx` para silenciar módulos no utilizados.
+
+### ✅ Actualización v4.0.0: Catálogo de Accesorios de Armas, Sistema Maker de Mejoras Tech & Lifepaths Específicos de Rol (COMPLETADA)
+* **Objetivo**: Implementar el catálogo canónico de 23 accesorios de armas con ranuras y requerimientos, soporte para disparos secundarios en combate, mejoras oficiales de la habilidad de rol Maker para armas y armaduras, y trasfondos de Lifepath específicos para los 10 roles del Core Rulebook.
+* **Entregables**:
+  - **Catálogo Canónico de 23 Accesorios de Armas**: Definido en `weaponAttachmentsAndTechData.ts` (`WEAPON_ATTACHMENTS_CATALOG`) con cálculo estricto de capacidad de ranuras (Core p. 342: Mala Calidad 1, Estándar 2, Excelente Calidad 3) y soporte para armas exóticas (0 ranuras por defecto).
+  - **Gestor de Instalación y Desinstalación**: Integrado tanto en `StreetLabView.tsx` (pestaña Arsenal) como en `CombatHudView.tsx` (En Mano y Cinturón de Arsenal), permitiendo desinstalar aditamentos y recuperar slots libres.
+  - **Disparos Secundarios en HUD de Combate**: Botones de acción directa con tirada de ataque y daño parametrizado para:
+    - *Bayoneta*: Ataque melée 1d6 (ROF 2) sin cambiar de arma.
+    - *Escopeta Bajo Cañón*: Disparo 3d6 (Shell) con tabla de dispersión de escopeta.
+    - *Lanzagranadas Bajo Cañón*: Disparo de proyectil explosivo 6d6 (Grenade) con tabla de DV de explosivos.
+  - **Modificadores Balísticos Activos**: Integración de bonos en el motor balístico para Smartgun Link (+1/+2 check de puntería), Teleobjetivo/Infrarrojo/Visor Nocturno (anulación de penalizadores de distancia y oscuridad), Linterna Táctica y Tambor de Munición ampliado.
+  - **Sistema Maker de Mejoras Tech**: Implementación canónica de las opciones de mejora de campo (Core pp. 147-148):
+    - *Armas*: Ranura de accesorio extra (+1 slot), mejora de calidad (Mala a Estándar, Estándar a Excelente), mejora de daño de combate (+1 dmg o +1d6 según caso) y aumento de cadencia de fuego (ROF).
+    - *Armaduras*: Mejora de blindaje (+1 SP en Cabeza y +1 SP en Torso) con toggle interactivo y persistencia en estado.
+    - *Matriz de Fabricación Maker*: Cálculo en vivo de DVs y tiempos de fabricación reglamentarios según coste del ítem (100 eb DV 13 / 1 día, 500 eb DV 17 / 1 semana, 1.000 eb DV 21 / 2 semanas, etc.).
+  - **Lifepaths Específicos de Rol**: 10 conjuntos de tablas canónicas de trasfondo (Core pp. 44-71) para Rockerboy, Solo, Netrunner, Tech, Medtech, Media, Lawman, Exec, Fixer y Nomad con generador de tiradas 1d10 o selección manual en Street Lab.
 
 ### ⏳ Fase 4: GM Role Master Control Deck, Tracker de Iniciativa & Campaña (EN ROADMAP)
 * **Objetivo**: Dotar al Árbitro de herramientas para coordinar iniciativas grupales, arbitraje de las 10 Habilidades de Rol, seguimiento de campaña y estado del equipo.

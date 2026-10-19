@@ -14,6 +14,7 @@ import {
   buildCharacterSheetFromPregen,
   createDefaultCombatSkills
 } from '../../data/characterCreationData';
+import { ROLE_SPECIFIC_LIFEPATH_TABLES_BY_ROLE } from '../../data/weaponAttachmentsAndTechData';
 import type { 
   CharacterEra, 
   CreationMethod, 
@@ -144,6 +145,7 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
     tragicLoveAffairs: ['Un amor de juventud reclutado por una megacorp'],
     enemies: [],
     roleLifepath: {},
+    roleSpecificLifepath: {},
     lifeGoal: 'Llegar a la cima de la Liga Mayor de Edgerunners sin venderse'
   });
 
@@ -419,7 +421,11 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
   // Randomize full lifepath
   const handleRandomizeFullLifepath = () => {
     const pick = (arr: readonly string[]) => arr[Math.floor(Math.random() * arr.length)];
-    const roleQ = ROLE_LIFEPATH_QUESTIONS[selectedRoleKey.toLowerCase()] || [];
+    const roleKey = selectedRoleKey.toLowerCase();
+    const roleQ =
+      ROLE_SPECIFIC_LIFEPATH_TABLES_BY_ROLE[roleKey] ||
+      ROLE_LIFEPATH_QUESTIONS[roleKey] ||
+      [];
     const roleAnswers: Record<string, string> = {};
     for (const q of roleQ) {
       roleAnswers[q.id] = pick(q.options);
@@ -451,7 +457,8 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
           customNotes: 'Enemigo generado en la creación de personaje'
         }
       ],
-      roleLifepath: roleAnswers
+      roleLifepath: roleAnswers,
+      roleSpecificLifepath: { ...roleAnswers }
     });
     showToast('🎲 Lifepath completo generado al azar según tablas oficiales.');
   };
@@ -1674,49 +1681,127 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
             })}
           </div>
 
-          {/* Preguntas Específicas de Rol */}
-          {(ROLE_LIFEPATH_QUESTIONS[selectedRoleKey.toLowerCase()] || []).length > 0 && (
-            <div className="bg-[#0e111a] border border-[#222a3e] p-3.5 rounded-xs space-y-3">
-              <span className="font-tech text-xs font-bold text-[#f59e0b] uppercase tracking-wider block">
-                PREGUNTAS ESPECÍFICAS DE {selectedRoleKey.toUpperCase()}
-              </span>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {(ROLE_LIFEPATH_QUESTIONS[selectedRoleKey.toLowerCase()] || []).map((q) => {
-                  const currentAns = lifepath.roleLifepath[q.id] || q.options[0];
-                  return (
-                    <div key={q.id} className="bg-[#121520] p-2.5 rounded border border-[#1e2538] space-y-1">
-                      <div className="flex items-center justify-between">
-                        <label className="text-[10px] font-mono-code text-[#94a3b8] block">{q.label}</label>
-                        <button
-                          onClick={() => {
-                            const rand = q.options[Math.floor(Math.random() * q.options.length)];
+          {/* 🔧 LIFEPATH ESPECÍFICO DE TU ROL ({selectedRoleKey.toUpperCase()}) */}
+          {(() => {
+            const roleKey = selectedRoleKey.toLowerCase();
+            const roleQuestions =
+              ROLE_SPECIFIC_LIFEPATH_TABLES_BY_ROLE[roleKey] ||
+              ROLE_LIFEPATH_QUESTIONS[roleKey] ||
+              [];
+
+            if (roleQuestions.length === 0) return null;
+
+            const handleRollAllRoleLifepath = () => {
+              const updatedAnswers: Record<string, string> = { ...(lifepath.roleLifepath || {}) };
+              for (const q of roleQuestions) {
+                const rand = q.options[Math.floor(Math.random() * q.options.length)];
+                updatedAnswers[q.id] = rand;
+              }
+              setLifepath((prev) => ({
+                ...prev,
+                roleLifepath: updatedAnswers,
+                roleSpecificLifepath: { ...(prev.roleSpecificLifepath || {}), ...updatedAnswers }
+              }));
+              showToast(`🎲 Tablas de Lifepath de ${selectedRoleKey.toUpperCase()} generadas con dados.`);
+            };
+
+            return (
+              <div className="bg-[#0b0e17] border border-[#f59e0b]/40 p-4 rounded-xs space-y-3 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#222a3e] pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-tech text-sm font-black text-[#f59e0b] uppercase tracking-wider flex items-center gap-1.5">
+                      <span>🔧 LIFEPATH ESPECÍFICO DE TU ROL ({selectedRoleKey.toUpperCase()})</span>
+                    </span>
+                    {roleKey === 'tech' && (
+                      <span className="text-[9px] font-mono-code bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/40 px-2 py-0.5 rounded font-bold uppercase">
+                        CANÓNICO CORE PÁG. 55 (6 TABLAS)
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleRollAllRoleLifepath}
+                    className="px-3 py-1 bg-[#f59e0b] hover:bg-white text-black font-tech text-xs font-black uppercase rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-[0_0_8px_rgba(245,158,11,0.3)]"
+                  >
+                    <Dices className="w-3.5 h-3.5" />
+                    <span>🎲 TIRAR TODAS LAS TABLAS DE {selectedRoleKey.toUpperCase()}</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  {roleQuestions.map((q) => {
+                    const currentAns =
+                      lifepath.roleSpecificLifepath?.[q.id] ||
+                      lifepath.roleLifepath?.[q.id] ||
+                      q.options[0];
+                    const diceType = (q as any).dice || '1d6';
+
+                    return (
+                      <div key={q.id} className="bg-[#121522] p-3 rounded border border-[#1f263c] space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <label className="text-[11px] font-tech text-[#cbd5e1] font-bold block leading-tight">
+                            {q.label}
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const rand = q.options[Math.floor(Math.random() * q.options.length)];
+                              setLifepath((prev) => ({
+                                ...prev,
+                                roleLifepath: { ...(prev.roleLifepath || {}), [q.id]: rand },
+                                roleSpecificLifepath: { ...(prev.roleSpecificLifepath || {}), [q.id]: rand }
+                              }));
+                            }}
+                            className="text-[10px] font-mono-code bg-[#f59e0b]/20 hover:bg-[#f59e0b] text-[#f59e0b] hover:text-black border border-[#f59e0b]/40 px-2 py-0.5 rounded font-bold flex items-center gap-1 transition-colors cursor-pointer flex-shrink-0"
+                            title={`Tirar ${diceType} aleatorio`}
+                          >
+                            <Dices className="w-3 h-3" />
+                            <span>Tirar {diceType}</span>
+                          </button>
+                        </div>
+
+                        {/* Selector de opciones canónicas de la tabla */}
+                        <select
+                          value={q.options.includes(currentAns) ? currentAns : '__custom__'}
+                          onChange={(e) => {
+                            if (e.target.value !== '__custom__') {
+                              setLifepath((prev) => ({
+                                ...prev,
+                                roleLifepath: { ...(prev.roleLifepath || {}), [q.id]: e.target.value },
+                                roleSpecificLifepath: { ...(prev.roleSpecificLifepath || {}), [q.id]: e.target.value }
+                              }));
+                            }
+                          }}
+                          className="w-full bg-[#080a10] border border-[#232b40] text-xs font-mono-code text-[#38bdf8] px-2.5 py-1.5 rounded focus:outline-none focus:border-[#38bdf8]"
+                        >
+                          {q.options.map((opt, optIdx) => (
+                            <option key={optIdx} value={opt}>
+                              #{optIdx + 1}: {opt}
+                            </option>
+                          ))}
+                          <option value="__custom__">-- Personalizado / Escribir abajo --</option>
+                        </select>
+
+                        <input
+                          type="text"
+                          value={currentAns}
+                          onChange={(e) =>
                             setLifepath((prev) => ({
                               ...prev,
-                              roleLifepath: { ...prev.roleLifepath, [q.id]: rand }
-                            }));
-                          }}
-                          className="text-[9px] font-mono-code text-[#f59e0b] hover:text-white cursor-pointer"
-                        >
-                          🎲 1d10
-                        </button>
+                              roleLifepath: { ...(prev.roleLifepath || {}), [q.id]: e.target.value },
+                              roleSpecificLifepath: { ...(prev.roleSpecificLifepath || {}), [q.id]: e.target.value }
+                            }))
+                          }
+                          placeholder="O escribe tu propio texto personalizado..."
+                          className="w-full bg-[#07080d] border border-[#1b2234] text-white font-mono-code text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#f59e0b]"
+                        />
                       </div>
-                      <input
-                        type="text"
-                        value={currentAns}
-                        onChange={(e) =>
-                          setLifepath({
-                            ...lifepath,
-                            roleLifepath: { ...lifepath.roleLifepath, [q.id]: e.target.value }
-                          })
-                        }
-                        className="w-full bg-[#08090f] border border-[#23293c] text-white font-mono-code text-xs px-2 py-1 rounded focus:outline-none focus:border-[#f59e0b]"
-                      />
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Constructor de Amigos y Romances */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

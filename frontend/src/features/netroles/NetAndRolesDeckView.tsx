@@ -20,7 +20,10 @@ import {
   Swords,
   Coins,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Shield,
+  Dices,
+  Plus
 } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { 
@@ -40,7 +43,14 @@ import {
   MARTIAL_ARTS_FORMS,
   MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT
 } from '../../data/cyberfistsMartialArtsData';
-import type { SoloCombatAwarenessAllocation, OwnedVehicle } from '../../types/cyberpunk';
+import type { SoloCombatAwarenessAllocation, OwnedVehicle, TechWeaponUpgradeType } from '../../types/cyberpunk';
+import {
+  WEAPON_ATTACHMENTS_CATALOG,
+  calculateWeaponSlotCapacity,
+  TECH_MAKER_UPGRADE_OPTIONS,
+  MAKER_DV_AND_TIME_BY_COST,
+  TECH_LIFEPATH_TABLES
+} from '../../data/weaponAttachmentsAndTechData';
 
 type ActiveTab = 'netrunning' | 'quickhacks' | 'martial' | 'roles' | 'vehicles';
 
@@ -59,7 +69,12 @@ export const NetAndRolesDeckView: React.FC = () => {
     setInterfaceRankOverride,
     trainMartialArtWithIp,
     buyAndEquipMartialArtChip,
-    toggleEquipMartialArtChip
+    toggleEquipMartialArtChip,
+    installWeaponAttachment,
+    removeWeaponAttachment,
+    applyTechUpgradeToWeapon,
+    applyTechUpgradeToArmor,
+    updateRoleSpecificLifepath
   } = useCharacterStore();
 
   const character = characters.find(c => c.id === activeCharacterId) || characters[0];
@@ -283,6 +298,48 @@ export const NetAndRolesDeckView: React.FC = () => {
       return { ...p, hoursCompleted: nextHours, isCompleted: nextHours >= p.hoursRequired };
     });
     updateTechProjects(updated);
+  };
+
+  // Tech Maker Workbench & Lifepath state
+  const [selectedTechTargetId, setSelectedTechTargetId] = useState<string>(
+    character.equippedWeapons[0]?.instanceId || 'headArmor'
+  );
+  const [selectedAttachmentId, setSelectedAttachmentId] = useState<string>(
+    WEAPON_ATTACHMENTS_CATALOG[0].id
+  );
+  const [selectedUpgradeType, setSelectedUpgradeType] = useState<TechWeaponUpgradeType | 'armor_plus_one_sp'>(
+    'excellent_quality'
+  );
+  const [techMakerLog, setTechMakerLog] = useState<{
+    action: string;
+    roll: number;
+    dv: number;
+    success: boolean;
+    text: string;
+  } | null>(null);
+
+  const handleRollMakerCheck = (actionName: string, dv: number) => {
+    const d10 = Math.floor(Math.random() * 10) + 1;
+    const isExplode = d10 === 10;
+    const isFumble = d10 === 1;
+    const extraDie = isExplode || isFumble ? Math.floor(Math.random() * 10) + 1 : 0;
+    const techStat = character.stats.TECH || 6;
+    const makerRank = character.role.toLowerCase() === 'tech' ? (character.roleRank || 4) : 0;
+    const basicTech = character.generalSkills?.['Basic Tech'] || character.skills?.cybertech || 4;
+    const bestSkill = Math.max(makerRank, basicTech);
+    const totalRoll = d10 + (isExplode ? extraDie : 0) - (isFumble ? extraDie : 0) + techStat + bestSkill;
+    const success = totalRoll >= dv;
+
+    setTechMakerLog({
+      action: actionName,
+      roll: totalRoll,
+      dv,
+      success,
+      text: success
+        ? `¡ÉXITO DE TALLER! Tirada: ${totalRoll} vs DV ${dv}. Mejora completada según especificaciones.`
+        : `FALLO DE TALLER. Tirada: ${totalRoll} vs DV ${dv}. La calibración no superó la prueba de banco.`
+    });
+    return success;
   };
 
   // ==========================================================================
@@ -1727,54 +1784,503 @@ export const NetAndRolesDeckView: React.FC = () => {
 
           {/* ESTACIÓN ESPECIALIZADA: TECH MAKER */}
           {selectedRoleView === 'tech' && (
-            <div className="bg-[#090b10] border border-[#1b2234] p-4 rounded-xs space-y-4 shadow-xl">
-              <div className="flex items-center justify-between border-b border-[#1b2234] pb-3">
-                <div>
-                  <h3 className="font-tech text-base font-bold text-amber-400 uppercase flex items-center gap-2">
-                    <Wrench className="w-5 h-5 text-amber-500" />
-                    <span>TECH WORKBENCH // MAKER PROJECTS</span>
-                  </h3>
-                  <p className="text-xs font-mono-code text-[#64748b]">
-                    Proyectos activos de invención, fabricación y mejoras de equipo de taller.
-                  </p>
+            <div className="space-y-4">
+              {/* FEEDBACK DEL BANCO DE TRABAJO */}
+              {techMakerLog && (
+                <div
+                  className={`p-3 rounded-xs border text-xs font-mono-code flex items-center justify-between ${
+                    techMakerLog.success
+                      ? 'bg-emerald-950/40 border-emerald-500/60 text-emerald-200'
+                      : 'bg-red-950/40 border-red-500/60 text-red-200'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    {techMakerLog.success ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    ) : (
+                      <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+                    )}
+                    <span>{techMakerLog.text}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setTechMakerLog(null)}
+                    className="text-xs text-slate-400 hover:text-white px-1.5 cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
+              {/* 1. TALLER EN VIVO SOBRE TU INVENTARIO (MAKER: UPGRADE & ATTACHMENT BENCH) */}
+              <div className="bg-[#090b10] border border-amber-500/40 p-4 rounded-xs space-y-4 shadow-xl">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#1b2234] pb-3">
+                  <div>
+                    <h3 className="font-tech text-base font-bold text-amber-400 uppercase flex items-center gap-2">
+                      <Wrench className="w-5 h-5 text-amber-500" />
+                      <span>MAKER: UPGRADE &amp; ATTACHMENT BENCH // TALLER EN VIVO</span>
+                    </h3>
+                    <p className="text-xs font-mono-code text-[#64748b]">
+                      Instalación de accesorios oficiales (13 tipos) y Mejoras Maker (Core pág. 148) directamente sobre tu equipo.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono-code bg-[#171d2b] text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded">
+                      💰 Fondos: {character.eurodollars ?? 0} eb
+                    </span>
+                  </div>
+                </div>
+
+                {/* Selector de Objetivo (Armas equipadas o Armaduras) */}
+                <div className="space-y-2">
+                  <label className="text-[11px] font-tech text-slate-300 font-bold uppercase tracking-wider block">
+                    1. SELECCIONA EL ÍTEM DE TU INVENTARIO A MEJORAR:
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {character.equippedWeapons.map((w) => {
+                      const isSelected = selectedTechTargetId === w.instanceId;
+                      const cap = calculateWeaponSlotCapacity(w);
+                      return (
+                        <button
+                          key={w.instanceId}
+                          type="button"
+                          onClick={() => setSelectedTechTargetId(w.instanceId)}
+                          className={`px-3 py-2 rounded-xs border text-left font-mono-code text-xs transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-amber-500/15 border-amber-500 text-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.2)]'
+                              : 'bg-[#121622] border-[#20273a] text-slate-300 hover:border-slate-500'
+                          }`}
+                        >
+                          <div className="font-tech font-bold uppercase">{w.name}</div>
+                          <div className="text-[10px] text-slate-400">
+                            Ranuras: {cap.usedSlots}/{cap.maxSlots} {cap.isExotic && '(Exótica/Melee)'}
+                          </div>
+                        </button>
+                      );
+                    })}
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedTechTargetId('headArmor')}
+                      className={`px-3 py-2 rounded-xs border text-left font-mono-code text-xs transition-all cursor-pointer ${
+                        selectedTechTargetId === 'headArmor'
+                          ? 'bg-amber-500/15 border-amber-500 text-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.2)]'
+                          : 'bg-[#121622] border-[#20273a] text-slate-300 hover:border-slate-500'
+                      }`}
+                    >
+                      <div className="font-tech font-bold uppercase">Blindaje Cabeza ({character.headArmor.name})</div>
+                      <div className="text-[10px] text-slate-400">
+                        SP {character.headArmor.currentSp}/{character.headArmor.maxSp} {character.headArmor.techUpgradedSp && '• [+1 SP TECH]'}
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedTechTargetId('bodyArmor')}
+                      className={`px-3 py-2 rounded-xs border text-left font-mono-code text-xs transition-all cursor-pointer ${
+                        selectedTechTargetId === 'bodyArmor'
+                          ? 'bg-amber-500/15 border-amber-500 text-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.2)]'
+                          : 'bg-[#121622] border-[#20273a] text-slate-300 hover:border-slate-500'
+                      }`}
+                    >
+                      <div className="font-tech font-bold uppercase">Blindaje Torso ({character.bodyArmor.name})</div>
+                      <div className="text-[10px] text-slate-400">
+                        SP {character.bodyArmor.currentSp}/{character.bodyArmor.maxSp} {character.bodyArmor.techUpgradedSp && '• [+1 SP TECH]'}
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Panel de Trabajo según el ítem seleccionado */}
+                {(() => {
+                  const selectedWeapon = character.equippedWeapons.find((w) => w.instanceId === selectedTechTargetId);
+
+                  if (selectedWeapon) {
+                    const capacity = calculateWeaponSlotCapacity(selectedWeapon);
+                    const installedList = selectedWeapon.installedAttachments || [];
+                    const selectedAtt = WEAPON_ATTACHMENTS_CATALOG.find((a) => a.id === selectedAttachmentId);
+                    const canAffordAtt = (character.eurodollars ?? 0) >= (selectedAtt?.cost ?? 0);
+                    const hasFreeSlots = selectedAtt ? capacity.remainingSlots >= selectedAtt.slots : false;
+
+                    const upgradeOption = TECH_MAKER_UPGRADE_OPTIONS.find((u) => u.id === selectedUpgradeType);
+                    const dvEntry = MAKER_DV_AND_TIME_BY_COST.find((d) => (selectedWeapon.cost || 500) <= d.itemPriceMax) || MAKER_DV_AND_TIME_BY_COST[3];
+                    const upgradeDv = dvEntry.upgradeDv;
+                    const upgradeMaterialCost = Math.round((selectedWeapon.cost || 500) / 2);
+                    const canAffordUpgrade = (character.eurodollars ?? 0) >= upgradeMaterialCost;
+
+                    return (
+                      <div className="bg-[#101420] border border-[#1d2436] p-3.5 rounded-xs space-y-4">
+                        {/* Estado del arma en el banco */}
+                        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#1b2234] pb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-tech text-sm font-bold text-white uppercase">{selectedWeapon.name}</span>
+                            <span className="text-[10px] font-mono-code bg-[#1a2133] text-[#38bdf8] px-2 py-0.5 rounded font-bold">
+                              Ranuras Usadas: {capacity.usedSlots} / {capacity.maxSlots}
+                            </span>
+                            <span className="text-[10px] font-mono-code bg-[#1a2133] text-emerald-400 px-2 py-0.5 rounded font-bold">
+                              Cargador: {selectedWeapon.currentMag}/{selectedWeapon.standardMag} tiros
+                            </span>
+                            {selectedWeapon.techUpgrade && selectedWeapon.techUpgrade !== 'none' && (
+                              <span className="text-[10px] font-mono-code bg-amber-500/20 text-amber-400 border border-amber-500/40 px-2 py-0.5 rounded font-bold uppercase">
+                                Tech: {selectedWeapon.techUpgrade}
+                              </span>
+                            )}
+                          </div>
+                          {capacity.isExotic && (
+                            <span className="text-[10px] font-mono-code text-red-400 font-bold">
+                              ⚠️ Arma Exótica o Melee (0 ranuras estándar)
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Accesorios Instalados */}
+                        <div className="space-y-1.5">
+                          <span className="text-[11px] font-tech text-slate-300 font-bold uppercase block">
+                            ACCESORIOS INSTALADOS ({installedList.length}):
+                          </span>
+                          {installedList.length === 0 ? (
+                            <p className="text-xs font-mono-code text-[#64748b]">No hay accesorios instalados en esta arma.</p>
+                          ) : (
+                            <div className="flex flex-wrap gap-2">
+                              {installedList.map((attId) => {
+                                const attObj = WEAPON_ATTACHMENTS_CATALOG.find((a) => a.id === attId);
+                                return (
+                                  <div
+                                    key={attId}
+                                    className="flex items-center gap-1.5 bg-[#171d2b] border border-[#232c40] px-2.5 py-1 rounded text-xs font-mono-code text-slate-200"
+                                  >
+                                    <span className="font-bold text-amber-300">{attObj?.name || attId}</span>
+                                    <span className="text-[10px] text-slate-400">({attObj?.slots || 1} slot)</span>
+                                    <button
+                                      type="button"
+                                      onClick={() => removeWeaponAttachment(selectedWeapon.instanceId, attId)}
+                                      className="ml-1 text-red-400 hover:text-red-300 font-bold cursor-pointer"
+                                      title="Desinstalar accesorio"
+                                    >
+                                      ✕
+                                    </button>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Sección 1: Instalar Nuevo Accesorio */}
+                        <div className="pt-2 border-t border-[#1b2234] space-y-2">
+                          <span className="text-[11px] font-tech text-amber-400 font-bold uppercase block flex items-center gap-1.5">
+                            <Plus className="w-3.5 h-3.5" /> INSTALAR ACCESORIO CANÓNICO (13 OFICIALES)
+                          </span>
+                          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                            <div className="md:col-span-8 space-y-1">
+                              <select
+                                value={selectedAttachmentId}
+                                onChange={(e) => setSelectedAttachmentId(e.target.value)}
+                                className="w-full bg-[#0a0d16] border border-[#222b40] text-xs font-mono-code text-[#38bdf8] p-2 rounded focus:outline-none"
+                              >
+                                {WEAPON_ATTACHMENTS_CATALOG.map((att) => (
+                                  <option key={att.id} value={att.id}>
+                                    {att.name} • {att.cost} eb • {att.slots} {att.slots === 1 ? 'ranura' : 'ranuras'}
+                                  </option>
+                                ))}
+                              </select>
+                              {selectedAtt && (
+                                <p className="text-[11px] font-mono-code text-slate-400 leading-tight">
+                                  {selectedAtt.summary} {selectedAtt.incompatibleWith.length > 0 && `(Incompatible con: ${selectedAtt.incompatibleWith.join(', ')})`}
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="md:col-span-4">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (!selectedAtt) return;
+                                  installWeaponAttachment(selectedWeapon.instanceId, selectedAtt.id, selectedAtt.cost);
+                                }}
+                                disabled={!hasFreeSlots || !canAffordAtt || capacity.isExotic}
+                                className="w-full py-2 bg-amber-500/20 hover:bg-amber-500 disabled:opacity-30 text-amber-300 hover:text-black border border-amber-500/50 rounded font-tech text-xs font-bold uppercase transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                              >
+                                <Plus className="w-3.5 h-3.5" />
+                                <span>Instalar (-{selectedAtt?.cost ?? 100} eb)</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Sección 2: Maker: Upgrade Expertise (Armas) */}
+                        <div className="pt-2 border-t border-[#1b2234] space-y-2">
+                          <span className="text-[11px] font-tech text-amber-400 font-bold uppercase block flex items-center gap-1.5">
+                            <Wrench className="w-3.5 h-3.5" /> MAKER: UPGRADE EXPERTISE (CORE PÁG. 148)
+                          </span>
+                          <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+                            <div className="md:col-span-6 space-y-1">
+                              <select
+                                value={selectedUpgradeType}
+                                onChange={(e) => setSelectedUpgradeType(e.target.value as any)}
+                                className="w-full bg-[#0a0d16] border border-[#222b40] text-xs font-mono-code text-amber-400 p-2 rounded focus:outline-none"
+                              >
+                                {TECH_MAKER_UPGRADE_OPTIONS.filter((u) => u.targetType === 'weapon').map((u) => (
+                                  <option key={u.id} value={u.id}>
+                                    {u.label}
+                                  </option>
+                                ))}
+                              </select>
+                              {upgradeOption && (
+                                <p className="text-[11px] font-mono-code text-slate-400 leading-tight">
+                                  {upgradeOption.description} (Tiempo: {dvEntry.timeRequired} • Coste materiales: {upgradeMaterialCost} eb)
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="md:col-span-6 flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => handleRollMakerCheck(`Mejora Maker: ${selectedUpgradeType}`, upgradeDv)}
+                                className="flex-1 py-2 bg-[#171d2b] hover:bg-[#252f44] text-slate-200 border border-[#2d3954] rounded font-tech text-xs font-bold uppercase transition-colors cursor-pointer flex items-center justify-center gap-1"
+                              >
+                                <Dices className="w-3.5 h-3.5 text-amber-400" />
+                                <span>Tirar vs DV {upgradeDv}</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  applyTechUpgradeToWeapon(selectedWeapon.instanceId, selectedUpgradeType as TechWeaponUpgradeType, upgradeMaterialCost);
+                                  setTechMakerLog({
+                                    action: `Mejora aplicada: ${selectedUpgradeType}`,
+                                    roll: 0,
+                                    dv: upgradeDv,
+                                    success: true,
+                                    text: `Mejora ${selectedUpgradeType} aplicada al arma ${selectedWeapon.name} (-${upgradeMaterialCost} eb).`
+                                  });
+                                }}
+                                disabled={!canAffordUpgrade}
+                                className="flex-1 py-2 bg-emerald-500/20 hover:bg-emerald-500 disabled:opacity-30 text-emerald-300 hover:text-black border border-emerald-500/50 rounded font-tech text-xs font-bold uppercase transition-colors cursor-pointer flex items-center justify-center gap-1"
+                              >
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                <span>Aplicar (-{upgradeMaterialCost} eb)</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Si se seleccionó blindaje (Head o Body)
+                  const isHead = selectedTechTargetId === 'headArmor';
+                  const armorObj = isHead ? character.headArmor : character.bodyArmor;
+                  const locationName = isHead ? 'Cabeza' : 'Torso';
+                  const isUpgraded = !!armorObj.techUpgradedSp;
+                  const armorMaterialCost = 100;
+                  const canAffordArmor = (character.eurodollars ?? 0) >= armorMaterialCost;
+
+                  return (
+                    <div className="bg-[#101420] border border-[#1d2436] p-3.5 rounded-xs space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#1b2234] pb-2">
+                        <div>
+                          <span className="font-tech text-sm font-bold text-white uppercase">
+                            Blindaje de {locationName}: {armorObj.name}
+                          </span>
+                          <span className="text-xs font-mono-code text-[#38bdf8] ml-2 font-bold">
+                            SP Actual: {armorObj.currentSp} / SP Máx: {armorObj.maxSp}
+                          </span>
+                        </div>
+                        <span
+                          className={`text-[10px] font-mono-code font-bold px-2 py-0.5 rounded ${
+                            isUpgraded ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-slate-800 text-slate-400'
+                          }`}
+                        >
+                          {isUpgraded ? 'REFORZADA (+1 SP TECH ACTIVO)' : 'ESTÁNDAR (SIN MEJORA TECH)'}
+                        </span>
+                      </div>
+
+                      <p className="text-xs font-mono-code text-slate-300">
+                        <strong>Maker: Upgrade Expertise en Armaduras (Core pág. 148):</strong> Refuerza permanentemente las placas balísticas añadiendo +1 a su SP máximo y actual. (Coste materiales: 100 eb • DV 17 • Tiempo: 1 día).
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-3 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => handleRollMakerCheck(`Mejora Blindaje (+1 SP ${locationName})`, 17)}
+                          className="py-2 px-4 bg-[#171d2b] hover:bg-[#252f44] text-slate-200 border border-[#2d3954] rounded font-tech text-xs font-bold uppercase transition-colors cursor-pointer flex items-center gap-1.5"
+                        >
+                          <Dices className="w-4 h-4 text-amber-400" />
+                          <span>Tirar Chequeo Maker vs DV 17</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            applyTechUpgradeToArmor(isHead ? 'head' : 'body', !isUpgraded, !isUpgraded ? armorMaterialCost : 0);
+                            setTechMakerLog({
+                              action: `Blindaje ${locationName}`,
+                              roll: 0,
+                              dv: 17,
+                              success: true,
+                              text: !isUpgraded
+                                ? `Blindaje de ${locationName} reforzado con éxito (+1 SP Máx y Actual, -${armorMaterialCost} eb).`
+                                : `Mejora de blindaje de ${locationName} retirada (-1 SP).`
+                            });
+                          }}
+                          disabled={!isUpgraded && !canAffordArmor}
+                          className={`py-2 px-4 font-tech text-xs font-bold uppercase rounded border transition-colors cursor-pointer flex items-center gap-1.5 ${
+                            isUpgraded
+                              ? 'bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white border-red-500/40'
+                              : 'bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-black border-emerald-500/40 disabled:opacity-30'
+                          }`}
+                        >
+                          <Shield className="w-4 h-4" />
+                          <span>{isUpgraded ? 'Retirar Refuerzo (-1 SP)' : `Activar Refuerzo +1 SP (-${armorMaterialCost} eb)`}</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* 2. GENERADOR DEL TECH ROLE-SPECIFIC LIFEPATH (CORE RULEBOOK PÁG. 55) */}
+              <div className="bg-[#090b10] border border-cyan-500/40 p-4 rounded-xs space-y-4 shadow-xl">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#1b2234] pb-3">
+                  <div>
+                    <h3 className="font-tech text-base font-bold text-[#38bdf8] uppercase flex items-center gap-2">
+                      <BookOpen className="w-5 h-5 text-[#38bdf8]" />
+                      <span>TECH ROLE-SPECIFIC LIFEPATH // CORE RULEBOOK PÁG. 55 (6 TABLAS)</span>
+                    </h3>
+                    <p className="text-xs font-mono-code text-[#64748b]">
+                      Trasfondo oficial canónico del Tech: especialidad técnica, taller, clientes, fuentes de suministros y enemigos.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      for (const table of Object.values(TECH_LIFEPATH_TABLES)) {
+                        const rand = table.options[Math.floor(Math.random() * table.options.length)];
+                        updateRoleSpecificLifepath(table.id, rand);
+                      }
+                      setTechMakerLog({
+                        action: 'Tirada Completa Tech Lifepath',
+                        roll: 0,
+                        dv: 0,
+                        success: true,
+                        text: 'Las 6 tablas del Tech Lifepath fueron generadas con dados oficiales.'
+                      });
+                    }}
+                    className="px-3.5 py-1.5 bg-[#38bdf8] hover:bg-white text-black font-tech text-xs font-black uppercase rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-[0_0_10px_rgba(56,189,248,0.3)]"
+                  >
+                    <Dices className="w-3.5 h-3.5" />
+                    <span>🎲 GENERAR TRASFONDO COMPLETO DE TECH (6 TABLAS)</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  {Object.values(TECH_LIFEPATH_TABLES).map((tbl) => {
+                    const currentVal =
+                      character.lifepath?.roleSpecificLifepath?.[tbl.id] ||
+                      character.lifepath?.roleLifepath?.[tbl.id] ||
+                      tbl.options[0];
+
+                    return (
+                      <div key={tbl.id} className="bg-[#101420] border border-[#1e2538] p-3 rounded space-y-2">
+                        <div className="flex items-center justify-between gap-2">
+                          <label className="text-[11px] font-tech text-slate-200 font-bold block leading-tight">
+                            {tbl.title}
+                          </label>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const rand = tbl.options[Math.floor(Math.random() * tbl.options.length)];
+                              updateRoleSpecificLifepath(tbl.id, rand);
+                            }}
+                            className="text-[10px] font-mono-code bg-[#38bdf8]/20 hover:bg-[#38bdf8] text-[#38bdf8] hover:text-black border border-[#38bdf8]/40 px-2 py-0.5 rounded font-bold flex items-center gap-1 transition-colors cursor-pointer shrink-0"
+                            title={`Tirar ${tbl.dice} en esta tabla`}
+                          >
+                            <Dices className="w-3 h-3" />
+                            <span>Tirar {tbl.dice}</span>
+                          </button>
+                        </div>
+
+                        <select
+                          value={tbl.options.includes(currentVal) ? currentVal : '__custom__'}
+                          onChange={(e) => {
+                            if (e.target.value !== '__custom__') {
+                              updateRoleSpecificLifepath(tbl.id, e.target.value);
+                            }
+                          }}
+                          className="w-full bg-[#080a10] border border-[#222b3e] text-xs font-mono-code text-[#38bdf8] p-1.5 rounded focus:outline-none"
+                        >
+                          {tbl.options.map((opt, optIdx) => (
+                            <option key={optIdx} value={opt}>
+                              #{optIdx + 1}: {opt}
+                            </option>
+                          ))}
+                          <option value="__custom__">-- Personalizado / Escribir abajo --</option>
+                        </select>
+
+                        <input
+                          type="text"
+                          value={currentVal}
+                          onChange={(e) => updateRoleSpecificLifepath(tbl.id, e.target.value)}
+                          placeholder="O escribe un trasfondo personalizado..."
+                          className="w-full bg-[#07080d] border border-[#1a2133] text-white font-mono-code text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#38bdf8]"
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              <div className="space-y-3">
-                {techProjects.map(proj => (
-                  <div key={proj.id} className="bg-[#10141f] border border-[#1b2336] p-3 rounded-xs space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="font-tech text-sm font-bold text-white uppercase">{proj.name}</span>
-                        <span className="text-[10px] font-mono-code text-[#64748b] ml-2">
-                          Tipo: {proj.specialty.toUpperCase()} • DV {proj.dv}
+              {/* 3. TECH WORKBENCH // MAKER PROJECTS EXISTENTES */}
+              <div className="bg-[#090b10] border border-[#1b2234] p-4 rounded-xs space-y-4 shadow-xl">
+                <div className="flex items-center justify-between border-b border-[#1b2234] pb-3">
+                  <div>
+                    <h3 className="font-tech text-base font-bold text-amber-400 uppercase flex items-center gap-2">
+                      <Wrench className="w-5 h-5 text-amber-500" />
+                      <span>TECH WORKBENCH // MAKER PROJECTS</span>
+                    </h3>
+                    <p className="text-xs font-mono-code text-[#64748b]">
+                      Proyectos activos de invención, fabricación y mejoras de equipo de taller.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {techProjects.map(proj => (
+                    <div key={proj.id} className="bg-[#10141f] border border-[#1b2336] p-3 rounded-xs space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="font-tech text-sm font-bold text-white uppercase">{proj.name}</span>
+                          <span className="text-[10px] font-mono-code text-[#64748b] ml-2">
+                            Tipo: {proj.specialty.toUpperCase()} • DV {proj.dv}
+                          </span>
+                        </div>
+                        <span className={`text-[10px] font-mono-code font-bold px-2 py-0.5 rounded-xs ${
+                          proj.isCompleted ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+                        }`}>
+                          {proj.isCompleted ? 'COMPLETADO' : `${proj.hoursCompleted} / ${proj.hoursRequired} Horas`}
                         </span>
                       </div>
-                      <span className={`text-[10px] font-mono-code font-bold px-2 py-0.5 rounded-xs ${
-                        proj.isCompleted ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
-                      }`}>
-                        {proj.isCompleted ? 'COMPLETADO' : `${proj.hoursCompleted} / ${proj.hoursRequired} Horas`}
-                      </span>
-                    </div>
 
-                    {/* Barra de progreso de horas */}
-                    <div className="w-full h-2 bg-[#1b202e] rounded-xs overflow-hidden">
-                      <div 
-                        className="h-full bg-[#f59e0b] transition-all"
-                        style={{ width: `${Math.min(100, (proj.hoursCompleted / proj.hoursRequired) * 100)}%` }}
-                      />
-                    </div>
+                      {/* Barra de progreso de horas */}
+                      <div className="w-full h-2 bg-[#1b202e] rounded-xs overflow-hidden">
+                        <div 
+                          className="h-full bg-[#f59e0b] transition-all"
+                          style={{ width: `${Math.min(100, (proj.hoursCompleted / proj.hoursRequired) * 100)}%` }}
+                        />
+                      </div>
 
-                    {!proj.isCompleted && (
-                      <button
-                        onClick={() => handleAdvanceProjectHours(proj.id)}
-                        className="py-1 px-3 bg-[#1a2030] hover:bg-[#f59e0b] hover:text-black text-xs font-tech font-bold uppercase rounded-xs transition-colors cursor-pointer"
-                      >
-                        +2 HORAS DE TRABAJO
-                      </button>
-                    )}
-                  </div>
-                ))}
+                      {!proj.isCompleted && (
+                        <button
+                          onClick={() => handleAdvanceProjectHours(proj.id)}
+                          className="py-1 px-3 bg-[#1a2030] hover:bg-[#f59e0b] hover:text-black text-xs font-tech font-bold uppercase rounded-xs transition-colors cursor-pointer"
+                        >
+                          +2 HORAS DE TRABAJO
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}

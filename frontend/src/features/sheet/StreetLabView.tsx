@@ -28,6 +28,14 @@ import {
   ROLE_ABILITIES_COMPLETE_PROGRESSION,
   type WeaponClassAndRebuildInfo
 } from '../../data/weaponAndCyberwareTooltips';
+import {
+  WEAPON_ATTACHMENTS_CATALOG,
+  calculateWeaponSlotCapacity,
+  TECH_MAKER_UPGRADE_OPTIONS,
+  MAKER_DV_AND_TIME_BY_COST,
+  TECH_LIFEPATH_TABLES,
+  ROLE_SPECIFIC_LIFEPATH_TABLES_BY_ROLE
+} from '../../data/weaponAttachmentsAndTechData';
 import { 
   User, 
   Plus, 
@@ -269,8 +277,19 @@ export const StreetLabView: React.FC = () => {
   const clearAllEmpDisabledCyberware = useCharacterStore((state) => state.clearAllEmpDisabledCyberware);
   const restAndHealDays = useCharacterStore((state) => state.restAndHealDays);
   const repairCharacterArmor = useCharacterStore((state) => state.repairCharacterArmor);
+  const installWeaponAttachment = useCharacterStore((state) => state.installWeaponAttachment);
+  const removeWeaponAttachment = useCharacterStore((state) => state.removeWeaponAttachment);
+  const applyTechUpgradeToWeapon = useCharacterStore((state) => state.applyTechUpgradeToWeapon);
+  const applyTechUpgradeToArmor = useCharacterStore((state) => state.applyTechUpgradeToArmor);
+  const updateRoleSpecificLifepath = useCharacterStore((state) => state.updateRoleSpecificLifepath);
 
   const activeChar = getActiveCharacter();
+
+  // Local state for attachments, maker upgrades & tech lifepath
+  const [openAttachmentsPanels, setOpenAttachmentsPanels] = useState<Record<string, boolean>>({});
+  const [attachmentFreeMode, setAttachmentFreeMode] = useState(false);
+  const [techRollFeedback, setTechRollFeedback] = useState<{ weaponId: string; text: string } | null>(null);
+  const [showTechLifepathModal, setShowTechLifepathModal] = useState(false);
 
   // Local state for modals & filters
   const [isWizardOpen, setIsWizardOpen] = useState(false);
@@ -1426,6 +1445,21 @@ export const StreetLabView: React.FC = () => {
                         Reparar
                       </button>
                     </div>
+                    <div className="mt-2 pt-1.5 border-t border-[#1e2333] flex items-center justify-between text-[10px]">
+                      <span className="text-slate-400">Mejora Tech:</span>
+                      <button
+                        type="button"
+                        onClick={() => applyTechUpgradeToArmor('head', !activeChar?.headArmor?.techUpgradedSp, 0)}
+                        className={`px-1.5 py-0.5 rounded text-[9px] font-bold border transition-colors cursor-pointer ${
+                          activeChar?.headArmor?.techUpgradedSp
+                            ? 'bg-amber-500 text-black border-amber-400'
+                            : 'bg-[#121622] text-amber-300 border-amber-500/40 hover:bg-[#1a2030]'
+                        }`}
+                        title="Mejora Tech: +1 SP Máximo (Upgrade Expertise)"
+                      >
+                        {activeChar?.headArmor?.techUpgradedSp ? '🛠️ +1 SP ACTIVO' : '🛠️ +1 SP Tech'}
+                      </button>
+                    </div>
                   </div>
 
                   {/* Body */}
@@ -1443,6 +1477,21 @@ export const StreetLabView: React.FC = () => {
                         className="text-[10px] text-[#f59e0b] hover:underline"
                       >
                         Reparar
+                      </button>
+                    </div>
+                    <div className="mt-2 pt-1.5 border-t border-[#1e2333] flex items-center justify-between text-[10px]">
+                      <span className="text-slate-400">Mejora Tech:</span>
+                      <button
+                        type="button"
+                        onClick={() => applyTechUpgradeToArmor('body', !activeChar?.bodyArmor?.techUpgradedSp, 0)}
+                        className={`px-1.5 py-0.5 rounded text-[9px] font-bold border transition-colors cursor-pointer ${
+                          activeChar?.bodyArmor?.techUpgradedSp
+                            ? 'bg-amber-500 text-black border-amber-400'
+                            : 'bg-[#121622] text-amber-300 border-amber-500/40 hover:bg-[#1a2030]'
+                        }`}
+                        title="Mejora Tech: +1 SP Máximo (Upgrade Expertise)"
+                      >
+                        {activeChar?.bodyArmor?.techUpgradedSp ? '🛠️ +1 SP ACTIVO' : '🛠️ +1 SP Tech'}
                       </button>
                     </div>
                   </div>
@@ -1466,6 +1515,7 @@ export const StreetLabView: React.FC = () => {
                   ) : (
                     activeChar.equippedWeapons.map((w) => {
                       const breakdown = calculateWeaponAttackBreakdown(activeChar, w);
+                      const slotInfo = calculateWeaponSlotCapacity(w);
                       const isRanged = w.type === 'Ranged';
                       const weaponInfo = getWeaponClassAndRebuildInfo(w);
                       const currentAmmo = w.ammoType || 'Basic';
@@ -1508,6 +1558,49 @@ export const StreetLabView: React.FC = () => {
                                     <TacticalTooltip term="MAG"><span className="text-white font-bold">{w.currentMag}/{w.standardMag}</span></TacticalTooltip>
                                   </>
                                 )}
+                              </div>
+
+                              {/* Ranuras de Accesorios y Badges de Attachments */}
+                              <div className="flex items-center gap-1.5 flex-wrap mt-1">
+                                <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-[#161a26] text-slate-300 border border-[#2b334a]">
+                                  🔩 RANURAS: <span className={slotInfo.remainingSlots === 0 ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold'}>{slotInfo.usedSlots}/{slotInfo.maxSlots} SLOTS</span>
+                                  {w.techUpgrade === 'extra_slot' && <span className="text-cyan-400 ml-1">(+1 Tech)</span>}
+                                  {slotInfo.isExotic && w.techUpgrade !== 'extra_slot' && <span className="text-amber-400 ml-1">(Exótica: 0 slots)</span>}
+                                </span>
+                                {w.techUpgrade && w.techUpgrade !== 'none' && (
+                                  <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-cyan-950/70 text-cyan-300 border border-cyan-500/40 font-bold flex items-center gap-1">
+                                    🛠️ {TECH_MAKER_UPGRADE_OPTIONS.find((o) => o.id === w.techUpgrade)?.label || w.techUpgrade}
+                                    <button
+                                      type="button"
+                                      onClick={() => applyTechUpgradeToWeapon(w.instanceId, 'none', 0)}
+                                      className="text-red-400 hover:text-red-300 ml-0.5 cursor-pointer"
+                                      title="Quitar mejora Tech"
+                                    >
+                                      ✕
+                                    </button>
+                                  </span>
+                                )}
+                                {w.installedAttachments && w.installedAttachments.length > 0 && w.installedAttachments.map((attId) => {
+                                  const att = WEAPON_ATTACHMENTS_CATALOG.find((a) => a.id === attId);
+                                  if (!att) return null;
+                                  return (
+                                    <span
+                                      key={attId}
+                                      className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-[#1b2234] text-cyan-300 border border-cyan-500/30 flex items-center gap-1 group"
+                                      title={`${att.name} (${att.slots} slot${att.slots > 1 ? 's' : ''}): ${att.summary}`}
+                                    >
+                                      <span>🔩 {att.name}</span>
+                                      <button
+                                        type="button"
+                                        onClick={() => removeWeaponAttachment(w.instanceId, attId)}
+                                        className="text-red-400 hover:text-red-300 ml-0.5 cursor-pointer"
+                                        title={`Desinstalar ${att.name}`}
+                                      >
+                                        ✕
+                                      </button>
+                                    </span>
+                                  );
+                                })}
                               </div>
                             </div>
 
@@ -1700,6 +1793,261 @@ export const StreetLabView: React.FC = () => {
                                     </button>
                                   </div>
                                 )}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Panel Desplegable: Accesorios (Attachments) & Mejora Tech (Maker Upgrade) */}
+                          <div className="pt-2 border-t border-[#1e2333] space-y-2">
+                            <div className="flex items-center justify-between">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setOpenAttachmentsPanels((prev) => ({
+                                    ...prev,
+                                    [w.instanceId]: !prev[w.instanceId]
+                                  }))
+                                }
+                                className="flex items-center gap-1.5 text-[10px] font-tech font-bold uppercase tracking-wider text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
+                              >
+                                <span>{openAttachmentsPanels[w.instanceId] ? '▾' : '▸'}</span>
+                                <span>🔩 ACCESORIOS (ATTACHMENTS) &amp; 🛠️ MEJORA TECH (MAKER UPGRADE)</span>
+                              </button>
+                              <span className="text-[9px] font-mono-code text-slate-400">
+                                {slotInfo.usedSlots}/{slotInfo.maxSlots} slots
+                              </span>
+                            </div>
+
+                            {openAttachmentsPanels[w.instanceId] && (
+                              <div className="p-2.5 bg-[#0a0c13] border border-cyan-500/30 rounded-xs space-y-3 text-[10px] font-mono-code animate-fade-in">
+                                {/* Selector de Modo de Pago (Comprar vs Gratis) */}
+                                <div className="flex items-center justify-between bg-[#121520] p-1.5 rounded border border-[#1f2538]">
+                                  <span className="text-slate-400 text-[10px]">Modo de instalación:</span>
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => setAttachmentFreeMode(false)}
+                                      className={`px-2 py-0.5 rounded text-[9px] font-bold transition-all cursor-pointer ${
+                                        !attachmentFreeMode ? 'bg-cyan-500 text-black font-bold' : 'bg-[#181c2b] text-slate-400'
+                                      }`}
+                                    >
+                                      💰 Pagar con €$
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setAttachmentFreeMode(true)}
+                                      className={`px-2 py-0.5 rounded text-[9px] font-bold transition-all cursor-pointer ${
+                                        attachmentFreeMode ? 'bg-emerald-500 text-black font-bold' : 'bg-[#181c2b] text-slate-400'
+                                      }`}
+                                    >
+                                      🔓 Libre / Gratis (0 €$)
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* 1. Catálogo de los 13 Accesorios */}
+                                <div className="space-y-1.5">
+                                  <div className="font-tech text-[11px] font-bold text-white uppercase tracking-wider flex items-center justify-between">
+                                    <span>🔩 Catálogo de Accesorios Canónicos (Core pp. 342-344)</span>
+                                    <span className="text-[9px] text-slate-400">Disponibles: {slotInfo.remainingSlots} ranuras</span>
+                                  </div>
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    {WEAPON_ATTACHMENTS_CATALOG.map((att) => {
+                                      const isInstalled = (w.installedAttachments ?? []).includes(att.id);
+                                      const canFit = slotInfo.remainingSlots >= att.slots;
+                                      const isEligible = att.eligibleWeaponTypes.length === 0 || 
+                                        att.eligibleWeaponTypes.some((t) => t.toLowerCase() === (w.skill || '').toLowerCase() || t.toLowerCase() === (w.type || '').toLowerCase());
+                                      const hasIncompatible = (w.installedAttachments ?? []).some((id) => att.incompatibleWith.includes(id));
+                                      const canAfford = attachmentFreeMode || (activeChar?.eurodollars ?? 0) >= att.cost;
+
+                                      return (
+                                        <div
+                                          key={att.id}
+                                          className={`p-2 rounded border space-y-1.5 flex flex-col justify-between ${
+                                            isInstalled
+                                              ? 'bg-cyan-950/40 border-cyan-500/60'
+                                              : 'bg-[#10131d] border-[#1e2436]'
+                                          }`}
+                                        >
+                                          <div className="space-y-1">
+                                            <div className="flex items-center justify-between gap-1">
+                                              <span className="font-tech font-bold text-white text-xs">{att.name}</span>
+                                              <span className="text-[9px] px-1 rounded bg-[#1c2234] text-cyan-300 font-bold border border-cyan-500/30">
+                                                {att.slots} Slot{att.slots > 1 ? 's' : ''}
+                                              </span>
+                                            </div>
+                                            <div className="text-[9px] text-amber-400 font-mono-code flex items-center gap-2">
+                                              <span>{att.cost} €$ ({att.costTier})</span>
+                                              {!isEligible && <span className="text-red-400 font-bold">⚠️ No estándar</span>}
+                                            </div>
+                                            <p className="text-[9px] text-slate-300 leading-tight">{att.summary}</p>
+                                            <p className="text-[8.5px] text-slate-400 italic">{att.fullRules}</p>
+                                          </div>
+
+                                          <div className="pt-1.5 border-t border-[#181d2e] flex items-center justify-between gap-1">
+                                            {isInstalled ? (
+                                              <button
+                                                type="button"
+                                                onClick={() => removeWeaponAttachment(w.instanceId, att.id)}
+                                                className="w-full py-1 bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-500/40 rounded text-[9px] font-bold uppercase transition-colors cursor-pointer"
+                                              >
+                                                ✕ Desinstalar
+                                              </button>
+                                            ) : (
+                                              <button
+                                                type="button"
+                                                disabled={!canFit || hasIncompatible || (!attachmentFreeMode && !canAfford)}
+                                                onClick={() => installWeaponAttachment(w.instanceId, att.id, attachmentFreeMode ? 0 : att.cost)}
+                                                className={`w-full py-1 rounded text-[9px] font-bold uppercase transition-colors cursor-pointer border ${
+                                                  !canFit
+                                                    ? 'bg-[#181c2a] text-slate-500 border-slate-700 cursor-not-allowed'
+                                                    : hasIncompatible
+                                                    ? 'bg-red-950/30 text-red-400 border-red-800 cursor-not-allowed'
+                                                    : !canAfford
+                                                    ? 'bg-[#181c2a] text-amber-500/60 border-amber-900 cursor-not-allowed'
+                                                    : 'bg-cyan-600 hover:bg-cyan-500 text-white border-cyan-400'
+                                                }`}
+                                              >
+                                                {!canFit
+                                                  ? `Ranuras llenas (${att.slots} nec.)`
+                                                  : hasIncompatible
+                                                  ? 'Incompatible con otro accesorio'
+                                                  : !canAfford
+                                                  ? `Saldo insuficiente (${att.cost} €$)`
+                                                  : attachmentFreeMode
+                                                  ? '🔓 Instalar Gratis (0 €$)'
+                                                  : `💰 Comprar e Instalar (${att.cost} €$)`}
+                                              </button>
+                                            )}
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+
+                                {/* 2. Taller Maker: Upgrade Expertise */}
+                                <div className="space-y-1.5 pt-2 border-t border-[#181d2e]">
+                                  <div className="font-tech text-[11px] font-bold text-amber-300 uppercase tracking-wider flex items-center justify-between">
+                                    <span>🛠️ Taller Maker: Upgrade Expertise (1 Mejora por Arma • Core p. 148)</span>
+                                    {w.techUpgrade && w.techUpgrade !== 'none' && (
+                                      <span className="text-[9px] text-cyan-400 font-bold">Activo: {w.techUpgrade}</span>
+                                    )}
+                                  </div>
+
+                                  {/* DV y Tiempo según coste del arma */}
+                                  {(() => {
+                                    const weaponCost = w.cost ?? 100;
+                                    const dvEntry = MAKER_DV_AND_TIME_BY_COST.find((e) => weaponCost <= e.itemPriceMax) || MAKER_DV_AND_TIME_BY_COST[MAKER_DV_AND_TIME_BY_COST.length - 1];
+                                    const materialCost = Math.round(weaponCost / 2);
+                                    const techSkillVal = Math.max(
+                                      activeChar?.skills?.cybertech ?? 0,
+                                      (activeChar?.skills as any)?.weaponstech ?? 0,
+                                      (activeChar?.skills as any)?.basicTech ?? 0
+                                    );
+                                    const techStatVal = activeChar?.stats?.TECH ?? 0;
+                                    const techBase = techStatVal + techSkillVal;
+
+                                    return (
+                                      <div className="space-y-2">
+                                        <div className="bg-[#121622] p-2 rounded border border-[#232d44] flex flex-wrap items-center justify-between gap-2 text-[9px]">
+                                          <div>
+                                            <span className="text-slate-400">Coste Base Arma: </span>
+                                            <span className="text-white font-bold">{weaponCost} €$ ({dvEntry.costTier})</span>
+                                            <span className="text-slate-500 mx-1.5">•</span>
+                                            <span className="text-slate-400">Materiales: </span>
+                                            <span className="text-amber-400 font-bold">{materialCost} €$</span>
+                                          </div>
+                                          <div>
+                                            <span className="text-slate-400">Dificultad Maker: </span>
+                                            <span className="text-cyan-300 font-bold">DV {dvEntry.upgradeDv}</span>
+                                            <span className="text-slate-500 mx-1.5">•</span>
+                                            <span className="text-slate-400">Tiempo: </span>
+                                            <span className="text-white font-bold">{dvEntry.timeRequired}</span>
+                                            <span className="text-slate-500 mx-1.5">•</span>
+                                            <span className="text-slate-400">Tu Base TECH: </span>
+                                            <span className="text-emerald-400 font-bold">{techBase}</span>
+                                          </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                          {TECH_MAKER_UPGRADE_OPTIONS.map((opt) => {
+                                            const isCurrent = w.techUpgrade === opt.id;
+                                            return (
+                                              <div
+                                                key={opt.id}
+                                                className={`p-2 rounded border space-y-1.5 flex flex-col justify-between ${
+                                                  isCurrent
+                                                    ? 'bg-amber-950/40 border-amber-500/60'
+                                                    : 'bg-[#10131d] border-[#1e2436]'
+                                                }`}
+                                              >
+                                                <div>
+                                                  <div className="flex items-center justify-between">
+                                                    <span className="font-tech font-bold text-white text-[11px]">{opt.label}</span>
+                                                    {isCurrent && (
+                                                      <span className="text-[8.5px] bg-amber-500 text-black px-1 rounded font-bold">ACTIVO</span>
+                                                    )}
+                                                  </div>
+                                                  <p className="text-[9px] text-slate-300 mt-0.5 leading-tight">{opt.description}</p>
+                                                </div>
+
+                                                <div className="pt-1.5 border-t border-[#181d2e] flex items-center gap-1">
+                                                  <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                      const d10 = Math.floor(Math.random() * 10) + 1;
+                                                      const total = techBase + d10;
+                                                      const success = total >= dvEntry.upgradeDv;
+                                                      setTechRollFeedback({
+                                                        weaponId: w.instanceId,
+                                                        text: `Tirada Maker (${opt.label}): TECH ${techBase} + 1d10 (${d10}) = ${total} vs DV ${dvEntry.upgradeDv} → ${success ? '¡ÉXITO!' : 'FALLO'}`
+                                                      });
+                                                    }}
+                                                    className="px-2 py-1 bg-[#1a2133] hover:bg-[#25304a] text-cyan-300 rounded text-[9px] font-bold transition-colors cursor-pointer border border-cyan-500/30"
+                                                    title="Tirar dado d10 con tu Base TECH vs DV oficial"
+                                                  >
+                                                    🎲 Tirar DV {dvEntry.upgradeDv}
+                                                  </button>
+                                                  {isCurrent ? (
+                                                    <button
+                                                      type="button"
+                                                      onClick={() => applyTechUpgradeToWeapon(w.instanceId, 'none', 0)}
+                                                      className="flex-1 py-1 bg-red-950/60 hover:bg-red-900 text-red-300 rounded text-[9px] font-bold transition-colors cursor-pointer border border-red-500/40"
+                                                    >
+                                                      ✕ Quitar
+                                                    </button>
+                                                  ) : (
+                                                    <button
+                                                      type="button"
+                                                      onClick={() => applyTechUpgradeToWeapon(w.instanceId, opt.id as any, attachmentFreeMode ? 0 : materialCost)}
+                                                      className="flex-1 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded text-[9px] font-bold transition-colors cursor-pointer border border-amber-400"
+                                                    >
+                                                      {attachmentFreeMode ? 'Aplicar (0 €$)' : `Aplicar (${materialCost} €$)`}
+                                                    </button>
+                                                  )}
+                                                </div>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+
+                                        {techRollFeedback && techRollFeedback.weaponId === w.instanceId && (
+                                          <div className="p-1.5 bg-[#0d1522] border border-cyan-500/40 rounded text-cyan-300 text-[9.5px] font-mono-code flex items-center justify-between">
+                                            <span>{techRollFeedback.text}</span>
+                                            <button
+                                              type="button"
+                                              onClick={() => setTechRollFeedback(null)}
+                                              className="text-slate-400 hover:text-white ml-2 cursor-pointer"
+                                            >
+                                              ✕
+                                            </button>
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  })()}
+                                </div>
                               </div>
                             )}
                           </div>
@@ -2279,6 +2627,172 @@ export const StreetLabView: React.FC = () => {
                     ))
                   )}
                 </div>
+              </div>
+
+              {/* 5. LIFEPATH ESPECÍFICO DE ROL & LIFEPATH DE TECH (Core págs. 52-59) */}
+              <div className="chamfer-card p-3 bg-[#121319] border border-[#232736] space-y-3">
+                <div className="flex flex-wrap items-center justify-between pb-1.5 border-b border-[#1f2230] gap-2">
+                  <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase">
+                    <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
+                    <span>LIFEPATH ESPECÍFICO DE ROL ({activeChar?.role?.toUpperCase() || 'SOLO'}) &amp; TECH (Core págs. 52–59)</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowTechLifepathModal(!showTechLifepathModal)}
+                    className="px-2 py-0.5 rounded text-[10px] font-mono-code font-bold bg-[#171c2b] hover:bg-[#252f4a] text-cyan-300 border border-cyan-500/40 transition-colors cursor-pointer"
+                  >
+                    {showTechLifepathModal ? '👁️ Ocultar Tablas Tech' : '🛠️ Ver Tablas Completas Tech (6 Tablas)'}
+                  </button>
+                </div>
+
+                {/* Preguntas de Lifepath del Rol del Personaje */}
+                <div className="space-y-2">
+                  {(() => {
+                    const roleKey = (activeChar?.role || 'solo').toLowerCase();
+                    const questions = ROLE_SPECIFIC_LIFEPATH_TABLES_BY_ROLE[roleKey] || [];
+                    const roleLifepathAnswers = activeChar?.lifepath?.roleSpecificLifepath || activeChar?.lifepath?.roleLifepath || {};
+
+                    if (questions.length === 0) {
+                      return (
+                        <div className="text-[10px] text-slate-400 italic">
+                          No hay preguntas de Lifepath específicas para este rol.
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                        {questions.map((q) => {
+                          const currentVal = roleLifepathAnswers[q.id] || '';
+                          return (
+                            <div key={q.id} className="p-2 bg-[#171923] rounded border border-[#222636] space-y-1.5 flex flex-col justify-between">
+                              <div>
+                                <div className="flex items-center justify-between gap-1">
+                                  <span className="font-tech text-xs font-bold text-cyan-300">{q.label}</span>
+                                  <span className="text-[9px] font-mono-code px-1 rounded bg-[#202538] text-slate-300">{q.dice}</span>
+                                </div>
+                                <div className="text-[10px] text-white font-mono-code bg-[#0e1017] p-1.5 rounded border border-[#1b2030] mt-1 min-h-[36px]">
+                                  {currentVal ? (
+                                    <span className="text-emerald-300">✓ {currentVal}</span>
+                                  ) : (
+                                    <span className="text-slate-500 italic">Sin responder... Elige o tira dados.</span>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="flex items-center gap-1.5 pt-1 border-t border-[#1e2333]">
+                                <select
+                                  value={currentVal}
+                                  onChange={(e) => updateRoleSpecificLifepath(q.id, e.target.value)}
+                                  className="flex-1 bg-[#12141f] border border-[#2b334a] text-slate-200 text-[9.5px] rounded px-1.5 py-1 font-mono-code"
+                                >
+                                  <option value="">-- Seleccionar manualmente --</option>
+                                  {q.options.map((opt, oIdx) => (
+                                    <option key={oIdx} value={opt}>
+                                      {oIdx + 1}. {opt.length > 55 ? opt.substring(0, 55) + '...' : opt}
+                                    </option>
+                                  ))}
+                                </select>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const rolledIndex = Math.floor(Math.random() * q.options.length);
+                                    const chosen = q.options[rolledIndex];
+                                    updateRoleSpecificLifepath(q.id, chosen);
+                                  }}
+                                  className="px-2 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded text-[9px] font-bold font-mono-code shrink-0 cursor-pointer"
+                                  title={`Tirar ${q.dice}`}
+                                >
+                                  🎲 {q.dice}
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                {/* Modal / Sección Desplegable de las 6 Tablas Completas del Tech Lifepath */}
+                {showTechLifepathModal && (
+                  <div className="p-3 bg-[#0a0c13] border-2 border-cyan-500/40 rounded space-y-3 animate-fade-in mt-3">
+                    <div className="flex items-center justify-between pb-1.5 border-b border-[#20293d]">
+                      <div>
+                        <h5 className="font-tech text-xs font-bold text-white uppercase tracking-wider">
+                          🛠️ TABLAS OFICIALES DEL TECH LIFEPATH (Core Rulebook pág. 55)
+                        </h5>
+                        <span className="text-[10px] text-slate-400 font-mono-code">
+                          Especialidad de Tech, Socio vs Solo, Cómo es tu Taller, Clientes Principales, Proveedores de Suministros y Quién te Busca
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowTechLifepathModal(false)}
+                        className="text-slate-400 hover:text-white text-xs font-bold cursor-pointer"
+                      >
+                        ✕ Cerrar
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                      {Object.values(TECH_LIFEPATH_TABLES).map((tbl) => {
+                        const roleLifepathAnswers = activeChar?.lifepath?.roleSpecificLifepath || activeChar?.lifepath?.roleLifepath || {};
+                        const tableKey = `tech_${tbl.id}`;
+                        const currentAnswer = roleLifepathAnswers[tableKey] || roleLifepathAnswers[tbl.id] || '';
+
+                        return (
+                          <div key={tbl.id} className="p-2 bg-[#121520] rounded border border-[#222b40] space-y-1.5 flex flex-col justify-between">
+                            <div>
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="font-tech text-xs font-bold text-amber-300">{tbl.title}</span>
+                                <span className="text-[9px] font-mono-code px-1 rounded bg-[#1c2234] text-slate-300">{tbl.dice}</span>
+                              </div>
+                              <div className="text-[10px] text-white font-mono-code bg-[#080a10] p-1.5 rounded border border-[#1b2234] mt-1 min-h-[34px]">
+                                {currentAnswer ? (
+                                  <span className="text-emerald-300">✓ {currentAnswer}</span>
+                                ) : (
+                                  <span className="text-slate-500 italic">Sin asignar...</span>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 pt-1 border-t border-[#1c2234]">
+                              <select
+                                value={currentAnswer}
+                                onChange={(e) => {
+                                  updateRoleSpecificLifepath(tableKey, e.target.value);
+                                  updateRoleSpecificLifepath(tbl.id, e.target.value);
+                                }}
+                                className="flex-1 bg-[#0d0f17] border border-[#27324c] text-slate-200 text-[9.5px] rounded px-1.5 py-1 font-mono-code"
+                              >
+                                <option value="">-- Elegir opción --</option>
+                                {tbl.options.map((opt, oIdx) => (
+                                  <option key={oIdx} value={opt}>
+                                    {oIdx + 1}. {opt.length > 55 ? opt.substring(0, 55) + '...' : opt}
+                                  </option>
+                                ))}
+                              </select>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const idx = Math.floor(Math.random() * tbl.options.length);
+                                  const val = tbl.options[idx];
+                                  updateRoleSpecificLifepath(tableKey, val);
+                                  updateRoleSpecificLifepath(tbl.id, val);
+                                }}
+                                className="px-2 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded text-[9px] font-bold font-mono-code shrink-0 cursor-pointer"
+                                title={`Tirar ${tbl.dice}`}
+                              >
+                                🎲 {tbl.dice}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

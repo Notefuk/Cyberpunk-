@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v3.9.0 OPERATIVO`  
+> **SYSTEM VERSION**: `v4.0.0 OPERATIVO`  
 > **LAST UPDATED**: 2026-10-19  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -10,14 +10,45 @@
 
 ## 🎯 1. Purpose of this Document
 This file is the official AI-to-AI handoff document for future LLMs, subagents, and orchestrators working on the **CPR Omni-Deck** repository. Whenever a new context window is initialized, read this file to immediately understand:
-1. What was just built and verified in `v3.9.0`.
+1. What was just built and verified in `v4.0.0` (and previously in `v3.9.0`).
 2. Where all critical systems, stores, and data structures reside on disk.
 3. How state transitions cascade across views without regressions.
 4. The exact scope and technical contracts planned for **Phase 4 (GM Role Master Control Deck)**.
 
 ---
 
-## 🚀 2. What Was Added in v3.9.0
+## 🚀 2. What Was Added in v4.0.0
+
+### A. Catálogo Canónico de 23 Accesorios de Armas
+* **Data Source**: `weaponAttachmentsAndTechData.ts` (`WEAPON_ATTACHMENTS_CATALOG`).
+* **Actions**: `installWeaponAttachment(charId, weaponId, attachmentId)` and `removeWeaponAttachment(charId, weaponId, attachmentId)` in `useCharacterStore.ts`.
+* **Mechanics**:
+  - **Capacidad de Ranuras**: `calculateWeaponSlotCapacity(quality, hasMakerSlotUpgrade, isExotic)`. Armas estándar tienen 2 slots; Mala calidad 1 slot; Excelente calidad 3 slots; Exóticas 0 slots salvo mejora Tech Maker (`extra_slot`).
+  - **Restricciones Canónicas**: Filtro estricto por categoría de arma (e.g., Lanzagranadas bajo cañón solo en escopetas/rifles; bayoneta solo en armas de dos manos; silenciador solo en pistolas/SMGs).
+  - **Ataques Secundarios Integrados en `CombatHudView.tsx`**:
+    - *Bayoneta*: 1d6 daño cuerpo a cuerpo con ROF 2.
+    - *Escopeta Bajo Cañón*: 3d6 daño (Shell) con tabla de dispersión.
+    - *Lanzagranadas Bajo Cañón*: 6d6 daño explosivo (Grenade) con tabla de DV de explosivos.
+  - **Modificadores Balísticos Activos**: Integración de bonos en el cálculo de ataque (`distMeters`, Smartgun Link, miras telescópicas e infrarrojas para anular penalizaciones de oscuridad/distancia).
+
+### B. Sistema Maker de Mejoras Tech (Armas & Armaduras)
+* **Data Sources**: `TECH_MAKER_UPGRADE_OPTIONS`, `MAKER_DV_AND_TIME_BY_COST`, `TechWeaponUpgradeType` en `weaponAttachmentsAndTechData.ts`.
+* **Actions**: `applyTechUpgradeToWeapon(charId, weaponId, upgradeType)` and `applyTechUpgradeToArmor(charId, location, upgraded)` in `useCharacterStore.ts`.
+* **Mechanics**:
+  - **Mejoras de Armas**: Ranura de accesorio extra (`extra_slot`), subida de calidad (`quality_step`), bonificación de daño balístico (`damage_boost`) y aumento de cadencia de fuego (`rof_increase`).
+  - **Mejora de Blindaje (+1 SP)**: Modificador canónico Tech Maker para armaduras de Cabeza y Torso con toggle interactivo en el panel de armaduras de `CombatHudView.tsx` y en `StreetLabView.tsx`.
+  - **Matriz de Fabricación Maker**: Consulta en tiempo real de DVs de Tech (Cybertech/Weaponstech/Basic Tech) y tiempos reglamentarios según valor en Eurodólares del ítem base (Core pp. 147-148).
+
+### C. Lifepaths Específicos de Rol
+* **Data Source**: `ROLE_SPECIFIC_LIFEPATHS` en `characterLifepathData.ts`.
+* **View**: Pestaña 8 en `StreetLabView.tsx` (`roleLifepath`).
+* **Mechanics**:
+  - Cobertura completa de los 10 roles del Core Rulebook (pp. 44-71): Rockero, Solo, Netrunner, Tech, Medtech, Media, Policía (Lawman), Ejecutivo, Fixer y Nómada.
+  - Generador de tiradas 1d10 o selección manual guiada con persistencia en el folio del personaje.
+
+---
+
+## 📦 2.1 Historical Summary: What Was Added in v3.9.0
 
 ### A. Taller Interactivo de Reconstrucción CEMK 2077
 * **Action**: `convertWeaponRebuild2077(characterId, weaponItemId, targetRebuild)` in `useCharacterStore.ts`.
@@ -76,6 +107,8 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 frontend/src/
 ├── data/
 │   ├── core-rules.cprpack.json          # 391+ ítems oficiales multi-libro
+│   ├── weaponAttachmentsAndTechData.ts  # 23 accesorios canónicos, slots, Maker Tech upgrades & DVs
+│   ├── characterLifepathData.ts         # ROLE_SPECIFIC_LIFEPATHS para los 10 roles
 │   ├── netAndRolesData.ts               # ROLE_ABILITIES_COMPLETE_PROGRESSION, Quickhacks, NET Topologies
 │   ├── weaponAndCyberwareTooltips.ts    # CEMK_WEAPON_REBUILD_SYSTEM_GUIDE, RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE
 │   ├── criticalInjuries.ts              # Tablas oficiales 2d6 de heridas críticas
@@ -87,11 +120,11 @@ frontend/src/
 │   └── combatEngine.ts                  # Tiradas d10 explosivas, Xd6, ablación de SP y críticos
 ├── features/
 │   ├── combat/
-│   │   └── CombatHudView.tsx            # HUD de combate táctico 3 columnas, decluttering, toggles 2077
+│   │   └── CombatHudView.tsx            # HUD de combate táctico, accesorios, ataques secundarios y +1 SP Tech
 │   ├── sheet/
-│   │   └── StreetLabView.tsx            # Ficha de personaje, Rebuild Workshop, EMP manager, Roles 1-10, Descanso/Reparación
+│   │   └── StreetLabView.tsx            # Ficha de personaje, Rebuild, EMP, Roles 1-10, Descanso, Accesorios & Lifepath
 │   ├── docs/
-│   │   └── SystemChangelogAndDocsView.tsx # Portal in-app de documentación y changelogs (v1.0.0 a v3.9.0)
+│   │   └── SystemChangelogAndDocsView.tsx # Portal in-app de documentación y changelogs (v1.0.0 a v4.0.0)
 │   ├── roles/
 │   │   └── NetAndRolesDeckView.tsx      # NET architectures, Quickhacks 2077, Garaje y Roles
 │   ├── compendium/
@@ -103,7 +136,7 @@ frontend/src/
 │   └── oneshot/
 │       └── RedChromeCargoView.tsx       # Misión interactiva CEMK 2077 con mapa Maglev y roster dual
 └── store/
-    ├── useCharacterStore.ts             # Estado de personajes, inventario, EMP, descanso y reparación
+    ├── useCharacterStore.ts             # Estado de personajes, inventario, accesorios, EMP, descanso y reparación
     └── useCombatStore.ts                # Estado de combate, DVs activos, objetivos y telemetría
 ```
 

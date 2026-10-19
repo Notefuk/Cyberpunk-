@@ -26,7 +26,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 
 ---
 
-## 🗺️ Current Real Tree on Disk (`v3.9.0 - Taller de Reconstrucción CEMK 2077, Gestor de Averías/EMP, Progresión de Rol 1-10, Motor de Descanso/Reparación y Filtro de Decluttering del HUD`)
+### 🗺️ Current Real Tree on Disk (`v4.0.0 - Motor Canónico de Accesorios de Armas, Taller Maker de Mejoras de Armas y Blindaje +1 SP y Lifepath de Rol Específico`)
 
 ```text
 cpr-omni-deck/
@@ -39,7 +39,7 @@ cpr-omni-deck/
 ├── scripts/
 │   ├── extract_core_pack.py              # Ingesta y validación real de páginas del Core Rulebook
 │   ├── find_sections.py                  # Inspector de bookmarks y outline del PDF
-│   └── inspect_pdf_pages.py              # Inspector CLI UTF-8 de páginas por rango
+│   ├── inspect_pdf_pages.py              # Inspector CLI UTF-8 de páginas por rango
 ├── frontend/
 │   ├── public/
 │   │   ├── hammerhead-map.png            # Plano esquemático canónico del tren Maglev Hammerhead (Red Chrome Cargo)
@@ -62,7 +62,8 @@ cpr-omni-deck/
 │   │   │   ├── redChromeCargoData.ts     # Misión oficial Red Chrome Cargo CEMK 2077 (mapa, escenas, botín)
 │   │   │   ├── rulesCheatSheet.ts        # Machete canónico de reglas de combate, coberturas y asfixia
 │   │   │   ├── systemDocsAndChangelogData.ts # Base de datos canónica de versiones, inventario y arquitectura
-│   │   │   └── weaponAndCyberwareTooltips.ts # Diccionario canónico de tooltips de armas, ciberware y municiones
+│   │   │   ├── weaponAndCyberwareTooltips.ts # Diccionario canónico de tooltips de armas, ciberware y municiones
+│   │   │   └── weaponAttachmentsAndTechData.ts # Catálogo oficial de 13 accesorios, ranuras, taller Maker y Lifepaths
 │   │   ├── engine/
 │   │   │   ├── characterEngine.ts        # Motor matemático: HP máx, humanidad, penalizadores
 │   │   │   └── combatEngine.ts           # Motor de resolución: d10 explosivo, Xd6, doble 6 crítico
@@ -224,6 +225,32 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ---
 
 ## 📜 Master Version Changelog
+
+### [v4.0.0] - 2026-10-19 (Weapon Attachments Engine, Maker Tech Upgrade Workshop, Armor +1 SP & Official Role/Tech Lifepath)
+* **Category**: Weapon Attachments, Maker Workshop, Armor Upgrades, Distance Breakdown & Role Lifepaths
+* **Files Modified**:
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `AI_CONTEXT_HANDOFF.md`
+* **What Changed**:
+  1. **Motor Canónico de Accesorios de Armas (13 Tipos Oficiales • Core Rulebook pp. 342-344)**:
+     - Catálogo maestro de 13 accesorios canónicos: *Bayoneta* (ataque melee 1d6 ROF 2), *Cargador Ampliado* (aumenta capacidad según categoría), *Cargador de Tambor* (máxima capacidad balística), *Smartgun Link* (+1 ataque con ciberware Smart), *Silenciador / Supresor* (disparos sigilosos DV 17 de Percepción), *Visor Infrarrojo / Visión Nocturna* (ignora oscuridad y humo), *Mirilla Telescópica* (+1 ataque a 51m+), *Escopeta Acoplada* (ataque secundario 3d6 Shells), *Lanzagranadas Acoplado* (ataque secundario 6d6 Grenades) y adaptaciones CEMK 2077 (*Power, Smart, Tech Rebuilds* que consumen ranuras).
+     - Regla canónica de ranuras: máximo 3 ranuras por arma estándar, 0 ranuras para armas de categoría Melee y armas Exóticas.
+  2. **Ataques Secundarios de Accesorios Acoplados en Combat HUD**:
+     - Botones de acción directa integrados en las tarjetas de armas en mano para disparar la *Escopeta Acoplada* (3d6 de daño vs tabla de escopeta), lanzar con el *Lanzagranadas Acoplado* (6d6 de daño) o clavar la *Bayoneta* (1d6 de daño cuerpo a cuerpo a ROF 2 con habilidad Melee Weapon) sin soltar el arma principal.
+  3. **Pase de Distancia al Desglose de Ataque (`calculateWeaponAttackBreakdown`)**:
+     - Conexión del bracket de distancia seleccionado en el telémetro con la mirilla telescópica (*Sniping Scope*), sumando automáticamente +1 a la tirada base cuando el objetivo se sitúa a 51m o más.
+  4. **Taller Maker: Upgrade Expertise (Core Rulebook p. 148)**:
+     - 4 mejoras canónicas de armamento: *Calidad Excelente* (+1 ataque), *Ranura Adicional de Accesorio* (+1 ranura extra, permitiendo hasta 4 slots o 1 slot en exóticas), *Diseño Ocultable* (permite ocultar armas grandes) y *Optimización de Cámara / Cerrojo* (+1 daño balístico / invención).
+     - Cálculo de coste de materiales (50% del valor base del arma), tabla oficial de DVs y tiempos de trabajo según el tramo de coste del arma, y botón de tirada interactiva d10 con base TECH vs DV oficial.
+  5. **Refuerzo de Blindaje Tech Maker (+1 SP en Cabeza y Cuerpo)**:
+     - Toggles tácticos en StreetLabView y CombatHudView para aplicar o retirar la mejora Tech de +1 SP a la armadura de Cabeza y Torso, ajustando el SP máximo y actual con deducción de costes de materiales.
+  6. **Lifepath Específico de Rol (10 Roles) & Tech Lifepath Completo (Core Rulebook p. 55)**:
+     - Preguntas y opciones canónicas para los 10 roles (Rockerboy, Solo, Netrunner, Tech, Medtech, Media, Exec, Lawman, Fixer y Nomad) integradas en la pestaña Bio & Lifepath de StreetLabView.
+     - Modal dedicado con las 6 tablas completas del Tech Lifepath oficial: Especialidad Técnica, Socio vs Solo, Cómo es tu Taller, Clientes Principales, Proveedores de Suministros y Quién te Busca.
 
 ### [v3.9.0] - 2026-10-19 (CEMK 2077 Weapon Rebuild Workshop, EMP Cyberware Manager, Role Rank 1-10 Progression, Resting & Armor Repair, Combat Clutter Filter)
 * **Category**: Weapon Rebuild Engine, EMP/Malfunction Systems, Role Progression, Natural Healing & Combat Ergonomics
