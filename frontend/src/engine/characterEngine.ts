@@ -101,6 +101,18 @@ export function rollDeathSave(character: CharacterSheet): DeathSaveResult {
   };
 }
 
+// Valor promedio de Humanity Loss en los formatos del pack: "2d6 (7)", "7 (2d6)", "3 (1d6)", "0 (N/A)".
+export function parseHumanityLossAverage(humanityLoss: string): number {
+  const text = humanityLoss.trim();
+  const leading = text.match(/^(\d+)\b(?!\s*d)/i);
+  if (leading) return parseInt(leading[1], 10);
+  const inParens = text.match(/\((\d+)\)/);
+  if (inParens) return parseInt(inParens[1], 10);
+  const dice = text.match(/^(\d+)d6/i);
+  if (dice) return Math.ceil(parseInt(dice[1], 10) * 3.5);
+  return 7;
+}
+
 export function mapWeaponSkillToKey(weaponSkillLabel: string, isAutofire?: boolean): CombatSkillKey {
   if (isAutofire) {
     return 'autofire';

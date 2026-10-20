@@ -26,6 +26,37 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.1.1',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'Corrección de bugs de estado',
+    title: 'FBC reversible, HP máximo único y parseo de Humanity Loss',
+    summary: 'Tercera fase del plan de arreglos de la auditoría. Activar una Full Body Conversion ya no pisa BODY y MOVE base y desactivarla devuelve la armadura previa. El HP máximo usa el BODY efectivo en toda la app. Comprar ciberware ya no resta 267 de Humanidad por un "2d6 (7)", y munición, HP y transacciones validan sus valores.',
+    highlights: [
+      'FBC reversible: BODY y MOVE del chasis se aplican sin modificar los stats base; se restaura la armadura al desactivar.',
+      'HP máximo con BODY efectivo en ficha, HUD, TopHudBar, Fixer Deck y acciones del store.',
+      'Humanity Loss: "2d6 (7)" resta 7, "14 (4d6)" resta 14.',
+      'Validaciones de munición, NaN y transacciones con saldo insuficiente.',
+      'Stores persistidos con version y migrate para futuras migraciones.'
+    ],
+    filesTouched: [
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/store/useCombatStore.ts',
+      'frontend/src/engine/characterEngine.ts',
+      'frontend/src/types/cyberpunk.ts',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/gm/FixerDeckView.tsx',
+      'frontend/src/features/layout/TopHudBar.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CHECKPOINT.md'
+    ],
+    metricsBadge: 'v4.1.1 • Bugs del store • Auditoría fase 3'
+  },
+  {
     version: 'v4.1.0',
     date: '2026-10-20',
     phase: 'Codex',
@@ -321,6 +352,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.1.1': true,
     'v4.1.0': true,
     'v4.0.3': true,
     'v4.0.2': true,

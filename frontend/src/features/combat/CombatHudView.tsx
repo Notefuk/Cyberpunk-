@@ -2513,7 +2513,7 @@ export const CombatHudView: React.FC = () => {
     });
 
     if (drug.name.toLowerCase().includes('speedheal')) {
-      const healAmount = (activeChar?.stats?.BODY ?? 6) + (activeChar?.stats?.WILL ?? 6);
+      const healAmount = effectiveBody + (activeChar?.stats?.WILL ?? 6);
       adjustHp(healAmount);
     }
   };

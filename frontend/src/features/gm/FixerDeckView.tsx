@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { 
   calculateMaxHp, 
+  getEffectiveBody,
   ENCUMBRANCE_MODES 
 } from '../../engine/characterEngine';
 import type { EncumbranceMode } from '../../types/cyberpunk';
@@ -284,7 +285,7 @@ export function FixerDeckView() {
     const rolledPlayers: InitiativeCombatant[] = characters.map((c) => {
       const d10 = rollD10();
       const ref = c.stats?.REF || 5;
-      const maxHp = calculateMaxHp(c.stats?.BODY ?? 0, c.stats?.WILL ?? 0);
+      const maxHp = calculateMaxHp(getEffectiveBody(c), c.stats?.WILL ?? 0);
       const avgSp = Math.max(c.headArmor?.currentSp || 0, c.bodyArmor?.currentSp || 0);
       const maxSp = Math.max(c.headArmor?.maxSp || 0, c.bodyArmor?.maxSp || 0);
 
@@ -755,7 +756,7 @@ export function FixerDeckView() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {characters.map((char) => {
             const isActive = char.id === activeCharacterId;
-            const maxHp = calculateMaxHp(char.stats?.BODY ?? 0, char.stats?.WILL ?? 0);
+            const maxHp = calculateMaxHp(getEffectiveBody(char), char.stats?.WILL ?? 0);
             const currentHp = char.currentHp ?? maxHp;
             const hpRatio = (currentHp / maxHp) * 100;
             const maxLuck = char.stats?.LUCK ?? 5;

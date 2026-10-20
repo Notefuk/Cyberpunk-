@@ -495,6 +495,9 @@ export interface ActiveFbcState {
   moveOverride: number;
   baseArmorSp: number;
   immunities: string[];
+  /** Armadura que tenía el personaje antes de la conversión, para restaurarla al desactivar. */
+  preFbcHeadArmor?: CharacterSheet['headArmor'];
+  preFbcBodyArmor?: CharacterSheet['bodyArmor'];
 }
 
 export interface OwnedVehicle {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
-import { calculateMaxHp, calculateSeriouslyWoundedThreshold } from '../../engine/characterEngine';
+import { calculateMaxHp, calculateSeriouslyWoundedThreshold, getEffectiveBody } from '../../engine/characterEngine';
 import { 
   Users, 
   Settings, 
@@ -29,7 +29,7 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
   const setAppTheme = useCharacterStore((state) => state.setAppTheme);
 
   const activeChar = getActiveCharacter();
-  const maxHp = calculateMaxHp(activeChar?.stats?.BODY ?? 6, activeChar?.stats?.WILL ?? 6);
+  const maxHp = calculateMaxHp(activeChar ? getEffectiveBody(activeChar) : 6, activeChar?.stats?.WILL ?? 6);
   const seriousWoundThresh = calculateSeriouslyWoundedThreshold(maxHp);
   const isSeriouslyWounded = (activeChar?.currentHp ?? 0) < seriousWoundThresh;
 
