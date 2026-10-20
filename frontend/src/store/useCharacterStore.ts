@@ -24,7 +24,6 @@ import type {
 } from '../types/cyberpunk';
 import { calculateMaxHp, getEffectiveBody, parseHumanityLossAverage, rollDeathSave as rollDeathSaveEngine } from '../engine/characterEngine';
 import type { DeathSaveResult } from '../engine/characterEngine';
-import { calculateArmorAblation } from '../engine/combatEngine';
 import { rollCriticalInjury } from '../data/criticalInjuries';
 import {
   PREGEN_TEMPLATES,
@@ -379,7 +378,6 @@ export interface CharacterStoreState {
   setDead: (isDead: boolean) => void;
   ablateArmor: (location: 'head' | 'body', amount?: number) => void;
   repairArmor: (location: 'head' | 'body') => void;
-  applyIncomingDamage: (damage: number, location: 'head' | 'body', critBonusDamage?: number) => { hpLost: number; spAblated: number };
   spendLuck: (amount: number) => boolean;
   restoreLuck: () => void;
   toggleLuckPip: (pipIndex: number) => void;
@@ -784,33 +782,6 @@ export const useCharacterStore = create<CharacterStoreState>()(
             }
           })
         }));
-      },
-
-      applyIncomingDamage: (damage: number, location: 'head' | 'body', critBonusDamage = 0) => {
-        const char = get().getActiveCharacter();
-        const armor = location === 'head' ? char.headArmor : char.bodyArmor;
-        const result = calculateArmorAblation(damage, armor.currentSp, char.currentHp, critBonusDamage);
-
-        const hpLost = char.currentHp - result.newHp;
-        const spAblated = armor.currentSp - result.newSp;
-
-        set(state => ({
-          characters: state.characters.map(c => {
-            if (c.id !== state.activeCharacterId) return c;
-            const updatedArmor = {
-              ...(location === 'head' ? c.headArmor : c.bodyArmor),
-              currentSp: result.newSp
-            };
-            return {
-              ...c,
-              currentHp: result.newHp,
-              headArmor: location === 'head' ? updatedArmor : c.headArmor,
-              bodyArmor: location === 'body' ? updatedArmor : c.bodyArmor
-            };
-          })
-        }));
-
-        return { hpLost, spAblated };
       },
 
       spendLuck: (amount: number) => {

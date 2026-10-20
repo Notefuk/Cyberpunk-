@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.2.0 OPERATIVO`  
+> **SYSTEM VERSION**: `v4.2.1 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-10-20]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -20,7 +20,11 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 
 ---
 
-## 🚀 2. What Was Added in v4.2.0
+## 🚀 2. What Was Added in v4.2.1
+
+[Claude Code · 2026-10-20] Plan 1 terminado (fase 5). Vistas con `React.lazy` (bundle inicial 598 kB), `calculateIncomingImpact` en `combatEngine.ts`, tests Vitest de reglas canon (`npm test`), borrado de `DataPacksView.tsx`, `clsx`, `tailwind-merge` y `applyIncomingDamage`, PIN del GM en `cpr_gm_pin_v1`. Para Antigravity: la sección 7 nueva de `.agent/AGENTS.md` pide correr `npm test`; replicarla en el AGENTS.md de la carpeta de PDFs. Siguiente: plan 2 (expansiones, hallazgos X1-X13), pendiente de aprobación.
+
+## 📦 2.0 Historical Summary: What Was Added in v4.2.0
 
 [Claude Code · 2026-10-20] Plan 1, fase 4. Melee enfrentado contra DEX + Evasion del defensor (estado `meleeDefenseBase` en `CombatHudView`), Cyberarm mín. 2d6, munición validada antes del alcance, apuntado sin autofire, multiplicador de autofire del último ataque, empates para el defensor en todos los módulos, quickhacks con WILL/Concentration del objetivo y sin daño antes de la explosión.
 

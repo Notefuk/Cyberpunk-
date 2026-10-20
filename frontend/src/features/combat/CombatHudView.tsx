@@ -21,6 +21,7 @@ import type { DeathSaveResult } from '../../engine/characterEngine';
 import { 
   createInitialAttackRoll, 
   createDamageRoll,
+  calculateIncomingImpact,
   AIMED_SHOT_OPTIONS
 } from '../../engine/combatEngine';
 import type { WeaponItem, RollEntry, InventoryItem, EncumbranceMode, AimedShotTarget, TechWeaponUpgradeType } from '../../types/cyberpunk';
@@ -1629,46 +1630,29 @@ export const CombatHudView: React.FC = () => {
   };
 
   // Calculation variables for Interactive Damage Calculator
-  const calcRawSp = calcLocation === 'head' ? (activeChar?.headArmor?.currentSp ?? 0) : (activeChar?.bodyArmor?.currentSp ?? 0);
-  const calcEffectiveSp = calcAttackType === 'direct'
-    ? 0
-    : (calcAttackType === 'melee' || calcAttackType === 'martial_arts' ? Math.ceil(calcRawSp / 2) : calcRawSp);
-
-  const calcPenetratingDamage = Math.max(0, incomingDamageInput - calcEffectiveSp);
-  const calcSpAblation = (calcPenetratingDamage > 0 && calcAttackType !== 'direct')
-    ? (calcAttackType === 'ap' ? Math.min(calcRawSp, 2) : Math.min(calcRawSp, 1))
-    : 0;
-
-  let calcHpLoss = 0;
-  if (calcAttackType === 'direct') {
-    calcHpLoss = incomingDamageInput;
-  } else if (calcPenetratingDamage > 0) {
+  const {
+    effectiveSp: calcEffectiveSp,
+    penetratingDamage: calcPenetratingDamage,
+    spAblation: calcSpAblation,
+    hpLoss: calcHpLoss,
+    shieldLoss: calcShieldLoss,
+    newShieldSdp: calcNewShieldSdp,
+    excessDamage: calcExcessDamage,
+    excessEffectiveSp: calcExcessEffectiveSp,
+    excessSpAblation: calcExcessSpAblation,
+    excessHpLoss: calcExcessHpLoss
+  } = calculateIncomingImpact({
+    damage: incomingDamageInput,
+    location: calcLocation,
+    attackType: calcAttackType,
+    isCritical: calcIsCritical,
+    passExcess: calcPassExcess,
+    headSp: activeChar?.headArmor?.currentSp ?? 0,
+    bodySp: activeChar?.bodyArmor?.currentSp ?? 0,
+    shieldSdp: shieldCover.currentSdp,
     // Core p. 188: con Cracked Skull los Ataques Apuntados a la cabeza multiplican x3 en vez de x2.
-    const hasCrackedSkull = (activeChar?.activeInjuries ?? []).some(inj => !inj.isTreated && inj.name.includes('Cracked Skull'));
-    calcHpLoss = calcPenetratingDamage * (calcLocation === 'head' ? (hasCrackedSkull ? 3 : 2) : 1);
-  }
-  if (calcIsCritical) {
-    calcHpLoss += 5;
-  }
-
-  // Shield calculation
-  const calcShieldLoss = calcLocation === 'shield' ? Math.min(shieldCover.currentSdp, incomingDamageInput) : 0;
-  const calcNewShieldSdp = calcLocation === 'shield' ? Math.max(0, shieldCover.currentSdp - calcShieldLoss) : shieldCover.currentSdp;
-  const calcExcessDamage = (calcLocation === 'shield' && calcPassExcess) ? Math.max(0, incomingDamageInput - shieldCover.currentSdp) : 0;
-
-  const calcBodyRawSp = activeChar?.bodyArmor?.currentSp ?? 0;
-  const calcExcessEffectiveSp = calcAttackType === 'direct'
-    ? 0
-    : (calcAttackType === 'melee' || calcAttackType === 'martial_arts' ? Math.ceil(calcBodyRawSp / 2) : calcBodyRawSp);
-  const calcExcessPenetrating = Math.max(0, calcExcessDamage - calcExcessEffectiveSp);
-  const calcExcessSpAblation = (calcExcessPenetrating > 0 && calcAttackType !== 'direct')
-    ? (calcAttackType === 'ap' ? Math.min(calcBodyRawSp, 2) : Math.min(calcBodyRawSp, 1))
-    : 0;
-  let calcExcessHpLoss = 0;
-  if (calcExcessDamage > 0) {
-    calcExcessHpLoss = calcAttackType === 'direct' ? calcExcessDamage : calcExcessPenetrating;
-    if (calcIsCritical) calcExcessHpLoss += 5;
-  }
+    hasCrackedSkull: (activeChar?.activeInjuries ?? []).some(inj => !inj.isTreated && inj.name.includes('Cracked Skull'))
+  });
 
   let calcExplanation = '';
   if (calcLocation === 'shield') {

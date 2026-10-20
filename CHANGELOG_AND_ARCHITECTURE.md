@@ -65,8 +65,9 @@ cpr-omni-deck/
 │   │   │   ├── weaponAndCyberwareTooltips.ts # Diccionario canónico de tooltips de armas, ciberware y municiones
 │   │   │   └── weaponAttachmentsAndTechData.ts # Catálogo oficial de 13 accesorios, ranuras, taller Maker y Lifepaths
 │   │   ├── engine/
-│   │   │   ├── characterEngine.ts        # Motor matemático: HP máx, humanidad, penalizadores
-│   │   │   └── combatEngine.ts           # Motor de resolución: d10 explosivo, Xd6, doble 6 crítico
+│   │   │   ├── __tests__/rules.test.ts   # Tests Vitest de reglas canon con cita de página [Claude Code · 2026-10-20]
+│   │   │   ├── characterEngine.ts        # Motor matemático: HP máx, humanidad, penalizadores, Death Saves, EMP efectiva
+│   │   │   └── combatEngine.ts           # Motor de resolución: d10 explosivo, Xd6, doble 6 crítico, calculadora de impactos
 │   │   ├── features/
 │   │   │   ├── combat/
 │   │   │   │   └── CombatHudView.tsx     # HUD de combate táctico, selector de DVs y dados
@@ -245,6 +246,32 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ---
 
 ## 📜 Master Version Changelog
+
+### [v4.2.1] - 2026-10-20 (Deuda técnica: carga por pestaña, calculadora en el motor, tests de reglas) [Claude Code · 2026-10-20]
+* **Category**: Arquitectura y calidad (plan 1, fase 5: `docs/plans/plan1-auditoria-core.md`)
+* **Files Modified**:
+  - `frontend/src/App.tsx`
+  - `frontend/src/engine/combatEngine.ts`
+  - `frontend/src/engine/__tests__/rules.test.ts`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/features/gm/FixerDeckView.tsx`
+  - `frontend/src/features/packs/DataPacksView.tsx (eliminado)`
+  - `frontend/package.json`
+  - `frontend/package-lock.json`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CLAUDE.md`
+  - `.agent/AGENTS.md`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CHECKPOINT.md`
+* **What Changed**:
+  1. **Carga por pestaña**: `App.tsx` carga cada vista con `React.lazy` + `Suspense`. El bundle inicial baja de 2.126 kB a 598 kB; cada módulo se descarga al abrir su pestaña.
+  2. **Calculadora de impactos en el motor**: la lógica de SP, ablación, cabeza x2/x3, crítico +5 y escudos pasa de `CombatHudView.tsx` a `calculateIncomingImpact` en `combatEngine.ts` (mismo resultado). Se borró `calculateArmorAblation` y la acción sin uso `applyIncomingDamage` del store.
+  3. **Tests de reglas**: Vitest con 14 casos en `src/engine/__tests__/rules.test.ts` (HP, Wound States, Death Saves, EMP, HL, Brawling, críticos, ablación, AP, melee, cabeza, orden de la tabla de críticos y re-tirada), cada uno con su página del Core. Nuevo script `npm test`; `CLAUDE.md` y `.agent/AGENTS.md` lo agregan a la definición de terminado.
+  4. **Código muerto**: se borró `features/packs/DataPacksView.tsx` (no se importaba) y las dependencias sin uso `clsx` y `tailwind-merge`.
+  5. **PIN del GM**: la clave pasa a `cpr_gm_pin_v1` y se migra sola desde `cpr-gm-pin`.
 
 ### [v4.2.0] - 2026-10-20 (Combate: melee enfrentado, munición y autofire corregidos, quickhacks con WILL real) [Claude Code · 2026-10-20]
 * **Category**: Reglas de combate (plan 1, fase 4: `docs/plans/plan1-auditoria-core.md`)

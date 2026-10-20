@@ -1,0 +1,122 @@
+// Tests de reglas canon del motor. Cada caso cita la página del libro que fija el valor.
+import { describe, expect, it, vi, afterEach } from 'vitest';
+import {
+  calculateMaxHp,
+  calculateSeriouslyWoundedThreshold,
+  calculateUnarmedDamage,
+  getEffectiveEmp,
+  isMortallyWounded,
+  parseHumanityLossAverage,
+  rollDeathSave
+} from '../characterEngine';
+import { calculateIncomingImpact, createDamageRoll } from '../combatEngine';
+import { BODY_CRITICAL_INJURIES, HEAD_CRITICAL_INJURIES, rollCriticalInjury } from '../../data/criticalInjuries';
+import type { CharacterSheet } from '../../types/cyberpunk';
+
+const baseCharacter = (overrides: Partial<CharacterSheet> = {}): CharacterSheet =>
+  ({
+    stats: { INT: 6, REF: 6, DEX: 6, TECH: 6, COOL: 6, WILL: 6, LUCK: 6, MOVE: 6, BODY: 6, EMP: 6 },
+    currentHp: 40,
+    currentHumanity: 60,
+    activeInjuries: [],
+    ...overrides
+  }) as CharacterSheet;
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+describe('HP y Wound States (Core pp. 80, 186)', () => {
+  it('HP máximo = 10 + 5 * ceil((BODY + WILL) / 2)', () => {
+    expect(calculateMaxHp(6, 6)).toBe(40);
+    expect(calculateMaxHp(5, 7)).toBe(40);
+    expect(calculateMaxHp(7, 8)).toBe(50);
+  });
+  it('Seriously Wounded por debajo de la mitad (redondeo arriba)', () => {
+    expect(calculateSeriouslyWoundedThreshold(45)).toBe(23);
+  });
+  it('Mortally Wounded con menos de 1 HP', () => {
+    expect(isMortallyWounded(0)).toBe(true);
+    expect(isMortallyWounded(1)).toBe(false);
+  });
+});
+
+describe('Death Saves (Core p. 188)', () => {
+  it('vive si 1d10 + penalizador es menor que BODY', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.3); // d10 = 4
+    const r = rollDeathSave(baseCharacter({ currentHp: 0, deathSavePenalty: 1 }));
+    expect(r.total).toBe(5);
+    expect(r.success).toBe(true);
+  });
+  it('un 10 natural falla siempre', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.95); // d10 = 10
+    const r = rollDeathSave(baseCharacter({ stats: { ...baseCharacter().stats, BODY: 20 } }));
+    expect(r.autoFail).toBe(true);
+    expect(r.success).toBe(false);
+  });
+});
+
+describe('EMP y Humanidad (Core p. 80)', () => {
+  it('44 HUM = EMP 4, 39 HUM = EMP 3', () => {
+    expect(getEffectiveEmp(baseCharacter({ currentHumanity: 44 }))).toBe(4);
+    expect(getEffectiveEmp(baseCharacter({ currentHumanity: 39 }))).toBe(3);
+  });
+  it('lee el promedio de Humanity Loss del pack', () => {
+    expect(parseHumanityLossAverage('2d6 (7)')).toBe(7);
+    expect(parseHumanityLossAverage('14 (4d6)')).toBe(14);
+    expect(parseHumanityLossAverage('0 (N/A)')).toBe(0);
+  });
+});
+
+describe('Brawling (Core p. 176)', () => {
+  it('daño por BODY y mínimo 2d6 con Cyberarm', () => {
+    expect(calculateUnarmedDamage(4)).toBe('1d6');
+    expect(calculateUnarmedDamage(4, true)).toBe('2d6');
+    expect(calculateUnarmedDamage(11)).toBe('4d6');
+  });
+});
+
+describe('Daño y críticos (Core pp. 186-188)', () => {
+  it('dos 6 en el daño = Herida Crítica con +5', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.99); // todos los d6 = 6
+    const roll = createDamageRoll('Test', '2d6');
+    expect(roll.isCriticalInjuryTrigger).toBe(true);
+    expect(roll.critBonusDamage).toBe(5);
+  });
+  it('ablación solo si el daño atraviesa el SP; AP abla 2', () => {
+    const base = { location: 'body' as const, isCritical: false, passExcess: true, headSp: 11, bodySp: 11, shieldSdp: 0 };
+    expect(calculateIncomingImpact({ ...base, damage: 11, attackType: 'standard' }).spAblation).toBe(0);
+    const hit = calculateIncomingImpact({ ...base, damage: 15, attackType: 'standard' });
+    expect(hit.hpLoss).toBe(4);
+    expect(hit.spAblation).toBe(1);
+    expect(calculateIncomingImpact({ ...base, damage: 15, attackType: 'ap' }).spAblation).toBe(2);
+  });
+  it('Melee ignora la mitad del SP (redondeo arriba), Brawling no', () => {
+    const base = { location: 'body' as const, isCritical: false, passExcess: true, headSp: 11, bodySp: 11, shieldSdp: 0, damage: 10 };
+    expect(calculateIncomingImpact({ ...base, attackType: 'melee' }).hpLoss).toBe(4);
+    expect(calculateIncomingImpact({ ...base, attackType: 'brawling' }).hpLoss).toBe(0);
+  });
+  it('cabeza x2, Cracked Skull x3, crítico +5 aunque no atraviese', () => {
+    const base = { location: 'head' as const, passExcess: true, headSp: 7, bodySp: 11, shieldSdp: 0, attackType: 'standard' as const };
+    expect(calculateIncomingImpact({ ...base, damage: 10, isCritical: false }).hpLoss).toBe(6);
+    expect(calculateIncomingImpact({ ...base, damage: 10, isCritical: false, hasCrackedSkull: true }).hpLoss).toBe(9);
+    expect(calculateIncomingImpact({ ...base, damage: 5, isCritical: true }).hpLoss).toBe(5);
+  });
+});
+
+describe('Tablas de Heridas Críticas (Core pp. 187-188)', () => {
+  it('cuerpo en el orden del libro', () => {
+    const names = BODY_CRITICAL_INJURIES.map(i => i.name);
+    expect(names[0]).toContain('Dismembered Arm');
+    expect(names[1]).toContain('Dismembered Hand');
+    expect(names[2]).toContain('Collapsed Lung');
+    expect(names[6]).toContain('Broken Leg');
+    expect(names[10]).toContain('Dismembered Leg');
+    expect(BODY_CRITICAL_INJURIES).toHaveLength(11);
+    expect(HEAD_CRITICAL_INJURIES).toHaveLength(11);
+  });
+  it('vuelve a tirar si el objetivo ya sufre esa herida', () => {
+    const allButOne = BODY_CRITICAL_INJURIES.filter(i => i.roll !== 7).map(i => i.name);
+    expect(rollCriticalInjury('body', allButOne).roll).toBe(7);
+  });
+});

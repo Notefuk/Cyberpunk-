@@ -261,33 +261,89 @@ export function createDamageRoll(
   };
 }
 
-export interface ArmorAblationResult {
-  penetratingDamage: number;
-  ablation: number;
-  newSp: number;
-  newHp: number;
-  critBonusDamage: number;
-  totalDamageToHp: number;
+export type IncomingAttackType = 'standard' | 'ap' | 'melee' | 'martial_arts' | 'brawling' | 'direct';
+
+export interface IncomingImpactInput {
+  damage: number;
+  location: 'shield' | 'body' | 'head';
+  attackType: IncomingAttackType;
+  isCritical: boolean;
+  passExcess: boolean;
+  headSp: number;
+  bodySp: number;
+  shieldSdp: number;
+  hasCrackedSkull?: boolean;
 }
 
-export function calculateArmorAblation(
-  incomingDamage: number,
-  currentSp: number,
-  currentHp: number,
-  critBonusDamage: number = 0
-): ArmorAblationResult {
-  const penetratingDamage = Math.max(0, incomingDamage - currentSp);
-  const ablation = incomingDamage > currentSp ? 1 : 0;
-  const newSp = Math.max(0, currentSp - ablation);
-  const totalDamageToHp = penetratingDamage + critBonusDamage;
-  const newHp = Math.max(0, currentHp - totalDamageToHp);
+export interface IncomingImpactResult {
+  effectiveSp: number;
+  penetratingDamage: number;
+  spAblation: number;
+  hpLoss: number;
+  shieldLoss: number;
+  newShieldSdp: number;
+  excessDamage: number;
+  excessEffectiveSp: number;
+  excessSpAblation: number;
+  excessHpLoss: number;
+}
+
+// SP efectivo: las armas Melee y Martial Arts ignoran la mitad del SP (redondeo arriba), Brawling no (Core p. 176).
+function getEffectiveSpForAttack(rawSp: number, attackType: IncomingAttackType): number {
+  if (attackType === 'direct') return 0;
+  if (attackType === 'melee' || attackType === 'martial_arts') return Math.ceil(rawSp / 2);
+  return rawSp;
+}
+
+// Ablación solo si el daño atraviesa el SP: 1 punto, 2 con Armor-Piercing (Core pp. 186, 345; Errata p. 186).
+function getSpAblation(penetrating: number, rawSp: number, attackType: IncomingAttackType): number {
+  if (penetrating <= 0 || attackType === 'direct') return 0;
+  return attackType === 'ap' ? Math.min(rawSp, 2) : Math.min(rawSp, 1);
+}
+
+// Calculadora de impactos recibidos: SP, ablación, cabeza x2 (x3 con Cracked Skull), +5 de crítico
+// directo a HP aunque no atraviese el SP (Core pp. 186-188) y escudos/cobertura con su SDP.
+export function calculateIncomingImpact(input: IncomingImpactInput): IncomingImpactResult {
+  const { damage, location, attackType, isCritical, passExcess, headSp, bodySp, shieldSdp, hasCrackedSkull } = input;
+
+  const rawSp = location === 'head' ? headSp : bodySp;
+  const effectiveSp = getEffectiveSpForAttack(rawSp, attackType);
+  const penetratingDamage = Math.max(0, damage - effectiveSp);
+  const spAblation = getSpAblation(penetratingDamage, rawSp, attackType);
+
+  let hpLoss = 0;
+  if (attackType === 'direct') {
+    hpLoss = damage;
+  } else if (penetratingDamage > 0) {
+    hpLoss = penetratingDamage * (location === 'head' ? (hasCrackedSkull ? 3 : 2) : 1);
+  }
+  if (isCritical) {
+    hpLoss += 5;
+  }
+
+  const shieldLoss = location === 'shield' ? Math.min(shieldSdp, damage) : 0;
+  const newShieldSdp = location === 'shield' ? Math.max(0, shieldSdp - shieldLoss) : shieldSdp;
+  const excessDamage = location === 'shield' && passExcess ? Math.max(0, damage - shieldSdp) : 0;
+
+  const excessEffectiveSp = getEffectiveSpForAttack(bodySp, attackType);
+  const excessPenetrating = Math.max(0, excessDamage - excessEffectiveSp);
+  const excessSpAblation = getSpAblation(excessPenetrating, bodySp, attackType);
+  let excessHpLoss = 0;
+  if (excessDamage > 0) {
+    excessHpLoss = attackType === 'direct' ? excessDamage : excessPenetrating;
+    if (isCritical) excessHpLoss += 5;
+  }
 
   return {
+    effectiveSp,
     penetratingDamage,
-    ablation,
-    newSp,
-    newHp,
-    critBonusDamage,
-    totalDamageToHp
+    spAblation,
+    hpLoss,
+    shieldLoss,
+    newShieldSdp,
+    excessDamage,
+    excessEffectiveSp,
+    excessSpAblation,
+    excessHpLoss
   };
 }
