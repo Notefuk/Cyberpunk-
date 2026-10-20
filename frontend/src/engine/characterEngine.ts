@@ -336,7 +336,7 @@ export const AMMO_TYPE_CATALOG: AmmoTypeMeta[] = [
   {
     id: 'Smart',
     label: 'Smart',
-    shortRule: 'Si fallas por 4 o menos, tira de nuevo 1d10 [Requiere Smartgun Link]'
+    shortRule: 'Requiere Targeting Scope. Si fallas un tiro simple por 4 o menos, segunda tirada con 10 + 1d10 (+LUCK) contra el mismo DV (Core p. 346)'
   },
   {
     id: 'Biotoxin',

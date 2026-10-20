@@ -83,7 +83,7 @@ Los `.bat` de la raíz (`start_app.bat`, `run_extractors.bat`, `push_to_github.b
 - Tirada: `STAT + Skill + 1d10`; 10 explota (+1d10), 1 resta 1d10.
 - Daño `Xd6` aparte; dos o más 6 = Herida Crítica (+5 daño directo a HP).
 - Ablación: si daño > SP, pasa `daño - SP` a HP y el SP baja 1 (2 con munición perforante).
-- HP máx `10 + 5 * ceil((BODY + WILL) / 2)`; Herida Grave a `<= ceil(MaxHP/2)` con -2 global.
+- HP máx `10 + 5 * ceil((BODY + WILL) / 2)`; Herida Grave (Seriously Wounded) con HP `< ceil(MaxHP/2)` (Core p. 186) con -2 global.
 - Brackets de distancia en `rangeTables.ts` (Core p. 174). Críticos en `criticalInjuries.ts` (Core pp. 187-188).
 - Quickhacking CEMK 2077: **sin RAM**; cada quickhack cuesta 1 NET Action, 1 por objetivo por turno, flujo de 4 pasos (Jack In, Breach Passwalls, Quickhack, Boot Out).
 

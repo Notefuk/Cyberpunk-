@@ -1,7 +1,7 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.0.2 OPERATIVO`  
-> **LAST UPDATED**: 2026-10-20  
+> **SYSTEM VERSION**: `v4.0.3 OPERATIVO`  
+> **LAST UPDATED**: [Claude Code · 2026-10-20]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
 > **ARCHITECTURE**: COMP/CON decoupled offline-first model. Single source of truth in typed registries and Zustand stores.
@@ -20,7 +20,15 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 
 ---
 
-## 🚀 2. What Was Added in v4.0.2
+## 🚀 2. What Was Added in v4.0.3
+
+[Claude Code · 2026-10-20] Primera fase del plan de arreglos de la auditoría general (`docs/plans/plan1-auditoria-core.md`). Informe completo: Claude Doc "Auditoría CPR Omni-Deck v4.0.2".
+- Tablas de Heridas Críticas (cuerpo y cabeza) reescritas según Core pp. 187-188, con re-tirada de críticos repetidos.
+- `neuralware-processor` corregido a *Neural Link* 500eb (Core p. 111).
+- Munición Smart según Core p. 346 y Asp ATK 2 (Core p. 206).
+- Ojo: varias secciones históricas de abajo (escritas por Antigravity) describen reglas que la auditoría encontró inventadas o incompletas. Antes de confiar en una, verifícala contra el código y el libro. Pendientes del plan 1: Mortally Wounded + Death Saves, EMP derivada de Humanidad, melee enfrentado, bugs del store.
+
+## 📦 2.0 Historical Summary: What Was Added in v4.0.2
 
 ### A. Quickhacking Canónico CEMK 2077 (Purga de RAM de Videojuego)
 * **Files**: `netAndRolesData.ts`, `NetAndRolesDeckView.tsx`, `CombatHudView.tsx`, `RedChromeCargoView.tsx`.
