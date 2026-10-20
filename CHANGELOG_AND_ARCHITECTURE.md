@@ -247,6 +247,39 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.3.0] - 2026-10-20 (NET y Quickhacks canon: 3 NET Actions, sin RAM, Black ICE del Core) [Claude Code · 2026-10-20]
+* **Category**: Reglas de NET (plan 2, fase 1: `docs/plans/plan2-auditoria-expansiones.md`)
+* **Files Modified**:
+  - `frontend/src/data/core-rules.cprpack.json`
+  - `data/core-rules.cprpack.json`
+  - `frontend/src/data/netAndRolesData.ts`
+  - `frontend/src/data/expansionRulesData.ts`
+  - `frontend/src/data/weaponAndCyberwareTooltips.ts`
+  - `frontend/src/data/enemiesCatalog.ts`
+  - `frontend/src/data/characterCreationData.ts`
+  - `frontend/src/data/systemDocsAndChangelogData.ts`
+  - `frontend/src/engine/combatEngine.ts`
+  - `frontend/src/engine/__tests__/rules.test.ts`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/netroles/NetAndRolesDeckView.tsx`
+  - `frontend/src/features/oneshot/RedChromeCargoView.tsx`
+  - `frontend/src/features/rules/RulesCheatSheetDrawer.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CONTENT_CHECKLIST.md`
+  - `CHECKPOINT.md`
+* **What Changed**:
+  1. **NET Actions**: hasta 3 por turno en cualquier rango (CEMK p. 15, decisión del usuario sobre la tabla 2/3/4/5 del Core p. 197). Constantes `NET_ACTIONS_PER_TURN` y `NET_ACTIONS_DIRECT_CONNECTION_BONUS` (+1 por Interface Plug, CEMK p. 27) en `netAndRolesData.ts`; se usan en la consola NET, la guía de Quickhacking, los tooltips de Netrunner, la hoja de reglas y el Hardened Netrunner.
+  2. **Quickhacks sin RAM**: la sección de expansiones y la guía oficial se reescribieron desde CEMK pp. 15-17 y 26-27 (Jack In, Breach, Quickhack, Boot Out; alcance 6/8/50 m según el Cyberdeck; 1 Quickhack por objetivo por turno). Se borraron los 14 programas `qh-*` del pack (RAM, costos y 7 quickhacks inventados: Contagion, Suicide, Memory Wipe, Detonate Grenade, Optics Jammer, Weapon Glitch, Cripple Movement); el catálogo de 11 de `netAndRolesData.ts` es la única fuente.
+  3. **HUD de combate**: selector de conexión con el alcance de CEMK p. 26, bloqueo de un segundo Quickhack en el mismo turno con botón "Nuevo turno", Breach que debe superar el DV y el log ya no muestra INT (Interface no suma STAT, CEMK p. 16).
+  4. **Consola NET y Quickhacks de la pestaña NET**: Jack In y Boot Out con WILL y Concentration editables del objetivo (antes fijos en 6 y 2), Boot Out contra una tirada nueva de Interface, empates para el defensor, d10 que explota y pifia, y DV que hay que superar, no igualar (CEMK p. 5).
+  5. **Black ICE y arquitecturas**: tabla `BLACK_ICE_STATS` con PER/SPD/ATK/DEF/REZ del Core pp. 206-207; los presets y el generador de pisos la usan (había 8 presets con stats inventados). Dificultades canon Basic/Standard/Uncommon/Advanced (Core p. 210) en lugar de "Hardened"/"Corporate Apex"; fuera los DV 13 y 14.
+  6. **Acciones de Interface**: Scanner es Meat Action sin DV (el GM interpreta el total, Core p. 199); Backdoor hasta DV 12; Eye-Dee usa el DV del File; Control y Virus con el texto del Core pp. 199-200.
+  7. **Programas del pack**: Flak reduce a 0 el ATK de los Attacker no Black ICE (antes tenía el efecto de Shield), Flak y Shield con REZ 7; Armor, Skunk y Wisp con el texto del Core pp. 203, 207.
+  8. **Motor**: `rollCheckD10` y `beatsDv` en `combatEngine.ts`; 5 tests nuevos (19 en total).
+
 ### [v4.2.1] - 2026-10-20 (Deuda técnica: carga por pestaña, calculadora en el motor, tests de reglas) [Claude Code · 2026-10-20]
 * **Category**: Arquitectura y calidad (plan 1, fase 5: `docs/plans/plan1-auditoria-core.md`)
 * **Files Modified**:

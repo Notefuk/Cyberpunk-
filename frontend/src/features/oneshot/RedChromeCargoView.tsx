@@ -348,7 +348,7 @@ export const RedChromeCargoView: React.FC = () => {
 
     if (actionType === 'backdoor') {
       const dv = floorNumber === 1 ? 6 : 8;
-      const pass = totalRoll >= dv;
+      const pass = totalRoll > dv; // superar el DV, no igualarlo (CEMK p. 5)
       setMainframeProgress(prev => ({
         ...prev,
         unlockedFloors: pass ? [...new Set([...prev.unlockedFloors, floorNumber])] : prev.unlockedFloors,
@@ -2485,7 +2485,7 @@ export const RedChromeCargoView: React.FC = () => {
                     const d10 = Math.floor(Math.random() * 10) + 1;
                     const interfaceRank = activeChar.roleRank || 4;
                     const rollTotal = d10 + interfaceRank;
-                    const success = rollTotal >= qh.dv;
+                    const success = rollTotal > qh.dv; // superar el DV, no igualarlo (CEMK p. 5)
                     const targetEnemy = activeEnemies.find(e => e.instanceId === activeQuickhackModal) || activeEnemies[0];
 
                     if (success && (qh.damage || qh.damageFormula) && targetEnemy) {

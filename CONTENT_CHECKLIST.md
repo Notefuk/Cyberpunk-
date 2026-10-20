@@ -222,9 +222,10 @@
 - [x] **Simulador de Pisos de Red 2045 (`NetAndRolesDeckView.tsx` & `netAndRolesData.ts`)**:
   - Escalera virtual de pisos de red: Archivos, Nodos de Control, Contraseñas, Black ICE.
   - Contador de Acciones de Red (Net Actions) basado en el Rango de Interfaz.
+  - [Claude Code · 2026-10-20] v4.3.0: hasta 3 NET Actions en cualquier rango (CEMK p. 15), Black ICE con stats del Core pp. 206-207 y dificultades Basic/Standard/Uncommon/Advanced (Core p. 210).
   - Combate Netrunner vs Black ICE con rez/derez de programas.
 - [x] **Sistema de Quickhacking 2077 (`NetAndRolesDeckView.tsx`)**:
-  - Hackeo inalámbrico en combate utilizando pool de RAM.
+  - Hackeo inalámbrico en combate sin RAM (CEMK pp. 15-17). [Claude Code · 2026-10-20] Corregido en v4.3.0: antes usaba RAM y tenía 7 quickhacks inventados.
   - Quickhacks ofensivos y de control (Short Circuit, Cyberware Malfunction, Overheat).
 - [x] **Habilidades de Rol Específicas**:
   - Solos (Combat Awareness), Medtechs (Farmacia/Cirugía/Criogenia), Techs (Maker), Nomads (Moto).

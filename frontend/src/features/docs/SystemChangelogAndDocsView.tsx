@@ -26,6 +26,44 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.3.0',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'Reglas de NET',
+    title: 'NET y Quickhacks canon: 3 NET Actions, sin RAM, Black ICE del Core',
+    summary: 'Primera fase del plan 2 (contenido canon de expansiones). Los Netrunners tienen hasta 3 NET Actions en cualquier rango, como dice CEMK. Los Quickhacks ya no usan RAM: alcance de 6, 8 o 50 m según el Cyberdeck y 1 por objetivo por turno. Los Black ICE, las dificultades de arquitectura y las acciones de Interface siguen el Core, y se borró el contenido inventado.',
+    highlights: [
+      'Hasta 3 NET Actions por turno en cualquier rango (CEMK p. 15).',
+      'Quickhacks sin RAM; borrados 7 quickhacks inventados y los programas qh-* del pack.',
+      'HUD: alcance según la conexión y un solo Quickhack por objetivo por turno (CEMK pp. 16, 26).',
+      'Black ICE con PER/SPD/ATK/DEF/REZ del Core pp. 206-207 y dificultades Basic a Advanced.',
+      'Scanner sin DV fijo, Flak y Shield con su efecto real, Checks que deben superar el DV (CEMK p. 5).'
+    ],
+    filesTouched: [
+      'frontend/src/data/core-rules.cprpack.json',
+      'data/core-rules.cprpack.json',
+      'frontend/src/data/netAndRolesData.ts',
+      'frontend/src/data/expansionRulesData.ts',
+      'frontend/src/data/weaponAndCyberwareTooltips.ts',
+      'frontend/src/data/enemiesCatalog.ts',
+      'frontend/src/data/characterCreationData.ts',
+      'frontend/src/data/systemDocsAndChangelogData.ts',
+      'frontend/src/engine/combatEngine.ts',
+      'frontend/src/engine/__tests__/rules.test.ts',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'frontend/src/features/oneshot/RedChromeCargoView.tsx',
+      'frontend/src/features/rules/RulesCheatSheetDrawer.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CONTENT_CHECKLIST.md',
+      'CHECKPOINT.md'
+    ],
+    metricsBadge: 'v4.3.0 • NET canon • Plan 2 fase 1'
+  },
+  {
     version: 'v4.2.1',
     date: '2026-10-20',
     phase: 'Codex',
@@ -411,6 +449,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.3.0': true,
     'v4.2.1': true,
     'v4.2.0': true,
     'v4.1.1': true,

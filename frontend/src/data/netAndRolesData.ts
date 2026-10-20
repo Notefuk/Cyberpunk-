@@ -7,6 +7,14 @@
 // 1. ACCIONES DE INTERFAZ & PRESETS DE ARQUITECTURAS DE RED (NETRUNNING 2045)
 // ============================================================================
 
+/**
+ * NET Actions por turno. CEMK p. 15: "1 Meat Action or up to 3 Net Actions" para cualquier rango.
+ * Decisión del usuario (2026-10-20): CEMK manda sobre la tabla 2/3/4/5 del Core p. 197.
+ */
+export const NET_ACTIONS_PER_TURN = 3;
+/** Conexión directa por Interface Plug al Neuroport: +1 NET Action por turno (CEMK p. 27). */
+export const NET_ACTIONS_DIRECT_CONNECTION_BONUS = 1;
+
 export interface NetAction {
   id: string;
   name: string;
@@ -37,25 +45,25 @@ export const NET_ACTIONS_CATALOG: NetAction[] = [
     id: 'backdoor',
     name: 'Backdoor',
     cost: '1 NET Action',
-    dv: 'Password DV (DV 6 a 14)',
+    dv: 'Password DV (DV 6 a 12)',
     defaultDv: 8,
     description: 'Fuerza la brecha a través de un piso de Contraseña (Password) para acceder a niveles inferiores.',
     exactEffect: 'Hackea y desactiva el bloqueo de un Password. Con éxito, el piso queda desbloqueado permanentemente para ti y tus aliados, permitiendo el tránsito libre a los pisos siguientes.',
     prerequisites: 'Estar en el mismo piso que el nodo de Password bloqueado.',
-    dvResolution: 'Basic DV 6, Standard DV 8, Uncommon DV 10, Advanced DV 12, Apex DV 14.',
+    dvResolution: 'Basic DV 6, Standard DV 8, Uncommon DV 10, Advanced DV 12 (Core p. 210). Si conoces el Password pasas automáticamente (Core p. 199).',
     checkFormula: 'Interface + 1d10 vs DV del Password'
   },
   {
     id: 'eye-dee',
     name: 'Eye-Dee',
     cost: '1 NET Action',
-    dv: 'DV 8 (o automático si no encriptado)',
+    dv: 'DV del File (algunos no tienen DV)',
     defaultDv: 8,
     description: 'Examina e identifica archivos, programas hostiles y nodos de control.',
-    exactEffect: 'Identifica qué contiene un archivo encriptado, su valor en Eurodólares (€$), qué dispositivos gobierna un Control Node o las estadísticas exactas y debilidades de un Black ICE.',
+    exactEffect: 'Te dice qué es un dato encontrado (como un File) y cuánto vale. Algunos Files tienen un DV que hay que superar para saber algo de ellos (Core p. 199).',
     prerequisites: 'Estar en el mismo piso que el File, Control Node o Black ICE objetivo.',
-    dvResolution: 'DV 8 estándar (o fijado por el GM para archivos corporativos de alta seguridad).',
-    checkFormula: 'Interface + 1d10 vs DV 8'
+    dvResolution: 'El DV del File según la dificultad de la arquitectura: Basic 6, Standard 8, Uncommon 10, Advanced 12 (Core p. 210).',
+    checkFormula: 'Interface + 1d10 vs DV del File'
   },
   {
     id: 'control',
@@ -64,7 +72,7 @@ export const NET_ACTIONS_CATALOG: NetAction[] = [
     dv: 'Control Node DV (DV 6 a 12)',
     defaultDv: 8,
     description: 'Toma el dominio de dispositivos físicos conectados en el mundo real.',
-    exactEffect: 'Toma el control del nodo y activa o desactiva uno de sus dispositivos conectados: cámaras de vigilancia, torretas automáticas, aspersores contra incendios o puertas de esclusa.',
+    exactEffect: 'Tomas el Control Node (cámaras, drones, torretas, ascensores, aspersores, etc.). Operar cada cosa conectada cuesta otra NET Action, desde cualquier piso mientras lo controles. Cada Control Node se activa una sola vez por turno. Para quitárselo a otro Netrunner o Demon el DV es su Control Check. Lo pierdes al hacer Jack Out (Core p. 199).',
     prerequisites: 'Estar en el mismo piso que el Control Node y haber superado Passwords previos.',
     dvResolution: 'Basic DV 6, Standard DV 8, Uncommon DV 10, Advanced DV 12.',
     checkFormula: 'Interface + 1d10 vs DV del Nodo de Control'
@@ -84,13 +92,13 @@ export const NET_ACTIONS_CATALOG: NetAction[] = [
   {
     id: 'virus',
     name: 'Virus',
-    cost: '2 NET Actions',
-    dv: 'Fijado por el GM (DV 8 a 14)',
+    cost: 'Las NET Actions que fije el GM',
+    dv: 'Fijado por el GM',
     defaultDv: 10,
     description: 'Crea y programa un efecto permanente o sabotaje en el núcleo del sistema.',
-    exactEffect: 'Escribe un script permanente en el piso más profundo de la arquitectura. El efecto perdura hasta que un Netrunner enemigo o SysAdmin ejecute una purga. Cada acción adicional invertida aumenta la dificultad de purga.',
-    prerequisites: 'Haber alcanzado el piso más profundo (Root / Core) de la arquitectura y disponer de 2 NET Actions.',
-    dvResolution: 'Fijado por el GM según magnitud: Menor DV 8, Moderado DV 10, Crítico DV 12, Catastrófico DV 14.',
+    exactEffect: 'En el piso más bajo dejas un Virus que hace hasta 2 acciones o cambios razonables; es lo único que persiste tras el Jack Out. El DV para destruirlo es tu Virus Check (Core p. 200).',
+    prerequisites: 'Haber llegado al piso más bajo de la arquitectura.',
+    dvResolution: 'Ejemplos del Core p. 200: cambiar iconos DV 6 y 1 NET Action; desactivar un Black ICE o un Control Node DV 10 y 2 NET Actions; borrar todo el Black ICE DV 12 y 10 NET Actions.',
     checkFormula: 'Interface + 1d10 vs DV de Complejidad'
   },
   {
@@ -108,14 +116,14 @@ export const NET_ACTIONS_CATALOG: NetAction[] = [
   {
     id: 'scanner',
     name: 'Scanner',
-    cost: '1 Acción de Meatspace',
-    dv: 'DV 13 (Percepción en el Mundo Real)',
-    defaultDv: 13,
+    cost: '1 Meat Action (NET Action con Quickhacking, CEMK p. 26)',
+    dv: 'Sin DV: el GM interpreta el total',
+    defaultDv: 0,
     description: 'Rastrea puntos de acceso inalámbricos (Access Points) en el entorno físico.',
-    exactEffect: 'Localiza todos los Puntos de Acceso (Access Points) a arquitecturas de red en un radio de 20 metros (o 10 casillas de cuadrícula) en línea de visión sin obstrucciones.',
-    prerequisites: 'Requiere 1 Acción de Meatspace en el mundo físico y tener un Cyberdeck activo.',
-    dvResolution: 'DV 13 fijo según reglamento oficial (Core p. 198).',
-    checkFormula: 'INT + Perception + 1d10 vs DV 13'
+    exactEffect: 'Encuentra la ubicación en Meatspace de los access points de las arquitecturas NET de la zona. Cuanto más alto el total, más encuentras y desde más lejos; el GM decide cuánto (Core p. 199).',
+    prerequisites: 'Usa una Meat Action, no una NET Action (Core p. 199).',
+    dvResolution: 'Sin DV fijo (Core p. 199).',
+    checkFormula: 'Interface + 1d10 (el GM interpreta el total)'
   },
   {
     id: 'zap',
@@ -148,11 +156,27 @@ export interface NetFloor {
 export interface NetArchitecturePreset {
   id: string;
   name: string;
-  difficulty: 'Basic' | 'Standard' | 'Hardened' | 'Corporate Apex';
+  difficulty: 'Basic' | 'Standard' | 'Uncommon' | 'Advanced'; // Core p. 210
   totalFloors: number;
   floors: NetFloor[];
   loreDescription: string;
 }
+
+/** Black ICE del Core pp. 206-207: PER, SPD, ATK, DEF, REZ. */
+export const BLACK_ICE_STATS: Record<string, { per: number; spd: number; atk: number; def: number; rez: number }> = {
+  Asp: { per: 4, spd: 6, atk: 2, def: 2, rez: 15 },
+  Giant: { per: 2, spd: 2, atk: 8, def: 4, rez: 25 },
+  Hellhound: { per: 6, spd: 6, atk: 6, def: 2, rez: 20 },
+  Kraken: { per: 6, spd: 2, atk: 8, def: 4, rez: 30 },
+  Liche: { per: 8, spd: 2, atk: 6, def: 2, rez: 25 },
+  Raven: { per: 6, spd: 4, atk: 4, def: 2, rez: 15 },
+  Scorpion: { per: 2, spd: 6, atk: 2, def: 2, rez: 15 },
+  Skunk: { per: 2, spd: 4, atk: 4, def: 2, rez: 10 },
+  Wisp: { per: 4, spd: 4, atk: 4, def: 2, rez: 15 },
+  Dragon: { per: 6, spd: 4, atk: 6, def: 6, rez: 30 },
+  Killer: { per: 4, spd: 8, atk: 6, def: 2, rez: 20 },
+  Sabertooth: { per: 8, spd: 6, atk: 6, def: 2, rez: 25 },
+};
 
 export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
   {
@@ -233,7 +257,7 @@ export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
     loreDescription: 'Red médica de nivel medio que custodia bóvedas de fármacos y registros de implantes instalados.',
     floors: [
       { floorNumber: 1, type: 'Password', name: 'Gateway de Pacientes', dv: 8 },
-      { floorNumber: 2, type: 'Black ICE', name: 'Raven (Rastreador)', iceType: 'Raven', iceHp: 15, iceAtk: 4, iceDef: 3 },
+      { floorNumber: 2, type: 'Black ICE', name: 'Raven (Rastreador)', iceType: 'Raven', iceHp: 15, iceAtk: 4, iceDef: 2 },
       { floorNumber: 3, type: 'File', name: 'Códigos de Acceso a Farmacia', dv: 8, rewardOrDevice: 'Acceso a Speedheal & Drogas' },
       { floorNumber: 4, type: 'Black ICE', name: 'Hellhound (Anti-Personal Ígneo)', iceType: 'Hellhound', iceHp: 20, iceAtk: 6, iceDef: 2 },
       { floorNumber: 5, type: 'Control Node', name: 'Cámaras Criogénicas y Escáneres', dv: 10, rewardOrDevice: 'Sobrecargar criotanques' }
@@ -242,7 +266,7 @@ export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
   {
     id: 'net-militech-outpost',
     name: 'Puesto Táctico Avanzado de Militech',
-    difficulty: 'Hardened',
+    difficulty: 'Uncommon',
     totalFloors: 6,
     loreDescription: 'Instalación fortificada con torretas de defensa automatizadas y personal de seguridad privada.',
     floors: [
@@ -250,37 +274,37 @@ export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
       { floorNumber: 2, type: 'Black ICE', name: 'Hellhound (Sabueso Devastador)', iceType: 'Hellhound', iceHp: 20, iceAtk: 6, iceDef: 2 },
       { floorNumber: 3, type: 'Control Node', name: 'Torreta Automática de Techo (5d6)', dv: 10, rewardOrDevice: 'Disparar contra tropas Militech' },
       { floorNumber: 4, type: 'File', name: 'Rutas de Patrulla y Armería', dv: 10, rewardOrDevice: 'Clave de bóveda de armas pesadas' },
-      { floorNumber: 5, type: 'Black ICE', name: 'Kraken (Anti-Programa Devorador)', iceType: 'Kraken', iceHp: 30, iceAtk: 8, iceDef: 4 },
+      { floorNumber: 5, type: 'Black ICE', name: 'Kraken (Anti-Personnel)', iceType: 'Kraken', iceHp: 30, iceAtk: 8, iceDef: 4 },
       { floorNumber: 6, type: 'Control Node', name: 'Puertas Blindadas y Esclusas de Asalto', dv: 10, rewardOrDevice: 'Aislar el complejo' }
     ]
   },
   {
     id: 'net-arasaka-vault',
     name: 'Bóveda de Proyectos Negros de Arasaka',
-    difficulty: 'Corporate Apex',
+    difficulty: 'Advanced',
     totalFloors: 7,
     loreDescription: 'La arquitectura más implacable de Night City. Custodiada por Black ICE letal de grado militar.',
     floors: [
       { floorNumber: 1, type: 'Password', name: 'Cifrado Cuántico Arasaka', dv: 12 },
-      { floorNumber: 2, type: 'Black ICE', name: 'Giant (Aplastador Mental)', iceType: 'Giant', iceHp: 25, iceAtk: 6, iceDef: 4 },
+      { floorNumber: 2, type: 'Black ICE', name: 'Giant (Aplastador Mental)', iceType: 'Giant', iceHp: 25, iceAtk: 8, iceDef: 4 },
       { floorNumber: 3, type: 'File', name: 'Esquema de Ciberware Experimental', dv: 12, rewardOrDevice: 'Datos clasificados (5,000 €$)' },
-      { floorNumber: 4, type: 'Black ICE', name: 'Dragon (Guardián Imperial)', iceType: 'Dragon', iceHp: 35, iceAtk: 8, iceDef: 4 },
+      { floorNumber: 4, type: 'Black ICE', name: 'Dragon (Guardián Imperial)', iceType: 'Dragon', iceHp: 30, iceAtk: 6, iceDef: 6 },
       { floorNumber: 5, type: 'Control Node', name: 'Defensas Láser y Gas Nervioso', dv: 12, rewardOrDevice: 'Desactivar medidas letales' },
-      { floorNumber: 6, type: 'Black ICE', name: 'Liche (Muerte Cerebral Automática)', iceType: 'Liche', iceHp: 25, iceAtk: 8, iceDef: 6 },
-      { floorNumber: 7, type: 'File', name: 'Núcleo Maestro del Proyecto Soulkiller', dv: 14, rewardOrDevice: 'Información que cambia el mundo' }
+      { floorNumber: 6, type: 'Black ICE', name: 'Liche (Muerte Cerebral Automática)', iceType: 'Liche', iceHp: 25, iceAtk: 6, iceDef: 2 },
+      { floorNumber: 7, type: 'File', name: 'Núcleo Maestro del Proyecto Soulkiller', dv: 12, rewardOrDevice: 'Información que cambia el mundo' }
     ]
   },
   {
     id: 'net-zetatech-lab',
     name: 'Laboratorio de Drones Zetatech R&D',
-    difficulty: 'Hardened',
+    difficulty: 'Uncommon',
     totalFloors: 6,
     loreDescription: 'Red de investigación que controla líneas de ensamblaje robóticas y prototipos autónomos.',
     floors: [
       { floorNumber: 1, type: 'Password', name: 'Barrera Criptográfica Zeta', dv: 10 },
       { floorNumber: 2, type: 'Black ICE', name: 'Killer (Desmantelador de Software)', iceType: 'Killer', iceHp: 20, iceAtk: 6, iceDef: 2 },
       { floorNumber: 3, type: 'Control Node', name: 'Drones de Patrulla Aérea Octocópteros', dv: 10, rewardOrDevice: 'Ordenar aterrizaje de emergencia' },
-      { floorNumber: 4, type: 'Black ICE', name: 'Sabertooth (Perseguidor Rápido)', iceType: 'Sabertooth', iceHp: 25, iceAtk: 6, iceDef: 4 },
+      { floorNumber: 4, type: 'Black ICE', name: 'Sabertooth (Perseguidor Rápido)', iceType: 'Sabertooth', iceHp: 25, iceAtk: 6, iceDef: 2 },
       { floorNumber: 5, type: 'Control Node', name: 'Línea de Montaje de Torretas', dv: 10, rewardOrDevice: 'Causar explosión en cadena' },
       { floorNumber: 6, type: 'File', name: 'Planos de Fabricación del Samson FBC', dv: 12, rewardOrDevice: 'Planos industriales de valor supremo' }
     ]
@@ -288,14 +312,14 @@ export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
   {
     id: 'net-danger-gal-archive',
     name: 'Archivo Central de Inteligencia Danger Gal',
-    difficulty: 'Hardened',
+    difficulty: 'Uncommon',
     totalFloors: 6,
     loreDescription: 'Servidor central protegido por la red de Michiko Sanderson con expedientes confidenciales.',
     floors: [
       { floorNumber: 1, type: 'Password', name: 'Acceso Gatuno Encriptado', dv: 10 },
       { floorNumber: 2, type: 'Black ICE', name: 'Wisp (Interferidor Óptico)', iceType: 'Wisp', iceHp: 15, iceAtk: 4, iceDef: 2 },
       { floorNumber: 3, type: 'Control Node', name: 'Micrófonos y Cámaras Espía del Edificio', dv: 10, rewardOrDevice: 'Intercepción de audio' },
-      { floorNumber: 4, type: 'Black ICE', name: 'Skunk (Rastreador Fétido)', iceType: 'Skunk', iceHp: 20, iceAtk: 4, iceDef: 4 },
+      { floorNumber: 4, type: 'Black ICE', name: 'Skunk (Rastreador Fétido)', iceType: 'Skunk', iceHp: 10, iceAtk: 4, iceDef: 2 },
       { floorNumber: 5, type: 'File', name: 'Expedientes de Operativos de Night City', dv: 12, rewardOrDevice: 'Secretos de todas las facciones' },
       { floorNumber: 6, type: 'Control Node', name: 'Servidor de Borrado Térmico de Emergencia', dv: 12, rewardOrDevice: 'Purgar base de datos' }
     ]
@@ -308,7 +332,7 @@ export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
     loreDescription: 'Red de radioenlace satelital que coordina camiones blindados y escoltas armadas en las Badlands.',
     floors: [
       { floorNumber: 1, type: 'Password', name: 'Filtro de Frecuencia Nómada', dv: 8 },
-      { floorNumber: 2, type: 'Black ICE', name: 'Scorpion (Picadura Neuronal)', iceType: 'Scorpion', iceHp: 20, iceAtk: 6, iceDef: 2 },
+      { floorNumber: 2, type: 'Black ICE', name: 'Scorpion (Picadura Neuronal)', iceType: 'Scorpion', iceHp: 15, iceAtk: 2, iceDef: 2 },
       { floorNumber: 3, type: 'Control Node', name: 'Navegación GPS y Freno del Convoy', dv: 8, rewardOrDevice: 'Detener los vehículos' },
       { floorNumber: 4, type: 'File', name: 'Manifiesto de Carga y Rutas de Contrabando', dv: 10, rewardOrDevice: 'Ubicación de alijos en el desierto' },
       { floorNumber: 5, type: 'Control Node', name: 'Lanzacohetes Montado en Camión Líder', dv: 10, rewardOrDevice: 'Disparo de cohetes tácticos' }
@@ -330,9 +354,9 @@ export function generateRandomNetFloor(floorNumber: number, difficulty: 'easy' |
       type: 'Black ICE',
       name: `${chosen} Guardián`,
       iceType: chosen,
-      iceHp: 20,
-      iceAtk: 6,
-      iceDef: 3
+      iceHp: BLACK_ICE_STATS[chosen].rez,
+      iceAtk: BLACK_ICE_STATS[chosen].atk,
+      iceDef: BLACK_ICE_STATS[chosen].def
     };
   }
 
@@ -345,7 +369,7 @@ export function generateRandomNetFloor(floorNumber: number, difficulty: 'easy' |
 }
 
 // ============================================================================
-// 2. CATÁLOGO DE LOS 15 QUICKHACKS OFICIALES (ERA 2077 - CEMK)
+// 2. CATÁLOGO DE LOS 11 QUICKHACKS OFICIALES (ERA 2077 - CEMK pp. 16-17)
 // ============================================================================
 
 export interface Quickhack2077 {
@@ -354,7 +378,6 @@ export interface Quickhack2077 {
   tier: 'Simple' | 'Standard' | 'Difficult' | 'Advanced';
   dv: number;
   actionCost: string; // '1 NET Action'
-  ramCost?: number;
   duration: string;
   damage?: string;
   damageFormula?: '1d6' | '3d6';
@@ -575,18 +598,15 @@ export const QUICKHACKING_OFFICIAL_RULES_GUIDE: QuickhackingOfficialRulesGuide =
   },
   rangeAndLineOfSight: {
     title: 'Alcance Operativo & Línea de Visión (Meatspace)',
-    maxDistance: '50 metros (25 casillas tácticas)',
-    lineOfSightRules: 'El Netrunner debe tener línea de visión directa hacia el objetivo o hacia una cámara hackeada que lo enfoque. No atraviesa paredes sólidas sin enlace.',
-    neuroportRequirement: 'El objetivo debe portar un Neuroport activo (en 2077, prácticamente todos los habitantes urbanos lo tienen instalado).',
-    freeActionConnection: 'En tu turno, establecer conexión inalámbrica al Neuroport de un objetivo visible dentro de 50 metros es una Acción Gratuita.'
+    maxDistance: '6 m (3 casillas) con Cyberdeck externo, 8 m (4 casillas) con la opción de hardware adecuada, 50 m (25 casillas) con Cyberdeck en Neuroport Cyberdeck Port (CEMK p. 26)',
+    lineOfSightRules: 'Siempre se necesita línea de visión con el objetivo (CEMK pp. 16, 26).',
+    neuroportRequirement: 'Si el objetivo no tiene Neuroport, no se le pueden hacer Quickhacks (CEMK p. 15).',
+    freeActionConnection: 'Conectarse es la NET Action Jack In; cada Neuroport es una NET Action aparte y puedes quedar conectado a todos los que quieras (CEMK p. 16). Por conexión directa con Interface Plug ganas +1 NET Action por turno e ignoras Passwalls, no Black ICE (CEMK p. 27).'
   },
   breachingAndPasswords: {
     title: 'Flujo Canónico de 4 Pasos en Combate (Por NET Actions)',
     netActionsPerTurn: [
-      { rankRange: 'Interface 1 a 3', actions: 3 },
-      { rankRange: 'Interface 4 a 6', actions: 4 },
-      { rankRange: 'Interface 7 a 9', actions: 5 },
-      { rankRange: 'Interface 10 (Master)', actions: 6 }
+      { rankRange: 'Cualquier rango de Interface (CEMK p. 15: "up to 3 Net Actions")', actions: NET_ACTIONS_PER_TURN }
     ],
     breachProcedure: [
       'Paso 1: Jack In (1 NET Action) — Interface + 1d10 vs WILL del objetivo + 1d10. Entras siempre a su Neuroport; pero si fallas la tirada, el objetivo detecta tu intrusión.',
@@ -599,7 +619,7 @@ export const QUICKHACKING_OFFICIAL_RULES_GUIDE: QuickhackingOfficialRulesGuide =
     title: 'Defensas del Objetivo: Self-ICE y Protocolo de Expulsión',
     selfIceEffect: 'Cada implante Self-ICE crea un Passwall defensivo adicional dentro del Neuroport (1 Self-ICE = DV 6, 2 Self-ICE = DV 8, 3 Self-ICE = DV 10) que debe ser superado antes de inyectar Quickhacks.',
     countermeasureAction: 'Si el objetivo sabe que estás dentro, gasta su Acción de Meatspace en su turno para tirar WILL + Concentration + 1d10 vs tu Interface + 1d10. Si supera la tirada, el hacker es expulsado y bloqueado por 60 minutos.',
-    rebootRecovery: 'El objetivo también puede reiniciar manualmente su Neuroport con 1 Acción Completa, perdiendo visión y defensas durante 1 asalto pero purgando daemons activos.'
+    rebootRecovery: 'Si el Netrunner sale por cualquier vía que no sea la NET Action Jack Out, es un Jack Out inseguro con sus consecuencias normales, y no puede volver a entrar en ese objetivo durante 60 minutos (CEMK p. 26).'
   }
 };
 

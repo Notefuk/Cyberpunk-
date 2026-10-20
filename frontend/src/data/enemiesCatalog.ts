@@ -827,7 +827,7 @@ export const ENEMIES_CATALOG: EnemySheet[] = [
     ],
     cyberware: ['Neural Link', 'Interface Plugs', 'Smartgun Link', 'Pain Editor'],
     gear: ['Cyberdeck excelente (8 slots)', 'Programas: Giant, Hellhound, Sword, Superglue, Banhammer'],
-    specialRules: ['4 Net Actions por turno. Puede rezear 2 programas en la misma acción.'],
+    specialRules: ['Hasta 3 Net Actions por turno (CEMK p. 15). Puede rezear 2 programas en la misma acción.'],
     loreSummary: 'Un operador de élite capaz de freír cyberdecks rivales y neutralizar sistemas de seguridad en segundos.'
   },
   {

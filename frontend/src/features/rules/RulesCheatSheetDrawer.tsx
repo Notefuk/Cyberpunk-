@@ -559,7 +559,7 @@ export const RulesCheatSheetDrawer: React.FC = () => {
                         <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
                           <strong className="text-cyan-400 block">🌐 Net Action / Quickhack</strong>
                           <span className="text-slate-300">
-                            Los Netrunners disponen de 2 a 4 Net Actions por turno según su Interface (Pathfinder, Scanner, Backdoor, Control, Eye-Dee, Zap). En la era 2077 con Neuroport, permite cargar Quickhacks neuronales a 50m.
+                            Los Netrunners hacen 1 Meat Action o hasta 3 NET Actions por turno (CEMK p. 15): Pathfinder, Backdoor, Control, Eye-Dee, Slide, Zap, etc. Los Quickhacks a Neuroports cuestan 1 NET Action, 1 por objetivo por turno, con alcance de 6, 8 o 50 m según el Cyberdeck (CEMK pp. 16, 26).
                           </span>
                         </div>
 

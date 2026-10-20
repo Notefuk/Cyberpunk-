@@ -101,7 +101,7 @@ export const SOURCEBOOKS_CATALOG: SourceBookMeta[] = [
       'La adaptación oficial a la era del anime Cyberpunk: Edgerunners y el videojuego 2077. Introduce el Neuroport unificado de serie, la reconstrucción balística en armas Power (rebotes), Tech (perforación de coberturas) y Smart (guiado), junto con el sistema de Quickhacking inalámbrico en combate y mecánicas de Ciberpsicosis acelerada.',
     keyHighlights: [
       'Neuroport universal preinstalado en todos los personajes de 2077 (0 €$ / 0 HL).',
-      '15 Quickhacks oficiales de combate ejecutables a 50 metros vía memoria RAM.',
+      '11 Quickhacks oficiales sin RAM: 1 NET Action cada uno, 1 por objetivo por turno (CEMK pp. 16-17).',
       'Armamento 2077: Carnage "Guts", Satara Tech, Nekomata, Achilles y Tamayura.',
       'Fichas de la tripulación de David Martinez, Lucy, Rebecca, Maine y Kiwi.'
     ],
@@ -109,7 +109,7 @@ export const SOURCEBOOKS_CATALOG: SourceBookMeta[] = [
       'Armas Power (rebotes tácticos y +5 crítico)',
       'Armas Tech (disparo cargado que ignora 50% SP y muros)',
       'Armas Smart 2077 (+1 ataque y reroll de fallo)',
-      'Quickhacking remoto con pools de memoria RAM',
+      'Quickhacking de Neuroports sin RAM (Jack In, Breach, Quickhack, Boot Out)',
       'Inmunobloqueadores y episodios de Ciberpsicosis con EMP <= 2'
     ]
   },
@@ -271,47 +271,44 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
   // --------------------------------------------------------------------------
   {
     id: 'quickhacking-2077',
-    title: 'Quickhacking Remoto Inalámbrico (CEMK 2077)',
-    subtitle: 'El combate digital sin cables contra el sistema nervioso de objetivos a 50 metros',
+    title: 'Quickhacking de Neuroports (CEMK 2077)',
+    subtitle: 'Hackeo inalámbrico de ciberware sin RAM: 1 NET Action por Quickhack, 1 por objetivo por turno (CEMK pp. 15-17, 26-27)',
     sourceBook: 'cemk_2077',
     sourceBookTitle: 'Cyberpunk Edgerunners Mission Kit',
     era: '2077',
     categoryBadge: 'NETRUNNING TACTICO // ERA 2077',
     introDescription:
-      'En 2077 los Netrunners ya no necesitan tender cables físicos dentro de 6 metros para atacar a sus rivales. Utilizando la antena de corto alcance de su Cyberdeck militar y el pool de memoria RAM, un Netrunner puede lanzar Quickhacks a cualquier objetivo visible que porte un Neuroport a una distancia de hasta 50 metros (25 casillas tácticas), prendiéndole fuego a los implantes, paralizando sus piernas o forzándolo a dispararse a sí mismo.',
+      'Solo se puede hackear a quien tiene Neuroport. En su turno el Netrunner hace 1 Meat Action o hasta 3 NET Actions, además de su Move Action (CEMK p. 15). Interface nunca suma STAT: es Interface + 1d10, con LUCK, Complementary Checks y Extra Time como cualquier Skill, y lo bajan los penalizadores de Grapple y Wound States (CEMK p. 16). No hay RAM. El alcance depende del equipo: 6 m con Cyberdeck externo (8 m con la opción adecuada) o 50 m con un Cyberdeck en Neuroport Cyberdeck Port, siempre con línea de visión (CEMK p. 26).',
     howItWorksSteps: [
-      'Paso 1 (Gasto de Acción de Interfaz): En su turno, el Netrunner gasta 1 Acción de Red para seleccionar un blanco con Neuroport a 50m y declara qué Quickhack cargará.',
-      'Paso 2 (Gasto de Memoria RAM): El Cyberdeck consume los puntos de RAM requeridos por el programa. La RAM se regenera a razón de 2 puntos por turno.',
-      'Paso 3 (Tirada de Hackeo): El atacante tira 1d10 + Rango de Interfaz + INT contra el DV específico del Quickhack.',
-      'Paso 4 (Defensa de Expulsión del Defensor): Si el Quickhack tiene éxito, el defensor puede intentar una tirada de expulsión en su turno (1d10 + WILL + Concentration) contra el DV del hackeo para sacarlo de su sistema.'
+      'Jack In (1 NET Action): Interface + 1d10 vs WILL + 1d10 del objetivo. Entras aunque falles, pero si fallas el objetivo sabe que lo hackean. Con Interface 1-2 primero hay que superar el firewall básico del Neuroport (DV 6, fallar no alerta); con Interface 3+ se pasa solo (CEMK pp. 16, 26).',
+      'Breach (1 NET Action por Passwall): cada Self-ICE instalado es un Passwall; el DV para romperlos es 6 con uno, 8 con dos, y +2 por cada uno más (CEMK p. 16).',
+      'Quickhack (1 NET Action): Interface + 1d10 vs el DV del Quickhack. Solo 1 intento por objetivo por turno, aunque te queden NET Actions. Con éxito el objetivo sabe que lo hackearon (salvo Lure) (CEMK p. 16).',
+      'Boot Out: como Acción (ROF 1) el objetivo puede expulsarte con WILL + Concentration + 1d10 vs Interface + 1d10. Si te expulsan no puedes volver a entrar en 60 minutos (CEMK p. 16). Jack Out (1 NET Action) te desconecta de forma segura.'
     ],
     keyBenefits: [
-      'Alcance táctico impresionante de 50 metros con línea de visión.',
-      'Efectos devastadores que ignoran el blindaje corporal tradicional (SP).',
-      'Versatilidad extrema: control de masas, daño térmico continuo, desarme y sabotaje de ciberware.'
+      'Overheat y Synapse Burnout hacen daño directo a HP que ignora la armadura y no la ablaciona (CEMK p. 16-17).',
+      'Rango de Interface desbloquea los niveles: Simple DV 6 (rango 1), Standard DV 8 (2), Difficult DV 10 (3), Advanced DV 12 (4) (CEMK p. 26).',
+      'Conexión directa con Interface Plug: +1 NET Action por turno e ignora Passwalls, pero no Black ICE (CEMK p. 27).'
     ],
     drawbacksAndRisks: [
-      'Límite de memoria RAM: Los Quickhacks potentes agotan la RAM rápidamente, obligando a esperar su recarga.',
-      'Rastreo de ubicación: Ejecutar un Quickhack genera una señal de contra-rastreo; los Netrunners enemigos pueden localizarte tras 2 turnos.',
-      'Ineficaz contra objetivos 100% orgánicos que no tengan implantes neurales ni Neuroport.'
+      'Sin Neuroport no hay Quickhack posible (CEMK p. 15).',
+      'Si te expulsan por cualquier vía que no sea Jack Out, es un Jack Out inseguro con sus consecuencias normales (CEMK p. 26).',
+      'El Neuroport puede tomar prestado el Black ICE del Cyberdeck al que está conectado (CEMK pp. 26-27).'
     ],
     referenceTable: {
-      headers: ['Quickhack', 'Coste RAM', 'DV de Intrusión', 'Efecto Mecánico Exacto en Objetivo'],
+      headers: ['Quickhack', 'Nivel', 'DV', 'Efecto (CEMK pp. 16-17)'],
       rows: [
-        ['Overheat', '3 RAM', 'DV 6', 'El ciberware arde: sufre 2d6 de daño directo a HP por turno (2 turnos).'],
-        ['Short Circuit', '3 RAM', 'DV 6', 'Descarga eléctrica: 3d6 daño directo a HP (x2 si es un dron o FBC Borg).'],
-        ['Optics Jammer', '2 RAM', 'DV 6', 'Ciega los ciberópticos: el objetivo sufre -4 a todas las tiradas de ataque por 1 turno.'],
-        ['Weapon Glitch', '2 RAM', 'DV 6', 'Bloquea el arma inteligente o en mano: no puede disparar hasta gastar 1 Acción.'],
-        ['Cripple Movement', '3 RAM', 'DV 8', 'Bloquea los servomotores de las piernas: su MOVE se reduce a 2 durante 2 turnos.'],
-        ['Cyberware Malfunction', '4 RAM', 'DV 8', 'Desactiva un implante clave (Sandevistan, Gorilla Arms o Blindaje) por 1 minuto.'],
-        ['Synapse Burnout', '5 RAM', 'DV 8', 'Daño neurológico letal: 4d6 daño a HP; suma +1d6 extra por cada punto de HP perdido.'],
-        ['Contagion', '4 RAM', 'DV 8', 'Toxina digital: inflige 2d6 daño y salta a un segundo enemigo a menos de 6 metros.'],
-        ['Detonate Grenade', '5 RAM', 'DV 10', 'Hackea el detonador de una granada en el cinto del enemigo y la hace estallar.'],
-        ['Memory Wipe', '4 RAM', 'DV 10', 'Borra la memoria inmediata: el objetivo olvida que está en combate y pierde su turno.'],
-        ['Puppet', '6 RAM', 'DV 10', 'Toma el control motor del objetivo por 1 turno, obligándolo a disparar a sus aliados.'],
-        ['Sonic Shock', '3 RAM', 'DV 8', 'Ensordece y aísla la señal: el blanco no puede comunicarse ni pedir ayuda.'],
-        ['System Reset', '7 RAM', 'DV 12', 'Reinicio forzoso total: el objetivo cae inconsciente al suelo durante 1 minuto.'],
-        ['Suicide', '8 RAM', 'DV 12', 'Fuerza extrema: el objetivo descarga su propia arma a quemarropa contra su cabeza.']
+        ['Impair Movement', 'Simple', 'DV 6', 'MOVE -1 durante 60 segundos (20 Rounds). Con MOVE 0 no puede hacer Move Action.'],
+        ['Sonic Shock', 'Simple', 'DV 6', 'Sufre la Herida Crítica Damaged Ear sin el daño extra, durante 60 segundos (20 Rounds).'],
+        ['Overheat', 'Standard', 'DV 8', 'Se prende fuego: 4 de daño directo a HP al final de su turno hasta apagarlo (Acción en su turno). Ignora armadura y no la ablaciona.'],
+        ['Short Circuit', 'Standard', 'DV 8', 'El GM elige 3 ciberware (no Cyberarm, Cyberleg, Cybereye, Cyberaudio Suite, Neuroport ni su Cyberdeck) que dejan de funcionar 60 segundos.'],
+        ['Cyberware Malfunction', 'Difficult', 'DV 10', 'Un ciberware a elección (no Neuroport ni su Cyberdeck Port) queda inoperable 60 segundos, con sus opciones. Un cyberlimb actúa como Broken Arm o Broken Leg.'],
+        ['Lure', 'Difficult', 'DV 10', 'Al inicio de su turno hace una Move Action que controla el Netrunner. Solo si no sabe que lo hackean, y no lo alerta. No sirve para llevarlo a un peligro obvio.'],
+        ['Slow', 'Difficult', 'DV 10', 'MOVE -1d6 durante 60 segundos (20 Rounds). Con MOVE 0 no puede hacer Move Action.'],
+        ['Synapse Burnout', 'Difficult', 'DV 10', '3d6 de daño directo a HP. Ignora armadura y no la ablaciona.'],
+        ['Puppet', 'Advanced', 'DV 12', 'Controlas su Action y su Move Action en su próximo turno, usando sus STATs y Skills.'],
+        ['Shard Ejection', 'Advanced', 'DV 12', 'Expulsa un chipware instalado a una casilla adyacente. No funciona si el slot tiene tapa (o cinta).'],
+        ['System Reset', 'Advanced', 'DV 12', 'Cae Unconscious y Prone durante 60 segundos (20 Rounds) o hasta recibir daño.']
       ]
     }
   },
