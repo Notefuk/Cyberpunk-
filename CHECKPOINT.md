@@ -7,7 +7,7 @@
 
 **Última actualización**: [Claude Code · 2026-10-20]
 **Versión de la app**: v4.2.1
-**Plan activo**: ninguno. Plan 1 (`docs/plans/plan1-auditoria-core.md`) terminado; plan 2 (expansiones) propuesto, sin aprobar.
+**Plan activo**: plan 2 (`docs/plans/plan2-auditoria-expansiones.md`). Plan 1 terminado en v4.2.1.
 
 ## Último trabajo terminado
 
@@ -23,16 +23,16 @@
 
 ## En curso
 
-- [Claude Code · 2026-10-20] Plan 1 aprobado. Fases: 1 ✓ v4.0.3 críticos/equipo canon · 2 ✓ v4.1.0 Mortally Wounded + Death Saves + EMP · 3 ✓ v4.1.1 bugs del store · 4 ✓ v4.2.0 combate unificado · 5 ✓ v4.2.1 deuda técnica.
-- [Claude Code · 2026-10-20] Auditoría de expansiones hecha (hallazgos X1-X13 en el Claude Doc de la auditoría). Propuesta de plan 2 (v4.3.0 NET/Quickhacks, v4.3.1 datos CEMK, v4.4.0 roles/Martial Arts/Humanidad/granadas/curación) esperando respuesta. No hay PDF de Going Metal ni Interface RED 4; IR3 es imagen.
-- Pendiente del usuario: qué hacer con los modos de carga sin fuente (R10, `engine/characterEngine.ts:12-41`).
+- [Claude Code · 2026-10-20] Plan 2 guardado. Fases: 1 ○ v4.3.0 NET/Quickhacks (X1-X3, X7) · 2 ○ v4.3.1 datos CEMK (X4-X6, X12) · 3 ○ v4.4.0 roles/Martial Arts/Humanidad/granadas/curación + borrar modos de carga (X8-X11, X13, R10) · 4 ○ v4.5.0 Going Metal canon (G1-G3) · 5 ○ v4.5.1 Cyberfists of Fury canon (C1-C2).
+- Decisiones del usuario: todo canon, borrar lo inventado (no homebrew), NET Actions según CEMK (hasta 3).
+- Texto de los PDFs extraído en el contenedor (no persiste): Going Metal es un PDF de 21 páginas (página impresa = PDF + 90); Interface RED 4 tiene Cyberfists of Fury en pp. 73-83.
 
 ## Próximos pasos
 
-1. Cuando el usuario apruebe: guardar plan 2 en `docs/plans/plan2-auditoria-expansiones.md` (v4.3.0 NET/Quickhacks X1-X3, X7; v4.3.1 datos CEMK X4-X6, X12; v4.4.0 roles/Martial Arts/Humanidad/granadas/curación X8-X11, X13).
-2. Fase 4: modo Settings para activar o desactivar módulos (FBC/Going Metal, Garaje, Quickhacking 2077, Dojo, NET). Ver `AI_CONTEXT_HANDOFF.md` §4.
+1. Ejecutar la fase 1 del plan 2 (v4.3.0).
+2. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.
 3. GM Master Screen (`FixerDeckView.tsx`).
-4. Scripts de extracción: pasar las rutas Windows hardcodeadas (`scripts/extract_core_pack.py`, `scripts/find_sections.py`) a rutas configurables.
+4. Scripts de extracción: pasar las rutas Windows hardcodeadas a rutas configurables.
 
 ## Notas y bloqueos
 
