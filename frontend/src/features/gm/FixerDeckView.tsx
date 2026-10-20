@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { 
   calculateMaxHp, 
-  getEffectiveBody,
-  ENCUMBRANCE_MODES 
+  getEffectiveBody
 } from '../../engine/characterEngine';
-import type { EncumbranceMode } from '../../types/cyberpunk';
 import { EnemiesCompendiumPanel } from './EnemiesCompendiumPanel';
 import type { EnemySheet } from '../../data/enemiesCatalog';
 import { GM_LOOT_TABLES } from '../../data/netAndRolesData';
@@ -25,7 +23,6 @@ import {
   Target, 
   Dices, 
   X, 
-  Package, 
   Flame, 
   UserCheck,
   FileText,
@@ -119,7 +116,6 @@ export function FixerDeckView() {
   const characters = useCharacterStore((state) => state.characters);
   const activeCharacterId = useCharacterStore((state) => state.activeCharacterId);
   const setActiveCharacter = useCharacterStore((state) => state.setActiveCharacter);
-  const setEncumbranceMode = useCharacterStore((state) => state.setEncumbranceMode);
   const gmUpdateCharacterVitals = useCharacterStore((state) => state.gmUpdateCharacterVitals);
   const gmPayAllCharacters = useCharacterStore((state) => state.gmPayAllCharacters);
 
@@ -907,31 +903,6 @@ export function FixerDeckView() {
                       {(char.eurodollars || 0).toLocaleString()} €$
                     </span>
                   </div>
-                </div>
-
-                {/* Situational Encumbrance Selector for this character */}
-                <div className="pt-2 border-t border-[#1b2030]">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[9px] font-mono-code text-[#94a3b8] uppercase flex items-center gap-1">
-                      <Package className="w-3 h-3 text-[#38bdf8]" /> SOBREPESO SITUACIONAL
-                    </span>
-                    {char.encumbranceMode && char.encumbranceMode !== 'none' && (
-                      <span className="text-[8px] font-mono-code text-[#ef4444] font-bold">
-                        -2/-4
-                      </span>
-                    )}
-                  </div>
-                  <select
-                    value={char.encumbranceMode || 'none'}
-                    onChange={(e) => setEncumbranceMode(e.target.value as EncumbranceMode, char.id)}
-                    className="w-full bg-[#090b10] border border-[#23293c] text-white font-mono-code text-[10px] py-1 px-1.5 rounded focus:outline-none focus:border-[#38bdf8] cursor-pointer"
-                  >
-                    {(Object.keys(ENCUMBRANCE_MODES) as EncumbranceMode[]).map((key) => (
-                      <option key={key} value={key} className="bg-[#121319] text-white">
-                        {ENCUMBRANCE_MODES[key].label}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
             );

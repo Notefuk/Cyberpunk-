@@ -247,6 +247,41 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.4.0] - 2026-10-20 (Roles, Martial Arts, curación, terapia y granadas del Core; sin modos de carga) [Claude Code · 2026-10-20]
+* **Category**: Reglas del Core (plan 2, fase 3: `docs/plans/plan2-auditoria-expansiones.md`)
+* **Files Modified**:
+  - `data/core-rules.cprpack.json`
+  - `frontend/src/data/characterCreationData.ts`
+  - `frontend/src/data/core-rules.cprpack.json`
+  - `frontend/src/data/cyberfistsMartialArtsData.ts`
+  - `frontend/src/data/netAndRolesData.ts`
+  - `frontend/src/data/weaponAndCyberwareTooltips.ts`
+  - `frontend/src/data/weaponAttachmentsAndTechData.ts`
+  - `frontend/src/engine/__tests__/rules.test.ts`
+  - `frontend/src/engine/characterEngine.ts`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/cyberware/CyberwareRipperdocView.tsx`
+  - `frontend/src/features/gm/FixerDeckView.tsx`
+  - `frontend/src/features/netroles/NetAndRolesDeckView.tsx`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/types/cyberpunk.ts`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CONTENT_CHECKLIST.md`
+  - `CHECKPOINT.md`
+* **What Changed**:
+  1. **Modos de carga borrados (R10)**: `ENCUMBRANCE_MODES`, el tipo `EncumbranceMode`, `setEncumbranceMode` y los selectores de Street Lab, HUD y Fixer Deck. El Core no tiene regla de carga. El campo viejo `encumbranceMode` que quede en partidas guardadas se ignora.
+  2. **Roles (X8)**: `ROLE_ABILITIES_COMPLETE_PROGRESSION` y `ROLES_INTERACTIVE_GUIDES` reescritos desde el Core pp. 143-162, sin títulos ni beneficios inventados (Backup, Operator, Teamwork, Credibility, Moto y Charismatic Impact con sus tablas por rango). Combat Awareness con las 6 opciones del Core p. 146 (no existe Damage Absorption); `soloAwarenessPointCost` e `isValidSoloAllocation` impiden gastar más puntos que el rango y respetan los topes (+3 Precision, -5 Deflection); Fumble Recovery cuesta 4. Medtech: los 5 Pharmaceuticals son Antibiotic, Rapidetox, Speedheal, Stim y Surge (Veritine y Cryo-Stasis borrados); síntesis TECH + Medical Tech contra DV 13 (Core p. 149). Maker: TECH + Skill + rango contra la tabla del Core p. 149 (Very Expensive DV 24, Super Luxury 1 mes por cada 10,000eb). Los Checks de rol, Maker y resistencia a EMP deben superar el DV.
+  3. **Martial Arts (X9)**: los 8 Special Moves del Core pp. 179-180 (Disarming Combination, Iron Grip, Armor Breaking Combination, Bone Breaking Strike, Counter Throw, Grab Escape, Pressure Point Strike, Flying Kick) reemplazan a los inventados; Bone Breaking Strike, Pressure Point Strike y Flying Kick se resuelven contra DEX + Evasion (`isOpposed`). `SHARED_MARTIAL_ARTS_MOVES` con Recovery (DV 13).
+  4. **Humanidad (X10)**: `calculateTherapyMaxHumanity` (Core p. 230): -2 por ciberware, -4 por borgware, 0 HL no cuenta. La Humanidad recuperada no pasa ese tope. Terapia Standard (500 €$, 2d6, DV 15) y Extreme (1,000 €$, 4d6, DV 17) en el Ripperdoc.
+  5. **Granadas (X11)**: lanzar usa la fila Grenade Launcher de la tabla de rango hasta 25 m (Core pp. 173, 177). Las granadas siguen las municiones del Core pp. 345-347: la básica es Armor-Piercing 6d6, Incendiary 6d6 + fuego, Biotoxin/Poison/Sleep/Teargas/Flashbang/EMP/Smoke sin daño y con su tirada; se agregaron Poison, Sleep y Teargas.
+  6. **Curación (X13)**: `naturalHealingPerDay` (BODY por día, x2 Enhanced Antibodies, x2 Cryotank, Core pp. 114, 223, 353) y `speedhealAmount` (BODY + WILL, no en Mortally Wounded, Core p. 150). Sin estabilizar a 1+ HP no hay descanso. Antibiotic y Surge agregadas al pack.
+  7. **Tests**: 5 casos nuevos (Combat Awareness, curación, Speedheal, tope de terapia, Special Moves). Total 28.
+  8. **Pendiente**: Damage Deflection y Fumble Recovery no se aplican solos en las tiradas; el "1 vez por día" de Speedheal no se registra (la app no lleva el tiempo de juego). El catálogo de PNJ (`enemiesCatalog.ts`) y Red Chrome Cargo usan armas y ciberware que no existen (Ballistic Coprocessor, Tamayura, Achilles, Chao): queda para una auditoría aparte.
+
 ### [v4.3.1] - 2026-10-20 (Datos CEMK canon: 13 armas, ciberware, Immunoblockers y Rebuilds de 1,000 €$) [Claude Code · 2026-10-20]
 * **Category**: Datos de expansión (plan 2, fase 2: `docs/plans/plan2-auditoria-expansiones.md`)
 * **Files Modified**:

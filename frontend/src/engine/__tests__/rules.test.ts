@@ -7,8 +7,14 @@ import {
   getEffectiveEmp,
   isMortallyWounded,
   parseHumanityLossAverage,
-  rollDeathSave
+  rollDeathSave,
+  soloAwarenessPointCost,
+  isValidSoloAllocation,
+  naturalHealingPerDay,
+  speedhealAmount,
+  calculateTherapyMaxHumanity
 } from '../characterEngine';
+import { MARTIAL_ARTS_FORMS, SHARED_MARTIAL_ARTS_MOVES } from '../../data/cyberfistsMartialArtsData';
 import { beatsDv, calculateIncomingImpact, createDamageRoll, rollCheckD10 } from '../combatEngine';
 import { BLACK_ICE_STATS, NET_ACTIONS_PER_TURN, QUICKHACKS_2077_CATALOG } from '../../data/netAndRolesData';
 import { BODY_CRITICAL_INJURIES, HEAD_CRITICAL_INJURIES, rollCriticalInjury } from '../../data/criticalInjuries';
@@ -192,5 +198,56 @@ describe('Datos CEMK canon', () => {
     const booster = ENEMIES_CATALOG.find((e) => e.id === 'core-boosterganger');
     expect(booster?.stats.BODY).toBe(2);
     expect(booster?.deathSave).toBe(2);
+  });
+});
+
+describe('Roles, curación y Humanidad del Core', () => {
+  const solo = { fumbleRecovery: false, damageDeflection: 0, initiativeReaction: 0, precisionAttack: 0, spotWeakness: 0, threatDetection: 0 };
+
+  it('Combat Awareness: Precision +1 cuesta 3, Deflection -1 cuesta 2, Fumble Recovery 4 (Core p. 146)', () => {
+    expect(soloAwarenessPointCost({ ...solo, precisionAttack: 1, damageDeflection: 1, fumbleRecovery: true })).toBe(9);
+    expect(isValidSoloAllocation({ ...solo, precisionAttack: 2 }, 6)).toBe(true);
+    expect(isValidSoloAllocation({ ...solo, precisionAttack: 2, spotWeakness: 1 }, 6)).toBe(false);
+    expect(isValidSoloAllocation({ ...solo, precisionAttack: 4 }, 12)).toBe(false);
+  });
+
+  it('curación natural BODY por día; Enhanced Antibodies x2 y Cryotank x2 (Core pp. 114, 223, 353)', () => {
+    expect(naturalHealingPerDay(6)).toBe(6);
+    expect(naturalHealingPerDay(6, true)).toBe(12);
+    expect(naturalHealingPerDay(6, true, true)).toBe(24);
+  });
+
+  it('Speedheal cura BODY + WILL y no funciona en Mortally Wounded (Core p. 150)', () => {
+    expect(speedhealAmount(6, 5, 10)).toBe(11);
+    expect(speedhealAmount(6, 5, 0)).toBe(0);
+  });
+
+  it('máximo de Humanidad por terapia: -2 por ciberware, -4 borgware, 0 HL no cuenta (Core p. 230)', () => {
+    expect(
+      calculateTherapyMaxHumanity(6, [
+        { humanityLoss: '2d6 (7)', type: 'Cyberoptics' },
+        { humanityLoss: '4d6 (14)', type: 'Borgware' },
+        { humanityLoss: '0 (N/A)', type: 'Fashionware' }
+      ])
+    ).toBe(54);
+  });
+
+  it('Special Moves del Core con nombre y DV del libro; Recovery DV 13 (Core pp. 179-180)', () => {
+    const core = MARTIAL_ARTS_FORMS.filter((f) => f.sourceBook === 'core');
+    expect(core.flatMap((f) => f.moves.map((m) => m.name)).sort()).toEqual(
+      [
+        'Armor Breaking Combination',
+        'Bone Breaking Strike',
+        'Counter Throw',
+        'Disarming Combination',
+        'Flying Kick',
+        'Grab Escape',
+        'Iron Grip',
+        'Pressure Point Strike'
+      ]
+    );
+    const bone = core.flatMap((f) => f.moves).find((m) => m.name === 'Bone Breaking Strike');
+    expect(bone?.isOpposed).toBe(true);
+    expect(SHARED_MARTIAL_ARTS_MOVES[0].resolutionDv).toBe(13);
   });
 });

@@ -398,13 +398,13 @@ export interface MakerDvEntry {
 }
 
 export const MAKER_DV_AND_TIME_BY_COST: MakerDvEntry[] = [
-  { costTier: 'Everyday (10 eb)', itemPriceMax: 10, upgradeDv: 9, timeRequired: '1 hora' },
-  { costTier: 'Costly (20 eb)', itemPriceMax: 20, upgradeDv: 13, timeRequired: '6 horas' },
-  { costTier: 'Premium (50 - 100 eb)', itemPriceMax: 100, upgradeDv: 17, timeRequired: '1 día (6 horas de trabajo)' },
+  { costTier: 'Cheap/Everyday (10-20 eb)', itemPriceMax: 20, upgradeDv: 9, timeRequired: '1 hora' },
+  { costTier: 'Costly (50 eb)', itemPriceMax: 50, upgradeDv: 13, timeRequired: '6 horas' },
+  { costTier: 'Premium (100 eb)', itemPriceMax: 100, upgradeDv: 17, timeRequired: '1 día' },
   { costTier: 'Expensive (500 eb)', itemPriceMax: 500, upgradeDv: 21, timeRequired: '1 semana' },
   { costTier: 'Very Expensive (1,000 eb)', itemPriceMax: 1000, upgradeDv: 24, timeRequired: '2 semanas' },
   { costTier: 'Luxury (5,000 eb)', itemPriceMax: 5000, upgradeDv: 29, timeRequired: '1 mes' },
-  { costTier: 'Super Luxury (10,000+ eb)', itemPriceMax: 999999, upgradeDv: 29, timeRequired: '1 mes' }
+  { costTier: 'Super Luxury (10,000+ eb)', itemPriceMax: 999999, upgradeDv: 29, timeRequired: '1 mes por cada 10,000 eb' }
 ];
 
 export interface TechLifepathTable {

@@ -432,8 +432,6 @@ export interface EurodollarTransaction {
   balanceAfter: number;
 }
 
-export type EncumbranceMode = 'none' | 'heavy_box' | 'carrying_body' | 'extreme_load';
-
 export type CharacterEra = '2045' | '2077';
 export type CreationMethod = 'streetrat' | 'edgerunner' | 'complete_package' | 'pregen';
 
@@ -572,7 +570,6 @@ export interface CharacterSheet {
   transactions?: EurodollarTransaction[];
   unarmedInHand?: { brawling?: boolean; martialArts?: boolean };
   activeDrugs?: ActiveDrugEffect[];
-  encumbranceMode?: EncumbranceMode;
   era?: CharacterEra;
   creationMethod?: CreationMethod;
   roleAbilityName?: string;

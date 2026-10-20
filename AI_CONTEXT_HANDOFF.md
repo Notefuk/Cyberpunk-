@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.3.1 OPERATIVO`  
+> **SYSTEM VERSION**: `v4.4.0 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-10-20]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -20,7 +20,11 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 
 ---
 
-## 🚀 2. What Was Added in v4.3.1
+## 🚀 2. What Was Added in v4.4.0
+
+[Claude Code · 2026-10-20] Plan 2, fase 3. Reglas del Core: sin modos de carga (`ENCUMBRANCE_MODES` borrado), Role Abilities reescritas desde Core pp. 143-162, Combat Awareness validado (`isValidSoloAllocation`), Pharmaceuticals canon, Special Moves del Core con `isOpposed` y `SHARED_MARTIAL_ARTS_MOVES`, tope de Humanidad por terapia (`calculateTherapyMaxHumanity`), terapias Standard/Extreme, granadas por tabla de rango y municiones del Core, `naturalHealingPerDay` y `speedhealAmount`. Siguiente: v4.5.0 Going Metal.
+
+## 📦 2.0 Historical Summary: What Was Added in v4.3.1
 
 [Claude Code · 2026-10-20] Plan 2, fase 2. Datos CEMK canon: un solo set de 13 armas (CEMK pp. 31-34, 6 inventadas borradas, Crusher agregada), ciberware con costo y HL del libro (Neuroport 1,000 €$ HL 7, Mantis Blade HL 14, Sandevistan de David 250,000 €$), Immunoblockers de CEMK p. 30, MaxDoc y BounceBack borradas, Rebuilds a 1,000 €$ sin Maker ni Ballistic Coprocessor (`CEMK_WEAPON_REBUILD_SYSTEM_GUIDE`), Boosterganger BODY 2 (Errata p. 412). Siguiente: v4.4.0 roles, Martial Arts, Humanidad, granadas, curación y borrar modos de carga.
 

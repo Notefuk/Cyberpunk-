@@ -12,6 +12,8 @@ export interface MartialArtMove {
   isNewCyberfists: boolean;
   requirements: string;
   resolutionDv: number;
+  /** true: se resuelve contra DEX + Evasion + 1d10 del defensor en vez de un DV fijo (Core p. 178). */
+  isOpposed?: boolean;
   damageBonusOrFormula?: string;
   effectDescription: string;
   criticalInjuryApplied?: string;
@@ -28,6 +30,20 @@ export interface MartialArtForm {
   moves: [MartialArtMove, MartialArtMove];
 }
 
+// Core p. 179: Shared Special Move que puede usar cualquier forma.
+export const SHARED_MARTIAL_ARTS_MOVES: MartialArtMove[] = [
+  {
+    id: 'shared-recovery',
+    name: 'Recovery',
+    formId: 'shared',
+    formName: 'Todas las formas',
+    isNewCyberfists: false,
+    requirements: 'Sin requisito. Al usar la Acción Get Up.',
+    resolutionDv: 13,
+    effectDescription: 'Si superas DV 13 con la resolución de Special Move, esa Acción Get Up no cuesta una Acción (Core p. 179).'
+  }
+];
+
 export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
   // ==========================================================================
   // CORE RULEBOOK (4 Formas Oficiales - 8 Movimientos Especiales)
@@ -37,31 +53,29 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Aikido',
     sourceBook: 'core',
     badge: 'CORE // CLÁSICO',
-    originAndFlavor: 'Arte marcial tradicional japonés basado en desviar el impulso y la fuerza del oponente para neutralizarlo sin esfuerzo bruto.',
-    keyStats: ['DEX', 'WILL'],
-    tacticalRole: 'Control de masa, desarmes defensivos y contraataques fluidos.',
+    originAndFlavor: 'Forma suave: barridos de mano y cuerpo para inmovilizar y desarmar, usando la fuerza del rival en su contra (Core p. 179).',
+    keyStats: ['DEX'],
+    tacticalRole: 'Desarmes y control del agarre.',
     moves: [
       {
-        id: 'aikido-iron-defense',
-        name: 'Iron Defense',
+        id: 'aikido-disarming-combination',
+        name: 'Disarming Combination',
         formId: 'aikido',
         formName: 'Aikido',
         isNewCyberfists: false,
-        requirements: 'Debe haber esquivado exitosamente un ataque cuerpo a cuerpo este asalto.',
+        requirements: 'Impactaste al mismo objetivo con un Brawling Attack y un Martial Arts Attack este turno. Una vez por turno.',
         resolutionDv: 15,
-        effectDescription: 'Desvías la inercia del agresor desestabilizándolo. El objetivo sufre -2 a su próxima tirada de ataque y no puede usar acciones de movimiento hasta su siguiente turno.'
+        effectDescription: 'Si superas DV 15, un objeto que el objetivo tenga en las manos pasa a tus manos o cae al suelo (Core p. 179).'
       },
       {
-        id: 'aikido-joint-lock-throw',
-        name: 'Joint Lock Throw',
+        id: 'aikido-iron-grip',
+        name: 'Iron Grip',
         formId: 'aikido',
         formName: 'Aikido',
         isNewCyberfists: false,
-        requirements: 'Debe tener al objetivo apresado (Grapple) o haber esquivado su golpe.',
+        requirements: 'Tienes al objetivo agarrado (Grab) y no está ya bajo Iron Grip. Una vez por turno, como Acción.',
         resolutionDv: 15,
-        damageBonusOrFormula: 'Daño base de Brawling + 2d6 directo a HP',
-        effectDescription: 'Proyectas al oponente contra el suelo o una estructura. Queda derribado (Prone) y sufre daño de caída/luxación ignorando el 50% de SP.',
-        criticalInjuryApplied: 'Foreign Object / Whiplash'
+        effectDescription: 'Si superas DV 15, el objetivo tiene -2 adicional a todos sus intentos de escapar de este Grapple y no puede hacer ataques a distancia mientras dure (Core p. 179).'
       }
     ]
   },
@@ -70,30 +84,31 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Karate',
     sourceBook: 'core',
     badge: 'CORE // CLÁSICO',
-    originAndFlavor: 'Estilo de impacto lineal centrado en golpes secos de mano abierta, puñetazos de nudillo duro y patadas devastadoras de ruptura.',
-    keyStats: ['DEX', 'BODY'],
-    tacticalRole: 'Perforación de blindajes densos y daño contundente bruto.',
+    originAndFlavor: 'Forma dura: golpes pensados para romper huesos o armadura (Core p. 179).',
+    keyStats: ['DEX', 'WILL'],
+    tacticalRole: 'Romper armadura y huesos.',
     moves: [
       {
-        id: 'karate-armor-breaking-strike',
-        name: 'Armor Breaking Strike',
+        id: 'karate-armor-breaking-combination',
+        name: 'Armor Breaking Combination',
         formId: 'karate',
         formName: 'Karate',
         isNewCyberfists: false,
-        requirements: 'Impactar 2 ataques de Artes Marciales exitosos en el mismo turno.',
+        requirements: 'Impactaste al mismo objetivo con un Melee Weapon y un Martial Arts Attack este turno. Una vez por turno.',
         resolutionDv: 15,
-        effectDescription: 'Un golpe focalizado de talón de mano contra la armadura. Ablaciona 2 puntos de SP adicionales en la localización impactada.'
+        effectDescription: 'Si superas DV 15, toda la armadura que lleva el objetivo se abla 2 puntos adicionales (Core p. 179).'
       },
       {
-        id: 'karate-flying-reverse-kick',
-        name: 'Flying Reverse Kick',
+        id: 'karate-bone-breaking-strike',
+        name: 'Bone Breaking Strike',
         formId: 'karate',
         formName: 'Karate',
         isNewCyberfists: false,
-        requirements: 'Moverse al menos 4 metros en línea recta hacia el objetivo antes del ataque.',
-        resolutionDv: 17,
-        damageBonusOrFormula: '+3d6 daño contundente',
-        effectDescription: 'Patada giratoria con salto de máxima potencia. Si el daño supera el SP, el objetivo sale despedido 2 metros hacia atrás y cae derribado (Prone).'
+        requirements: 'WILL 8 o más. En lugar de los 2 ataques de la Acción de Martial Arts, como Acción contra un objetivo en rango cuerpo a cuerpo.',
+        resolutionDv: 0,
+        isOpposed: true,
+        effectDescription: 'Si impactas, además del daño de Martial Arts el objetivo sufre Broken Ribs. Con -8 al Check puedes apuntar a la cabeza como un Aimed Shot: Cracked Skull en su lugar. Si ya tenía esa herida, no sufre otra (Core p. 179).',
+        criticalInjuryApplied: 'Broken Ribs (o Cracked Skull a la cabeza con -8)'
       }
     ]
   },
@@ -102,30 +117,30 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Judo',
     sourceBook: 'core',
     badge: 'CORE // CLÁSICO',
-    originAndFlavor: 'Especialidad en proyecciones de cadera, barridos de pierna y sumisiones implacables en el suelo.',
-    keyStats: ['DEX', 'BODY'],
-    tacticalRole: 'Derribos garantizados, control en el suelo y luxaciones severas.',
+    originAndFlavor: 'Forma suave: agarres, proyecciones y escapes (Core p. 179).',
+    keyStats: ['DEX'],
+    tacticalRole: 'Proyecciones y escapes de agarres.',
     moves: [
       {
-        id: 'judo-hip-throw',
-        name: 'Hip Throw (O-Goshi)',
+        id: 'judo-counter-throw',
+        name: 'Counter Throw',
         formId: 'judo',
         formName: 'Judo',
         isNewCyberfists: false,
-        requirements: 'Tener una mano libre y estar adyacente a un enemigo.',
+        requirements: 'Esquivaste todos los Melee Attacks contra ti desde tu último turno. Una vez por turno, como Acción.',
         resolutionDv: 15,
-        damageBonusOrFormula: 'Daño de Artes Marciales completo ignorando armadura SP',
-        effectDescription: 'Cargas al enemigo sobre tu centro de gravedad y lo estampas contra el asfalto. El objetivo queda derribado (Prone) y pierde 1 acción de movimiento.'
+        effectDescription: 'Si superas DV 15, usas la Acción Throw contra un objetivo en rango cuerpo a cuerpo cuyo ataque esquivaste; no se puede evitar y no hace falta tenerlo agarrado (Core p. 179).'
       },
       {
-        id: 'judo-ground-grapple-lock',
-        name: 'Ground Grapple Lock',
+        id: 'judo-grab-escape',
+        name: 'Grab Escape',
         formId: 'judo',
         formName: 'Judo',
         isNewCyberfists: false,
-        requirements: 'El objetivo debe estar ya derribado (Prone) y en rango cuerpo a cuerpo.',
-        resolutionDv: 16,
-        effectDescription: 'Inmovilización total mediante palanca de brazo o cuello. El objetivo no puede levantarse ni disparar armas de dos manos hasta superar una tirada de Brawling vs tu tirada de Artes Marciales.'
+        requirements: 'Impactaste con 2 Melee Attacks este turno a quien te tiene agarrado. Una vez por turno.',
+        resolutionDv: 15,
+        effectDescription: 'Si superas DV 15, dejas de estar agarrado por ese objetivo y sufre Broken Arm si no lo tenía; eliges el brazo (Core p. 179).',
+        criticalInjuryApplied: 'Broken Arm'
       }
     ]
   },
@@ -134,31 +149,33 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Taekwondo',
     sourceBook: 'core',
     badge: 'CORE // CLÁSICO',
-    originAndFlavor: 'Estilo coreano caracterizado por acrobacias dinámicas, patadas giratorias altas y combinaciones rápidas de extremidades inferiores.',
-    keyStats: ['DEX', 'MOVE'],
-    tacticalRole: 'Ataques rápidos a distancia de paso, patadas a la cabeza y combos ágiles.',
+    originAndFlavor: 'Forma dura: patadas altas y golpes de precisión a puntos de presión (Core p. 180).',
+    keyStats: ['DEX', 'WILL', 'MOVE'],
+    tacticalRole: 'Golpes a puntos de presión y patadas voladoras.',
     moves: [
       {
-        id: 'tkd-spinning-back-kick',
-        name: 'Spinning Back Kick',
+        id: 'tkd-pressure-point-strike',
+        name: 'Pressure Point Strike',
         formId: 'taekwondo',
         formName: 'Taekwondo',
         isNewCyberfists: false,
-        requirements: 'Haber conectado un ataque previo en este turno.',
-        resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño a la cabeza o torso',
-        effectDescription: 'Giro veloz de talón que impacta con violencia. Si impacta en la cabeza, ignora el penalizador de disparo apuntado habitual (-8 a 0).'
+        requirements: 'WILL 8 o más. En lugar de los 2 ataques de la Acción de Martial Arts, como Acción contra un objetivo en rango cuerpo a cuerpo.',
+        resolutionDv: 0,
+        isOpposed: true,
+        effectDescription: 'Si impactas, además del daño de Martial Arts el objetivo sufre Spinal Injury. Con -8 al Check puedes apuntar a la cabeza como un Aimed Shot: Brain Injury en su lugar. Si ya tenía esa herida, no sufre otra (Core p. 180).',
+        criticalInjuryApplied: 'Spinal Injury (o Brain Injury a la cabeza con -8)'
       },
       {
-        id: 'tkd-tornado-kick-combo',
-        name: 'Tornado Kick Combo',
+        id: 'tkd-flying-kick',
+        name: 'Flying Kick',
         formId: 'taekwondo',
         formName: 'Taekwondo',
         isNewCyberfists: false,
-        requirements: 'MOVE 6+ y espacio despejado de al menos 2 metros.',
-        resolutionDv: 17,
-        damageBonusOrFormula: 'Aplica daño completo a 2 enemigos adyacentes',
-        effectDescription: 'Salto circular con barrido aéreo que golpea a dos objetivos distintos adyacentes en una sola acción de ataque.'
+        requirements: 'MOVE 8 o más y ya te moviste al menos 4 m este turno. En lugar de los 2 ataques de la Acción de Martial Arts, usando la Acción y todo tu movimiento restante, contra un objetivo a hasta 4 m en línea recta.',
+        resolutionDv: 0,
+        isOpposed: true,
+        damageBonusOrFormula: 'Daño de Martial Arts al cuerpo',
+        effectDescription: 'Si impactas, haces daño de Martial Arts al cuerpo, el objetivo queda Prone y cae de cualquier moto o vehículo sin cabina cerrada (Core p. 180).'
       }
     ]
   },
@@ -988,7 +1005,7 @@ export const MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT: MartialArtsOfficialManualText = 
       { bodyRange: 'BODY 7 a 10', damageDice: '3d6 Daño Base', examples: 'Solos de asalto, ciberbrazos Gorilla o culturistas.' },
       { bodyRange: 'BODY 11+ (FBC / Borg / Graf 3)', damageDice: '4d6 Daño Base', examples: 'Cuerpos Full Borg Conversion, Muscle & Bone Lace o Cyberware lineal.' }
     ],
-    specialMovesResolution: 'Resolución de Movimientos Especiales (Special Moves): Cada forma otorga exactamente 2 Movimientos Especiales. Puedes intentar un Movimiento Especial una vez por turno. Si cumples su requisito táctico previo (Requirements, ej. haber impactado ambos golpes de ROF 2 o que el rival esté apresado), declaras la técnica y tiras 1d10 + DEX + Nivel en ese Estilo contra la DV del Movimiento (normalmente DV 15). Si tienes éxito, el combo se ejecuta causando heridas críticas automáticas, derribos o ablación destructiva.'
+    specialMovesResolution: 'Resolución de Special Moves (Core p. 178): DEX + Skill de esa forma + 1d10 contra DEX + Evasion + 1d10 del defensor, o contra el DV del movimiento cuando lo indica (DV 15 en los del Core; Recovery DV 13). Cada forma tiene 2 Special Moves propios y todas pueden usar los Shared Special Moves (Recovery). Hace falta al menos 1 punto en la forma y cumplir el requisito del movimiento. Salvo que el movimiento lo diga, no sirven para Aimed Shots.'
   },
   howToBuyAndAcquire: {
     title: 'Las 3 Vías Oficiales para Aprender o Adquirir un Arte Marcial',

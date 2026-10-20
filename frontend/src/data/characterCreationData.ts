@@ -304,7 +304,7 @@ export const STAT_TOOLTIPS: Record<StatKey, StatTooltipInfo> = {
     shortSummary: 'Fuerza muscular, masa corporal, resistencia al daño y capacidad de carga.',
     beginnerExplanation:
       'Tu resistencia física pura y potencia atlética. Determina junto con WILL tus Puntos de Golpe (HP), el daño que infliges a puño limpio, tu umbral de muerte y si puedes disparar armas pesadas sin apoyo.',
-    dependentSkills: ['Brawling Damage', 'Death Saves', 'Encumbrance (Capacidad de carga: BODY * 10 ítems)'],
+    dependentSkills: ['Brawling Damage', 'Death Saves'],
     mechanicalBreakpoints: [
       'BODY 8+: Permite disparar armas pesadas de dos manos a una mano y empuñar armas de cuerpo a cuerpo pesadas sin penalizador.',
       'Base para Death Save: Cuanto mayor sea tu BODY, más difícil es que mueras cuando tus HP llegan a cero.'

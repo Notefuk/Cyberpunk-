@@ -7,12 +7,12 @@ import {
   calculateWeaponAttackBreakdown,
   getEffectiveEmp,
   getEffectiveBody,
-  ENCUMBRANCE_MODES
+  naturalHealingPerDay,
+  speedhealAmount
 } from '../../engine/characterEngine';
 import type { 
   CombatSkillKey, 
-  StatKey,
-  EncumbranceMode
+  StatKey
 } from '../../types/cyberpunk';
 import { SKILL_METADATA } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
@@ -264,7 +264,6 @@ export const StreetLabView: React.FC = () => {
   const addEurodollarTransaction = useCharacterStore((state) => state.addEurodollarTransaction);
   const exportActiveCharacterJson = useCharacterStore((state) => state.exportActiveCharacterJson);
   const importCharacterJson = useCharacterStore((state) => state.importCharacterJson);
-  const setEncumbranceMode = useCharacterStore((state) => state.setEncumbranceMode);
   const updateCharacterLifepath = useCharacterStore((state) => state.updateCharacterLifepath);
   const updateCharacterDebt = useCharacterStore((state) => state.updateCharacterDebt);
   const payOffCharacterDebt = useCharacterStore((state) => state.payOffCharacterDebt);
@@ -371,15 +370,6 @@ export const StreetLabView: React.FC = () => {
       const headPen = Math.abs(activeChar?.headArmor?.penalty ?? 0);
       const bodyPen = Math.abs(activeChar?.bodyArmor?.penalty ?? 0);
       pen += Math.max(headPen, bodyPen);
-    }
-    const encMode = activeChar?.encumbranceMode || 'none';
-    const encConfig = ENCUMBRANCE_MODES[encMode];
-    if (encConfig) {
-      if (stat === 'REF' || stat === 'DEX') {
-        pen += encConfig.attackPenalty;
-      } else if (stat === 'MOVE') {
-        pen += encConfig.movePenalty;
-      }
     }
     activeChar?.activeInjuries?.forEach((inj) => {
       if (!inj.isTreated && inj.modifiers?.statPenalties?.[stat]) {
@@ -2014,7 +2004,7 @@ export const StreetLabView: React.FC = () => {
                                                     onClick={() => {
                                                       const d10 = Math.floor(Math.random() * 10) + 1;
                                                       const total = techBase + d10;
-                                                      const success = total >= dvEntry.upgradeDv;
+                                                      const success = total > dvEntry.upgradeDv; // hay que superar el DV (CEMK p. 5)
                                                       setTechRollFeedback({
                                                         weaponId: w.instanceId,
                                                         text: `Tirada Maker (${opt.label}): TECH ${techBase} + 1d10 (${d10}) = ${total} vs DV ${dvEntry.upgradeDv} → ${success ? '¡ÉXITO!' : 'FALLO'}`
@@ -2186,34 +2176,6 @@ export const StreetLabView: React.FC = () => {
                 <span className="text-[10px] font-mono-code text-[#64748b]">
                   EQUIPO, MUNICIÓN Y DROGAS
                 </span>
-              </div>
-
-              {/* Selector de Carga y Sobrepeso Situacional */}
-              <div className="bg-[#171923] p-2.5 rounded-sm border border-[#222636] space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="font-tech text-xs font-bold text-white uppercase flex items-center gap-1.5">
-                    <Package className="w-3.5 h-3.5 text-[#38bdf8]" /> ESTADO DE CARGA / SOBREPESO SITUACIONAL
-                  </span>
-                  {activeChar?.encumbranceMode && activeChar.encumbranceMode !== 'none' && (
-                    <span className="bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold animate-pulse">
-                      SOBREPESO ACTIVO
-                    </span>
-                  )}
-                </div>
-                <select
-                  value={activeChar?.encumbranceMode || 'none'}
-                  onChange={(e) => setEncumbranceMode(e.target.value as EncumbranceMode)}
-                  className="w-full bg-[#0c0d12] border border-[#262b3c] text-white font-mono-code text-xs py-1 px-2 rounded focus:outline-none focus:border-[#38bdf8] cursor-pointer"
-                >
-                  {(Object.keys(ENCUMBRANCE_MODES) as EncumbranceMode[]).map((key) => (
-                    <option key={key} value={key} className="bg-[#121319] text-white">
-                      {ENCUMBRANCE_MODES[key].label}
-                    </option>
-                  ))}
-                </select>
-                <p className="text-[10px] text-[#94a3b8] font-mono-code leading-tight">
-                  {ENCUMBRANCE_MODES[activeChar?.encumbranceMode || 'none']?.description}
-                </p>
               </div>
 
               {(activeChar?.inventory ?? []).length === 0 ? (
@@ -3085,7 +3047,7 @@ export const StreetLabView: React.FC = () => {
                                         className="text-[10px] font-mono-code flex items-center justify-between bg-[#0e111a] px-2 py-1 rounded border border-[#1b2234]"
                                       >
                                         <span className="text-white font-bold">{m.name}</span>
-                                        <span className="text-amber-400 font-bold">DV {m.resolutionDv}</span>
+                                        <span className="text-amber-400 font-bold">{m.isOpposed ? 'vs DEX + Evasion' : `DV ${m.resolutionDv}`}</span>
                                       </div>
                                     ))}
                                   </div>
@@ -3218,7 +3180,7 @@ export const StreetLabView: React.FC = () => {
                                   >
                                     <div className="flex items-center justify-between font-bold">
                                       <span className="text-white">{m.name}</span>
-                                      <span className="text-amber-400">DV {m.resolutionDv}</span>
+                                      <span className="text-amber-400">{m.isOpposed ? 'vs DEX + Evasion' : `DV ${m.resolutionDv}`}</span>
                                     </div>
                                     <div className="text-[9px] text-slate-400 font-sans leading-tight">
                                       <strong>Req:</strong> {m.requirements}
@@ -3551,8 +3513,7 @@ export const StreetLabView: React.FC = () => {
                     return;
                   }
                   updateCharacterMeta({ eurodollars: currentEb - 100 });
-                  const mult = (hasEnhancedAntibodies || restAntibodies ? 2 : 1) + 1;
-                  const healAmount = effBody * mult;
+                  const healAmount = naturalHealingPerDay(effBody, hasEnhancedAntibodies || restAntibodies, true);
                   const newHp = Math.min(maxHp, currentHp + healAmount);
                   setHp(newHp);
                   setRestFeedback(`Cryotank Hospitalario (-100 €$): +${healAmount} HP recuperados (Tasa criocelular ${mult}× BODY).`);
@@ -3566,8 +3527,7 @@ export const StreetLabView: React.FC = () => {
                     return;
                   }
                   updateCharacterMeta({ eurodollars: currentEb - 50 });
-                  const mult = (hasEnhancedAntibodies || restAntibodies ? 2 : 1) + 1;
-                  const healAmount = effBody * mult;
+                  const healAmount = naturalHealingPerDay(effBody, hasEnhancedAntibodies || restAntibodies, true);
                   const newHp = Math.min(maxHp, currentHp + healAmount);
                   setHp(newHp);
                   setRestFeedback(`Recarga Química Medtech abonada (-50 €$): +${healAmount} HP recuperados en Cryotank aliado.`);
@@ -3575,7 +3535,12 @@ export const StreetLabView: React.FC = () => {
                 };
 
                 const handleInjectSpeedheal = () => {
-                  const healAmount = effBody + effWill;
+                  const healAmount = speedhealAmount(effBody, effWill, currentHp);
+                  if (healAmount === 0) {
+                    setRestFeedback('Speedheal no funciona en Mortally Wounded: primero hay que estabilizar (Core p. 150).');
+                    setTimeout(() => setRestFeedback(null), 4000);
+                    return;
+                  }
                   if (currentHp >= maxHp) {
                     setRestFeedback('Tus puntos de golpe (HP) ya están al máximo.');
                     setTimeout(() => setRestFeedback(null), 4000);
@@ -3583,12 +3548,12 @@ export const StreetLabView: React.FC = () => {
                   }
                   const newHp = Math.min(maxHp, currentHp + healAmount);
                   setHp(newHp);
-                  setRestFeedback(`Inyección de Speedheal aplicada: +${healAmount} HP restaurados al instante (${newHp}/${maxHp} HP). Máx 1 dosis cada 24 horas.`);
+                  setRestFeedback(`Inyección de Speedheal aplicada: +${healAmount} HP restaurados al instante (${newHp}/${maxHp} HP). Máx 1 dosis por día (Core p. 150).`);
                   setTimeout(() => setRestFeedback(null), 5000);
                 };
 
-                const mult = (restAntibodies || hasEnhancedAntibodies ? 2 : 1) + (restCryotank ? 1 : 0);
-                const ratePerDay = Math.max(1, effBody) * mult;
+                const mult = (restAntibodies || hasEnhancedAntibodies ? 2 : 1) * (restCryotank ? 2 : 1);
+                const ratePerDay = naturalHealingPerDay(effBody, restAntibodies || hasEnhancedAntibodies, restCryotank);
                 const totalPreview = ratePerDay * Math.max(1, restDays);
 
                 return (
@@ -3679,7 +3644,7 @@ export const StreetLabView: React.FC = () => {
                             <div className="text-[10px] font-mono-code text-white font-bold">
                               Tanque Criogénico
                             </div>
-                            <div className="text-[9px] text-slate-400">+BODY adicional/día</div>
+                            <div className="text-[9px] text-slate-400">Dobla la curación/día (Core p. 353)</div>
                           </div>
                           <button
                             type="button"
@@ -3703,8 +3668,12 @@ export const StreetLabView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => {
-                            restAndHealDays(restDays, restAntibodies || hasEnhancedAntibodies, restCryotank);
-                            setRestFeedback(`Descanso completado: +${totalPreview} HP recuperados tras ${restDays} día(s) de reposo.`);
+                            if (currentHp <= 0) {
+                              setRestFeedback('Mortally Wounded: hay que estabilizar (DV 15) antes de que empiece la curación natural (Core p. 222).');
+                            } else {
+                              restAndHealDays(restDays, restAntibodies || hasEnhancedAntibodies, restCryotank);
+                              setRestFeedback(`Descanso completado: +${totalPreview} HP recuperados tras ${restDays} día(s) de reposo.`);
+                            }
                             setTimeout(() => setRestFeedback(null), 4000);
                           }}
                           className="px-3 py-1.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded font-tech text-xs font-bold uppercase transition-all shadow-md cursor-pointer flex items-center gap-1.5"
@@ -3742,7 +3711,7 @@ export const StreetLabView: React.FC = () => {
                       </div>
                       <p className="text-[10px] text-slate-300 leading-relaxed font-sans">
                         <strong>¿Qué es?</strong> Implante nanotecnológico y biológico interno que acelera drásticamente la regeneración celular una vez que las heridas fueron cerradas/estabilizadas.<br />
-                        <strong>Buff:</strong> Curas el <strong>DOBLE de tu BODY por cada día de descanso (2 × BODY = {effBody * 2} HP/día)</strong>. Se acumula con el Tanque Criogénico para llegar a <strong>3 × BODY ({effBody * 3} HP/día)</strong>.<br />
+                        <strong>Buff:</strong> Curas el <strong>DOBLE de tu BODY por cada día de descanso (2 × BODY = {effBody * 2} HP/día)</strong>. En Cryotank la tasa se dobla: <strong>4 × BODY ({effBody * 4} HP/día)</strong> (Core pp. 114, 353).<br />
                         <strong className="text-amber-400">Limitación:</strong> Ocupa 1 de las 7 ranuras de <em>Internal Body Cyberware</em>. No te estabiliza automáticamente ni cura Heridas Críticas por sí solo.
                       </p>
                     </div>

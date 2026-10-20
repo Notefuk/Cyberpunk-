@@ -15,7 +15,9 @@ import {
   getEffectiveBody,
   getBaseDeathSavePenalty,
   AMMO_TYPE_CATALOG,
-  ENCUMBRANCE_MODES
+  isValidSoloAllocation,
+  naturalHealingPerDay,
+  speedhealAmount
 } from '../../engine/characterEngine';
 import type { DeathSaveResult } from '../../engine/characterEngine';
 import { 
@@ -25,7 +27,7 @@ import {
   beatsDv,
   AIMED_SHOT_OPTIONS
 } from '../../engine/combatEngine';
-import type { WeaponItem, RollEntry, InventoryItem, EncumbranceMode, AimedShotTarget, TechWeaponUpgradeType } from '../../types/cyberpunk';
+import type { WeaponItem, RollEntry, InventoryItem, AimedShotTarget, TechWeaponUpgradeType } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
 import { QUICKHACKS_2077_CATALOG, QUICKHACKING_OFFICIAL_RULES_GUIDE, type Quickhack2077 } from '../../data/netAndRolesData';
@@ -71,7 +73,6 @@ import {
   Swords,
   ChevronDown,
   ChevronRight,
-  Package,
   X,
   Train,
   GripVertical,
@@ -117,47 +118,65 @@ const TacticalTooltip: React.FC<{
   );
 };
 
-const TACTICAL_GRENADES = [
+// Core pp. 345-347: las granadas son munición de Grenade. La básica es Armor-Piercing (6d6, como el Grenade
+// Launcher, Core p. 177). El resto no hace daño y pide una tirada para resistir.
+// Lanzar: DEX + Athletics + 1d10 contra la fila Grenade Launcher de la tabla de rango, hasta 25 m (Core pp. 173, 177).
+const TACTICAL_GRENADES: { id: string; name: string; damage?: string; effect: string }[] = [
   {
     id: 'frag-grenade',
-    name: 'Frag Grenade',
+    name: 'Armor-Piercing Grenade',
     damage: '6d6',
-    effect: '6d6 de Daño en área (radio 10x10m). Abla armadura en impacto.',
-    dv: 15
+    effect: '6d6 a todos en el área. Abla la armadura 2 puntos en vez de 1 (Core p. 345).'
   },
   {
     id: 'flashbang',
-    name: 'Flashbang',
-    effect: 'Ceguera y sordera por 1 min. DV 15 Resist Torture/Drugs para evitar.',
-    dv: 15
+    name: 'Flashbang Grenade',
+    effect: 'Sin daño. DV 15 Resist Torture/Drugs o sufre Damaged Eye y Damaged Ear durante 1 minuto, sin Bonus Damage (Core p. 346).'
   },
   {
     id: 'incendiary-grenade',
     name: 'Incendiary Grenade',
-    damage: '4d6',
-    effect: '4d6 de Daño + Prende fuego al objetivo: 2 HP directos/turno hasta apagarse.',
-    dv: 15
+    damage: '6d6',
+    effect: '6d6. Si el daño pasa la armadura, el objetivo arde: 2 de daño directo a HP al final de cada turno hasta usar una Acción para apagarse; no se acumula (Core p. 346).'
   },
   {
     id: 'smoke-grenade',
     name: 'Smoke Grenade',
-    effect: 'Cobertura visual densa de humo (10x10m). -4 a ataques con visión a través.',
-    dv: 13
+    effect: 'Sin daño. Humo en un área de 10 x 10 m durante 1 minuto; tareas a través del humo con -4 (Core p. 347).'
   },
   {
     id: 'emp-grenade',
     name: 'EMP Grenade',
-    effect: 'Pulso electromagnético. DV 15 Cybertech o desactiva 2 piezas cyberware 1 min.',
-    dv: 15
+    effect: 'Sin daño. DV 15 Cybertech o el GM elige 2 ciberware o electrónicos que quedan inoperables 1 minuto (Core p. 345).'
   },
   {
     id: 'biotoxin-grenade',
     name: 'Biotoxin Grenade',
-    damage: '3d6',
-    effect: 'Nube de biotoxina. DV 15 Resist Torture/Drugs o recibe 3d6 directos a HP ignorando SP.',
-    dv: 15
+    effect: 'Sin daño. Quien sea de carne y reciba el impacto: DV 15 Resist Torture/Drugs o 3d6 directos a HP, sin ablar armadura (Core p. 345).'
+  },
+  {
+    id: 'poison-grenade',
+    name: 'Poison Grenade',
+    effect: 'Sin daño. DV 13 Resist Torture/Drugs o 2d6 directos a HP, sin ablar armadura (Core p. 346).'
+  },
+  {
+    id: 'sleep-grenade',
+    name: 'Sleep Grenade',
+    effect: 'Sin daño. DV 13 Resist Torture/Drugs o queda Prone e inconsciente 1 minuto, o hasta recibir daño o que lo despierten con una Acción (Core p. 346).'
+  },
+  {
+    id: 'teargas-grenade',
+    name: 'Teargas Grenade',
+    effect: 'Sin daño. Quien tenga ojos de carne: DV 13 Resist Torture/Drugs o sufre Damaged Eye 1 minuto, sin Bonus Damage (Core p. 347).'
   }
 ];
+
+// DV de lanzamiento: fila Grenade Launcher (Core p. 173); más allá de 25 m no se puede lanzar (Core p. 177).
+const THROWN_GRENADE_MAX_BRACKETS = ['0-6m', '7-12m', '13-25m'];
+function getThrownGrenadeDv(distance: string): number | null {
+  if (!THROWN_GRENADE_MAX_BRACKETS.includes(distance)) return null;
+  return WEAPON_RANGE_PROFILES.grenade_launcher.dvs[distance] ?? null;
+}
 
 const AmmoCartridgeVisualizer: React.FC<{
   currentMag: number;
@@ -808,7 +827,6 @@ export const CombatHudView: React.FC = () => {
   const setDead = useCharacterStore((state) => state.setDead);
   const toggleTreatInjury = useCharacterStore((state) => state.toggleTreatInjury);
   const removeInjury = useCharacterStore((state) => state.removeInjury);
-  const setEncumbranceMode = useCharacterStore((state) => state.setEncumbranceMode);
   const updateMartialArtRank = useCharacterStore((state) => state.updateMartialArtRank);
   const adjustImprovementPoints = useCharacterStore((state) => state.adjustImprovementPoints);
   const setInterfaceRankOverride = useCharacterStore((state) => state.setInterfaceRankOverride);
@@ -1536,8 +1554,7 @@ export const CombatHudView: React.FC = () => {
       id: item.catalogId || item.id,
       name: item.name,
       damage: found?.damage || (item.details?.match(/\d+d\d+/i)?.[0] ?? ''),
-      effect: found?.effect || item.details || 'Granada táctica estándar.',
-      dv: found?.dv ?? 15
+      effect: found?.effect || item.details || 'Granada táctica estándar.'
     };
   };
 
@@ -2156,7 +2173,9 @@ export const CombatHudView: React.FC = () => {
     const d10 = Math.floor(Math.random() * 10) + 1;
     const isCritSuccess = d10 === 10;
     const isCritFail = d10 === 1;
-    const targetDv = move.resolutionDv;
+    // Core p. 178: los movimientos sin DV se resuelven contra DEX + Evasion + 1d10 del defensor.
+    const opposedDefense = move.isOpposed ? rollMeleeDefenseDv() : null;
+    const targetDv = opposedDefense ? opposedDefense.dv : move.resolutionDv;
     const totalBase = dex + rank + soloPrecision + luckSpent;
     const totalAttack = totalBase + d10;
     const margin = totalAttack - targetDv;
@@ -2173,7 +2192,7 @@ export const CombatHudView: React.FC = () => {
       type: 'attack',
       weaponName: `🥋 Combo: ${move.name} (${form.name})`,
       damageFormula: move.damageBonusOrFormula || (move.criticalInjuryApplied ? `Aplica ${move.criticalInjuryApplied}` : move.effectDescription),
-      distanceLabel: `DV ${move.resolutionDv} · ${move.requirements}`,
+      distanceLabel: `${opposedDefense ? `Enfrentada ${opposedDefense.label}` : `DV ${move.resolutionDv}`} · ${move.requirements}`,
       d10,
       critDie: null,
       needsExplosionClick: isCritSuccess || isCritFail,
@@ -2227,6 +2246,8 @@ export const CombatHudView: React.FC = () => {
     } else {
       (updated as any)[field] = Math.max(0, ((updated as any)[field] || 0) + delta);
     }
+    // Core p. 146: el total gastado no puede superar el rango de Combat Awareness.
+    if (!isValidSoloAllocation(updated, activeChar?.roleRank || 0)) return;
     updateSoloAllocation(updated);
   };
 
@@ -2415,6 +2436,11 @@ export const CombatHudView: React.FC = () => {
   // Throw grenade action
   const handleThrowGrenade = (grenade: typeof TACTICAL_GRENADES[number]) => {
     ensureTelemetryExpanded();
+    const throwDv = getThrownGrenadeDv(selectedDistance);
+    if (throwDv === null) {
+      alert(`No puedes lanzar una granada a ${selectedDistance}: el máximo es 25 m (Core p. 177).`);
+      return false;
+    }
     const athletics = activeChar?.skills?.athletics ?? 0;
     const dex = activeChar?.stats?.DEX ?? 6;
     const luckSpent = luckToSpendOnNextRoll;
@@ -2426,7 +2452,7 @@ export const CombatHudView: React.FC = () => {
     const d10 = Math.floor(Math.random() * 10) + 1;
     const isCritSuccess = d10 === 10;
     const isCritFail = d10 === 1;
-    const targetDv = grenade.dv || 15;
+    const targetDv = throwDv;
     const totalBase = dex + athletics + luckSpent;
     const totalAttack = totalBase + d10;
     const margin = totalAttack - targetDv;
@@ -2458,6 +2484,7 @@ export const CombatHudView: React.FC = () => {
     };
 
     addRollEntry(entry);
+    return true;
   };
 
   // Grenade damage / effect trigger
@@ -2484,8 +2511,7 @@ export const CombatHudView: React.FC = () => {
   // Throw owned grenade action (deducts 1 charge)
   const handleThrowOwnedGrenade = (invItem: InventoryItem) => {
     const grenadeInfo = getGrenadeInfo(invItem);
-    handleThrowGrenade(grenadeInfo);
-    updateInventoryQuantity(invItem.id, -1);
+    if (handleThrowGrenade(grenadeInfo)) updateInventoryQuantity(invItem.id, -1);
   };
 
   // Trigger owned grenade damage / effect
@@ -2531,8 +2557,8 @@ export const CombatHudView: React.FC = () => {
     });
 
     if (drug.name.toLowerCase().includes('speedheal')) {
-      const healAmount = effectiveBody + (activeChar?.stats?.WILL ?? 6);
-      adjustHp(healAmount);
+      const healAmount = speedhealAmount(effectiveBody, activeChar?.stats?.WILL ?? 6, activeChar?.currentHp ?? 0);
+      if (healAmount > 0) adjustHp(healAmount);
     }
   };
 
@@ -2866,33 +2892,6 @@ export const CombatHudView: React.FC = () => {
                   })()}
                 </div>
 
-                <div className="mt-2.5 bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <span className="font-tech text-[11px] font-bold text-white uppercase flex items-center gap-1.5">
-                      <Package className="w-3.5 h-3.5 text-[#38bdf8]" /> ESTADO DE CARGA / SOBREPESO
-                    </span>
-                    {activeChar?.encumbranceMode && activeChar.encumbranceMode !== 'none' && (
-                      <span className="bg-[#ef4444]/20 border border-[#ef4444]/40 text-[#ef4444] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold animate-pulse">
-                        SOBREPESO ACTIVO
-                      </span>
-                    )}
-                  </div>
-                  <select
-                    value={activeChar?.encumbranceMode || 'none'}
-                    onChange={(e) => setEncumbranceMode(e.target.value as EncumbranceMode)}
-                    className="w-full bg-[#0f1016] border border-[#2e364c] text-white font-mono-code text-[11px] py-1 px-2 rounded focus:outline-none focus:border-[#38bdf8] cursor-pointer"
-                  >
-                    {(Object.keys(ENCUMBRANCE_MODES) as EncumbranceMode[]).map((key) => (
-                      <option key={key} value={key} className="bg-[#121319] text-white">
-                        {ENCUMBRANCE_MODES[key].label}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="text-[10px] text-[#94a3b8] font-mono-code mt-1.5 leading-tight">
-                    {ENCUMBRANCE_MODES[activeChar?.encumbranceMode || 'none']?.description}
-                  </p>
-                </div>
-
                 {/* Mini Descanso y Curación Canónica */}
                 {(() => {
                   const currentEb = activeChar?.eurodollars ?? 0;
@@ -2934,8 +2933,7 @@ export const CombatHudView: React.FC = () => {
                       return;
                     }
                     updateCharacterMeta({ eurodollars: currentEb - 100 });
-                    const mult = (hasEnhancedAntibodies || combatRestAntibodies ? 2 : 1) + 1;
-                    const healAmount = effectiveBody * mult;
+                    const healAmount = naturalHealingPerDay(effectiveBody, hasEnhancedAntibodies || combatRestAntibodies, true);
                     const newHp = Math.min(maxHp, currentHp + healAmount);
                     setHp(newHp);
                     setCombatRestFeedback(`Cryotank Hospital (-100 €$): +${healAmount} HP recuperados.`);
@@ -2949,8 +2947,7 @@ export const CombatHudView: React.FC = () => {
                       return;
                     }
                     updateCharacterMeta({ eurodollars: currentEb - 50 });
-                    const mult = (hasEnhancedAntibodies || combatRestAntibodies ? 2 : 1) + 1;
-                    const healAmount = effectiveBody * mult;
+                    const healAmount = naturalHealingPerDay(effectiveBody, hasEnhancedAntibodies || combatRestAntibodies, true);
                     const newHp = Math.min(maxHp, currentHp + healAmount);
                     setHp(newHp);
                     setCombatRestFeedback(`Recarga Cryo Medtech (-50 €$): +${healAmount} HP recuperados.`);
@@ -2958,7 +2955,12 @@ export const CombatHudView: React.FC = () => {
                   };
 
                   const handleInjectSpeedhealHud = () => {
-                    const healAmount = effectiveBody + effWill;
+                    const healAmount = speedhealAmount(effectiveBody, effWill, currentHp);
+                    if (healAmount === 0) {
+                      setCombatRestFeedback('Speedheal no funciona en Mortally Wounded (Core p. 150).');
+                      setTimeout(() => setCombatRestFeedback(null), 3000);
+                      return;
+                    }
                     if (currentHp >= maxHp) {
                       setCombatRestFeedback('HP ya al máximo.');
                       setTimeout(() => setCombatRestFeedback(null), 3000);
@@ -2970,8 +2972,7 @@ export const CombatHudView: React.FC = () => {
                     setTimeout(() => setCombatRestFeedback(null), 4000);
                   };
 
-                  const mult = (combatRestAntibodies || hasEnhancedAntibodies ? 2 : 1) + (combatRestCryotank ? 1 : 0);
-                  const totalGain = effectiveBody * mult * combatRestDays;
+                  const totalGain = naturalHealingPerDay(effectiveBody, combatRestAntibodies || hasEnhancedAntibodies, combatRestCryotank) * combatRestDays;
 
                   return (
                     <div className="mt-2.5 bg-[#141824] p-2.5 rounded-sm border border-[#232a3d] space-y-2">
@@ -3070,9 +3071,9 @@ export const CombatHudView: React.FC = () => {
                           className={`p-1 rounded text-center border font-bold cursor-pointer transition-all ${
                             combatRestCryotank ? 'bg-cyan-500 text-black border-cyan-400' : 'bg-[#0f1118] text-slate-400 border-[#1e2335]'
                           }`}
-                          title="Cámara Criogénica suma +BODY adicional por día (indefenso, 30 SDP)"
+                          title="Cryotank: dobla la curación por día; el paciente está inconsciente y tras cobertura de 30 HP (Core p. 353)"
                         >
-                          Cryo: {combatRestCryotank ? '+BODY' : 'OFF'}
+                          Cryo: {combatRestCryotank ? 'x2' : 'OFF'}
                         </button>
                       </div>
 
@@ -3083,8 +3084,12 @@ export const CombatHudView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => {
-                            restAndHealDays(combatRestDays, combatRestAntibodies || hasEnhancedAntibodies, combatRestCryotank);
-                            setCombatRestFeedback(`+${totalGain} HP recuperados tras ${combatRestDays} día(s).`);
+                            if (currentHp <= 0) {
+                              setCombatRestFeedback('Mortally Wounded: estabiliza (DV 15) antes de descansar (Core p. 222).');
+                            } else {
+                              restAndHealDays(combatRestDays, combatRestAntibodies || hasEnhancedAntibodies, combatRestCryotank);
+                              setCombatRestFeedback(`+${totalGain} HP recuperados tras ${combatRestDays} día(s).`);
+                            }
                             setTimeout(() => setCombatRestFeedback(null), 4000);
                           }}
                           className="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-tech text-xs font-bold uppercase transition-all cursor-pointer"
@@ -4012,7 +4017,7 @@ export const CombatHudView: React.FC = () => {
           const cybertechSkill = activeChar?.skills?.cybertech ?? 2;
           const d10 = Math.floor(Math.random() * 10) + 1;
           const total = techStat + cybertechSkill + d10;
-          const isSuccess = total >= 15;
+          const isSuccess = total > 15; // Core p. 345: hay que superar DV 15
 
           const entry: RollEntry = {
             id: `emp-resist-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -6583,7 +6588,7 @@ export const CombatHudView: React.FC = () => {
                                         TÁCTICA
                                       </span>
                                     )}
-                                    <span className="text-[#64748b]">| Radio: 10x10m | DV lanzamiento: {gInfo.dv}</span>
+                                    <span className="text-[#64748b]">| Radio: 10x10m | DV lanzamiento: {getThrownGrenadeDv(selectedDistance) ?? 'fuera de alcance (máx. 25 m)'}</span>
                                   </div>
                                   <div className="text-[#94a3b8]">{gInfo.effect}</div>
                                 </div>
@@ -6660,7 +6665,7 @@ export const CombatHudView: React.FC = () => {
                           >
                             {TACTICAL_GRENADES.map((g) => (
                               <option key={g.id} value={g.id}>
-                                {g.name} ({g.damage || 'Táctica'}, DV {g.dv})
+                                {g.name} ({g.damage || 'sin daño'})
                               </option>
                             ))}
                           </select>
@@ -7183,7 +7188,7 @@ export const CombatHudView: React.FC = () => {
                                     >
                                       <div className="flex items-center justify-between font-bold">
                                         <span className="text-white">{m.name}</span>
-                                        <span className="text-amber-400">DV {m.resolutionDv}</span>
+                                        <span className="text-amber-400">{m.isOpposed ? 'vs DEX + Evasion' : `DV ${m.resolutionDv}`}</span>
                                       </div>
                                       <div className="text-[9px] text-slate-400 font-sans leading-tight">
                                         <strong>Req:</strong> {m.requirements}
@@ -7410,7 +7415,7 @@ export const CombatHudView: React.FC = () => {
                                 )}
                               </div>
                               <div className="text-[10px] font-mono-code font-bold text-[#38bdf8] bg-[#0c121e] px-1.5 py-0.5 rounded border border-[#1b2b40]">
-                                DV {move.resolutionDv}
+                                {move.isOpposed ? 'vs DEX + Evasion' : `DV ${move.resolutionDv}`}
                               </div>
                             </div>
 
@@ -7433,7 +7438,7 @@ export const CombatHudView: React.FC = () => {
                                 onClick={() => handleExecuteMartialMove(activeForm, move)}
                                 className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#10b981] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d] cursor-pointer"
                               >
-                                <Target className="w-3 h-3" /> EJECUTAR COMBO (1d10 + DEX + {activeRank} vs DV {move.resolutionDv})
+                                <Target className="w-3 h-3" /> EJECUTAR COMBO (1d10 + DEX + {activeRank} vs {move.isOpposed ? 'DEX + Evasion + 1d10' : `DV ${move.resolutionDv}`})
                               </button>
                               {move.damageBonusOrFormula && move.damageBonusOrFormula.includes('d') && (
                                 <button
@@ -7642,10 +7647,10 @@ export const CombatHudView: React.FC = () => {
                   <div className="bg-[#141622] p-2 rounded border border-[#22283c] flex items-center justify-between">
                     <div>
                       <div className="text-white font-bold">Fumble Recovery (Ignora Pifia)</div>
-                      <div className="text-[9px] text-[#64748b]">Cuesta 2 pts fijar activo</div>
+                      <div className="text-[9px] text-[#64748b]">Cuesta 4 pts (Core p. 146)</div>
                     </div>
                     <button
-                      onClick={() => handleUpdateSoloField('fumbleRecovery', activeChar?.soloAllocation?.fumbleRecovery ? -2 : 2)}
+                      onClick={() => handleUpdateSoloField('fumbleRecovery', !activeChar?.soloAllocation?.fumbleRecovery)}
                       className={`px-2 py-0.5 rounded font-bold ${
                         activeChar?.soloAllocation?.fumbleRecovery
                           ? 'bg-[#10b981] text-black'
