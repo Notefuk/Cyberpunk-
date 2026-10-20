@@ -246,6 +246,30 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.1.1] - 2026-10-20 (Bugs del store: FBC reversible, HP máximo único, parseo de Humanity Loss) [Claude Code · 2026-10-20]
+* **Category**: Corrección de bugs de estado (plan 1, fase 3: `docs/plans/plan1-auditoria-core.md`)
+* **Files Modified**:
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/store/useCombatStore.ts`
+  - `frontend/src/engine/characterEngine.ts`
+  - `frontend/src/types/cyberpunk.ts`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/gm/FixerDeckView.tsx`
+  - `frontend/src/features/layout/TopHudBar.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CHECKPOINT.md`
+* **What Changed**:
+  1. **FBC reversible (B2)**: `activateFullBodyConversion` ya no pisa `stats.BODY` ni `stats.MOVE`; el chasis se aplica con `getEffectiveBody` / `getEffectiveMove`. Guarda la armadura previa en `fbcState.preFbcHeadArmor` / `preFbcBodyArmor` y `deactivateFullBodyConversion` la restaura y recorta el HP al nuevo máximo. Activar ya no revive a un personaje en 0 HP. Los personajes convertidos antes de esta versión conservan los stats que ya se habían pisado.
+  2. **HP máximo único (B3)**: `adjustHp`, `setHp`, `updateStat`, `gmUpdateCharacterVitals`, la ficha, el TopHudBar y el Fixer Deck usan el BODY efectivo. La ficha muestra BODY y MOVE del chasis cuando hay FBC.
+  3. **Parseo de Humanity Loss (B4)**: `parseHumanityLossAverage` lee "2d6 (7)", "14 (4d6)" y "0 (N/A)" correctamente (antes "2d6 (7)" restaba 267).
+  4. **Validaciones (B12, B13)**: `consumeAmmo` rechaza cantidades no positivas; `updateStat`, `adjustHp` y `setHp` ignoran NaN; las transacciones registran el monto realmente movido cuando el saldo no alcanza.
+  5. **Persistencia**: los dos stores Zustand declaran `version: 1` y `migrate`, listos para futuras migraciones sin perder partidas.
+  6. **Desvío del plan**: B1 (re-inyección de premades CEMK) se mantiene a pedido del usuario.
+
 ### [v4.1.0] - 2026-10-20 (Mortally Wounded, Death Saves, críticos automáticos y EMP por Humanidad) [Claude Code · 2026-10-20]
 * **Category**: Reglas de heridas y muerte del Core Rulebook (plan 1, fase 2: `docs/plans/plan1-auditoria-core.md`)
 * **Files Modified**:

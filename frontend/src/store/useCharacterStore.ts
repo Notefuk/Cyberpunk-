@@ -22,7 +22,7 @@ import type {
   TechWeaponUpgradeType,
   WeaponItem
 } from '../types/cyberpunk';
-import { calculateMaxHp, getEffectiveBody, rollDeathSave as rollDeathSaveEngine } from '../engine/characterEngine';
+import { calculateMaxHp, getEffectiveBody, parseHumanityLossAverage, rollDeathSave as rollDeathSaveEngine } from '../engine/characterEngine';
 import type { DeathSaveResult } from '../engine/characterEngine';
 import { calculateArmorAblation } from '../engine/combatEngine';
 import { rollCriticalInjury } from '../data/criticalInjuries';
@@ -625,6 +625,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
       },
 
       updateStat: (stat: StatKey, value: number) => {
+        if (!Number.isFinite(value)) return;
         const clampedVal = Math.max(0, value);
         set(state => ({
           characters: state.characters.map(char => {
@@ -635,7 +636,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
             let newCurrentLuck = char.currentLuck;
 
             if (stat === 'BODY' || stat === 'WILL') {
-              const maxHp = calculateMaxHp(newStats.BODY, newStats.WILL);
+              const maxHp = calculateMaxHp(getEffectiveBody({ ...char, stats: newStats }), newStats.WILL);
               if (newCurrentHp > maxHp) {
                 newCurrentHp = maxHp;
               }
@@ -675,10 +676,11 @@ export const useCharacterStore = create<CharacterStoreState>()(
       },
 
       adjustHp: (delta: number) => {
+        if (!Number.isFinite(delta)) return;
         set(state => ({
           characters: state.characters.map(char => {
             if (char.id !== state.activeCharacterId) return char;
-            const maxHp = calculateMaxHp(char.stats.BODY, char.stats.WILL);
+            const maxHp = calculateMaxHp(getEffectiveBody(char), char.stats.WILL);
             const nextHp = Math.max(0, Math.min(maxHp, char.currentHp + delta));
             // Core p. 188: al estabilizar a 1+ HP el Death Save Penalty vuelve al base.
             return { ...char, currentHp: nextHp, deathSavePenalty: nextHp >= 1 ? 0 : char.deathSavePenalty };
@@ -687,10 +689,11 @@ export const useCharacterStore = create<CharacterStoreState>()(
       },
 
       setHp: (hp: number) => {
+        if (!Number.isFinite(hp)) return;
         set(state => ({
           characters: state.characters.map(char => {
             if (char.id !== state.activeCharacterId) return char;
-            const maxHp = calculateMaxHp(char.stats.BODY, char.stats.WILL);
+            const maxHp = calculateMaxHp(getEffectiveBody(char), char.stats.WILL);
             const nextHp = Math.max(0, Math.min(maxHp, hp));
             return { ...char, currentHp: nextHp, deathSavePenalty: nextHp >= 1 ? 0 : char.deathSavePenalty };
           })
@@ -851,7 +854,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
       consumeAmmo: (weaponInstanceId: string, amount: number) => {
         const char = get().getActiveCharacter();
         const weapon = char.equippedWeapons.find(w => w.instanceId === weaponInstanceId);
-        if (!weapon || weapon.currentMag < amount) {
+        if (!weapon || !Number.isFinite(amount) || amount <= 0 || weapon.currentMag < amount) {
           return false;
         }
 
@@ -1822,7 +1825,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
             } else if (category === 'cyberware' && autoEquip !== false) {
               if (!updatedCyberwareIds.includes(item.id)) {
                 updatedCyberwareIds.push(item.id);
-                const parsedHl = item.humanityLoss ? parseInt(String(item.humanityLoss).replace(/\D/g, '')) || 7 : 7;
+                const parsedHl = item.humanityLoss ? parseHumanityLossAverage(String(item.humanityLoss)) : 7;
                 updatedHumanity = Math.max(0, updatedHumanity - parsedHl);
               }
             } else {
@@ -1930,7 +1933,8 @@ export const useCharacterStore = create<CharacterStoreState>()(
               id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
               timestamp: new Date().toISOString(),
               concept,
-              amount,
+              // Se registra lo que realmente se movió si el saldo no alcanzaba.
+              amount: newBalance - (c.eurodollars || 0),
               balanceAfter: newBalance
             };
             return {
@@ -1958,7 +1962,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
           characters: state.characters.map((c) => {
             if (c.id !== characterId) return c;
 
-            const maxHp = calculateMaxHp(c.stats?.BODY ?? 0, c.stats?.WILL ?? 0);
+            const maxHp = calculateMaxHp(getEffectiveBody(c), c.stats?.WILL ?? 0);
             let updatedHp = c.currentHp;
             if (patch.restoreFullHp) {
               updatedHp = maxHp;
@@ -1987,12 +1991,13 @@ export const useCharacterStore = create<CharacterStoreState>()(
             let updatedEurodollars = c.eurodollars ?? 0;
             let updatedTransactions = [...(c.transactions || [])];
             if (typeof patch.eurodollarsDelta === 'number' && patch.eurodollarsDelta !== 0) {
+              const previousEurodollars = updatedEurodollars;
               updatedEurodollars = Math.max(0, updatedEurodollars + patch.eurodollarsDelta);
               const newTx: EurodollarTransaction = {
                 id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
                 timestamp: new Date().toISOString(),
                 concept: patch.concept || (patch.eurodollarsDelta > 0 ? 'GM Grant (€$)' : 'GM Deduct (€$)'),
-                amount: patch.eurodollarsDelta,
+                amount: updatedEurodollars - previousEurodollars,
                 balanceAfter: updatedEurodollars
               };
               updatedTransactions = [newTx, ...updatedTransactions].slice(0, 50);
@@ -2186,22 +2191,22 @@ export const useCharacterStore = create<CharacterStoreState>()(
               bodyOverride: chassis.bodyOverride,
               moveOverride: chassis.moveOverride,
               baseArmorSp: chassis.baseArmorSp,
-              immunities: chassis.immunities || []
+              immunities: chassis.immunities || [],
+              // Al cambiar de chasis se conserva la armadura original de antes de la primera conversión.
+              preFbcHeadArmor: wasAlreadyFbc ? c.fbcState?.preFbcHeadArmor : c.headArmor,
+              preFbcBodyArmor: wasAlreadyFbc ? c.fbcState?.preFbcBodyArmor : c.bodyArmor
             };
 
+            // BODY y MOVE del chasis se aplican vía getEffectiveBody / getEffectiveMove (fbcState),
+            // sin pisar los stats base, para que la conversión se pueda revertir.
             const updatedCharTemp: CharacterSheet = {
               ...c,
-              fbcState: newFbcState,
-              stats: {
-                ...c.stats,
-                BODY: Math.max(c.stats?.BODY ?? 0, chassis.bodyOverride),
-                MOVE: chassis.moveOverride
-              }
+              fbcState: newFbcState
             };
 
             const newMaxHp = calculateMaxHp(getEffectiveBody(updatedCharTemp), updatedCharTemp.stats?.WILL ?? 0);
             const hpDiff = newMaxHp - oldMaxHp;
-            const newHp = Math.max(1, (c.currentHp ?? 0) + (hpDiff > 0 ? hpDiff : 0));
+            const newHp = Math.min(newMaxHp, Math.max(0, (c.currentHp ?? 0) + (hpDiff > 0 ? hpDiff : 0)));
 
             let headArmor = c.headArmor;
             let bodyArmor = c.bodyArmor;
@@ -2244,12 +2249,21 @@ export const useCharacterStore = create<CharacterStoreState>()(
 
             const newFbcState: ActiveFbcState = {
               ...c.fbcState,
-              isFullBodyConversion: false
+              isFullBodyConversion: false,
+              preFbcHeadArmor: undefined,
+              preFbcBodyArmor: undefined
             };
+            const restored: CharacterSheet = {
+              ...c,
+              fbcState: newFbcState,
+              headArmor: c.fbcState.preFbcHeadArmor ?? c.headArmor,
+              bodyArmor: c.fbcState.preFbcBodyArmor ?? c.bodyArmor
+            };
+            const maxHp = calculateMaxHp(getEffectiveBody(restored), restored.stats?.WILL ?? 0);
 
             return {
-              ...c,
-              fbcState: newFbcState
+              ...restored,
+              currentHp: Math.min(restored.currentHp, maxHp)
             };
           })
         }));
@@ -2567,6 +2581,10 @@ export const useCharacterStore = create<CharacterStoreState>()(
     }),
     {
       name: 'cpr-omni-deck-characters-v2',
+      // Versión del esquema persistido. Al cambiar la forma de los datos, subir el número y migrar aquí.
+      // v0 -> v1: solo agrega campos opcionales (deathSavePenalty, isDead, preFbc*Armor); no hace falta transformar.
+      version: 1,
+      migrate: (persistedState: unknown) => persistedState as CharacterStoreState,
       merge: (persistedState: unknown, currentState: CharacterStoreState) => {
         if (!persistedState || typeof persistedState !== 'object') {
           return currentState;

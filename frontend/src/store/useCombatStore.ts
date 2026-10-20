@@ -73,7 +73,10 @@ export const useCombatStore = create<CombatStoreState>()(
       clearRollHistory: () => set({ rollHistory: [] })
     }),
     {
-      name: 'cpr-omni-deck-combat-v2'
+      name: 'cpr-omni-deck-combat-v2',
+      // Versión del esquema persistido. Al cambiar la forma de los datos, subir el número y migrar aquí.
+      version: 1,
+      migrate: (persistedState: unknown) => persistedState as CombatStoreState
     }
   )
 );

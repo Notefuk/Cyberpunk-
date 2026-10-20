@@ -6,6 +6,7 @@ import {
   calculateMaxHumanity,
   calculateWeaponAttackBreakdown,
   getEffectiveEmp,
+  getEffectiveBody,
   ENCUMBRANCE_MODES
 } from '../../engine/characterEngine';
 import type { 
@@ -348,7 +349,7 @@ export const StreetLabView: React.FC = () => {
   const [folioSkillStatFilter, setFolioSkillStatFilter] = useState('ALL');
 
   // Derived stats
-  const bodyVal = activeChar?.stats?.BODY ?? 6;
+  const bodyVal = activeChar ? getEffectiveBody(activeChar) : 6;
   const willVal = activeChar?.stats?.WILL ?? 6;
   const empVal = activeChar?.stats?.EMP ?? 6;
   const maxHp = calculateMaxHp(bodyVal, willVal);
@@ -1027,7 +1028,13 @@ export const StreetLabView: React.FC = () => {
         {!isStatsCollapsed && (
           <div className="grid grid-cols-5 lg:grid-cols-10 gap-1.5 animate-fade-in relative z-30 overflow-visible">
             {STAT_KEYS.map((stat, idx) => {
-              const val = activeChar?.stats?.[stat] ?? 6;
+              // Con Full Body Conversion el chasis reemplaza BODY y MOVE sin pisar los stats base.
+              const fbcMove = activeChar?.fbcState?.isFullBodyConversion ? activeChar.fbcState.moveOverride : 0;
+              const val = stat === 'BODY' && activeChar
+                ? getEffectiveBody(activeChar)
+                : stat === 'MOVE' && fbcMove > 0
+                  ? fbcMove
+                  : activeChar?.stats?.[stat] ?? 6;
               const penalty = getStatPenalty(stat);
               const isRightSide = idx >= 5;
 
@@ -3504,7 +3511,7 @@ export const StreetLabView: React.FC = () => {
 
               {/* SECCIÓN 1: Descanso, Estabilización y Asistencia Médica Canónica */}
               {(() => {
-                const effBody = activeChar?.stats?.BODY ?? 6;
+                const effBody = activeChar ? getEffectiveBody(activeChar) : 6;
                 const effWill = activeChar?.stats?.WILL ?? 6;
                 const maxHp = calculateMaxHp(effBody, effWill);
                 const currentHp = activeChar?.currentHp ?? 0;
