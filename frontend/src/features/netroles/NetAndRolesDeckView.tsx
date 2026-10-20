@@ -36,6 +36,7 @@ import {
   generateRandomNetFloor,
   type NetFloor,
   type NetArchitecturePreset,
+  type NetAction,
   type Quickhack2077,
   type VehicleSpec
 } from '../../data/netAndRolesData';
@@ -96,6 +97,9 @@ export const NetAndRolesDeckView: React.FC = () => {
   const [currentFloorIndex, setCurrentFloorIndex] = useState<number>(0);
   const [unlockedNetFloors, setUnlockedNetFloors] = useState<number[]>([1]);
   const [activeNetRollResult, setActiveNetRollResult] = useState<{ action: string; roll: number; formula: string; success?: boolean; text?: string } | null>(null);
+  const [isGmArchitectureManagerOpen, setIsGmArchitectureManagerOpen] = useState<boolean>(false);
+  const [targetNetDv, setTargetNetDv] = useState<number>(8);
+  const [expandedNetActionId, setExpandedNetActionId] = useState<string | null>(null);
   const [rezzedPrograms, setRezzedPrograms] = useState<Record<string, boolean>>({
     'Armor': true,
     'Sword': true,
@@ -112,24 +116,23 @@ export const NetAndRolesDeckView: React.FC = () => {
     : (character.role === 'Netrunner' ? (character.roleRank || 4) : 0);
   const netActionsPerTurn = activeInterfaceRank >= 10 ? 5 : activeInterfaceRank >= 7 ? 4 : activeInterfaceRank >= 4 ? 3 : 2;
 
-  const handleRollNetAction = (actionName: string, dvStr: string) => {
+  const handleRollNetAction = (action: NetAction) => {
     const d10 = Math.floor(Math.random() * 10) + 1;
     const isExplode = d10 === 10;
     const isFumble = d10 === 1;
     const extraDie = isExplode ? (Math.floor(Math.random() * 10) + 1) : isFumble ? (Math.floor(Math.random() * 10) + 1) : 0;
     const totalRoll = d10 + (isExplode ? extraDie : 0) - (isFumble ? extraDie : 0) + activeInterfaceRank;
     
-    // Parse target DV if numeric
-    const parsedDv = parseInt(dvStr.replace(/\D/g, ''), 10);
-    const hasDv = !isNaN(parsedDv) && parsedDv > 0;
-    const success = hasDv ? totalRoll >= parsedDv : true;
+    // Si la acción es Scanner, usa DV 13 canónico; de lo contrario usa el DV objetivo seleccionado (targetNetDv)
+    const effectiveDv = action.id === 'scanner' ? 13 : targetNetDv;
+    const success = totalRoll >= effectiveDv;
 
     setActiveNetRollResult({
-      action: actionName,
+      action: action.name,
       roll: totalRoll,
-      formula: `1d10 (${d10}${isExplode ? ` + explota ${extraDie}` : ''}${isFumble ? ` - pifia ${extraDie}` : ''}) + Interface (${activeInterfaceRank}) = ${totalRoll}`,
-      success: hasDv ? success : undefined,
-      text: hasDv ? (success ? `¡ÉXITO! Superó DV ${parsedDv}` : `FALLO. Requiere DV ${parsedDv}`) : 'Acción ejecutada'
+      formula: `1d10 (${d10}${isExplode ? ` + explota ${extraDie}` : ''}${isFumble ? ` - pifia ${extraDie}` : ''}) + Interface (${activeInterfaceRank}) = ${totalRoll} vs DV ${effectiveDv}`,
+      success,
+      text: success ? `¡ÉXITO! Superó DV ${effectiveDv}` : `FALLO. Requiere DV ${effectiveDv}`
     });
   };
 
@@ -485,97 +488,228 @@ export const NetAndRolesDeckView: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* COLUMNA IZQUIERDA: SELECTOR DE ARQUITECTURAS & ACCIONES (5 cols) */}
           <div className="lg:col-span-5 space-y-4">
-            {/* Presets & Custom Arch Selector */}
+            {/* Presets & Custom Arch Selector (Con Modo Jugador vs Modo Master GM) */}
+            {!isGmArchitectureManagerOpen ? (
+              <div className="bg-[#0d1017] border border-[#1b2234] p-3.5 rounded-xs space-y-3">
+                <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-tech text-xs font-bold text-[#00f5d4] uppercase tracking-wider flex items-center gap-1.5">
+                      <Layers className="w-4 h-4" />
+                      <span>🌐 PUNTO DE ACCESO ACTIVO (MODO JUGADOR)</span>
+                    </span>
+                    <span className="text-[9px] font-mono-code px-1.5 py-0.2 bg-emerald-950/70 text-emerald-400 border border-emerald-500/40 rounded">
+                      ARQ OCULTA
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono-code text-[#64748b]">
+                    Interface: <strong className="text-white">Rango {activeInterfaceRank}</strong> ({netActionsPerTurn} Acciones/Turno)
+                  </span>
+                </div>
+
+                <div className="p-3 bg-[#121622] border border-[#1e2638] rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-tech font-bold text-white uppercase flex items-center gap-1.5">
+                      <span className="text-[#00f5d4]">Punto de Acceso:</span> {activeArch.name}
+                    </div>
+                    <p className="text-[10px] font-mono-code text-[#94a3b8] mt-1">
+                      Piso Actual: <strong className="text-cyan-400">Nivel #{currentFloorIndex + 1} de {activeArch.floors.length}</strong> • El Árbitro administra la topología y revela pisos según tus tiradas.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsGmArchitectureManagerOpen(true)}
+                    className="px-3 py-1.5 bg-[#1a2030] hover:bg-amber-600 hover:text-black text-amber-400 border border-amber-500/40 font-tech text-xs font-bold rounded-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 shadow"
+                  >
+                    <span>👑</span>
+                    <span>MODO MASTER (GM): SELECCIONAR / EDITAR</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-[#0d1017] border border-amber-500/50 p-3.5 rounded-xs space-y-3 animate-fade-in shadow-xl">
+                <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-tech text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <Layers className="w-4 h-4" />
+                      <span>👑 PANEL DEL MASTER (GM): ARQUITECTURAS ({allPresets.length})</span>
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsGmArchitectureManagerOpen(false)}
+                    className="px-2 py-0.5 bg-[#161a26] hover:bg-[#20273a] text-slate-300 text-[10px] font-mono-code rounded border border-[#2b354d] cursor-pointer"
+                  >
+                    [ ✖ Cerrar Modo Master ]
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-2 max-h-[220px] overflow-y-auto pr-1">
+                  {allPresets.map(preset => (
+                    <button
+                      key={preset.id}
+                      onClick={() => {
+                        setSelectedPresetId(preset.id);
+                        setCurrentFloorIndex(0);
+                        setUnlockedNetFloors([1]);
+                      }}
+                      className={`p-2.5 rounded-xs text-left transition-all border cursor-pointer ${
+                        selectedPresetId === preset.id
+                          ? 'bg-[#00f5d4]/10 border-[#00f5d4] text-white shadow-[0_0_8px_rgba(0,245,212,0.2)]'
+                          : 'bg-[#121622] border-[#1e2638] text-[#94a3b8] hover:border-[#38bdf8]/50 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-tech text-xs font-bold uppercase">{preset.name}</span>
+                        <span className={`text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs font-bold ${
+                          preset.difficulty === 'Corporate Apex' ? 'bg-red-500/20 text-red-400' :
+                          preset.difficulty === 'Hardened' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
+                        }`}>
+                          {preset.difficulty} • {preset.totalFloors} Pisos
+                        </span>
+                      </div>
+                      <p className="text-[10px] font-mono-code text-[#64748b] mt-1 line-clamp-1">{preset.loreDescription}</p>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Generador de pisos manuales para el GM */}
+                <div className="pt-2 border-t border-[#1b2234] flex items-center justify-between gap-1.5 flex-wrap">
+                  <span className="text-[10px] font-mono-code text-amber-400 font-bold">+ AÑADIR PISO (GM):</span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleCreateCustomFloor('Password')}
+                      className="px-2 py-1 bg-[#1a2030] hover:bg-[#00f5d4] hover:text-black text-[10px] font-mono-code rounded-xs transition-colors cursor-pointer"
+                    >
+                      Password
+                    </button>
+                    <button
+                      onClick={() => handleCreateCustomFloor('File')}
+                      className="px-2 py-1 bg-[#1a2030] hover:bg-[#38bdf8] hover:text-black text-[10px] font-mono-code rounded-xs transition-colors cursor-pointer"
+                    >
+                      File
+                    </button>
+                    <button
+                      onClick={() => handleCreateCustomFloor('Control Node')}
+                      className="px-2 py-1 bg-[#1a2030] hover:bg-[#f59e0b] hover:text-black text-[10px] font-mono-code rounded-xs transition-colors cursor-pointer"
+                    >
+                      Control
+                    </button>
+                    <button
+                      onClick={() => handleCreateCustomFloor('Black ICE')}
+                      className="px-2 py-1 bg-[#1a2030] hover:bg-[#ef4444] hover:text-white text-[10px] font-mono-code rounded-xs transition-colors cursor-pointer"
+                    >
+                      Black ICE
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Catálogo de 9 Acciones de Red con Selector de DV */}
             <div className="bg-[#0d1017] border border-[#1b2234] p-3.5 rounded-xs space-y-3">
               <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
-                <span className="font-tech text-xs font-bold text-[#00f5d4] uppercase tracking-wider flex items-center gap-1.5">
-                  <Layers className="w-4 h-4" />
-                  <span>ARQUITECTURAS DISPONIBLES ({allPresets.length})</span>
+                <span className="font-tech text-xs font-bold text-[#38bdf8] uppercase tracking-wider flex items-center gap-1.5">
+                  <Terminal className="w-4 h-4" />
+                  <span>ACCIONES DE INTERFAZ (9 ACCIONES OFICIALES)</span>
                 </span>
-                <span className="text-[10px] font-mono-code text-[#64748b]">
-                  Interface: <strong className="text-white">Rango {activeInterfaceRank}</strong> ({netActionsPerTurn} Acciones/Turno)
+                <span className="text-[10px] font-mono-code text-cyan-400">
+                  Core pp. 198-199
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 gap-2 max-h-[220px] overflow-y-auto pr-1">
-                {allPresets.map(preset => (
-                  <button
-                    key={preset.id}
-                    onClick={() => {
-                      setSelectedPresetId(preset.id);
-                      setCurrentFloorIndex(0);
-                      setUnlockedNetFloors([1]);
-                    }}
-                    className={`p-2.5 rounded-xs text-left transition-all border cursor-pointer ${
-                      selectedPresetId === preset.id
-                        ? 'bg-[#00f5d4]/10 border-[#00f5d4] text-white shadow-[0_0_8px_rgba(0,245,212,0.2)]'
-                        : 'bg-[#121622] border-[#1e2638] text-[#94a3b8] hover:border-[#38bdf8]/50 hover:text-white'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-tech text-xs font-bold uppercase">{preset.name}</span>
-                      <span className={`text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs font-bold ${
-                        preset.difficulty === 'Corporate Apex' ? 'bg-red-500/20 text-red-400' :
-                        preset.difficulty === 'Hardened' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
-                      }`}>
-                        {preset.difficulty} • {preset.totalFloors} Pisos
-                      </span>
-                    </div>
-                    <p className="text-[10px] font-mono-code text-[#64748b] mt-1 line-clamp-1">{preset.loreDescription}</p>
-                  </button>
-                ))}
+              {/* Selector de DV Objetivo para la Tirada de Interfaz */}
+              <div className="p-2 bg-[#121622] border border-[#1e2638] rounded-xs space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono-code text-slate-400 uppercase font-bold">
+                    🎯 Selector de DV Objetivo para la Tirada:
+                  </span>
+                  <span className="text-[11px] font-mono-code text-cyan-300 font-bold">
+                    DV Activo: {targetNetDv}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 flex-wrap text-[10px] font-mono-code">
+                  {[
+                    { dv: 6, label: 'DV 6 Básico' },
+                    { dv: 8, label: 'DV 8 Estándar' },
+                    { dv: 10, label: 'DV 10 Poco Común' },
+                    { dv: 12, label: 'DV 12 Avanzado' },
+                    { dv: 13, label: 'DV 13 Scanner' },
+                    { dv: 14, label: 'DV 14 Maestro' }
+                  ].map((item) => (
+                    <button
+                      key={item.dv}
+                      type="button"
+                      onClick={() => setTargetNetDv(item.dv)}
+                      className={`px-2 py-0.5 rounded-xs transition-all cursor-pointer font-bold ${
+                        targetNetDv === item.dv
+                          ? 'bg-cyan-500 text-black border border-cyan-300 shadow'
+                          : 'bg-[#1a2030] text-slate-400 hover:text-white border border-[#28324a]'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              {/* Generador de pisos manuales */}
-              <div className="pt-2 border-t border-[#1b2234] flex items-center justify-between gap-1.5">
-                <span className="text-[10px] font-mono-code text-[#64748b]">+ AÑADIR PISO:</span>
-                <button
-                  onClick={() => handleCreateCustomFloor('Password')}
-                  className="px-2 py-1 bg-[#1a2030] hover:bg-[#00f5d4] hover:text-black text-[10px] font-mono-code rounded-xs transition-colors cursor-pointer"
-                >
-                  Password
-                </button>
-                <button
-                  onClick={() => handleCreateCustomFloor('File')}
-                  className="px-2 py-1 bg-[#1a2030] hover:bg-[#38bdf8] hover:text-black text-[10px] font-mono-code rounded-xs transition-colors cursor-pointer"
-                >
-                  File
-                </button>
-                <button
-                  onClick={() => handleCreateCustomFloor('Control Node')}
-                  className="px-2 py-1 bg-[#1a2030] hover:bg-[#f59e0b] hover:text-black text-[10px] font-mono-code rounded-xs transition-colors cursor-pointer"
-                >
-                  Control
-                </button>
-                <button
-                  onClick={() => handleCreateCustomFloor('Black ICE')}
-                  className="px-2 py-1 bg-[#1a2030] hover:bg-[#ef4444] hover:text-white text-[10px] font-mono-code rounded-xs transition-colors cursor-pointer"
-                >
-                  Black ICE
-                </button>
-              </div>
-            </div>
-
-            {/* Catálogo de 9 Acciones de Red */}
-            <div className="bg-[#0d1017] border border-[#1b2234] p-3.5 rounded-xs space-y-3">
-              <span className="font-tech text-xs font-bold text-[#38bdf8] uppercase tracking-wider flex items-center gap-1.5 border-b border-[#1b2234] pb-2">
-                <Terminal className="w-4 h-4" />
-                <span>ACCIONES DE INTERFAZ (9 ACCIONES OFICIALES)</span>
-              </span>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {/* Las 9 Acciones con especificación canónica */}
+              <div className="grid grid-cols-1 gap-2.5">
                 {NET_ACTIONS_CATALOG.map(act => (
-                  <button
+                  <div
                     key={act.id}
-                    onClick={() => handleRollNetAction(act.name, act.dv)}
-                    className="p-2 bg-[#121622] hover:bg-[#1a2234] border border-[#1e2638] hover:border-[#38bdf8] rounded-xs text-left transition-colors cursor-pointer group"
+                    className="p-2.5 bg-[#121622] border border-[#1e2638] hover:border-[#38bdf8]/60 rounded-xs space-y-1.5 transition-all"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-tech text-xs font-bold text-white group-hover:text-[#38bdf8]">{act.name}</span>
-                      <span className="text-[9px] font-mono-code text-[#f59e0b]">{act.cost}</span>
+                    <div className="flex items-start justify-between gap-1">
+                      <div>
+                        <div className="font-tech text-xs font-bold text-white flex items-center gap-1.5">
+                          <span>{act.name}</span>
+                          <span className="text-[9px] font-mono-code px-1 py-0.2 bg-amber-950/70 text-amber-400 border border-amber-500/30 rounded">
+                            {act.cost}
+                          </span>
+                        </div>
+                        <div className="text-[9px] font-mono-code text-cyan-400 mt-0.5">
+                          {act.id === 'scanner' ? 'DV 13 (Percepción en Mundo Real)' : `DV Objetivo: ${targetNetDv} (${act.dv})`}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRollNetAction(act)}
+                        className="px-2.5 py-1 bg-[#1a2030] hover:bg-[#00f5d4] hover:text-black text-[#00f5d4] border border-[#00f5d4]/40 rounded-xs font-tech text-xs font-bold uppercase transition-all cursor-pointer shrink-0"
+                      >
+                        🎲 Tirar
+                      </button>
                     </div>
-                    <span className="text-[9px] font-mono-code text-[#64748b] block mt-0.5">{act.dv}</span>
-                  </button>
+
+                    <p className="text-[10px] text-slate-300 font-sans leading-tight">
+                      {act.description}
+                    </p>
+
+                    <div className="text-[9px] font-mono-code text-[#64748b]">
+                      <strong className="text-slate-400">Prerrequisito:</strong> {act.prerequisites}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setExpandedNetActionId(expandedNetActionId === act.id ? null : act.id)}
+                      className="text-[9px] font-mono-code text-[#38bdf8] hover:underline cursor-pointer block"
+                    >
+                      {expandedNetActionId === act.id ? '▴ Ocultar Detalle Canónico' : '▾ Ver Detalle Canónico & DV (Core pp. 198-199)'}
+                    </button>
+
+                    {expandedNetActionId === act.id && (
+                      <div className="p-2 bg-[#090b10] border border-[#1b2234] rounded text-[9px] font-mono-code space-y-1 animate-fade-in">
+                        <div className="text-slate-200">
+                          <strong className="text-[#00f5d4]">Efecto Exacto:</strong> {act.exactEffect}
+                        </div>
+                        <div className="text-slate-300">
+                          <strong className="text-amber-400">Resolución de DVs:</strong> {act.dvResolution}
+                        </div>
+                        <div className="text-[#64748b]">
+                          <strong>Fórmula:</strong> {act.checkFormula}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 ))}
               </div>
 

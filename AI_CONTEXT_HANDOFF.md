@@ -1,7 +1,7 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.0.0 OPERATIVO`  
-> **LAST UPDATED**: 2026-10-19  
+> **SYSTEM VERSION**: `v4.0.1 OPERATIVO`  
+> **LAST UPDATED**: 2026-10-20  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
 > **ARCHITECTURE**: COMP/CON decoupled offline-first model. Single source of truth in typed registries and Zustand stores.
@@ -10,14 +10,42 @@
 
 ## 🎯 1. Purpose of this Document
 This file is the official AI-to-AI handoff document for future LLMs, subagents, and orchestrators working on the **CPR Omni-Deck** repository. Whenever a new context window is initialized, read this file to immediately understand:
-1. What was just built and verified in `v4.0.0` (and previously in `v3.9.0`).
+1. What was just built and verified in `v4.0.1` (and previously in `v4.0.0` / `v3.9.0`).
 2. Where all critical systems, stores, and data structures reside on disk.
 3. How state transitions cascade across views without regressions.
-4. The exact scope and technical contracts planned for **Phase 4 (GM Role Master Control Deck)**.
+4. The exact scope and technical contracts planned for **Phase 4 (GM Role Master Control Deck & Modular Settings)**.
 
 ---
 
-## 🚀 2. What Was Added in v4.0.0
+## 🚀 2. What Was Added in v4.0.1
+
+### A. Corrección de Clipping en Tooltips de STATS (`StreetLabView.tsx`)
+* **Problem**: The `.chamfer-card` class on the 10 STATS container used `clip-path: polygon(...)`, which clipped any child tooltips rendered via `absolute top-full`.
+* **Fix**: Replaced `.chamfer-card` with standard Tailwind `rounded-xl border border-red-500/30`, applied `relative z-30 overflow-visible` on both the container and inner stat cards. Tooltips now float seamlessly above adjacent sections.
+
+### B. Especificación Exhaustiva de Descanso y Asistencia Médica Canónica
+* **Files**: `weaponAndCyberwareTooltips.ts`, `StreetLabView.tsx`, `CombatHudView.tsx`.
+* **Data Source**: `RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE.restingAndHealing` updated with exact RTG Core pp. 140, 222-226 rules.
+* **Mechanics & Interactive Actions**:
+  - **Estabilización & Reposo Natural**: DVs 10 (Herida Leve), 13 (Gravemente Herido), 15 (Mortalmente Herido). Regla canónica de esfuerzo: cualquier actividad física o intelectual extenuante reduce a 0 los HP recuperados en el día. Tasa base: 1x BODY HP/día.
+  - **Anticuerpos Mejorados (Enhanced Antibodies)**: 500 eb, 1 slot interno, 2 HL (1d6). Duplica la recuperación natural a 2x BODY HP/día (o 3x con Criotanque). Botón interactivo de compra e instalación inmediata en Street Lab y HUD de Combate.
+  - **Criotanque (Cryotank)**: 5.000 eb coste de compra, 30 SDP. Estancia hospitalaria a 100 eb/día (+50 eb de suministros médicos) o uso de taller para Medtech Rango 4+ (solo 50 eb de suministros químicos). Otorga curación acelerada (+BODY HP/día) e inmunidad a penalizadores de heridas críticas mientras el paciente permanezca dentro. Botones para pagar estancia hospitalaria o suministros Medtech con curación automática.
+  - **Criobomba (Cryopump)**: 5.000 eb coste de compra. Unidad portátil de soporte vital que congela las tiradas de salvación de muerte (<1 HP) por 1 hora por dosis consumiendo 50 eb de suministros químicos durante transporte médico.
+  - **Speedheal**: 200 eb por dosis. Inyección de emergencia que cura BODY + WILL HP al instante (máximo 1 dosis cada 24 horas; sobredosis causa daño). Botón interactivo en Street Lab y HUD de Combate con actualización en Biomonitor.
+
+### C. Modo Master (GM) en Netrunning (`NetAndRolesDeckView.tsx`)
+* **Player-First Ergonomics**: Por defecto, la lista de las 9 arquitecturas de red preconstruidas y el botón `+ AÑADIR PISO` permanecen ocultos a los jugadores, presentando un panel de punto de acceso limpio con estado de conexión.
+* **GM Toggle**: Conmutador `👑 MODO MASTER (GM): SELECCIONAR / EDITAR ARQUITECTURA` controlado por el estado local `isGmArchitectureManagerOpen` (default `false`) para que el Árbitro administre y configure pisos sin saturar la pantalla del jugador.
+
+### D. 9 Acciones de Interfaz & Fix del Bug DV 612
+* **Files**: `netAndRolesData.ts`, `NetAndRolesDeckView.tsx`.
+* **Canonical Fields**: Todas las 9 acciones (Jack In/Out, Meat Actions, Scanner, Backdoor, Cloak, Control, Eye-Dee, Pathfinder, Slide, Virus) incluyen coste exacto en acciones NET (1 o 2), efecto canónico exacto (Core pp. 198-199), prerrequisitos, tabla/resolución de DVs y fórmula de tirada.
+* **Bug Fix DV 612**: Erradicado el bug donde `Variable (DV 6 a 12)` se parseaba extrayendo dígitos concatenados (`612`).
+* **Target DV Selector Bar**: Barra interactiva de selección de dificultad (`DV 6`, `DV 8`, `DV 10`, `DV 12`, `DV 13`, `DV 14`) que permite al jugador fijar el DV objetivo antes de realizar la tirada de Interface.
+
+---
+
+## 📦 2.1 Historical Summary: What Was Added in v4.0.0
 
 ### A. Catálogo Canónico de 23 Accesorios de Armas
 * **Data Source**: `weaponAttachmentsAndTechData.ts` (`WEAPON_ATTACHMENTS_CATALOG`).
@@ -48,7 +76,7 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 
 ---
 
-## 📦 2.1 Historical Summary: What Was Added in v3.9.0
+## 📦 2.2 Historical Summary: What Was Added in v3.9.0
 
 ### A. Taller Interactivo de Reconstrucción CEMK 2077
 * **Action**: `convertWeaponRebuild2077(characterId, weaponItemId, targetRebuild)` in `useCharacterStore.ts`.
@@ -142,16 +170,23 @@ frontend/src/
 
 ---
 
-## 🔮 4. Phase 4 Roadmap: GM Role Master Control Deck
+## 🔮 4. Phase 4 Roadmap: GM Role Master Control Deck & Modular Settings
 The next major architectural milestone is **Phase 4**:
-1. **GM Master Screen (`FixerDeckView.tsx` / `GmRoleMasterControlDeck.tsx`)**:
+1. **⚙️ MODO SETTINGS & MODULARIDAD GLOBAL (Prender / Apagar Sistemas)**:
+   - Capacidad en configuración del sistema y perfil del personaje para activar o desactivar módulos globales completos según el tipo de mesa:
+     - *Full Body Conversions (Going Metal)*: Ocultar chasis cyborg si la campaña es de nivel callejero o purista orgánica.
+     - *Garaje & Vehículos Nómada*: Ocultar panel de vehículos si el personaje no conduce ni posee vehículos.
+     - *Quickhacking & Cyberware CEMK 2077*: Desactivar mecánicas de 2077 para mesas puristas de la Era del Rojo (2045).
+     - *Dojo de Artes Marciales*: Ocultar disciplinas marciales para personajes que no usan combate cuerpo a cuerpo desarmado.
+     - *Consola NET & Pisos de Red*: Ocultar herramientas de Netrunning en grupos sin Netrunners.
+2. **GM Master Screen (`FixerDeckView.tsx` / `GmRoleMasterControlDeck.tsx`)**:
    - Tablero unificado para el Árbitro para orquestar y reaccionar a las 10 Habilidades de Rol en vivo.
    - Arbitraje de tiradas de *Combat Awareness*, *Interface*, *Maker* (tiempos de fabricación), *Medicine* (lotes farmacéuticos y criocámaras), *Backup* (cronómetros de refuerzos), y *Charismatic Impact* (audiencias y favores).
-2. **Multi-Participant Combat Initiative Tracker**:
+3. **Multi-Participant Combat Initiative Tracker**:
    - Sincronización bidireccional entre la ficha del jugador activo, los 44 goons del catálogo y los 118 PNJs de *Danger Gal Dossier*.
-3. **Generador Procedural de Encuentros & Clima Callejero**:
+4. **Generador Procedural de Encuentros & Clima Callejero**:
    - Tablas de calor urbano por distrito (Watson, City Center, Santo Domingo, Pacifica, Combat Zone) y eventos ambientales (lluvia ácida, smog rojo, interferencias EMP).
-4. **Seguimiento de Economía & Campaña**:
+5. **Seguimiento de Economía & Campaña**:
    - Alquiler mensual, cuotas de deuda corporativa y gastos de estilo de vida (Core p. 377).
 
 ---

@@ -520,6 +520,12 @@ export const ADDED_FEATURES_INVENTORY: AddedFeatureSystem[] = [
         description: 'Generación de dossier imprimible fiel a la hoja oficial de R. Talsorian Games y copia de respaldo en JSON.',
         status: 'completado',
         sourceRulebook: 'Companion App Parity'
+      },
+      {
+        name: 'Motor Canónico de Descanso, Estabilización & Cuidado Médico',
+        description: 'DVs 10/13/15 de Estabilización, reposo sin esfuerzo severo, Anticuerpos Mejorados (500 eb, x2/x3 BODY HP), Criotanque (5.000 eb / 100 eb día), Criobomba y Speedheal.',
+        status: 'completado',
+        sourceRulebook: 'Cyberpunk RED Core Rulebook (págs. 140, 222-226)'
       }
     ]
   },
@@ -600,6 +606,12 @@ export const ADDED_FEATURES_INVENTORY: AddedFeatureSystem[] = [
         description: 'Seguimiento de Structural Damage Points, blindaje corporal/lunas, asientos, armas montadas y maniobras de persecución.',
         status: 'completado',
         sourceRulebook: 'Black Chrome & Core Rulebook'
+      },
+      {
+        name: 'Modo Master (GM) y 9 Acciones de Interfaz con Selector DV',
+        description: 'Toggle de control GM para ocultar/mostrar arquitecturas de Red a jugadores, desglose canónico de 9 acciones de interfaz y selector rápido de Target DV (6, 8, 10, 12, 13, 14).',
+        status: 'completado',
+        sourceRulebook: 'Cyberpunk RED Core Rulebook (págs. 198-199)'
       }
     ]
   },
@@ -815,7 +827,8 @@ export const PHASES_ROADMAP_OVERVIEW: PhaseRoadmapOverview[] = [
       'Creador universal de Homebrew con algoritmo de conversión oficial de Cyberpunk 2020 a RED.',
       'Efectos sonoros hápticos/auditivos de disparos, recargas y zumbidos de Sandevistan.',
       'Módulo Premium NIGHT CITY 2045: Mapa interactivo, 25 distritos, 700+ ubicaciones y 130 plot hooks.',
-      'Módulo Premium SOLO OF FORTUNE: Armaduras de poder ACPA, 10 modelos ACPA y arsenal pesado militar.'
+      'Módulo Premium SOLO OF FORTUNE: Armaduras de poder ACPA, 10 modelos ACPA y arsenal pesado militar.',
+      '⚙️ Modo Settings & Modularidad Global: Conmutadores para activar/desactivar módulos (FBC, Garaje, Quickhacks 2077, Dojo, Netrunning).'
     ]
   },
   {

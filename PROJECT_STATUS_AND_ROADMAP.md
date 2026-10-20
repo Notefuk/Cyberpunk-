@@ -1,13 +1,13 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v4.0.0 OPERATIVO`**  
-> **FECHA DE CORTE**: 2026-10-19  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v4.0.1 OPERATIVO`**  
+> **FECHA DE CORTE**: 2026-10-20  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 
 ---
 
-## 📊 1. Resumen Ejecutivo de Estado (v4.0.0)
+## 📊 1. Resumen Ejecutivo de Estado (v4.0.1)
 
 CPR Omni-Deck es una plataforma táctica digital offline-first de alta fidelidad diseñada según la filosofía de arquitectura desacoplada COMP/CON de Lancer RPG. La aplicación actúa como un HUD de combate dinámico, un laboratorio de ciberware/equipo callejero, un asistente de Netrunning y un portal integral de gestión para Árbitros y Edgerunners de Cyberpunk RED.
 
@@ -149,9 +149,35 @@ flowchart TD
     - *Matriz de Fabricación Maker*: Cálculo en vivo de DVs y tiempos de fabricación reglamentarios según coste del ítem (100 eb DV 13 / 1 día, 500 eb DV 17 / 1 semana, 1.000 eb DV 21 / 2 semanas, etc.).
   - **Lifepaths Específicos de Rol**: 10 conjuntos de tablas canónicas de trasfondo (Core pp. 44-71) para Rockerboy, Solo, Netrunner, Tech, Medtech, Media, Lawman, Exec, Fixer y Nomad con generador de tiradas 1d10 o selección manual en Street Lab.
 
+### ✅ Actualización v4.0.1: Ergonomía de STATS, Asistencia Médica Canónica, Modo Master en Netrunning & Acciones de Interfaz (COMPLETADA)
+* **Objetivo**: Corregir problemas de visualización en tooltips de estadísticas, implementar la guía médica y descanso exhaustivo (Enhanced Antibodies, Cryotank, Cryopump, Speedheal), dotar al Netrunning de un Modo Master (GM) que oculte por defecto las 9 arquitecturas preconstruidas a los jugadores, detallar exhaustivamente las 9 Acciones de Interfaz con resolución de DVs canónica y resolver el bug de concatenación `DV 612`.
+* **Entregables**:
+  - **Corrección de Clipping en Tooltips de STATS (`StreetLabView.tsx`)**: Reemplazo de la clase `.chamfer-card` (cuyo `clip-path` recortaba los tooltips emergentes) por bordes redondeados y configuración `relative z-30 overflow-visible` tanto en el contenedor como en la grilla interna.
+  - **Especificación Médica Exhaustiva & Descanso Canónico (`weaponAndCyberwareTooltips.ts`, `StreetLabView.tsx`, `CombatHudView.tsx`)**:
+    - *Estabilización & Reposo Natural*: DVs 10, 13 y 15 para Estabilización según condición médica; regla de esfuerzo severo (0 HP recuperados si se realizan tareas extenuantes); curación base de 1x BODY HP por día de descanso completo.
+    - *Anticuerpos Mejorados (Enhanced Antibodies)*: Coste 500 eb, 1 ranura interna, 2 HL (1d6), duplica la tasa de curación natural a 2x BODY HP/día (o 3x BODY HP/día combinado con Criotanque). Botón interactivo de compra e instalación rápida en Street Lab y Combat HUD.
+    - *Criotanque (Cryotank)*: Coste 5.000 eb de compra, 30 SDP, servicio hospitalario a 100 eb/día (+50 eb en suministros médicos), uso gratuito para Medtech Rango 4+ (pagando solo 50 eb de químicos). Otorga curación acelerada (+BODY HP adicionales al día) e ignora penalizadores de heridas críticas mientras el paciente permanezca conectado. Botones de acción directa para costear estancia hospitalaria o suministros Medtech.
+    - *Criobomba (Cryopump)*: Coste 5.000 eb de compra, unidad portátil que congela salvadas de muerte para pacientes con menos de 1 HP durante 1 hora por dosis consumiendo 50 eb de suministros químicos.
+    - *Speedheal*: Coste 200 eb, inyección de emergencia que restaura BODY + WILL HP al instante (máximo 1 dosis cada 24 horas; dosis adicionales causan daño en lugar de curación). Botón interactivo de inyección inmediata con actualización en el biomonitor.
+  - **Modo Master (GM) en Netrunning (`NetAndRolesDeckView.tsx`)**:
+    - Ocultación por defecto del catálogo de 9 arquitecturas de red y del botón `+ AÑADIR PISO` para jugadores.
+    - Nuevo toggle `👑 MODO MASTER (GM): SELECCIONAR / EDITAR ARQUITECTURA` para desplegar la administración de arquitecturas únicamente cuando el Árbitro lo requiera.
+    - Panel compacto de información y estado de conexión para jugadores cuando el modo GM está cerrado.
+  - **Detalle Reglamentario de 9 Acciones de Interfaz & Fix del Bug DV 612 (`netAndRolesData.ts`, `NetAndRolesDeckView.tsx`)**:
+    - Enriquecimiento de `NetAction` y `NET_ACTIONS_CATALOG` con campos canónicos del Core pp. 198-199: coste exacto en acciones de red (1 Net Action o 2 para Desconectar), efecto canónico exacto, prerrequisitos, tabla/resolución de DVs y fórmula de tirada.
+    - Selector interactivo de Target DV (`DV 6`, `DV 8`, `DV 10`, `DV 12`, `DV 13`, `DV 14`) para tiradas contra nodos y programas.
+    - Erradicación definitiva del bug de concatenación de texto que convertía `Variable (DV 6 a 12)` en `DV 612`.
+
 ### ⏳ Fase 4: GM Role Master Control Deck, Tracker de Iniciativa & Campaña (EN ROADMAP)
 * **Objetivo**: Dotar al Árbitro de herramientas para coordinar iniciativas grupales, arbitraje de las 10 Habilidades de Rol, seguimiento de campaña y estado del equipo.
 * **Módulos proyectados**:
+  - **⚙️ MODO SETTINGS & MODULARIDAD GLOBAL (Prender / Apagar Sistemas)**:
+    - Interruptor global configurable en ajustes de usuario para activar u ocultar módulos completos según la temática de la campaña o el tipo de personaje:
+      - *Módulo FBC / Going Metal*: Ocultar chasis ciborg de cuerpo completo si la campaña es de bajo nivel callejero o purista orgánica.
+      - *Módulo Garaje & Vehículos Nómada*: Ocultar la pestaña de vehículos y persecuciones si el personaje no posee vehículos.
+      - *Módulo Quickhacks CEMK 2077*: Desactivar hackeos inalámbricos y ciberware 2077 en campañas clásicas de Cyberpunk 2045.
+      - *Módulo Dojo & Artes Marciales*: Ocultar los 27 estilos marciales si el personaje no entrena artes marciales.
+      - *Módulo Netrunning Deck*: Ocultar consolas de interfaz y ciberdecks si ningún miembro del grupo es Netrunner.
   - **GM Role Master Control Deck**: Consola centralizada para arbitrar las 10 Habilidades de Rol oficiales:
     - *Solo (Combat Awareness)*: Detección y priorización táctica de amenazas.
     - *Netrunner (Interface)*: Topología de red, niveles de alerta y combate contra Black ICE.

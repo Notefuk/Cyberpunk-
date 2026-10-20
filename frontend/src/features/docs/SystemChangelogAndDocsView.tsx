@@ -26,6 +26,35 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.0.1',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'STATS Tooltips Ergonomics, Canonical Medical Care & Netrunning GM Architecture Mode',
+    title: 'Ergonomía de STATS Tooltips, Asistencia Médica Canónica (Enhanced Antibodies, Cryotank, Cryopump, Speedheal), Modo Master en Netrunning y Acciones de Interfaz con Selector DV',
+    summary: 'Actualización técnica v4.0.1 con 5 mejoras y fixes clave: corrección de recorte de tooltips en el contenedor de estadísticas básicas (StreetLabView.tsx) reemplazando chamfer-card por bordes estándar y overflow-visible; especificación canónica exhaustiva de Estabilización (DV 10/13/15) y descanso natural con esfuerzo severo (0 HP); implementación interactiva de compra, curación y uso de Anticuerpos Mejorados (500 eb, 1 slot interno, 2 HL, 2x/3x BODY HP), Criotanque (5.000 eb compra, estancia 100 eb/día + 50 eb químicos, Medtech R4+ 50 eb químicos, 30 SDP, ignora penalizadores de heridas críticas), Criobomba (5.000 eb, congela salvadas de muerte por 1 hora por dosis con 50 eb químicos) y Speedheal (200 eb, BODY+WILL HP instantáneos) en Street Lab y HUD de Combate; protección del Netrunning mediante Modo Master (GM) que oculta por defecto las 9 arquitecturas y el botón + Añadir Piso a los jugadores; detalle exhaustivo de las 9 Acciones de Interfaz con tabla de resolución y selector interactivo de Target DV (6, 8, 10, 12, 13, 14), erradicando el bug DV 612; y documentación del Modo Settings & Modularidad Global para futuras fases.',
+    highlights: [
+      'Fix de Tooltips en STATS Básicos: Reemplazo de chamfer-card (cuyo clip-path recortaba el tooltip) por bordes redondeados y relative z-30 overflow-visible.',
+      'Especificación Médica Exhaustiva: Reglas canónicas del Core pp. 140, 222-226 para Estabilización, reposo sin esfuerzo severo, Anticuerpos Mejorados, Criotanque, Criobomba y Speedheal.',
+      'Botones Médicos Interactivos en Street Lab y Combat HUD: Compra/instalación de Enhanced Antibodies (500 eb / 2 HL), estancia hospitalaria en Criotanque (100 eb), suministros Medtech en Criotanque (50 eb) e inyección de Speedheal (BODY+WILL HP).',
+      'Modo Master (GM) en Netrunning: Ocultación por defecto de las 9 arquitecturas y + Añadir Piso para jugadores; panel de punto de acceso simplificado y conmutador GM para edición y selección.',
+      '9 Acciones de Interfaz con Resolución y Target DV: Desglose reglamentario canónico y barra selectora de Target DV (6, 8, 10, 12, 13, 14) eliminando la concatenación accidental DV 612.',
+      'Roadmap del Modo Settings & Modularidad Global: Documentación técnica para conmutar módulos completos (FBC, Garaje, Quickhacks 2077, Dojo, Netrunning).'
+    ],
+    filesTouched: [
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/data/weaponAndCyberwareTooltips.ts',
+      'frontend/src/data/netAndRolesData.ts',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'frontend/src/data/systemDocsAndChangelogData.ts',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'AI_CONTEXT_HANDOFF.md'
+    ],
+    metricsBadge: 'v4.0.1 • Medical Systems & Netrunning GM Mode • 100% Validado'
+  },
+  {
     version: 'v4.0.0',
     date: '2026-10-19',
     phase: 'Codex',
@@ -205,6 +234,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.0.1': true,
     'v4.0.0': true,
     'v3.9.0': true,
     'v3.8.0': true,

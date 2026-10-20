@@ -12,7 +12,11 @@ export interface NetAction {
   name: string;
   cost: string;
   dv: string;
+  defaultDv: number;
   description: string;
+  exactEffect: string;
+  prerequisites: string;
+  dvResolution: string;
   checkFormula: string;
 }
 
@@ -21,40 +25,60 @@ export const NET_ACTIONS_CATALOG: NetAction[] = [
     id: 'pathfinder',
     name: 'Pathfinder',
     cost: '1 NET Action',
-    dv: 'Variable (DV 6 a 12)',
-    description: 'Permite mapear la arquitectura NET desde tu posición actual hacia arriba o abajo, revelando pisos, nodos de control y Black ICE.',
-    checkFormula: 'Interface + 1d10 vs DV'
+    dv: 'Dificultad de Red (DV 6 a 12)',
+    defaultDv: 8,
+    description: 'Mapea la topología de la arquitectura revelando pisos, nodos de control y Black ICE.',
+    exactEffect: 'Escanea la arquitectura revelando 1 piso por cada punto obtenido en tu tirada (1d10 + Interface). Se detiene prematuramente si choca con un Password cuyo DV sea mayor al resultado de tu tirada.',
+    prerequisites: 'Estar conectado a un Punto de Acceso (Access Point) a <= 6 metros.',
+    dvResolution: 'Basic DV 6, Standard DV 8, Uncommon DV 10, Advanced DV 12.',
+    checkFormula: 'Interface + 1d10 vs DV de Dificultad'
   },
   {
     id: 'backdoor',
     name: 'Backdoor',
     cost: '1 NET Action',
     dv: 'Password DV (DV 6 a 14)',
-    description: 'Fuerza la brecha a través de un piso de Contraseña (Password) para desbloquear el acceso a niveles inferiores.',
-    checkFormula: 'Interface + 1d10 vs DV de la Contraseña'
+    defaultDv: 8,
+    description: 'Fuerza la brecha a través de un piso de Contraseña (Password) para acceder a niveles inferiores.',
+    exactEffect: 'Hackea y desactiva el bloqueo de un Password. Con éxito, el piso queda desbloqueado permanentemente para ti y tus aliados, permitiendo el tránsito libre a los pisos siguientes.',
+    prerequisites: 'Estar en el mismo piso que el nodo de Password bloqueado.',
+    dvResolution: 'Basic DV 6, Standard DV 8, Uncommon DV 10, Advanced DV 12, Apex DV 14.',
+    checkFormula: 'Interface + 1d10 vs DV del Password'
   },
   {
     id: 'eye-dee',
     name: 'Eye-Dee',
     cost: '1 NET Action',
-    dv: 'Automático o DV 8',
-    description: 'Analiza un archivo encriptado, nodo de control o programa enemigo para identificar su función exacta y valor de reventa o táctico.',
-    checkFormula: 'Interface + 1d10'
+    dv: 'DV 8 (o automático si no encriptado)',
+    defaultDv: 8,
+    description: 'Examina e identifica archivos, programas hostiles y nodos de control.',
+    exactEffect: 'Identifica qué contiene un archivo encriptado, su valor en Eurodólares (€$), qué dispositivos gobierna un Control Node o las estadísticas exactas y debilidades de un Black ICE.',
+    prerequisites: 'Estar en el mismo piso que el File, Control Node o Black ICE objetivo.',
+    dvResolution: 'DV 8 estándar (o fijado por el GM para archivos corporativos de alta seguridad).',
+    checkFormula: 'Interface + 1d10 vs DV 8'
   },
   {
     id: 'control',
     name: 'Control',
     cost: '1 NET Action',
     dv: 'Control Node DV (DV 6 a 12)',
-    description: 'Toma el mando de los dispositivos conectados al nodo de control: cámaras de seguridad, torretas automáticas, aspersores o puertas de esclusa.',
-    checkFormula: 'Interface + 1d10 vs DV del Nodo'
+    defaultDv: 8,
+    description: 'Toma el dominio de dispositivos físicos conectados en el mundo real.',
+    exactEffect: 'Toma el control del nodo y activa o desactiva uno de sus dispositivos conectados: cámaras de vigilancia, torretas automáticas, aspersores contra incendios o puertas de esclusa.',
+    prerequisites: 'Estar en el mismo piso que el Control Node y haber superado Passwords previos.',
+    dvResolution: 'Basic DV 6, Standard DV 8, Uncommon DV 10, Advanced DV 12.',
+    checkFormula: 'Interface + 1d10 vs DV del Nodo de Control'
   },
   {
     id: 'slide',
     name: 'Slide',
     cost: '1 NET Action',
-    dv: 'Percepción del Black ICE (DV 6 a 10)',
-    description: 'Movimiento evasivo en el ciberespacio que te permite desengancharte de un combate con Black ICE y cambiar de piso.',
+    dv: 'Perception del Black ICE',
+    defaultDv: 8,
+    description: 'Movimiento evasivo en el ciberespacio para desengancharse de un combate.',
+    exactEffect: 'Huye del combate con un Black ICE hostil (no Demonio central) hacia un piso adyacente (arriba o abajo). Si tu tirada supera la Perception del Black ICE, este pierde tu rastro y no te sigue.',
+    prerequisites: 'Estar trabado en combate con Black ICE en el piso actual. Máximo 1 intento de Slide por turno.',
+    dvResolution: 'Tirada enfrentada: Interface + 1d10 vs Perception del Black ICE + 1d10.',
     checkFormula: 'Interface + 1d10 vs Perception de Black ICE'
   },
   {
@@ -62,34 +86,52 @@ export const NET_ACTIONS_CATALOG: NetAction[] = [
     name: 'Virus',
     cost: '2 NET Actions',
     dv: 'Fijado por el GM (DV 8 a 14)',
-    description: 'Implanta un código malicioso persistente en el sistema una vez que has alcanzado el piso más profundo de la arquitectura.',
-    checkFormula: 'Interface + 1d10 vs DV del Sistema'
+    defaultDv: 10,
+    description: 'Crea y programa un efecto permanente o sabotaje en el núcleo del sistema.',
+    exactEffect: 'Escribe un script permanente en el piso más profundo de la arquitectura. El efecto perdura hasta que un Netrunner enemigo o SysAdmin ejecute una purga. Cada acción adicional invertida aumenta la dificultad de purga.',
+    prerequisites: 'Haber alcanzado el piso más profundo (Root / Core) de la arquitectura y disponer de 2 NET Actions.',
+    dvResolution: 'Fijado por el GM según magnitud: Menor DV 8, Moderado DV 10, Crítico DV 12, Catastrófico DV 14.',
+    checkFormula: 'Interface + 1d10 vs DV de Complejidad'
   },
   {
     id: 'cloak',
     name: 'Cloak',
     cost: '1 NET Action',
-    dv: 'Fija el DV para el SysAdmin',
-    description: 'Oculta tus rastros de intrusión y borra los registros de acceso para que los administradores no detecten tu presencia.',
-    checkFormula: 'Resultado = DV que debe superar el SysAdmin'
+    dv: 'Tu resultado fija el DV del SysAdmin',
+    defaultDv: 8,
+    description: 'Borra huellas neuronales y oculta virus o brechas dejadas en la arquitectura.',
+    exactEffect: 'Oculta tus rastros y cualquier Virus implantado. El resultado total de tu tirada (1d10 + Interface) se convierte en el DV que el SysAdmin o Netrunner defensor deberá superar con Pathfinder para detectar tu presencia.',
+    prerequisites: 'Estar conectado a la red tras haber realizado acciones o implantado un Virus.',
+    dvResolution: 'El total obtenido se registra como DV de detección para la red.',
+    checkFormula: 'Total Roll = DV Defensivo contra SysAdmin'
   },
   {
     id: 'scanner',
     name: 'Scanner',
     cost: '1 Acción de Meatspace',
-    dv: 'DV 13 (Percepción)',
-    description: 'Escanea en un radio de 6 metros en el mundo real en busca de puntos de acceso inalámbricos (Access Points) a la red.',
+    dv: 'DV 13 (Percepción en el Mundo Real)',
+    defaultDv: 13,
+    description: 'Rastrea puntos de acceso inalámbricos (Access Points) en el entorno físico.',
+    exactEffect: 'Localiza todos los Puntos de Acceso (Access Points) a arquitecturas de red en un radio de 20 metros (o 10 casillas de cuadrícula) en línea de visión sin obstrucciones.',
+    prerequisites: 'Requiere 1 Acción de Meatspace en el mundo físico y tener un Cyberdeck activo.',
+    dvResolution: 'DV 13 fijo según reglamento oficial (Core p. 198).',
     checkFormula: 'INT + Perception + 1d10 vs DV 13'
   },
   {
     id: 'zap',
     name: 'Zap',
     cost: '1 NET Action',
-    dv: 'Defensa del programa / Netrunner',
-    description: 'Disparo de energía neuronal directo contra un programa hostil o la mente de un Netrunner enemigo.',
-    checkFormula: 'Interface + 1d10 vs Defensa del Objetivo'
+    dv: 'Defensa del Objetivo',
+    defaultDv: 8,
+    description: 'Descarga eléctrica y neural contra un programa hostil o Netrunner enemigo.',
+    exactEffect: 'Dispara un pulso neuronal que inflige 1d6 de daño directo al REZ de un programa/Black ICE enemigo o a la mente de un Netrunner enemigo (daño directo a HP ignorando armadura corporal).',
+    prerequisites: 'Estar en el mismo piso que el programa, Black ICE o Netrunner objetivo.',
+    dvResolution: 'Tirada enfrentada: Interface + 1d10 vs Defensa del programa o Interface + 1d10 del Netrunner.',
+    checkFormula: 'Interface + 1d10 vs Defensa (Daño: 1d6)'
   }
 ];
+
+export const NET_INTERFACE_ACTIONS = NET_ACTIONS_CATALOG;
 
 export interface NetFloor {
   floorNumber: number;

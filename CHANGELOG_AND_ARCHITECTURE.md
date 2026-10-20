@@ -26,7 +26,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 
 ---
 
-### 🗺️ Current Real Tree on Disk (`v4.0.0 - Motor Canónico de Accesorios de Armas, Taller Maker de Mejoras de Armas y Blindaje +1 SP y Lifepath de Rol Específico`)
+### 🗺️ Current Real Tree on Disk (`v4.0.1 - Ergonomía de STATS, Asistencia Médica Canónica, Modo Master en Netrunning, Acciones de Interfaz y Settings Modulares`)
 
 ```text
 cpr-omni-deck/
@@ -227,6 +227,13 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
   - **Completar los 118 PNJs Oficiales (`118 New NPCs`)** distribuidos en las **15 Facciones (`15 Factions`)**.
   - **Nuevo Flujo de Creación de PNJs Personalizados (`New Workflow for Custom NPCs`)** para el Director de Juego.
   - **Tema Visual "Danger Gal" (`Danger Gal Theme`)** seleccionable en la interfaz y **Retratos de Personajes (`New Character Portraits`)**.
+* **6. `SETTINGS & MODULARIDAD GLOBAL` (Prender / Apagar Sistemas por Campaña o Personaje — Planeado para Fase 4 / Future Architecture)**:
+  - **Modular System Switches**: Conmutadores reactivos en la configuración global de la aplicación y por personaje para habilitar o desactivar subsistemas completos:
+    - *Full Body Conversions (Going Metal)*: Ocultación completa de biovainas y chasis FBC para mesas a nivel de calle orgánicas.
+    - *Garaje & Vehículos Nómada*: Desactivación de la pestaña y mecánicas vehiculares si el personaje no dispone de transporte o la campaña es exclusivamente peatonal.
+    - *Quickhacking & Cyberware CEMK 2077*: Aislamiento de software y ciberware 2077 para mesas con ambientación histórica estricta de la Era del Rojo (2045).
+    - *Dojo de Artes Marciales*: Ocultación de las 27 disciplinas y 54 movimientos de Cyberfists of Fury si el edgerunner no utiliza combate marcial desarmado.
+    - *Consola y Pisos de Netrunning*: Ocultación de la suite de ciberdecks y simulación de arquitectura de Red en mesas sin Netrunners activos.
 * **[Espacio Reservado para Próximos Módulos Premium]**:
   - *(Ranuras preparadas para capturas adicionales: Black Chrome Packs, Interface RED Vol. 1-2 Packs, etc.)*
 
@@ -238,6 +245,40 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ---
 
 ## 📜 Master Version Changelog
+
+### [v4.0.1] - 2026-10-20 (STATS Tooltip Clipping Fix, Canonical Resting & Medical Assistance, Netrunning GM Mode & Interface Actions DV Fix)
+* **Category**: UI Ergonomics, Resting & Medical Systems, Netrunning GM Mode & Interface Rules
+* **Files Modified**:
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/data/weaponAndCyberwareTooltips.ts`
+  - `frontend/src/data/netAndRolesData.ts`
+  - `frontend/src/features/netroles/NetAndRolesDeckView.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `frontend/src/data/systemDocsAndChangelogData.ts`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `AI_CONTEXT_HANDOFF.md`
+* **What Changed**:
+  1. **Corrección de Clipping en Tooltips de STATS (`StreetLabView.tsx`)**:
+     - Retirada la clase `.chamfer-card` del contenedor de estadísticas básicas (`ESTADÍSTICAS BÁSICAS (10 STATS)`), ya que su propiedad CSS `clip-path` recortaba los tooltips emergentes en pantalla.
+     - Reemplazado por bordes redondeados (`rounded-xl border border-red-500/30`) y estilo `relative z-30 overflow-visible` tanto en el contenedor como en la rejilla interna para renderizado impecable.
+  2. **Especificación Exhaustiva de Descanso Natural y Asistencia Médica (`weaponAndCyberwareTooltips.ts`, `StreetLabView.tsx`, `CombatHudView.tsx`)**:
+     - *Estabilización & Reposo Natural*: DVs 10, 13 y 15 para Estabilización según condición médica; regla de esfuerzo severo (0 HP recuperados si se realizan tareas extenuantes); curación base de 1x BODY HP por día de descanso completo.
+     - *Anticuerpos Mejorados (Enhanced Antibodies)*: Coste 500 eb, 1 ranura interna, 2 HL (1d6), duplica la tasa de curación natural a 2x BODY HP/día (o 3x BODY HP/día combinado con Criotanque). Botón interactivo de compra e instalación rápida en Street Lab y Combat HUD.
+     - *Criotanque (Cryotank)*: Coste 5.000 eb de compra, 30 SDP, servicio hospitalario a 100 eb/día (+50 eb en suministros médicos), uso gratuito para Medtech Rango 4+ (pagando solo 50 eb de químicos). Otorga curación acelerada (+BODY HP adicionales al día) e ignora penalizadores de heridas críticas mientras el paciente permanezca conectado. Botones de acción directa para costear estancia hospitalaria o suministros Medtech.
+     - *Criobomba (Cryopump)*: Coste 5.000 eb de compra, unidad portátil que congela salvadas de muerte para pacientes con menos de 1 HP durante 1 hora por dosis consumiendo 50 eb de suministros químicos.
+     - *Speedheal*: Coste 200 eb, inyección de emergencia que restaura BODY + WILL HP al instante (máximo 1 dosis cada 24 horas; dosis adicionales causan daño en lugar de curación). Botón interactivo de inyección inmediata con actualización en el biomonitor.
+  3. **Modo Master (GM) en Netrunning (`NetAndRolesDeckView.tsx`)**:
+     - Ocultación por defecto del catálogo de 9 arquitecturas de red y del botón `+ AÑADIR PISO` para jugadores.
+     - Nuevo toggle `👑 MODO MASTER (GM): SELECCIONAR / EDITAR ARQUITECTURA` para desplegar la administración de arquitecturas únicamente cuando el Árbitro lo requiera.
+     - Panel compacto de información y estado de conexión para jugadores cuando el modo GM está cerrado.
+  4. **Detalle Reglamentario de 9 Acciones de Interfaz & Fix del Bug DV 612 (`netAndRolesData.ts`, `NetAndRolesDeckView.tsx`)**:
+     - Enriquecimiento de `NetAction` y `NET_ACTIONS_CATALOG` con campos canónicos del Core pp. 198-199: coste exacto en acciones de red (1 Net Action o 2 para Desconectar), efecto canónico exacto, prerrequisitos, tabla/resolución de DVs y fórmula de tirada.
+     - Selector interactivo de Target DV (`DV 6`, `DV 8`, `DV 10`, `DV 12`, `DV 13`, `DV 14`) para tiradas contra nodos y programas.
+     - Erradicación definitiva del bug de concatenación de texto que convertía `Variable (DV 6 a 12)` en `DV 612`.
+  5. **Especificación del Modo Settings & Modularidad Global**:
+     - Documentación de arquitectura para la habilitación o desactivación modular de subsistemas (FBC, Vehículos, Quickhacks 2077, Artes Marciales, Netrunning) según las preferencias de mesa y tipo de personaje.
 
 ### [v4.0.0] - 2026-10-19 (Weapon Attachments Engine, Maker Tech Upgrade Workshop, Armor +1 SP & Official Role/Tech Lifepath)
 * **Category**: Weapon Attachments, Maker Workshop, Armor Upgrades, Distance Breakdown & Role Lifepaths

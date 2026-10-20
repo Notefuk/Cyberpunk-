@@ -633,36 +633,59 @@ export const CEMK_WEAPON_REBUILD_SYSTEM_GUIDE = {
 
 export const RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE = {
   restingAndHealing: {
-    title: 'Reglas Canónicas de Descanso y Curación (CP RED Core pp. 222-224)',
+    title: 'Reglas Canónicas de Descanso y Curación Médica (CP RED Core pp. 114, 149, 222-224, 363)',
     rules: [
       {
-        type: 'Natural Rest (Descanso Natural)',
-        healingRate: '+BODY HP por día completo',
-        requirements: 'Al menos 8 horas de sueño ininterrumpido y solo actividad ligera.',
-        description: 'El personaje recupera tantos Puntos de Vida (HP) por día de descanso como su estadística BODY base.'
+        type: 'Natural Rest & Estabilización (Descanso Natural)',
+        healingRate: '+1 × BODY HP por día completo (24h)',
+        cost: 'Gratis (requiere lugar seguro y comida básica)',
+        requirements: 'Prerrequisito Obligatorio: Haber sido Estabilizado previamente (First Aid / Paramedic: DV 10 Levemente Herido, DV 13 Gravemente Herido, DV 15 Mortalmente Herido). Requiere al menos 8h de sueño y solo actividad ligera (leer, descansar, conversar).',
+        description: 'El cuerpo repara tejidos orgánicos a razón de su estadística BODY base por cada ciclo de 24 horas continuas de reposo.',
+        buffs: 'Recupera 1 × BODY HP cada 24 horas sin coste médico.',
+        debuffs: 'Penalizador de Actividad Extenuante: Si durante las 24 horas el personaje realiza esfuerzo físico intenso (combate, correr, nadar, trepar o recibir nuevo daño), PIERDE TODA la curación del día (0 HP recuperados) y si estaba herido de gravedad debe volver a ser estabilizado.'
       },
       {
-        type: 'Enhanced Antibodies (Ciberware)',
-        healingRate: '2 × BODY HP por día completo',
-        requirements: 'Ciberware Enhanced Antibodies instalado en el cuerpo.',
-        description: 'Duplica la tasa natural de curación biológica diaria del cuerpo.'
+        type: 'Enhanced Antibodies (Ciberware Corporal Interno)',
+        healingRate: '2 × BODY HP por día (3 × BODY con Cryotank)',
+        cost: '500 €$ (Expensive) • Instalación en Mall / Clínica (1 Slot Internal Body)',
+        humanityLoss: '2 HL (1d6/2 hacia arriba) • Reduce Humanidad Máxima en -2',
+        requirements: 'Ciberware Enhanced Antibodies instalado en 1 de las 7 ranuras de Internal Body.',
+        description: 'Nanoinyecciones celulares y colonias de leucocitos clonados que aceleran drásticamente la síntesis proteica una vez que el paciente está estabilizado.',
+        buffs: 'Duplica la curación biológica natural a 2 × BODY HP por día. Se acumula con el Tanque Criogénico para alcanzar 3 × BODY HP por día.',
+        debuffs: 'No estabiliza por sí solo ni sana Heridas Críticas no tratadas; la actividad extenuante anula igualmente la curación diaria.'
       },
       {
-        type: 'Speedheal (Fármaco Medtech)',
-        healingRate: 'Inmediato: BODY + WILL HP',
-        requirements: 'Inyección de Speedheal (1 dosis cada 24 horas máximo).',
-        description: 'Acelera metabólicamente la regeneración celular. El uso reiterado dentro de 24h produce 1 daño a la Humanidad y causa fatiga severa.'
+        type: 'Tanque Criogénico (Cryotank — Cápsula Médica)',
+        healingRate: '2 × BODY HP por día (3 × BODY con Enhanced Antibodies)',
+        cost: 'Compra propia: 5,000 €$ (Luxury) | Alquiler Hospital: 500 €$ ingreso o 100 €$/día + 50 €$ químicos | Medtech Rango 4+: Gratis en casa (solo 50 €$ químicos)',
+        requirements: 'Paciente sumergido en fluido perfluorocarbonado y gel bio-refrigerante.',
+        description: 'Cápsula médica sellada de cuerpo entero que induce un coma metabólico controlado mientras satura de oxígeno e inmunosupresores los tejidos dañados.',
+        buffs: 'Garantiza Actividad Ligera perfecta, duplica la velocidad de regeneración (2 × BODY HP/día o 3 × BODY con Antibodies) y suspende los penalizadores de Heridas Críticas no tratadas mientras se permanezca sumergido.',
+        debuffs: 'Inconsciente e Indefenso: El paciente no puede hablar, moverse, percibir el entorno ni defenderse. Vulnerabilidad Estructural: El chasis cilíndrico tiene 30 SDP; si es destruido en combate, el tanque estalla arrojando al paciente empapado e indefenso.'
       },
       {
-        type: 'Cryotank (Cámara Criogénica Medtech)',
-        healingRate: '2 × BODY HP por día de criocura',
-        requirements: 'Acceso a un Cryotank operado por un Medtech cualificado.',
-        description: 'Mantiene al paciente en coma inducido con nutrientes biológicos y oxígeno hiperbárico, duplicando la tasa de regeneración celular.'
+        type: 'Cryopump (Bomba Criogénica Portátil)',
+        healingRate: 'Mantiene paciente estable indefinidamente sin tiradas de Muerte',
+        cost: '5,000 €$ (Luxury) | Gratis para Medtech Cryosystem Op 1+ | Recarga química: 50 €$',
+        requirements: 'Maletín criogénico conectado al paciente mediante catéteres corporales.',
+        description: 'Bomba portátil de soporte vital que congela las constantes biológicas de un paciente en estado Mortalmente Herido (<1 HP), suspendiendo los Death Saves durante el transporte hacia un hospital o base.',
+        buffs: 'Inmunidad a chequeos de Muerte (Death Saves) durante el traslado en campo.',
+        debuffs: 'Requiere recargas de 50 €$ por uso prolongado y no regenera HP por sí misma sin reposo.'
       },
       {
-        type: 'Estabilización y Curación de Heridas Críticas',
+        type: 'Speedheal (Fármaco Biológico Medtech)',
+        healingRate: 'Instantáneo: BODY + WILL HP al momento de la inyección',
+        cost: 'Lote de síntesis Medtech: 200 €$ (Premium)',
+        requirements: 'Inyección intramuscular o hipodérmica (Airhypo / jeringa).',
+        description: 'Compuesto estimulante hiper-metabólico diseñado para sintetizar plaquetas y cerrar hemorragias en combate activo.',
+        buffs: 'Restaura inmediatamente una suma igual a tu estadística BODY + WILL en HP.',
+        debuffs: 'Restricción Severa: Máximo 1 dosis cada 24 horas. Administrar una segunda dosis antes de 24h no otorga HP, produce 1 punto de pérdida de Humanidad permanente y aplica estado de Fatiga Crítica.'
+      },
+      {
+        type: 'Estabilización y Cirugía de Heridas Críticas',
         healingRate: 'Tiempo variable (días o semanas) tras Tratamiento Quirúrgico',
-        requirements: 'First Aid / Paramedic para Estabilizar (DV según lesión), Surgery para Tratar.',
+        cost: 'Honorarios médicos o kit de trauma (First Aid / Paramedic / Surgery)',
+        requirements: 'First Aid / Paramedic para Estabilizar (DV 10/13/15), Surgery para Tratar.',
         description: 'Una herida estabilizada ya no causa sangrado continuo ni empeora. Una vez tratada quirúrgicamente con éxito por un cirujano/Medtech, cura de forma natural en el número de días o semanas especificado en la tabla de Heridas Críticas.'
       }
     ]

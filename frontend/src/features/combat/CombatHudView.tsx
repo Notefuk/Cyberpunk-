@@ -785,6 +785,8 @@ export const CombatHudView: React.FC = () => {
   const removeWeaponAttachment = useCharacterStore((state) => state.removeWeaponAttachment);
   const applyTechUpgradeToWeapon = useCharacterStore((state) => state.applyTechUpgradeToWeapon);
   const applyTechUpgradeToArmor = useCharacterStore((state) => state.applyTechUpgradeToArmor);
+  const updateCharacterMeta = useCharacterStore((state) => state.updateCharacterMeta);
+  const installCyberwareAdvanced = useCharacterStore((state) => state.installCyberwareAdvanced);
 
   const selectedDistance = useCombatStore((state) => state.selectedDistance);
   const setSelectedDistance = useCombatStore((state) => state.setSelectedDistance);
@@ -2675,86 +2677,212 @@ export const CombatHudView: React.FC = () => {
                 </div>
 
                 {/* Mini Descanso y Curación Canónica */}
-                <div className="mt-2.5 bg-[#141824] p-2.5 rounded-sm border border-[#232a3d] space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-tech text-[11px] font-bold text-cyan-300 uppercase flex items-center gap-1.5">
-                      <Heart className="w-3.5 h-3.5 text-red-400" /> DESCANSO Y RECUPERACIÓN (CANON CORE p. 222)
-                    </span>
-                    <span className="text-[10px] font-mono-code text-slate-400">
-                      BODY: {effectiveBody}
-                    </span>
-                  </div>
+                {(() => {
+                  const currentEb = activeChar?.eurodollars ?? 0;
+                  const currentHp = activeChar?.currentHp ?? 0;
+                  const effWill = activeChar?.stats?.WILL ?? 6;
+                  const maxHp = calculateMaxHp(effectiveBody, effWill);
+                  const hasEnhancedAntibodies = Boolean(
+                    activeChar?.installedCyberwareIds?.includes('enhanced-antibodies') ||
+                    activeChar?.installedCyberwareIds?.includes('cw-enhanced-antibodies')
+                  );
 
-                  <div className="grid grid-cols-3 gap-1.5 text-[10px] font-mono-code">
-                    <div className="flex items-center gap-1 bg-[#0f1118] p-1 rounded border border-[#1e2335]">
-                      <span className="text-slate-400">Días:</span>
-                      {[1, 3, 7].map((d) => (
-                        <button
-                          key={d}
-                          type="button"
-                          onClick={() => setCombatRestDays(d)}
-                          className={`flex-1 py-0.5 rounded font-bold cursor-pointer transition-all ${
-                            combatRestDays === d ? 'bg-cyan-500 text-black' : 'bg-[#181d2a] text-slate-400 hover:text-white'
-                          }`}
-                        >
-                          {d}d
-                        </button>
-                      ))}
-                    </div>
+                  const handleBuyAntibodiesHud = () => {
+                    if (hasEnhancedAntibodies) return;
+                    if (currentEb < 500) {
+                      setCombatRestFeedback('Fondos insuficientes (requiere 500 €$).');
+                      setTimeout(() => setCombatRestFeedback(null), 3000);
+                      return;
+                    }
+                    const res = installCyberwareAdvanced({
+                      cyberwareId: 'enhanced-antibodies',
+                      cyberwareName: 'Enhanced Antibodies',
+                      humanityLossAmount: 2,
+                      cost: 500,
+                      spendMoney: true
+                    });
+                    if (res && !res.success) {
+                      setCombatRestFeedback(res.message || 'Error al instalar.');
+                    } else {
+                      setCombatRestAntibodies(true);
+                      setCombatRestFeedback('¡Enhanced Antibodies instalado (-500 €$, -2 HL)!');
+                    }
+                    setTimeout(() => setCombatRestFeedback(null), 4000);
+                  };
 
-                    <button
-                      type="button"
-                      onClick={() => setCombatRestAntibodies(!combatRestAntibodies)}
-                      className={`p-1 rounded text-center border font-bold cursor-pointer transition-all ${
-                        combatRestAntibodies ? 'bg-emerald-500 text-black border-emerald-400' : 'bg-[#0f1118] text-slate-400 border-[#1e2335]'
-                      }`}
-                      title="Enhanced Antibodies duplica la tasa (2× BODY)"
-                    >
-                      Antibodies: {combatRestAntibodies ? '2×' : '1×'}
-                    </button>
+                  const handlePayHospitalCryoHud = () => {
+                    if (currentEb < 100) {
+                      setCombatRestFeedback('Fondos insuficientes: 100 €$ para Cryotank hospitalario.');
+                      setTimeout(() => setCombatRestFeedback(null), 3000);
+                      return;
+                    }
+                    updateCharacterMeta({ eurodollars: currentEb - 100 });
+                    const mult = (hasEnhancedAntibodies || combatRestAntibodies ? 2 : 1) + 1;
+                    const healAmount = effectiveBody * mult;
+                    const newHp = Math.min(maxHp, currentHp + healAmount);
+                    setHp(newHp);
+                    setCombatRestFeedback(`Cryotank Hospital (-100 €$): +${healAmount} HP recuperados.`);
+                    setTimeout(() => setCombatRestFeedback(null), 4000);
+                  };
 
-                    <button
-                      type="button"
-                      onClick={() => setCombatRestCryotank(!combatRestCryotank)}
-                      className={`p-1 rounded text-center border font-bold cursor-pointer transition-all ${
-                        combatRestCryotank ? 'bg-cyan-500 text-black border-cyan-400' : 'bg-[#0f1118] text-slate-400 border-[#1e2335]'
-                      }`}
-                      title="Cámara Criogénica suma +BODY adicional por día"
-                    >
-                      Cryo: {combatRestCryotank ? '+BODY' : 'OFF'}
-                    </button>
-                  </div>
+                  const handlePayMedtechChemHud = () => {
+                    if (currentEb < 50) {
+                      setCombatRestFeedback('Fondos insuficientes: 50 €$ recarga química.');
+                      setTimeout(() => setCombatRestFeedback(null), 3000);
+                      return;
+                    }
+                    updateCharacterMeta({ eurodollars: currentEb - 50 });
+                    const mult = (hasEnhancedAntibodies || combatRestAntibodies ? 2 : 1) + 1;
+                    const healAmount = effectiveBody * mult;
+                    const newHp = Math.min(maxHp, currentHp + healAmount);
+                    setHp(newHp);
+                    setCombatRestFeedback(`Recarga Cryo Medtech (-50 €$): +${healAmount} HP recuperados.`);
+                    setTimeout(() => setCombatRestFeedback(null), 4000);
+                  };
 
-                  <div className="flex items-center justify-between pt-1 border-t border-[#1e2335]">
-                    {(() => {
-                      const mult = (combatRestAntibodies ? 2 : 1) + (combatRestCryotank ? 1 : 0);
-                      const totalGain = effectiveBody * mult * combatRestDays;
-                      return (
-                        <>
-                          <span className="text-[10px] font-mono-code text-emerald-400">
-                            Recupera: +{totalGain} HP ({combatRestDays}d)
-                          </span>
+                  const handleInjectSpeedhealHud = () => {
+                    const healAmount = effectiveBody + effWill;
+                    if (currentHp >= maxHp) {
+                      setCombatRestFeedback('HP ya al máximo.');
+                      setTimeout(() => setCombatRestFeedback(null), 3000);
+                      return;
+                    }
+                    const newHp = Math.min(maxHp, currentHp + healAmount);
+                    setHp(newHp);
+                    setCombatRestFeedback(`Speedheal inyectado: +${healAmount} HP (Máx 1 dosis/24h).`);
+                    setTimeout(() => setCombatRestFeedback(null), 4000);
+                  };
+
+                  const mult = (combatRestAntibodies || hasEnhancedAntibodies ? 2 : 1) + (combatRestCryotank ? 1 : 0);
+                  const totalGain = effectiveBody * mult * combatRestDays;
+
+                  return (
+                    <div className="mt-2.5 bg-[#141824] p-2.5 rounded-sm border border-[#232a3d] space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-tech text-[11px] font-bold text-cyan-300 uppercase flex items-center gap-1.5">
+                          <Heart className="w-3.5 h-3.5 text-red-400" /> DESCANSO Y ASISTENCIA MÉDICA (CANON CORE p. 222)
+                        </span>
+                        <div className="text-[10px] font-mono-code text-slate-400 flex items-center gap-1.5">
+                          <span>BODY: <strong className="text-white">{effectiveBody}</strong></span>
+                          <span>•</span>
+                          <span className="text-[#10b981] font-bold">€$: {currentEb}</span>
+                        </div>
+                      </div>
+
+                      <div className="text-[9px] font-mono-code text-slate-300 bg-[#0d0f17] p-1.5 rounded border border-[#1e2335] leading-relaxed">
+                        <strong className="text-amber-400">Estabilización obligatoria:</strong> Requiere First Aid/Paramedic (DV 10/13/15). Actividad extenuante durante las 24h anula toda la curación (0 HP).
+                      </div>
+
+                      {/* Acciones Médicas Rápidas */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[9px] font-mono-code">
+                        {hasEnhancedAntibodies ? (
+                          <div className="p-1 bg-emerald-950/70 border border-emerald-500/40 text-emerald-300 rounded text-center font-bold flex items-center justify-center">
+                            🧬 Antibodies (2×)
+                          </div>
+                        ) : (
                           <button
                             type="button"
-                            onClick={() => {
-                              restAndHealDays(combatRestDays, combatRestAntibodies, combatRestCryotank);
-                              setCombatRestFeedback(`+${totalGain} HP recuperados tras ${combatRestDays} día(s).`);
-                              setTimeout(() => setCombatRestFeedback(null), 4000);
-                            }}
-                            className="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-tech text-xs font-bold uppercase transition-all cursor-pointer"
+                            onClick={handleBuyAntibodiesHud}
+                            className="p-1 bg-[#1a2234] hover:bg-emerald-600 hover:text-black text-emerald-300 border border-emerald-500/30 rounded text-center font-bold cursor-pointer transition-all"
+                            title="Comprar e instalar Enhanced Antibodies (500 €$ • 2 HL)"
                           >
-                            🛌 Descansar
+                            + Antibodies (500€$)
                           </button>
-                        </>
-                      );
-                    })()}
-                  </div>
-                  {combatRestFeedback && (
-                    <div className="text-[10px] font-mono-code text-emerald-300 bg-emerald-950/60 p-1 rounded border border-emerald-500/40">
-                      ✓ {combatRestFeedback}
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={handlePayHospitalCryoHud}
+                          className="p-1 bg-[#1a2234] hover:bg-cyan-600 hover:text-black text-cyan-300 border border-cyan-500/30 rounded text-center font-bold cursor-pointer transition-all"
+                          title="Pagar 1 día de internación en Cryotank Hospitalario (100 €$)"
+                        >
+                          🧊 Hosp Cryo (100€$)
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handlePayMedtechChemHud}
+                          className="p-1 bg-[#1a2234] hover:bg-emerald-600 hover:text-black text-emerald-300 border border-emerald-500/30 rounded text-center font-bold cursor-pointer transition-all"
+                          title="Pagar 50 €$ de recarga química en Cryotank de Medtech aliado"
+                        >
+                          🧪 Cryo Chem (50€$)
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={handleInjectSpeedhealHud}
+                          className="p-1 bg-purple-950/80 hover:bg-purple-600 hover:text-white text-purple-300 border border-purple-500/40 rounded text-center font-bold cursor-pointer transition-all"
+                          title={`Inyectar Speedheal (+${effectiveBody + effWill} HP instantáneos)`}
+                        >
+                          💉 Speedheal (+{effectiveBody + effWill})
+                        </button>
+                      </div>
+
+                      {/* Selector de días de reposo */}
+                      <div className="grid grid-cols-3 gap-1.5 text-[10px] font-mono-code">
+                        <div className="flex items-center gap-1 bg-[#0f1118] p-1 rounded border border-[#1e2335]">
+                          <span className="text-slate-400">Días:</span>
+                          {[1, 3, 7].map((d) => (
+                            <button
+                              key={d}
+                              type="button"
+                              onClick={() => setCombatRestDays(d)}
+                              className={`flex-1 py-0.5 rounded font-bold cursor-pointer transition-all ${
+                                combatRestDays === d ? 'bg-cyan-500 text-black' : 'bg-[#181d2a] text-slate-400 hover:text-white'
+                              }`}
+                            >
+                              {d}d
+                            </button>
+                          ))}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => setCombatRestAntibodies(!combatRestAntibodies)}
+                          className={`p-1 rounded text-center border font-bold cursor-pointer transition-all ${
+                            combatRestAntibodies || hasEnhancedAntibodies ? 'bg-emerald-500 text-black border-emerald-400' : 'bg-[#0f1118] text-slate-400 border-[#1e2335]'
+                          }`}
+                          title="Enhanced Antibodies duplica la tasa (2× BODY)"
+                        >
+                          Antibodies: {combatRestAntibodies || hasEnhancedAntibodies ? '2×' : '1×'}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setCombatRestCryotank(!combatRestCryotank)}
+                          className={`p-1 rounded text-center border font-bold cursor-pointer transition-all ${
+                            combatRestCryotank ? 'bg-cyan-500 text-black border-cyan-400' : 'bg-[#0f1118] text-slate-400 border-[#1e2335]'
+                          }`}
+                          title="Cámara Criogénica suma +BODY adicional por día (indefenso, 30 SDP)"
+                        >
+                          Cryo: {combatRestCryotank ? '+BODY' : 'OFF'}
+                        </button>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1 border-t border-[#1e2335]">
+                        <span className="text-[10px] font-mono-code text-emerald-400">
+                          Recupera: +{totalGain} HP ({combatRestDays}d)
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            restAndHealDays(combatRestDays, combatRestAntibodies || hasEnhancedAntibodies, combatRestCryotank);
+                            setCombatRestFeedback(`+${totalGain} HP recuperados tras ${combatRestDays} día(s).`);
+                            setTimeout(() => setCombatRestFeedback(null), 4000);
+                          }}
+                          className="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-500 text-white rounded font-tech text-xs font-bold uppercase transition-all cursor-pointer"
+                        >
+                          🛌 Descansar
+                        </button>
+                      </div>
+                      {combatRestFeedback && (
+                        <div className="text-[10px] font-mono-code text-emerald-300 bg-emerald-950/60 p-1 rounded border border-emerald-500/40">
+                          ✓ {combatRestFeedback}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
+                  );
+                })()}
               </div>
             </div>
             {renderLeftPanelResizeHandle('vitals')}
