@@ -47,3 +47,8 @@ Cada vez que llames a `invoke_subagent` con `gemini-worker` para escribir o edit
 4. PROHIBIDO eliminar comentarios o docstrings existentes.
 5. Al finalizar, responde ÚNICAMENTE con una lista de archivos modificados, rangos de líneas editados y confirmación de éxito. Cero texto conversacional.
 ```
+
+## 4. CHECKPOINT.md (Compartido con Claude Code)
+El archivo `CHECKPOINT.md` en la raíz del repo `cpr-omni-deck` es el estado vivo del trabajo, compartido entre Antigravity y Claude Code.
+- **Léelo primero** al iniciar sesión o tras compactar contexto.
+- **Actualízalo** al terminar cada tarea, antes de compactar contexto y antes de cambiar de herramienta: último trabajo terminado, qué quedó a medias (archivos y líneas), próximos pasos y bloqueos. Breve; reemplaza lo viejo en vez de acumular historial.
