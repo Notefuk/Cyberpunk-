@@ -95,6 +95,18 @@ const GOON_PRESETS: GoonPreset[] = [
   }
 ];
 
+const GM_PIN_STORAGE_KEY = 'cpr_gm_pin_v1';
+
+// Clave con sufijo de versión; se migra una vez desde la clave vieja 'cpr-gm-pin'.
+function migrateLegacyGmPin(): void {
+  if (typeof window === 'undefined' || localStorage.getItem(GM_PIN_STORAGE_KEY)) return;
+  const legacyPin = localStorage.getItem('cpr-gm-pin');
+  if (legacyPin) {
+    localStorage.setItem(GM_PIN_STORAGE_KEY, legacyPin);
+    localStorage.removeItem('cpr-gm-pin');
+  }
+}
+
 function rollD10(): number {
   return Math.floor(Math.random() * 10) + 1;
 }
@@ -114,12 +126,13 @@ export function FixerDeckView() {
   // 1. PIN Security System
   const [savedPin, setSavedPin] = useState<string | null>(() => {
     if (typeof window === 'undefined') return null;
-    const pin = localStorage.getItem('cpr-gm-pin');
+    migrateLegacyGmPin();
+    const pin = localStorage.getItem(GM_PIN_STORAGE_KEY);
     return pin && pin.length === 4 ? pin : null;
   });
   const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
-    const pin = localStorage.getItem('cpr-gm-pin');
+    const pin = localStorage.getItem(GM_PIN_STORAGE_KEY);
     return !(pin && pin.length === 4);
   });
   const [pinInput, setPinInput] = useState<string>('');
@@ -139,7 +152,7 @@ export function FixerDeckView() {
 
   const handleSaveNewPin = () => {
     if (newPinValue.length === 4 && /^\d+$/.test(newPinValue)) {
-      localStorage.setItem('cpr-gm-pin', newPinValue);
+      localStorage.setItem(GM_PIN_STORAGE_KEY, newPinValue);
       setSavedPin(newPinValue);
       setIsSettingPin(false);
       setNewPinValue('');
@@ -150,7 +163,7 @@ export function FixerDeckView() {
   };
 
   const handleRemovePin = () => {
-    localStorage.removeItem('cpr-gm-pin');
+    localStorage.removeItem(GM_PIN_STORAGE_KEY);
     setSavedPin(null);
     setIsUnlocked(true);
     showFeedback('PIN de seguridad eliminado.');

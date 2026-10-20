@@ -26,6 +26,40 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.2.1',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'Arquitectura y calidad',
+    title: 'Carga por pestaña, calculadora de impactos en el motor y tests de reglas',
+    summary: 'Quinta y última fase del plan de arreglos de la auditoría. La app carga cada módulo al abrir su pestaña (el bundle inicial baja de 2.1 MB a 598 kB), la calculadora de impactos vive en el motor de combate y hay tests automáticos que fijan las reglas canon con su página del Core. Se borró código y dependencias sin uso.',
+    highlights: [
+      'React.lazy por pestaña: bundle inicial de 2.126 kB a 598 kB.',
+      'calculateIncomingImpact en combatEngine.ts: SP, ablación, cabeza x2/x3, crítico +5 y escudos.',
+      '14 tests Vitest de reglas canon (npm test), cada uno con su página del libro.',
+      'Eliminados DataPacksView.tsx, applyIncomingDamage, clsx y tailwind-merge.',
+      'PIN del GM con clave versionada cpr_gm_pin_v1 y migración automática.'
+    ],
+    filesTouched: [
+      'frontend/src/App.tsx',
+      'frontend/src/engine/combatEngine.ts',
+      'frontend/src/engine/__tests__/rules.test.ts',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/features/gm/FixerDeckView.tsx',
+      'frontend/src/features/packs/DataPacksView.tsx (eliminado)',
+      'frontend/package.json',
+      'frontend/package-lock.json',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CLAUDE.md',
+      '.agent/AGENTS.md',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CHECKPOINT.md'
+    ],
+    metricsBadge: 'v4.2.1 • Lazy loading + tests • Auditoría fase 5'
+  },
+  {
     version: 'v4.2.0',
     date: '2026-10-20',
     phase: 'Codex',
@@ -377,6 +411,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.2.1': true,
     'v4.2.0': true,
     'v4.1.1': true,
     'v4.1.0': true,

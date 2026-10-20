@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { 
   Crosshair, 
   User, 
@@ -13,17 +13,19 @@ import {
 } from 'lucide-react';
 import { useCharacterStore } from './store/useCharacterStore';
 import { TopHudBar } from './features/layout/TopHudBar';
-import { CombatHudView } from './features/combat/CombatHudView';
-import { StreetLabView } from './features/sheet/StreetLabView';
-import { CharacterCreatorWizard } from './features/creator/CharacterCreatorWizard';
-import { CyberwareRipperdocView } from './features/cyberware/CyberwareRipperdocView';
-import { CompendiumView } from './features/compendium/CompendiumView';
-import { DataPackManagerView } from './features/datapacks/DataPackManagerView';
-import { FixerDeckView } from './features/gm/FixerDeckView';
-import { NetAndRolesDeckView } from './features/netroles/NetAndRolesDeckView';
-import { RedChromeCargoView } from './features/oneshot/RedChromeCargoView';
 import { RulesCheatSheetDrawer } from './features/rules/RulesCheatSheetDrawer';
-import { SystemChangelogAndDocsView } from './features/docs/SystemChangelogAndDocsView';
+
+// Cada vista se carga al abrir su pestaña para no meter toda la app en un solo bundle.
+const CombatHudView = lazy(() => import('./features/combat/CombatHudView').then((m) => ({ default: m.CombatHudView })));
+const StreetLabView = lazy(() => import('./features/sheet/StreetLabView').then((m) => ({ default: m.StreetLabView })));
+const CharacterCreatorWizard = lazy(() => import('./features/creator/CharacterCreatorWizard').then((m) => ({ default: m.CharacterCreatorWizard })));
+const CyberwareRipperdocView = lazy(() => import('./features/cyberware/CyberwareRipperdocView').then((m) => ({ default: m.CyberwareRipperdocView })));
+const CompendiumView = lazy(() => import('./features/compendium/CompendiumView').then((m) => ({ default: m.CompendiumView })));
+const DataPackManagerView = lazy(() => import('./features/datapacks/DataPackManagerView').then((m) => ({ default: m.DataPackManagerView })));
+const FixerDeckView = lazy(() => import('./features/gm/FixerDeckView').then((m) => ({ default: m.FixerDeckView })));
+const NetAndRolesDeckView = lazy(() => import('./features/netroles/NetAndRolesDeckView').then((m) => ({ default: m.NetAndRolesDeckView })));
+const RedChromeCargoView = lazy(() => import('./features/oneshot/RedChromeCargoView').then((m) => ({ default: m.RedChromeCargoView })));
+const SystemChangelogAndDocsView = lazy(() => import('./features/docs/SystemChangelogAndDocsView').then((m) => ({ default: m.SystemChangelogAndDocsView })));
 
 type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'oneshot' | 'creator' | 'docs';
 
@@ -140,6 +142,7 @@ export default function App() {
 
       {/* Contenedor Principal de Vistas Modulares */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+        <Suspense fallback={<div className="font-mono-code text-xs text-[#64748b] p-4">Cargando módulo...</div>}>
         {activeTab === 'combat' && <CombatHudView />}
         {activeTab === 'sheet' && <StreetLabView />}
         {activeTab === 'creator' && (
@@ -155,6 +158,7 @@ export default function App() {
         {activeTab === 'gm' && <FixerDeckView />}
         {activeTab === 'oneshot' && <RedChromeCargoView />}
         {activeTab === 'docs' && <SystemChangelogAndDocsView />}
+        </Suspense>
       </main>
 
       {/* Rules Cheat Sheet Drawer persistente */}

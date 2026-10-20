@@ -63,9 +63,10 @@ npm run dev               # servidor de desarrollo Vite
 npx tsc -b --noEmit       # chequeo de tipos
 npm run build             # tsc -b && vite build -> frontend/dist
 npm run lint              # oxlint (hay warnings react(purity) preexistentes en CombatHudView.tsx)
+npm test                  # vitest: tests de reglas canon del motor (src/engine/__tests__)
 ```
 
-No hay tests automatizados. **Definición de "terminado"**: `npx tsc -b --noEmit` y `npm run build` pasan con 0 errores. El aviso de chunk > 500 kB es preexistente.
+Hay tests de reglas del motor con Vitest (`src/engine/__tests__/rules.test.ts`, cada caso cita su página); si cambias una regla, actualiza o agrega su test. **Definición de "terminado"**: `npx tsc -b --noEmit`, `npm test` y `npm run build` pasan con 0 errores. El aviso de chunk > 500 kB es preexistente.
 
 Los `.bat` de la raíz (`start_app.bat`, `run_extractors.bat`, `push_to_github.bat`) son atajos de Windows del entorno original; en Linux/cloud usa los comandos de arriba.
 

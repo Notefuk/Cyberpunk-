@@ -67,3 +67,7 @@ Para cualquier feature grande (nuevo módulo, cambio de varios archivos, cambio 
 3. **Guarda el plan aprobado** en `docs/plans/planN-<slug>.md` del repo (siguiente número libre), firmado `[Antigravity · AAAA-MM-DD]`. **Ese archivo es inmutable**: nunca se edita después de aprobado. Si el plan cambia, se crea un plan nuevo con el siguiente número que referencia al anterior.
 4. **El avance va en `CHECKPOINT.md`**, no en el plan: plan activo, pasos hechos / pendientes, desvíos y por qué.
 Tareas chicas no necesitan plan.
+
+## 7. Verificación y Tests de Reglas (Compartido con Claude Code)
+
+[Claude Code · 2026-10-20] Desde v4.2.1 hay tests de reglas canon con Vitest en `frontend/src/engine/__tests__/rules.test.ts` (cada caso cita libro y página). Antes de dar algo por terminado, desde `frontend/`: `npx tsc -b --noEmit`, `npm test` y `npm run build` con 0 errores. Si cambias una regla del motor, actualiza o agrega su test.
