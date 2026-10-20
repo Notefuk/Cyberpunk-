@@ -1269,7 +1269,7 @@ export const RedChromeCargoView: React.FC = () => {
                                 <div className="p-1.5 bg-[#171308] border border-amber-600/40 rounded text-[10px] text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
                                   <div>
                                     <strong className="text-amber-400 uppercase">⚡ VULNERABLE A {cb.quickhackVulnerability.hackName}:</strong>
-                                    <span className="ml-1">DV {cb.quickhackVulnerability.dv} | RAM {cb.quickhackVulnerability.costRam} ➔ {cb.quickhackVulnerability.targetEffect}</span>
+                                    <span className="ml-1">DV {cb.quickhackVulnerability.dv} | 1 NET Action ➔ {cb.quickhackVulnerability.targetEffect}</span>
                                     {cb.quickhackVulnerability.lucyKiwiSpecial && (
                                       <span className="text-cyan-300 block text-[9px]">{cb.quickhackVulnerability.lucyKiwiSpecial}</span>
                                     )}
@@ -2478,7 +2478,7 @@ export const RedChromeCargoView: React.FC = () => {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-1">
-              {QUICKHACKS_2077_CATALOG.slice(0, 8).map((qh) => (
+              {QUICKHACKS_2077_CATALOG.map((qh) => (
                 <button
                   key={qh.id}
                   onClick={() => {
@@ -2488,8 +2488,15 @@ export const RedChromeCargoView: React.FC = () => {
                     const success = rollTotal >= qh.dv;
                     const targetEnemy = activeEnemies.find(e => e.instanceId === activeQuickhackModal) || activeEnemies[0];
 
-                    if (success && qh.damage && targetEnemy) {
-                      const dmg = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+                    if (success && (qh.damage || qh.damageFormula) && targetEnemy) {
+                      let dmg = 0;
+                      if (qh.damageFormula === '3d6') {
+                        dmg = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+                      } else if (qh.damageFormula === '1d6') {
+                        dmg = Math.floor(Math.random() * 6) + 1;
+                      } else {
+                        dmg = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+                      }
                       handleEnemyHpDelta(targetEnemy.instanceId, -dmg);
                       showToast(`⚡ ${qh.name} ÉXITO (${rollTotal} vs DV ${qh.dv})! ${dmg} daño a ${targetEnemy.name}.`, 'success');
                     } else if (success) {
@@ -2510,7 +2517,7 @@ export const RedChromeCargoView: React.FC = () => {
                     </span>
                   </div>
                   <span className="text-[9px] text-cyan-400 block">
-                    RAM: {qh.ramCost} | {qh.duration}
+                    {qh.actionCost} | {qh.duration}
                   </span>
                   <p className="text-[9px] text-[#94a3b8] line-clamp-2 mt-0.5">
                     {qh.effect}

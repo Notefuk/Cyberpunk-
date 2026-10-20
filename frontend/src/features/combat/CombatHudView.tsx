@@ -626,6 +626,8 @@ interface CollapsibleHudCardProps {
   isDragOver: boolean;
   children: React.ReactNode;
   extraHeaderActions?: React.ReactNode;
+  headerRight?: React.ReactNode;
+  subHeaderControls?: React.ReactNode;
   accentBorderClass?: string;
   onSendToTray?: () => void;
   headerDragHandler?: (e: React.MouseEvent) => void;
@@ -647,6 +649,8 @@ const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
   isDragOver,
   children,
   extraHeaderActions,
+  headerRight,
+  subHeaderControls,
   accentBorderClass = 'border-[#232736]',
   onSendToTray,
   headerDragHandler
@@ -666,75 +670,96 @@ const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
       <div
         onMouseDown={headerDragHandler}
         onClick={onToggleCollapse}
-        className={`p-2.5 sm:p-3 flex items-center justify-between gap-2 cursor-pointer select-none group/header transition-colors hover:bg-[#161924] ${
+        className={`cursor-pointer select-none group/header transition-colors hover:bg-[#161924] ${
           isCollapsed ? '' : 'border-b border-[#1f2230]'
         } ${headerDragHandler ? 'cursor-move' : ''}`}
       >
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          <div
-            className="flex items-center gap-0.5 shrink-0"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <span
-              title="Arrastrar para mover arriba o abajo"
-              className="cursor-grab active:cursor-grabbing p-1 text-slate-500 hover:text-cyan-400 transition-colors"
+        {/* Fila 1 (Principal) */}
+        <div className="p-2 sm:p-2.5 flex items-center justify-between gap-1.5 min-w-0">
+          <div className="flex items-center gap-1.5 min-w-0 flex-1 overflow-hidden">
+            <div
+              className="flex items-center gap-0.5 shrink-0"
+              onClick={(e) => e.stopPropagation()}
             >
-              <GripVertical className="w-3.5 h-3.5" />
-            </span>
-            <button
-              type="button"
-              onClick={onMoveUp}
-              disabled={!canMoveUp}
-              title="Subir un lugar"
-              className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors cursor-pointer"
-            >
-              ▲
-            </button>
-            <button
-              type="button"
-              onClick={onMoveDown}
-              disabled={!canMoveDown}
-              title="Bajar un lugar"
-              className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors cursor-pointer"
-            >
-              ▼
-            </button>
-            {onSendToTray && (
+              <span
+                title="Arrastrar para mover arriba o abajo"
+                className="cursor-grab active:cursor-grabbing p-0.5 text-slate-500 hover:text-cyan-400 transition-colors"
+              >
+                <GripVertical className="w-3.5 h-3.5" />
+              </span>
               <button
                 type="button"
-                onClick={onSendToTray}
-                title="Mandar este módulo a la Bandeja Derecha (quitar del centro)"
-                className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-amber-600 hover:text-black text-slate-400 hover:text-amber-300 transition-colors ml-0.5 cursor-pointer"
+                onClick={onMoveUp}
+                disabled={!canMoveUp}
+                title="Subir un lugar"
+                className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
-                ➡️
+                ▲
               </button>
-            )}
-          </div>
-
-          <span className="text-slate-500 group-hover/header:text-cyan-400 transition-colors shrink-0">
-            {isCollapsed ? (
-              <ChevronRight className="w-4 h-4" />
-            ) : (
-              <ChevronDown className="w-4 h-4 text-cyan-400" />
-            )}
-          </span>
-
-          <div className="flex items-center gap-1.5 min-w-0">
-            <span className="shrink-0">{icon}</span>
-            <span className="font-tech text-xs font-bold tracking-wider text-white uppercase truncate group-hover/header:text-cyan-300 transition-colors">
-              {title}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          {isCollapsed && (
-            <div className="text-[10px] font-mono-code text-cyan-300 bg-[#0e121a] px-2 py-0.5 rounded border border-[#20293d] max-w-[180px] sm:max-w-[280px] truncate">
-              {summary}
+              <button
+                type="button"
+                onClick={onMoveDown}
+                disabled={!canMoveDown}
+                title="Bajar un lugar"
+                className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-[#252c3e] text-slate-400 hover:text-white disabled:opacity-20 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              >
+                ▼
+              </button>
+              {onSendToTray && (
+                <button
+                  type="button"
+                  onClick={onSendToTray}
+                  title="Mandar este módulo a la Bandeja Derecha (quitar del centro)"
+                  className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-amber-600 hover:text-black text-slate-400 hover:text-amber-300 transition-colors ml-0.5 cursor-pointer"
+                >
+                  ➡️
+                </button>
+              )}
             </div>
-          )}
-          {extraHeaderActions}
+
+            <div className="flex items-center gap-1.5 min-w-0 truncate">
+              <span className="shrink-0">{icon}</span>
+              <span className="font-tech text-xs font-bold tracking-wider text-white uppercase truncate group-hover/header:text-cyan-300 transition-colors">
+                {title}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+            {isCollapsed && summary && (
+              <div className="text-[10px] font-mono-code text-cyan-300 bg-[#0e121a] px-1.5 py-0.5 rounded border border-[#20293d] max-w-[140px] truncate">
+                {summary}
+              </div>
+            )}
+            {headerRight}
+            {extraHeaderActions && !subHeaderControls && extraHeaderActions}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleCollapse();
+              }}
+              className="p-1 text-slate-400 hover:text-cyan-400 transition-colors cursor-pointer"
+              title={isCollapsed ? 'Expandir' : 'Colapsar'}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="w-4 h-4" />
+              ) : (
+                <ChevronDown className="w-4 h-4 text-cyan-400" />
+              )}
+            </button>
+          </div>
         </div>
+
+        {/* Fila 2 (Sub-barra compacta de espacio, solo cuando la tarjeta está expandida) */}
+        {!isCollapsed && subHeaderControls && (
+          <div
+            className="px-2.5 py-1 bg-[#0c0e15] border-t border-[#1a1d29] flex items-center justify-between text-[10px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {subHeaderControls}
+          </div>
+        )}
       </div>
 
       {!isCollapsed && <div className="p-3.5 space-y-3">{children}</div>}
@@ -1406,6 +1431,7 @@ export const CombatHudView: React.FC = () => {
   const [quickhackTierFilter, setQuickhackTierFilter] = useState<string>('all');
   const [unlockAllQuickhacks, setUnlockAllQuickhacks] = useState<boolean>(false);
   const [showQuickhackGuide, setShowQuickhackGuide] = useState<boolean>(false);
+  const [quickhackFeedback, setQuickhackFeedback] = useState<string | null>(null);
   const [showDojoModal, setShowDojoModal] = useState<boolean>(false);
   const [showMartialArtsGuide, setShowMartialArtsGuide] = useState<boolean>(false);
   const [martialFeedback, setMartialFeedback] = useState<{ success: boolean; message: string } | null>(null);
@@ -2173,7 +2199,82 @@ export const CombatHudView: React.FC = () => {
     updateSoloAllocation(updated);
   };
 
-  // Netrunner: Launch Quickhack 2077
+  // CEMK Canonical 4-Step Quickhacking Flow
+  // Paso 1: Jack In (1 NET Action) vs Target WILL
+  const handleJackInRoll = () => {
+    ensureTelemetryExpanded();
+    const d10Hacker = Math.floor(Math.random() * 10) + 1;
+    const hackerTotal = activeInterfaceRank + d10Hacker;
+    const d10Target = Math.floor(Math.random() * 10) + 1;
+    const targetWill = 6; // Promedio estándar NPC
+    const targetTotal = targetWill + d10Target;
+    const isDetected = hackerTotal < targetTotal;
+
+    const entry: RollEntry = {
+      id: `roll-jackin-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
+      timestamp: new Date().toISOString(),
+      type: 'skill',
+      weaponName: '🔌 Paso 1: Jack In (1 NET Action)',
+      statName: 'INT',
+      statVal: activeChar?.stats?.INT ?? 8,
+      skillName: 'Interface vs WILL',
+      skillVal: activeInterfaceRank,
+      d10: d10Hacker,
+      totalAttack: hackerTotal,
+      targetDv: targetTotal,
+      margin: hackerTotal - targetTotal,
+      isHit: true,
+      critDie: null,
+      needsExplosionClick: false,
+      explosionType: null
+    };
+    addRollEntry(entry);
+    const msg = isDetected
+      ? `⚠️ Jack In exitoso pero DETECTADO (Tiraste ${hackerTotal} vs WILL ${targetTotal}). El objetivo sabe que estás dentro.`
+      : `✅ Jack In SIGILOSO completado (Tiraste ${hackerTotal} vs WILL ${targetTotal}). El objetivo NO detectó tu intrusión.`;
+    setQuickhackFeedback(msg);
+    setTimeout(() => setQuickhackFeedback(null), 5000);
+  };
+
+  // Paso 2: Romper Passwall / Firewall base / Self-ICE (1 NET Action)
+  const handleBreachPasswallRoll = (dv: number = 6, label: string = 'Firewall Base') => {
+    ensureTelemetryExpanded();
+    if (label.includes('Firewall') && activeInterfaceRank >= 3) {
+      const msg = `⚡ Bypass automático de Firewall base (DV 6) por Interface R${activeInterfaceRank} (CEMK p. 27).`;
+      setQuickhackFeedback(msg);
+      setTimeout(() => setQuickhackFeedback(null), 5000);
+      return;
+    }
+    const d10 = Math.floor(Math.random() * 10) + 1;
+    const total = activeInterfaceRank + d10;
+    const isSuccess = total >= dv;
+    const entry: RollEntry = {
+      id: `roll-breach-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
+      timestamp: new Date().toISOString(),
+      type: 'skill',
+      weaponName: `🛡️ Paso 2: Romper ${label} (DV ${dv})`,
+      statName: 'INT',
+      statVal: activeChar?.stats?.INT ?? 8,
+      skillName: 'Interface (Breach Passwall)',
+      skillVal: activeInterfaceRank,
+      d10,
+      totalAttack: total,
+      targetDv: dv,
+      margin: total - dv,
+      isHit: isSuccess,
+      critDie: null,
+      needsExplosionClick: false,
+      explosionType: null
+    };
+    addRollEntry(entry);
+    const msg = isSuccess
+      ? `✅ ¡Passwall superado! Tiraste ${total} vs DV ${dv}. Acceso libre para Quickhacks.`
+      : `❌ Fallo al romper ${label}: Tiraste ${total} vs DV ${dv}.`;
+    setQuickhackFeedback(msg);
+    setTimeout(() => setQuickhackFeedback(null), 5000);
+  };
+
+  // Paso 3: Netrunner: Launch Quickhack 2077 (1 NET Action)
   const handleLaunchQuickhack = (qh: Quickhack2077) => {
     ensureTelemetryExpanded();
     const roleRank = activeInterfaceRank;
@@ -2194,8 +2295,8 @@ export const CombatHudView: React.FC = () => {
       id: `roll-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
       timestamp: new Date().toISOString(),
       type: 'attack',
-      weaponName: `⚡ Quickhack: ${qh.name} [RAM: ${qh.ramCost}]`,
-      damageFormula: qh.damage || qh.effect,
+      weaponName: `⚡ Quickhack: ${qh.name} [1 NET Action]`,
+      damageFormula: qh.damage || (qh.damageFormula ? `${qh.damageFormula} HP` : qh.effect),
       distanceLabel: `DV ${qh.dv} · Rango 50m (Neuroport)`,
       d10,
       critDie: null,
@@ -2215,13 +2316,17 @@ export const CombatHudView: React.FC = () => {
       damageRolled: false
     };
     addRollEntry(entry);
+
+    if (isHit && (qh.damageFormula || qh.damage)) {
+      handleQuickhackDamage(qh);
+    }
   };
 
   // Netrunner: Quickhack damage
   const handleQuickhackDamage = (qh: Quickhack2077) => {
     ensureTelemetryExpanded();
     const diceMatch = qh.damage?.match(/(\d+d\d+)/i);
-    const formula = diceMatch ? diceMatch[1] : '2d6';
+    const formula = diceMatch ? diceMatch[1] : (qh.damageFormula || '3d6');
     const dmgEntry = createDamageRoll(
       `Quickhack: ${qh.name}`,
       formula,
@@ -2231,6 +2336,41 @@ export const CombatHudView: React.FC = () => {
       aimedShotTarget
     );
     addRollEntry(dmgEntry);
+  };
+
+  // Paso 4: Contramedida de Expulsión (Boot Out) por el Objetivo
+  const handleBootOutRoll = () => {
+    ensureTelemetryExpanded();
+    const d10Target = Math.floor(Math.random() * 10) + 1;
+    const targetScore = 6 + 2 + d10Target; // WILL 6 + Conc 2
+    const d10Hacker = Math.floor(Math.random() * 10) + 1;
+    const hackerScore = activeInterfaceRank + d10Hacker;
+    const expelled = targetScore > hackerScore;
+
+    const entry: RollEntry = {
+      id: `roll-bootout-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
+      timestamp: new Date().toISOString(),
+      type: 'skill',
+      weaponName: '👢 Paso 4: Contramedida de Expulsión (Boot Out)',
+      statName: 'WILL',
+      statVal: 6,
+      skillName: 'Concentration vs Interface',
+      skillVal: 2,
+      d10: d10Target,
+      totalAttack: targetScore,
+      targetDv: hackerScore,
+      margin: targetScore - hackerScore,
+      isHit: expelled,
+      critDie: null,
+      needsExplosionClick: false,
+      explosionType: null
+    };
+    addRollEntry(entry);
+    const msg = expelled
+      ? `🚫 ¡Hacker EXPULSADO! El objetivo sacó ${targetScore} vs tu Interface ${hackerScore}. No puedes reconectarte en 60 minutos.`
+      : `🛡️ Intento de expulsión FALLIDO. El objetivo sacó ${targetScore} vs tu Interface ${hackerScore}. Sigues conectado.`;
+    setQuickhackFeedback(msg);
+    setTimeout(() => setQuickhackFeedback(null), 5000);
   };
 
   // Throw grenade action
@@ -2459,23 +2599,24 @@ export const CombatHudView: React.FC = () => {
   const renderLeftPanelHeaderControls = (
     panelId: LeftPanelId,
     isAutoFullTriggered = false,
-    autoCount = 0,
-    extra?: React.ReactNode
+    autoCount = 0
   ) => {
     const activeMode = leftPanelSizeMode[panelId] || (isAutoFullTriggered ? 'auto_full' : 'normal');
     return (
-      <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-        {extra}
-        {isAutoFullTriggered && (
-          <span className="text-[9px] font-mono-code font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 animate-pulse">
-            🔓 Auto-expandido ({autoCount})
-          </span>
-        )}
+      <div className="flex items-center justify-between w-full gap-1.5" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <span className="text-[9px] font-mono-code text-slate-400 uppercase tracking-wider">Espacio:</span>
+          {isAutoFullTriggered && (
+            <span className="text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 shrink-0 animate-pulse">
+              🔓 Auto ({autoCount})
+            </span>
+          )}
+        </div>
         <div className="flex items-center gap-0.5 bg-[#141722] p-0.5 rounded border border-[#22283a]">
           <button
             type="button"
             onClick={() => setLeftPanelMode(panelId, 'compact')}
-            className={`px-1 py-0.2 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+            className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
               activeMode === 'compact' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
             }`}
             title="Compacto (160px)"
@@ -2485,7 +2626,7 @@ export const CombatHudView: React.FC = () => {
           <button
             type="button"
             onClick={() => setLeftPanelMode(panelId, 'normal')}
-            className={`px-1 py-0.2 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+            className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
               activeMode === 'normal' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
             }`}
             title="Normal (280px)"
@@ -2495,7 +2636,7 @@ export const CombatHudView: React.FC = () => {
           <button
             type="button"
             onClick={() => setLeftPanelMode(panelId, 'large')}
-            className={`px-1 py-0.2 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+            className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
               activeMode === 'large' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
             }`}
             title="Grande (480px)"
@@ -2505,7 +2646,7 @@ export const CombatHudView: React.FC = () => {
           <button
             type="button"
             onClick={() => setLeftPanelMode(panelId, 'auto_full')}
-            className={`px-1 py-0.2 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
+            className={`px-1.5 py-0.5 text-[9px] font-mono-code rounded transition-colors cursor-pointer ${
               activeMode === 'auto_full' ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
             }`}
             title="Todo (sin límite)"
@@ -2515,7 +2656,7 @@ export const CombatHudView: React.FC = () => {
           <button
             type="button"
             onClick={() => adjustLeftPanelHeight(panelId, -40)}
-            className="px-1 py-0.2 text-[9px] font-mono-code text-slate-400 hover:text-white hover:bg-[#252c3e] rounded transition-colors cursor-pointer"
+            className="px-1.5 py-0.5 text-[9px] font-mono-code text-slate-400 hover:text-white hover:bg-[#252c3e] rounded transition-colors cursor-pointer"
             title="Reducir altura (-40px)"
           >
             -
@@ -2523,7 +2664,7 @@ export const CombatHudView: React.FC = () => {
           <button
             type="button"
             onClick={() => adjustLeftPanelHeight(panelId, 40)}
-            className="px-1 py-0.2 text-[9px] font-mono-code text-slate-400 hover:text-white hover:bg-[#252c3e] rounded transition-colors cursor-pointer"
+            className="px-1.5 py-0.5 text-[9px] font-mono-code text-slate-400 hover:text-white hover:bg-[#252c3e] rounded transition-colors cursor-pointer"
             title="Aumentar altura (+40px)"
           >
             +
@@ -2571,16 +2712,14 @@ export const CombatHudView: React.FC = () => {
             onDrop={() => handleDrop('left', 'vitals')}
             isDragOver={dragOverItem === 'vitals'}
             accentBorderClass={isSeriouslyWounded ? 'border-red-600/60 shadow-md shadow-red-950/40' : 'border-[#232736]'}
-            extraHeaderActions={renderLeftPanelHeaderControls(
-              'vitals',
-              false,
-              0,
+            headerRight={
               isSeriouslyWounded ? (
                 <span className="bg-[#dc2626]/20 border border-[#dc2626]/40 text-[#dc2626] font-mono-code text-[9px] px-1.5 py-0.5 rounded font-bold flex items-center gap-1 animate-pulse">
                   <Flame className="w-3 h-3" /> GRAVE (-2)
                 </span>
               ) : null
-            )}
+            }
+            subHeaderControls={renderLeftPanelHeaderControls('vitals', false, 0)}
           >
             <div className={getLeftPanelClass('vitals')} style={getLeftPanelStyle('vitals')}>
               <div className="space-y-3">
@@ -2908,7 +3047,7 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'armor')}
             onDrop={() => handleDrop('left', 'armor')}
             isDragOver={dragOverItem === 'armor'}
-            extraHeaderActions={renderLeftPanelHeaderControls('armor', false, 0)}
+            subHeaderControls={renderLeftPanelHeaderControls('armor', false, 0)}
           >
             <div className={getLeftPanelClass('armor')} style={getLeftPanelStyle('armor')}>
               <div className="space-y-3">
@@ -3257,37 +3396,37 @@ export const CombatHudView: React.FC = () => {
                     )}
                   </div>
 
-                  {/* Fila 1: Daño base con presets */}
+                  {/* Fila 1: Daño base con input numérico y ajuste fino */}
                   <div>
                     <div className="flex items-center justify-between text-[10px] font-mono-code text-slate-400 mb-1">
                       <span>Daño Bruto Entrante:</span>
                       <span className="text-white font-bold">{incomingDamageInput} pts</span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setIncomingDamageInput(Math.max(0, incomingDamageInput - 1))}
+                        className="w-8 h-8 bg-[#181d2a] hover:bg-[#dc2626] text-white border border-[#283248] rounded flex items-center justify-center font-mono-code font-bold text-xs transition-colors cursor-pointer"
+                        title="Restar 1 punto de daño"
+                      >
+                        -1
+                      </button>
                       <input
                         type="number"
                         min="0"
-                        max="99"
+                        max="200"
                         value={incomingDamageInput}
-                        onChange={(e) => setIncomingDamageInput(Math.max(0, parseInt(e.target.value) || 0))}
-                        className="w-16 bg-[#0a0c12] border border-[#2e374f] text-white font-mono-code font-bold text-center py-1 rounded text-sm focus:outline-none focus:border-cyan-400"
+                        onChange={(e) => setIncomingDamageInput(Math.max(0, Math.min(200, parseInt(e.target.value) || 0)))}
+                        className="flex-1 bg-[#0a0c12] border border-[#2e374f] text-cyan-300 font-mono-code font-bold text-center py-1.5 rounded text-sm focus:outline-none focus:border-cyan-400"
                       />
-                      <div className="flex flex-wrap gap-1 flex-1">
-                        {[5, 8, 10, 12, 15, 18, 22, 25].map((presetDmg) => (
-                          <button
-                            key={presetDmg}
-                            type="button"
-                            onClick={() => setIncomingDamageInput(presetDmg)}
-                            className={`px-1.5 py-0.5 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer border ${
-                              incomingDamageInput === presetDmg
-                                ? 'bg-cyan-500 text-black border-cyan-400'
-                                : 'bg-[#181d2a] text-slate-300 border-[#283248] hover:bg-[#22293b]'
-                            }`}
-                          >
-                            {presetDmg}
-                          </button>
-                        ))}
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setIncomingDamageInput(Math.min(200, incomingDamageInput + 1))}
+                        className="w-8 h-8 bg-[#181d2a] hover:bg-[#10b981] text-white border border-[#283248] rounded flex items-center justify-center font-mono-code font-bold text-xs transition-colors cursor-pointer"
+                        title="Sumar 1 punto de daño"
+                      >
+                        +1
+                      </button>
                     </div>
                   </div>
 
@@ -3609,10 +3748,7 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'luck')}
             onDrop={() => handleDrop('left', 'luck')}
             isDragOver={dragOverItem === 'luck'}
-            extraHeaderActions={renderLeftPanelHeaderControls(
-              'luck',
-              false,
-              0,
+            headerRight={
               <button
                 type="button"
                 onClick={restoreLuck}
@@ -3621,19 +3757,21 @@ export const CombatHudView: React.FC = () => {
               >
                 <RefreshCw className="w-2.5 h-2.5" /> Restaurar
               </button>
-            )}
+            }
+            subHeaderControls={renderLeftPanelHeaderControls('luck', false, 0)}
           >
             <div className={getLeftPanelClass('luck')} style={getLeftPanelStyle('luck')}>
               <div className="space-y-3">
-                <div className="flex flex-wrap items-center gap-1 mb-2.5 bg-[#171923] p-2 rounded border border-[#222636]">
+                <div className="flex flex-wrap items-center gap-1.5 mb-2.5 bg-[#171923] p-2 rounded border border-[#222636]">
                   {Array.from({ length: activeChar?.stats?.LUCK ?? 6 }).map((_, i) => (
                     <button
                       key={i}
+                      type="button"
                       onClick={() => toggleLuckPip(i + 1)}
                       title={`Fijar Suerte en ${i + 1}`}
-                      className={`w-5 h-5 rounded-xs transition-all flex items-center justify-center font-mono-code text-[10px] font-bold ${
+                      className={`w-5 h-5 rounded-xs transition-all flex items-center justify-center font-mono-code text-[10px] font-bold cursor-pointer ${
                         i < (activeChar?.currentLuck ?? 0)
-                          ? 'bg-[#f59e0b] text-black shadow-sm shadow-[#f59e0b]/40'
+                          ? 'bg-[#f59e0b] text-black shadow-sm shadow-[#f59e0b]/40 font-extrabold'
                           : 'bg-[#222534] text-[#64748b] hover:bg-[#2d3246]'
                       }`}
                     >
@@ -3648,19 +3786,23 @@ export const CombatHudView: React.FC = () => {
                   <span className="text-[10px] font-mono-code text-[#94a3b8]">Invertir en Tiro:</span>
                   <div className="flex items-center gap-1.5">
                     <button
+                      type="button"
                       onClick={() => setLuckToSpend(Math.max(0, luckToSpendOnNextRoll - 1))}
-                      className="w-5 h-5 bg-[#222534] hover:bg-[#dc2626] text-white rounded flex items-center justify-center font-bold"
+                      className="w-6 h-6 bg-[#222534] hover:bg-[#dc2626] text-white rounded flex items-center justify-center font-bold cursor-pointer transition-colors"
+                      title="Restar 1 punto de Suerte"
                     >
                       <Minus className="w-3 h-3" />
                     </button>
-                    <span className={`w-6 text-center font-mono-code font-bold text-xs ${
+                    <span className={`w-8 text-center font-mono-code font-bold text-xs ${
                       luckToSpendOnNextRoll > 0 ? 'text-[#f59e0b]' : 'text-[#64748b]'
                     }`}>
                       +{luckToSpendOnNextRoll}
                     </span>
                     <button
+                      type="button"
                       onClick={() => setLuckToSpend(Math.min(activeChar?.currentLuck ?? 0, luckToSpendOnNextRoll + 1))}
-                      className="w-5 h-5 bg-[#222534] hover:bg-[#10b981] text-white rounded flex items-center justify-center font-bold"
+                      className="w-6 h-6 bg-[#222534] hover:bg-[#10b981] text-white rounded flex items-center justify-center font-bold cursor-pointer transition-colors"
+                      title="Sumar 1 punto de Suerte"
                     >
                       <Plus className="w-3 h-3" />
                     </button>
@@ -3693,10 +3835,7 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'injuries')}
             onDrop={() => handleDrop('left', 'injuries')}
             isDragOver={dragOverItem === 'injuries'}
-            extraHeaderActions={renderLeftPanelHeaderControls(
-              'injuries',
-              isInjuriesAutoFull,
-              injuriesCount,
+            headerRight={
               <div className="flex gap-1 mr-1" onClick={(e) => e.stopPropagation()}>
                 <button
                   type="button"
@@ -3713,7 +3852,8 @@ export const CombatHudView: React.FC = () => {
                   + CUERPO
                 </button>
               </div>
-            )}
+            }
+            subHeaderControls={renderLeftPanelHeaderControls('injuries', isInjuriesAutoFull, injuriesCount)}
           >
             <div className={getLeftPanelClass('injuries', isInjuriesAutoFull)} style={getLeftPanelStyle('injuries', isInjuriesAutoFull)}>
               {injuriesCount === 0 ? (
@@ -3837,7 +3977,7 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'cyberware')}
             onDrop={() => handleDrop('left', 'cyberware')}
             isDragOver={dragOverItem === 'cyberware'}
-            extraHeaderActions={renderLeftPanelHeaderControls('cyberware', isCyberwareAutoFull, cyberwareCount)}
+            subHeaderControls={renderLeftPanelHeaderControls('cyberware', isCyberwareAutoFull, cyberwareCount)}
           >
             <div className={getLeftPanelClass('cyberware', isCyberwareAutoFull)} style={getLeftPanelStyle('cyberware', isCyberwareAutoFull)}>
               {/* Barra de Gestión de EMP y Averías */}
@@ -3973,7 +4113,7 @@ export const CombatHudView: React.FC = () => {
             onDragOver={(e) => handleDragOver(e, 'consumables')}
             onDrop={() => handleDrop('left', 'consumables')}
             isDragOver={dragOverItem === 'consumables'}
-            extraHeaderActions={renderLeftPanelHeaderControls('consumables', isConsumablesAutoFull, drugsCount)}
+            subHeaderControls={renderLeftPanelHeaderControls('consumables', isConsumablesAutoFull, drugsCount)}
           >
             <div className={getLeftPanelClass('consumables', isConsumablesAutoFull)} style={getLeftPanelStyle('consumables', isConsumablesAutoFull)}>
               {drugsCount === 0 ? (
@@ -7439,7 +7579,7 @@ export const CombatHudView: React.FC = () => {
             id="quickhacks2077"
             title="QUICKHACKS 2077 // CEMK NEUROPORT"
             icon={<Cpu className="w-4 h-4 text-cyan-400" />}
-            summary={`Interface R${activeInterfaceRank} | 15 Hacks CEMK`}
+            summary={`Interface R${activeInterfaceRank} | 11 Hacks CEMK`}
             isCollapsed={isCollapsed}
             onToggleCollapse={() => toggleBoxCollapse('quickhacks2077')}
             canMoveUp={canMoveUp}
@@ -7532,7 +7672,7 @@ export const CombatHudView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Tabla de Desbloqueo por Rango de Interface */}
+              {/* Tabla de Desbloqueo Canónica CEMK por Rango de Interface */}
               <div className="bg-[#0c0f18] p-2.5 rounded border border-[#1e2638] text-[10px] font-mono-code space-y-1">
                 <div className="flex items-center justify-between text-slate-400 font-bold border-b border-[#1b2234] pb-1 mb-1">
                   <span>TABLA DE DESBLOQUEO CANÓNICA CEMK</span>
@@ -7546,7 +7686,7 @@ export const CombatHudView: React.FC = () => {
                         : 'bg-[#121622] border-[#20273a] text-slate-500'
                     }`}
                   >
-                    <div className="font-bold">Rango 1+</div>
+                    <div className="font-bold">Interface 1+</div>
                     <div className="text-[9px]">Simple [DV 6]</div>
                   </div>
                   <div
@@ -7556,8 +7696,18 @@ export const CombatHudView: React.FC = () => {
                         : 'bg-[#121622] border-[#20273a] text-slate-500'
                     }`}
                   >
-                    <div className="font-bold">Rango 2-3+</div>
+                    <div className="font-bold">Interface 2+</div>
                     <div className="text-[9px]">Standard [DV 8]</div>
+                  </div>
+                  <div
+                    className={`p-1.5 rounded border ${
+                      activeInterfaceRank >= 3
+                        ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
+                        : 'bg-[#121622] border-[#20273a] text-slate-500'
+                    }`}
+                  >
+                    <div className="font-bold">Interface 3+</div>
+                    <div className="text-[9px]">Difficult [DV 10]</div>
                   </div>
                   <div
                     className={`p-1.5 rounded border ${
@@ -7566,17 +7716,7 @@ export const CombatHudView: React.FC = () => {
                         : 'bg-[#121622] border-[#20273a] text-slate-500'
                     }`}
                   >
-                    <div className="font-bold">Rango 4+</div>
-                    <div className="text-[9px]">Difficult [DV 10]</div>
-                  </div>
-                  <div
-                    className={`p-1.5 rounded border ${
-                      activeInterfaceRank >= 7
-                        ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-300'
-                        : 'bg-[#121622] border-[#20273a] text-slate-500'
-                    }`}
-                  >
-                    <div className="font-bold">Rango 7+</div>
+                    <div className="font-bold">Interface 4+</div>
                     <div className="text-[9px]">Advanced [DV 12]</div>
                   </div>
                 </div>
@@ -7656,6 +7796,103 @@ export const CombatHudView: React.FC = () => {
                 </div>
               )}
 
+              {/* Flujo Canónico de 4 Pasos CEMK */}
+              <div className="bg-[#0b0e17] p-2.5 rounded border border-[#20293d] space-y-2">
+                <div className="flex items-center justify-between border-b border-[#1b2234] pb-1">
+                  <span className="font-tech text-xs font-bold text-amber-400 uppercase flex items-center gap-1.5">
+                    <Zap className="w-3.5 h-3.5 text-amber-400" /> FLUJO CANÓNICO DE COMBATE CEMK (POR NET ACTIONS)
+                  </span>
+                  <span className="text-[9px] font-mono-code text-slate-400">Sin RAM · 1 NET Action por paso</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                  {/* Paso 1: Jack In */}
+                  <div className="bg-[#121520] p-2 rounded-xs border border-[#1e273a] flex flex-col justify-between">
+                    <div>
+                      <div className="text-[10px] font-tech font-bold text-cyan-300">PASO 1: JACK IN</div>
+                      <div className="text-[9px] text-slate-400">1 NET Action vs WILL</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleJackInRoll}
+                      className="mt-1.5 py-1 px-1.5 bg-[#172238] hover:bg-cyan-500 hover:text-black text-cyan-300 font-tech font-bold text-[10px] rounded-xs transition-colors cursor-pointer text-center"
+                      title="Conectar al Neuroport del objetivo dentro de 50m"
+                    >
+                      🔌 Conectar
+                    </button>
+                  </div>
+
+                  {/* Paso 2: Romper Passwalls */}
+                  <div className="bg-[#121520] p-2 rounded-xs border border-[#1e273a] flex flex-col justify-between">
+                    <div>
+                      <div className="text-[10px] font-tech font-bold text-amber-300">PASO 2: PASSWALLS</div>
+                      <div className="text-[9px] text-slate-400">
+                        {activeInterfaceRank >= 3 ? '⚡ Firewall DV 6 Bypass' : 'Firewall base (DV 6) / ICE'}
+                      </div>
+                    </div>
+                    <div className="flex gap-1 mt-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleBreachPasswallRoll(6, 'Firewall Base (DV 6)')}
+                        className="flex-1 py-1 px-1 bg-[#262016] hover:bg-amber-500 hover:text-black text-amber-300 font-tech font-bold text-[9px] rounded-xs transition-colors cursor-pointer text-center"
+                        title="Romper Firewall base (DV 6) o Self-ICE #1"
+                      >
+                        DV 6
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleBreachPasswallRoll(8, 'Self-ICE #2 (DV 8)')}
+                        className="flex-1 py-1 px-1 bg-[#262016] hover:bg-amber-500 hover:text-black text-amber-300 font-tech font-bold text-[9px] rounded-xs transition-colors cursor-pointer text-center"
+                        title="Romper Self-ICE #2 (DV 8)"
+                      >
+                        DV 8
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleBreachPasswallRoll(10, 'Self-ICE #3 (DV 10)')}
+                        className="flex-1 py-1 px-1 bg-[#262016] hover:bg-amber-500 hover:text-black text-amber-300 font-tech font-bold text-[9px] rounded-xs transition-colors cursor-pointer text-center"
+                        title="Romper Self-ICE #3 (DV 10)"
+                      >
+                        DV 10
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Paso 3: Lanzar Quickhack */}
+                  <div className="bg-[#121520] p-2 rounded-xs border border-[#1e273a] flex flex-col justify-between">
+                    <div>
+                      <div className="text-[10px] font-tech font-bold text-emerald-300">PASO 3: QUICKHACK</div>
+                      <div className="text-[9px] text-slate-400">1 NET Action (1 hack/turno)</div>
+                    </div>
+                    <div className="text-[9px] text-emerald-400 font-mono-code mt-1.5 flex items-center gap-1">
+                      <span>✓ Selecciona abajo</span>
+                    </div>
+                  </div>
+
+                  {/* Paso 4: Expulsión */}
+                  <div className="bg-[#121520] p-2 rounded-xs border border-[#1e273a] flex flex-col justify-between">
+                    <div>
+                      <div className="text-[10px] font-tech font-bold text-rose-300">PASO 4: EXPULSIÓN</div>
+                      <div className="text-[9px] text-slate-400">Acción Objetivo (WILL vs Int)</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleBootOutRoll}
+                      className="mt-1.5 py-1 px-1.5 bg-[#29171b] hover:bg-rose-600 hover:text-white text-rose-300 font-tech font-bold text-[10px] rounded-xs transition-colors cursor-pointer text-center"
+                      title="El objetivo gasta su Acción de Meatspace para intentar expulsarte"
+                    >
+                      👢 Boot Out
+                    </button>
+                  </div>
+                </div>
+
+                {quickhackFeedback && (
+                  <div className="p-1.5 bg-black/60 rounded text-[10px] font-mono-code text-cyan-300 border border-cyan-500/30 animate-fade-in">
+                    {quickhackFeedback}
+                  </div>
+                )}
+              </div>
+
               {/* Filtro y Búsqueda de Quickhacks */}
               <div className="flex flex-wrap items-center gap-2">
                 <input
@@ -7718,7 +7955,7 @@ export const CombatHudView: React.FC = () => {
                           )}
                         </div>
                         <div className="flex items-center gap-2 text-[10px] font-mono-code">
-                          <span className="text-[#38bdf8] font-bold">RAM: {qh.ramCost}</span>
+                          <span className="text-cyan-400 font-bold">{qh.actionCost}</span>
                           <span className="text-[#f59e0b] font-bold bg-[#1a1924] px-1.5 rounded border border-[#2b2738]">
                             DV {qh.dv}
                           </span>

@@ -1,26 +1,29 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v4.0.1 OPERATIVO`**  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v4.0.2 OPERATIVO`**  
 > **FECHA DE CORTE**: 2026-10-20  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 
 ---
 
-## 📊 1. Resumen Ejecutivo de Estado (v4.0.1)
+## 📊 1. Resumen Ejecutivo de Estado (v4.0.2)
 
 CPR Omni-Deck es una plataforma táctica digital offline-first de alta fidelidad diseñada según la filosofía de arquitectura desacoplada COMP/CON de Lancer RPG. La aplicación actúa como un HUD de combate dinámico, un laboratorio de ciberware/equipo callejero, un asistente de Netrunning y un portal integral de gestión para Árbitros y Edgerunners de Cyberpunk RED.
 
 ### Métricas de Desarrollo en Vivo:
 * **Ítems del Catálogo Multi-Libro**: 391+ ítems oficiales indexados sin pérdidas.
 * **Folios Canónicos CEMK 2077**: 7 personajes oficiales pregenerados (28 páginas CEMK), 66 habilidades completas por folio con desglose `LVL + STAT = BASE`, y 7 tokens PNG oficiales.
+* **Quickhacking Canónico CEMK 2077 (Sin RAM)**: 11 Quickhacks oficiales de Cyberpunk Edgerunners Mission Kit (pp. 16-18, 26-28) con coste de 1 NET Action, desbloqueo en Interface 1/2/3/4, bypass automático de Firewall DV 6 a Interface 3+ y flujo interactivo de 4 pasos (Jack In vs WILL, Breach Passwalls, Ejecutar Quickhack y Expulsión).
+* **Calculadora de Daño e Impactos Ergonómica**: Entrada numérica libre (0-200) con ajuste fino -1/+1 y cálculo instantáneo de ablación SP y daño directo a HP.
+* **Cabeceras HUD de Dos Filas**: Tarjetas modulares colapsables con fila 1 para arrastre/título/acciones rápidas y fila 2 para sub-barra de espacio S/M/L/Todo, garantizando cero solapamiento visual en 3 columnas.
 * **Catálogo Canónico de Accesorios de Armas**: 23 aditamentos oficiales indexados con ranuras requeridas (0 a 3), costes y restricciones de categoría de arma.
 * **Sistema Maker de Mejoras Tech**: Extra slot de accesorios, +1 SP de armadura (Cabeza y Torso), bonificaciones de calidad/daño/ROF con matriz de DVs y tiempos de fabricación oficiales (Core pp. 147-148).
 * **Lifepaths Específicos de Rol**: 10 trasfondos oficiales de rol (Rockero, Solo, Netrunner, Tech, Medtech, Media, Ley, Ejecutivo, Fixer, Nómada) con tiradas 1d10 o selección directa.
 * **Taller de Reconstrucción de Armas CEMK 2077**: Conversión 2045 a 2077 (Smart, Tech, Power) con toggles tácticos de combate (Bypass de Cobertura Smart, Rebote Power, Disparo Cargado Tech 50% SP).
 * **Gestor de Averías & Pulso EMP de Ciberware**: Protocolo de resistencia ante EMP (`TECH + Cybertech + 1d10 vs DV 15`), selector de implantes con insignia `⚡ EMP OFF` y anulación dinámica de bonos.
 * **Progresión de Rol Rango 1-10**: Visualizador de árbol de 10 rangos oficiales (`ROLE_ABILITIES_COMPLETE_PROGRESSION`) y selector rápido en Street Lab.
-* **Motor de Descanso Natural & Reparación de Blindaje**: Recuperación de HP por días de reposo (reglas Core pp. 140, 222-223 con multiplicador de anticuerpos y criotanque) y matriz de reparación de SP de cabeza y torso según tabla de DVs de Tech.
+* **Motor de Descanso Natural & Asistencia Médica Canónica**: Recuperación de HP por días de reposo (Core pp. 140, 222-226), Anticuerpos Mejorados (2x/3x BODY HP), Criotanque (100 eb estancia, 50 eb químicos Medtech), Criobomba (congelación de salvadas de muerte) y Speedheal inyectable instantáneo.
 * **Filtro de Decluttering del HUD**: Selector persistente (`cpr_combat_disabled_right_modules_v1`) y modo atenuado para silenciar módulos secundarios de la bandeja derecha.
 * **Disciplinas Marciales Ergonómicas**: 27 artes marciales colapsables en formato compacto con fórmula estándar `Nombre • Stats • Fuente` (Core Rulebook + Interface RED Vol. 4).
 * **Módulos de Sistema Principales**: 8 sistemas completamente integrados y operativos.
@@ -30,18 +33,18 @@ CPR Omni-Deck es una plataforma táctica digital offline-first de alta fidelidad
 
 ---
 
-## 🛠️ 2. Módulos del Sistema Operativos (v4.0.0)
+## 🛠️ 2. Módulos del Sistema Operativos (v4.0.2)
 
 | # | Módulo | Componente Principal | Estado | Descripción Funcional |
 |---|--------|----------------------|:------:|-----------------------|
-| 1 | **Motor de Combate & HUD Táctico** | `CombatHudView.tsx` | **100% OPERATIVO** | Grid modular en 3 zonas, tiradas D10, selector de municiones (10 tipos), toggles tácticos 2077 (Smart bypass, Power ricochet, Tech charge shot), gestor de averías/EMP con tirada vs DV 15, reparación/descanso rápido, filtro de decluttering (`disabledRightModules`), gestión y ataques secundarios de accesorios instalados (Bayoneta, Escopeta Bajo Cañón, Lanzagranadas Bajo Cañón) y mejora Maker Tech +1 SP en Cabeza/Torso. |
-| 2 | **Matriz Visual SP/SDP & Calculadora** | `CombatHudView.tsx` | **100% OPERATIVO** | Placas interactivas (`🛡️/💥`) para Cabeza y Torso, monitor SDP de Coberturas/Escudos (`🔰/💥`), Calculadora de Impactos con soporte para AP, Melee, Artes Marciales, Brawling y Críticos, y guía oficial integrada (pp. 183-187). |
+| 1 | **Motor de Combate & HUD Táctico** | `CombatHudView.tsx` | **100% OPERATIVO** | Grid modular en 3 zonas, tiradas D10, selector de municiones (10 tipos), toggles tácticos 2077, gestor de averías/EMP con tirada vs DV 15, reparación/descanso rápido, cabeceras HUD estructuradas en 2 filas, calculadora de impactos libre (0-200) y consola CEMK de Quickhacking con flujo canónico de 4 pasos sin RAM. |
+| 2 | **Matriz Visual SP/SDP & Calculadora** | `CombatHudView.tsx` | **100% OPERATIVO** | Placas interactivas (`🛡️/💥`) para Cabeza y Torso, monitor SDP de Coberturas/Escudos (`🔰/💥`), Calculadora de Impactos con input numérico (0-200), soporte para AP, Melee, Artes Marciales, Brawling y Críticos, y guía oficial integrada (pp. 183-187). |
 | 3 | **Creador de Personajes & Lifepath** | `CharacterCreatorWizard.tsx` | **100% OPERATIVO** | Wizard de 6 pasos (Concepto/Rol, STATs por 3 métodos, Habilidades, Lifepath con tiradas 1d10, Equipo inicial por Rol y Exportación en formato oficial). |
-| 4 | **Street Lab, Arsenal & Roles** | `StreetLabView.tsx` | **100% OPERATIVO** | Gestión de Eurodólares, Taller de Reconstrucción de Armas 2077, gestor de malfunciones/EMP en ciberware, pestañas de Progresión de Rol 1-10, Descanso/Reparación, Lifepaths de Rol, gestión e instalación de los 23 accesorios de armas con capacidad de slots y mejoras Maker Tech (+1 Slot, +1 SP, daño, ROF). |
-| 5 | **Netrunning & 10 Habilidades de Rol** | `NetAndRolesDeckView.tsx` | **100% OPERATIVO** | Simulador de arquitectura de Red 2045 con programas Black ICE, consola de Quickhacking CEMK 2077 con cola de memoria RAM, 27 artes marciales colapsables y terminal interactivo para las 10 Habilidades de Rol oficiales. |
+| 4 | **Street Lab, Arsenal & Roles** | `StreetLabView.tsx` | **100% OPERATIVO** | Gestión de Eurodólares, Taller de Reconstrucción de Armas 2077, gestor de malfunciones/EMP en ciberware, pestañas de Progresión de Rol 1-10, Descanso/Asistencia Médica Canónica (Anticuerpos, Criotanque, Criobomba, Speedheal), Lifepaths de Rol, gestión e instalación de los 23 accesorios de armas con slots y mejoras Maker Tech (+1 Slot, +1 SP, daño, ROF). |
+| 5 | **Netrunning & 10 Habilidades de Rol** | `NetAndRolesDeckView.tsx` | **100% OPERATIVO** | Simulador de arquitectura de Red 2045 con programas Black ICE, consola canónica CEMK 2077 de Quickhacking (11 hacks oficiales, Interface 1-4, flujo de 4 pasos, cero RAM), Modo Master (GM) para ocultar pisos a jugadores, 27 artes marciales colapsables y terminal interactivo para las 10 Habilidades de Rol oficiales. |
 | 6 | **Bestiario GM & Encuentros** | `EnemiesCompendiumPanel.tsx` | **100% OPERATIVO** | Catálogo de 44 enemigos base y 15 facciones con inyección directa de perfiles de combate en el HUD táctico y generador de goons al vuelo. |
-| 7 | **Misión Oficial CEMK 2077 & Hub de Folios** | `RedChromeCargoView.tsx` | **100% OPERATIVO** | Misión interactiva *Red Chrome Cargo* con mapa Maglev Hammerhead, tablero de escenas, spawneo de enemigos, botín y pestaña 4 con selector dual de Edgerunners 2077 (7 Folios CEMK + 7 Anime Crew) con modal de 66 habilidades. |
-| 8 | **Codex, Compendio & Documentación** | `SystemChangelogAndDocsView.tsx` / `CompendiumView.tsx` | **100% OPERATIVO** | Compendio con tooltips canónicos para subclases de armas, insignias de reconstrucción 2077, tooltips de munición y ciberware, portal in-app de documentación y registro cronológico (`v1.0.0` a `v4.0.0`). |
+| 7 | **Misión Oficial CEMK 2077 & Hub de Folios** | `RedChromeCargoView.tsx` | **100% OPERATIVO** | Misión interactiva *Red Chrome Cargo* con mapa Maglev Hammerhead, tablero de escenas, spawneo de enemigos, botín, vulnerabilidades y modal con los 11 Quickhacks oficiales de CEMK a 1 NET Action. |
+| 8 | **Codex, Compendio & Documentación** | `SystemChangelogAndDocsView.tsx` / `CompendiumView.tsx` | **100% OPERATIVO** | Compendio con tooltips canónicos para subclases de armas, insignias de reconstrucción 2077, tooltips de munición y ciberware, portal in-app de documentación y registro cronológico (`v1.0.0` a `v4.0.2`). |
 
 ---
 

@@ -160,7 +160,7 @@ export const NetAndRolesDeckView: React.FC = () => {
   // 2. ESTADO DE QUICKHACKING 2077
   // ==========================================================================
   const [quickhackTierFilter, setQuickhackTierFilter] = useState<'All' | 'Simple' | 'Standard' | 'Difficult' | 'Advanced'>('All');
-  const [quickhackRollLog, setQuickhackRollLog] = useState<{ qhName: string; roll: number; dv: number; success: boolean; damageRoll?: number; targetWillRoll?: number } | null>(null);
+  const [quickhackRollLog, setQuickhackRollLog] = useState<{ qhName: string; roll: number; dv: number; success: boolean; damageRoll?: number; targetWillRoll?: number; stepInfo?: string } | null>(null);
   const [unlockAllQuickhacks, setUnlockAllQuickhacks] = useState<boolean>(false);
   const [showQuickhackGuide, setShowQuickhackGuide] = useState<boolean>(false);
 
@@ -177,6 +177,51 @@ export const NetAndRolesDeckView: React.FC = () => {
     ? QUICKHACKS_2077_CATALOG 
     : QUICKHACKS_2077_CATALOG.filter(q => q.tier === quickhackTierFilter);
 
+  // CEMK Canonical 4-Step Quickhacking Handlers
+  const handleJackInRoll = () => {
+    const d10Hacker = Math.floor(Math.random() * 10) + 1;
+    const hackerTotal = activeInterfaceRank + d10Hacker;
+    const d10Target = Math.floor(Math.random() * 10) + 1;
+    const targetWill = 6;
+    const targetTotal = targetWill + d10Target;
+    const detected = hackerTotal < targetTotal;
+
+    setQuickhackRollLog({
+      qhName: 'Paso 1: Jack In (1 NET Action)',
+      roll: hackerTotal,
+      dv: targetTotal,
+      success: true,
+      stepInfo: detected
+        ? `⚠️ Jack In completado pero DETECTADO (Tiraste ${hackerTotal} vs WILL ${targetTotal}). El objetivo detectó tu enlace.`
+        : `✅ Jack In SIGILOSO completado (Tiraste ${hackerTotal} vs WILL ${targetTotal}). Conectado al Neuroport.`
+    });
+  };
+
+  const handleBreachPasswallRoll = (dv: number, label: string) => {
+    if (label.includes('Firewall') && activeInterfaceRank >= 3) {
+      setQuickhackRollLog({
+        qhName: `Paso 2: Romper ${label}`,
+        roll: activeInterfaceRank + 10,
+        dv,
+        success: true,
+        stepInfo: `⚡ Bypass automático de Firewall base (DV 6) por Interface R${activeInterfaceRank} (CEMK p. 27).`
+      });
+      return;
+    }
+    const d10 = Math.floor(Math.random() * 10) + 1;
+    const total = activeInterfaceRank + d10;
+    const success = total >= dv;
+    setQuickhackRollLog({
+      qhName: `Paso 2: Romper ${label}`,
+      roll: total,
+      dv,
+      success,
+      stepInfo: success
+        ? `✅ ¡Passwall superado! (${total} vs DV ${dv}). Acceso libre para inyectar Quickhacks.`
+        : `❌ Fallo al superar ${label} (${total} vs DV ${dv}). Passwall aún activo.`
+    });
+  };
+
   const handleExecuteQuickhack = (qh: Quickhack2077) => {
     const isLocked = !unlockAllQuickhacks && activeInterfaceRank < qh.requiredInterfaceRank;
     if (isLocked) {
@@ -184,7 +229,8 @@ export const NetAndRolesDeckView: React.FC = () => {
         qhName: qh.name,
         roll: 0,
         dv: qh.dv,
-        success: false
+        success: false,
+        stepInfo: `🔒 Bloqueado: Requiere Interface ${qh.requiredInterfaceRank}+`
       });
       return;
     }
@@ -194,8 +240,14 @@ export const NetAndRolesDeckView: React.FC = () => {
     const success = total >= qh.dv;
 
     let dmg: number | undefined;
-    if (success && qh.damage) {
-      dmg = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1);
+    if (success && (qh.damage || qh.damageFormula)) {
+      if (qh.damageFormula === '3d6') {
+        dmg = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1);
+      } else if (qh.damageFormula === '1d6') {
+        dmg = Math.floor(Math.random() * 6) + 1;
+      } else if (qh.damage) {
+        dmg = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1);
+      }
     }
 
     setQuickhackRollLog({
@@ -203,18 +255,25 @@ export const NetAndRolesDeckView: React.FC = () => {
       roll: total,
       dv: qh.dv,
       success,
-      damageRoll: dmg
+      damageRoll: dmg,
+      stepInfo: success
+        ? `¡OBJETIVO INFECTADO CON ÉXITO! (1 NET Action gastada · Máximo 1 quickhack/turno por objetivo)`
+        : `HACKEO BLOQUEADO (Tiraste ${total} vs DV ${qh.dv})`
     });
   };
 
   const handleTargetCounterRoll = () => {
     if (!quickhackRollLog) return;
     const d10 = Math.floor(Math.random() * 10) + 1;
-    const willBonus = 6; // promedio NPC
+    const willBonus = 6 + 2; // WILL 6 + Concentration 2
     const targetTotal = d10 + willBonus;
+    const expelled = targetTotal > quickhackRollLog.roll;
     setQuickhackRollLog({
       ...quickhackRollLog,
-      targetWillRoll: targetTotal
+      targetWillRoll: targetTotal,
+      stepInfo: expelled
+        ? `🚫 ¡Hacker EXPULSADO! (Objetivo sacó ${targetTotal} vs tu Interface ${quickhackRollLog.roll}). No puedes reconectarte en 60 minutos.`
+        : `🛡️ Intento de expulsión FALLIDO (Objetivo sacó ${targetTotal} vs tu Interface ${quickhackRollLog.roll}). Sigues en su Neuroport.`
     });
   };
 
@@ -1003,12 +1062,11 @@ export const NetAndRolesDeckView: React.FC = () => {
                     )}
                   </div>
                   <p className="text-[10px] font-mono-code text-[#94a3b8]">
-                    {activeInterfaceRank >= 10 ? '5 NET Actions/Turno • Acceso a los 15 Quickhacks oficiales' :
-                     activeInterfaceRank >= 7 ? '4 NET Actions/Turno • Desbloquea Advanced (DV 12)' :
-                     activeInterfaceRank >= 4 ? '3 NET Actions/Turno • Desbloquea Difficult (DV 10)' :
-                     activeInterfaceRank >= 2 ? '2 NET Actions/Turno • Desbloquea Standard (DV 8)' :
-                     activeInterfaceRank >= 1 ? '2 NET Actions/Turno • Desbloquea Simple (DV 6)' :
-                     'Sin Interface • Necesitas al menos Rango 1 para desbloquear Quickhacks'}
+                    {activeInterfaceRank >= 4 ? `${Math.min(5, 2 + Math.floor(activeInterfaceRank / 3))} NET Actions/Turno • Acceso a los 11 Quickhacks oficiales (CEMK)` :
+                     activeInterfaceRank === 3 ? '2 NET Actions/Turno • Desbloquea Difficult (DV 10) · Bypass Firewall DV 6' :
+                     activeInterfaceRank === 2 ? '2 NET Actions/Turno • Desbloquea Standard (DV 8)' :
+                     activeInterfaceRank === 1 ? '2 NET Actions/Turno • Desbloquea Simple (DV 6)' :
+                     'Sin Interface • Necesitas al menos Interface 1 para desbloquear Quickhacks'}
                   </p>
                 </div>
               </div>
@@ -1154,6 +1212,97 @@ export const NetAndRolesDeckView: React.FC = () => {
             )}
           </div>
 
+          {/* Flujo Canónico de 4 Pasos CEMK */}
+          <div className="bg-[#0b0e17] p-3 rounded-xs border border-[#1e2638] space-y-2">
+            <div className="flex items-center justify-between border-b border-[#1b2234] pb-1.5">
+              <span className="font-tech text-xs font-bold text-amber-400 uppercase flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-amber-400" /> FLUJO CANÓNICO DE COMBATE CEMK (POR NET ACTIONS)
+              </span>
+              <span className="text-[10px] font-mono-code text-slate-400">Sin RAM · 1 NET Action por paso</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+              {/* Paso 1: Jack In */}
+              <div className="bg-[#121622] p-2.5 rounded-xs border border-[#1e273a] flex flex-col justify-between">
+                <div>
+                  <div className="text-[10px] font-tech font-bold text-cyan-300">PASO 1: JACK IN</div>
+                  <div className="text-[9px] text-slate-400">1 NET Action vs WILL</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleJackInRoll}
+                  className="mt-2 py-1 px-2 bg-[#172238] hover:bg-cyan-500 hover:text-black text-cyan-300 font-tech font-bold text-[10px] rounded-xs transition-colors cursor-pointer text-center"
+                  title="Conectar al Neuroport del objetivo dentro de 50m"
+                >
+                  🔌 Tirar Jack In
+                </button>
+              </div>
+
+              {/* Paso 2: Romper Passwalls */}
+              <div className="bg-[#121622] p-2.5 rounded-xs border border-[#1e273a] flex flex-col justify-between">
+                <div>
+                  <div className="text-[10px] font-tech font-bold text-amber-300">PASO 2: PASSWALLS</div>
+                  <div className="text-[9px] text-slate-400">
+                    {activeInterfaceRank >= 3 ? '⚡ Firewall DV 6 Bypass' : 'Firewall base (DV 6) / ICE'}
+                  </div>
+                </div>
+                <div className="flex gap-1 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => handleBreachPasswallRoll(6, 'Firewall Base (DV 6)')}
+                    className="flex-1 py-1 px-1 bg-[#262016] hover:bg-amber-500 hover:text-black text-amber-300 font-tech font-bold text-[9px] rounded-xs transition-colors cursor-pointer text-center"
+                    title="Romper Firewall base (DV 6) o Self-ICE #1"
+                  >
+                    DV 6
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleBreachPasswallRoll(8, 'Self-ICE #2 (DV 8)')}
+                    className="flex-1 py-1 px-1 bg-[#262016] hover:bg-amber-500 hover:text-black text-amber-300 font-tech font-bold text-[9px] rounded-xs transition-colors cursor-pointer text-center"
+                    title="Romper Self-ICE #2 (DV 8)"
+                  >
+                    DV 8
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleBreachPasswallRoll(10, 'Self-ICE #3 (DV 10)')}
+                    className="flex-1 py-1 px-1 bg-[#262016] hover:bg-amber-500 hover:text-black text-amber-300 font-tech font-bold text-[9px] rounded-xs transition-colors cursor-pointer text-center"
+                    title="Romper Self-ICE #3 (DV 10)"
+                  >
+                    DV 10
+                  </button>
+                </div>
+              </div>
+
+              {/* Paso 3: Lanzar Quickhack */}
+              <div className="bg-[#121622] p-2.5 rounded-xs border border-[#1e273a] flex flex-col justify-between">
+                <div>
+                  <div className="text-[10px] font-tech font-bold text-emerald-300">PASO 3: QUICKHACK</div>
+                  <div className="text-[9px] text-slate-400">1 NET Action (1 hack/turno)</div>
+                </div>
+                <div className="text-[10px] text-emerald-400 font-mono-code mt-2 flex items-center gap-1">
+                  <span>✓ Ejecuta en las cartas</span>
+                </div>
+              </div>
+
+              {/* Paso 4: Expulsión */}
+              <div className="bg-[#121622] p-2.5 rounded-xs border border-[#1e273a] flex flex-col justify-between">
+                <div>
+                  <div className="text-[10px] font-tech font-bold text-rose-300">PASO 4: EXPULSIÓN</div>
+                  <div className="text-[9px] text-slate-400">Acción Objetivo (WILL vs Int)</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleTargetCounterRoll}
+                  className="mt-2 py-1 px-2 bg-[#29171b] hover:bg-rose-600 hover:text-white text-rose-300 font-tech font-bold text-[10px] rounded-xs transition-colors cursor-pointer text-center"
+                  title="El objetivo gasta su Acción de Meatspace para intentar expulsarte"
+                >
+                  👢 Boot Out
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Barra de Filtro de Tiers */}
           <div className="bg-[#0d1017] border border-[#1b2234] p-3 rounded-xs flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
@@ -1193,10 +1342,10 @@ export const NetAndRolesDeckView: React.FC = () => {
               </div>
               <div>
                 Resultado: <strong className={quickhackRollLog.success ? 'text-emerald-400' : 'text-red-400'}>
-                  {quickhackRollLog.success ? '¡OBJETIVO INFECTADO CON ÉXITO!' : 'HACKEO BLOQUEADO POR FIREWALL O RANGO'}
+                  {quickhackRollLog.stepInfo || (quickhackRollLog.success ? '¡OBJETIVO INFECTADO CON ÉXITO!' : 'HACKEO BLOQUEADO POR FIREWALL O RANGO')}
                 </strong>
                 {quickhackRollLog.damageRoll !== undefined && (
-                  <span className="ml-3 font-bold text-amber-300">Daño Infligido a HP: {quickhackRollLog.damageRoll} pts</span>
+                  <span className="ml-3 font-bold text-amber-300">Daño Infligido: {quickhackRollLog.damageRoll} pts</span>
                 )}
               </div>
 
@@ -1220,7 +1369,7 @@ export const NetAndRolesDeckView: React.FC = () => {
             </div>
           )}
 
-          {/* Grilla de las 15 Cartas de Quickhacks */}
+          {/* Grilla de los 11 Quickhacks Oficiales */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredQuickhacks.map(qh => {
               const isLocked = !unlockAllQuickhacks && activeInterfaceRank < qh.requiredInterfaceRank;
@@ -1260,7 +1409,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-3 text-[10px] font-mono-code text-[#94a3b8] mt-1">
-                      <span>RAM: <strong className="text-white">{qh.ramCost}</strong></span>
+                      <span>Coste: <strong className="text-cyan-400">{qh.actionCost}</strong></span>
                       <span>Duración: <strong className="text-white">{qh.duration}</strong></span>
                       {qh.damage && <span>Daño: <strong className="text-[#f59e0b]">{qh.damage}</strong></span>}
                     </div>

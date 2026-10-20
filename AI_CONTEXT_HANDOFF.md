@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.0.1 OPERATIVO`  
+> **SYSTEM VERSION**: `v4.0.2 OPERATIVO`  
 > **LAST UPDATED**: 2026-10-20  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -10,14 +10,43 @@
 
 ## 🎯 1. Purpose of this Document
 This file is the official AI-to-AI handoff document for future LLMs, subagents, and orchestrators working on the **CPR Omni-Deck** repository. Whenever a new context window is initialized, read this file to immediately understand:
-1. What was just built and verified in `v4.0.1` (and previously in `v4.0.0` / `v3.9.0`).
+1. What was just built and verified in `v4.0.2` (and previously in `v4.0.1` / `v4.0.0` / `v3.9.0`).
 2. Where all critical systems, stores, and data structures reside on disk.
 3. How state transitions cascade across views without regressions.
-4. The exact scope and technical contracts planned for **Phase 4 (GM Role Master Control Deck & Modular Settings)**.
+4. The exact scope and technical contracts planned for future phases.
 
 ---
 
-## 🚀 2. What Was Added in v4.0.1
+## 🚀 2. What Was Added in v4.0.2
+
+### A. Quickhacking Canónico CEMK 2077 (Purga de RAM de Videojuego)
+* **Files**: `netAndRolesData.ts`, `NetAndRolesDeckView.tsx`, `CombatHudView.tsx`, `RedChromeCargoView.tsx`.
+* **Zero RAM Law**: En el TTRPG Cyberpunk Edgerunners Mission Kit (pp. 16-18, 26-28, 39, 42), la RAM del videojuego no existe. Todos los quickhacks cuestan **1 NET Action** en combate táctico (con un límite estricto de 1 quickhack por objetivo por Turno).
+* **11 Quickhacks Oficiales de CEMK**:
+  - **Simple (Interface 1+, DV 6)**: *Impair Movement* (-1 MOVE por 60s), *Sonic Shock* (condición Damaged Ear por 60s).
+  - **Standard (Interface 2+, DV 8)**: *Overheat* (fuego térmico: 4 daño directo a HP/turno ignorando SP hasta que se apague con 1 Acción), *Short Circuit* (apaga 3 piezas de ciberware secundario por 60s).
+  - **Difficult (Interface 3+, DV 10)**: *Cyberware Malfunction* (anula 1 implante crítico por 60s), *Lure* (distracción acústica simulada), *Slow* (reduce el MOVE en 1d6 durante 60s), *Synapse Burnout* (3d6 daño directo a HP ignorando SP; ¡a Interface 3+ el hacker supera automáticamente el Firewall base DV 6 de cualquier Neuroport!).
+  - **Advanced (Interface 4+, DV 12)**: *Puppet* (secuestro motor total: controla la Acción y el Movimiento del blanco en su turno), *Shard Ejection* (expulsión forzosa de Chipware), *System Reset* (deja al blanco Inconsciente y Prone durante 60s o hasta que sufra daño).
+* **Flujo Canónico de 4 Pasos Interactivo**:
+  - **Paso 1: Jack In**: 1 NET Action · Interface + 1d10 vs WILL del blanco + 1d10 (si falla la tirada, el objetivo detecta la intrusión).
+  - **Paso 2: Breach Passwalls**: 1 NET Action / Passwall · Romper Firewall base (DV 6; superado automáticamente a Interface 3+) y Self-ICE (1 Self-ICE = DV 6, 2 Self-ICE = DV 8, 3 Self-ICE = DV 10).
+  - **Paso 3: Perform Quickhack**: 1 NET Action · Interface + 1d10 vs DV del Quickhack (6, 8, 10, 12). Resolución y tirada de daño automática para Synapse Burnout (3d6) y Slow (1d6).
+  - **Paso 4: Boot Out / Expulsión**: 1 Acción Meatspace del objetivo · WILL + Concentration + 1d10 vs Interface + 1d10 (si el objetivo gana, expulsa al hacker e inhabilita reconexión por 60 minutos).
+
+### B. Rediseño de la Calculadora de Daño e Impactos (`CombatHudView.tsx`)
+* **Problem**: 8 botones presets fijos (`[5] [8] [10] [12] [15] [18] [22] [25]`) ocupaban espacio visual innecesario y limitaban la flexibilidad en mesa.
+* **Fix**: Sustituidos por un campo numérico libre `<input type="number" min={0} max={200} ... />` centrado con tipografía monospace de alta legibilidad, flanqueado por botones `-1` y `+1` para ajuste fino de daño bruto entrante.
+
+### C. Arquitectura de Cabeceras HUD de Dos Filas (`CombatHudView.tsx`)
+* **Problem**: En monitores o layouts estrechos de 3 columnas, la inclusión de botones de tamaño (`[S] [M] [L] [↕ Todo]`) junto al título y badges hacía que el título e icono (`✨ SUERTE (LUCK)`) se recortasen o superpusieran.
+* **Fix**: `CollapsibleHudCard` reestructurado en 2 filas limpias:
+  - **Fila 1 (Principal)**: Iconos de arrastre, botón de colapso, icono y título con truncado elegante, y `headerRight` para badges (`GRAVE -2`) o acciones prioritarias (`🔄 Restaurar`).
+  - **Fila 2 (Sub-barra de Espacio)**: Controles `[S] [M] [L] [↕ Todo] [-] [+]` visibles únicamente cuando la tarjeta está expandida (`!isCollapsed && subHeaderControls`).
+* **Ergonomía de Suerte**: Pips de LUCK reorganizados con `flex flex-wrap gap-1.5` y contador de inversión `[-] +0 [+]` proporcional.
+
+---
+
+## 📦 2.1 Historical Summary: What Was Added in v4.0.1
 
 ### A. Corrección de Clipping en Tooltips de STATS (`StreetLabView.tsx`)
 * **Problem**: The `.chamfer-card` class on the 10 STATS container used `clip-path: polygon(...)`, which clipped any child tooltips rendered via `absolute top-full`.

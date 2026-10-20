@@ -26,6 +26,33 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.0.2',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'Canonical CEMK Quickhacking, Combat HUD Damage Calculator & Ergonomic Header Layout',
+    title: 'CEMK Canonical Quickhacking (Zero RAM, 11 Quickhacks, 4-Step Combat Flow), Rediseño de Calculadora de Daño y Cabeceras HUD de Dos Filas',
+    summary: 'Actualización técnica v4.0.2 con 3 mejoras canónicas fundamentales: 1) Purga total de la RAM de videojuego y transición 100% canónica a las reglas oficiales del TTRPG de Cyberpunk Edgerunners Mission Kit (pp. 16-18, 26-28, 39, 42) en netAndRolesData.ts, NetAndRolesDeckView.tsx, CombatHudView.tsx y RedChromeCargoView.tsx con catálogo estricto de los 11 Quickhacks oficiales (Simple: Impair Movement, Sonic Shock; Standard: Overheat, Short Circuit; Difficult: Cyberware Malfunction, Lure, Slow [1d6 MOVE], Synapse Burnout [3d6 HP] con auto-bypass de Firewall DV 6; Advanced: Puppet, Shard Ejection, System Reset), desbloqueo en Interface 1/2/3/4 y flujo canónico interactivo de 4 pasos (Jack In vs WILL, Romper Passwalls/Self-ICE, Ejecutar Quickhack y Expulsión/Boot Out); 2) Rediseño integral de la Calculadora de Daño e Impactos en CombatHudView eliminando los 8 botones preset fijos y reemplazándolos por un input numérico editable (0 a 200) con tipografía monospace y botones de ajuste fino -1 y +1; 3) Reorganización arquitectónica de CollapsibleHudCard en dos filas estructuradas (Fila 1: arrastre, colapso, título y headerRight como Restaurar Suerte; Fila 2: sub-barra de espacio S/M/L/Todo/-/+ solo cuando la tarjeta está desplegada) garantizando que títulos e iconos nunca se superpongan o recorten en pantallas de 3 columnas.',
+    highlights: [
+      'CEMK Canonical Quickhacking: Erradicación completa de la RAM de videojuego; implementación basada en 1 NET Action y catálogo estricto de los 11 Quickhacks oficiales.',
+      'Flujo Canónico de 4 Pasos: Paso 1 (Jack In vs WILL), Paso 2 (Romper Passwalls / Self-ICE DV 6/8/10 con Auto-Bypass de Firewall base a Interface 3+), Paso 3 (Lanzar Quickhack) y Paso 4 (Contramedida de Expulsión del Objetivo).',
+      'Desbloqueo Canónico CEMK p. 26: Simple (Interface 1+, DV 6), Standard (Interface 2+, DV 8), Difficult (Interface 3+, DV 10) y Advanced (Interface 4+, DV 12).',
+      'Tiradas de Daño Automáticas: Cálculo y aplicación automática de 3d6 HP para Synapse Burnout y 1d6 MOVE para Slow en combate.',
+      'Calculadora de Daño Ergonómica: Erradicación de los 8 presets [5..25] e introducción de campo numérico libre (0-200) con botones flotantes -1 y +1.',
+      'Cabeceras HUD de Dos Filas: Separación de acciones críticas en Fila 1 y barra de tamaño de espacio en Fila 2, erradicando solapamientos de texto e iconos en paneles estrechos.'
+    ],
+    filesTouched: [
+      'frontend/src/data/netAndRolesData.ts',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/oneshot/RedChromeCargoView.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'AI_CONTEXT_HANDOFF.md'
+    ],
+    metricsBadge: 'v4.0.2 • CEMK Quickhacking Canonical & HUD Ergonomics • 100% Validado'
+  },
+  {
     version: 'v4.0.1',
     date: '2026-10-20',
     phase: 'Codex',
@@ -234,6 +261,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.0.2': true,
     'v4.0.1': true,
     'v4.0.0': true,
     'v3.9.0': true,

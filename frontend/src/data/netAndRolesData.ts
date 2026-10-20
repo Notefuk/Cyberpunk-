@@ -353,185 +353,149 @@ export interface Quickhack2077 {
   name: string;
   tier: 'Simple' | 'Standard' | 'Difficult' | 'Advanced';
   dv: number;
-  ramCost: number;
+  actionCost: string; // '1 NET Action'
+  ramCost?: number;
   duration: string;
   damage?: string;
+  damageFormula?: '1d6' | '3d6';
   effect: string;
   loreDescription: string;
   requiredInterfaceRank: number;
 }
 
 export const QUICKHACKS_2077_CATALOG: Quickhack2077[] = [
+  // 1. Simple Quickhacks (DV 6 — Desbloqueados en Interface Rango 1+)
   {
-    id: 'qh-overheat',
-    name: 'Overheat',
+    id: 'qh-impair-movement',
+    name: 'Impair Movement',
     tier: 'Simple',
     dv: 6,
-    ramCost: 3,
-    duration: '2 Asaltos',
-    damage: '2d6 Térmico por asalto',
-    effect: 'Inyecta un bucle térmico que sobrecalienta los circuitos subcutáneos del objetivo, infligiendo 2d6 daño directo a HP por asalto.',
-    loreDescription: 'Quema los procesadores térmicos del Neuroport enemigo.',
+    actionCost: '1 NET Action',
+    duration: '60 segundos (20 Rondas)',
+    effect: 'El MOVE del objetivo se reduce en 1 durante los próximos 60 segundos (20 Rondas). Si se reduce a 0 MOVE, no puede realizar una Acción de Movimiento (Move Action).',
+    loreDescription: 'Sobrecarga los micro-servomotores o impulsos motores corporales frenando el desplazamiento.',
     requiredInterfaceRank: 1
-  },
-  {
-    id: 'qh-short-circuit',
-    name: 'Short Circuit',
-    tier: 'Simple',
-    dv: 6,
-    ramCost: 3,
-    duration: 'Instantáneo',
-    damage: '3d6 EMP a HP (x2 vs Drones/FBC)',
-    effect: 'Descarga un pico de voltaje directo al sistema nervioso y servos. Causa 3d6 daño a HP, duplicándose contra drones y cuerpos Full Borg.',
-    loreDescription: 'El ataque predilecto para freír ciberware y robots.',
-    requiredInterfaceRank: 1
-  },
-  {
-    id: 'qh-optics-jammer',
-    name: 'Optics Jammer',
-    tier: 'Simple',
-    dv: 6,
-    ramCost: 2,
-    duration: '1 Asalto',
-    effect: 'Ciega la visión del objetivo transmitiendo estática brillante. El objetivo sufre un penalizador de -4 a todas sus tiradas de ataque.',
-    loreDescription: 'Ciega temporalmente las retinas Kiroshi o biológicas con señal parásita.',
-    requiredInterfaceRank: 1
-  },
-  {
-    id: 'qh-weapon-glitch',
-    name: 'Weapon Glitch',
-    tier: 'Simple',
-    dv: 6,
-    ramCost: 2,
-    duration: 'Hasta que se repare con 1 Acción',
-    effect: 'Hackea el percutor electrónico del arma sostenida, trabándola de inmediato. Requiere una acción de Meatspace para despejar la recámara.',
-    loreDescription: 'Inutiliza el cargador de armas Smart o Power.',
-    requiredInterfaceRank: 1
-  },
-  {
-    id: 'qh-lure',
-    name: 'Lure',
-    tier: 'Simple',
-    dv: 6,
-    ramCost: 2,
-    duration: '1 Asalto',
-    effect: 'Emite una señal auditiva o visual falsa forzando al objetivo a abandonar su cobertura e investigar el punto señalado.',
-    loreDescription: 'Desaloja a centinelas sin alertar al resto del escuadrón.',
-    requiredInterfaceRank: 1
-  },
-  {
-    id: 'qh-cyberware-malfunction',
-    name: 'Cyberware Malfunction',
-    tier: 'Standard',
-    dv: 8,
-    ramCost: 4,
-    duration: '1 Minuto',
-    effect: 'Apaga temporalmente un implante de ciberware activo del objetivo (Sandevistan, Cyberarm, Kiroshi o Blindaje Subdérmico).',
-    loreDescription: 'Corta la alimentación eléctrica del implante seleccionado.',
-    requiredInterfaceRank: 2
-  },
-  {
-    id: 'qh-contagion',
-    name: 'Contagion',
-    tier: 'Standard',
-    dv: 8,
-    ramCost: 4,
-    duration: 'Instantáneo',
-    damage: '2d6 Viral a HP',
-    effect: 'Afecta al objetivo principal y salta automáticamente a un segundo objetivo enemigo situado a menos de 6 metros.',
-    loreDescription: 'Un gusano bio-viral que salta entre interfaces inalámbricas abiertas.',
-    requiredInterfaceRank: 2
   },
   {
     id: 'qh-sonic-shock',
     name: 'Sonic Shock',
+    tier: 'Simple',
+    dv: 6,
+    actionCost: '1 NET Action',
+    duration: '60 segundos (20 Rondas)',
+    effect: 'El objetivo sufre el efecto de la Herida Crítica "Damaged Ear" (Oído Dañado: si se mueve más de 4m en un turno no puede moverse en el siguiente, y -2 a Perception auditiva), pero NO sufre el Daño Bono (+5). El efecto dura 60 segundos (20 Rondas).',
+    loreDescription: 'Dispara una frecuencia resonante ensordecedora directo al córtex auditivo o suite cibernética.',
+    requiredInterfaceRank: 1
+  },
+
+  // 2. Standard Quickhacks (DV 8 — Desbloqueados en Interface Rango 2+)
+  {
+    id: 'qh-overheat',
+    name: 'Overheat',
     tier: 'Standard',
     dv: 8,
-    ramCost: 3,
-    duration: '1 Minuto',
-    effect: 'Ensordece totalmente al objetivo y corta su enlace de radiofrecuencia, impidiendo que escuche o pida refuerzos a sus aliados.',
-    loreDescription: 'Aísla acústica y telemáticamente a la víctima.',
+    actionCost: '1 NET Action',
+    duration: 'Hasta apagar el fuego',
+    damage: '4 Daño directo a HP/turno (ignora SP)',
+    effect: 'El objetivo está en llamas. Sufre 4 puntos de daño directamente a sus HP al final de cada uno de sus Turnos hasta que apague el fuego. Este daño ignora la armadura (SP) y NO la ablaciona. Apagar el fuego requiere 1 Acción (ROF 1) en el turno del objetivo.',
+    loreDescription: 'Inyecta un bucle térmico que sobrecalienta los disipadores subcutáneos del Neuroport enemigo.',
     requiredInterfaceRank: 2
   },
   {
-    id: 'qh-cripple-movement',
-    name: 'Cripple Movement',
+    id: 'qh-short-circuit',
+    name: 'Short Circuit',
     tier: 'Standard',
     dv: 8,
-    ramCost: 3,
-    duration: '2 Asaltos',
-    effect: 'Bloquea los actuadores de las piernas o extremidades motoras. Reduce la estadística MOVE del objetivo a 2.',
-    loreDescription: 'Inmoviliza a corredores rápidos y ciberpsicópatas.',
+    actionCost: '1 NET Action',
+    duration: '60 segundos (20 Rondas)',
+    effect: 'El GM elige 3 piezas de ciberware del objetivo que NO sean Cyberarm, Cyberleg, Cybereye, Cyberaudio Suite, Neuroport ni Neuroport Cyberdeck Expansion (las opciones instaladas en ellos como Mantis Blades o Low Light/IR/UV SÍ pueden ser elegidas). El ciberware seleccionado deja de funcionar durante 60 segundos (20 Rondas).',
+    loreDescription: 'Descarga un pico de alto voltaje selectivo para freír circuitos integrados y actuadores secundarios.',
     requiredInterfaceRank: 2
+  },
+
+  // 3. Difficult Quickhacks (DV 10 — Desbloqueados en Interface Rango 3+)
+  {
+    id: 'qh-cyberware-malfunction',
+    name: 'Cyberware Malfunction',
+    tier: 'Difficult',
+    dv: 10,
+    actionCost: '1 NET Action',
+    duration: '60 segundos (20 Rondas)',
+    effect: 'El jugador del Netrunner elige 1 pieza de ciberware del objetivo (excepto Neuroport o Neuroport Cyberdeck Port) para que quede inoperativa durante 60 segundos (20 Rondas). Las Ciberextremidades (Cyberlimbs) inoperativas actúan como si tuvieran la Herida Crítica "Broken Arm" o "Broken Leg". Todas las opciones acopladas a ese implante también dejan de funcionar.',
+    loreDescription: 'Ataque quirúrgico con control total del atacante para anular el implante más peligroso del enemigo.',
+    requiredInterfaceRank: 3
+  },
+  {
+    id: 'qh-lure',
+    name: 'Lure',
+    tier: 'Difficult',
+    dv: 10,
+    actionCost: '1 NET Action',
+    duration: '1 Turno',
+    effect: 'Al inicio del próximo Turno del objetivo, está forzado a realizar una Acción de Movimiento (Move Action) controlada por el Netrunner, sintiéndose compelido a investigar un ruido fantasma que solo él oye. Lure solo funciona si el objetivo NO sabe que un Netrunner hizo Jack In. A diferencia de otros Quickhacks, Lure NO alerta al objetivo de que fue hackeado. No puedes atraer a alguien por un precipicio ni hacia un peligro físico evidente.',
+    loreDescription: 'Genera alucinaciones auditivas subliminales para mover centinelas sin romper el sigilo.',
+    requiredInterfaceRank: 3
+  },
+  {
+    id: 'qh-slow',
+    name: 'Slow',
+    tier: 'Difficult',
+    dv: 10,
+    actionCost: '1 NET Action',
+    duration: '60 segundos (20 Rondas)',
+    damage: '1d6 reducción de MOVE',
+    damageFormula: '1d6',
+    effect: 'El MOVE del objetivo se reduce en 1d6 durante los próximos 60 segundos (20 Rondas). Si se reduce a 0 MOVE, no puede realizar una Acción de Movimiento (Move Action).',
+    loreDescription: 'Bloquea drásticamente los enlaces bio-ópticos motores dejando al objetivo casi inmóvil.',
+    requiredInterfaceRank: 3
   },
   {
     id: 'qh-synapse-burnout',
     name: 'Synapse Burnout',
-    tier: 'Standard',
-    dv: 8,
-    ramCost: 5,
+    tier: 'Difficult',
+    dv: 10,
+    actionCost: '1 NET Action',
     duration: 'Instantáneo',
-    damage: '4d6 daño a HP + 1d6 por cada 10 HP que le falten al objetivo',
-    effect: 'Descarga neurotrópica masiva. Causa más daño cuanto más herida esté la víctima, rematándola con brutalidad.',
-    loreDescription: 'Acelerador letal de daño neuronal terminal.',
-    requiredInterfaceRank: 2
+    damage: '3d6 daño directo a HP (ignora SP)',
+    damageFormula: '3d6',
+    effect: 'Causa 3d6 de daño directamente a los HP del objetivo. Este daño ignora la armadura (SP) y NO la ablaciona.',
+    loreDescription: 'Sobrecarga neuroeléctrica brutal dirigida contra el córtex del objetivo, friendo tejido vivo.',
+    requiredInterfaceRank: 3
   },
+
+  // 4. Advanced Quickhacks (DV 12 — Desbloqueados en Interface Rango 4+)
   {
-    id: 'qh-detonate-grenade',
-    name: 'Detonate Grenade',
-    tier: 'Difficult',
-    dv: 10,
-    ramCost: 5,
-    duration: 'Instantáneo',
-    damage: 'Daño completo de la granada detonada',
-    effect: 'Sobrecarga el temporizador de una granada en el arnés de combate del objetivo, detonándola de forma inmediata sobre su propio cuerpo.',
-    loreDescription: 'Convierte el arsenal del enemigo en su propia tumba.',
-    requiredInterfaceRank: 4
-  },
-  {
-    id: 'qh-memory-wipe',
-    name: 'Memory Wipe',
-    tier: 'Difficult',
-    dv: 10,
-    ramCost: 4,
-    duration: '1 Asalto',
-    effect: 'Borra temporalmente el estado de alerta del enemigo. El objetivo sale del combate y pierde su siguiente turno preguntándose qué ocurría.',
-    loreDescription: 'Reinicio táctico de memoria a corto plazo.',
-    requiredInterfaceRank: 4
-  },
-  {
-    id: 'qh-reboot-optics-mass',
-    name: 'Reboot Optics (Mass)',
-    tier: 'Difficult',
-    dv: 10,
-    ramCost: 5,
-    duration: '2 Asaltos',
-    effect: 'Reinicia las ópticas cibernéticas de hasta 2 enemigos situados a menos de 4 metros, cegándolos por completo durante 2 asaltos.',
-    loreDescription: 'Apagón óptico coordinado para escuadras enteras.',
-    requiredInterfaceRank: 4
-  },
-  {
-    id: 'qh-cyberpsychosis-protocol',
-    name: 'Cyberpsychosis Protocol',
+    id: 'qh-puppet',
+    name: 'Puppet',
     tier: 'Advanced',
     dv: 12,
-    ramCost: 7,
-    duration: '2 Asaltos',
-    effect: 'Induce un ataque de paranoia violenta. El objetivo debe atacar con su arma más dañina al aliado más cercano durante su siguiente turno.',
-    loreDescription: 'Desata el frenesí psicótico simulado en mentes con alto cromo.',
-    requiredInterfaceRank: 7
+    actionCost: '1 NET Action',
+    duration: '1 Turno',
+    effect: 'Controlas tanto la Acción (Action) como la Acción de Movimiento (Move Action) del objetivo durante su próximo Turno. Puedes hacer que se ataque a sí mismo con su arma, que saque el seguro de su propia granada (pull a pin on their grenade), o que le dispare a su propio compañero (choomba). Todas las tiradas se realizan usando los STATs y Skills del objetivo en lugar de los del Netrunner.',
+    loreDescription: 'Secuestro psicomotor total del cuerpo anfitrión forzándolo a cometer fratricidio o suicidio.',
+    requiredInterfaceRank: 4
   },
   {
-    id: 'qh-suicide',
-    name: 'Suicide',
+    id: 'qh-shard-ejection',
+    name: 'Shard Ejection',
     tier: 'Advanced',
     dv: 12,
-    ramCost: 8,
+    actionCost: '1 NET Action',
     duration: 'Instantáneo',
-    damage: 'Disparo a la cabeza con su propia arma',
-    effect: 'Invalida la voluntad motora del objetivo, obligándole a colocar su arma activa en la sien y apretar el gatillo con daño apuntado a la cabeza (x2 daño penetrante).',
-    loreDescription: 'El Quickhack definitivo de control absoluto.',
-    requiredInterfaceRank: 7
+    effect: 'Desinstala por la fuerza y expulsa 1 pieza de Chipware del objetivo (a tu elección si tiene varias instaladas) hacia una casilla adyacente. No funciona si el objetivo tiene un cobertor de ranura de fragmentos (Shard Slot Cover) o incluso cinta adhesiva sobre la ranura.',
+    loreDescription: 'Obliga a los eyectores neumáticos del Neuroport a disparar sus fragmentos de habilidad o memoria.',
+    requiredInterfaceRank: 4
+  },
+  {
+    id: 'qh-system-reset',
+    name: 'System Reset',
+    tier: 'Advanced',
+    dv: 12,
+    actionCost: '1 NET Action',
+    duration: '60 segundos o al recibir daño',
+    effect: 'El objetivo cae Inconsciente (Unconscious) durante 60 segundos (20 Rondas) o hasta que despierte al recibir daño. Además, cae Cuerpo a Tierra (Prone).',
+    loreDescription: 'Envía una señal de parada cardiorrespiratoria simulada provocando un síncope total inmediato.',
+    requiredInterfaceRank: 4
   }
 ];
 
@@ -573,69 +537,69 @@ export interface QuickhackingOfficialRulesGuide {
 }
 
 export const QUICKHACKING_OFFICIAL_RULES_GUIDE: QuickhackingOfficialRulesGuide = {
-  title: 'Reglas Canónicas de Quickhacking Remoto // CEMK 2077',
-  source: 'Cyberpunk Edgerunners Mission Kit (CEMK 2077 Rulebook pp. 24-31)',
+  title: 'Reglas Canónicas de Quickhacking Remoto // CEMK 2077 (Sin RAM)',
+  source: 'Cyberpunk Edgerunners Mission Kit (CEMK Rulebook pp. 16–18, 26–28, 39, 42)',
   howUnlockingWorks: {
-    title: 'Desbloqueo de Quickhacks según Rango de Interface',
-    summary: 'A diferencia de los programas clásicos de 2045 que se compraban por separado, en la era 2077 los Netrunners militares y edgerunners acceden a las suites de daemons de combate directamente en función de su maestría en la habilidad de Rol Interface. Cada umbral desbloquea automáticamente toda la categoría correspondiente:',
+    title: 'Desbloqueo Canónico de Quickhacks según Rango de Interface',
+    summary: 'En el TTRPG de CEMK NO existe la RAM de los videojuegos. Todas las acciones de Quickhacking se gestionan mediante NET Actions en combate. Los Quickhacks se desbloquean en 4 escalones según tu Rango de Interface:',
     ranks: [
       {
-        interfaceRank: 'Rango Interface 1+',
+        interfaceRank: 'Interface Rango 1',
         tierName: 'Simple Quickhacks',
         dv: 'DV 6',
-        unlockedHacks: ['Overheat', 'Short Circuit', 'Optics Jammer', 'Weapon Glitch', 'Lure'],
-        notes: 'Disponibles desde el primer instante en que aprendes la habilidad Interface. Daños térmicos básicos, chispazos EMP y cegamiento leve.'
+        unlockedHacks: ['Impair Movement', 'Sonic Shock'],
+        notes: 'Reducción de MOVE (-1) o condición Damaged Ear sin daño extra durante 60 segundos.'
       },
       {
-        interfaceRank: 'Rango Interface 2–3+',
+        interfaceRank: 'Interface Rango 2',
         tierName: 'Standard Quickhacks',
         dv: 'DV 8',
-        unlockedHacks: ['Cyberware Malfunction', 'Contagion', 'Sonic Shock', 'Cripple Movement', 'Reboot Optics / Synapse Burnout'],
-        notes: 'Inmovilización motora, apagón de ciberimplantes activos, virus bio-contagiosos y aceleración de daño sináptico.'
+        unlockedHacks: ['Overheat', 'Short Circuit'],
+        notes: 'Fuego térmico (4 HP/turno ignorando SP) o apagado de 3 piezas de ciberware por 60 segundos.'
       },
       {
-        interfaceRank: 'Rango Interface 4+',
+        interfaceRank: 'Interface Rango 3',
         tierName: 'Difficult Quickhacks',
         dv: 'DV 10',
-        unlockedHacks: ['Detonate Grenade', 'Memory Wipe', 'Reboot Optics (Mass)'],
-        notes: 'Todo Netrunner inicial de Rango 4 (como Lucy o Kiwi) ya posee maestría en Simple, Standard y Difficult. Permite detonar arneses de granadas y borrar alertas.'
+        unlockedHacks: ['Cyberware Malfunction', 'Lure', 'Slow (1d6 MOVE)', 'Synapse Burnout (3d6 HP)'],
+        notes: 'Apagado de ciberware clave, señuelo silencioso, frenado motor drástico y daño letal 3d6. ¡A Rango 3 superas automáticamente el Firewall base (DV 6) de cualquier Neuroport sin gastar NET Action!'
       },
       {
-        interfaceRank: 'Rango Interface 7+',
-        tierName: 'Advanced / Ultimate Quickhacks',
+        interfaceRank: 'Interface Rango 4+',
+        tierName: 'Advanced Quickhacks',
         dv: 'DV 12',
-        unlockedHacks: ['Cyberpsychosis Protocol', 'Suicide', 'Puppet', 'System Reset'],
-        notes: 'La cumbre del ciberterrorismo: anulación absoluta de la autonomía motora del blanco, forzándolo a dispararse a la cabeza o aniquilar a sus propios compañeros.'
+        unlockedHacks: ['Puppet', 'Shard Ejection', 'System Reset'],
+        notes: 'Control total de acciones/movimiento del blanco, eyección forzosa de Chipware e inconsciencia total con derribo.'
       }
     ]
   },
   rangeAndLineOfSight: {
     title: 'Alcance Operativo & Línea de Visión (Meatspace)',
     maxDistance: '50 metros (25 casillas tácticas)',
-    lineOfSightRules: 'El Netrunner debe tener línea de visión directa hacia el objetivo o hacia una cámara hackeada que lo enfoque. No atraviesa paredes sólidas sin retransmisión.',
-    neuroportRequirement: 'El objetivo debe portar un Neuroport activo o interfaz inalámbrica (en 2077, el 99% de los habitantes urbanos lo tiene de serie).',
-    freeActionConnection: 'En tu turno, conectarte a la frecuencia inalámbrica del Neuroport de un objetivo visible dentro de 50 metros se considera una Acción Gratuita (Free Action).'
+    lineOfSightRules: 'El Netrunner debe tener línea de visión directa hacia el objetivo o hacia una cámara hackeada que lo enfoque. No atraviesa paredes sólidas sin enlace.',
+    neuroportRequirement: 'El objetivo debe portar un Neuroport activo (en 2077, prácticamente todos los habitantes urbanos lo tienen instalado).',
+    freeActionConnection: 'En tu turno, establecer conexión inalámbrica al Neuroport de un objetivo visible dentro de 50 metros es una Acción Gratuita.'
   },
   breachingAndPasswords: {
-    title: 'Vulneración de Defensas & NET Actions por Turno',
+    title: 'Flujo Canónico de 4 Pasos en Combate (Por NET Actions)',
     netActionsPerTurn: [
-      { rankRange: 'Interface 1 a 3', actions: 2 },
-      { rankRange: 'Interface 4 a 6', actions: 3 },
-      { rankRange: 'Interface 7 a 9', actions: 4 },
-      { rankRange: 'Interface 10 (Master)', actions: 5 }
+      { rankRange: 'Interface 1 a 3', actions: 3 },
+      { rankRange: 'Interface 4 a 6', actions: 4 },
+      { rankRange: 'Interface 7 a 9', actions: 5 },
+      { rankRange: 'Interface 10 (Master)', actions: 6 }
     ],
     breachProcedure: [
-      '1. Acción Gratuita: Estableces el enlace inalámbrico hacia el Neuroport del blanco (alcance 50m).',
-      '2. Primera NET Action: Si el blanco tiene Password o Firewall defensivo, tiras 1d10 + Interface contra el DV del Firewall para abrir la brecha.',
-      '3. Segunda NET Action: Declaras el Quickhack que deseas inyectar, gastas su coste de RAM y tiras 1d10 + Interface contra el DV del Quickhack.',
-      '4. Éxito: El daemon se compila e infecta los circuitos del Neuroport de inmediato, aplicando su efecto y daño.'
+      'Paso 1: Jack In (1 NET Action) — Interface + 1d10 vs WILL del objetivo + 1d10. Entras siempre a su Neuroport; pero si fallas la tirada, el objetivo detecta tu intrusión.',
+      'Paso 2: Breach Passwalls (1 NET Action por Passwall) — Romper el Firewall base (DV 6; ignorado automáticamente a Interface 3+) y los Self-ICE del objetivo (1 Self-ICE = DV 6, 2 Self-ICE = DV 8, 3 Self-ICE = DV 10).',
+      'Paso 3: Perform a Quickhack (1 NET Action) — Tira Interface + 1d10 vs DV del Quickhack (6, 8, 10 o 12). Límite estricto: máximo 1 Quickhack por objetivo por Turno.',
+      'Paso 4: Expulsión / Boot Out (1 Acción de Meatspace del Objetivo) — En su turno, si el objetivo sabe que estás dentro, puede gastar su Acción para tirar WILL + Concentration + 1d10 vs tu Interface + 1d10. Si gana, te expulsa y no puedes volver a entrar por 60 minutos.'
     ]
   },
   selfIceAndDefense: {
-    title: 'Defensas del Objetivo: Self-ICE y Expulsión Activa',
-    selfIceEffect: 'El implante Self-ICE crea una capa de firewall autónomo que añade +2 a la DV de todos los Quickhacks hostiles dirigidos contra el portador o actúa como un Password defensivo automático de DV 8.',
-    countermeasureAction: 'En su turno, la víctima de un Quickhack continuo (como Overheat o Cyberware Malfunction) puede gastar 1 Acción de Meatspace para intentar expulsar el daemon tirando 1d10 + WILL + Concentration contra la tirada de Interface del Netrunner atacante.',
-    rebootRecovery: 'Alternativamente, el portador puede reiniciar manualmente su Neuroport con 1 Acción Completa, quedando ciego y desorientado durante 1 asalto pero purgando todos los daemons activos.'
+    title: 'Defensas del Objetivo: Self-ICE y Protocolo de Expulsión',
+    selfIceEffect: 'Cada implante Self-ICE crea un Passwall defensivo adicional dentro del Neuroport (1 Self-ICE = DV 6, 2 Self-ICE = DV 8, 3 Self-ICE = DV 10) que debe ser superado antes de inyectar Quickhacks.',
+    countermeasureAction: 'Si el objetivo sabe que estás dentro, gasta su Acción de Meatspace en su turno para tirar WILL + Concentration + 1d10 vs tu Interface + 1d10. Si supera la tirada, el hacker es expulsado y bloqueado por 60 minutos.',
+    rebootRecovery: 'El objetivo también puede reiniciar manualmente su Neuroport con 1 Acción Completa, perdiendo visión y defensas durante 1 asalto pero purgando daemons activos.'
   }
 };
 

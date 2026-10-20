@@ -26,7 +26,7 @@ When tasked with modifying, refactoring, or extending this repository, **you mus
 
 ---
 
-### 🗺️ Current Real Tree on Disk (`v4.0.1 - Ergonomía de STATS, Asistencia Médica Canónica, Modo Master en Netrunning, Acciones de Interfaz y Settings Modulares`)
+### 🗺️ Current Real Tree on Disk (`v4.0.2 - CEMK Canonical Quickhacking [Zero RAM], Damage Calculator & Two-Row HUD Headers`)
 
 ```text
 cpr-omni-deck/
@@ -245,6 +245,34 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 ---
 
 ## 📜 Master Version Changelog
+
+### [v4.0.2] - 2026-10-20 (CEMK Canonical Quickhacking [Zero RAM, 11 Hacks, 4-Step Combat Flow], Combat HUD Damage Calculator & Ergonomic Header Layout)
+* **Category**: Canonical CEMK 2077 Rules, Combat HUD Ergonomics & Two-Row Card Header Architecture
+* **Files Modified**:
+  - `frontend/src/data/netAndRolesData.ts`
+  - `frontend/src/features/netroles/NetAndRolesDeckView.tsx`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/oneshot/RedChromeCargoView.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `AI_CONTEXT_HANDOFF.md`
+* **What Changed**:
+  1. **Purga Integral de RAM y Quickhacking Canónico CEMK 2077 (`netAndRolesData.ts`, `NetAndRolesDeckView.tsx`, `CombatHudView.tsx`, `RedChromeCargoView.tsx`)**:
+     - *Erradicación total de la RAM de videojuego*: En el juego de rol de mesa Cyberpunk Edgerunners Mission Kit (pp. 16-18, 26-28, 39, 42), el Quickhacking opera 100% mediante NET Actions en combate táctico (1 NET Action por Quickhack, con límite de 1 Quickhack por objetivo por Turno).
+     - *Catálogo Estricto de los 11 Quickhacks Oficiales*:
+       - **Simple (Interface R1+, DV 6)**: *Impair Movement* (-1 MOVE por 60s), *Sonic Shock* (condición Damaged Ear por 60s sin daño extra).
+       - **Standard (Interface R2+, DV 8)**: *Overheat* (fuego térmico: 4 daño directo a HP/turno ignorando SP hasta que se apague con 1 Acción), *Short Circuit* (apaga 3 piezas de ciberware secundario por 60s).
+       - **Difficult (Interface R3+, DV 10)**: *Cyberware Malfunction* (el Netrunner anula 1 implante crítico por 60s), *Lure* (distracción acústica simulada), *Slow* (reduce el MOVE del blanco en 1d6 durante 60s), *Synapse Burnout* (inflicción de 3d6 daño directo a HP ignorando SP; ¡además, a Interface 3+ el hacker supera automáticamente el Firewall base DV 6 de cualquier Neuroport!).
+       - **Advanced (Interface R4+, DV 12)**: *Puppet* (secuestro motor total: el Netrunner controla la Acción y el Movimiento del blanco en su turno), *Shard Ejection* (expulsión forzosa de Chipware), *System Reset* (síncope total: deja al blanco Inconsciente y Prone durante 60s o hasta que sufra daño).
+     - *Flujo Canónico de 4 Pasos*: Integración interactiva y telemétrica del procedimiento canónico: Paso 1 (Jack In vs WILL del blanco con detección de intrusión), Paso 2 (Romper Passwalls / Self-ICE DV 6/8/10, con Bypass automático de Firewall base DV 6 para Interface 3+), Paso 3 (Lanzar Quickhack a 1 NET Action con resolución de daño automático 3d6/1d6) y Paso 4 (Contramedida de Expulsión / Boot Out del objetivo mediante tirada de WILL + Concentration vs Interface).
+  2. **Rediseño Integral de la Calculadora de Daño e Impactos (`CombatHudView.tsx`)**:
+     - Eliminados los 8 botones preset fijos (`[5] [8] [10] [12] [15] [18] [22] [25]`).
+     - Sustituidos por un campo numérico libre `<input type="number" min={0} max={200} ... />` centrado y tipografía monospace de alta legibilidad, flanqueado por botones tácticos `-1` y `+1` para ajuste fino de daño bruto entrante.
+  3. **Arquitectura de Cabeceras HUD de Dos Filas (`CombatHudView.tsx`)**:
+     - Reestructuración de `CollapsibleHudCard` en dos filas diferenciadas: Fila 1 (controles de arrastre/colapso, título de sección y botones de acción rápida como `🔄 Restaurar Suerte` o badges `GRAVE (-2)`); Fila 2 (sub-barra de espacio `[S] [M] [L] [↕ Todo] [-] [+]` visible únicamente cuando la tarjeta está desplegada).
+     - Previene completamente el solapamiento de textos, títulos o iconos (`✨ SUERTE (LUCK)`) incluso en resoluciones ultra compactas de 3 columnas.
+     - Pips de Suerte ajustados con `flex flex-wrap gap-1.5` y contador de inversión `[-] +0 [+]` redimensionado armónicamente.
 
 ### [v4.0.1] - 2026-10-20 (STATS Tooltip Clipping Fix, Canonical Resting & Medical Assistance, Netrunning GM Mode & Interface Actions DV Fix)
 * **Category**: UI Ergonomics, Resting & Medical Systems, Netrunning GM Mode & Interface Rules
