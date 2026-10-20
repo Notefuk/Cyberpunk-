@@ -7,7 +7,7 @@
 
 **Última actualización**: [Claude Code · 2026-10-20]
 **Versión de la app**: v4.0.2 (sin cambios de código desde entonces)
-**Plan activo**: ninguno (los planes aprobados viven en `docs/plans/`, inmutables)
+**Plan activo**: `docs/plans/plan1-auditoria-core.md` (arreglos de la auditoría general, 5 fases v4.0.3 → v4.2.1)
 
 ## Último trabajo terminado
 
@@ -18,13 +18,16 @@
 
 ## En curso
 
-- Nada a medias.
+- [Claude Code · 2026-10-20] Plan 1 aprobado. Fases: 1 ○ v4.0.3 críticos/equipo canon · 2 ○ v4.1.0 Mortally Wounded + Death Saves + EMP · 3 ○ v4.1.1 bugs del store · 4 ○ v4.2.0 combate unificado · 5 ○ v4.2.1 deuda técnica.
+- Auditoría de expansiones (CEMK 2077, Interface RED, Going Metal) en curso, solo lectura; sus arreglos irán en un plan 2.
+- Pendiente del usuario: qué hacer con los modos de carga sin fuente (R10, `engine/characterEngine.ts:12-41`).
 
 ## Próximos pasos
 
-1. Fase 4: modo Settings para activar o desactivar módulos (FBC/Going Metal, Garaje, Quickhacking 2077, Dojo, NET). Ver `AI_CONTEXT_HANDOFF.md` §4.
-2. GM Master Screen (`FixerDeckView.tsx`).
-3. Scripts de extracción: pasar las rutas Windows hardcodeadas (`scripts/extract_core_pack.py`, `scripts/find_sections.py`) a rutas configurables.
+1. Ejecutar plan 1, fase 1 (v4.0.3).
+2. Fase 4: modo Settings para activar o desactivar módulos (FBC/Going Metal, Garaje, Quickhacking 2077, Dojo, NET). Ver `AI_CONTEXT_HANDOFF.md` §4.
+3. GM Master Screen (`FixerDeckView.tsx`).
+4. Scripts de extracción: pasar las rutas Windows hardcodeadas (`scripts/extract_core_pack.py`, `scripts/find_sections.py`) a rutas configurables.
 
 ## Notas y bloqueos
 
