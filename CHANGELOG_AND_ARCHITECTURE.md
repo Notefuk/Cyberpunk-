@@ -247,6 +247,35 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.3.1] - 2026-10-20 (Datos CEMK canon: 13 armas, ciberware, Immunoblockers y Rebuilds de 1,000 €$) [Claude Code · 2026-10-20]
+* **Category**: Datos de expansión (plan 2, fase 2: `docs/plans/plan2-auditoria-expansiones.md`)
+* **Files Modified**:
+  - `frontend/src/data/core-rules.cprpack.json`
+  - `data/core-rules.cprpack.json`
+  - `frontend/src/data/weaponAndCyberwareTooltips.ts`
+  - `frontend/src/data/expansionRulesData.ts`
+  - `frontend/src/data/enemiesCatalog.ts`
+  - `frontend/src/engine/__tests__/rules.test.ts`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/rules/RulesCheatSheetDrawer.tsx`
+  - `frontend/src/features/datapacks/DataPackManagerView.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CONTENT_CHECKLIST.md`
+  - `CHECKPOINT.md`
+* **What Changed**:
+  1. **Armas CEMK**: se unificaron los dos sets duplicados (`cemk_2077` y `cemk`) en uno solo con las 13 armas de CEMK pp. 31-34 (Yukimura, Masamune, Shingen, Carnage, Unity, Zhuo, Crusher, Lexington, Omaha, Satara, Burya, Grad y Nekomata), con costo, cargador y tipo de Rebuild del libro. Se borraron 6 armas inventadas (Tamayura, Shigure, Kenshin, Chao, Dian, Achilles). Militech Crusher agregada. Mantis Blades y Gorilla Arms quedan como entradas melee. Total del pack: 109 → 98 armas.
+  2. **Ciberware CEMK** (CEMK pp. 34-36): Neuroport 1,000 €$ y HL 7 (gratis y sin HL al crear el personaje, CEMK p. 25), Berserk HL 7, Mantis Blade 500 €$ y HL 14, Self-ICE HL 3 en Hospital. Agregados David's Sandevistan (250,000 €$, HL 14), Ex-Disk, Monowire, Neuroport Cyberdeck Port y Projectile Launch System. Borradas las 12 entradas `cemk_2077` inventadas o duplicadas. Total: 159 → 152.
+  3. **Drogas**: Immunoblockers reescrita desde CEMK p. 30 (2d6 Humanidad, Secondary Effect DV 21). Borradas MaxDoc Mk.1 y BounceBack Mk.1, que no existen en CEMK.
+  4. **Rebuilds** (CEMK pp. 30-31): 1,000 €$ (Very Expensive), 2 ranuras, 1 hora de instalación. Se borró la fabricación con Maker (DV 17, 1 semana, 250 €$) y el Ballistic Coprocessor, que no existen. Power: el rebote con Aimed Shot solo usa el penalizador del Aimed Shot. Smart: Personal Link o Subdermal Grip, incompatible con Smartgun Link; con Improved Smart Ammunition ignora humo y oscuridad y repite el ataque con 14 si falla por 5 o menos. Tech: carga con la Acción de Movimiento, dura 20 Rounds, el disparo cargado es ROF 1. El taller de Street Lab cobra 1,000 €$.
+  5. **Boosterganger**: BODY 2 y Death Save 2 (Errata v1.25 p. 412).
+  6. **Tests**: 4 casos nuevos en `rules.test.ts` (Rebuilds, armas CEMK, Neuroport y Mantis Blade, Boosterganger). Total 23.
+  7. **Sin migración**: el inventario guarda copias completas de cada ítem, así que los personajes que tengan un ítem borrado lo conservan.
+  8. **Revisado sin cambios**: la ficha de Hardpoint coincide con el folio (X12 era un falso positivo) y el ciberware de los folios es equipo premade canon.
+  9. **Pendiente**: menciones a Ballistic Coprocessor y Tamayura en `enemiesCatalog.ts` y `redChromeCargoData.ts` (PNJ y aventura), y el coprocesador de `goingMetalFbcData.ts` (fase de Going Metal).
+
 ### [v4.3.0] - 2026-10-20 (NET y Quickhacks canon: 3 NET Actions, sin RAM, Black ICE del Core) [Claude Code · 2026-10-20]
 * **Category**: Reglas de NET (plan 2, fase 1: `docs/plans/plan2-auditoria-expansiones.md`)
 * **Files Modified**:

@@ -148,6 +148,7 @@
 - [x] **Extracción de `Cyberpunk Edgerunners Mission Kit (CEMK 2077)`**:
   - Reglas de la Era 2077: Neuroport universal (Agente + Biomonitor + Chipware integrado).
   - Conversión de armas 2077: *Power* (rebotes), *Tech* (perforación de cobertura) y *Smart* (guiado).
+  - [Claude Code · 2026-10-20] v4.3.1: Rebuilds a 1,000 €$ y 2 ranuras (CEMK pp. 30-31), 13 armas de CEMK pp. 31-34, ciberware de CEMK pp. 34-36 e Immunoblockers de CEMK p. 30. Borrados 6 armas, 12 ciberwares y 2 drogas inventados.
   - Mecánicas de Ciberpsicosis y Estrés 2077.
 - [x] **Extracción de `Danger Gal Dossier`**:
   - Perfiles de PNJs, mooks y jefes listos para combate integrados en el catálogo de enemigos.

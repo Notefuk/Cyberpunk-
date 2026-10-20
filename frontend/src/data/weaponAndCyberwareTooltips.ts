@@ -135,7 +135,7 @@ export function getWeaponClassAndRebuildInfo(weapon: any): WeaponClassAndRebuild
     rebuildType = 'power';
     rebuildBadge = '💥 POWER REBUILD 2077';
     rebuildTooltip =
-      'Tecnología Power 2077: Proyectiles cinéticos pesados. +5 al daño adicional de Heridas Críticas. Permite disparos con rebote (ricochet) contra paredes o techos con un penalizador de -4 a la tirada (o penalizador 0 si se utiliza un Coprocesador Balístico).';
+      'Tecnología Power 2077: Proyectiles cinéticos pesados. +5 al daño adicional de Heridas Críticas. Permite disparos con rebote (ricochet) en coberturas con -4 a la tirada; con Aimed Shot solo aplica el penalizador del Aimed Shot (CEMK pp. 30-31).';
   } else if (rebuildOverride === 'tech') {
     rebuildType = 'tech';
     rebuildBadge = '⚡ TECH REBUILD 2077';
@@ -154,7 +154,7 @@ export function getWeaponClassAndRebuildInfo(weapon: any): WeaponClassAndRebuild
     rebuildType = 'power';
     rebuildBadge = '💥 POWER REBUILD 2077';
     rebuildTooltip =
-      'Tecnología Power 2077: Proyectiles cinéticos pesados. +5 al daño adicional de Heridas Críticas. Permite disparos con rebote (ricochet) contra paredes o techos con un penalizador de -4 a la tirada (o penalizador 0 si se utiliza un Coprocesador Balístico).';
+      'Tecnología Power 2077: Proyectiles cinéticos pesados. +5 al daño adicional de Heridas Críticas. Permite disparos con rebote (ricochet) en coberturas con -4 a la tirada; con Aimed Shot solo aplica el penalizador del Aimed Shot (CEMK pp. 30-31).';
   } else if (techType === 'tech' || notes.includes('tech weapon') || name.includes('(tech)')) {
     rebuildType = 'tech';
     rebuildBadge = '⚡ TECH REBUILD 2077';
@@ -549,80 +549,57 @@ export interface RebuildSystemOption {
   prerequisites: string;
   combatRules: string;
   specialAbility: string;
-  makerFabrication: {
-    skill: string;
-    dv: number;
-    time: string;
-    materialsCostEb: number;
-  };
   notes: string;
 }
 
 export const CEMK_WEAPON_REBUILD_SYSTEM_GUIDE = {
-  title: 'Sistema Canónico de Rebuilds de Armamento CEMK 2077 (pp. 30-33)',
+  title: 'Sistema Canónico de Rebuilds de Armamento CEMK 2077 (pp. 30-31)',
   description:
-    'Cualquier arma de fuego estándar convencional puede ser transformada en una variante de última tecnología 2077 (Power, Smart o Tech) mediante reacondicionamiento técnico en taller o compra directa.',
+    'Un Rebuild es un accesorio que convierte un arma de fuego de Cyberpunk RED en Power, Smart o Tech Weapon (CEMK p. 30).',
   conversionRulesSummary:
-    'Un arma convertida mediante Rebuild 2077 pasa a costar 500 €$ adicionales (Categoría Expensive), gana 2 ranuras de accesorios dedicadas y adopta la tecnología de disparo elegida. Un Tech con la habilidad Maker puede fabricar la conversión con una tirada de DV 17 y 1 semana de trabajo (250 €$ en materiales).',
+    'Cada Rebuild cuesta 1,000 €$ (Very Expensive) y ocupa 2 ranuras de accesorio. Instalarlo o quitarlo lleva 1 hora. Solo un Rebuild por arma; en un arma Exótica ocupa 1 ranura si la tiene libre (CEMK p. 30).',
   rebuildOptions: [
     {
       type: 'power',
       name: 'Power Rebuild 2077',
       badge: '💥 POWER REBUILD 2077',
-      costEb: 500,
-      costTier: 'Expensive',
+      costEb: 1000,
+      costTier: 'Very Expensive',
       attachmentSlots: 2,
-      prerequisites: 'Arma de fuego estándar (pistola, subfusil, escopeta o fusil).',
+      prerequisites: 'Cualquier arma a distancia no Exótica (CEMK p. 30).',
       combatRules:
-        'Dispara munición cinética de alta densidad. Permite disparos con rebote (Ricochet) en superficies duras (paredes, techos, suelo) ignorando coberturas completas con un penalizador de -4 a la tirada (o penalizador 0 si se cuenta con Ballistic Coprocessor cibernético).',
-      specialAbility: '+5 al daño adicional cuando se inflige una Herida Crítica (Critical Injury).',
-      makerFabrication: {
-        skill: 'Maker (Upgrade / Fabrication Expertise)',
-        dv: 17,
-        time: '1 semana',
-        materialsCostEb: 250
-      },
-      notes: 'No compatible con armas Exóticas o armas Melee.'
+        'Ricochet: puede rebotar el disparo en una cobertura para alcanzar a un objetivo que conoce pero que está tras cobertura o fuera de línea de visión, con -4 al Ataque. Si hace un Aimed Shot, ignora el -4 y solo aplica el penalizador del Aimed Shot. Debe haber camino libre del punto de rebote al objetivo; el rango se mide entre tirador y objetivo (CEMK pp. 30-31).',
+      specialAbility: '+5 al Bonus Damage de cada Herida Crítica que cause el arma (CEMK p. 30).',
+      notes: 'Escopetas: el rebote toma una superficie a 6 m como nuevo origen del área de 6 m (CEMK p. 31).'
     },
     {
       type: 'smart',
       name: 'Smart Rebuild 2077',
       badge: '🎯 SMART REBUILD 2077',
-      costEb: 500,
-      costTier: 'Expensive',
+      costEb: 1000,
+      costTier: 'Very Expensive',
       attachmentSlots: 2,
-      prerequisites: 'Requiere Neuroport con interfaz Smart Link o Subdermal Grip con enlace cibernético + Targeting Scope.',
+      prerequisites:
+        'Cualquier arma a distancia no Exótica sin Smartgun Link. El usuario debe conectarse con un Personal Link (Interface Plug) o un Subdermal Grip (CEMK p. 31).',
       combatRules:
-        'Balas giroscópicas guiadas por micro-propulsores y giroscopio interno. Otorga un bono pasivo de +1 a todas las tiradas de Ataque. Permite disparar alrededor de coberturas a objetivos fuera de línea de visión directa con un penalizador de -4.',
+        '+1 a los Ataques a distancia con el arma. Puede cargar Improved Smart Ammunition; con otra munición mantiene el +1 pero no las ventajas de esa munición (CEMK p. 31).',
       specialAbility:
-        'Con Munición Smart Especializada: si el disparo falla por 5 o menos puntos respecto al DV objetivo, realiza un reroll automático inmediato (14 + 1d10 contra el DV original).',
-      makerFabrication: {
-        skill: 'Maker (Upgrade / Fabrication Expertise)',
-        dv: 17,
-        time: '1 semana',
-        materialsCostEb: 250
-      },
-      notes: 'Si el enlace neuronal es interrumpido o interferido (EMP/Microwaver), opera como un arma convencional sin bonos.'
+        'Con Improved Smart Ammunition: ignora penalizadores por oscuridad, humo, niebla u ocultación visual. Si falla el DV por 5 o menos, repite el ataque sumando 14 (más LUCK) en lugar de STAT + Skill, con los mismos penalizadores del primer disparo (CEMK p. 31).',
+      notes: 'Improved Smart Ammunition: 50 €$ por 10 balas, flechas, slugs o cartuchos; 500 €$ por granada o cohete (CEMK p. 31).'
     },
     {
       type: 'tech',
       name: 'Tech Rebuild 2077',
       badge: '⚡ TECH REBUILD 2077',
-      costEb: 500,
-      costTier: 'Expensive',
+      costEb: 1000,
+      costTier: 'Very Expensive',
       attachmentSlots: 2,
-      prerequisites: 'Batería interna de condensadores electromagnéticos y cañón con bobinas de aceleración Gauss.',
+      prerequisites: 'Cualquier arma a distancia no Exótica salvo lanzagranadas y lanzacohetes (CEMK p. 31).',
       combatRules:
-        'Equipada con visor de detección de siluetas térmicas/electromagnéticas a través de Coberturas Delgadas (placas de yeso, madera, puertas ligeras, chapa de metal).',
+        'Mira que ve siluetas simples a través de Thin Cover. Sacrificando la Acción de Movimiento se carga el arma; queda cargada hasta disparar o 60 segundos (20 Rounds) (CEMK p. 31).',
       specialAbility:
-        'Acción Completa "Charge Shot" (Disparo Cargado): Sacrifica la Acción de Movimiento para cargar los condensadores. El disparo atraviesa coberturas delgadas e ignora el 50% del blindaje SP del defensor (redondeado hacia arriba).',
-      makerFabrication: {
-        skill: 'Maker (Upgrade / Fabrication Expertise)',
-        dv: 17,
-        time: '1 semana',
-        materialsCostEb: 250
-      },
-      notes: 'Consume 2 proyectiles o 1 carga de celda energética por cada disparo cargado.'
+        'Cargada, el siguiente ataque no explosivo es ROF 1, atraviesa Thin Cover (la cobertura no pierde HP) e ignora la mitad del SP del objetivo (redondeando hacia arriba) (CEMK p. 31).',
+      notes: 'La carga se pierde si pasan 20 Rounds sin disparar (CEMK p. 31).'
     }
   ] as RebuildSystemOption[]
 };

@@ -95,13 +95,13 @@ const OFFICIAL_13_MODULES: OfficialModuleData[] = [
     keyHighlights: [
       'Neuroport 2077 universal (Holófono, Biomonitor, Virtu, HUD, Shards, Personal Link).',
       '15 Quickhacks divididos en Simple (Req 1), Standard (Req 2), Difficult (Req 4) y Advanced (Req 7).',
-      'Reglas de Armas 2077: Power (rebote +5 crítico), Tech (disparo cargado ignora 50% SP y atraviesa cobertura) y Smart (+1 ataque y target lock).',
+      'Reglas de Armas 2077: Power (rebote +5 crítico), Tech (disparo cargado ignora 50% SP y atraviesa cobertura) y Smart (+1 ataque y segundo intento con Improved Smart Ammunition).',
       '7 Personajes oficiales de los Folios: Hardpoint, Wrench, Connect, Bluescreen, Insurance, Thorn y Maven.',
       'Tokens oficiales en formato PNG listos para el tablero táctico.'
     ],
     mechanicsIntroduced: [
-      'Quickhacking a 50m con 3 Net Actions por Turno',
-      'Disparos con Rebote cinético Power a -4 (o 0 con Coprocesador)',
+      'Quickhacking a 6, 8 o 50 m según la conexión, con hasta 3 NET Actions por turno',
+      'Disparos con Rebote Power a -4 (o solo el penalizador de Aimed Shot)',
       'Carga electromagnética Tech ignorando la mitad de SP',
       'Segunda oportunidad balística con munición Smart'
     ],

@@ -100,15 +100,15 @@ export const SOURCEBOOKS_CATALOG: SourceBookMeta[] = [
     whatItBringsSummary:
       'La adaptación oficial a la era del anime Cyberpunk: Edgerunners y el videojuego 2077. Introduce el Neuroport unificado de serie, la reconstrucción balística en armas Power (rebotes), Tech (perforación de coberturas) y Smart (guiado), junto con el sistema de Quickhacking inalámbrico en combate y mecánicas de Ciberpsicosis acelerada.',
     keyHighlights: [
-      'Neuroport universal preinstalado en todos los personajes de 2077 (0 €$ / 0 HL).',
+      'Neuroport (1,000 €$, HL 7): gratis y sin pérdida de Humanidad al crear un personaje de 2077 (CEMK p. 25).',
       '11 Quickhacks oficiales sin RAM: 1 NET Action cada uno, 1 por objetivo por turno (CEMK pp. 16-17).',
-      'Armamento 2077: Carnage "Guts", Satara Tech, Nekomata, Achilles y Tamayura.',
+      '13 armas 2077 de CEMK pp. 31-34 (Yukimura, Masamune, Shingen, Carnage, Unity, Zhuo, Crusher, Lexington, Omaha, Satara, Burya, Grad y Nekomata).',
       'Fichas de la tripulación de David Martinez, Lucy, Rebecca, Maine y Kiwi.'
     ],
     mechanicsIntroduced: [
       'Armas Power (rebotes tácticos y +5 crítico)',
       'Armas Tech (disparo cargado que ignora 50% SP y muros)',
-      'Armas Smart 2077 (+1 ataque y reroll de fallo)',
+      'Armas Smart 2077 (+1 ataque; con Improved Smart Ammunition, segundo intento con 14 + 1d10 si falla por 5 o menos)',
       'Quickhacking de Neuroports sin RAM (Jack In, Breach, Quickhack, Boot Out)',
       'Inmunobloqueadores y episodios de Ciberpsicosis con EMP <= 2'
     ]
@@ -327,26 +327,27 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
     introDescription:
       'En 2077 las armas convencionales evolucionaron en tres tecnologías balísticas dominantes. Las armas Power dominan la calle con proyectiles cinéticos pesados que rebotan en esquinas; las armas Tech utilizan aceleradores electromagnéticos Gauss para perforar hormigón y coberturas; y las armas Smart disparan micromisiles guiados por giroscopios que persiguen al enemigo tras esquinas sin fallar.',
     howItWorksSteps: [
-      'Armas Power (Cinéticas): Permiten disparar a objetivos ocultos tras una esquina haciendo rebotar la bala en el suelo o pared. Disparar con rebote aplica un penalizador de -4 a la tirada, pero si el tirador tiene instalado el ciberware Ballistic Coprocessor, ¡el penalizador de rebote se reduce a 0! Además, las armas Power suman +5 de daño extra automático en Heridas Críticas.',
-      'Armas Tech (Electromagnéticas): El tirador puede optar por gastar su Acción completa para "Cargar" el disparo. Un disparo cargado Tech ignora el 50% del blindaje defensor (SP / 2) y puede atravesar coberturas sólidas (puertas de coche, muros de pladur, mamparas) sin perder daño si el daño supera el SP de la cobertura.',
-      'Armas Smart (Guiadas): Requieren sincronización con el Neuroport 2077 o Interface Plugs. Otorgan un bono permanente de +1 a la tirada de ataque y poseen la regla de "Segunda Oportunidad": si la tirada de ataque falla por 4 puntos o menos, los microcohetes corrigen la trayectoria y la tirada se repite automáticamente.'
+      'Rebuild: accesorio de 1,000 €$ (Very Expensive) que ocupa 2 ranuras y convierte un arma de fuego en Power, Smart o Tech. Instalarlo lleva 1 hora y solo cabe uno por arma (CEMK p. 30).',
+      'Armas Power: +5 al Bonus Damage de cada Herida Crítica. Pueden rebotar el disparo en una cobertura para alcanzar a un objetivo tras cobertura o fuera de línea de visión con -4 al Ataque; con Aimed Shot solo se aplica el penalizador del Aimed Shot (CEMK pp. 30-31).',
+      'Armas Tech: sacrificando la Acción de Movimiento se carga el arma (dura hasta disparar o 20 Rounds). El siguiente ataque no explosivo es ROF 1, atraviesa Thin Cover sin dañarla e ignora la mitad del SP del objetivo, redondeando hacia arriba (CEMK p. 31).',
+      'Armas Smart: requieren Personal Link (Interface Plug) o Subdermal Grip y no se combinan con Smartgun Link. Dan +1 al Ataque. Con Improved Smart Ammunition ignoran oscuridad, humo y niebla, y si el ataque falla por 5 o menos se repite sumando 14 (más LUCK) en lugar de STAT + Skill (CEMK p. 31).'
     ],
     keyBenefits: [
-      'Power: Nadie está a salvo tras un parapeto si hay una pared o suelo en el que rebotar balas.',
-      'Tech: Anula por completo la ventaja defensiva de coberturas y blindajes pesados tipo Metalgear.',
-      'Smart: Puntería asistida implacable que reduce el margen de error casi a cero.'
+      'Power: el rebote alcanza objetivos tras cobertura o fuera de línea de visión.',
+      'Tech: el disparo cargado atraviesa Thin Cover y corta a la mitad el SP del objetivo.',
+      'Smart: +1 al Ataque y segundo intento con Improved Smart Ammunition.'
     ],
     drawbacksAndRisks: [
-      'Power: Sin el Coprocesador Balístico, calcular ángulos de rebote es difícil (-4 a la tirada).',
-      'Tech: Cargar el arma consume toda tu Acción, impidiendo moverte ágilmente o disparar en ráfaga rápida.',
-      'Smart: Vulnerable a granadas de interferencia Chaff, humo denso y contramedidas electrónicas Self-ICE.'
+      'Power: el rebote cuesta -4 al Ataque (o el penalizador del Aimed Shot si se apunta).',
+      'Tech: cargar consume la Acción de Movimiento y el disparo cargado es ROF 1.',
+      'Smart: sin Personal Link o Subdermal Grip no se puede operar; sin Improved Smart Ammunition solo da el +1.'
     ],
     referenceTable: {
-      headers: ['Tecnología', 'Bono Clave', 'Mecánica Especial de Impacto', 'Ciberware Requerido'],
+      headers: ['Tecnología', 'Bono Clave', 'Mecánica Especial', 'Requisito'],
       rows: [
-        ['Power', '+5 daño en Crítico', 'Rebote en paredes con -4 (o 0 con Coprocesador)', 'Ballistic Coprocessor'],
-        ['Tech', 'Perfora SP y Muros', 'Disparo cargado: ignora 50% SP y atraviesa cobertura', 'Neuroport 2077'],
-        ['Smart 2077', '+1 Ataque / Reroll', 'Segunda oportunidad si falla por 4 o menos', 'Neuroport + Smartgun Link']
+        ['Power', '+5 Bonus Damage en Crítico', 'Rebote con -4 (o solo el penalizador de Aimed Shot)', 'Arma a distancia no Exótica'],
+        ['Tech', 'Ignora mitad del SP', 'Carga con la Acción de Movimiento; atraviesa Thin Cover', 'No lanzagranadas ni lanzacohetes'],
+        ['Smart', '+1 Ataque', 'Segundo intento con 14 si falla por 5 o menos (Improved Smart Ammo)', 'Personal Link o Subdermal Grip']
       ]
     }
   },

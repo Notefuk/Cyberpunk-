@@ -12,6 +12,9 @@ import {
 import { beatsDv, calculateIncomingImpact, createDamageRoll, rollCheckD10 } from '../combatEngine';
 import { BLACK_ICE_STATS, NET_ACTIONS_PER_TURN, QUICKHACKS_2077_CATALOG } from '../../data/netAndRolesData';
 import { BODY_CRITICAL_INJURIES, HEAD_CRITICAL_INJURIES, rollCriticalInjury } from '../../data/criticalInjuries';
+import { CEMK_WEAPON_REBUILD_SYSTEM_GUIDE } from '../../data/weaponAndCyberwareTooltips';
+import { ENEMIES_CATALOG } from '../../data/enemiesCatalog';
+import pack from '../../data/core-rules.cprpack.json';
 import type { CharacterSheet } from '../../types/cyberpunk';
 
 const baseCharacter = (overrides: Partial<CharacterSheet> = {}): CharacterSheet =>
@@ -156,5 +159,38 @@ describe('NET y Quickhacks (CEMK pp. 15-17, Core pp. 206-207)', () => {
     expect(BLACK_ICE_STATS.Asp).toEqual({ per: 4, spd: 6, atk: 2, def: 2, rez: 15 });
     expect(BLACK_ICE_STATS.Giant).toEqual({ per: 2, spd: 2, atk: 8, def: 4, rez: 25 });
     expect(BLACK_ICE_STATS.Dragon).toEqual({ per: 6, spd: 4, atk: 6, def: 6, rez: 30 });
+  });
+});
+
+describe('Datos CEMK canon', () => {
+  const byId = <T extends { id: string }>(list: T[], id: string) => list.find((x) => x.id === id);
+
+  it('los Rebuilds cuestan 1,000 €$ y ocupan 2 ranuras (CEMK pp. 30-31)', () => {
+    for (const opt of CEMK_WEAPON_REBUILD_SYSTEM_GUIDE.rebuildOptions) {
+      expect(opt.costEb).toBe(1000);
+      expect(opt.attachmentSlots).toBe(2);
+    }
+  });
+
+  it('el pack tiene las 13 armas CEMK con su costo (CEMK pp. 31-34)', () => {
+    const cemk = (pack.weapons as { id: string; sourceBook?: string; cost?: number }[]).filter(
+      (w) => w.sourceBook === 'cemk' && !w.id.endsWith('-2077')
+    );
+    expect(cemk).toHaveLength(13);
+    expect(byId(cemk, 'militech-crusher')?.cost).toBe(1000);
+    expect(byId(cemk, 'arasaka-hjke11-yukimura')?.cost).toBe(500);
+  });
+
+  it('Neuroport 1,000 €$ y HL 7; Mantis Blades HL 14 (CEMK pp. 34-36)', () => {
+    const cw = pack.cyberware as { id: string; cost?: number; humanityLoss?: string | number }[];
+    expect(byId(cw, 'cw-cemk-neuroport')?.cost).toBe(1000);
+    expect(String(byId(cw, 'cw-cemk-neuroport')?.humanityLoss)).toContain('7');
+    expect(String(byId(cw, 'cw-cemk-mantis-blades')?.humanityLoss)).toContain('14');
+  });
+
+  it('Boosterganger con BODY 2 y Death Save 2 (Errata v1.25 p. 412)', () => {
+    const booster = ENEMIES_CATALOG.find((e) => e.id === 'core-boosterganger');
+    expect(booster?.stats.BODY).toBe(2);
+    expect(booster?.deathSave).toBe(2);
   });
 });

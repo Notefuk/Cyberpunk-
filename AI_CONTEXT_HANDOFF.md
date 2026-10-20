@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.3.0 OPERATIVO`  
+> **SYSTEM VERSION**: `v4.3.1 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-10-20]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -20,7 +20,11 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 
 ---
 
-## 🚀 2. What Was Added in v4.3.0
+## 🚀 2. What Was Added in v4.3.1
+
+[Claude Code · 2026-10-20] Plan 2, fase 2. Datos CEMK canon: un solo set de 13 armas (CEMK pp. 31-34, 6 inventadas borradas, Crusher agregada), ciberware con costo y HL del libro (Neuroport 1,000 €$ HL 7, Mantis Blade HL 14, Sandevistan de David 250,000 €$), Immunoblockers de CEMK p. 30, MaxDoc y BounceBack borradas, Rebuilds a 1,000 €$ sin Maker ni Ballistic Coprocessor (`CEMK_WEAPON_REBUILD_SYSTEM_GUIDE`), Boosterganger BODY 2 (Errata p. 412). Siguiente: v4.4.0 roles, Martial Arts, Humanidad, granadas, curación y borrar modos de carga.
+
+## 📦 2.0 Historical Summary: What Was Added in v4.3.0
 
 [Claude Code · 2026-10-20] Plan 2, fase 1 (`docs/plans/plan2-auditoria-expansiones.md`). NET y Quickhacks canon: hasta 3 NET Actions en todo rango (`NET_ACTIONS_PER_TURN`, CEMK p. 15), Quickhacks sin RAM con alcance 6/8/50 m y 1 por objetivo por turno, 14 programas `qh-*` borrados del pack, `BLACK_ICE_STATS` del Core pp. 206-207, dificultades Basic/Standard/Uncommon/Advanced, Scanner sin DV, Flak y Shield corregidos, `rollCheckD10`/`beatsDv` en el motor (los Checks contra DV deben superarlo, CEMK p. 5). Siguiente: v4.3.1 datos CEMK.
 
