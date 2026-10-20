@@ -26,6 +26,31 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.2.0',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'Reglas de combate',
+    title: 'Melee enfrentado, munición y autofire corregidos, quickhacks con WILL real',
+    summary: 'Cuarta fase del plan de arreglos de la auditoría. El cuerpo a cuerpo deja el DV 13 fijo y pasa a ser enfrentado contra DEX + Evasion + 1d10 del defensor (Core p. 176). La munición se gasta después de validar el alcance, un Ataque Apuntado nunca usa autofire, los empates los gana el defensor en todos los módulos y los quickhacks usan la WILL del objetivo.',
+    highlights: [
+      'Melee, Brawling, Grab, Martial Arts y Cyberfists vs DEX + Evasion + 1d10 del defensor (Core p. 176).',
+      'Brawling con Cyberarm: mínimo 2d6 (Core p. 176).',
+      'Alcance validado antes de gastar munición; apuntado sin autofire.',
+      'Multiplicador de autofire tomado del último ataque del arma.',
+      'Jack In y Boot Out con WILL y Concentration editables del objetivo (CEMK p. 16).'
+    ],
+    filesTouched: [
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/engine/characterEngine.ts',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CHECKPOINT.md'
+    ],
+    metricsBadge: 'v4.2.0 • Combate unificado • Auditoría fase 4'
+  },
+  {
     version: 'v4.1.1',
     date: '2026-10-20',
     phase: 'Codex',
@@ -352,6 +377,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.2.0': true,
     'v4.1.1': true,
     'v4.1.0': true,
     'v4.0.3': true,

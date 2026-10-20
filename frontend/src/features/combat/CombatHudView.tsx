@@ -769,6 +769,11 @@ const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
   );
 };
 
+// Tirada de 1d10 del defensor en el cuerpo a cuerpo enfrentado (Core p. 176).
+function rollDefenseD10(): number {
+  return Math.floor(Math.random() * 10) + 1;
+}
+
 export const CombatHudView: React.FC = () => {
   // Store hooks
   const activeChar = useCharacterStore((state) => state.getActiveCharacter());
@@ -1420,6 +1425,11 @@ export const CombatHudView: React.FC = () => {
   const [calcAttackType, setCalcAttackType] = useState<'standard' | 'ap' | 'melee' | 'martial_arts' | 'brawling' | 'direct'>('standard');
   const [calcIsCritical, setCalcIsCritical] = useState<boolean>(false);
   const [lastDeathSave, setLastDeathSave] = useState<DeathSaveResult | null>(null);
+  // Core p. 176: el cuerpo a cuerpo es enfrentado contra DEX + Evasion + 1d10 del defensor.
+  const [meleeDefenseBase, setMeleeDefenseBase] = useState<number>(10);
+  // CEMK p. 16: Jack In y Boot Out usan la WILL (y Concentration) reales del objetivo.
+  const [quickhackTargetWill, setQuickhackTargetWill] = useState<number>(6);
+  const [quickhackTargetConcentration, setQuickhackTargetConcentration] = useState<number>(2);
   const [calcPassExcess, setCalcPassExcess] = useState<boolean>(true);
   const [showArmorRulesGuide, setShowArmorRulesGuide] = useState<boolean>(false);
   const [rackFilter, setRackFilter] = useState<'all' | 'weapons' | 'unarmed' | 'throwables' | 'drugs'>('all');
@@ -1571,7 +1581,8 @@ export const CombatHudView: React.FC = () => {
   const seriousWoundThresh = calculateSeriouslyWoundedThreshold(maxHp);
   const isSeriouslyWounded = (activeChar?.currentHp ?? 0) < seriousWoundThresh;
   const isMortallyWounded = (activeChar?.currentHp ?? 0) <= 0;
-  const unarmedDmg = calculateUnarmedDamage(effectiveBody);
+  const hasCyberarm = (activeChar?.installedCyberwareIds ?? []).some(id => id.includes('cyberarm') || id.includes('gorilla-arms'));
+  const unarmedDmg = calculateUnarmedDamage(effectiveBody, hasCyberarm);
   const activeBracket = RANGE_BRACKETS.find((b) => b.range === selectedDistance);
 
   // Helper: DV for weapon & distance
@@ -1585,6 +1596,12 @@ export const CombatHudView: React.FC = () => {
       return profile.autofireDvs[distance] ?? null;
     }
     return profile.dvs[distance] ?? null;
+  };
+
+  // Core p. 176: tirada de defensa del rival (DEX + Evasion + 1d10); el empate gana el defensor.
+  const rollMeleeDefenseDv = (): { dv: number; label: string } => {
+    const d10 = rollDefenseD10();
+    return { dv: meleeDefenseBase + d10, label: `vs Defensa ${meleeDefenseBase} + 1d10 (${d10})` };
   };
 
   // Helper for placeholder type
@@ -1732,8 +1749,16 @@ export const CombatHudView: React.FC = () => {
   // Handle Step 1: Weapon Attack Check (1d10)
   const handleAttackClick = (weapon: WeaponItem, instanceId: string) => {
     ensureTelemetryExpanded();
-    const isAuto = !!autofireByWeapon[instanceId];
+    // Un Ataque Apuntado nunca es Autofire (Core p. 170): no se gastan 10 balas ni se usa el DV de autofire.
+    const isAuto = !!autofireByWeapon[instanceId] && aimedShotTarget === 'none';
     const ammoCost = isAuto ? 10 : (weapon.type === 'Melee' ? 0 : 1);
+
+    // Se valida el alcance antes de gastar munición.
+    const currentDv = getDvForWeapon(weapon, selectedDistance, isAuto);
+    if (currentDv === null && weapon.type !== 'Melee') {
+      alert(`El objetivo a ${selectedDistance} está fuera de alcance.`);
+      return;
+    }
 
     if (ammoCost > 0) {
       const success = consumeAmmo(instanceId, ammoCost);
@@ -1743,11 +1768,7 @@ export const CombatHudView: React.FC = () => {
       }
     }
 
-    const currentDv = getDvForWeapon(weapon, selectedDistance, isAuto);
-    if (currentDv === null && weapon.type !== 'Melee') {
-      alert(`El objetivo a ${selectedDistance} está fuera de alcance.`);
-      return;
-    }
+    const meleeDefense = weapon.type === 'Melee' ? rollMeleeDefenseDv() : null;
 
     const luckSpent = luckToSpendOnNextRoll;
     if (luckSpent > 0) {
@@ -1756,8 +1777,8 @@ export const CombatHudView: React.FC = () => {
     }
 
     const entry = createInitialAttackRoll(activeChar, weapon, {
-      targetDv: weapon.type === 'Melee' ? 13 : currentDv,
-      distanceLabel: weapon.type === 'Melee' ? 'Cuerpo a cuerpo' : selectedDistance,
+      targetDv: meleeDefense ? meleeDefense.dv : currentDv,
+      distanceLabel: meleeDefense ? `Cuerpo a cuerpo ${meleeDefense.label}` : selectedDistance,
       luckSpent,
       isAutofire: isAuto,
       weaponInstanceId: instanceId,
@@ -1771,9 +1792,11 @@ export const CombatHudView: React.FC = () => {
   const handleDamageClick = (weapon: WeaponItem, instanceId: string) => {
     ensureTelemetryExpanded();
     const isAuto = !!autofireByWeapon[instanceId];
-    const recentHit = rollHistory.find(
-      (r) => r.type === 'attack' && r.weaponInstanceId === instanceId && r.isHit
+    // El daño corresponde al último ataque de esta arma, no al último acierto del historial.
+    const recentAttack = rollHistory.find(
+      (r) => r.type === 'attack' && r.weaponInstanceId === instanceId
     );
+    const recentHit = recentAttack?.isHit ? recentAttack : undefined;
     const multiplier = isAuto ? (recentHit?.autofireMultiplier || 1) : 1;
 
     const dmgEntry = createDamageRoll(
@@ -1814,8 +1837,7 @@ export const CombatHudView: React.FC = () => {
     }
 
     const entry = createInitialAttackRoll(activeChar, brawlingWeapon, {
-      targetDv: 13,
-      distanceLabel: 'Cuerpo a cuerpo (Enfrentada)',
+      ...(() => { const def = rollMeleeDefenseDv(); return { targetDv: def.dv, distanceLabel: `${'Cuerpo a cuerpo (Enfrentada)'} ${def.label}` }; })(),
       luckSpent,
       weaponInstanceId: 'unarmed-brawling',
       aimedShotTarget
@@ -1852,8 +1874,7 @@ export const CombatHudView: React.FC = () => {
     }
 
     const entry = createInitialAttackRoll(activeChar, grappleWeapon, {
-      targetDv: 13,
-      distanceLabel: 'Presa cuerpo a cuerpo (Enfrentada)',
+      ...(() => { const def = rollMeleeDefenseDv(); return { targetDv: def.dv, distanceLabel: `${'Presa cuerpo a cuerpo (Enfrentada)'} ${def.label}` }; })(),
       luckSpent,
       weaponInstanceId: 'unarmed-grapple'
     });
@@ -1899,8 +1920,7 @@ export const CombatHudView: React.FC = () => {
     }
 
     const entry = createInitialAttackRoll(activeChar, martialArtsWeapon, {
-      targetDv: 13,
-      distanceLabel: 'Cuerpo a cuerpo (Ignora 50% SP)',
+      ...(() => { const def = rollMeleeDefenseDv(); return { targetDv: def.dv, distanceLabel: `${'Cuerpo a cuerpo (Ignora 50% SP)'} ${def.label}` }; })(),
       luckSpent,
       weaponInstanceId: 'unarmed-martial-arts',
       aimedShotTarget
@@ -1935,8 +1955,7 @@ export const CombatHudView: React.FC = () => {
       setLuckToSpend(0);
     }
     const entry = createInitialAttackRoll(activeChar, bayonetWeapon, {
-      targetDv: 13,
-      distanceLabel: 'Cuerpo a cuerpo (Melee)',
+      ...(() => { const def = rollMeleeDefenseDv(); return { targetDv: def.dv, distanceLabel: `${'Cuerpo a cuerpo (Melee)'} ${def.label}` }; })(),
       luckSpent,
       weaponInstanceId: `bayonet-${parentWeapon.id}`,
       aimedShotTarget
@@ -2070,11 +2089,11 @@ export const CombatHudView: React.FC = () => {
     const d10 = Math.floor(Math.random() * 10) + 1;
     const isCritSuccess = d10 === 10;
     const isCritFail = d10 === 1;
-    const targetDv = 13;
+    const targetDv = rollMeleeDefenseDv().dv;
     const totalBase = dex + rank + soloPrecision + luckSpent;
     const totalAttack = totalBase + d10;
     const margin = totalAttack - targetDv;
-    const isHit = margin >= 0;
+    const isHit = margin > 0;
 
     const penaltyBreakdown: string[] = [];
     if (soloPrecision > 0) {
@@ -2150,7 +2169,7 @@ export const CombatHudView: React.FC = () => {
     const totalBase = dex + rank + soloPrecision + luckSpent;
     const totalAttack = totalBase + d10;
     const margin = totalAttack - targetDv;
-    const isHit = margin >= 0;
+    const isHit = margin > 0;
 
     const penaltyBreakdown: string[] = [];
     if (soloPrecision > 0) {
@@ -2227,9 +2246,10 @@ export const CombatHudView: React.FC = () => {
     const d10Hacker = Math.floor(Math.random() * 10) + 1;
     const hackerTotal = activeInterfaceRank + d10Hacker;
     const d10Target = Math.floor(Math.random() * 10) + 1;
-    const targetWill = 6; // Promedio estándar NPC
+    const targetWill = quickhackTargetWill;
     const targetTotal = targetWill + d10Target;
-    const isDetected = hackerTotal < targetTotal;
+    // Empate gana el defensor (Core p. 129): el objetivo detecta la intrusión.
+    const isDetected = hackerTotal <= targetTotal;
 
     const entry: RollEntry = {
       id: `roll-jackin-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
@@ -2310,7 +2330,7 @@ export const CombatHudView: React.FC = () => {
     const isCritFail = d10 === 1;
     const totalAttack = roleRank + luckSpent + d10;
     const margin = totalAttack - qh.dv;
-    const isHit = margin >= 0;
+    const isHit = margin > 0;
 
     const entry: RollEntry = {
       id: `roll-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
@@ -2338,7 +2358,8 @@ export const CombatHudView: React.FC = () => {
     };
     addRollEntry(entry);
 
-    if (isHit && (qh.damageFormula || qh.damage)) {
+    // Con 10 o 1 hay que resolver primero el segundo d10; el daño se tira luego con su botón.
+    if (isHit && !entry.needsExplosionClick && (qh.damageFormula || qh.damage)) {
       handleQuickhackDamage(qh);
     }
   };
@@ -2363,7 +2384,7 @@ export const CombatHudView: React.FC = () => {
   const handleBootOutRoll = () => {
     ensureTelemetryExpanded();
     const d10Target = Math.floor(Math.random() * 10) + 1;
-    const targetScore = 6 + 2 + d10Target; // WILL 6 + Conc 2
+    const targetScore = quickhackTargetWill + quickhackTargetConcentration + d10Target;
     const d10Hacker = Math.floor(Math.random() * 10) + 1;
     const hackerScore = activeInterfaceRank + d10Hacker;
     const expelled = targetScore > hackerScore;
@@ -2374,9 +2395,9 @@ export const CombatHudView: React.FC = () => {
       type: 'skill',
       weaponName: '👢 Paso 4: Contramedida de Expulsión (Boot Out)',
       statName: 'WILL',
-      statVal: 6,
+      statVal: quickhackTargetWill,
       skillName: 'Concentration vs Interface',
-      skillVal: 2,
+      skillVal: quickhackTargetConcentration,
       d10: d10Target,
       totalAttack: targetScore,
       targetDv: hackerScore,
@@ -2536,7 +2557,7 @@ export const CombatHudView: React.FC = () => {
     const isCritFail = d10 === 1;
     const totalAttack = will + resist + luckSpent + d10;
     const margin = totalAttack - targetDv;
-    const isHit = margin >= 0;
+    const isHit = margin > 0;
 
     const entry: RollEntry = {
       id: `roll-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
@@ -4880,7 +4901,7 @@ export const CombatHudView: React.FC = () => {
                             <span className={`px-1.5 py-0.5 rounded-xs border font-bold ${
                               currentDv !== null ? 'bg-[#1b1f2e] border-[#272e42] text-[#38bdf8]' : 'bg-[#1c1417] border-[#3b1d24] text-[#94a3b8]'
                             }`}>
-                              DV actual: {w.type === 'Melee' ? 'DV 13' : currentDv !== null ? `DV ${currentDv}` : 'N/A'} ({selectedDistance})
+                              DV actual: {w.type === 'Melee' ? `Defensa ${meleeDefenseBase}+1d10` : currentDv !== null ? `DV ${currentDv}` : 'N/A'} ({selectedDistance})
                             </span>
                             <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
                               Base: +{netBaseWithLuck}{aimedPenalty > 0 ? ' (-8)' : ''}
@@ -5065,7 +5086,7 @@ export const CombatHudView: React.FC = () => {
                         }`}
                       >
                         <Crosshair className="w-4 h-4" />
-                        <span>1. ATACAR 1d10 ({w.type === 'Melee' ? 'DV 13' : currentDv !== null ? `DV ${currentDv}` : 'Fuera Rango'}){aimedShotTarget !== 'none' ? ` [${AIMED_SHOT_OPTIONS[aimedShotTarget].shortBadge} -8]` : ''}</span>
+                        <span>1. ATACAR 1d10 ({w.type === 'Melee' ? `vs ${meleeDefenseBase}+1d10` : currentDv !== null ? `DV ${currentDv}` : 'Fuera Rango'}){aimedShotTarget !== 'none' ? ` [${AIMED_SHOT_OPTIONS[aimedShotTarget].shortBadge} -8]` : ''}</span>
                       </button>
 
                       <button
@@ -5120,7 +5141,7 @@ export const CombatHudView: React.FC = () => {
                                     onClick={() => handleAttachmentBayonetAttack(w)}
                                     className="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white font-tech font-bold text-[9px] rounded cursor-pointer"
                                   >
-                                    Atacar (DV 13)
+                                    Atacar (vs {meleeDefenseBase}+1d10)
                                   </button>
                                   <button
                                     type="button"
@@ -5374,7 +5395,18 @@ export const CombatHudView: React.FC = () => {
                               </div>
                             ) : (
                               <div className="text-[11px] font-mono-code text-[#cbd5e1] bg-[#141724] p-2 rounded border border-[#232a3d]">
-                                Ataque cuerpo a cuerpo / Melee: DV fijo 13 o Enfrentado a la Evasión del rival.
+                                <label className="flex items-center justify-between gap-2">
+                                  <span>Melee enfrentado (Core p. 176): DEX + Evasion del defensor</span>
+                                  <input
+                                    type="number"
+                                    min={0}
+                                    max={30}
+                                    value={meleeDefenseBase}
+                                    onChange={(e) => setMeleeDefenseBase(Math.max(0, Number(e.target.value) || 0))}
+                                    className="w-14 bg-[#0f1016] border border-[#2e364c] text-white text-center rounded-xs"
+                                  />
+                                </label>
+                                <span className="text-[10px] text-[#94a3b8]">El defensor suma 1d10; el empate lo gana el defensor.</span>
                               </div>
                             )}
                           </div>
@@ -5618,7 +5650,7 @@ export const CombatHudView: React.FC = () => {
                             ROF {aimedShotTarget !== 'none' ? '1 (Apuntado)' : '2'}
                           </span>
                           <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
-                            DV 13
+                            vs {meleeDefenseBase}+1d10
                           </span>
                           <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
                             Base: +{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.brawling ?? 0) + luckToSpendOnNextRoll - (aimedShotTarget !== 'none' ? 8 : 0)}{aimedShotTarget !== 'none' ? ' (-8)' : ''}
@@ -5652,7 +5684,7 @@ export const CombatHudView: React.FC = () => {
                       className="py-2 px-3 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
                     >
                       <Crosshair className="w-4 h-4" />
-                      <span>1. ATACAR 1d10 (DV 13){aimedShotTarget !== 'none' ? ` [${AIMED_SHOT_OPTIONS[aimedShotTarget].shortBadge} -8]` : ''}</span>
+                      <span>1. ATACAR 1d10 (vs {meleeDefenseBase}+1d10){aimedShotTarget !== 'none' ? ` [${AIMED_SHOT_OPTIONS[aimedShotTarget].shortBadge} -8]` : ''}</span>
                     </button>
                     <button
                       onClick={handleBrawlingDamage}
@@ -5738,7 +5770,7 @@ export const CombatHudView: React.FC = () => {
                             ROF {aimedShotTarget !== 'none' ? '1 (Apuntado)' : '2'}
                           </span>
                           <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
-                            DV 13
+                            vs {meleeDefenseBase}+1d10
                           </span>
                           <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
                             Base: +{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0) + luckToSpendOnNextRoll - (aimedShotTarget !== 'none' ? 8 : 0)}{aimedShotTarget !== 'none' ? ' (-8)' : ''}
@@ -5772,7 +5804,7 @@ export const CombatHudView: React.FC = () => {
                       className="py-2 px-3 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
                     >
                       <Crosshair className="w-4 h-4" />
-                      <span>1. ATACAR 1d10 (DV 13){aimedShotTarget !== 'none' ? ` [${AIMED_SHOT_OPTIONS[aimedShotTarget].shortBadge} -8]` : ''}</span>
+                      <span>1. ATACAR 1d10 (vs {meleeDefenseBase}+1d10){aimedShotTarget !== 'none' ? ` [${AIMED_SHOT_OPTIONS[aimedShotTarget].shortBadge} -8]` : ''}</span>
                     </button>
                     <button
                       onClick={handleMartialArtsDamage}
@@ -7871,6 +7903,18 @@ export const CombatHudView: React.FC = () => {
                     <div>
                       <div className="text-[10px] font-tech font-bold text-cyan-300">PASO 1: JACK IN</div>
                       <div className="text-[9px] text-slate-400">1 NET Action vs WILL</div>
+                      <div className="flex gap-1 mt-1 text-[9px] text-slate-400">
+                        <label className="flex items-center gap-0.5">WILL
+                          <input type="number" min={0} max={20} value={quickhackTargetWill}
+                            onChange={(e) => setQuickhackTargetWill(Math.max(0, Number(e.target.value) || 0))}
+                            className="w-9 bg-[#0f1016] border border-[#2e364c] text-white text-center rounded-xs" />
+                        </label>
+                        <label className="flex items-center gap-0.5">Conc.
+                          <input type="number" min={0} max={20} value={quickhackTargetConcentration}
+                            onChange={(e) => setQuickhackTargetConcentration(Math.max(0, Number(e.target.value) || 0))}
+                            className="w-9 bg-[#0f1016] border border-[#2e364c] text-white text-center rounded-xs" />
+                        </label>
+                      </div>
                     </div>
                     <button
                       type="button"
