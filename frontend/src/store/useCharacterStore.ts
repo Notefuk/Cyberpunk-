@@ -22,7 +22,8 @@ import type {
   TechWeaponUpgradeType,
   WeaponItem
 } from '../types/cyberpunk';
-import { calculateMaxHp, getEffectiveBody } from '../engine/characterEngine';
+import { calculateMaxHp, getEffectiveBody, rollDeathSave as rollDeathSaveEngine } from '../engine/characterEngine';
+import type { DeathSaveResult } from '../engine/characterEngine';
 import { calculateArmorAblation } from '../engine/combatEngine';
 import { rollCriticalInjury } from '../data/criticalInjuries';
 import {
@@ -373,6 +374,9 @@ export interface CharacterStoreState {
   updateSkill: (skill: CombatSkillKey, value: number) => void;
   adjustHp: (delta: number) => void;
   setHp: (hp: number) => void;
+  rollDeathSave: () => DeathSaveResult | null;
+  addDeathSavePenalty: (amount: number) => void;
+  setDead: (isDead: boolean) => void;
   ablateArmor: (location: 'head' | 'body', amount?: number) => void;
   repairArmor: (location: 'head' | 'body') => void;
   applyIncomingDamage: (damage: number, location: 'head' | 'body', critBonusDamage?: number) => { hpLost: number; spAblated: number };
@@ -676,7 +680,8 @@ export const useCharacterStore = create<CharacterStoreState>()(
             if (char.id !== state.activeCharacterId) return char;
             const maxHp = calculateMaxHp(char.stats.BODY, char.stats.WILL);
             const nextHp = Math.max(0, Math.min(maxHp, char.currentHp + delta));
-            return { ...char, currentHp: nextHp };
+            // Core p. 188: al estabilizar a 1+ HP el Death Save Penalty vuelve al base.
+            return { ...char, currentHp: nextHp, deathSavePenalty: nextHp >= 1 ? 0 : char.deathSavePenalty };
           })
         }));
       },
@@ -687,8 +692,44 @@ export const useCharacterStore = create<CharacterStoreState>()(
             if (char.id !== state.activeCharacterId) return char;
             const maxHp = calculateMaxHp(char.stats.BODY, char.stats.WILL);
             const nextHp = Math.max(0, Math.min(maxHp, hp));
-            return { ...char, currentHp: nextHp };
+            return { ...char, currentHp: nextHp, deathSavePenalty: nextHp >= 1 ? 0 : char.deathSavePenalty };
           })
+        }));
+      },
+
+      rollDeathSave: () => {
+        const active = get().characters.find(c => c.id === get().activeCharacterId);
+        if (!active) return null;
+        const result = rollDeathSaveEngine(active);
+        set(state => ({
+          characters: state.characters.map(char =>
+            char.id === state.activeCharacterId
+              ? {
+                  ...char,
+                  deathSavePenalty: (char.deathSavePenalty ?? 0) + 1,
+                  isDead: result.success ? char.isDead : true
+                }
+              : char
+          )
+        }));
+        return result;
+      },
+
+      addDeathSavePenalty: (amount: number) => {
+        set(state => ({
+          characters: state.characters.map(char =>
+            char.id === state.activeCharacterId
+              ? { ...char, deathSavePenalty: Math.max(0, (char.deathSavePenalty ?? 0) + amount) }
+              : char
+          )
+        }));
+      },
+
+      setDead: (isDead: boolean) => {
+        set(state => ({
+          characters: state.characters.map(char =>
+            char.id === state.activeCharacterId ? { ...char, isDead } : char
+          )
         }));
       },
 

@@ -46,7 +46,8 @@
   - Tablas completas de Cabeza y Cuerpo de las páginas 187-188 del Core Book.
   - Generador con 1 clic, estados `[ TRATAR ]` y `[ CURAR ]` con iconos temáticos (cráneo, cerebro, ojo, hueso, etc.).
   - [Claude Code · 2026-10-20] Hasta v4.0.2 la tabla de Cuerpo estaba desordenada y tenía efectos inventados; corregida en v4.0.3 contra Core pp. 187-188, con re-tirada de críticos repetidos.
-- [ ] [Claude Code · 2026-10-20] **Mortally Wounded y Death Saves** (Core pp. 186, 188): no implementado; plan 1, fase 2.
+- [x] [Claude Code · 2026-10-20] **Mortally Wounded y Death Saves** (Core pp. 186, 188): v4.1.0, botón Tirar Death Save en el HUD.
+- [x] [Claude Code · 2026-10-20] **EMP efectiva por Humanidad** (Core p. 80): v4.1.0.
 
 ### 3. Catálogo Canónico Maestro (272 Ítems Oficiales en `core-rules.cprpack.json`)
 - [x] **Armas (66 ítems)**:
