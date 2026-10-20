@@ -2,17 +2,18 @@
 
 > Archivo compartido entre Claude Code y Antigravity. **Léelo primero** al abrir una sesión nueva o después de compactar contexto.
 > **Actualízalo** al terminar cada tarea, antes de compactar contexto y antes de cambiar de herramienta.
+> Toda actualización va firmada: `[Claude Code · AAAA-MM-DD]` o `[Antigravity · AAAA-MM-DD]`.
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 
-**Última actualización**: 2026-10-20 · Claude Code
+**Última actualización**: [Claude Code · 2026-10-20]
 **Versión de la app**: v4.0.2 (sin cambios de código desde entonces)
 
 ## Último trabajo terminado
 
-- Migración de las instrucciones de Antigravity a Claude Code (PRs #1, #2 y este).
+- [Claude Code · 2026-10-20] Migración de las instrucciones de Antigravity a Claude Code (PRs #1-#4), `CHECKPOINT.md` y convención de firma de autoría.
   - `CLAUDE.md`, subagentes `.claude/agents/` (`cpr-scout` Haiku, `cpr-worker` Sonnet, `github-web-deployer` Haiku) y skills `.claude/skills/` (`cpr-pdf-extractor`, `cpr-version-release`).
   - `.agent/` queda como config de Antigravity, con copia de `AGENTS.md`, `gemini-scout` y `gemini-worker`.
-- Acceso a los PDFs desde Claude verificado: se leyó el Core Rulebook p. 174 trayéndolo desde la PC del usuario.
+- [Claude Code · 2026-10-20] Acceso a los PDFs desde Claude verificado: se leyó el Core Rulebook p. 174 trayéndolo desde la PC del usuario.
 
 ## En curso
 

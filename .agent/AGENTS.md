@@ -49,6 +49,13 @@ Cada vez que llames a `invoke_subagent` con `gemini-worker` para escribir o edit
 ```
 
 ## 4. CHECKPOINT.md (Compartido con Claude Code)
-El archivo `CHECKPOINT.md` en la raíz del repo `cpr-omni-deck` es el estado vivo del trabajo, compartido entre Antigravity y Claude Code.
+El archivo `CHECKPOINT.md` en la raíz del repo (`C:\Users\TeseoHeracles\cpr-omni-deck\CHECKPOINT.md`) es el estado vivo del trabajo, compartido entre Antigravity y Claude Code.
 - **Léelo primero** al iniciar sesión o tras compactar contexto.
 - **Actualízalo** al terminar cada tarea, antes de compactar contexto y antes de cambiar de herramienta: último trabajo terminado, qué quedó a medias (archivos y líneas), próximos pasos y bloqueos. Breve; reemplaza lo viejo en vez de acumular historial.
+
+## 5. Convención de Autoría (Firma Obligatoria)
+Claude Code y Antigravity escriben en los mismos archivos. Toda entrada o actualización de documentación debe ir firmada con quién la escribió y la fecha, para que cada herramienta sepa qué escribió la otra.
+- Formato: `[Antigravity · AAAA-MM-DD]` o `[Claude Code · AAAA-MM-DD]`.
+- Dónde: cada actualización de `CHECKPOINT.md` (línea "Última actualización" y cada entrada nueva), cada entrada de versión en `CHANGELOG_AND_ARCHITECTURE.md`, la cabecera `LAST UPDATED` y cada sección nueva de `AI_CONTEXT_HANDOFF.md` y `PROJECT_STATUS_AND_ROADMAP.md`, y los ítems nuevos de `CONTENT_CHECKLIST.md`.
+- En los commits, agrega al final del mensaje la línea `Autor-IA: Antigravity` o `Autor-IA: Claude Code`.
+- Si retomas trabajo firmado por la otra herramienta, verifícalo contra el código antes de darlo por cierto; no borres su firma, agrega la tuya debajo.

@@ -7,6 +7,7 @@
 > **ARCHITECTURE**: COMP/CON decoupled offline-first model. Single source of truth in typed registries and Zustand stores.
 
 > **WORK STATE**: Leer primero `CHECKPOINT.md` (estado vivo compartido Claude Code ↔ Antigravity) y actualizarlo al terminar cada tarea.
+> **AUTORÍA**: Cada sección o actualización se firma `[Claude Code · AAAA-MM-DD]` o `[Antigravity · AAAA-MM-DD]`. Las secciones sin firma son anteriores a 2026-10-20 y las escribió Antigravity.
 
 ---
 

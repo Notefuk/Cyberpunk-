@@ -20,6 +20,14 @@ El proyecto se trabaja alternando Claude Code y Antigravity (cuando se agota el 
 - **Actualízalo** al terminar cada tarea, antes de compactar contexto (o cuando la conversación ya sea larga) y antes de que el usuario cambie de herramienta: último trabajo terminado, qué quedó a medias (archivos y líneas), próximos pasos y bloqueos. Mantenlo breve y reemplaza lo viejo en vez de acumular historial.
 - Commitéalo junto con el trabajo al que corresponde.
 
+## Firma de autoría (Claude Code ↔ Antigravity)
+
+Toda entrada o actualización de documentación se firma con quién la escribió y la fecha, para que cada herramienta sepa qué escribió la otra:
+- Formato: `[Claude Code · AAAA-MM-DD]` (Antigravity firma `[Antigravity · AAAA-MM-DD]`).
+- Dónde: cada actualización de `CHECKPOINT.md`, cada entrada de versión en `CHANGELOG_AND_ARCHITECTURE.md`, la cabecera `LAST UPDATED` y cada sección nueva de `AI_CONTEXT_HANDOFF.md` y `PROJECT_STATUS_AND_ROADMAP.md`, y los ítems nuevos de `CONTENT_CHECKLIST.md`.
+- En los commits, agrega la línea `Autor-IA: Claude Code` al final del mensaje.
+- Lo firmado por Antigravity se verifica contra el código antes de darlo por cierto. No borres su firma; agrega la tuya debajo.
+
 ## Antes de tocar nada: leer contexto
 
 Al empezar una tarea nueva, lee en este orden (solo las secciones relevantes, son archivos largos):
