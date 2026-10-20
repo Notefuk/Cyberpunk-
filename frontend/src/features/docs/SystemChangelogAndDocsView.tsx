@@ -26,6 +26,46 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.4.0',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'Reglas del Core',
+    title: 'Roles, Martial Arts, curación, terapia y granadas del Core; sin modos de carga',
+    summary: 'Tercera fase del plan 2. Las habilidades de rol, los Special Moves de Martial Arts, la curación, la terapia y las granadas siguen el Core, y se borraron los modos de carga, que no existen en el libro.',
+    highlights: [
+      'Roles con las tablas del Core pp. 143-162; Combat Awareness no deja gastar más puntos que el rango.',
+      'Pharmaceuticals del Core (Antibiotic, Rapidetox, Speedheal, Stim, Surge); Veritine y Cryo-Stasis borrados.',
+      'Los 8 Special Moves del Core y Recovery; algunos se resuelven contra DEX + Evasion.',
+      'Terapia Standard y Extreme con tope de Humanidad: -2 por ciberware, -4 por borgware.',
+      'Granadas con la tabla de rango hasta 25 m; descanso solo tras estabilizar; Speedheal no sirve en Mortally Wounded.'
+    ],
+    filesTouched: [
+      'data/core-rules.cprpack.json',
+      'frontend/src/data/characterCreationData.ts',
+      'frontend/src/data/core-rules.cprpack.json',
+      'frontend/src/data/cyberfistsMartialArtsData.ts',
+      'frontend/src/data/netAndRolesData.ts',
+      'frontend/src/data/weaponAndCyberwareTooltips.ts',
+      'frontend/src/data/weaponAttachmentsAndTechData.ts',
+      'frontend/src/engine/__tests__/rules.test.ts',
+      'frontend/src/engine/characterEngine.ts',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/cyberware/CyberwareRipperdocView.tsx',
+      'frontend/src/features/gm/FixerDeckView.tsx',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/types/cyberpunk.ts',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CONTENT_CHECKLIST.md',
+      'CHECKPOINT.md'
+    ],
+    metricsBadge: 'v4.4.0 • Reglas del Core • Plan 2 fase 3'
+  },
+  {
     version: 'v4.3.1',
     date: '2026-10-20',
     phase: 'Codex',
@@ -482,6 +522,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.4.0': true,
     'v4.3.1': true,
     'v4.3.0': true,
     'v4.2.1': true,

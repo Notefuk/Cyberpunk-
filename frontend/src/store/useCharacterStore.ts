@@ -10,7 +10,6 @@ import type {
   CharacterLifepath,
   CharacterSheet,
   CombatSkillKey,
-  EncumbranceMode,
   EquippedWeapon,
   EurodollarTransaction,
   InventoryItem,
@@ -22,7 +21,7 @@ import type {
   TechWeaponUpgradeType,
   WeaponItem
 } from '../types/cyberpunk';
-import { calculateMaxHp, getEffectiveBody, parseHumanityLossAverage, rollDeathSave as rollDeathSaveEngine } from '../engine/characterEngine';
+import { calculateMaxHp, calculateTherapyMaxHumanity, getEffectiveBody, naturalHealingPerDay, parseHumanityLossAverage, rollDeathSave as rollDeathSaveEngine } from '../engine/characterEngine';
 import type { DeathSaveResult } from '../engine/characterEngine';
 import { rollCriticalInjury } from '../data/criticalInjuries';
 import {
@@ -30,10 +29,26 @@ import {
   buildCharacterSheetFromPregen as instantiatePregenCharacter
 } from '../data/characterCreationData';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
+import coreRulesPack from '../data/core-rules.cprpack.json';
 import {
   WEAPON_ATTACHMENTS_CATALOG,
   calculateModifiedMagazineSize
 } from '../data/weaponAttachmentsAndTechData';
+
+const PACK_CYBERWARE_BY_ID = new Map(
+  (coreRulesPack.cyberware as { id: string; humanityLoss?: string; type?: string }[]).map((cw) => [cw.id, cw])
+);
+
+// Core p. 230: la Humanidad que se recupera no puede pasar el máximo de terapia (-2 por ciberware, -4 por borgware).
+function gainHumanityCapped(c: CharacterSheet, delta: number, installedIds = c.installedCyberwareIds): number {
+  const current = c.currentHumanity;
+  if (delta <= 0) return Math.max(0, current + delta);
+  const cap = calculateTherapyMaxHumanity(
+    c.stats.EMP,
+    installedIds.map((id) => PACK_CYBERWARE_BY_ID.get(id) ?? {})
+  );
+  return Math.max(current, Math.min(cap, current + delta));
+}
 
 function mapInjuryIcon(icon: string): ActiveCriticalInjury['iconType'] {
   if (icon === 'heart' || icon === 'throat') return 'organ';
@@ -433,7 +448,6 @@ export interface CharacterStoreState {
     charges?: number
   ) => void;
   addEurodollarTransaction: (concept: string, amount: number) => void;
-  setEncumbranceMode: (mode: EncumbranceMode, characterId?: string) => void;
   gmUpdateCharacterVitals: (
     characterId: string,
     patch: {
@@ -1470,9 +1484,10 @@ export const useCharacterStore = create<CharacterStoreState>()(
         set(state => ({
           characters: state.characters.map(c => {
             if (c.id !== state.activeCharacterId) return c;
+            // Core p. 223: sin estabilizar a 1+ HP no empieza la curación natural.
+            if ((c.currentHp || 0) <= 0) return c;
             const effBody = getEffectiveBody(c);
-            const mult = (hasEnhancedAntibodies ? 2 : 1) + (inCryotank ? 1 : 0);
-            const healAmount = Math.max(1, effBody) * mult * Math.max(1, days);
+            const healAmount = naturalHealingPerDay(effBody, hasEnhancedAntibodies, inCryotank) * Math.max(1, days);
             const maxHp = calculateMaxHp(effBody, c.stats?.WILL ?? 0);
             const newHp = Math.min(maxHp, (c.currentHp || 0) + healAmount);
             return {
@@ -1522,10 +1537,11 @@ export const useCharacterStore = create<CharacterStoreState>()(
 
             const isInstalled = c.installedCyberwareIds.includes(cyberwareId);
             if (isInstalled) {
+              const remaining = c.installedCyberwareIds.filter(id => id !== cyberwareId);
               return {
                 ...c,
-                installedCyberwareIds: c.installedCyberwareIds.filter(id => id !== cyberwareId),
-                currentHumanity: Math.min(c.stats.EMP * 10, c.currentHumanity + humanityCostAvg)
+                installedCyberwareIds: remaining,
+                currentHumanity: gainHumanityCapped(c, humanityCostAvg, remaining)
               };
             } else {
               return {
@@ -1622,11 +1638,11 @@ export const useCharacterStore = create<CharacterStoreState>()(
         set((state) => ({
           characters: state.characters.map((c) => {
             if (c.id !== state.activeCharacterId) return c;
-            const maxHumanity = c.stats.EMP * 10;
+            const remaining = c.installedCyberwareIds.filter((id) => id !== cyberwareId);
             return {
               ...c,
-              installedCyberwareIds: c.installedCyberwareIds.filter((id) => id !== cyberwareId),
-              currentHumanity: Math.min(maxHumanity, c.currentHumanity + humanityRefundAmount)
+              installedCyberwareIds: remaining,
+              currentHumanity: gainHumanityCapped(c, humanityRefundAmount, remaining)
             };
           })
         }));
@@ -1636,10 +1652,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
         set((state) => ({
           characters: state.characters.map((c) => {
             if (c.id !== state.activeCharacterId) return c;
-            const maxHumanity = c.stats.EMP * 10;
             return {
               ...c,
-              currentHumanity: Math.max(0, Math.min(maxHumanity, c.currentHumanity + delta))
+              currentHumanity: gainHumanityCapped(c, delta)
             };
           })
         }));
@@ -1915,17 +1930,6 @@ export const useCharacterStore = create<CharacterStoreState>()(
             };
           })
         }));
-      },
-
-      setEncumbranceMode: (mode: EncumbranceMode, characterId?: string) => {
-        set((state) => {
-          const targetId = characterId || state.activeCharacterId;
-          return {
-            characters: state.characters.map((c) =>
-              c.id === targetId ? { ...c, encumbranceMode: mode } : c
-            )
-          };
-        });
       },
 
       gmUpdateCharacterVitals: (characterId, patch) => {

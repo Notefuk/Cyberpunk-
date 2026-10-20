@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { beatsDv, rollCheckD10 } from '../../engine/combatEngine';
+import { isValidSoloAllocation, soloAwarenessPointCost } from '../../engine/characterEngine';
 import { 
   NET_ARCHITECTURE_PRESETS, 
   NET_ACTIONS_CATALOG, 
@@ -303,19 +304,16 @@ export const NetAndRolesDeckView: React.FC = () => {
   };
 
   const handleSoloPointChange = (key: keyof SoloCombatAwarenessAllocation, delta: number) => {
+    let next: SoloCombatAwarenessAllocation;
     if (key === 'fumbleRecovery') {
-      updateSoloAllocation({
-        ...currentSolo,
-        fumbleRecovery: !currentSolo.fumbleRecovery
-      });
-      return;
+      next = { ...currentSolo, fumbleRecovery: !currentSolo.fumbleRecovery };
+    } else {
+      const currentVal = typeof currentSolo[key] === 'number' ? (currentSolo[key] as number) : 0;
+      next = { ...currentSolo, [key]: Math.max(0, currentVal + delta) };
     }
-    const currentVal = typeof currentSolo[key] === 'number' ? (currentSolo[key] as number) : 0;
-    const nextVal = Math.max(0, currentVal + delta);
-    updateSoloAllocation({
-      ...currentSolo,
-      [key]: nextVal
-    });
+    // Core p. 146: el total gastado no puede superar el rango de Combat Awareness.
+    if (!isValidSoloAllocation(next, character.roleRank || 0)) return;
+    updateSoloAllocation(next);
   };
 
   // Medtech Pharmaceuticals state
@@ -326,8 +324,8 @@ export const NetAndRolesDeckView: React.FC = () => {
       'Speedheal': 2,
       'Stim': 1,
       'Surge': 1,
-      'Veritine': 0,
-      'Cryo-Stasis': 1
+      'Antibiotic': 0,
+      'Rapidetox': 0
     },
     activeCryotanks: []
   };
@@ -335,11 +333,11 @@ export const NetAndRolesDeckView: React.FC = () => {
   const [medtechCraftLog, setMedtechCraftLog] = useState<string | null>(null);
 
   const handleCraftDrug = (drugName: string) => {
-    const d10 = Math.floor(Math.random() * 10) + 1;
+    // Core p. 149: TECH + Medical Tech (puntos en Pharmaceuticals + Cryosystem Operation) + 1d10, hay que superar DV 13.
     const techStat = character.stats.TECH || 6;
-    const medSkill = character.skills.paramedic || 4;
-    const total = d10 + techStat + medSkill;
-    const success = total >= 13;
+    const medSkill = (medtechData.pharmaceuticalsRank || 0) + (medtechData.cryoSystemRank || 0);
+    const total = rollCheckD10().value + techStat + medSkill;
+    const success = beatsDv(total, 13);
 
     if (success) {
       const currentDoses = medtechData.synthesizedDoses || {};
@@ -360,7 +358,7 @@ export const NetAndRolesDeckView: React.FC = () => {
   // Tech Maker state
   const techProjects = character.techProjects || [
     { id: 'proj-1', name: 'Modificación Cañón Silenciador', specialty: 'upgrade' as const, dv: 13, hoursRequired: 6, hoursCompleted: 3, cost: 50, isCompleted: false },
-    { id: 'proj-2', name: 'Fabricación Granada Chaff EMP', specialty: 'fabrication' as const, dv: 17, hoursRequired: 16, hoursCompleted: 16, cost: 100, isCompleted: true }
+    { id: 'proj-2', name: 'Fabricación Granada Flashbang', specialty: 'fabrication' as const, dv: 17, hoursRequired: 24, hoursCompleted: 24, cost: 100, isCompleted: true }
   ];
 
   const handleAdvanceProjectHours = (projId: string) => {
@@ -391,16 +389,13 @@ export const NetAndRolesDeckView: React.FC = () => {
   } | null>(null);
 
   const handleRollMakerCheck = (actionName: string, dv: number) => {
-    const d10 = Math.floor(Math.random() * 10) + 1;
-    const isExplode = d10 === 10;
-    const isFumble = d10 === 1;
-    const extraDie = isExplode || isFumble ? Math.floor(Math.random() * 10) + 1 : 0;
+    // Core p. 148: TECH + Skill TECH de reparar el ítem + Rango de la especialidad + 1d10, hay que superar el DV.
+    // La app no guarda el rango por especialidad: se usa el rango de Maker como tope.
     const techStat = character.stats.TECH || 6;
     const makerRank = character.role.toLowerCase() === 'tech' ? (character.roleRank || 4) : 0;
     const basicTech = character.generalSkills?.['Basic Tech'] || character.skills?.cybertech || 4;
-    const bestSkill = Math.max(makerRank, basicTech);
-    const totalRoll = d10 + (isExplode ? extraDie : 0) - (isFumble ? extraDie : 0) + techStat + bestSkill;
-    const success = totalRoll >= dv;
+    const totalRoll = rollCheckD10().value + techStat + basicTech + makerRank;
+    const success = beatsDv(totalRoll, dv);
 
     setTechMakerLog({
       action: actionName,
@@ -1836,7 +1831,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                             <div key={m.id} className="bg-[#0b0e15] p-2 rounded-xs border border-[#1a2133] space-y-0.5 text-[10px] font-mono-code">
                               <div className="flex items-center justify-between font-bold">
                                 <span className="text-white">{m.name}</span>
-                                <span className="text-amber-400">DV {m.resolutionDv}</span>
+                                <span className="text-amber-400">{m.isOpposed ? 'vs DEX + Evasion' : `DV ${m.resolutionDv}`}</span>
                               </div>
                               <div className="text-[9px] text-slate-400 font-sans leading-tight">
                                 <strong>Req:</strong> {m.requirements}
@@ -1976,19 +1971,19 @@ export const NetAndRolesDeckView: React.FC = () => {
                     <span>SOLO WORKBENCH // COMBAT AWARENESS</span>
                   </h3>
                   <p className="text-xs font-mono-code text-[#64748b]">
-                    Puntos totales disponibles: <strong className="text-white">{character.roleRank || 4} pts</strong> (según tu Rango de Solo).
+                    Puntos usados: <strong className="text-white">{soloAwarenessPointCost(currentSolo)} / {character.roleRank || 0}</strong> (Rango de Combat Awareness, Core p. 146).
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {[
-                  { key: 'threatDetection' as const, label: 'Threat Detection', costDesc: '1 pt = +1 Percepción ante emboscadas' },
+                  { key: 'threatDetection' as const, label: 'Threat Detection', costDesc: '1 pt = +1 a Perception' },
                   { key: 'initiativeReaction' as const, label: 'Initiative Reaction', costDesc: '1 pt = +1 Iniciativa en combate' },
-                  { key: 'spotWeakness' as const, label: 'Spot Weakness', costDesc: '1 pt = +1 Daño al primer impacto' },
-                  { key: 'precisionAttack' as const, label: 'Precision Attack', costDesc: '3 pts = +1 Puntería con arma designada' },
-                  { key: 'damageDeflection' as const, label: 'Damage Deflection', costDesc: '2 pts = Reduce en 1 daño recibido' },
-                  { key: 'fumbleRecovery' as const, label: 'Fumble Recovery', costDesc: '4 pts = Anula primera pifia del asalto' }
+                  { key: 'spotWeakness' as const, label: 'Spot Weakness', costDesc: '1 pt = +1 al daño (antes de armadura) del primer ataque exitoso del Round' },
+                  { key: 'precisionAttack' as const, label: 'Precision Attack', costDesc: '3/6/9 pts = +1/+2/+3 a todos los Ataques' },
+                  { key: 'damageDeflection' as const, label: 'Damage Deflection', costDesc: '2 pts por -1 al primer daño recibido en el Round (máx. -5)' },
+                  { key: 'fumbleRecovery' as const, label: 'Fumble Recovery', costDesc: '4 pts = ignora los 1 al atacar (siguen contando como 1)' }
                 ].map(item => (
                   <div key={item.key} className="bg-[#10141f] border border-[#1b2336] p-3 rounded-xs space-y-2">
                     <div className="flex items-center justify-between">
@@ -1996,7 +1991,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                       <span className="font-mono-code text-sm font-black text-red-400">
                         {item.key === 'fumbleRecovery'
                           ? (currentSolo.fumbleRecovery ? 'ACTIVO (4 pts)' : '0 pts')
-                          : `${(currentSolo[item.key] as number) || 0} pts`}
+                          : `+${(currentSolo[item.key] as number) || 0}`}
                       </span>
                     </div>
                     <p className="text-[10px] font-mono-code text-[#64748b]">{item.costDesc}</p>
@@ -2060,7 +2055,7 @@ export const NetAndRolesDeckView: React.FC = () => {
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {['Speedheal', 'Stim', 'Surge', 'Veritine', 'Cryo-Stasis'].map(drug => (
+                {['Antibiotic', 'Rapidetox', 'Speedheal', 'Stim', 'Surge'].map(drug => (
                   <div key={drug} className="bg-[#10141f] border border-[#1b2336] p-3 rounded-xs space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-tech text-xs font-bold text-white uppercase">{drug}</span>

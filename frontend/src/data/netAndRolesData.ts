@@ -641,17 +641,18 @@ export const ROLES_INTERACTIVE_GUIDES: RoleGuide[] = [
     id: 'solo',
     name: 'Solo',
     abilityName: 'Combat Awareness',
-    description: 'El mercenario de élite definitivo. Sus puntos de habilidad pueden repartirse y reconfigurarse cada asalto entre 5 especialidades tácticas.',
-    rankProgressionSummary: 'Puntos iguales a su Rango en Combat Awareness asignables entre daño, detección, iniciativa y defensa.',
+    description: 'El Solo reparte sus puntos de Combat Awareness entre seis capacidades: al empezar el combate (antes de la Iniciativa), fuera de combate, o en combate con una Acción. Si no cambia la asignación, la anterior persiste (Core p. 146).',
+    rankProgressionSummary: 'Los puntos a repartir son iguales a su Rango en Combat Awareness (Core p. 146).',
     subBranchesOrTables: [
       {
-        title: 'Las 5 Especialidades de Combat Awareness',
+        title: 'Las 6 Opciones de Combat Awareness (Core p. 146)',
         content: [
-          '• Threat Detection: +1 a Percepción por punto asignado contra emboscadas y trampas.',
-          '• Initiative Reaction: +1 a tiradas de Iniciativa por punto asignado.',
-          '• Spot Weakness: +1 al daño que penetre armadura por punto asignado.',
-          '• Precision Attack: +1 a tiradas de ataque con armas designadas por cada 3 puntos.',
-          '• Damage Absorption: Reduce en 1 punto el daño recibido por cada 2 puntos asignados.'
+          '• Damage Deflection: 2 puntos = -1, 4 = -2, 6 = -3, 8 = -4, 10 = -5 al primer daño que recibas este Round.',
+          '• Fumble Recovery: 4 puntos; ignoras los fallos críticos (1) al atacar, aunque esas tiradas se siguen tratando como 1.',
+          '• Initiative Reaction: cada punto suma +1 a las tiradas de Iniciativa.',
+          '• Precision Attack: 3 puntos = +1, 6 = +2, 9 = +3 a cualquier Ataque.',
+          '• Spot Weakness: cada punto suma +1 al daño (antes de armadura) de tu primer Ataque exitoso del Round.',
+          '• Threat Detection: cada punto suma +1 a cualquier Check de Perception.'
         ]
       }
     ]
@@ -660,24 +661,36 @@ export const ROLES_INTERACTIVE_GUIDES: RoleGuide[] = [
     id: 'medtech',
     name: 'Medtech',
     abilityName: 'Medicine',
-    description: 'El ángel de la guarda de la calle. Domina la cirugía de emergencia, el mantenimiento de criotanques y la sintetización de fármacos avanzados.',
-    rankProgressionSummary: 'Cada rango en Medicine otorga 1 punto a repartir entre Surgery, Medical Tech y Pharmaceuticals.',
+    description: 'El Medtech mantiene vivas a personas que deberían estar muertas; es tanto mecánico como médico. Cada vez que sube su Rango de Medicine elige una especialidad (Surgery, Medical Tech [Pharmaceuticals] o Medical Tech [Cryosystem Operation]) y le asigna 1 punto (Core p. 149).',
+    rankProgressionSummary: 'Cada Rango de Medicine otorga 1 punto a asignar entre Surgery, Medical Tech (Pharmaceuticals) y Medical Tech (Cryosystem Operation) (Core p. 149).',
     subBranchesOrTables: [
       {
-        title: 'Los 5 Fármacos Canónicos de Farmacia',
+        title: 'Surgery y Medical Tech (Core p. 149)',
         content: [
-          '• Speedheal: Cura inmediatamente HP equivalente a (BODY + WILL) del paciente.',
-          '• Stim: Elimina penalizaciones de Herida Grave durante 1 hora completa.',
-          '• Surge: Restaura 2d6 Puntos de Suerte (LUCK) temporalmente para la sesión.',
-          '• Veritine: Suero de la verdad que impone -4 a mentiras y engaños.',
-          '• Cryo-Stasis: Suspende el deterioro de heridas críticas y detiene la muerte durante 24h.'
+          '• Surgery: por cada punto asignado ganas 2 puntos en la Surgery Skill (máx. 10). Es la Skill TECH para tratar las Critical Injuries más graves e implantar cyberware.',
+          '• Medical Tech (Pharmaceuticals): por cada punto ganas 1 punto en la Medical Tech Skill (máx. 10) y acceso a un fármaco; máximo 5 puntos en esta especialidad.',
+          '• Medical Tech (Cryosystem Operation): por cada punto ganas 1 punto en la Medical Tech Skill (máx. 10); máximo 5 puntos en esta especialidad (Core p. 150).'
         ]
       },
       {
-        title: 'Operaciones de Criotanque & Cirugía',
+        title: 'Los 5 Pharmaceuticals (Core p. 150)',
         content: [
-          '• Surgery permite operar heridas críticas de Cabeza y Cuerpo reduciendo el tiempo de recuperación a días en lugar de semanas.',
-          '• Cryotank duplica la velocidad de recuperación de HP natural en reposo.'
+          '• Antibiotic: un objetivo que ya empezó la curación natural cura 2 HP extra cada día durante una semana; solo un uso a la vez por persona.',
+          '• Rapidetox: purga de inmediato los efectos de una droga, veneno o intoxicante.',
+          '• Speedheal: un objetivo que no esté Mortally Wounded cura HP iguales a su BODY + WILL; un uso por día.',
+          '• Stim: ignora todos los penalizadores del estado Seriously Wounded durante una hora; un uso por día.',
+          '• Surge: funciona sin impedimento sin dormir durante 24 horas; un uso por semana.',
+          '• Síntesis: Check de Medical Tech DV13 (se pierden los materiales si falla); con 200eb de materiales se hacen tantas dosis como tu Medical Tech Skill en 1 hora (Core p. 149).'
+        ]
+      },
+      {
+        title: 'Cryosystem Operation: niveles 1-5 (Core p. 150)',
+        content: [
+          '• Nivel 1: ganas un Cryopump.',
+          '• Nivel 2: Registered Cryotank Technician; acceso ilimitado 24/7 a 1 Cryotank a la vez en cualquier instalación de criotanques de corporaciones médicas o agencias gubernamentales.',
+          '• Nivel 3: ganas 1 Cryotank, instalado en una sala de tu elección.',
+          '• Nivel 4: 2 Cryotanks más en la misma sala; tu Cryopump tiene 2 cargas y capacidad para 2 personas en estasis.',
+          '• Nivel 5: 3 Cryotanks más en la misma sala (los 3 primeros y 3 nuevos); tu Cryopump tiene 3 cargas y capacidad para 3 personas en estasis.'
         ]
       }
     ]
@@ -686,19 +699,28 @@ export const ROLES_INTERACTIVE_GUIDES: RoleGuide[] = [
     id: 'tech',
     name: 'Tech',
     abilityName: 'Maker',
-    description: 'El genio del taller. Capaz de reparar cualquier chatarra, mejorar armas más allá de especificaciones de fábrica e inventar prototipos únicos.',
-    rankProgressionSummary: 'Puntos asignables entre Field Expertise, Upgrade, Fabrication e Invention.',
+    description: 'El Tech arregla, mejora, modifica, fabrica e inventa objetos con Maker. Cada vez que sube 1 Rango de Maker gana 1 Rango en dos Maker Specialties distintas a elección: Field Expertise, Upgrade Expertise, Fabrication Expertise o Invention Expertise (Core p. 147).',
+    rankProgressionSummary: 'Cada Rango de Maker da 1 Rango en dos especialidades Maker distintas (Core p. 147).',
     subBranchesOrTables: [
       {
-        title: 'Tabla de DVs y Tiempos de Fabricación por Coste',
+        title: 'Tabla de DVs y Tiempos Upgrade/Fabricate/Invent (Core p. 149)',
         content: [
-          '• Everyday (10-20 €$): DV 9 / Tiempo: 1 hora',
-          '• Costly (50 €$): DV 13 / Tiempo: 6 horas',
-          '• Premium (100 €$): DV 17 / Tiempo: 1 día',
-          '• Expensive (500 €$): DV 21 / Tiempo: 1 semana',
-          '• Very Expensive (1,000 €$): DV 25 / Tiempo: 2 semanas',
-          '• Luxury (5,000 €$): DV 29 / Tiempo: 1 mes',
-          '• Super Luxury (10,000+ €$): DV 33+ / Tiempo: Varios meses'
+          '• Cheap/Everyday: DV 9 / Tiempo: 1 hora',
+          '• Costly: DV 13 / Tiempo: 6 horas',
+          '• Premium: DV 17 / Tiempo: 1 día',
+          '• Expensive: DV 21 / Tiempo: 1 semana',
+          '• Very Expensive: DV 24 / Tiempo: 2 semanas',
+          '• Luxury: DV 29 / Tiempo: 1 mes',
+          '• Super Luxury: DV 29 / Tiempo: 1 mes por cada 10,000eb de Costo'
+        ]
+      },
+      {
+        title: 'Las 4 Maker Specialties (Core pp. 147-149)',
+        content: [
+          '• Field Expertise: suma tu Rango a Checks de Basic Tech, Cybertech, Electronics/Security Tech, Weaponstech y Vehicle Tech para fines no-Maker; con 1+ Rango puedes reparar temporalmente un objeto como Acción, 10 minutos por Rango (Core p. 147).',
+          '• Upgrade Expertise: mejora un objeto con 1 sola mejora; Check de TECH + Skill TECH del objeto + tu Rango + 1d10, con materiales de la misma categoría de precio (Core p. 148).',
+          '• Fabrication Expertise: fabrica un objeto existente o inventado con materiales de una categoría de precio menor (Super Luxury requiere materiales por la mitad de su Precio); mismo Check (Core p. 148).',
+          '• Invention Expertise: inventa una mejora o un objeto nuevo que el GM define; la categoría más baja que el GM puede asignar es Expensive (Core pp. 148-149).'
         ]
       }
     ]
@@ -707,16 +729,24 @@ export const ROLES_INTERACTIVE_GUIDES: RoleGuide[] = [
     id: 'nomad',
     name: 'Nomad',
     abilityName: 'Moto',
-    description: 'Señor del asfalto y miembro leal de una Familia Nómada. Tiene acceso a vehículos blindados y mejoras mecánicas especializadas.',
-    rankProgressionSummary: 'Cada rango en Moto añade o mejora vehículos de la flota familiar (Motos, Coches, Camiones blindados y AVs).',
+    description: 'La diferencia entre la mayoría de la gente y los Nomads es que los Nomads tienen mejores autos. Suma su Rango de Moto a cualquier Check de Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech o Sea Vehicle Tech (Core p. 161).',
+    rankProgressionSummary: 'Cada vez que sube su Rango, agrega un vehículo stock (specs mínimas) de su Rango de Moto o menor al Family Motorpool, o mejora uno de sus Family Vehicles con una mejora de su Rango o menor (Core p. 161).',
     subBranchesOrTables: [
       {
-        title: 'Opciones de Vehículos por Rango',
+        title: 'Family Motorpool por Rango (Core p. 162)',
         content: [
-          '• Rango 1-3: Moto terrestre deportiva o Sedán económico con blindaje SP 10.',
-          '• Rango 4-6: Camioneta todoterreno o Furgón de asalto con blindaje SP 13.',
-          '• Rango 7-9: Camión blindado articulado o Lancha de asalto pesada.',
-          '• Rango 10: Aerodino táctico AV-4 o Helicóptero de combate con armas montadas.'
+          '• Rango 1 a 4: Compact Groundcar, Gyrocopter, Jetski, Roadbike.',
+          '• Rango 5 a 6: Helicopter, High Performance Groundcar, Speedboat.',
+          '• Rango 7 a 8: AV-4, Cabin Cruiser, Superbike.',
+          '• Rango 9 a 10: Aerozep, AV-9, Super Groundcar, Yacht.'
+        ]
+      },
+      {
+        title: 'Reglas del Family Vehicle (Core p. 162)',
+        content: [
+          '• Solo puede tener un Family Vehicle fuera a la vez; para cambiarlo, llama a su Familia y, si está cerca, se cambia a la mañana siguiente.',
+          '• Si se destruye, la Familia lo repara por completo en una semana y el Nomad paga 500eb.',
+          '• En Rango 10 es promovido a líder de su Familia: puede tener todos sus Family Vehicles fuera a la vez, comprar nuevos a precio de mercado y mejoras a 1,000eb cada una.'
         ]
       }
     ]
@@ -725,17 +755,19 @@ export const ROLES_INTERACTIVE_GUIDES: RoleGuide[] = [
     id: 'lawman',
     name: 'Lawman',
     abilityName: 'Backup',
-    description: 'Oficial de policía o seguridad corporativa con placa y radio para solicitar refuerzos tácticos inmediatos en tiroteos.',
-    rankProgressionSummary: 'Tirada de 1d10 al pedir Backup; si es menor o igual al Rango, llegan refuerzos en 1d6 asaltos.',
+    description: 'El Lawman puede llamar a fuerzas del orden según su Rango de Backup y las condiciones de la llamada; el Backup es controlado por el GM. Como Acción, tira un d10 y debe sacar igual o menos que su Rango de Backup para que alguien responda (Core p. 158).',
+    rankProgressionSummary: 'Tras una respuesta, tira 1d6 para saber en cuántas Rondas llega el Backup; con un 6 llega el Backup del nivel inmediato superior (en Rango 10, dos grupos distintos) (Core p. 158).',
     subBranchesOrTables: [
       {
-        title: 'Escalafón de Refuerzos Oficiales',
+        title: 'Backup por Rango (Core pp. 158-159)',
         content: [
-          '• Rango 1-2: 2 Patrulleros Novatos (Pistolas y Kevlar SP 7).',
-          '• Rango 3-4: 2 Oficiales de Patrulla Veteranos (Escopetas y Light Armorjack SP 11).',
-          '• Rango 5-7: 2 Agentes de Intervención Rápida en Coche Patrulla (Fusiles y SP 13).',
-          '• Rango 8-9: Escuadrón Táctico SWAT de 4 agentes con armas pesadas y escudos.',
-          '• Rango 10: Equipo de Asalto MaxTac aerotransportado en AV-4 con ciberware militar.'
+          '• Rango 1-2 (Corporate Security): Combat Number 8, SP 7, HP 20, MOVE y BODY 4; cuatro renta-cops a pie con Heavy Pistols y Kevlar.',
+          '• Rango 3-4 (Local Beat Cops): Combat Number 10, SP 7, HP 25, MOVE y BODY 5; cuatro policías en dos Compact Groundcars con Heavy Pistols y Kevlar.',
+          '• Rango 5-7 (Sheriff\'s Department): Combat Number 14, SP 13, HP 35, MOVE y BODY 4; dos County Mounties en un High Performance Groundcar con Heavy Pistols y Assault Rifles, en Heavy Armorjack.',
+          '• Rango 8 (Recovery Zone Marshal): Combat Number 16, SP 15, HP 50, MOVE y BODY 6; un marshal en Superbike con Very Heavy Pistol, Assault Rifle y Grenade Launcher, en Flak Armor.',
+          '• Rango 9 (C-SWAT): Combat Number 15, SP 18, HP 35, MOVE y BODY 4; dos agentes que llegan por aire en un AV-4 con assault rifles y rocket launchers, en Metalgear.',
+          '• Rango 10 (National Law Enforcement/Interpol/FBI/Netwatch): Combat Number 14, SP 11, HP 35, MOVE y BODY 6; dos agentes en un AV-4 con Very Heavy Pistols y Assault Rifles, en Light Armorjack; permanecen para investigar y los mismos 2 responden a llamadas conectadas al caso hasta cerrarlo.',
+          '• El Backup no esquiva balas; suma 1d10 a su Combat Number al atacar o defender (Core p. 158).'
         ]
       }
     ]
@@ -744,15 +776,25 @@ export const ROLES_INTERACTIVE_GUIDES: RoleGuide[] = [
     id: 'exec',
     name: 'Exec',
     abilityName: 'Teamwork',
-    description: 'Ejecutivo corporativo con respaldo financiero, apartamento en rascacielos, chofer privado y guardaespaldas a sueldo.',
-    rankProgressionSummary: 'Otorga vivienda corporativa de lujo, seguro médico Trauma Team y subordinados leales.',
+    description: 'El Exec arma un equipo cuyos miembros lo ayudan a cumplir sus metas, legales o no, mientras la moral lo permita (Core p. 153).',
+    rankProgressionSummary: 'Teamwork otorga Signing Bonus (Rango 1), Corporate Housing (Rangos 2, 7 y 10), Corporate Health Insurance (Rangos 6 y 8) y Team Members (Rangos 3, 5 y 9; máximo 3) (Core pp. 153-154).',
     subBranchesOrTables: [
       {
-        title: 'Beneficios Corporativos por Rango',
+        title: 'Beneficios Corporativos por Rango (Core p. 153)',
         content: [
-          '• Subordinados disponibles: Chofer privado, Guardaespaldas armado, Asistente técnico.',
-          '• Cobertura Trauma Team Silver/Executive gratuita.',
-          '• Armario de ropa corporativa de alta costura renovado mensualmente.'
+          '• Rango 1: traje de Businesswear (Jacket, Top, Bottom y Footwear); no puede revenderlo sin levantar sospechas.',
+          '• Rango 2: acceso a un Corporate Conapt de su Compañía sin pagar Rent ni otras tarifas; el Lifestyle se paga aparte cada mes.',
+          '• Rango 6: Trauma Team Silver pagado mensualmente por su Corporación; Rango 8: mejora a Trauma Team Executive.',
+          '• Rango 7: vivienda mejorada a una Beaverville House en la Executive Zone; Rango 10: Beaverville McMansion en la Executive Zone o Luxury Penthouse en la Corporate Zone.'
+        ]
+      },
+      {
+        title: 'Team Members y Loyalty (Core pp. 154-155)',
+        content: [
+          '• Un Team Member en Rango 3, otro en Rango 5 y otro en Rango 9 (máximo 3).',
+          '• Se tiran en una tabla por trabajo (Company Bodyguard, Covert Operative, Driver, Netrunner, Technician); no mejoran Skills y solo usan Light Armorjack.',
+          '• Loyalty Save: el GM tira 1d6 por debajo de la Loyalty actual al darle una tarea; Loyalty inicial = 1d6 + 1; tope 10 entre sesiones.',
+          '• Si se pierde un Team Member, HR lo reemplaza la siguiente sesión con Loyalty 1 y cuesta 200eb extra.'
         ]
       }
     ]
@@ -761,15 +803,19 @@ export const ROLES_INTERACTIVE_GUIDES: RoleGuide[] = [
     id: 'fixer',
     name: 'Fixer',
     abilityName: 'Operator',
-    description: 'El intermediario del mercado negro. Sabe quién vende qué, cómo conseguir armas prohibidas y organizar Night Markets clandestinos.',
-    rankProgressionSummary: 'Puntos en Operator amplían el alcance geográfico de contactos y el nivel de lujo de ítems que puede conseguir.',
+    description: 'El Fixer sabe conseguir cosas en el mercado negro y se mueve entre las costumbres de The Street. Mantiene redes de Contacts y Clients, Reach, Haggle y Grease (Core p. 159).',
+    rankProgressionSummary: 'Haggle: COOL + Trading + Operator Rank + 1d10 contra COOL + Trading + Operator Rank (si es Fixer) + 1d10 del otro; si gana, 1 trato de su Operator Rank o menor, un trato de Fixer por transacción (Core p. 159).',
     subBranchesOrTables: [
       {
-        title: 'Capacidad de Adquisición',
+        title: 'Operator por Rango (Core pp. 160-161)',
         content: [
-          '• Rango 1-4: Acceso a ítems hasta 100 €$ y contactos de barrio.',
-          '• Rango 5-7: Acceso a ítems de 500 a 1,000 €$ y convocatoria de Night Markets.',
-          '• Rango 8-10: Acceso a armamento militar y acuerdos corporativos internacionales.'
+          '• Rango 1-2: Reach hasta Cheap y Everyday; Haggle 10% más o menos que el precio de mercado; Grease: tu vecindario y sus pandillas.',
+          '• Rango 3-4: Reach hasta Expensive; Haggle: comprando 5 o más del mismo ítem, uno gratis; Grease: 1 cultura más y un idioma nuevo en Skill Level 4.',
+          '• Rango 5-6: Night Market una vez al mes con otros Fixers (Reach hasta Super Luxury allí); Haggle: pago por persona de un Job +20%; Grease: 3 culturas en total.',
+          '• Rango 7-8: Reach hasta Very Expensive; Haggle: Luxury o Super Luxury, mitad ahora y mitad en un mes; Grease: 6 culturas en total.',
+          '• Rango 9: Reach hasta Luxury y Midnight Market dentro de un Night Market; Haggle 20% más o menos que el precio de mercado; Grease: también agencias corporativas y gubernamentales.',
+          '• Rango 10: Reach hasta Super Luxury; Haggle: doble pago por persona en un Dangerous Job; Grease: casi cualquier grupo, incluso sociedades secretas, cultos o grupos exclusivos.',
+          '• Contacts & Clients: Rango 1-2 local honcho/gang lord; 3-4 City gang honcho/minor politician/Corp Exec; 5-6 Major City player/City politico; 7-8 Local Corp president/mayor; 9 Divisional Corp head; 10 Major world leader/Corporation head.'
         ]
       }
     ]
@@ -778,15 +824,19 @@ export const ROLES_INTERACTIVE_GUIDES: RoleGuide[] = [
     id: 'rockerboy',
     name: 'Rockerboy',
     abilityName: 'Charismatic Impact',
-    description: 'La voz rebelde del pueblo. Sus canciones, discursos y presencia magnética pueden inspirar lealtad fanática o desatar disturbios.',
-    rankProgressionSummary: 'Rango determina cuántas personas puede convencer y qué tipo de favores están dispuestas a realizar por él.',
+    description: 'El Rockerboy influye en los demás por pura presencia de personalidad; puede ser músico, poeta, artista o líder de culto. Solo puede usar Charismatic Impact sobre Fans (Core p. 144).',
+    rankProgressionSummary: 'Convierte personas en fans con Charismatic Impact + 1d10 contra DV8 (una persona), DV10 (grupo de hasta 6) o DV12 (grupo enorme); luego usa el mismo Check para pedir favores según su Rango (Core p. 144).',
     subBranchesOrTables: [
       {
-        title: 'Niveles de Influencia',
+        title: 'Charismatic Impact por Rango (Core pp. 144-145)',
         content: [
-          '• Un individuo particular: pedir alojamiento, favores menores o protección.',
-          '• Grupo pequeño (pandilla local): convencerlos de no atacar o apoyar una causa.',
-          '• Multitud masiva (concierto): desatar disturbios callejeros contra una corporación.'
+          '• Rango 1-2: clubes locales pequeños; fan: favor pequeño; grupo (DV10): autógrafos y amistad; grupo enorme (DV12): aún no tiene.',
+          '• Rango 3-4: clubes conocidos; fan: favor grande; grupo: se juntan seguido y proveen alcohol o drogas; grupo enorme: seguimiento local fuerte.',
+          '• Rango 5-6: clubes grandes e importantes; fan: delito menor; grupo: su posse personal; grupo enorme: fans por toda la ciudad, muy leales.',
+          '• Rango 7-8: salas de concierto pequeñas, video local; fan: arriesga su vida; grupo: delito menor; grupo enorme: rabiosamente leales.',
+          '• Rango 9: salas de concierto grandes, video nacional; fan: delito grave; grupo: delito grave; grupo enorme: culto, hasta matar por él.',
+          '• Rango 10: estadios enormes o video internacional; fan: se sacrifica; grupo: arriesga la vida como protección personal; grupo enorme: seguimiento mundial, ejército privado.',
+          '• Si falla un favor, no puede pedir el mismo favor a esos fans por una semana (Core p. 144).'
         ]
       }
     ]
@@ -795,15 +845,28 @@ export const ROLES_INTERACTIVE_GUIDES: RoleGuide[] = [
     id: 'media',
     name: 'Media',
     abilityName: 'Credibility',
-    description: 'Periodista intrépido que arriesga el pellejo para publicar la verdad y destruir la reputación de los poderosos.',
-    rankProgressionSummary: 'Credibility permite que sus historias sean creídas por el público y abran puertas de investigación inaccesibles.',
+    description: 'El Media puede convencer a una audiencia de lo que publica y tiene una audiencia mayor cuanto más creíble es; además accede a fuentes y capta rumores de forma pasiva (Core p. 151).',
+    rankProgressionSummary: 'Rumores: al menos dos veces por semana el GM tira en secreto Credibility Rank + 1d10 contra la columna Passive de la Rumor Table; Believability se tira con 1d10 según el Rango y no se puede gastar LUCK (Core pp. 151-152).',
     subBranchesOrTables: [
       {
-        title: 'Impacto de Reportajes',
+        title: 'Rumor Table (Core p. 151)',
         content: [
-          '• Acceso a fuentes protegidas y filtradores corporativos anónimos.',
-          '• Publicación de escándalos que hunden acciones de megacorporaciones.',
-          '• Inmunidad social temporal gracias al foco mediático del público.'
+          '• Vague Rumor: Passive DV 7 / Active DV 13.',
+          '• Typical Rumor: Passive DV 9 / Active DV 15.',
+          '• Substantial Rumor: Passive DV 11 / Active DV 17.',
+          '• Detailed Rumor: Passive DV 13 / Active DV 21.'
+        ]
+      },
+      {
+        title: 'Credibility por Rango (Core pp. 152-153)',
+        content: [
+          '• Rango 1-2: fuentes locales; audiencia: el vecindario inmediato; Believability 2 de 10; impacto pequeño e incremental.',
+          '• Rango 3-4: fuentes: City gang honcho, minor politician, Corp Exec; audiencia: screamsheet o Data Pool local; Believability 3 de 10; efecto directo, justicia local.',
+          '• Rango 5-6: fuentes: Major City player, City politico; audiencia: toda la ciudad; Believability 4 de 10; cambios en toda la ciudad.',
+          '• Rango 7-8: fuentes: Local Corp president, mayor; audiencia: todo el estado; Believability 5 de 10; cambios en varias ciudades.',
+          '• Rango 9: fuentes: Divisional Corp head, State politico; audiencia: noticiero nacional; Believability 6 de 10; cambios a nivel nación.',
+          '• Rango 10: fuentes: Major world leader, major Corporation head; audiencia: mundial; Believability 7 de 10; cambios en todo el mundo, caída de Megacorps.',
+          '• Una prueba verificable fácil de entender da +1 a Believability; más de 4 pruebas duras dan +2 (se acumulan) (Core p. 152).'
         ]
       }
     ]

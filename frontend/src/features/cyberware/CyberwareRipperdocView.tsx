@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import coreData from '../../data/core-rules.cprpack.json';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { calculateTherapyMaxHumanity } from '../../engine/characterEngine';
 import { 
   Cpu, 
   Activity, 
@@ -228,6 +229,7 @@ export function CyberwareRipperdocView() {
   const installCyberwareAdvanced = useCharacterStore((state) => state.installCyberwareAdvanced);
   const uninstallCyberware = useCharacterStore((state) => state.uninstallCyberware);
   const adjustHumanity = useCharacterStore((state) => state.adjustHumanity);
+  const updateCharacterMeta = useCharacterStore((state) => state.updateCharacterMeta);
   const activateFullBodyConversion = useCharacterStore((state) => state.activateFullBodyConversion);
   const deactivateFullBodyConversion = useCharacterStore((state) => state.deactivateFullBodyConversion);
 
@@ -268,7 +270,13 @@ export function CyberwareRipperdocView() {
   };
 
   const currentHum = activeChar.currentHumanity ?? 40;
-  const maxHum = (activeChar.stats?.EMP || 5) * 10;
+  // Core p. 230: tope de Humanidad recuperable con terapia (-2 por ciberware, -4 por borgware, 0 HL no cuenta).
+  const maxHum = calculateTherapyMaxHumanity(
+    activeChar.stats?.EMP || 5,
+    (activeChar.installedCyberwareIds || []).map(
+      (id) => (coreData.cyberware as { id: string; humanityLoss?: string; type?: string }[]).find((cw) => cw.id === id) ?? {}
+    )
+  );
   const effectiveEmp = Math.max(0, Math.floor(currentHum / 10));
   const isPsychosisRisk = currentHum < 20;
 
@@ -278,12 +286,20 @@ export function CyberwareRipperdocView() {
   const bodyMaxSp = activeChar.bodyArmor?.maxSp || 0;
   const maxDisplayedSp = Math.max(headSp, bodySp, 11);
 
-  const handleTherapy = () => {
-    const d1 = Math.floor(Math.random() * 6) + 1;
-    const d2 = Math.floor(Math.random() * 6) + 1;
-    const recovered = d1 + d2;
+  // Core pp. 229-230: 1 semana con un Medtech (no a sí mismo). Standard 500 €$, 2d6, DV 15; Extreme 1,000 €$, 4d6, DV 17.
+  const handleTherapy = (kind: 'standard' | 'extreme' = 'standard') => {
+    const cost = kind === 'extreme' ? 1000 : 500;
+    const dice = kind === 'extreme' ? 4 : 2;
+    const dv = kind === 'extreme' ? 17 : 15;
+    if ((activeChar.eurodollars || 0) < cost) {
+      showToast(`Fondos insuficientes: la terapia ${kind === 'extreme' ? 'Extreme' : 'Standard'} cuesta ${cost.toLocaleString()} €$ (Core p. 230).`, 'warn');
+      return;
+    }
+    const rolls = Array.from({ length: dice }, () => Math.floor(Math.random() * 6) + 1);
+    const recovered = rolls.reduce((a, b) => a + b, 0);
+    updateCharacterMeta({ eurodollars: (activeChar.eurodollars || 0) - cost });
     adjustHumanity(recovered);
-    showToast(`🧠 Sesión de Terapia Psico-Avanzada completada: +${recovered} HUM (${d1}+${d2} en 2d6).`, 'success');
+    showToast(`🧠 Terapia ${kind === 'extreme' ? 'Extreme' : 'Standard'} (1 semana, -${cost.toLocaleString()} €$, el Medtech debe superar DV ${dv}): +${recovered} HUM (${rolls.join('+')} en ${dice}d6), hasta el máximo de ${maxHum}.`, 'success');
   };
 
   const handleRollForCyber = (item: CyberwareItemData) => {
@@ -593,10 +609,10 @@ export function CyberwareRipperdocView() {
             </div>
           </div>
           <button
-            onClick={handleTherapy}
+            onClick={() => handleTherapy('extreme')}
             className="px-3 py-1.5 bg-[#ef4444] hover:bg-white text-black font-tech font-bold text-xs uppercase tracking-wider rounded-xs cursor-pointer transition-colors"
           >
-            TERAPIA URGENTE (+2d6)
+            TERAPIA EXTREME (+4d6, 1,000 €$)
           </button>
         </div>
       )}
@@ -1263,12 +1279,20 @@ export function CyberwareRipperdocView() {
 
             {/* Therapy Button */}
             <button
-              onClick={handleTherapy}
+              onClick={() => handleTherapy('standard')}
               className="w-full py-1.5 bg-[#f59e0b]/20 hover:bg-[#f59e0b] border border-[#f59e0b]/50 text-[#f59e0b] hover:text-black font-tech font-bold text-[10px] uppercase rounded-xs transition-colors cursor-pointer tracking-wider flex items-center justify-center gap-1"
-              title="Realizar sesión de terapia (+2d6)"
+              title="Terapia Standard: 1 semana, 500 €$, +2d6 HUM si el Medtech supera DV 15 (Core p. 230)"
             >
               <Sparkles className="w-3 h-3" />
               <span>+TERAPIA</span>
+            </button>
+            <button
+              onClick={() => handleTherapy('extreme')}
+              className="w-full py-1.5 mt-1 bg-[#ef4444]/20 hover:bg-[#ef4444] border border-[#ef4444]/50 text-[#ef4444] hover:text-black font-tech font-bold text-[10px] uppercase rounded-xs transition-colors cursor-pointer tracking-wider flex items-center justify-center gap-1"
+              title="Terapia Extreme: 1 semana, 1,000 €$, +4d6 HUM si el Medtech supera DV 17 (Core p. 230)"
+            >
+              <Sparkles className="w-3 h-3" />
+              <span>+EXTREME</span>
             </button>
           </div>
         </div>

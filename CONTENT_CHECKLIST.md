@@ -306,3 +306,14 @@
     - Verificación de completitud de catálogo: armas, blindajes, ciberware, drogas, programas, equipo, vehículos y exóticos.
     - Detección e incorporación de erratas oficiales y ajustes de balanceo canónicos (FAQs oficiales y errata de R. Talsorian Games).
     - Homologación de identificadores únicos, categorías y atributos en los data packs (`.cprpack.json`).
+
+## Plan 2, fase 3 (v4.4.0)
+
+- [x] [Claude Code · 2026-10-20] Role Abilities del Core con sus tablas por rango (Core pp. 143-162); Combat Awareness con topes y costo (Core p. 146).
+- [x] [Claude Code · 2026-10-20] Pharmaceuticals: Antibiotic, Rapidetox, Speedheal, Stim, Surge (Core p. 150).
+- [x] [Claude Code · 2026-10-20] Special Moves del Core y Recovery (Core pp. 178-180).
+- [x] [Claude Code · 2026-10-20] Tope de Humanidad por terapia y terapias Standard/Extreme (Core pp. 229-230).
+- [x] [Claude Code · 2026-10-20] Granadas por tabla de rango hasta 25 m y municiones de granada (Core pp. 173, 177, 345-347).
+- [x] [Claude Code · 2026-10-20] Curación natural tras estabilizar, Enhanced Antibodies, Cryotank, Speedheal (Core pp. 114, 150, 222-223, 353).
+- [~] [Claude Code · 2026-10-20] Damage Deflection y Fumble Recovery se reparten pero no se aplican solos en las tiradas.
+- [ ] [Claude Code · 2026-10-20] Auditar el catálogo de PNJ y Red Chrome Cargo (armas y ciberware inventados).

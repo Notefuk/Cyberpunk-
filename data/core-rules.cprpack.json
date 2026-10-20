@@ -4236,6 +4236,34 @@
       "era": "2045"
     },
     {
+      "id": "antibiotic",
+      "name": "Antibiotic",
+      "cost": 200,
+      "costTier": "Expensive",
+      "duration": "1 Week",
+      "primaryEffect": "A target who has already started the natural healing process heals an extra 2 HP every day for a week. Only one use of Antibiotic at a time (Core p. 150).",
+      "secondaryEffect": "None (Medical pharmaceutical synthesized by Medtech).",
+      "addictionDv": 0,
+      "description": "Pharmaceutical de Medtech: +2 HP por día durante una semana si la curación natural ya empezó (Core p. 150).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
+    },
+    {
+      "id": "surge",
+      "name": "Surge",
+      "cost": 200,
+      "costTier": "Expensive",
+      "duration": "24 Hours",
+      "primaryEffect": "Target can function unimpaired without sleep for a full 24 hours. Only one use of Surge per week (Core p. 150).",
+      "secondaryEffect": "None (Medical pharmaceutical synthesized by Medtech).",
+      "addictionDv": 0,
+      "description": "Pharmaceutical de Medtech: 24 horas sin dormir sin penalizadores, 1 vez por semana (Core p. 150).",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "era": "2045"
+    },
+    {
       "id": "immunoblockers-2077",
       "name": "Immunoblockers",
       "cost": 100,

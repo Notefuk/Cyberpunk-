@@ -1,43 +1,13 @@
 import type {
   CharacterSheet,
   CombatSkillKey,
-  EncumbranceMode,
+  SoloCombatAwarenessAllocation,
   EquippedWeapon,
   StatKey,
   WeaponItem
 } from '../types/cyberpunk';
 import { SKILL_METADATA } from '../types/cyberpunk';
 import { calculateWeaponAttachmentBonuses } from '../data/weaponAttachmentsAndTechData';
-
-export const ENCUMBRANCE_MODES: Record<
-  EncumbranceMode,
-  { label: string; attackPenalty: number; movePenalty: number; description: string }
-> = {
-  none: {
-    label: 'Normal (Sin sobrepeso)',
-    attackPenalty: 0,
-    movePenalty: 0,
-    description: 'Movimiento y combate sin penalización por carga.'
-  },
-  heavy_box: {
-    label: 'Carga Pesada / Caja (-2)',
-    attackPenalty: 2,
-    movePenalty: 2,
-    description: 'Cargando equipo voluminoso o caja pesada: -2 a REF/DEX (Ataques) y -2 MOVE.'
-  },
-  carrying_body: {
-    label: 'Cargando Cuerpo / Aliado (-2 Atk, -4 MOVE)',
-    attackPenalty: 2,
-    movePenalty: 4,
-    description: 'Arrastrando o cargando un cuerpo: -2 a ataques (solo armas 1H) y -4 MOVE.'
-  },
-  extreme_load: {
-    label: 'Sobrecarga Extrema (-4)',
-    attackPenalty: 4,
-    movePenalty: 4,
-    description: 'Exceso severo de peso situacional: -4 a ataques y -4 MOVE.'
-  }
-};
 
 export function calculateMaxHp(body: number, will: number): number {
   return 10 + 5 * Math.ceil((body + will) / 2);
@@ -151,7 +121,6 @@ export interface WeaponAttackBreakdown {
   armorPenalty: number;
   seriousWoundPenalty: number;
   injuryPenalty: number;
-  encumbrancePenalty?: number;
   soloPrecisionBonus?: number;
   attachmentBonus?: number;
   attachmentBreakdown?: string[];
@@ -242,14 +211,6 @@ export function calculateWeaponAttackBreakdown(
     }
   }
 
-  // 4. Penalizador de Carga / Sobrepeso Situacional
-  const encMode = character.encumbranceMode || 'none';
-  const encConfig = ENCUMBRANCE_MODES[encMode] || ENCUMBRANCE_MODES.none;
-  const encumbrancePenalty = encConfig.attackPenalty;
-  if (encumbrancePenalty > 0) {
-    penaltyBreakdown.push(`[Carga] ${encConfig.label}: -${encumbrancePenalty}`);
-  }
-
   // 5. Bonificador de Solo: Combat Awareness (Precision Attack)
   const soloPrecisionBonus = character.soloAllocation?.precisionAttack ?? 0;
   if (soloPrecisionBonus > 0) {
@@ -265,7 +226,7 @@ export function calculateWeaponAttackBreakdown(
     penaltyBreakdown.push(`[Accesorio/Mejora] ${bonusText}`);
   }
 
-  const totalPenalty = armorPenalty + seriousWoundPenalty + injuryPenalty + encumbrancePenalty;
+  const totalPenalty = armorPenalty + seriousWoundPenalty + injuryPenalty;
   const netBase = statVal + skillVal - totalPenalty + soloPrecisionBonus + attachmentBonus;
 
   return {
@@ -277,7 +238,6 @@ export function calculateWeaponAttackBreakdown(
     armorPenalty,
     seriousWoundPenalty,
     injuryPenalty,
-    encumbrancePenalty,
     soloPrecisionBonus,
     attachmentBonus,
     attachmentBreakdown,
@@ -296,12 +256,6 @@ export function getEffectiveMove(character: CharacterSheet): number {
   const headPen = Math.abs(character.headArmor?.penalty ?? 0);
   const bodyPen = Math.abs(character.bodyArmor?.penalty ?? 0);
   penalty += Math.max(headPen, bodyPen);
-
-  const encMode = character.encumbranceMode || 'none';
-  const encConfig = ENCUMBRANCE_MODES[encMode];
-  if (encConfig) {
-    penalty += encConfig.movePenalty;
-  }
 
   // Core p. 186: Mortally Wounded da -6 a MOVE (mínimo 1).
   if (isMortallyWounded(character.currentHp ?? 0)) {
@@ -432,3 +386,55 @@ export const AMMO_TYPE_CATALOG: AmmoTypeMeta[] = [
     isNonLethal: true
   }
 ];
+
+
+// Core p. 146: costo en puntos de Combat Awareness. Los valores guardados son el bono (+N), no los puntos.
+export const SOLO_AWARENESS_MAX_BONUS: Partial<Record<keyof SoloCombatAwarenessAllocation, number>> = {
+  precisionAttack: 3,
+  damageDeflection: 5
+};
+
+export function soloAwarenessPointCost(alloc: SoloCombatAwarenessAllocation): number {
+  return (
+    (alloc.fumbleRecovery ? 4 : 0) +
+    (alloc.damageDeflection || 0) * 2 +
+    (alloc.initiativeReaction || 0) +
+    (alloc.precisionAttack || 0) * 3 +
+    (alloc.spotWeakness || 0) +
+    (alloc.threatDetection || 0)
+  );
+}
+
+// Devuelve true si el reparto entra en el rango de Combat Awareness y respeta los topes del Core p. 146.
+export function isValidSoloAllocation(alloc: SoloCombatAwarenessAllocation, roleRank: number): boolean {
+  for (const [key, max] of Object.entries(SOLO_AWARENESS_MAX_BONUS)) {
+    if (((alloc[key as keyof SoloCombatAwarenessAllocation] as number) || 0) > (max ?? 0)) return false;
+  }
+  return soloAwarenessPointCost(alloc) <= roleRank;
+}
+
+// Core p. 223: tras estabilizar se cura BODY por día de descanso. Enhanced Antibodies: BODY x 2 (Core p. 114).
+// Cryotank: dobla la tasa normal mientras el paciente esté dentro (Core p. 353).
+export function naturalHealingPerDay(body: number, hasEnhancedAntibodies = false, inCryotank = false): number {
+  return Math.max(1, body) * (hasEnhancedAntibodies ? 2 : 1) * (inCryotank ? 2 : 1);
+}
+
+// Core p. 150: Speedheal cura BODY + WILL; no sirve en Mortally Wounded y solo 1 vez por día.
+export function speedhealAmount(body: number, will: number, currentHp: number): number {
+  return isMortallyWounded(currentHp) ? 0 : body + will;
+}
+
+// Core p. 230: cada ciberware instalado baja 2 la Humanidad máxima que se puede recuperar con terapia;
+// el borgware baja 4 y el ciberware de 0 Humanity Loss no la baja.
+export function calculateTherapyMaxHumanity(
+  emp: number,
+  installed: { humanityLoss?: string | number; type?: string }[]
+): number {
+  let cap = emp * 10;
+  for (const cw of installed) {
+    const hl = cw.humanityLoss === undefined ? 7 : parseHumanityLossAverage(String(cw.humanityLoss));
+    if (hl === 0) continue;
+    cap -= (cw.type || '').toLowerCase() === 'borgware' ? 4 : 2;
+  }
+  return Math.max(0, cap);
+}
