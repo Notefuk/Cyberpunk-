@@ -12,82 +12,74 @@ export interface CriticalInjury {
   modifiers: InjuryModifier;
 }
 
+// Tablas canon de Heridas Críticas: Core Rulebook p. 187 (Cuerpo) y p. 188 (Cabeza).
+// Toda Herida Crítica inflige además 5 de Daño Adicional directo a HP, sin ablación,
+// aunque el daño del ataque no atraviese el SP (Core p. 187).
+
 export const HEAD_CRITICAL_INJURIES: CriticalInjury[] = [
   {
     id: 'head-2',
     roll: 2,
     location: 'head',
     name: 'Ojo Perdido (Lost Eye)',
-    effect: '-4 a todas las tiradas a Distancia y de Percepción que requieran visión. Si pierdes ambos, quedas ciego.',
-    quickFix: 'N/A (Irreversible sin ciberóptica)',
-    treatment: 'Cirugía en Hospital (DV 17) para instalar Ciberojo o clonación.',
+    effect: 'El ojo perdido ya no está. -4 a Ataques a Distancia y a tiradas de Percepción que dependan de la vista. +1 al Death Save Penalty base.',
+    quickFix: 'N/A',
+    treatment: 'Surgery DV 17',
     iconType: 'eye',
-    modifiers: {
-      rangedAttackPenalty: 4,
-      statPenalties: { INT: 2 }
-    }
+    modifiers: { rangedAttackPenalty: 4, bonusDeathSavePenalty: 1 }
   },
   {
     id: 'head-3',
     roll: 3,
     location: 'head',
     name: 'Trauma Cerebral (Brain Injury)',
-    effect: '-2 a todas las acciones que utilicen INT, WILL o COOL.',
-    quickFix: 'Primeros Auxilios o Paramédico (DV 17)',
-    treatment: 'Cirugía en Hospital (DV 17) con 1 semana de reposo.',
+    effect: '-2 a todas las Acciones. +1 al Death Save Penalty base.',
+    quickFix: 'N/A',
+    treatment: 'Surgery DV 17',
     iconType: 'brain',
-    modifiers: {
-      allActionsPenalty: 2,
-      statPenalties: { INT: 2, WILL: 2, COOL: 2 }
-    }
+    modifiers: { allActionsPenalty: 2, bonusDeathSavePenalty: 1 }
   },
   {
     id: 'head-4',
     roll: 4,
     location: 'head',
     name: 'Ojo Dañado (Damaged Eye)',
-    effect: '-2 a tiradas a Distancia y Percepción que requieran vista.',
-    quickFix: 'Primeros Auxilios o Paramédico (DV 15)',
-    treatment: 'Cirugía en Clínica (DV 15) o reposo médico.',
+    effect: '-2 a Ataques a Distancia y a tiradas de Percepción que dependan de la vista.',
+    quickFix: 'Paramedic DV 15',
+    treatment: 'Surgery DV 13',
     iconType: 'eye',
-    modifiers: {
-      rangedAttackPenalty: 2
-    }
+    modifiers: { rangedAttackPenalty: 2 }
   },
   {
     id: 'head-5',
     roll: 5,
     location: 'head',
     name: 'Conmoción Cerebral (Concussion)',
-    effect: '-2 a todas las acciones por mareo extremo y zumbidos.',
-    quickFix: 'Primeros Auxilios o Paramédico (DV 13)',
-    treatment: 'Reposo absoluto de 1 día.',
+    effect: '-2 a todas las Acciones.',
+    quickFix: 'First Aid o Paramedic DV 13',
+    treatment: 'El Quick Fix elimina el efecto de forma permanente',
     iconType: 'brain',
-    modifiers: {
-      allActionsPenalty: 2
-    }
+    modifiers: { allActionsPenalty: 2 }
   },
   {
     id: 'head-6',
     roll: 6,
     location: 'head',
-    name: 'Mandíbula Fracturada (Fractured Jaw)',
-    effect: '-4 a acciones verbales (Conversación, Liderazgo, etc.) y no puedes comer comida sólida.',
-    quickFix: 'Paramédico (DV 13)',
-    treatment: 'Cirugía en Clínica (DV 13) para fijar el hueso.',
+    name: 'Mandíbula Rota (Broken Jaw)',
+    effect: '-4 a todas las Acciones que impliquen hablar.',
+    quickFix: 'Paramedic DV 13',
+    treatment: 'Paramedic o Surgery DV 13',
     iconType: 'skull',
-    modifiers: {
-      allActionsPenalty: 2
-    }
+    modifiers: {}
   },
   {
     id: 'head-7',
     roll: 7,
     location: 'head',
-    name: 'Objeto Incrustado en Cabeza (Foreign Object)',
-    effect: 'Recibes 5 puntos de daño directo que ignora armadura si realizas una acción que requiera moverte más de 4m.',
-    quickFix: 'Paramédico (DV 13) para estabilizar',
-    treatment: 'Cirugía en Clínica (DV 13) para extraer el objeto.',
+    name: 'Objeto Extraño (Foreign Object)',
+    effect: 'Al final de cada Turno en que te muevas más de 4 m a pie, vuelves a sufrir el Daño Adicional de esta Herida Crítica (5) directo a tus HP.',
+    quickFix: 'First Aid o Paramedic DV 13',
+    treatment: 'El Quick Fix elimina el efecto de forma permanente',
     iconType: 'skull',
     modifiers: {}
   },
@@ -96,37 +88,31 @@ export const HEAD_CRITICAL_INJURIES: CriticalInjury[] = [
     roll: 8,
     location: 'head',
     name: 'Latigazo Cervical (Whiplash)',
-    effect: '-2 a todas las acciones que requieran REF y DEX por espasmos en el cuello.',
-    quickFix: 'Primeros Auxilios (DV 13)',
-    treatment: 'Reposo y analgésicos durante 2 días.',
+    effect: '+1 al Death Save Penalty base.',
+    quickFix: 'Paramedic DV 13',
+    treatment: 'Paramedic o Surgery DV 13',
     iconType: 'bone',
-    modifiers: {
-      bonusDeathSavePenalty: 1,
-      statPenalties: { REF: 2, DEX: 2 }
-    }
+    modifiers: { bonusDeathSavePenalty: 1 }
   },
   {
     id: 'head-9',
     roll: 9,
     location: 'head',
-    name: 'Cráneo Fracturado (Fractured Skull)',
-    effect: '-2 a todas las acciones que utilicen INT, REF y DEX. El daño a la cabeza hace daño triple en vez de doble.',
-    quickFix: 'Paramédico (DV 15)',
-    treatment: 'Cirugía en Hospital (DV 17) para colocar placa craneal.',
+    name: 'Cráneo Fisurado (Cracked Skull)',
+    effect: 'Los Ataques Apuntados a tu cabeza multiplican por 3 (en vez de 2) el daño que atraviesa tu SP. +1 al Death Save Penalty base.',
+    quickFix: 'Paramedic DV 15',
+    treatment: 'Paramedic o Surgery DV 15',
     iconType: 'skull',
-    modifiers: {
-      bonusDeathSavePenalty: 1,
-      statPenalties: { INT: 2, REF: 2, DEX: 2 }
-    }
+    modifiers: { bonusDeathSavePenalty: 1 }
   },
   {
     id: 'head-10',
     roll: 10,
     location: 'head',
     name: 'Oído Dañado (Damaged Ear)',
-    effect: '-2 a tiradas de Percepción basadas en audición.',
-    quickFix: 'Primeros Auxilios (DV 13)',
-    treatment: 'Cirugía en Clínica (DV 13).',
+    effect: 'Cada Turno en que te muevas más de 4 m a pie, no puedes realizar Acción de Movimiento en tu siguiente Turno. Además, -2 a tiradas de Percepción que dependan del oído.',
+    quickFix: 'Paramedic DV 13',
+    treatment: 'Surgery DV 13',
     iconType: 'ear',
     modifiers: {}
   },
@@ -135,24 +121,22 @@ export const HEAD_CRITICAL_INJURIES: CriticalInjury[] = [
     roll: 11,
     location: 'head',
     name: 'Tráquea Aplastada (Crushed Windpipe)',
-    effect: 'No puedes hablar y te sofocas: sufres 2 de daño directo por asfixia al final de cada turno.',
-    quickFix: 'Paramédico (DV 15) para traqueotomía de emergencia',
-    treatment: 'Cirugía en Hospital (DV 15).',
+    effect: 'No puedes hablar. +1 al Death Save Penalty base.',
+    quickFix: 'N/A',
+    treatment: 'Surgery DV 15',
     iconType: 'throat',
-    modifiers: {}
+    modifiers: { bonusDeathSavePenalty: 1 }
   },
   {
     id: 'head-12',
     roll: 12,
     location: 'head',
-    name: 'Oído Perdido (Lost Ear)',
-    effect: '-4 a tiradas de Percepción basadas en oído y -2 a tiradas de iniciativa por desorientación acústica.',
+    name: 'Oreja Perdida (Lost Ear)',
+    effect: 'La oreja perdida ya no está. Cada Turno en que te muevas más de 4 m a pie, no puedes realizar Acción de Movimiento en tu siguiente Turno. Además, -4 a tiradas de Percepción que dependan del oído. +1 al Death Save Penalty base.',
     quickFix: 'N/A',
-    treatment: 'Cirugía en Hospital (DV 15) para reemplazo ciberacústico.',
+    treatment: 'Surgery DV 17',
     iconType: 'ear',
-    modifiers: {
-      statPenalties: { REF: 2 }
-    }
+    modifiers: { bonusDeathSavePenalty: 1 }
   }
 ];
 
@@ -162,154 +146,138 @@ export const BODY_CRITICAL_INJURIES: CriticalInjury[] = [
     roll: 2,
     location: 'body',
     name: 'Brazo Amputado (Dismembered Arm)',
-    effect: 'El brazo queda cercenado. Pierdes el brazo y cualquier objeto sostenido en él.',
-    quickFix: 'Paramédico (DV 15) para torniquete urgente',
-    treatment: 'Cirugía en Hospital (DV 17) para instalar Ciberbrazo o reimplante.',
+    effect: 'El brazo amputado ya no está. Sueltas de inmediato lo que tuvieras en esa mano. +1 al Death Save Penalty base.',
+    quickFix: 'N/A',
+    treatment: 'Surgery DV 17',
     iconType: 'bone',
-    modifiers: {
-      meleeAttackPenalty: 2
-    }
+    modifiers: { bonusDeathSavePenalty: 1 }
   },
   {
     id: 'body-3',
     roll: 3,
     location: 'body',
-    name: 'Pierna Amputada (Dismembered Leg)',
-    effect: 'La pierna queda cercenada. Tu MOV se reduce a 1, no puedes correr ni esquivar.',
-    quickFix: 'Paramédico (DV 15) para torniquete urgente',
-    treatment: 'Cirugía en Hospital (DV 17) para Ciberpierna o reimplante.',
+    name: 'Mano Amputada (Dismembered Hand)',
+    effect: 'La mano amputada ya no está. Sueltas de inmediato lo que tuvieras en esa mano. +1 al Death Save Penalty base.',
+    quickFix: 'N/A',
+    treatment: 'Surgery DV 17',
     iconType: 'bone',
-    modifiers: {
-      movePenalty: 6
-    }
+    modifiers: { bonusDeathSavePenalty: 1 }
   },
   {
     id: 'body-4',
     roll: 4,
     location: 'body',
-    name: 'Brazo Roto (Broken Arm)',
-    effect: 'No puedes utilizar ese brazo para sostener armas a dos manos ni realizar acciones con él.',
-    quickFix: 'Paramédico (DV 13) para entablillar',
-    treatment: 'Cirugía en Clínica (DV 13) o yeso médico.',
-    iconType: 'bone',
-    modifiers: {
-      meleeAttackPenalty: 2
-    }
+    name: 'Pulmón Colapsado (Collapsed Lung)',
+    effect: '-2 a MOVE (mínimo 1). +1 al Death Save Penalty base.',
+    quickFix: 'Paramedic DV 15',
+    treatment: 'Surgery DV 15',
+    iconType: 'heart',
+    modifiers: { movePenalty: 2, bonusDeathSavePenalty: 1 }
   },
   {
     id: 'body-5',
     roll: 5,
     location: 'body',
-    name: 'Pierna Rota (Broken Leg)',
-    effect: 'Tu MOV se reduce a la mitad (redondeado hacia abajo, mínimo 1).',
-    quickFix: 'Paramédico (DV 13) para entablillar',
-    treatment: 'Cirugía en Clínica (DV 13) o escayola.',
+    name: 'Costillas Rotas (Broken Ribs)',
+    effect: 'Al final de cada Turno en que te muevas más de 4 m a pie, vuelves a sufrir el Daño Adicional de esta Herida Crítica (5) directo a tus HP.',
+    quickFix: 'Paramedic DV 13',
+    treatment: 'Paramedic DV 15 o Surgery DV 13',
     iconType: 'bone',
-    modifiers: {
-      movePenalty: 4
-    }
+    modifiers: {}
   },
   {
     id: 'body-6',
     roll: 6,
     location: 'body',
-    name: 'Músculo Desgarrado (Torn Muscle)',
-    effect: '-2 a todas las acciones que utilicen DEX, REF y MOVE por dolor agudo.',
-    quickFix: 'Primeros Auxilios (DV 13)',
-    treatment: 'Cirugía en Clínica (DV 13) o 1 semana de reposo.',
-    iconType: 'muscle',
-    modifiers: {
-      allActionsPenalty: 2,
-      statPenalties: { DEX: 2, REF: 2, MOVE: 2 }
-    }
+    name: 'Brazo Roto (Broken Arm)',
+    effect: 'El brazo roto no se puede usar. Sueltas de inmediato lo que tuvieras en esa mano.',
+    quickFix: 'Paramedic DV 13',
+    treatment: 'Paramedic DV 15 o Surgery DV 13',
+    iconType: 'bone',
+    modifiers: {}
   },
   {
     id: 'body-7',
     roll: 7,
     location: 'body',
-    name: 'Objeto Incrustado en Torso (Foreign Object)',
-    effect: 'Recibes 5 puntos de daño directo que ignora armadura si realizas una acción de correr o saltar.',
-    quickFix: 'Paramédico (DV 13) para estabilizar',
-    treatment: 'Cirugía en Clínica (DV 13) para extracción segura.',
-    iconType: 'heart',
+    name: 'Objeto Extraño (Foreign Object)',
+    effect: 'Al final de cada Turno en que te muevas más de 4 m a pie, vuelves a sufrir el Daño Adicional de esta Herida Crítica (5) directo a tus HP.',
+    quickFix: 'First Aid o Paramedic DV 13',
+    treatment: 'El Quick Fix elimina el efecto de forma permanente',
+    iconType: 'muscle',
     modifiers: {}
   },
   {
     id: 'body-8',
     roll: 8,
     location: 'body',
-    name: 'Fractura Ósea (Bone Fracture)',
-    effect: '-2 a todas las acciones que utilicen BODY, DEX o REF.',
-    quickFix: 'Paramédico (DV 13)',
-    treatment: 'Cirugía en Clínica (DV 13).',
+    name: 'Pierna Rota (Broken Leg)',
+    effect: '-4 a MOVE (mínimo 1).',
+    quickFix: 'Paramedic DV 13',
+    treatment: 'Paramedic DV 15 o Surgery DV 13',
     iconType: 'bone',
-    modifiers: {
-      allActionsPenalty: 2,
-      statPenalties: { BODY: 2, DEX: 2, REF: 2 }
-    }
+    modifiers: { movePenalty: 4 }
   },
   {
     id: 'body-9',
     roll: 9,
     location: 'body',
-    name: 'Lesión Espinal (Spinal Injury)',
-    effect: 'Al final de cada turno en combate, tira 1d10: con un 1, quedas temporalmente paralizado hasta tu próximo turno.',
-    quickFix: 'Paramédico (DV 15)',
-    treatment: 'Cirugía en Hospital (DV 17) para neurofijación.',
-    iconType: 'skull',
-    modifiers: {
-      allActionsPenalty: 2,
-      bonusDeathSavePenalty: 1
-    }
+    name: 'Músculo Desgarrado (Torn Muscle)',
+    effect: '-2 a Ataques Cuerpo a Cuerpo.',
+    quickFix: 'First Aid o Paramedic DV 13',
+    treatment: 'El Quick Fix elimina el efecto de forma permanente',
+    iconType: 'muscle',
+    modifiers: { meleeAttackPenalty: 2 }
   },
   {
     id: 'body-10',
     roll: 10,
     location: 'body',
-    name: 'Dedos Aplastados (Crushed Fingers)',
-    effect: '-4 a acciones con esa mano (disparar, manipular herramientas, forzar cerraduras).',
-    quickFix: 'Primeros Auxilios (DV 13)',
-    treatment: 'Cirugía en Clínica (DV 13).',
+    name: 'Lesión Espinal (Spinal Injury)',
+    effect: 'En tu próximo Turno no puedes realizar una Acción, pero sí una Acción de Movimiento. +1 al Death Save Penalty base.',
+    quickFix: 'Paramedic DV 15',
+    treatment: 'Surgery DV 15',
     iconType: 'bone',
-    modifiers: {
-      rangedAttackPenalty: 4,
-      meleeAttackPenalty: 4
-    }
+    modifiers: { bonusDeathSavePenalty: 1 }
   },
   {
     id: 'body-11',
     roll: 11,
     location: 'body',
-    name: 'Costillas Rotas (Broken Ribs)',
-    effect: 'Al final de cada turno que te muevas más de 4m, sufres 2 de daño directo por punzadas en el pecho.',
-    quickFix: 'Primeros Auxilios (DV 13) para vendar torso',
-    treatment: 'Cirugía en Clínica (DV 13).',
+    name: 'Dedos Aplastados (Crushed Fingers)',
+    effect: '-4 a todas las Acciones que impliquen esa mano.',
+    quickFix: 'Paramedic DV 13',
+    treatment: 'Surgery DV 15',
     iconType: 'bone',
-    modifiers: {
-      movePenalty: 2
-    }
+    modifiers: {}
   },
   {
     id: 'body-12',
     roll: 12,
     location: 'body',
-    name: 'Pulmón Colapsado (Collapsed Lung)',
-    effect: 'Tu MOV se reduce a 2 y recibes 2 puntos de daño directo por turno hasta que se drene el aire del tórax.',
-    quickFix: 'Paramédico (DV 15) para punción torácica con aguja',
-    treatment: 'Cirugía en Hospital (DV 15).',
-    iconType: 'heart',
-    modifiers: {
-      movePenalty: 2,
-      bonusDeathSavePenalty: 1
-    }
+    name: 'Pierna Amputada (Dismembered Leg)',
+    effect: 'La pierna amputada ya no está. -6 a MOVE (mínimo 1). No puedes esquivar ataques. +1 al Death Save Penalty base.',
+    quickFix: 'N/A',
+    treatment: 'Surgery DV 17',
+    iconType: 'bone',
+    modifiers: { movePenalty: 6, bonusDeathSavePenalty: 1 }
   }
 ];
 
-export function rollCriticalInjury(location: 'head' | 'body'): CriticalInjury {
-  const d1 = Math.floor(Math.random() * 6) + 1;
-  const d2 = Math.floor(Math.random() * 6) + 1;
-  const total = d1 + d2;
+// Core p. 187: se tira 2d6 hasta obtener una Herida Crítica que el objetivo no esté sufriendo.
+export function rollCriticalInjury(
+  location: 'head' | 'body',
+  currentInjuryNames: string[] = []
+): CriticalInjury {
   const table = location === 'head' ? HEAD_CRITICAL_INJURIES : BODY_CRITICAL_INJURIES;
-  const found = table.find(item => item.roll === total);
-  return found || table[5]; // fallback
+  const available = table.filter(item => !currentInjuryNames.includes(item.name));
+  if (available.length === 0) {
+    return table[Math.floor(Math.random() * table.length)];
+  }
+  for (;;) {
+    const d1 = Math.floor(Math.random() * 6) + 1;
+    const d2 = Math.floor(Math.random() * 6) + 1;
+    const found = available.find(item => item.roll === d1 + d2);
+    if (found) return found;
+  }
 }

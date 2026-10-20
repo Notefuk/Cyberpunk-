@@ -220,7 +220,7 @@ export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
     loreDescription: 'Arquitectura de seguridad modesta para proteger inventario de licor y cámaras de barullo.',
     floors: [
       { floorNumber: 1, type: 'Password', name: 'Enlace Wi-Fi Corporativo', dv: 6 },
-      { floorNumber: 2, type: 'Black ICE', name: 'Asp (Anti-Netrunner)', iceType: 'Asp', iceHp: 15, iceAtk: 4, iceDef: 2 },
+      { floorNumber: 2, type: 'Black ICE', name: 'Asp (Anti-Netrunner)', iceType: 'Asp', iceHp: 15, iceAtk: 2, iceDef: 2 },
       { floorNumber: 3, type: 'Control Node', name: 'Luces y Cierre de Puerta Trasera', dv: 8, rewardOrDevice: 'Bloquear/desbloquear salidas' },
       { floorNumber: 4, type: 'File', name: 'Lista de Deudores y Contrabando', dv: 8, rewardOrDevice: 'Chantaje a clientes (300 €$)' }
     ]

@@ -26,6 +26,37 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.0.3',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'Corrección de reglas contra el Core Rulebook',
+    title: 'Tablas canon de Heridas Críticas, Neural Link y correcciones de datos',
+    summary: 'Primera fase del plan de arreglos de la auditoría general. Las tablas de Heridas Críticas de cuerpo y cabeza se reescribieron según Core pp. 187-188 (la de cuerpo estaba desordenada, le faltaba Dismembered Hand y tenía una entrada inventada), y ahora se vuelve a tirar si el objetivo ya sufre esa herida. El Neural Link vuelve a su precio y nombre del Core (500eb, p. 111), la munición Smart sigue la regla de Core p. 346 y el Black ICE Asp tiene ATK 2 (p. 206).',
+    highlights: [
+      'Heridas Críticas de Cuerpo y Cabeza con orden, efectos, Quick Fix y Treatment de Core pp. 187-188.',
+      'Re-tirada automática de críticos que el objetivo ya sufre (Core p. 187).',
+      'Neural Link: 500eb, HL 2d6 (7), 5 Option Slots (Core p. 111).',
+      'Munición Smart: Targeting Scope, segunda tirada 10 + 1d10 si fallas por 4 o menos (Core p. 346).',
+      'Black ICE Asp con ATK 2 en el preset de arquitectura (Core p. 206).'
+    ],
+    filesTouched: [
+      'frontend/src/data/criticalInjuries.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/data/core-rules.cprpack.json',
+      'data/core-rules.cprpack.json',
+      'frontend/src/data/characterCreationData.ts',
+      'frontend/src/data/netAndRolesData.ts',
+      'frontend/src/engine/characterEngine.ts',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CLAUDE.md',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CHECKPOINT.md'
+    ],
+    metricsBadge: 'v4.0.3 • Críticos canon Core pp. 187-188 • Auditoría fase 1'
+  },
+  {
     version: 'v4.0.2',
     date: '2026-10-20',
     phase: 'Codex',
@@ -261,6 +292,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.0.3': true,
     'v4.0.2': true,
     'v4.0.1': true,
     'v4.0.0': true,

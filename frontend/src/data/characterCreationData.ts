@@ -438,7 +438,7 @@ export const ROLES_CATALOG: RoleInfo[] = [
     whatYouGet: [
       'Habilidad Interface a Rango 4 (permite realizar 3 Net Actions por turno).',
       'Cyberdeck estándar con 7 ranuras de memoria cargado con programas ofensivos y Black ICE.',
-      'Neuralware Processor e Interface Plugs de serie instalados en la nuca.',
+      'Neural Link e Interface Plugs de serie instalados en la nuca.',
       'Armamento de defensa personal: Subfusil o Pistola Pesada compacta.',
       'Blindaje Light Armorjack completo (SP 11).'
     ],

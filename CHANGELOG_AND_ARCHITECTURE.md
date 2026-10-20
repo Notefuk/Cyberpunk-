@@ -246,6 +246,30 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.0.3] - 2026-10-20 (Tablas canon de Heridas Críticas, Neural Link y correcciones de datos) [Claude Code · 2026-10-20]
+* **Category**: Corrección de reglas contra el Core Rulebook (plan 1, fase 1: `docs/plans/plan1-auditoria-core.md`)
+* **Files Modified**:
+  - `frontend/src/data/criticalInjuries.ts`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/data/core-rules.cprpack.json`
+  - `data/core-rules.cprpack.json`
+  - `frontend/src/data/characterCreationData.ts`
+  - `frontend/src/data/netAndRolesData.ts`
+  - `frontend/src/engine/characterEngine.ts`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CLAUDE.md`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CHECKPOINT.md`
+* **What Changed**:
+  1. **Heridas Críticas canon (Core pp. 187-188)**: la tabla de Cuerpo estaba desordenada (9 de 11 entradas), faltaba *Dismembered Hand* y existía una entrada inventada (*Bone Fracture*). Se reescribieron ambas tablas con el orden, efecto, Quick Fix y Treatment del libro, y sus modificadores (`allActionsPenalty`, `movePenalty`, `rangedAttackPenalty`, `meleeAttackPenalty`, `bonusDeathSavePenalty`) se ajustaron al texto. Se quitaron efectos sin fuente (Brain Injury solo a INT/WILL/COOL, Crushed Windpipe con daño por turno, Spinal Injury con 1d10 de parálisis, Broken Leg a la mitad de MOVE, entre otros).
+  2. **Re-tirada de críticos repetidos (Core p. 187)**: `rollCriticalInjury` recibe las heridas activas sin tratar y vuelve a tirar 2d6 hasta sacar una que el objetivo no tenga.
+  3. **Neural Link (Core p. 111)**: el ítem `neuralware-processor` pasaba como "Neuralware Processor" a 1000eb; ahora es *Neural Link*, 500eb, HL 2d6 (7), 5 Option Slots. Se mantiene el id para no romper paquetes ni partidas guardadas.
+  4. **Munición Smart (Core p. 346)**: requiere Targeting Scope; si fallas un tiro simple por 4 o menos, segunda tirada con 10 + 1d10 (+LUCK) contra el mismo DV.
+  5. **Black ICE Asp (Core p. 206)**: ATK 2 en el preset de arquitectura "Bar El Coyote Cojo" (decía 4).
+  6. **`CLAUDE.md`**: Seriously Wounded es HP `<` ceil(MaxHP/2) (Core p. 186), no `<=`.
+
 ### [v4.0.2] - 2026-10-20 (CEMK Canonical Quickhacking [Zero RAM, 11 Hacks, 4-Step Combat Flow], Combat HUD Damage Calculator & Ergonomic Header Layout)
 * **Category**: Canonical CEMK 2077 Rules, Combat HUD Ergonomics & Two-Row Card Header Architecture
 * **Files Modified**:

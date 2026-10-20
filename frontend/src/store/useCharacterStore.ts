@@ -1631,7 +1631,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
       },
 
       inflictRandomInjury: (location: 'head' | 'body') => {
-        const rolled = rollCriticalInjury(location);
+        const active = get().characters.find(c => c.id === get().activeCharacterId);
+        const currentNames = (active?.activeInjuries ?? []).filter(i => !i.isTreated).map(i => i.name);
+        const rolled = rollCriticalInjury(location, currentNames);
         const newInjury: ActiveCriticalInjury = {
           id: `injury-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
           name: rolled.name,
