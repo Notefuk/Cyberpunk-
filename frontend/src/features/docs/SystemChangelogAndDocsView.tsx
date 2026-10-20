@@ -26,6 +26,35 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.1.0',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'Reglas de heridas y muerte del Core Rulebook',
+    title: 'Mortally Wounded, Death Saves, críticos automáticos y EMP por Humanidad',
+    summary: 'Segunda fase del plan de arreglos de la auditoría. Con menos de 1 HP el personaje queda Mortally Wounded (-4 a todas las Acciones, -6 MOVE) y aparece el botón Tirar Death Save, que suma el penalizador base de los críticos y el acumulado de cada tirada (Core pp. 186, 188). La calculadora de impactos tira la Herida Crítica sola cuando el daño es crítico o el personaje ya estaba Mortally Wounded, y la EMP baja con cada decena de Humanidad perdida (Core p. 80).',
+    highlights: [
+      'Mortally Wounded: -4 a todas las Acciones y -6 MOVE (mínimo 1), Core p. 186.',
+      'Botón Tirar Death Save: 1d10 + penalizador base + acumulado, menor que BODY para vivir, 10 natural falla (Core p. 188).',
+      'Herida Crítica automática al aplicar un impacto crítico, o cualquier impacto estando Mortally Wounded (Core pp. 187-188).',
+      'Cracked Skull: el daño a la cabeza se multiplica x3 (Core p. 188).',
+      'EMP efectiva = mín(EMP, piso(Humanidad / 10)), Core p. 80.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/characterEngine.ts',
+      'frontend/src/types/cyberpunk.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CONTENT_CHECKLIST.md',
+      'CHECKPOINT.md'
+    ],
+    metricsBadge: 'v4.1.0 • Death Saves Core p. 188 • Auditoría fase 2'
+  },
+  {
     version: 'v4.0.3',
     date: '2026-10-20',
     phase: 'Codex',
@@ -292,6 +321,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.1.0': true,
     'v4.0.3': true,
     'v4.0.2': true,
     'v4.0.1': true,

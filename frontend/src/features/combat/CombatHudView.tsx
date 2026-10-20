@@ -13,9 +13,11 @@ import {
   calculateSeriouslyWoundedThreshold,
   calculateUnarmedDamage,
   getEffectiveBody,
+  getBaseDeathSavePenalty,
   AMMO_TYPE_CATALOG,
   ENCUMBRANCE_MODES
 } from '../../engine/characterEngine';
+import type { DeathSaveResult } from '../../engine/characterEngine';
 import { 
   createInitialAttackRoll, 
   createDamageRoll,
@@ -791,6 +793,9 @@ export const CombatHudView: React.FC = () => {
   const updateInventoryQuantity = useCharacterStore((state) => state.updateInventoryQuantity);
   const addConsumableCharge = useCharacterStore((state) => state.addConsumableCharge);
   const inflictRandomInjury = useCharacterStore((state) => state.inflictRandomInjury);
+  const rollDeathSave = useCharacterStore((state) => state.rollDeathSave);
+  const addDeathSavePenalty = useCharacterStore((state) => state.addDeathSavePenalty);
+  const setDead = useCharacterStore((state) => state.setDead);
   const toggleTreatInjury = useCharacterStore((state) => state.toggleTreatInjury);
   const removeInjury = useCharacterStore((state) => state.removeInjury);
   const setEncumbranceMode = useCharacterStore((state) => state.setEncumbranceMode);
@@ -1414,6 +1419,7 @@ export const CombatHudView: React.FC = () => {
   const [calcLocation, setCalcLocation] = useState<'shield' | 'body' | 'head'>('body');
   const [calcAttackType, setCalcAttackType] = useState<'standard' | 'ap' | 'melee' | 'martial_arts' | 'brawling' | 'direct'>('standard');
   const [calcIsCritical, setCalcIsCritical] = useState<boolean>(false);
+  const [lastDeathSave, setLastDeathSave] = useState<DeathSaveResult | null>(null);
   const [calcPassExcess, setCalcPassExcess] = useState<boolean>(true);
   const [showArmorRulesGuide, setShowArmorRulesGuide] = useState<boolean>(false);
   const [rackFilter, setRackFilter] = useState<'all' | 'weapons' | 'unarmed' | 'throwables' | 'drugs'>('all');
@@ -1620,7 +1626,9 @@ export const CombatHudView: React.FC = () => {
   if (calcAttackType === 'direct') {
     calcHpLoss = incomingDamageInput;
   } else if (calcPenetratingDamage > 0) {
-    calcHpLoss = calcPenetratingDamage * (calcLocation === 'head' ? 2 : 1);
+    // Core p. 188: con Cracked Skull los Ataques Apuntados a la cabeza multiplican x3 en vez de x2.
+    const hasCrackedSkull = (activeChar?.activeInjuries ?? []).some(inj => !inj.isTreated && inj.name.includes('Cracked Skull'));
+    calcHpLoss = calcPenetratingDamage * (calcLocation === 'head' ? (hasCrackedSkull ? 3 : 2) : 1);
   }
   if (calcIsCritical) {
     calcHpLoss += 5;
@@ -1666,6 +1674,9 @@ export const CombatHudView: React.FC = () => {
 
   const handleApplyCalculatedDamage = () => {
     ensureTelemetryExpanded();
+    const wasMortallyWounded = (activeChar?.currentHp ?? 0) < 1;
+    const appliedHpLoss = calcLocation === 'shield' ? (calcPassExcess ? calcExcessHpLoss : 0) : calcHpLoss;
+    const critLocation: 'head' | 'body' = calcLocation === 'head' ? 'head' : 'body';
     if (calcLocation === 'shield') {
       if (calcShieldLoss > 0) {
         setShieldSdp(calcNewShieldSdp);
@@ -1685,6 +1696,16 @@ export const CombatHudView: React.FC = () => {
       if (calcHpLoss > 0) {
         adjustHp(-calcHpLoss);
       }
+    }
+
+    // Core p. 187: con dos o más 6 se sufre la Herida Crítica aunque el daño no atraviese el SP.
+    if (calcIsCritical && (calcLocation !== 'shield' || calcExcessDamage > 0)) {
+      inflictRandomInjury(critLocation);
+    }
+    // Core p. 188: Mortally Wounded sufre una Herida Crítica por cada ataque que le hace daño y su Death Save Penalty sube 1.
+    if (wasMortallyWounded && calcAttackType !== 'direct' && appliedHpLoss > 0) {
+      inflictRandomInjury(critLocation);
+      addDeathSavePenalty(1);
     }
 
     const entry: RollEntry = {
@@ -2786,6 +2807,45 @@ export const CombatHudView: React.FC = () => {
                       Max
                     </button>
                   </div>
+
+                  {/* Core pp. 186, 188: Mortally Wounded y Death Saves */}
+                  {(isMortallyWounded || activeChar?.isDead) && (() => {
+                    const baseDsPenalty = activeChar ? getBaseDeathSavePenalty(activeChar) : 0;
+                    const accDsPenalty = activeChar?.deathSavePenalty ?? 0;
+                    return (
+                      <div className="mt-2.5 pt-2 border-t border-[#dc2626]/40 text-[11px] font-mono-code space-y-1.5">
+                        {activeChar?.isDead ? (
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-[#dc2626] font-bold flex items-center gap-1"><Skull className="w-3.5 h-3.5" /> MUERTO (falló un Death Save)</span>
+                            <button
+                              onClick={() => { setDead(false); setLastDeathSave(null); }}
+                              className="px-2 py-0.5 bg-[#1a1d28] border border-[#2b3042] text-[#94a3b8] hover:text-white rounded-xs text-[10px]"
+                            >
+                              Deshacer
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="text-[#dc2626] font-bold">MORTALMENTE HERIDO: -4 a todas las Acciones, -6 MOVE (mín. 1)</div>
+                            <div className="text-[#94a3b8] text-[10px] leading-tight">
+                              Al inicio de cada Turno tira 1d10 + penalizador: vives si sacas menos que tu BODY ({effectiveBody}). Un 10 siempre falla. Penalizador: base {baseDsPenalty} + acumulado {accDsPenalty}. Stabilization DV 15 lo devuelve a 1 HP.
+                            </div>
+                            <button
+                              onClick={() => { const r = rollDeathSave(); if (r) setLastDeathSave(r); }}
+                              className="w-full px-2 py-1 bg-[#dc2626]/20 hover:bg-[#dc2626] border border-[#dc2626]/60 text-white rounded-xs font-bold transition-all active:scale-95"
+                            >
+                              Tirar Death Save
+                            </button>
+                          </>
+                        )}
+                        {lastDeathSave && (
+                          <div className={`text-[10px] ${lastDeathSave.success ? 'text-[#10b981]' : 'text-[#dc2626]'}`}>
+                            d10 {lastDeathSave.d10} + {lastDeathSave.basePenalty + lastDeathSave.accumulatedPenalty} = {lastDeathSave.total} vs BODY {lastDeathSave.deathSaveValue}: {lastDeathSave.success ? 'SOBREVIVE' : lastDeathSave.autoFail ? 'FALLA (10 natural)' : 'FALLA'}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 <div className="mt-2.5 bg-[#181a24] p-2.5 rounded-sm border border-[#262c3e]">

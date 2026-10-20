@@ -246,6 +246,27 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.1.0] - 2026-10-20 (Mortally Wounded, Death Saves, críticos automáticos y EMP por Humanidad) [Claude Code · 2026-10-20]
+* **Category**: Reglas de heridas y muerte del Core Rulebook (plan 1, fase 2: `docs/plans/plan1-auditoria-core.md`)
+* **Files Modified**:
+  - `frontend/src/engine/characterEngine.ts`
+  - `frontend/src/types/cyberpunk.ts`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CONTENT_CHECKLIST.md`
+  - `CHECKPOINT.md`
+* **What Changed**:
+  1. **Mortally Wounded (Core p. 186)**: con menos de 1 HP el penalizador de herida pasa de -2 a -4 a todas las Acciones (los Wound States se reemplazan) y MOVE baja 6 (mínimo 1). Funciones nuevas `isMortallyWounded`, `getBaseDeathSavePenalty` y `rollDeathSave` en `characterEngine.ts`.
+  2. **Death Saves (Core p. 188)**: botón "Tirar Death Save" en Biomonitor y Vitales del HUD de combate. Tira 1d10 + penalizador base (críticos) + acumulado; vive si el total es menor que BODY, un 10 natural falla siempre, cada tirada suma 1 al acumulado. Si falla, el personaje queda MUERTO (con botón Deshacer). El acumulado vuelve a 0 al subir a 1+ HP. Campos opcionales nuevos `deathSavePenalty` e `isDead` en `CharacterSheet` (no rompen datos guardados).
+  3. **Críticos automáticos en la calculadora de impactos (Core pp. 187-188)**: si se marca Crítico, además del +5 directo a HP se tira la Herida Crítica en la ubicación (cabeza o cuerpo). Si el personaje ya estaba Mortally Wounded y un ataque le hace daño, sufre otra Herida Crítica y su Death Save Penalty sube 1. Con *Cracked Skull* el daño a la cabeza se multiplica x3.
+  4. **EMP efectiva (Core p. 80)**: `getEffectiveEmp` = mín(EMP, piso(Humanidad/10)). La ficha muestra la pérdida como penalizador en la casilla de EMP y la tabla de habilidades usa la EMP efectiva.
+  5. **Desvío del plan**: B11 (efectos de apuntado a pierna y mano) queda como texto, porque el objetivo de esos ataques es un PNJ que la app no modela.
+
 ### [v4.0.3] - 2026-10-20 (Tablas canon de Heridas Críticas, Neural Link y correcciones de datos) [Claude Code · 2026-10-20]
 * **Category**: Corrección de reglas contra el Core Rulebook (plan 1, fase 1: `docs/plans/plan1-auditoria-core.md`)
 * **Files Modified**:

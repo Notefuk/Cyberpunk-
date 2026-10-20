@@ -560,6 +560,10 @@ export interface CharacterSheet {
   installedCyberwareIds: string[];
   empDisabledCyberwareIds?: string[];
   activeInjuries: ActiveCriticalInjury[];
+  /** Death Save Penalty acumulado mientras está Mortally Wounded (Core p. 188). Vuelve a 0 al estabilizar a 1+ HP. */
+  deathSavePenalty?: number;
+  /** Falló un Death Save (Core p. 188). */
+  isDead?: boolean;
   eurodollars: number;
   inventory?: InventoryItem[];
   transactions?: EurodollarTransaction[];

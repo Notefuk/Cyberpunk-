@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.0.3 OPERATIVO`  
+> **SYSTEM VERSION**: `v4.1.0 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-10-20]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -20,7 +20,11 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 
 ---
 
-## 🚀 2. What Was Added in v4.0.3
+## 🚀 2. What Was Added in v4.1.0
+
+[Claude Code · 2026-10-20] Plan 1, fase 2. Mortally Wounded (-4 a todo, -6 MOVE), botón Tirar Death Save con penalizador base + acumulado y estado MUERTO (Core pp. 186, 188); críticos automáticos al aplicar daño con Crítico o estando Mortally Wounded; Cracked Skull x3; EMP efectiva derivada de la Humanidad (Core p. 80). Funciones en `engine/characterEngine.ts`; campos opcionales `deathSavePenalty` e `isDead` en `CharacterSheet`.
+
+## 📦 2.0 Historical Summary: What Was Added in v4.0.3
 
 [Claude Code · 2026-10-20] Primera fase del plan de arreglos de la auditoría general (`docs/plans/plan1-auditoria-core.md`). Informe completo: Claude Doc "Auditoría CPR Omni-Deck v4.0.2".
 - Tablas de Heridas Críticas (cuerpo y cabeza) reescritas según Core pp. 187-188, con re-tirada de críticos repetidos.

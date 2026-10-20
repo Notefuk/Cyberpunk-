@@ -51,6 +51,56 @@ export function calculateMaxHumanity(emp: number): number {
   return emp * 10;
 }
 
+// Core p. 80: la EMP baja cada vez que baja la decena de la Humanidad (44 HUM = EMP 4, 39 HUM = EMP 3).
+export function getEffectiveEmp(character: CharacterSheet): number {
+  const baseEmp = character.stats?.EMP ?? 0;
+  const humanity = character.currentHumanity ?? baseEmp * 10;
+  return Math.max(0, Math.min(baseEmp, Math.floor(humanity / 10)));
+}
+
+// Core p. 186: Mortally Wounded con menos de 1 HP.
+export function isMortallyWounded(currentHp: number): boolean {
+  return currentHp < 1;
+}
+
+// Core pp. 187-188: varias Heridas Críticas suben en 1 el Death Save Penalty base.
+export function getBaseDeathSavePenalty(character: CharacterSheet): number {
+  return (character.activeInjuries ?? []).reduce(
+    (sum, inj) => sum + (!inj.isTreated ? inj.modifiers?.bonusDeathSavePenalty ?? 0 : 0),
+    0
+  );
+}
+
+export interface DeathSaveResult {
+  d10: number;
+  basePenalty: number;
+  accumulatedPenalty: number;
+  total: number;
+  deathSaveValue: number;
+  autoFail: boolean;
+  success: boolean;
+}
+
+// Core p. 188: tira 1d10 + Death Save Penalty; vives si el resultado es menor que tu BODY.
+// Un 10 natural falla siempre. Cada tirada sube el penalizador acumulado en 1.
+export function rollDeathSave(character: CharacterSheet): DeathSaveResult {
+  const deathSaveValue = getEffectiveBody(character);
+  const basePenalty = getBaseDeathSavePenalty(character);
+  const accumulatedPenalty = character.deathSavePenalty ?? 0;
+  const d10 = Math.floor(Math.random() * 10) + 1;
+  const total = d10 + basePenalty + accumulatedPenalty;
+  const autoFail = d10 === 10;
+  return {
+    d10,
+    basePenalty,
+    accumulatedPenalty,
+    total,
+    deathSaveValue,
+    autoFail,
+    success: !autoFail && total < deathSaveValue
+  };
+}
+
 export function mapWeaponSkillToKey(weaponSkillLabel: string, isAutofire?: boolean): CombatSkillKey {
   if (isAutofire) {
     return 'autofire';
@@ -137,12 +187,16 @@ export function calculateWeaponAttackBreakdown(
   }
 
   // 2. Penalizador por Gravemente Herido (HP actual < 50% de Max HP: -2 a todas las acciones)
+  // Core p. 186: cada Wound State reemplaza al anterior; Mortally Wounded (< 1 HP) es -4 a todas las Acciones.
   const effectiveBody = getEffectiveBody(character);
   const maxHp = calculateMaxHp(effectiveBody, character.stats?.WILL ?? 0);
   const woundThreshold = calculateSeriouslyWoundedThreshold(maxHp);
+  const isMortallyWoundedNow = isMortallyWounded(character.currentHp ?? 0);
   const isSeriouslyWounded = (character.currentHp ?? 0) < woundThreshold;
-  const seriousWoundPenalty = isSeriouslyWounded ? 2 : 0;
-  if (seriousWoundPenalty > 0) {
+  const seriousWoundPenalty = isMortallyWoundedNow ? 4 : isSeriouslyWounded ? 2 : 0;
+  if (isMortallyWoundedNow) {
+    penaltyBreakdown.push('[Salud] Mortalmente Herido (<1 HP): -4');
+  } else if (seriousWoundPenalty > 0) {
     penaltyBreakdown.push(`[Salud] Gravemente Herido (<${woundThreshold} HP): -2`);
   }
 
@@ -235,6 +289,11 @@ export function getEffectiveMove(character: CharacterSheet): number {
   const encConfig = ENCUMBRANCE_MODES[encMode];
   if (encConfig) {
     penalty += encConfig.movePenalty;
+  }
+
+  // Core p. 186: Mortally Wounded da -6 a MOVE (mínimo 1).
+  if (isMortallyWounded(character.currentHp ?? 0)) {
+    penalty += 6;
   }
 
   character.activeInjuries?.forEach((inj) => {

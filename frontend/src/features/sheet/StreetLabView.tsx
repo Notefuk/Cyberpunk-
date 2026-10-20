@@ -5,6 +5,7 @@ import {
   calculateSeriouslyWoundedThreshold, 
   calculateMaxHumanity,
   calculateWeaponAttackBreakdown,
+  getEffectiveEmp,
   ENCUMBRANCE_MODES
 } from '../../engine/characterEngine';
 import type { 
@@ -384,6 +385,10 @@ export const StreetLabView: React.FC = () => {
         pen += inj.modifiers.statPenalties[stat]!;
       }
     });
+    // Core p. 80: la EMP efectiva baja con cada decena de Humanidad perdida.
+    if (stat === 'EMP' && activeChar) {
+      pen += Math.max(0, (activeChar.stats?.EMP ?? 0) - getEffectiveEmp(activeChar));
+    }
     return pen;
   };
 
@@ -889,7 +894,9 @@ export const StreetLabView: React.FC = () => {
                         </thead>
                         <tbody className="divide-y divide-[#141a29]">
                           {filteredSkills.map((sk, idx) => {
-                            const statVal = activeChar.stats[sk.stat as keyof typeof activeChar.stats] ?? (sk.base - sk.lvl);
+                            const statVal = sk.stat === 'EMP'
+                              ? getEffectiveEmp(activeChar)
+                              : activeChar.stats[sk.stat as keyof typeof activeChar.stats] ?? (sk.base - sk.lvl);
                             const isTrained = sk.lvl > 0;
                             return (
                               <tr
