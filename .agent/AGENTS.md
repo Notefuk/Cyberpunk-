@@ -59,3 +59,11 @@ Claude Code y Antigravity escriben en los mismos archivos. Toda entrada o actual
 - Dónde: cada actualización de `CHECKPOINT.md` (línea "Última actualización" y cada entrada nueva), cada entrada de versión en `CHANGELOG_AND_ARCHITECTURE.md`, la cabecera `LAST UPDATED` y cada sección nueva de `AI_CONTEXT_HANDOFF.md` y `PROJECT_STATUS_AND_ROADMAP.md`, y los ítems nuevos de `CONTENT_CHECKLIST.md`.
 - En los commits, agrega al final del mensaje la línea `Autor-IA: Antigravity` o `Autor-IA: Claude Code`.
 - Si retomas trabajo firmado por la otra herramienta, verifícalo contra el código antes de darlo por cierto; no borres su firma, agrega la tuya debajo.
+
+## 6. Planificación de Features Grandes (Plan Primero, Compartido con Claude Code)
+Para cualquier feature grande (nuevo módulo, cambio de varios archivos, cambio de reglas o del modelo de datos):
+1. **Planifica antes de codear**: explora con `gemini-scout` y diseña; no edites nada todavía.
+2. **Pregunta**: antes de cerrar el plan, hazle al usuario las preguntas de alcance y diseño que falten. No asumas.
+3. **Guarda el plan aprobado** en `docs/plans/planN-<slug>.md` del repo (siguiente número libre), firmado `[Antigravity · AAAA-MM-DD]`. **Ese archivo es inmutable**: nunca se edita después de aprobado. Si el plan cambia, se crea un plan nuevo con el siguiente número que referencia al anterior.
+4. **El avance va en `CHECKPOINT.md`**, no en el plan: plan activo, pasos hechos / pendientes, desvíos y por qué.
+Tareas chicas no necesitan plan.
