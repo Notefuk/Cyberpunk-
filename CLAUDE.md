@@ -13,10 +13,18 @@ El proyecto se trabaja alternando Claude Code y Antigravity (cuando se agota el 
 - `.claude/` es la config de Claude Code. Si cambias una instrucción en un lado, replícala en el otro (`.agent/skills/` ↔ `.claude/skills/`, `.agent/agents/` ↔ `.claude/agents/`).
 - Al cerrar cada versión, deja `AI_CONTEXT_HANDOFF.md` al día para que la otra herramienta pueda retomar sin perder contexto.
 
+## CHECKPOINT.md (obligatorio)
+
+`CHECKPOINT.md` en la raíz es el estado vivo del trabajo, compartido con Antigravity.
+- **Léelo primero** al iniciar sesión o tras una compactación de contexto.
+- **Actualízalo** al terminar cada tarea, antes de compactar contexto (o cuando la conversación ya sea larga) y antes de que el usuario cambie de herramienta: último trabajo terminado, qué quedó a medias (archivos y líneas), próximos pasos y bloqueos. Mantenlo breve y reemplaza lo viejo en vez de acumular historial.
+- Commitéalo junto con el trabajo al que corresponde.
+
 ## Antes de tocar nada: leer contexto
 
 Al empezar una tarea nueva, lee en este orden (solo las secciones relevantes, son archivos largos):
 
+0. `CHECKPOINT.md` — dónde quedó el trabajo.
 1. `AI_CONTEXT_HANDOFF.md` — qué se hizo en las últimas versiones y el roadmap inmediato (Fase 4).
 2. `PROJECT_STATUS_AND_ROADMAP.md` — estado por módulo y fases futuras.
 3. `CHANGELOG_AND_ARCHITECTURE.md` — reglas de arquitectura, árbol real de archivos y changelog maestro.

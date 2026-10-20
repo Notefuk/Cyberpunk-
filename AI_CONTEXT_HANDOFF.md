@@ -6,6 +6,8 @@
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
 > **ARCHITECTURE**: COMP/CON decoupled offline-first model. Single source of truth in typed registries and Zustand stores.
 
+> **WORK STATE**: Leer primero `CHECKPOINT.md` (estado vivo compartido Claude Code ↔ Antigravity) y actualizarlo al terminar cada tarea.
+
 ---
 
 ## 🎯 1. Purpose of this Document
