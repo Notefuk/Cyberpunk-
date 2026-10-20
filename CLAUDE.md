@@ -6,6 +6,13 @@ Companion app offline-first para **Cyberpunk RED** (Core Rulebook + CEMK 2077 + 
 - Stack: React 19 + TypeScript + Vite + Tailwind CSS v4 + Zustand 5 (todo dentro de `frontend/`)
 - Idioma: la UI, los docs y los mensajes al usuario van en **español**. Nombres de reglas/ítems oficiales se mantienen en inglés cuando así figuran en los libros (ej. *Synapse Burnout*, *Autofire*).
 
+## Convivencia con Antigravity
+
+El proyecto se trabaja alternando Claude Code y Antigravity (cuando se agota el cupo de uno se sigue con el otro). Por eso:
+- **No borrar ni mover** `.agent/` (config de Antigravity) ni los docs de la raíz (`AI_CONTEXT_HANDOFF.md`, `PROJECT_STATUS_AND_ROADMAP.md`, `CHANGELOG_AND_ARCHITECTURE.md`, `CONTENT_CHECKLIST.md`). Son la memoria compartida entre ambas herramientas.
+- `.claude/` es la config de Claude Code. Si cambias una instrucción en un lado, replícala en el otro (`.agent/skills/` ↔ `.claude/skills/`, `.agent/agents/` ↔ `.claude/agents/`).
+- Al cerrar cada versión, deja `AI_CONTEXT_HANDOFF.md` al día para que la otra herramienta pueda retomar sin perder contexto.
+
 ## Antes de tocar nada: leer contexto
 
 Al empezar una tarea nueva, lee en este orden (solo las secciones relevantes, son archivos largos):
