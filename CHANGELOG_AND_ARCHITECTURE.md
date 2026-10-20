@@ -246,6 +246,25 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.2.0] - 2026-10-20 (Combate: melee enfrentado, munición y autofire corregidos, quickhacks con WILL real) [Claude Code · 2026-10-20]
+* **Category**: Reglas de combate (plan 1, fase 4: `docs/plans/plan1-auditoria-core.md`)
+* **Files Modified**:
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/engine/characterEngine.ts`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CHECKPOINT.md`
+* **What Changed**:
+  1. **Melee enfrentado (R6, Core p. 176)**: armas Melee, Brawling, Grab, Martial Arts, bayoneta y golpes Cyberfists ya no usan DV 13 fijo. Hay un campo "DEX + Evasion del defensor" en el panel de cuerpo a cuerpo y cada ataque tira 1d10 para el defensor; el empate lo gana el defensor.
+  2. **Cyberarm (Core p. 176)**: el daño de Brawling es al menos 2d6 con Cyberarm o Gorilla Arms instalados.
+  3. **Munición y autofire (B5, B6)**: se valida el alcance antes de gastar balas; un Ataque Apuntado nunca usa autofire (ni 10 balas ni su DV).
+  4. **Multiplicador de autofire (B7)**: el daño usa el último ataque del arma; si ese ataque falló, no se arrastra el multiplicador de un acierto anterior.
+  5. **Empates (B8, Core p. 129)**: Cyberfists, combos, quickhacks y adicción usan `margen > 0`, igual que el motor.
+  6. **Quickhacks (B9, B10, CEMK p. 16)**: con 10 o 1 en el d10 ya no se tira daño antes de resolver la explosión; Jack In y Boot Out usan la WILL y Concentration del objetivo (campos editables), y el empate en Jack In detecta al hacker.
+  7. **Desvíos del plan**: la "tabla de DV duplicada" de `types/cyberpunk.ts` resultó ser ejemplos de habilidades con valores correctos (no se borró). Mover la calculadora de impactos al motor pasa a la fase 5, junto con los tests.
+
 ### [v4.1.1] - 2026-10-20 (Bugs del store: FBC reversible, HP máximo único, parseo de Humanity Loss) [Claude Code · 2026-10-20]
 * **Category**: Corrección de bugs de estado (plan 1, fase 3: `docs/plans/plan1-auditoria-core.md`)
 * **Files Modified**:

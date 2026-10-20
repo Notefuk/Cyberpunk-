@@ -359,8 +359,9 @@ export function getAutofireRulesSummary(weapon: WeaponItem): AutofireRulesSummar
   };
 }
 
-export function calculateUnarmedDamage(body: number): string {
-  if (body <= 4) return '1d6';
+// Core p. 176: con un Cyberarm el daño de Brawling es al menos 2d6.
+export function calculateUnarmedDamage(body: number, hasCyberarm: boolean = false): string {
+  if (body <= 4) return hasCyberarm ? '2d6' : '1d6';
   if (body <= 6) return '2d6';
   if (body <= 10) return '3d6';
   return '4d6';
