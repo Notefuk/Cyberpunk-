@@ -26,6 +26,39 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.3.1',
+    date: '2026-10-20',
+    phase: 'Codex',
+    category: 'Datos de expansión',
+    title: 'Datos CEMK canon: 13 armas, ciberware, Immunoblockers y Rebuilds de 1,000 €$',
+    summary: 'Segunda fase del plan 2. Las armas, el ciberware y las drogas de CEMK tienen el costo, cargador y Humanity Loss del libro, y se borró lo inventado. Los Rebuilds cuestan 1,000 €$ y siguen las reglas de CEMK pp. 30-31. El Boosterganger usa los valores de la Errata.',
+    highlights: [
+      '13 armas de CEMK pp. 31-34 en un solo set; 6 armas inventadas borradas y Militech Crusher agregada.',
+      'Neuroport 1,000 €$ y HL 7 (gratis al crear el personaje), Mantis Blade HL 14, Sandevistan de David 250,000 €$.',
+      'Immunoblockers de CEMK p. 30; MaxDoc y BounceBack borradas.',
+      'Rebuilds a 1,000 €$ y 2 ranuras, sin fabricación con Maker ni Ballistic Coprocessor.',
+      'Boosterganger con BODY 2 y Death Save 2 (Errata p. 412).'
+    ],
+    filesTouched: [
+      'frontend/src/data/core-rules.cprpack.json',
+      'data/core-rules.cprpack.json',
+      'frontend/src/data/weaponAndCyberwareTooltips.ts',
+      'frontend/src/data/expansionRulesData.ts',
+      'frontend/src/data/enemiesCatalog.ts',
+      'frontend/src/engine/__tests__/rules.test.ts',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/rules/RulesCheatSheetDrawer.tsx',
+      'frontend/src/features/datapacks/DataPackManagerView.tsx',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CONTENT_CHECKLIST.md',
+      'CHECKPOINT.md'
+    ],
+    metricsBadge: 'v4.3.1 • Datos CEMK • Plan 2 fase 2'
+  },
+  {
     version: 'v4.3.0',
     date: '2026-10-20',
     phase: 'Codex',
@@ -449,6 +482,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.3.1': true,
     'v4.3.0': true,
     'v4.2.1': true,
     'v4.2.0': true,

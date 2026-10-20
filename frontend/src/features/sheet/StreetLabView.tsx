@@ -1732,7 +1732,7 @@ export const StreetLabView: React.FC = () => {
                                           : 'bg-[#1a1e2d] text-slate-400 hover:text-white'
                                       }`}
                                     >
-                                      💰 Pagar 500 €$
+                                      💰 Pagar 1,000 €$
                                     </button>
                                     <button
                                       type="button"
@@ -1781,7 +1781,7 @@ export const StreetLabView: React.FC = () => {
                                             convertWeaponRebuild2077(
                                               w.instanceId,
                                               opt.type as any,
-                                              rebuildFreeMode ? 0 : 500
+                                              rebuildFreeMode ? 0 : 1000
                                             )
                                           }
                                           className={`w-full py-1 rounded text-[10px] font-tech font-bold uppercase transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
@@ -1790,7 +1790,7 @@ export const StreetLabView: React.FC = () => {
                                               : 'bg-amber-500 hover:bg-amber-400 text-black shadow-xs'
                                           }`}
                                         >
-                                          {isCurrent ? 'Instalado' : `Convertir (${rebuildFreeMode ? '0 €$' : '500 €$'})`}
+                                          {isCurrent ? 'Instalado' : `Convertir (${rebuildFreeMode ? '0 €$' : '1,000 €$'})`}
                                         </button>
                                       </div>
                                     );

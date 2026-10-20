@@ -417,10 +417,10 @@ export const ENEMIES_CATALOG: EnemySheet[] = [
     role: 'Solo',
     hp: 20,
     seriouslyWounded: 10,
-    deathSave: 4,
+    deathSave: 2, // Errata v1.25 p. 412
     headSp: 4,
     bodySp: 4,
-    stats: { INT: 2, REF: 6, DEX: 6, TECH: 2, COOL: 4, WILL: 3, LUCK: 0, MOVE: 6, BODY: 4, EMP: 2 },
+    stats: { INT: 2, REF: 6, DEX: 6, TECH: 2, COOL: 4, WILL: 3, LUCK: 0, MOVE: 6, BODY: 2, EMP: 2 },
     combatBases: [
       { label: 'Disparo Pistola', totalBase: 10, damage: '2d6', rof: 2 },
       { label: 'Pelea Desarmada / Navaja', totalBase: 10, damage: '1d6', rof: 2 },

@@ -566,21 +566,21 @@ export const RulesCheatSheetDrawer: React.FC = () => {
                         <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
                           <strong className="text-amber-300 block">⚡ Tech Charge Shot (CEMK 2077)</strong>
                           <span className="text-slate-300">
-                            Sacrifica la Acción de Movimiento para cargar los condensadores Gauss de un arma Tech. El disparo atraviesa cobertura delgada e ignora el 50% del blindaje SP del defensor.
+                            Sacrifica la Acción de Movimiento para cargar un arma Tech. El siguiente ataque no explosivo es ROF 1, atraviesa Thin Cover e ignora la mitad del SP del objetivo, redondeando hacia arriba (CEMK p. 31).
                           </span>
                         </div>
 
                         <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
                           <strong className="text-orange-300 block">💥 Power Ricochet (CEMK 2077)</strong>
                           <span className="text-slate-300">
-                            Disparo cinético que rebota contra paredes o techos con penalizador de -4 (o 0 con Coprocesador Balístico), ignorando coberturas completas del blanco.
+                            Rebota el disparo en una cobertura para alcanzar a un objetivo tras cobertura o fuera de línea de visión con -4 al Ataque; con Aimed Shot solo aplica el penalizador del Aimed Shot (CEMK pp. 30-31).
                           </span>
                         </div>
 
                         <div className="p-2 bg-[#101420] border border-[#1e2538] rounded-xs space-y-1">
                           <strong className="text-cyan-300 block">🎯 Smart Lock (CEMK 2077)</strong>
                           <span className="text-slate-300">
-                            Con Neuroport y Smart Link, guía micro-misiles alrededor de esquinas contra objetivos fuera de línea de visión directa a -4 a la tirada de ataque.
+                            Con Personal Link o Subdermal Grip da +1 al Ataque. Con Improved Smart Ammunition ignora humo y oscuridad, y si falla por 5 o menos repite el ataque sumando 14 en lugar de STAT + Skill (CEMK p. 31).
                           </span>
                         </div>
                       </div>
