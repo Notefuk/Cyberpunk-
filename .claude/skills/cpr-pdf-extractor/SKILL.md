@@ -16,7 +16,16 @@ C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\
 └── Core-Rules\Cyberpunk-RED-Core-Rulebook-v1.24_2020-12-25.pdf
 ```
 
-Si no encuentras los PDFs en esta sesión, **no inventes contenido**: pide al usuario la ruta o el archivo. Los scripts `scripts/extract_core_pack.py` y `scripts/find_sections.py` tienen rutas de Windows hardcodeadas (PDF de entrada y carpetas de salida); hay que pasarlos a rutas configurables antes de usarlos fuera de esa máquina.
+Subcarpetas: `Core-Rules/` (Core Rulebook v1.24, CEMK Rulebook, Easy Mode), `Sourcebooks/` (Black Chrome, Danger Gal Dossier, Night City Gang Guide, CEMK Handbook, `Interface-RED/` Vol. 1-3), `DLC-Supplements/`, `Adventures/`, `Reference-Aids/` (errata v1.25, Data Pack, folios CEMK), `Cyberpunk Edgerunners Mission Kit Digital/` (mapas, tokens y cartas en JPG/PNG).
+
+### Acceso desde Claude Code
+
+Con la PC del usuario conectada (app de escritorio de Claude y carpeta autorizada):
+1. Ubica el archivo con `device_list_dir` sobre `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY`.
+2. Tráelo al contenedor con `device_stage_files` (queda en `/mnt/user-data/uploads/CP RED TEST ANTIGRAVITY/<subcarpeta>/<archivo>.pdf`; los archivos grandes tardan unos segundos en aparecer).
+3. Léelo con `inspect_pdf_pages.py`. Para lecturas largas delega en el subagente `cpr-scout`.
+
+Trae solo los PDFs que la tarea necesita. Si no hay dispositivo conectado ni PDFs disponibles, **no inventes contenido**: pide al usuario que conecte la PC o comparta el archivo. Los scripts `scripts/extract_core_pack.py` y `scripts/find_sections.py` tienen rutas de Windows hardcodeadas (PDF de entrada y carpetas de salida); hay que pasarlos a rutas configurables antes de usarlos fuera de esa máquina.
 
 ## Herramienta de inspección de páginas
 

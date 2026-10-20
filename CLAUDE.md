@@ -70,6 +70,33 @@ Todo cambio de reglas debe citar libro y página (ej. "Core p. 174", "CEMK pp. 1
 4. **Preservar comentarios** y directivas de linter existentes.
 5. **No inventar archivos**: no importar nada que no exista en disco; lo del roadmap se crea primero en su carpeta asignada.
 
+## Orquestación con subagentes (port de AGENTS.md de Antigravity)
+
+El agente principal es el arquitecto: su contexto es caro, así que delega la carga bruta de tokens.
+
+- **No** leas archivos largos (>150 líneas) enteros si no conoces las líneas exactas, ni hagas barridos masivos del repo, ni leas logs extensos: delega en **`cpr-scout`** (solo lectura, devuelve rutas + rangos de líneas + resumen ≤15 líneas).
+- **No** escribas en persona bloques largos y mecánicos (boilerplate, migraciones de datos, catálogos): delega en **`cpr-worker`** con el Contrato de Ejecución de abajo. Nunca le des instrucciones abiertas ("arregla el módulo X").
+- Al terminar el worker, revisa `git diff` y revierte cualquier cambio fuera de alcance.
+- Cambios chicos y puntuales los puedes hacer tú directamente.
+
+Flujo: **A.** Exploración con `cpr-scout` → **B.** Diseño y especificación quirúrgica (tú) → **C.** Ejecución con `cpr-worker` + auditoría del diff.
+
+Contrato de Ejecución para `cpr-worker`:
+
+```text
+[OBJETIVO EXACTO]: <descripción precisa de la tarea>
+[ARCHIVOS PERMITIDOS]: <lista explícita de archivos que puedes tocar>
+[CAMBIOS REQUERIDOS]:
+- En <archivo> (líneas X-Y): <cambio exacto a realizar>
+
+[RESTRICCIONES ESTRICTAS - CERO DESVIACIÓN]:
+1. PROHIBIDO modificar cualquier archivo fuera de [ARCHIVOS PERMITIDOS].
+2. PROHIBIDO tocar líneas, funciones, imports o estilos no necesarios para [CAMBIOS REQUERIDOS].
+3. PROHIBIDO renombrar variables, cambiar firmas públicas o "mejorar/limpiar" código adyacente.
+4. PROHIBIDO eliminar comentarios o docstrings existentes.
+5. Al finalizar, responde ÚNICAMENTE con archivos modificados, rangos de líneas y verificación.
+```
+
 ## Flujo de versión
 
 Cada entrega se publica como versión semántica (`vX.Y.Z`) y el commit lleva ese prefijo, ej. `v4.0.3 Descripción corta`. La skill `cpr-version-release` describe qué docs y datos in-app actualizar. El subagente `github-web-deployer` compila, sincroniza el changelog y publica.
@@ -78,4 +105,6 @@ En sesiones cloud de Claude Code se trabaja en una rama y se abre PR hacia `main
 
 ## PDFs de reglas
 
-Los PDFs oficiales **no están en el repo** (`*.pdf` en `.gitignore`, por tamaño y licencia). En Antigravity vivían en `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\` y los scripts de `scripts/` tienen esas rutas de Windows hardcodeadas. Ver la skill `cpr-pdf-extractor`. El acceso a los PDFs desde Claude Code está pendiente de configurar.
+Los PDFs oficiales **no están en el repo** (`*.pdf` en `.gitignore`, por tamaño y licencia). Viven en la PC del usuario, en `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\` (Core-Rules, Sourcebooks incl. Interface RED, DLC-Supplements, Adventures, Reference-Aids, CEMK). La copia local del repo donde trabaja Antigravity es `C:\Users\TeseoHeracles\cpr-omni-deck`.
+
+En una sesión de Claude con la PC conectada (app de escritorio), los PDFs se traen al contenedor con `device_stage_files` y se leen con `scripts/inspect_pdf_pages.py`. Detalle en la skill `cpr-pdf-extractor`. Los scripts `extract_core_pack.py` y `find_sections.py` tienen rutas de Windows hardcodeadas.
