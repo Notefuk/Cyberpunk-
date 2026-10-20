@@ -28,6 +28,17 @@ Toda entrada o actualización de documentación se firma con quién la escribió
 - En los commits, agrega la línea `Autor-IA: Claude Code` al final del mensaje.
 - Lo firmado por Antigravity se verifica contra el código antes de darlo por cierto. No borres su firma; agrega la tuya debajo.
 
+## Planificación de features grandes (plan primero)
+
+Para cualquier feature grande (nuevo módulo, cambio de varios archivos, cambio de reglas o del modelo de datos):
+
+1. **Planifica antes de codear**: usa el modo plan (`/plan` o Shift+Tab en Claude Code). Explora con `cpr-scout`, no edites nada todavía.
+2. **Pregunta**: antes de cerrar el plan, hazle al usuario las preguntas de alcance y diseño que falten (qué incluir, cómo se ve, qué libro/regla aplica). No asumas.
+3. **Guarda el plan aprobado** en `docs/plans/planN-<slug>.md` (siguiente número libre: `plan1-...`, `plan2-...`), firmado `[Claude Code · AAAA-MM-DD]`. **Ese archivo es inmutable**: nunca se edita después de aprobado. Si el plan cambia, se crea un plan nuevo con el siguiente número que referencia al anterior.
+4. **El avance va en `CHECKPOINT.md`**, no en el plan: plan activo, pasos hechos / pendientes, desvíos respecto al plan y por qué. Así cualquiera de las dos herramientas retoma sin depender del chat.
+
+Tareas chicas (un fix, un ajuste de UI, un dato) no necesitan plan.
+
 ## Antes de tocar nada: leer contexto
 
 Al empezar una tarea nueva, lee en este orden (solo las secciones relevantes, son archivos largos):
