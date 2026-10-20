@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.2.1 OPERATIVO`  
+> **SYSTEM VERSION**: `v4.3.0 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-10-20]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -20,7 +20,11 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 
 ---
 
-## 🚀 2. What Was Added in v4.2.1
+## 🚀 2. What Was Added in v4.3.0
+
+[Claude Code · 2026-10-20] Plan 2, fase 1 (`docs/plans/plan2-auditoria-expansiones.md`). NET y Quickhacks canon: hasta 3 NET Actions en todo rango (`NET_ACTIONS_PER_TURN`, CEMK p. 15), Quickhacks sin RAM con alcance 6/8/50 m y 1 por objetivo por turno, 14 programas `qh-*` borrados del pack, `BLACK_ICE_STATS` del Core pp. 206-207, dificultades Basic/Standard/Uncommon/Advanced, Scanner sin DV, Flak y Shield corregidos, `rollCheckD10`/`beatsDv` en el motor (los Checks contra DV deben superarlo, CEMK p. 5). Siguiente: v4.3.1 datos CEMK.
+
+## 📦 2.0 Historical Summary: What Was Added in v4.2.1
 
 [Claude Code · 2026-10-20] Plan 1 terminado (fase 5). Vistas con `React.lazy` (bundle inicial 598 kB), `calculateIncomingImpact` en `combatEngine.ts`, tests Vitest de reglas canon (`npm test`), borrado de `DataPacksView.tsx`, `clsx`, `tailwind-merge` y `applyIncomingDamage`, PIN del GM en `cpr_gm_pin_v1`. Para Antigravity: la sección 7 nueva de `.agent/AGENTS.md` pide correr `npm test`; replicarla en el AGENTS.md de la carpeta de PDFs. Siguiente: plan 2 (expansiones, hallazgos X1-X13), pendiente de aprobación.
 

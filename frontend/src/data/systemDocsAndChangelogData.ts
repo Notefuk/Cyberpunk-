@@ -591,7 +591,7 @@ export const ADDED_FEATURES_INVENTORY: AddedFeatureSystem[] = [
       },
       {
         name: 'Mazo de 15 Quickhacks Remotos Era 2077',
-        description: 'Consola de hackeo inalámbrico en combate con pool de memoria RAM y software oficial ofensivo y de control.',
+        description: 'Consola de Quickhacking en combate sin RAM (CEMK pp. 15-17): Jack In, Breach, Quickhack y Boot Out con los 11 Quickhacks oficiales.',
         status: 'completado',
         sourceRulebook: 'Cyberpunk Edgerunners Mission Kit (CEMK 2077)'
       },
@@ -802,10 +802,10 @@ export const PHASES_ROADMAP_OVERVIEW: PhaseRoadmapOverview[] = [
     versionSpan: 'v3.0 – v3.4.5',
     status: 'COMPLETADO',
     badgeColor: 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10',
-    description: 'Sistemas de alta complejidad: simulación de Pisos de Red 2045, consola de Quickhacks 2077 con RAM, estaciones de los 10 roles, garaje de vehículos con SDP, centro de mando de Red Chrome Cargo y 3 módulos premium.',
+    description: 'Sistemas de alta complejidad: simulación de Pisos de Red 2045, consola de Quickhacks 2077 sin RAM (CEMK), estaciones de los 10 roles, garaje de vehículos con SDP, centro de mando de Red Chrome Cargo y 3 módulos premium.',
     keyDeliverables: [
       'Simulador piso a piso de Red 2045 con 8 presets y combate contra Black ICE.',
-      'Consola de Quickhacking 2077 inalámbrico con pool de RAM y 15 programas.',
+      'Consola de Quickhacking 2077 sin RAM con los 11 Quickhacks de CEMK.',
       'Estaciones interactivas con calculadoras para los 10 roles oficiales.',
       'Garaje y tracker de 14 vehículos con Structural Damage Points (SDP) y embestidas.',
       'Módulo Premium GOING METAL: 13 Cuerpos FBC, 16 cyberware borg y Linear Frame Omega.',

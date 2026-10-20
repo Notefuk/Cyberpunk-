@@ -9,7 +9,8 @@ import {
   parseHumanityLossAverage,
   rollDeathSave
 } from '../characterEngine';
-import { calculateIncomingImpact, createDamageRoll } from '../combatEngine';
+import { beatsDv, calculateIncomingImpact, createDamageRoll, rollCheckD10 } from '../combatEngine';
+import { BLACK_ICE_STATS, NET_ACTIONS_PER_TURN, QUICKHACKS_2077_CATALOG } from '../../data/netAndRolesData';
 import { BODY_CRITICAL_INJURIES, HEAD_CRITICAL_INJURIES, rollCriticalInjury } from '../../data/criticalInjuries';
 import type { CharacterSheet } from '../../types/cyberpunk';
 
@@ -118,5 +119,42 @@ describe('Tablas de Heridas Críticas (Core pp. 187-188)', () => {
   it('vuelve a tirar si el objetivo ya sufre esa herida', () => {
     const allButOne = BODY_CRITICAL_INJURIES.filter(i => i.roll !== 7).map(i => i.name);
     expect(rollCriticalInjury('body', allButOne).roll).toBe(7);
+  });
+});
+
+describe('Checks contra DV (CEMK p. 5)', () => {
+  it('hay que superar el DV, igualarlo falla', () => {
+    expect(beatsDv(9, 8)).toBe(true);
+    expect(beatsDv(8, 8)).toBe(false);
+  });
+
+  it('el 10 explota una sola vez y el 1 resta 1d10', () => {
+    const seq = [0.95, 0.95];
+    const explode = rollCheckD10(() => seq.shift() ?? 0);
+    expect(explode).toEqual({ natural: 10, extra: 10, value: 20 });
+    const seq2 = [0, 0.45];
+    expect(rollCheckD10(() => seq2.shift() ?? 0)).toEqual({ natural: 1, extra: 5, value: -4 });
+  });
+});
+
+describe('NET y Quickhacks (CEMK pp. 15-17, Core pp. 206-207)', () => {
+  it('hasta 3 NET Actions por turno (CEMK p. 15)', () => {
+    expect(NET_ACTIONS_PER_TURN).toBe(3);
+  });
+
+  it('11 Quickhacks con los DV del libro', () => {
+    const dvByName = Object.fromEntries(QUICKHACKS_2077_CATALOG.map(q => [q.name, q.dv]));
+    expect(QUICKHACKS_2077_CATALOG).toHaveLength(11);
+    expect(dvByName).toMatchObject({
+      'Impair Movement': 6, 'Sonic Shock': 6, Overheat: 8, 'Short Circuit': 8,
+      'Cyberware Malfunction': 10, Lure: 10, Slow: 10, 'Synapse Burnout': 10,
+      Puppet: 12, 'Shard Ejection': 12, 'System Reset': 12
+    });
+  });
+
+  it('Black ICE con los valores del Core (Asp, Giant, Dragon)', () => {
+    expect(BLACK_ICE_STATS.Asp).toEqual({ per: 4, spd: 6, atk: 2, def: 2, rez: 15 });
+    expect(BLACK_ICE_STATS.Giant).toEqual({ per: 2, spd: 2, atk: 8, def: 4, rez: 25 });
+    expect(BLACK_ICE_STATS.Dragon).toEqual({ per: 6, spd: 4, atk: 6, def: 6, rez: 30 });
   });
 });

@@ -26,6 +26,7 @@ import {
   Plus
 } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { beatsDv, rollCheckD10 } from '../../engine/combatEngine';
 import { 
   NET_ARCHITECTURE_PRESETS, 
   NET_ACTIONS_CATALOG, 
@@ -34,6 +35,7 @@ import {
   ROLES_INTERACTIVE_GUIDES, 
   VEHICLES_CATALOG, 
   generateRandomNetFloor,
+  NET_ACTIONS_PER_TURN,
   type NetFloor,
   type NetArchitecturePreset,
   type NetAction,
@@ -110,11 +112,11 @@ export const NetAndRolesDeckView: React.FC = () => {
   const allPresets = [...NET_ARCHITECTURE_PRESETS, ...customPresets];
   const activeArch = allPresets.find(p => p.id === selectedPresetId) || NET_ARCHITECTURE_PRESETS[0];
 
-  // NET Actions por turno según Rango de Interface activo
+  // NET Actions por turno: hasta 3 en cualquier rango (CEMK p. 15)
   const activeInterfaceRank = character.interfaceRankOverride !== undefined
     ? character.interfaceRankOverride
     : (character.role === 'Netrunner' ? (character.roleRank || 4) : 0);
-  const netActionsPerTurn = activeInterfaceRank >= 10 ? 5 : activeInterfaceRank >= 7 ? 4 : activeInterfaceRank >= 4 ? 3 : 2;
+  const netActionsPerTurn = NET_ACTIONS_PER_TURN;
 
   const handleRollNetAction = (action: NetAction) => {
     const d10 = Math.floor(Math.random() * 10) + 1;
@@ -123,9 +125,18 @@ export const NetAndRolesDeckView: React.FC = () => {
     const extraDie = isExplode ? (Math.floor(Math.random() * 10) + 1) : isFumble ? (Math.floor(Math.random() * 10) + 1) : 0;
     const totalRoll = d10 + (isExplode ? extraDie : 0) - (isFumble ? extraDie : 0) + activeInterfaceRank;
     
-    // Si la acción es Scanner, usa DV 13 canónico; de lo contrario usa el DV objetivo seleccionado (targetNetDv)
-    const effectiveDv = action.id === 'scanner' ? 13 : targetNetDv;
-    const success = totalRoll >= effectiveDv;
+    // Scanner no tiene DV: el GM interpreta el total (Core p. 199). El resto debe superar el DV (CEMK p. 5).
+    if (action.id === 'scanner') {
+      setActiveNetRollResult({
+        action: action.name,
+        roll: totalRoll,
+        formula: `1d10 (${d10}${isExplode ? ` + explota ${extraDie}` : ''}${isFumble ? ` - pifia ${extraDie}` : ''}) + Interface (${activeInterfaceRank}) = ${totalRoll}`,
+        text: `Total ${totalRoll}: el GM decide cuántos access points encuentras y desde qué distancia`
+      });
+      return;
+    }
+    const effectiveDv = targetNetDv;
+    const success = beatsDv(totalRoll, effectiveDv);
 
     setActiveNetRollResult({
       action: action.name,
@@ -162,6 +173,8 @@ export const NetAndRolesDeckView: React.FC = () => {
   const [quickhackTierFilter, setQuickhackTierFilter] = useState<'All' | 'Simple' | 'Standard' | 'Difficult' | 'Advanced'>('All');
   const [quickhackRollLog, setQuickhackRollLog] = useState<{ qhName: string; roll: number; dv: number; success: boolean; damageRoll?: number; targetWillRoll?: number; stepInfo?: string } | null>(null);
   const [unlockAllQuickhacks, setUnlockAllQuickhacks] = useState<boolean>(false);
+  const [qhTargetWill, setQhTargetWill] = useState<number>(6);
+  const [qhTargetConcentration, setQhTargetConcentration] = useState<number>(2);
   const [showQuickhackGuide, setShowQuickhackGuide] = useState<boolean>(false);
 
   // ==========================================================================
@@ -179,12 +192,10 @@ export const NetAndRolesDeckView: React.FC = () => {
 
   // CEMK Canonical 4-Step Quickhacking Handlers
   const handleJackInRoll = () => {
-    const d10Hacker = Math.floor(Math.random() * 10) + 1;
-    const hackerTotal = activeInterfaceRank + d10Hacker;
-    const d10Target = Math.floor(Math.random() * 10) + 1;
-    const targetWill = 6;
-    const targetTotal = targetWill + d10Target;
-    const detected = hackerTotal < targetTotal;
+    // Interface + 1d10 vs WILL + 1d10; empate gana el defensor (CEMK pp. 5, 16)
+    const hackerTotal = activeInterfaceRank + rollCheckD10().value;
+    const targetTotal = qhTargetWill + rollCheckD10().value;
+    const detected = hackerTotal <= targetTotal;
 
     setQuickhackRollLog({
       qhName: 'Paso 1: Jack In (1 NET Action)',
@@ -208,9 +219,8 @@ export const NetAndRolesDeckView: React.FC = () => {
       });
       return;
     }
-    const d10 = Math.floor(Math.random() * 10) + 1;
-    const total = activeInterfaceRank + d10;
-    const success = total >= dv;
+    const total = activeInterfaceRank + rollCheckD10().value;
+    const success = beatsDv(total, dv);
     setQuickhackRollLog({
       qhName: `Paso 2: Romper ${label}`,
       roll: total,
@@ -235,9 +245,9 @@ export const NetAndRolesDeckView: React.FC = () => {
       return;
     }
 
-    const d10 = Math.floor(Math.random() * 10) + 1;
-    const total = d10 + activeInterfaceRank;
-    const success = total >= qh.dv;
+    // Interface + 1d10 vs DV del Quickhack, sin STAT (CEMK p. 16)
+    const total = rollCheckD10().value + activeInterfaceRank;
+    const success = beatsDv(total, qh.dv);
 
     let dmg: number | undefined;
     if (success && (qh.damage || qh.damageFormula)) {
@@ -264,16 +274,16 @@ export const NetAndRolesDeckView: React.FC = () => {
 
   const handleTargetCounterRoll = () => {
     if (!quickhackRollLog) return;
-    const d10 = Math.floor(Math.random() * 10) + 1;
-    const willBonus = 6 + 2; // WILL 6 + Concentration 2
-    const targetTotal = d10 + willBonus;
-    const expelled = targetTotal > quickhackRollLog.roll;
+    // WILL + Concentration + 1d10 vs Interface + 1d10 del Netrunner (CEMK p. 16)
+    const targetTotal = qhTargetWill + qhTargetConcentration + rollCheckD10().value;
+    const hackerTotal = activeInterfaceRank + rollCheckD10().value;
+    const expelled = targetTotal > hackerTotal;
     setQuickhackRollLog({
       ...quickhackRollLog,
       targetWillRoll: targetTotal,
       stepInfo: expelled
-        ? `🚫 ¡Hacker EXPULSADO! (Objetivo sacó ${targetTotal} vs tu Interface ${quickhackRollLog.roll}). No puedes reconectarte en 60 minutos.`
-        : `🛡️ Intento de expulsión FALLIDO (Objetivo sacó ${targetTotal} vs tu Interface ${quickhackRollLog.roll}). Sigues en su Neuroport.`
+        ? `🚫 ¡Hacker EXPULSADO! (Objetivo sacó ${targetTotal} vs tu Interface ${hackerTotal}). No puedes reconectarte en 60 minutos.`
+        : `🛡️ Intento de expulsión FALLIDO (Objetivo sacó ${targetTotal} vs tu Interface ${hackerTotal}). Sigues en su Neuroport.`
     });
   };
 
@@ -620,8 +630,8 @@ export const NetAndRolesDeckView: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <span className="font-tech text-xs font-bold uppercase">{preset.name}</span>
                         <span className={`text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs font-bold ${
-                          preset.difficulty === 'Corporate Apex' ? 'bg-red-500/20 text-red-400' :
-                          preset.difficulty === 'Hardened' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
+                          preset.difficulty === 'Advanced' ? 'bg-red-500/20 text-red-400' :
+                          preset.difficulty === 'Uncommon' ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'
                         }`}>
                           {preset.difficulty} • {preset.totalFloors} Pisos
                         </span>
@@ -691,9 +701,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                     { dv: 6, label: 'DV 6 Básico' },
                     { dv: 8, label: 'DV 8 Estándar' },
                     { dv: 10, label: 'DV 10 Poco Común' },
-                    { dv: 12, label: 'DV 12 Avanzado' },
-                    { dv: 13, label: 'DV 13 Scanner' },
-                    { dv: 14, label: 'DV 14 Maestro' }
+                    { dv: 12, label: 'DV 12 Avanzado' }
                   ].map((item) => (
                     <button
                       key={item.dv}
@@ -1062,10 +1070,10 @@ export const NetAndRolesDeckView: React.FC = () => {
                     )}
                   </div>
                   <p className="text-[10px] font-mono-code text-[#94a3b8]">
-                    {activeInterfaceRank >= 4 ? `${Math.min(5, 2 + Math.floor(activeInterfaceRank / 3))} NET Actions/Turno • Acceso a los 11 Quickhacks oficiales (CEMK)` :
-                     activeInterfaceRank === 3 ? '2 NET Actions/Turno • Desbloquea Difficult (DV 10) · Bypass Firewall DV 6' :
-                     activeInterfaceRank === 2 ? '2 NET Actions/Turno • Desbloquea Standard (DV 8)' :
-                     activeInterfaceRank === 1 ? '2 NET Actions/Turno • Desbloquea Simple (DV 6)' :
+                    {activeInterfaceRank >= 4 ? `${NET_ACTIONS_PER_TURN} NET Actions/Turno • Acceso a los 11 Quickhacks oficiales (CEMK)` :
+                     activeInterfaceRank === 3 ? `${NET_ACTIONS_PER_TURN} NET Actions/Turno • Desbloquea Difficult (DV 10) · Bypass Firewall DV 6` :
+                     activeInterfaceRank === 2 ? `${NET_ACTIONS_PER_TURN} NET Actions/Turno • Desbloquea Standard (DV 8)` :
+                     activeInterfaceRank === 1 ? `${NET_ACTIONS_PER_TURN} NET Actions/Turno • Desbloquea Simple (DV 6)` :
                      'Sin Interface • Necesitas al menos Interface 1 para desbloquear Quickhacks'}
                   </p>
                 </div>
@@ -1227,12 +1235,20 @@ export const NetAndRolesDeckView: React.FC = () => {
                 <div>
                   <div className="text-[10px] font-tech font-bold text-cyan-300">PASO 1: JACK IN</div>
                   <div className="text-[9px] text-slate-400">1 NET Action vs WILL</div>
+                  <div className="flex gap-1 mt-1 text-[9px] font-mono-code text-slate-400">
+                    <label className="flex items-center gap-0.5">WILL
+                      <input type="number" min={0} max={20} value={qhTargetWill} onChange={e => { const v = Number(e.target.value); if (Number.isFinite(v)) setQhTargetWill(v); }} className="w-9 bg-[#0b0e14] border border-[#1e273a] rounded-xs px-0.5 text-white" />
+                    </label>
+                    <label className="flex items-center gap-0.5">Conc.
+                      <input type="number" min={0} max={20} value={qhTargetConcentration} onChange={e => { const v = Number(e.target.value); if (Number.isFinite(v)) setQhTargetConcentration(v); }} className="w-9 bg-[#0b0e14] border border-[#1e273a] rounded-xs px-0.5 text-white" />
+                    </label>
+                  </div>
                 </div>
                 <button
                   type="button"
                   onClick={handleJackInRoll}
                   className="mt-2 py-1 px-2 bg-[#172238] hover:bg-cyan-500 hover:text-black text-cyan-300 font-tech font-bold text-[10px] rounded-xs transition-colors cursor-pointer text-center"
-                  title="Conectar al Neuroport del objetivo dentro de 50m"
+                  title="Conectar al Neuroport del objetivo: 6 m con Cyberdeck externo, 8 m con la opción, 50 m con Neuroport Cyberdeck Port (CEMK p. 26)"
                 >
                   🔌 Tirar Jack In
                 </button>

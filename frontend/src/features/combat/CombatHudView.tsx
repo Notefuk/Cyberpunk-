@@ -22,6 +22,7 @@ import {
   createInitialAttackRoll, 
   createDamageRoll,
   calculateIncomingImpact,
+  beatsDv,
   AIMED_SHOT_OPTIONS
 } from '../../engine/combatEngine';
 import type { WeaponItem, RollEntry, InventoryItem, EncumbranceMode, AimedShotTarget, TechWeaponUpgradeType } from '../../types/cyberpunk';
@@ -775,6 +776,9 @@ function rollDefenseD10(): number {
   return Math.floor(Math.random() * 10) + 1;
 }
 
+// Alcance de Quickhack según el hardware del Netrunner (CEMK p. 26).
+const QUICKHACK_RANGE_BY_CONNECTION = { external: 6, external_plus: 8, neuroport_port: 50 } as const;
+
 export const CombatHudView: React.FC = () => {
   // Store hooks
   const activeChar = useCharacterStore((state) => state.getActiveCharacter());
@@ -1431,6 +1435,9 @@ export const CombatHudView: React.FC = () => {
   // CEMK p. 16: Jack In y Boot Out usan la WILL (y Concentration) reales del objetivo.
   const [quickhackTargetWill, setQuickhackTargetWill] = useState<number>(6);
   const [quickhackTargetConcentration, setQuickhackTargetConcentration] = useState<number>(2);
+  // CEMK p. 26: alcance según el hardware. CEMK p. 16: 1 Quickhack por objetivo por turno.
+  const [quickhackConnection, setQuickhackConnection] = useState<'external' | 'external_plus' | 'neuroport_port'>('neuroport_port');
+  const [quickhackUsedThisTurn, setQuickhackUsedThisTurn] = useState<boolean>(false);
   const [calcPassExcess, setCalcPassExcess] = useState<boolean>(true);
   const [showArmorRulesGuide, setShowArmorRulesGuide] = useState<boolean>(false);
   const [rackFilter, setRackFilter] = useState<'all' | 'weapons' | 'unarmed' | 'throwables' | 'drugs'>('all');
@@ -2241,7 +2248,7 @@ export const CombatHudView: React.FC = () => {
       type: 'skill',
       weaponName: '🔌 Paso 1: Jack In (1 NET Action)',
       statName: 'INT',
-      statVal: activeChar?.stats?.INT ?? 8,
+      statVal: 0, // Interface no suma STAT (CEMK p. 16)
       skillName: 'Interface vs WILL',
       skillVal: activeInterfaceRank,
       d10: d10Hacker,
@@ -2272,14 +2279,14 @@ export const CombatHudView: React.FC = () => {
     }
     const d10 = Math.floor(Math.random() * 10) + 1;
     const total = activeInterfaceRank + d10;
-    const isSuccess = total >= dv;
+    const isSuccess = beatsDv(total, dv);
     const entry: RollEntry = {
       id: `roll-breach-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
       timestamp: new Date().toISOString(),
       type: 'skill',
       weaponName: `🛡️ Paso 2: Romper ${label} (DV ${dv})`,
       statName: 'INT',
-      statVal: activeChar?.stats?.INT ?? 8,
+      statVal: 0, // Interface no suma STAT (CEMK p. 16)
       skillName: 'Interface (Breach Passwall)',
       skillVal: activeInterfaceRank,
       d10,
@@ -2302,6 +2309,12 @@ export const CombatHudView: React.FC = () => {
   // Paso 3: Netrunner: Launch Quickhack 2077 (1 NET Action)
   const handleLaunchQuickhack = (qh: Quickhack2077) => {
     ensureTelemetryExpanded();
+    if (quickhackUsedThisTurn) {
+      setQuickhackFeedback('⛔ Solo 1 Quickhack por objetivo por turno, aunque te queden NET Actions (CEMK p. 16). Pulsa "Nuevo turno" para seguir.');
+      setTimeout(() => setQuickhackFeedback(null), 5000);
+      return;
+    }
+    setQuickhackUsedThisTurn(true);
     const roleRank = activeInterfaceRank;
     const luckSpent = luckToSpendOnNextRoll;
     if (luckSpent > 0) {
@@ -2322,13 +2335,13 @@ export const CombatHudView: React.FC = () => {
       type: 'attack',
       weaponName: `⚡ Quickhack: ${qh.name} [1 NET Action]`,
       damageFormula: qh.damage || (qh.damageFormula ? `${qh.damageFormula} HP` : qh.effect),
-      distanceLabel: `DV ${qh.dv} · Rango 50m (Neuroport)`,
+      distanceLabel: `DV ${qh.dv} · Rango ${QUICKHACK_RANGE_BY_CONNECTION[quickhackConnection]} m`,
       d10,
       critDie: null,
       needsExplosionClick: isCritSuccess || isCritFail,
       explosionType: isCritSuccess ? 'crit_success' : isCritFail ? 'crit_fail' : null,
       statName: 'INT',
-      statVal: activeChar?.stats?.INT ?? 8,
+      statVal: 0, // Interface no suma STAT (CEMK p. 16)
       skillName: 'Interface (2077 Quickhack)',
       skillVal: roleRank,
       luckSpent,
@@ -7880,6 +7893,24 @@ export const CombatHudView: React.FC = () => {
                   </span>
                   <span className="text-[9px] font-mono-code text-slate-400">Sin RAM · 1 NET Action por paso</span>
                 </div>
+                <div className="flex flex-wrap items-center gap-2 text-[9px] font-mono-code text-slate-400">
+                  <label className="flex items-center gap-1">Conexión
+                    <select value={quickhackConnection} onChange={(e) => setQuickhackConnection(e.target.value as 'external' | 'external_plus' | 'neuroport_port')}
+                      className="bg-[#0f1016] border border-[#2e364c] text-white rounded-xs px-1">
+                      <option value="external">Cyberdeck externo (6 m)</option>
+                      <option value="external_plus">Cyberdeck externo con opción (8 m)</option>
+                      <option value="neuroport_port">Neuroport Cyberdeck Port (50 m)</option>
+                    </select>
+                  </label>
+                  <span>Línea de visión obligatoria (CEMK p. 26)</span>
+                  <span className={quickhackUsedThisTurn ? 'text-rose-300' : 'text-emerald-300'}>
+                    {quickhackUsedThisTurn ? 'Quickhack de este turno ya usado' : 'Quickhack de este turno disponible'}
+                  </span>
+                  <button type="button" onClick={() => setQuickhackUsedThisTurn(false)}
+                    className="px-1.5 py-0.5 bg-[#172238] hover:bg-cyan-500 hover:text-black text-cyan-300 rounded-xs cursor-pointer">
+                    Nuevo turno
+                  </button>
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
                   {/* Paso 1: Jack In */}
@@ -7904,7 +7935,7 @@ export const CombatHudView: React.FC = () => {
                       type="button"
                       onClick={handleJackInRoll}
                       className="mt-1.5 py-1 px-1.5 bg-[#172238] hover:bg-cyan-500 hover:text-black text-cyan-300 font-tech font-bold text-[10px] rounded-xs transition-colors cursor-pointer text-center"
-                      title="Conectar al Neuroport del objetivo dentro de 50m"
+                      title={`Conectar al Neuroport del objetivo dentro de ${QUICKHACK_RANGE_BY_CONNECTION[quickhackConnection]} m`}
                     >
                       🔌 Conectar
                     </button>

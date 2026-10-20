@@ -752,19 +752,19 @@ export const ROLE_ABILITIES_COMPLETE_PROGRESSION: Record<string, RoleAbilityProg
     role: 'Netrunner',
     abilityName: 'Interface (Interfaz)',
     summary: 'Conexión neuronal directa con el ciberespacio y arquitecturas de red.',
-    statUsed: 'INT / Interface',
-    mechanicsOverview: 'Permite interactuar con Cyberdecks y Neuroports. Otorga Net Actions en tu turno (2 acciones en rangos 1-3, 3 acciones en rangos 4-6, 4 acciones en rangos 7-10). Rige tiradas de Pathfinder, Scanner, Backdoor, Cloak, Control, Eye-Dee, Virus y combate de Black ICE.',
+    statUsed: 'Interface (sin STAT, CEMK p. 16)',
+    mechanicsOverview: 'Permite netrunnear y hacer Quickhacks a Neuroports. En su turno el Netrunner hace 1 Meat Action o hasta 3 NET Actions en cualquier rango, además de su Move Action (CEMK p. 15). Interface no suma STAT: es Interface + 1d10 (CEMK p. 16). Rige Pathfinder, Backdoor/Breach, Cloak, Control, Eye-Dee, Slide, Virus, Zap y Scanner (Core pp. 199-201).',
     ranks: [
-      { rank: 1, title: 'Script Kiddie', unlocks: '2 Net Actions/turno. DV Virus base 7. Capacidad de explorar 1 piso de red con Pathfinder.' },
-      { rank: 2, title: 'Hacker de Azotea (Console Jockey)', unlocks: '2 Net Actions/turno. DV Virus 8. Mayor fiabilidad al atravesar contraseñas básicas.' },
-      { rank: 3, title: 'Ciberbuzo Urbano (Net Diver)', unlocks: '2 Net Actions/turno. DV Virus 9. Capacidad de eludir Black ICE defensivo ligero.' },
-      { rank: 4, title: 'Corredor de Sombras (Shadow Runner)', unlocks: '¡Desbloquea 3 Net Actions/turno! DV Virus 10. Puede controlar torretas y cámaras en paralelo.' },
-      { rank: 5, title: 'Explorador Profundo (Deep Navigator)', unlocks: '3 Net Actions/turno. DV Virus 11. Detección y mapeo de hasta 5 pisos de red en 1 tirada de Pathfinder.' },
-      { rank: 6, title: 'Infiltrador de Mainframes (System Slicer)', unlocks: '3 Net Actions/turno. DV Virus 12. Creación de virus personalizados destructivos.' },
-      { rank: 7, title: 'Fantasma en la Red (Ghost in the Wire)', unlocks: '¡Desbloquea 4 Net Actions/turno! DV Virus 13. Ataques simultáneos y destrucción de Black ICE de élite.' },
-      { rank: 8, title: 'Maestro de Arquitecturas (Architecture Overlord)', unlocks: '4 Net Actions/turno. DV Virus 14. Escribe virus capaces de fundir servidores enteros.' },
-      { rank: 9, title: 'Cibermístico del Data Pool (Data Deity)', unlocks: '4 Net Actions/turno. DV Virus 15. Invisibilidad virtual casi indetectable por I.C.E. corporativo.' },
-      { rank: 10, title: 'Avatar del Ciberespacio (Bartmoss Legacy)', unlocks: '4 Net Actions/turno. DV Virus 16+. Capacidad de desafiar las fortalezas de datos de Arasaka y Militech.' }
+      { rank: 1, title: 'Interface 1', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET. Desbloquea Simple Quickhacks (DV 6): Impair Movement, Sonic Shock (CEMK p. 26).' },
+      { rank: 2, title: 'Interface 2', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET. Desbloquea Standard Quickhacks (DV 8): Overheat, Short Circuit (CEMK p. 26).' },
+      { rank: 3, title: 'Interface 3', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET. Desbloquea Difficult Quickhacks (DV 10): Cyberware Malfunction, Lure, Slow, Synapse Burnout. Pasas el firewall básico de los Neuroports sin tirar (CEMK p. 26).' },
+      { rank: 4, title: 'Interface 4', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET. Desbloquea Advanced Quickhacks (DV 12): Puppet, Shard Ejection, System Reset (CEMK p. 26).' },
+      { rank: 5, title: 'Interface 5', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET.' },
+      { rank: 6, title: 'Interface 6', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET.' },
+      { rank: 7, title: 'Interface 7', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET.' },
+      { rank: 8, title: 'Interface 8', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET.' },
+      { rank: 9, title: 'Interface 9', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET.' },
+      { rank: 10, title: 'Interface 10', unlocks: 'Hasta 3 NET Actions/turno (CEMK p. 15). Interface + 1d10 en todos los Checks de NET.' }
     ]
   },
   Tech: {

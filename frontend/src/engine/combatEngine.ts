@@ -347,3 +347,33 @@ export function calculateIncomingImpact(input: IncomingImpactInput): IncomingImp
     excessHpLoss
   };
 }
+
+// ============================================================================
+// Checks de Skill e Interface contra DV (Core p. 130, CEMK p. 5)
+// ============================================================================
+
+export interface CheckD10Roll {
+  natural: number;
+  extra: number;
+  value: number;
+}
+
+/** 1d10 de un Check: 10 explota (+1d10, sin volver a explotar) y 1 resta 1d10 (CEMK p. 5). */
+export function rollCheckD10(rng: () => number = Math.random): CheckD10Roll {
+  const roll = () => Math.floor(rng() * 10) + 1;
+  const natural = roll();
+  if (natural === 10) {
+    const extra = roll();
+    return { natural, extra, value: 10 + extra };
+  }
+  if (natural === 1) {
+    const extra = roll();
+    return { natural, extra, value: 1 - extra };
+  }
+  return { natural, extra: 0, value: natural };
+}
+
+/** Contra un DV hay que superarlo, no igualarlo: "beat (not meet)" (CEMK p. 5). En enfrentadas el empate gana el defensor. */
+export function beatsDv(total: number, dv: number): boolean {
+  return total > dv;
+}

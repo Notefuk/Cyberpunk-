@@ -5184,7 +5184,7 @@
       "def": 0,
       "rez": 7,
       "cost": 50,
-      "description": "Reduces all incoming brain damage by 4. Only 1 copy can be running at a time.",
+      "description": "Lowers all brain damage you would receive by 4 as long as this Program remains Rezzed. Only 1 copy can be running at a time. Each copy can only be used once per Netrun (Core p. 203).",
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
       "era": "2045"
@@ -5195,9 +5195,9 @@
       "class": "Defender",
       "atk": 0,
       "def": 0,
-      "rez": 0,
+      "rez": 7,
       "cost": 50,
-      "description": "Reduces the first successful brain damage attack by an enemy to 0, then Derezzes itself.",
+      "description": "Reduces the ATK of all Non-Black ICE Attacker Programs run against you to 0 as long as this Program remains Rezzed. Only 1 copy can be running at a time. Each copy can only be used once per Netrun (Core p. 203).",
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
       "era": "2045"
@@ -5208,9 +5208,9 @@
       "class": "Defender",
       "atk": 0,
       "def": 0,
-      "rez": 0,
+      "rez": 7,
       "cost": 20,
-      "description": "Stops the first successful Non-Black ICE Program Effect from dealing brain damage, then Derezzes itself.",
+      "description": "Stops the first successful Non-Black ICE Program Effect from dealing brain damage, then Derezzes itself. Only 1 copy can be running at a time. Each copy can only be used once per Netrun (Core p. 203).",
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
       "era": "2045"
@@ -5434,7 +5434,7 @@
       "def": 2,
       "rez": 10,
       "cost": 500,
-      "description": "Cartoon skunk imposing a permanent -2 penalty to Slide Checks until Derezzed.",
+      "description": "Until this Program is Derezzed, an enemy Netrunner hit by it makes all Slide Checks at -2. Each Skunk affects a single Netrunner at a time; multiple Skunks stack (Core p. 207).",
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
       "era": "2045"
@@ -5449,7 +5449,7 @@
       "def": 2,
       "rez": 15,
       "cost": 50,
-      "description": "Crackling orb. Deals 1d6 brain damage and reduces target's NET Actions by 1 on next turn.",
+      "description": "Deals 1d6 damage direct to the enemy Netrunner's brain and lowers their total NET Actions on their next Turn by 1 (minimum 2) (Core p. 207).",
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
       "era": "2045"
@@ -5498,146 +5498,6 @@
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
       "era": "2045"
-    },
-    {
-      "id": "qh-overheat",
-      "name": "Overheat [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 500,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (3 RAM, DV 6). Deals 2d6 thermal damage per turn directly to enemy HP for 2 turns."
-    },
-    {
-      "id": "qh-short-circuit",
-      "name": "Short Circuit [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 500,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (3 RAM, DV 6). Deals 3d6 EMP damage to HP (double damage against drones and FBC Borgs)."
-    },
-    {
-      "id": "qh-cyberware-malfunction",
-      "name": "Cyberware Malfunction [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 500,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (4 RAM, DV 8). Disables target's key cyberware implant for 1 minute."
-    },
-    {
-      "id": "qh-synapse-burnout",
-      "name": "Synapse Burnout [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 1000,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (5 RAM, DV 8). Deals 4d6 damage to HP plus +1d6 per 10 HP missing from target."
-    },
-    {
-      "id": "qh-contagion",
-      "name": "Contagion [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 500,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (4 RAM, DV 8). Deals 2d6 viral damage and jumps to a secondary target within 6m."
-    },
-    {
-      "id": "qh-cripple-movement",
-      "name": "Cripple Movement [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 500,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (3 RAM, DV 8). Locks cyberlimb actuators, reducing target MOVE to 2 for 2 turns."
-    },
-    {
-      "id": "qh-detonate-grenade",
-      "name": "Detonate Grenade [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 1000,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (5 RAM, DV 10). Detonates a grenade on target's belt or cyberlimb."
-    },
-    {
-      "id": "qh-lure",
-      "name": "Lure [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 100,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (2 RAM, DV 6). Sends a false auditory alert forcing an enemy to investigate a location."
-    },
-    {
-      "id": "qh-memory-wipe",
-      "name": "Memory Wipe [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 500,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (4 RAM, DV 10). Erases combat awareness: target exits combat state and loses their turn."
-    },
-    {
-      "id": "qh-optics-jammer",
-      "name": "Optics Jammer [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 500,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (2 RAM, DV 6). Blinds optics: target suffers -4 penalty to all attacks for 1 turn."
-    },
-    {
-      "id": "qh-sonic-shock",
-      "name": "Sonic Shock [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 500,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (3 RAM, DV 8). Deafens target and severs audio communications with allies."
-    },
-    {
-      "id": "qh-suicide",
-      "name": "Suicide [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 2000,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (8 RAM, DV 12). Ultimate override: target discharges their own weapon point-blank into their head."
-    },
-    {
-      "id": "qh-system-reset",
-      "name": "System Reset [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 1000,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (7 RAM, DV 12). Shuts down nervous system: target falls unconscious for 1 minute."
-    },
-    {
-      "id": "qh-weapon-glitch",
-      "name": "Weapon Glitch [Quickhack]",
-      "class": "Quickhack (2077)",
-      "cost": 100,
-      "sourceBook": "cemk_2077",
-      "sourceBookTitle": "Cyberpunk Edgerunners Mission Kit",
-      "era": "2077",
-      "description": "Quickhack (2 RAM, DV 6). Jams target's active weapon, requiring an Action to clear."
     }
   ]
 }

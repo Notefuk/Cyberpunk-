@@ -63,7 +63,7 @@ export const ERA_CATALOG: EraInfo[] = [
     whatYouGet: [
       'Neuroport Universal de serie preinstalado gratuitamente (ahorro de más de 2,500 €$ y 20+ HL).',
       'Armas de tecnología 2077: Power (rebotes tácticos), Tech (disparo perforante de coberturas) y Smart (guiado balístico).',
-      'Soporte para Quickhacking en combate táctico mediante pool de memoria RAM.',
+      'Soporte para Quickhacking en combate táctico: 1 NET Action por Quickhack, sin RAM (CEMK p. 16).',
       'Acceso a las plantillas pregeneradas y estilos de la tripulación de Maine y David Martinez.',
       'Mecánicas avanzadas de Estrés, Humanidad y Ciberpsicosis acelerada del Edgerunners Mission Kit.',
       'Catálogo de ciberware moderno: Sandevistan militar Militech, Monowire, Mantis Blades y Gorilla Arms.'
@@ -1910,7 +1910,7 @@ export const PREGEN_TEMPLATES: PregenTemplate[] = [
     bioSummary:
       'Netrunner misteriosa y letal de la Vieja Red. Entrenada de niña en instalaciones secretas de Arasaka, huyó para vivir como fantasma en Night City. Especialista en hackeo profundo y combate con cable Monowire.',
     whatYouGet: [
-      'Cyberdeck militar 2077 con ranuras de Quickhacks y memoria RAM aumentada.',
+      'Cyberdeck militar 2077 para Quickhacking (sin RAM, CEMK p. 16).',
       'Ciberarma Monowire integrada en el antebrazo (ataques a 2m que ignoran mitad de blindaje).',
       'INT 8 y REF 8: Dominio total tanto en el ciberespacio como en el esquive acrobático.',
       'Neuroport 2077 de serie con interfaz de Virtuality y cables Interface Plugs.',
