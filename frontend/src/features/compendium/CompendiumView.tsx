@@ -93,7 +93,19 @@ export const TacticalTooltip: React.FC<{
 };
 
 /* Origin SourceBook Badge Helper */
-export const renderSourceBookBadge = (sourceBook?: string) => {
+// Plan 5: muestra la página del libro junto al badge cuando el ítem tiene sourcePage.
+export const renderSourceBookBadge = (sourceBook?: string, sourcePage?: number) => {
+  const badge = renderSourceBookBadgeOnly(sourceBook);
+  if (!sourcePage) return badge;
+  return (
+    <span className="inline-flex items-center gap-1 shrink-0">
+      {badge}
+      <span className="text-[9px] font-mono-code text-[#94a3b8]" title="Página del libro">p.{sourcePage}</span>
+    </span>
+  );
+};
+
+const renderSourceBookBadgeOnly = (sourceBook?: string) => {
   const book = sourceBook || 'core';
   switch (book) {
     case 'core':
@@ -1457,7 +1469,7 @@ export const CompendiumView: React.FC = () => {
                               <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={weapon.name}>
                                 {weapon.name}
                               </h4>
-                              {renderSourceBookBadge(weapon.sourceBook)}
+                              {renderSourceBookBadge(weapon.sourceBook, weapon.sourcePage)}
                             </div>
                             <span className="text-[10px] text-[#f59e0b] font-mono-code">
                               {weapon.cost} eb
@@ -1585,7 +1597,7 @@ export const CompendiumView: React.FC = () => {
                             <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={armor.name}>
                               {armor.name}
                             </h4>
-                            {renderSourceBookBadge(armor.sourceBook)}
+                            {renderSourceBookBadge(armor.sourceBook, armor.sourcePage)}
                           </div>
                           <span className="text-[10px] text-[#f59e0b] font-mono-code">
                             {armor.cost} eb
@@ -1705,7 +1717,7 @@ export const CompendiumView: React.FC = () => {
                             <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={cyber.name}>
                               {cyber.name}
                             </h4>
-                            {renderSourceBookBadge(cyber.sourceBook)}
+                            {renderSourceBookBadge(cyber.sourceBook, cyber.sourcePage)}
                           </div>
                           <span className="text-[10px] text-[#f59e0b] font-mono-code">
                             {cyber.cost} eb
@@ -1803,7 +1815,7 @@ export const CompendiumView: React.FC = () => {
                             <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={prog.name}>
                               {prog.name}
                             </h4>
-                            {renderSourceBookBadge(prog.sourceBook)}
+                            {renderSourceBookBadge(prog.sourceBook, prog.sourcePage)}
                           </div>
                         </div>
                         <button
@@ -1893,7 +1905,7 @@ export const CompendiumView: React.FC = () => {
                                 {ammo.name}
                               </h4>
                             </AmmoHoverTooltip>
-                            {renderSourceBookBadge(ammo.sourceBook)}
+                            {renderSourceBookBadge(ammo.sourceBook, ammo.sourcePage)}
                           </div>
                         </div>
                         <button
@@ -1966,7 +1978,7 @@ export const CompendiumView: React.FC = () => {
                             <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={att.name}>
                               {att.name}
                             </h4>
-                            {renderSourceBookBadge(att.sourceBook)}
+                            {renderSourceBookBadge(att.sourceBook, att.sourcePage)}
                           </div>
                         </div>
                         <button
@@ -2039,7 +2051,7 @@ export const CompendiumView: React.FC = () => {
                             <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={drug.name}>
                               {drug.name}
                             </h4>
-                            {renderSourceBookBadge(drug.sourceBook)}
+                            {renderSourceBookBadge(drug.sourceBook, drug.sourcePage)}
                           </div>
                         </div>
                         <button
@@ -2117,7 +2129,7 @@ export const CompendiumView: React.FC = () => {
                             <h4 className="text-xs font-bold text-[#f1f5f9] truncate font-tech" title={g.name}>
                               {g.name}
                             </h4>
-                            {renderSourceBookBadge(g.sourceBook)}
+                            {renderSourceBookBadge(g.sourceBook, g.sourcePage)}
                           </div>
                         </div>
                         <button
@@ -2253,7 +2265,7 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-1.5 px-2">
-                          {renderSourceBookBadge(w.sourceBook)}
+                          {renderSourceBookBadge(w.sourceBook, w.sourcePage)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
                           <span className="font-bold text-[#f43f5e] mr-2">{w.damage}</span>
@@ -2325,7 +2337,7 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-1.5 px-2">
-                          {renderSourceBookBadge(a.sourceBook)}
+                          {renderSourceBookBadge(a.sourceBook, a.sourcePage)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
                           <span className="font-bold text-[#38bdf8] mr-2">
@@ -2412,7 +2424,7 @@ export const CompendiumView: React.FC = () => {
                           </CyberCategoryTooltip>
                         </td>
                         <td className="py-1.5 px-2">
-                          {renderSourceBookBadge(c.sourceBook)}
+                          {renderSourceBookBadge(c.sourceBook, c.sourcePage)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
                           <span className="text-[#f43f5e] mr-2">
@@ -2478,7 +2490,7 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-1.5 px-2">
-                          {renderSourceBookBadge(p.sourceBook)}
+                          {renderSourceBookBadge(p.sourceBook, p.sourcePage)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#cbd5e1]">
                           {p.atk !== undefined && <span className="mr-2 text-[#f43f5e]">ATK {p.atk}</span>}
@@ -2535,7 +2547,7 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-1.5 px-2">
-                          {renderSourceBookBadge(am.sourceBook)}
+                          {renderSourceBookBadge(am.sourceBook, am.sourcePage)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#94a3b8] truncate max-w-[300px]">
                           {am.description}
@@ -2587,7 +2599,7 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-1.5 px-2">
-                          {renderSourceBookBadge(att.sourceBook)}
+                          {renderSourceBookBadge(att.sourceBook, att.sourcePage)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#94a3b8] truncate max-w-[300px]">
                           {att.slots} ranuras • {att.description}
@@ -2639,7 +2651,7 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-1.5 px-2">
-                          {renderSourceBookBadge(d.sourceBook)}
+                          {renderSourceBookBadge(d.sourceBook, d.sourcePage)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#94a3b8] truncate max-w-[300px]">
                           {d.duration} {d.addictionDv > 0 ? `• DV ${d.addictionDv}` : ''} • {d.primaryEffect}
@@ -2691,7 +2703,7 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-1.5 px-2">
-                          {renderSourceBookBadge(g.sourceBook)}
+                          {renderSourceBookBadge(g.sourceBook, g.sourcePage)}
                         </td>
                         <td className="py-1.5 px-2 text-[11px] text-[#94a3b8] truncate max-w-[300px]">
                           {g.description}

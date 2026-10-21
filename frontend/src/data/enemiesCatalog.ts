@@ -3013,7 +3013,7 @@ export const ENEMIES_CATALOG: EnemySheet[] = [
     weapons: [{"name": "Pistola de Inyección Neumática", "skillBase": 12, "damage": "2d6", "rof": 1, "mag": 12}, {"name": "Navaja", "skillBase": 11, "damage": "1d6", "rof": 2, "mag": 0}],
     cyberware: ["Analizador Químico", "Cybereye"],
     gear: ["Chaqueta de Cuero SP 7", "4x Fármacos Variados"],
-    specialRules: ["Dopaje Inmediato: Inyecta Berserk o Stim a un aliado como acción rápida."],
+    specialRules: ["Dopaje Inmediato: Inyecta Berserker o Stim a un aliado como acción rápida."],
     loreSummary: "Fabrica drogas en una bañera en un ático de Heywood."
   },
   {

@@ -162,9 +162,9 @@ export const SOURCEBOOKS_CATALOG: SourceBookMeta[] = [
     whatItBringsSummary:
       'Colección de suplementos mensuales publicados por R. Talsorian Games: Hornet\'s Pharmacy (aditivos químicos y dispersión osmótica), Hardened Enemies (versiones letales de pandilleros y guardias con pools de suerte), 12 Days of Gunmas (armas exóticas experimentales) y salvamento náutico.',
     keyHighlights: [
-      'Hornet\'s Pharmacy: Nuevos fármacos de combate (Sixgun, Berserk, Prime Time).',
+      'Hornet\'s Pharmacy: Nuevas drogas de combate (Berserker, Prime Time, Sixgun, Timewarp).',
       'Enemigos Hardened con estadísticas potenciadas para grupos de jugadores veteranos.',
-      'Armas navideñas Gunmas: Militech Fox Dual-Ammo y Midnight Arms Erebus.',
+      'Armas navideñas Gunmas: Arasaka WAA Bullpup y Kendachi Dragon Flamethrower.',
       'Sistemas de aditivos médicos y vectores osmóticos para Medtechs.'
     ],
     mechanicsIntroduced: [
@@ -380,37 +380,41 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
   // --------------------------------------------------------------------------
   {
     id: 'hornets-pharmacy',
-    title: 'Farmacología Avanzada, Aditivos y Dispersión Osmótica (Hornet\'s Pharmacy)',
-    subtitle: 'Nuevos fármacos callejeros, cócteles de combate y vectores de administración química',
+    title: 'Hornet\'s Pharmacy: A Chemical Wonderland (drogas, aditivos y equipo)',
+    subtitle: 'Cuatro drogas callejeras, tres aditivos para venenos, dos fármacos de Medtech, un dron asesino y dos implantes',
     sourceBook: 'dlc',
     sourceBookTitle: "Hornet's Pharmacy DLC",
     era: 'both',
     categoryBadge: 'QUIMICA Y MEDICINA // DLC',
     introDescription:
-      'Hornet, el Fixer y químico legendario de Night City, revolucionó el mercado negro de drogas y medicina de campaña. Este sistema expande el catálogo de fármacos con nuevas sustancias de diseño y permite a los Medtechs crear cócteles farmacológicos personalizados con aditivos osmóticos que se absorben a través de la piel o por niebla en aerosol.',
+      'Suplemento oficial de R. Talsorian Games (v1.11) con 4 drogas callejeras (Berserker, Prime Time, Sixgun y Timewarp), 3 compuestos aditivos para venenos y biotoxinas (Delaying, Distilling y Osmosis), 2 fármacos de Medtech (Sedative y Veritas), el dron asesino Suzumebachi y 2 implantes (Bodyweight AutoInjector y Pursuit Security Inc. Gas Jet).',
     howItWorksSteps: [
-      'Paso 1 (Catálogo de Nuevos Fármacos): Incorpora drogas de combate avanzadas como Sixgun (+2 REF y DEX en tiroteos rápidos), Berserk (inmunidad temporal a heridas y dolor) y Prime Time (carisma arrollador).',
-      'Paso 2 (Vectores de Administración): Los fármacos ya no exigen solo inyección con Airhypo. Pueden aplicarse como parches dérmicos osmóticos, granadas de aerosol químico de 6x6m o aditivos en munición de dardos.',
-      'Paso 3 (Compounding de Medtech): Un Medtech con la habilidad Pharmaceuticals puede mezclar un fármaco con aditivos de retraso temporal o aditivos de desintoxicación rápida (Detox Additive).'
+      'Paso 1 (Drogas, p.2-3): Berserker, Prime Time, Sixgun y Timewarp tienen Efecto Primario y Efecto Secundario (DV17) que incluye la adicción.',
+      'Paso 2 (Aditivos, p.4): Delaying, Distilling y Osmosis Compound se mezclan como Acción con un Vial de Veneno o Biotoxina; ninguno se acumula.',
+      'Paso 3 (Fármacos, p.4): Sedative y Veritas son dosis de Medtech con las reglas de los fármacos del Core; el libro no imprime su costo.',
+      'Paso 4 (Equipo, p.5): dron Suzumebachi (5.000 €$, Luxury), Bodyweight AutoInjector (100 €$) y Pursuit Security Inc. Gas Jet (500 €$).'
     ],
     keyBenefits: [
-      'Drogas con efectos tácticos específicos para cada rol de combate.',
-      'Posibilidad de dosificar a aliados a distancia mediante dardos o niebla beneficiosa.',
-      'Aditivos que reducen el DV de adicción secundaria de las sustancias callejeras.'
+      'Berserker: sin daño adicional por Lesión Crítica y penalizadores de heridas y de Facedown reducidos a la mitad.',
+      'Timewarp: +3 a cualquier tirada de Iniciativa durante 1 minuto.',
+      'Sixgun: +2 Speed en la NET y una Acción NET adicional por turno a cambio de 1 Humanity Loss.'
     ],
     drawbacksAndRisks: [
-      'El riesgo de adicción sigue siendo implacable: fallar la tirada de adicción al terminar el efecto aplica penalizadores severos de abstinencia.',
-      'Sustancias incompatibles: Mezclar dos drogas callejeras en el mismo turno puede provocar shock químico (3d6 daño directo a HP).'
+      'Las cuatro drogas son adictivas (DV17): Berserker cuesta 2 de Humanity Loss y +1 permanente a la Base Death Save Penalty; Prime Time resta 4d6 de Humanity Loss mientras dura el efecto.',
+      'Sixgun baja MOVE y REF en 2; Prime Time reprime las emociones del usuario.'
     ],
     referenceTable: {
       headers: ['Fármaco / Compuesto', 'Efecto Primario en Combate', 'Duración', 'DV Adicción'],
       rows: [
-        ['Sixgun', '+2 REF y +2 DEX en acciones de disparo y esquiva', '10 Minutos', 'DV 16'],
-        ['Berserk', '+10 HP temporales e ignora penalizador Seriously Wounded', '10 Minutos', 'DV 15'],
-        ['Prime Time', '+2 COOL y +2 en todas las habilidades sociales', '1 Hora', 'DV 13'],
-        ['Hover', '+2 INT y velocidad mental para Netrunning e investigación', '1 Hora', 'DV 14'],
-        ['Red Glass', 'Euforia extrema y visiones de color (+1 WILL)', '4 Horas', 'DV 13'],
-        ['Detox Additive', 'Purga toxinas y drogas activas del torrente sanguíneo', 'Instantáneo', 'No adictivo']
+        ['Berserker', 'Sin daño adicional por Lesión Crítica; penalizadores de heridas y Facedown a la mitad', '10 Minutos', 'DV 17'],
+        ['Prime Time', 'COOL y WILL +2; 4d6 Humanity Loss devueltos al terminar', '4 Horas', 'DV 17'],
+        ['Sixgun', 'MOVE y REF -2; +2 Speed en la NET y una Acción NET extra por 1 Humanity Loss', '4 Horas', 'DV 17'],
+        ['Timewarp', '+3 a Iniciativa', '1 Minuto', 'DV 17'],
+        ['Delaying Compound', 'Retrasa 1 minuto o 1 hora los efectos de un veneno o biotoxina', '—', '—'],
+        ['Distilling Compound', 'El DV de Resist Torture/Drugs del veneno o biotoxina sube 2', '—', '—'],
+        ['Osmosis Compound', 'El veneno o biotoxina entra por la piel desde una superficie', '1 Hora (en superficie)', '—'],
+        ['Sedative', 'Inconsciente 4 horas si es voluntario; DV15 Resist Torture/Drugs si no lo es', '4 Horas', '—'],
+        ['Veritas', 'DV17 Resist Torture/Drugs o -5 a Acting, Concentration, Conversation, Deduction, Human Perception y Persuasion', '10 Minutos', '—']
       ]
     }
   },

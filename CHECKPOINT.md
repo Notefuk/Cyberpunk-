@@ -7,24 +7,25 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-21]
-**Versión de la app**: v4.6.1 (en `main`, squash 5ed7296, PR #18; publicada en gh-pages y verificada en vivo)
+**Versión de la app**: v4.6.2 lista en la rama `claude/v4.6.2-farmacia-gunmas-errata` (sin mergear). `main` está en v4.6.1, publicada.
 **Plan activo**: plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, `source` libro+página en cada ítem y registro en `docs/canon-audit/`. En curso: v4.5.1 Cyberfists (absorbe la fase 5 del plan 2). Plan 4 terminado en v4.6.0. Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-21] v4.6.2 (plan 5: Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25) en la rama `claude/v4.6.2-farmacia-gunmas-errata`. Fase: extracción de los PDFs. Antigravity: no tocar el pack, `expansionRulesData.ts` ni `extract_core_pack.py` hasta el merge.
+- [Claude Code · 2026-10-21] v4.6.2 terminada y verificada en la rama `claude/v4.6.2-farmacia-gunmas-errata`. Falta: PR, merge y gh-pages. Antigravity: no tocar el pack ni `extract_core_pack.py` hasta el merge.
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `main` @ commit "CHECKPOINT: v4.6.1 mergeada..." (pusheada: sí). gh-pages publicada con el build de v4.6.1.
-- A medias: nada.
-- Siguiente paso exacto: plan 5, v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 en una rama nueva (scout extrae del PDF con página, worker aplica, registro en `docs/canon-audit/`).
+- Rama y último commit: `claude/v4.6.2-farmacia-gunmas-errata` @ "v4.6.2 Hornet's + Gunmas + Errata canon" (pusheada: sí).
+- A medias: el PR de v4.6.2 a main y la publicación.
+- Siguiente paso exacto: mergear v4.6.2; después, plan 5 v4.7.0 enemigos canon (Danger Gal, Hardened, Red Chrome Cargo, CEMK 2077 y la errata del Security Officer de Core p.415).
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
 - Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`. El Ripperdoc ahora está dividido en componentes en `frontend/src/features/cyberware/` (ver v4.6.0 abajo).
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-21] v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 canon (plan 5, bloque 2). Pack editado a mano en las dos copias (idénticas) y espejado en `extract_core_pack.py`, que NO se corre porque está desincronizado (maxdoc-mk1, bounceback-mk1). Se perdieron 6 inventados, se ganaron 19 ítems y se corrigieron 9 de Hornet's, el Cityhunter y 5 erratas. `sourcePage` en 5 tipos, visible en el Compendium. 44 tests. Registro: `docs/canon-audit/v4.6.2-farmacia-gunmas-errata.md`.
 - [Claude Code · 2026-10-21] v4.6.1 Cyberfists of Fury canon, mergeada (PR #18, squash 5ed7296) y publicada (plan 5, bloque 1; cierra la fase 5 del plan 2). IR4 pp. 74-84: 23 formas y 46 movimientos con `sourcePage`; borradas 10 formas inventadas y agregadas 10 faltantes; corregidos los movimientos de las 13 restantes (ids conservados). `opposedBy` en los movimientos enfrentados. La UI muestra la página. Persist v2 migra los ids huérfanos. 38 tests. Registro: `docs/canon-audit/v4.5.1-cyberfists.md` + índice `docs/canon-audit/README.md`. JSON canon extraído (scratchpad de la sesión, no versionado).
 - [Claude Code · 2026-10-21] v4.6.0 Ripperdoc estilo Cyberpunk 2077 (plan 4), mergeada a `main` (PR #17, squash 458cc3c) y publicada. Componentes en `features/cyberware/`: `ripperdocZones.tsx`, `HoloBody.tsx` (holograma, 9 zonas), `ZoneCard.tsx`, `SlotBox.tsx`, `ZoneConnectors.tsx`, `ZoneDetailPanel.tsx`, `GoingMetalBanner.tsx`, `cyberwareCardArt.ts` (6 cartas del Mission Kit, visibles al inspeccionar). Fix: 'Cyberarm Option', 'Neuralware Option' y 'Borgware x2' sin zona. `animate-in`/`fade-in`/`zoom-in-95` definidas en `index.css`. 33 tests. Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
 - [Claude Code · 2026-10-21] v4.5.0 (plan 2, fase 4) Going Metal canon, mergeada a `main` (PR #16, squash 44baf2c) y publicada en https://notefuk.github.io/Cyberpunk-/. Rehecha desde el PDF porque el trabajo a medias de claude.ai nunca se había pusheado (también se perdió el plan 3).

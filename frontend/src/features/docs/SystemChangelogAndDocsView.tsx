@@ -26,6 +26,38 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.6.2',
+    date: '2026-10-21',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Canon / Reglas',
+    title: "Hornet's Pharmacy, 12 Days of Gunmas y Errata v1.25 canon",
+    summary: 'Plan 5, bloque 2: la farmacia, las armas de Gunmas y la errata del Core ahora coinciden con los PDFs, con página en cada ítem. Registro completo en docs/canon-audit/v4.6.2-farmacia-gunmas-errata.md.',
+    highlights: [
+      "Hornet's Pharmacy. Se perdió (inventado): Hover, Red Glass y Detox. Se ganó: Delaying, Distilling y Osmosis Compounds, Sedative, Veritas, el dron Suzumebachi Assassin Drone, Bodyweight AutoInjector y el Gas Jet de Pursuit Security. Se corrigió: Berserker (antes Berserk), Prime Time y Sixgun, reescritos del libro (DV17); Timewarp pasa de Core a Hornet's p.3.",
+      '12 Days of Gunmas. Se perdió (no existen en ningún PDF): Erebus, Fox y Kolokol. Se ganó: 11 armas (Arasaka WAA Bullpup, Constitutional Arms MAP, IMI Chainknife, Kendachi Dragon, Magnum Opus Hellbringer, Malorian Sub-Flechette, Militech Crusher (Gunmas), Mustang ARS-5, Nomad Pneumatic Bolt Gun, Stolbovoy ST-5 y Teen Dreem). Se corrigió: Nova 757 Cityhunter (1000 €$, mag 18, Smartgun Link; estaba como Core con stats inventados).',
+      'Errata v1.25: Grafted Muscle & Bone Lace (BODY +2 también para Wound Threshold, acumulable, máx. 10), Techtool, Rubber Ammo (cuenta como Basic para armas Exotic) y Smoke. Las 9 erratas ya aplicadas siguen bien; 17 no tienen dato en la app.',
+      'Procedencia: sourcePage en armas, ciberware, equipo, drogas y munición; el Compendium muestra "p.N" junto al badge del libro.',
+      'Pendiente para v4.7.0 (enemigos): el Security Operative no coincide con el Security Officer del Core p.415, así que su errata de SP queda para la auditoría de PNJ. El script extract_core_pack.py no está sincronizado con el pack (maxdoc-mk1, bounceback-mk1); no se regenera el pack.',
+      '44 tests (6 nuevos).'
+    ],
+    filesTouched: [
+      'frontend/src/data/core-rules.cprpack.json',
+      'data/core-rules.cprpack.json',
+      'scripts/extract_core_pack.py',
+      'frontend/src/types/cyberpunk.ts',
+      'frontend/src/features/compendium/CompendiumView.tsx',
+      'frontend/src/data/expansionRulesData.ts',
+      'frontend/src/features/datapacks/DataPackManagerView.tsx',
+      'frontend/src/data/netAndRolesData.ts',
+      'frontend/src/data/enemiesCatalog.ts',
+      'frontend/src/engine/__tests__/rules.test.ts',
+      'docs/canon-audit/v4.6.2-farmacia-gunmas-errata.md',
+      'docs/canon-audit/README.md'
+    ],
+    metricsBadge: "v4.6.2 • Hornet's + Gunmas + Errata • Plan 5"
+  },
+  {
     version: 'v4.6.1',
     date: '2026-10-21',
     author: 'Claude Code',
@@ -642,6 +674,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.6.2': true,
     'v4.6.1': true,
     'v4.6.0': true,
     'v4.5.0': true,

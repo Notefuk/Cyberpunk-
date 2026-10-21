@@ -338,3 +338,76 @@ describe('Cyberfists of Fury canon (IR4 pp. 74-84)', () => {
     }
   });
 });
+
+describe('Plan 5 v4.6.2 canon', () => {
+  // Hornet's Pharmacy v1.11 pp.2-5, 12 Days of Gunmas v1.3 pp.3-7, Errata v1.25 pp.2-4.
+  type PackItem = { id: string; name: string; description?: string; sourceBook?: string; sourceBookTitle?: string; sourcePage?: number; addictionDv?: number };
+  const all = (): PackItem[] => {
+    const p = pack as unknown as Record<string, PackItem[]>;
+    return [...p.weapons, ...p.armor, ...p.attachments, ...p.ammunition, ...p.cyberware, ...p.drugs, ...p.gear, ...p.programs];
+  };
+  const byId = (id: string) => all().find((x) => x.id === id);
+
+  it('los items inventados de Hornet y Gunmas ya no existen', () => {
+    const ids = all().map((x) => x.id);
+    for (const id of ['drug-hover', 'drug-red-glass', 'drug-detox-additive', 'midnight-erebus', 'militech-fox-dual', 'rostovic-kolokol']) {
+      expect(ids).not.toContain(id);
+    }
+  });
+
+  it('Gunmas v1.3 pp.3-7: exactamente 12 armas con los nombres canon', () => {
+    const CANON = [
+      'Arasaka WAA Bullpup Assault Weapon',
+      'Constitutional Arms Multiple Ammunition Pistol',
+      'IMI Chainknife',
+      'Kendachi Dragon Flamethrower',
+      'Magnum Opus Hellbringer',
+      'Malorian Arms Sub-Flechette Gun',
+      'Militech Crusher (Gunmas)',
+      'Mustang Arms ARS-5 Submachine Gun',
+      'Nomad Pneumatic Bolt Gun',
+      'Nova Model 757 Cityhunter',
+      'Stolbovoy ST-5 Assault Rifle',
+      'Teen Dreem'
+    ];
+    const gunmas = (pack.weapons as PackItem[]).filter((w) => w.sourceBookTitle === '12 Days of Gunmas');
+    expect(gunmas).toHaveLength(12);
+    expect(gunmas.map((w) => w.name).sort()).toEqual([...CANON].sort());
+    for (const w of gunmas) {
+      expect(w.sourceBook, w.id).toBe('dlc');
+      expect(w.sourcePage, w.id).toBeGreaterThanOrEqual(3);
+      expect(w.sourcePage, w.id).toBeLessThanOrEqual(7);
+    }
+    // El Crusher del CEMK es otra arma y se conserva.
+    expect(byId('militech-crusher')?.sourceBook).toBe('cemk');
+  });
+
+  it('Gunmas p.5: Nova Cityhunter cuesta 1000, cargador 18, ROF 2', () => {
+    const w = (pack.weapons as Array<PackItem & { cost: number; standardMag: number; rof: number }>).find((x) => x.id === 'nova-cityhunter');
+    expect(w?.cost).toBe(1000);
+    expect(w?.standardMag).toBe(18);
+    expect(w?.rof).toBe(2);
+  });
+
+  it("Hornet's pp.2-3: Berserker, Prime Time, Sixgun y Timewarp tienen adiccion DV17 y son DLC", () => {
+    for (const id of ['drug-berserk', 'drug-prime-time', 'drug-sixgun', 'timewarp']) {
+      const d = byId(id);
+      expect(d, id).toBeDefined();
+      expect(d?.addictionDv, id).toBe(17);
+      expect(d?.sourceBook, id).toBe('dlc');
+      expect(d?.sourceBookTitle, id).toBe("Hornet's Pharmacy");
+    }
+    expect(byId('drug-berserk')?.name).toBe('Berserker');
+    expect(byId('timewarp')?.sourcePage).toBe(3);
+  });
+
+  it("Hornet's pp.4-5: aditivos, farmaceuticos, dron e implantes canon existen", () => {
+    for (const id of ['drug-delaying-compound', 'drug-distilling-compound', 'drug-osmosis-compound', 'drug-sedative', 'drug-veritas', 'suzumebachi-assassin-drone', 'bodyweight-autoinjector', 'pursuit-security-gas-jet']) {
+      expect(byId(id), id).toBeDefined();
+    }
+  });
+
+  it('Errata v1.25 p.2 (Core p.114): Grafted Muscle and Bone Lace cambia el Wound Threshold', () => {
+    expect(byId('grafted-muscle-bone-lace')?.description).toContain('Wound Threshold');
+  });
+});
