@@ -14,6 +14,7 @@ import {
 import { useCharacterStore } from './store/useCharacterStore';
 import { TopHudBar } from './features/layout/TopHudBar';
 import { RulesCheatSheetDrawer } from './features/rules/RulesCheatSheetDrawer';
+import { PersistenceBanner } from './components/PersistenceBanner';
 
 // Cada vista se carga al abrir su pestaña para no meter toda la app en un solo bundle.
 const CombatHudView = lazy(() => import('./features/combat/CombatHudView').then((m) => ({ default: m.CombatHudView })));
@@ -163,6 +164,7 @@ export default function App() {
 
       {/* Rules Cheat Sheet Drawer persistente */}
       <RulesCheatSheetDrawer />
+      <PersistenceBanner />
     </div>
   );
 }

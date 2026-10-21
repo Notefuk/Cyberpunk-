@@ -36,7 +36,18 @@ import {
 } from '../data/weaponAttachmentsAndTechData';
 
 import { FBC_16_CYBERWARE, FBC_IMMUNE_CRITICAL_INJURIES } from '../data/goingMetalFbcData';
-import { MARTIAL_ARTS_FORMS } from '../data/cyberfistsMartialArtsData';
+import {
+  APP_VERSION,
+  CHARACTERS_SCHEMA_VERSION,
+  CHARACTERS_STORAGE_KEY,
+  backupRawBeforeMigration,
+  buildFullBackup,
+  emitPersistenceWarning,
+  injectPremades,
+  parseFullBackup,
+  runMigrations,
+  safeCharacterStorage
+} from './persistence';
 
 const PACK_CYBERWARE_BY_ID = new Map(
   [
@@ -383,6 +394,7 @@ export function loadInitialCharacters(): { characters: CharacterSheet[]; activeC
 export interface CharacterStoreState {
   characters: CharacterSheet[];
   activeCharacterId: string;
+  dismissedPremadeIds: string[];
 
   // Acciones
   getActiveCharacter: () => CharacterSheet;
@@ -435,6 +447,9 @@ export interface CharacterStoreState {
   removeInjury: (injuryId: string) => void;
   exportActiveCharacterJson: () => string;
   importCharacterJson: (jsonStr: string) => boolean;
+  exportFullBackup: () => string;
+  importFullBackup: (text: string, mode: 'replace' | 'merge') => { ok: boolean; message: string; warnings: string[] };
+  restorePremades: () => void;
   purchaseOrAcquireItem: (params: {
     item: any;
     category: InventoryItem['category'];
@@ -535,6 +550,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
     (set, get) => ({
       characters: initialRoster.characters,
       activeCharacterId: initialRoster.activeCharacterId,
+      dismissedPremadeIds: [],
       appTheme:
         (typeof window !== 'undefined'
           ? (localStorage.getItem('cpr_app_theme_v1') as AppThemeId)
@@ -622,13 +638,27 @@ export const useCharacterStore = create<CharacterStoreState>()(
       deleteCharacter: (id: string) => {
         set(state => {
           const remaining = state.characters.filter(c => c.id !== id);
+          // Si es un premade, recordar que fue descartado para que merge no lo re-inyecte.
+          const dismissed = [...(state.dismissedPremadeIds || [])];
+          const deletedHandle = state.characters.find(x => x.id === id)?.handle.toLowerCase();
+          if (CEMK_FOLIO_PREMADE_CHARACTERS.some(f => f.id === id)) {
+            if (!dismissed.includes(id)) dismissed.push(id);
+          } else {
+            const cemk = buildCemk2077Characters().find(c => c.id === id || c.handle.toLowerCase() === deletedHandle);
+            if (cemk) {
+              if (!dismissed.includes(cemk.id)) dismissed.push(cemk.id);
+              const lower = cemk.handle.toLowerCase();
+              if (!dismissed.includes(lower)) dismissed.push(lower);
+            }
+          }
           if (remaining.length === 0) {
             remaining.push(INITIAL_CHARACTER_V);
           }
           const newActive = state.activeCharacterId === id ? remaining[0].id : state.activeCharacterId;
           return {
             characters: remaining,
-            activeCharacterId: newActive
+            activeCharacterId: newActive,
+            dismissedPremadeIds: dismissed
           };
         });
       },
@@ -1740,28 +1770,82 @@ export const useCharacterStore = create<CharacterStoreState>()(
 
       importCharacterJson: (jsonStr: string) => {
         try {
-          const parsed = JSON.parse(jsonStr) as CharacterSheet;
-          if (!parsed || typeof parsed !== 'object') return false;
-          if (!parsed.id || !parsed.handle || !parsed.stats || !parsed.skills) return false;
-
+          const parsed = parseFullBackup(jsonStr);
+          if (!parsed.ok) return false;
+          const incoming = parsed.characters;
           set(state => {
-            const existingIndex = state.characters.findIndex(c => c.id === parsed.id);
-            let updatedList: CharacterSheet[];
-            if (existingIndex >= 0) {
-              updatedList = [...state.characters];
-              updatedList[existingIndex] = parsed;
-            } else {
-              updatedList = [...state.characters, parsed];
+            const updatedList = [...state.characters];
+            for (const ch of incoming) {
+              const existingIndex = updatedList.findIndex(c => c.id === ch.id);
+              if (existingIndex >= 0) {
+                updatedList[existingIndex] = ch;
+              } else {
+                updatedList.push(ch);
+              }
             }
             return {
               characters: updatedList,
-              activeCharacterId: parsed.id
+              activeCharacterId: incoming[0].id
             };
           });
           return true;
         } catch {
           return false;
         }
+      },
+
+      exportFullBackup: () => {
+        const { characters, activeCharacterId, dismissedPremadeIds } = get();
+        return JSON.stringify(
+          buildFullBackup({ characters, activeCharacterId, dismissedPremadeIds }, APP_VERSION),
+          null,
+          2
+        );
+      },
+
+      importFullBackup: (text: string, mode: 'replace' | 'merge') => {
+        const parsed = parseFullBackup(text);
+        if (!parsed.ok) {
+          return { ok: false, message: parsed.error, warnings: [] as string[] };
+        }
+        const incoming = parsed.characters;
+        if (mode === 'replace') {
+          for (const [key, value] of Object.entries(parsed.extras)) {
+            try {
+              if (typeof value === 'string') localStorage.setItem(key, value);
+            } catch {
+              parsed.warnings.push(`No se pudo restaurar "${key}" (sin espacio en el navegador).`);
+            }
+          }
+          set(() => {
+            const activeId = parsed.activeCharacterId && incoming.some(c => c.id === parsed.activeCharacterId)
+              ? parsed.activeCharacterId
+              : incoming[0].id;
+            return {
+              characters: incoming,
+              activeCharacterId: activeId,
+              dismissedPremadeIds: parsed.dismissedPremadeIds
+            };
+          });
+          return { ok: true, message: `Respaldo restaurado: ${incoming.length} fichas (reemplazo total).`, warnings: parsed.warnings };
+        }
+        set(state => {
+          const updatedList = [...state.characters];
+          for (const ch of incoming) {
+            const idx = updatedList.findIndex(c => c.id === ch.id);
+            if (idx >= 0) updatedList[idx] = ch;
+            else updatedList.push(ch);
+          }
+          return { characters: updatedList };
+        });
+        return { ok: true, message: `Respaldo combinado: ${incoming.length} fichas agregadas o actualizadas.`, warnings: parsed.warnings };
+      },
+
+      restorePremades: () => {
+        set(state => ({
+          dismissedPremadeIds: [],
+          characters: injectPremades(state.characters, [], CEMK_FOLIO_PREMADE_CHARACTERS, buildCemk2077Characters())
+        }));
       },
 
       purchaseOrAcquireItem: ({ item, category, spendMoney, autoEquip = true, armorLocation = 'both' }) => {
@@ -2576,34 +2660,16 @@ export const useCharacterStore = create<CharacterStoreState>()(
       }
     }),
     {
-      name: 'cpr-omni-deck-characters-v2',
-      // Versión del esquema persistido. Al cambiar la forma de los datos, subir el número y migrar aquí.
+      name: CHARACTERS_STORAGE_KEY,
+      storage: safeCharacterStorage,
+      // Versión del esquema persistido. Al cambiar la forma de los datos, subir el número y agregar su migración en persistence.ts (MIGRATIONS).
       // v0 -> v1: solo agrega campos opcionales (deathSavePenalty, isDead, preFbc*Armor); no hace falta transformar.
-      version: 2,
+      version: CHARACTERS_SCHEMA_VERSION,
       migrate: (persistedState: unknown, persistedVersion: number) => {
-        // v4.5.1: formas de artes marciales inventadas eliminadas (IR4 canon)
-        if (persistedVersion < 2 && persistedState && typeof persistedState === 'object') {
-          const validFormIds = new Set(MARTIAL_ARTS_FORMS.map((f) => f.id));
-          const state = persistedState as Partial<CharacterStoreState>;
-          if (Array.isArray(state.characters)) {
-            state.characters = state.characters.map((c) => {
-              const cleaned = { ...c };
-              if (c.knownMartialArts && typeof c.knownMartialArts === 'object') {
-                cleaned.knownMartialArts = Object.fromEntries(
-                  Object.entries(c.knownMartialArts).filter(([formId]) => validFormIds.has(formId))
-                );
-              }
-              if (Array.isArray(c.ownedMartialArtChips)) {
-                cleaned.ownedMartialArtChips = c.ownedMartialArtChips.filter((formId) => validFormIds.has(formId));
-              }
-              if (Array.isArray(c.equippedMartialArtChips)) {
-                cleaned.equippedMartialArtChips = c.equippedMartialArtChips.filter((formId) => validFormIds.has(formId));
-              }
-              return cleaned;
-            });
-          }
-        }
-        return persistedState as CharacterStoreState;
+        backupRawBeforeMigration(persistedVersion);
+        const { state, warnings } = runMigrations(persistedState, persistedVersion);
+        warnings.forEach(emitPersistenceWarning);
+        return state as CharacterStoreState;
       },
       merge: (persistedState: unknown, currentState: CharacterStoreState) => {
         if (!persistedState || typeof persistedState !== 'object') {
@@ -2614,43 +2680,16 @@ export const useCharacterStore = create<CharacterStoreState>()(
 
         // Auto-inyección automática en localStorage existente:
         // Asegura la presencia inmutable de los 7 Folios Oficiales CEMK 2077 sin sobreescribir fichas de usuario
-        const mergedCharacters = [...persistedChars];
-        const existingIds = new Set(mergedCharacters.map((c) => c.id));
-
-        for (const folio of CEMK_FOLIO_PREMADE_CHARACTERS) {
-          if (!existingIds.has(folio.id)) {
-            mergedCharacters.push({ ...folio });
-            existingIds.add(folio.id);
-          }
-        }
+        // (salvo los premades que el usuario descartó a propósito: dismissedPremadeIds)
+        const dismissedPremadeIds = Array.isArray(p.dismissedPremadeIds) ? p.dismissedPremadeIds : [];
 
         // Ensure the 7 CEMK 2077 anime crew characters are present in characters roster
-        const cemkChars = buildCemk2077Characters();
-        const existingHandles = new Set(mergedCharacters.map((c) => c.handle.toLowerCase()));
-
-        for (const cemk of cemkChars) {
-          if (!existingHandles.has(cemk.handle.toLowerCase())) {
-            mergedCharacters.push(cemk);
-            existingHandles.add(cemk.handle.toLowerCase());
-          }
-        }
-
-        const sanitizedCharacters = mergedCharacters.map((c) => {
-          const updated = { ...c };
-          if (updated.improvementPoints === undefined) {
-            updated.improvementPoints = 120;
-          }
-          if ((updated.skills?.martialArts || 0) > 0 && (!updated.knownMartialArts || Object.keys(updated.knownMartialArts).length === 0)) {
-            updated.knownMartialArts = { karate: updated.skills.martialArts };
-          }
-          if (!updated.ownedMartialArtChips) {
-            updated.ownedMartialArtChips = [];
-          }
-          if (!updated.equippedMartialArtChips) {
-            updated.equippedMartialArtChips = [];
-          }
-          return updated;
-        });
+        const sanitizedCharacters = injectPremades(
+          persistedChars,
+          dismissedPremadeIds,
+          CEMK_FOLIO_PREMADE_CHARACTERS,
+          buildCemk2077Characters()
+        );
 
         const validActiveId = p.activeCharacterId && sanitizedCharacters.some((c) => c.id === p.activeCharacterId)
           ? p.activeCharacterId
@@ -2659,6 +2698,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
         return {
           ...currentState,
           ...p,
+          dismissedPremadeIds,
           characters: sanitizedCharacters.length > 0 ? sanitizedCharacters : currentState.characters,
           activeCharacterId: validActiveId
         };

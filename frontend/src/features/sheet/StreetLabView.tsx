@@ -264,6 +264,9 @@ export const StreetLabView: React.FC = () => {
   const addEurodollarTransaction = useCharacterStore((state) => state.addEurodollarTransaction);
   const exportActiveCharacterJson = useCharacterStore((state) => state.exportActiveCharacterJson);
   const importCharacterJson = useCharacterStore((state) => state.importCharacterJson);
+  const exportFullBackup = useCharacterStore((state) => state.exportFullBackup);
+  const importFullBackup = useCharacterStore((state) => state.importFullBackup);
+  const restorePremades = useCharacterStore((state) => state.restorePremades);
   const updateCharacterLifepath = useCharacterStore((state) => state.updateCharacterLifepath);
   const updateCharacterDebt = useCharacterStore((state) => state.updateCharacterDebt);
   const payOffCharacterDebt = useCharacterStore((state) => state.payOffCharacterDebt);
@@ -416,6 +419,71 @@ export const StreetLabView: React.FC = () => {
     } else {
       alert('Error: El formato JSON no es válido o carece de campos obligatorios.');
     }
+  };
+
+  const handleDownloadFullBackup = () => {
+    const jsonStr = exportFullBackup();
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cpr-omni-deck-respaldo-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showStatus('¡Respaldo completo descargado!');
+  };
+
+  const readFileAsText = (file: File, onText: (text: string) => void) => {
+    const reader = new FileReader();
+    reader.onload = () => onText(String(reader.result ?? ''));
+    reader.onerror = () => alert('Error: no se pudo leer el archivo.');
+    reader.readAsText(file);
+  };
+
+  const handleRestoreBackupFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    readFileAsText(file, (text) => {
+      let count = 0;
+      let extrasCount = 0;
+      try {
+        const data = JSON.parse(text);
+        count = Array.isArray(data?.characters?.characters) ? data.characters.characters.length : 0;
+        extrasCount = data?.extras ? Object.values(data.extras).filter((v) => typeof v === 'string').length : 0;
+      } catch {
+        alert('Error: el archivo no es un JSON válido.');
+        return;
+      }
+      if (!confirm(`El respaldo contiene ${count} fichas y ${extrasCount} bloques de datos extra (GM, combate, red). ¿Continuar con la restauración?`)) return;
+      const replace = confirm('Aceptar = reemplazar todo, Cancelar = combinar');
+      const result = importFullBackup(text, replace ? 'replace' : 'merge');
+      if (!result.ok) {
+        alert(`Error: ${result.message}`);
+        return;
+      }
+      showStatus(result.message);
+      if (result.warnings.length > 0) alert(result.warnings.join('\n'));
+    });
+  };
+
+  const handleImportCharacterFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    readFileAsText(file, (text) => {
+      if (importCharacterJson(text)) {
+        showStatus('¡Ficha importada correctamente!');
+      } else {
+        alert('Error: El formato JSON no es válido o carece de campos obligatorios.');
+      }
+    });
+  };
+
+  const handleRestorePremades = () => {
+    if (!confirm('¿Restaurar las fichas premade que borraste? Se vuelven a agregar las que falten.')) return;
+    restorePremades();
+    showStatus('Premades restaurados.');
   };
 
   const handleCreateSubmit = (e: React.FormEvent) => {
@@ -664,6 +732,38 @@ export const StreetLabView: React.FC = () => {
           )}
         </div>
 
+      </div>
+
+      {/* Respaldo completo, restauración e importación por archivo */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <button
+          onClick={handleDownloadFullBackup}
+          className="px-2 py-1 bg-[#171924] hover:bg-[#10b981] hover:text-black text-[#10b981] text-[10px] font-mono-code font-bold rounded-xs border border-[#2a3044] transition-all"
+          title="Descargar un respaldo con todas las fichas y datos del GM"
+        >
+          RESPALDO COMPLETO ⬇
+        </button>
+        <label
+          className="px-2 py-1 bg-[#171924] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] text-[10px] font-mono-code font-bold rounded-xs border border-[#2a3044] transition-all cursor-pointer"
+          title="Restaurar un respaldo completo desde archivo"
+        >
+          RESTAURAR RESPALDO ⬆
+          <input type="file" accept=".json" className="hidden" onChange={handleRestoreBackupFile} />
+        </label>
+        <label
+          className="px-2 py-1 bg-[#171924] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] text-[10px] font-mono-code font-bold rounded-xs border border-[#2a3044] transition-all cursor-pointer"
+          title="Importar una ficha desde archivo JSON"
+        >
+          IMPORTAR FICHA (archivo)
+          <input type="file" accept=".json" className="hidden" onChange={handleImportCharacterFile} />
+        </label>
+        <button
+          onClick={handleRestorePremades}
+          className="px-2 py-1 bg-[#171924] hover:bg-[#f59e0b] hover:text-black text-[#f59e0b] text-[10px] font-mono-code font-bold rounded-xs border border-[#2a3044] transition-all"
+          title="Volver a agregar los premades borrados"
+        >
+          RESTAURAR PREMADES
+        </button>
       </div>
 
       {/* Formulario Inline: Crear Nuevo Personaje */}
