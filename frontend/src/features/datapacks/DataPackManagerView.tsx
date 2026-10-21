@@ -233,19 +233,20 @@ const OFFICIAL_13_MODULES: OfficialModuleData[] = [
     shortBadge: 'GUNMAS',
     era: '2045',
     version: 'v1.0.0',
-    sourcePdf: '12-Days-of-Gunmas.pdf',
+    sourcePdf: 'The-12-Days-of-Gunmas-v1.3_2022-01-12.pdf',
     accentColor: '#10b981',
     icon: <Crosshair className="w-4 h-4 text-[#10b981]" />,
     whatItBringsSummary:
-      'Suplemento festivo oficial con 12 armas de fuego y armas pesadas icónicas modificadas. Incluye variantes tácticas de fusiles, escopetas automáticas pesadas y lanzadores de granadas compactos.',
+      'Suplemento festivo oficial con 12 armas exóticas: Arasaka WAA Bullpup, Constitutional Arms Multi-Ammo Pistol, IMI Chainknife, Kendachi Dragon Flamethrower, Magnum Opus Hellbringer, Malorian Arms Sub-Flechette Gun, Militech Crusher, Mustang Arms ARS-5, Nomad Pneumatic Bolt Gun, Nova Model 757 Cityhunter, Stolbovoy ST-5 y Teen Dreem.',
     keyHighlights: [
-      '12 Armas únicas con perfiles de daño y calibres tácticos.',
-      'Accesorios de cañón y tambor de alta capacidad.',
-      'Perfiles de coste equilibrados para la calle.'
+      '12 armas exóticas con tabla de estadísticas impresa (p.7).',
+      'Dos armas de Calidad Pobre (Stolbovoy ST-5 y Teen Dreem) y una Excelente (Malorian Sub-Flechette).',
+      'Munición propia en la Nova Cityhunter y la Malorian Sub-Flechette.'
     ],
     mechanicsIntroduced: [
-      'Modificaciones de armas de calidad estándar y excelente',
-      'Mecanismos de fuego alternativo compactos'
+      'Munición mixta seleccionable disparo a disparo (Multi-Ammo Pistol)',
+      'Fuego incendiario: 4 de daño a HP por turno (Kendachi Dragon)',
+      'Motosierra con modo revved de 4d6 y Calidad Excelente (IMI Chainknife)'
     ],
     specificNavigation: {
       label: '🔫 Ver Arsenal en Street Lab',
@@ -341,20 +342,20 @@ const OFFICIAL_13_MODULES: OfficialModuleData[] = [
     shortBadge: 'PHARMA',
     era: '2045',
     version: 'v1.11',
-    sourcePdf: 'Hornets-Pharmacy-v1.11.pdf',
+    sourcePdf: 'Hornets-Pharmacy-Chemical-Wonderland-v1.11_2023-01-23.pdf',
     accentColor: '#ec4899',
     icon: <Pill className="w-4 h-4 text-[#ec4899]" />,
     whatItBringsSummary:
-      'El compendio oficial farmacéutico de Night City. Incluye drogas de combate (Black Lace, Blue Glass, Smash, Synthcoke, Berserker), biotoxinas avanzadas, antídotos y reglas de síntesis química para Medtechs.',
+      'Suplemento oficial Hornet\'s Pharmacy: A Chemical Wonderland (v1.11): 4 drogas callejeras (Berserker, Prime Time, Sixgun, Timewarp), 3 aditivos (Delaying, Distilling, Osmosis), 2 fármacos de Medtech (Sedative, Veritas), el dron asesino Suzumebachi y 2 implantes (Bodyweight AutoInjector, Pursuit Security Inc. Gas Jet).',
     keyHighlights: [
-      'Drogas de combate con efectos primarios, secundarios y DVs de adicción.',
-      'Biotoxinas de acción rápida que causan daño directo a HP.',
-      'Sistemas de síntesis en laboratorio criogénico y farmacéutico de Medtech.'
+      'Drogas con Efecto Primario, Efecto Secundario (DV17) y adicción.',
+      'Aditivos que se mezclan con Viales de Veneno o Biotoxina.',
+      'Dron Suzumebachi, Bodyweight AutoInjector y Gas Jet.'
     ],
     mechanicsIntroduced: [
-      'Tiradas de adicción a drogas de combate',
-      'Efectos secundarios de abstinencia',
-      'Fabricación de fármacos con Medical Tech'
+      'Adicción y efectos secundarios (DV17)',
+      'Mezcla de aditivos con venenos y biotoxinas',
+      'Humanity Loss temporal devuelta al terminar el efecto (Prime Time)'
     ],
     specificNavigation: {
       label: '🧪 Ver Laboratorio Medtech',

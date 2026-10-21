@@ -11,8 +11,8 @@ Registro de canonización del plan 5: por cada libro, qué se perdió, qué se g
 | Danger Gal | Pendiente (plan 5) | — |
 | Hardened | Pendiente (plan 5) | — |
 | Red Chrome Cargo | Pendiente (plan 5) | — |
-| Hornet's Pharmacy | Pendiente (plan 5) | — |
-| 12 Days of Gunmas | Pendiente (plan 5) | — |
+| Hornet's Pharmacy | Canon (v4.6.2) | [v4.6.2-farmacia-gunmas-errata.md](v4.6.2-farmacia-gunmas-errata.md) |
+| 12 Days of Gunmas | Canon (v4.6.2) | [v4.6.2-farmacia-gunmas-errata.md](v4.6.2-farmacia-gunmas-errata.md) |
 | Black Chrome | Pendiente (plan 5) | — |
-| Errata v1.25 | Pendiente (plan 5) | — |
+| Errata v1.25 | Canon (v4.6.2) | [v4.6.2-farmacia-gunmas-errata.md](v4.6.2-farmacia-gunmas-errata.md) |
 | Interface RED Vol. 1-3 | Fuera de alcance | — |

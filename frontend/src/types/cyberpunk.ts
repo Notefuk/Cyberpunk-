@@ -281,6 +281,7 @@ export interface WeaponItem {
   examples?: string;
   sourceBook?: SourceBookId;
   sourceBookTitle?: string;
+  sourcePage?: number;
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
   rebuild2077?: 'standard' | 'power' | 'smart' | 'tech';
@@ -312,6 +313,7 @@ export interface CyberwareItem {
   slots?: number;
   sourceBook?: SourceBookId;
   sourceBookTitle?: string;
+  sourcePage?: number;
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
@@ -343,6 +345,7 @@ export interface GearItem {
   notes?: string;
   sourceBook?: SourceBookId;
   sourceBookTitle?: string;
+  sourcePage?: number;
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
@@ -359,6 +362,7 @@ export interface DrugItem {
   description?: string;
   sourceBook?: SourceBookId;
   sourceBookTitle?: string;
+  sourcePage?: number;
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }
@@ -373,6 +377,7 @@ export interface AmmoItem {
   description?: string;
   sourceBook?: SourceBookId;
   sourceBookTitle?: string;
+  sourcePage?: number;
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
 }

@@ -247,6 +247,16 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.6.2] - 2026-10-21 (Hornet's Pharmacy, 12 Days of Gunmas y Errata v1.25 canon) [Claude Code · 2026-10-21]
+* **Category**: Canon / datos (plan 5, bloque 2). Registro detallado: `docs/canon-audit/v4.6.2-farmacia-gunmas-errata.md`.
+* **Hornet's Pharmacy** (pp. 2-5). Se perdió: Hover, Red Glass y Detox (inventados). Se ganó: 3 compuestos aditivos, Sedative, Veritas, el Suzumebachi Assassin Drone, Bodyweight AutoInjector y el Gas Jet. Se corrigió: Berserker, Prime Time, Sixgun y Timewarp (antes etiquetado como Core).
+* **12 Days of Gunmas** (pp. 3-7). Se perdió: Erebus, Fox y Kolokol (inventados). Se ganaron 11 armas. Se corrigió el Nova 757 Cityhunter.
+* **Errata v1.25**: Grafted Muscle & Bone Lace, Techtool, Rubber Ammo y Smoke corregidos en el pack.
+* **Modelo/UI**: `sourcePage?: number` en WeaponItem, CyberwareItem, GearItem, DrugItem y AmmoItem; `renderSourceBookBadge(sourceBook, sourcePage)` lo muestra en el Compendium.
+* **Pack**: se editaron a mano las dos copias (idénticas) y se replicaron los mismos cambios en `extract_core_pack.py`. **No se regenera** el pack con el script: este no está sincronizado (maxdoc-mk1, bounceback-mk1).
+* **Desvío**: la errata del Security Officer (Core p.415) no se aplicó porque el Security Operative de `enemiesCatalog.ts` no coincide con esa ficha; pasa a v4.7.0 (enemigos).
+* **Tests**: 44 (6 nuevos).
+
 ### [v4.6.1] - 2026-10-21 (Cyberfists of Fury canon) [Claude Code · 2026-10-21]
 * **Category**: Canon / reglas (plan 5, bloque 1: `docs/plans/plan5-canon-audit.md`). Fuente: Interface RED Vol. 4 pp. 74-84. Registro detallado (qué se perdió, qué se ganó y qué se corrigió, con páginas): `docs/canon-audit/v4.5.1-cyberfists.md`.
 * **Se perdió** (inventado, no existe en IR4): 10 formas (Animal Kung Fu, Chornobog's Kommando, Cyber-Wrestling, Hapkido, Jeet Kune Do, Jiu-Jitsu, Lethwei, Ninjutsu, Savate y Systema) y sus 20 movimientos.

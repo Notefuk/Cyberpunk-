@@ -1233,11 +1233,11 @@ export const GM_LOOT_TABLES: LootTable[] = [
     description: 'Sustancias ilícitas y contrabando valioso en el mercado clandestino.',
     entries: [
       { roll: 1, item: '4 Dosis de Blue Glass en frascos cuentagotas', value: '80 €$' },
-      { roll: 2, item: '3 Dosis de Timewarp en sellos sublinguales', value: '150 €$' },
+      { roll: 2, item: '3 Dosis de Timewarp en sellos sublinguales', value: '300 €$' },
       { roll: 3, item: 'Inyector con 2 dosis de Black Lace pura de laboratorio', value: '100 €$' },
       { roll: 4, item: 'Frasco con 5 dosis de Smash de alta graduación', value: '50 €$' },
       { roll: 5, item: 'Estimulante neuronal Sixgun de la Farmacia de Hornet', value: '100 €$' },
-      { roll: 6, item: 'Dosis de Berserk con adrenalina sintética de choque', value: '100 €$' },
+      { roll: 6, item: 'Dosis de Berserker con adrenalina sintética de choque', value: '100 €$' },
       { roll: 7, item: 'Bolsa con 5 dosis de Boost para hackers', value: '250 €$' },
       { roll: 8, item: 'Lingote de oro de contrabando con sello corporativo raspado', value: '1,000 €$' },
       { roll: 9, item: 'Lote de 10 dosis de Immunoblockers 2077 para ciberpsicosis', value: '1,000 €$' },

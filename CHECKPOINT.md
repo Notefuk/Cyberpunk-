@@ -6,62 +6,67 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
-**Última actualización**: [Claude Code · 2026-10-21]
-**Versión de la app**: v4.6.1 (en `main`, squash 5ed7296, PR #18; publicada en gh-pages y verificada en vivo)
-**Plan activo**: plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, `source` libro+página en cada ítem y registro en `docs/canon-audit/`. En curso: v4.5.1 Cyberfists (absorbe la fase 5 del plan 2). Plan 4 terminado en v4.6.0. Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
+**Última actualización**: [Claude Code · 2026-10-21] (cierre de sesión)
+**Versión de la app**: `main` = v4.6.1 (publicada en gh-pages). v4.6.2 está terminada en la rama `claude/v4.6.2-farmacia-gunmas-errata`, sin PR ni merge.
+**Plan activo**: plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, página de origen en cada ítem y registro en `docs/canon-audit/`. Bloques 1 (v4.6.1) y 2 (v4.6.2) hechos. Planes 1, 2 y 4 terminados. El plan 3 se perdió y lo reemplaza v4.7.0.
 
 ## En curso (a cargo)
 
-- Nada a medias. `main` libre. Siguiente bloque del plan 5: v4.6.2 (ver Traspaso).
+- [Claude Code · 2026-10-21] v4.6.2 en la rama `claude/v4.6.2-farmacia-gunmas-errata`: falta PR, merge y gh-pages (Giuliano lo deja para la próxima sesión). Antigravity: no tocar el pack, `extract_core_pack.py` ni `expansionRulesData.ts` hasta el merge.
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `main` @ commit "CHECKPOINT: v4.6.1 mergeada..." (pusheada: sí). gh-pages publicada con el build de v4.6.1.
-- A medias: nada.
-- Siguiente paso exacto: plan 5, v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 en una rama nueva (scout extrae del PDF con página, worker aplica, registro en `docs/canon-audit/`).
+- Rama y último commit: `claude/v4.6.2-farmacia-gunmas-errata` @ commit "CHECKPOINT: cierre de sesión" (pusheada: sí; e87c350 tiene el código de v4.6.2).
+- A medias: nada de código. tsc, 44 tests, build y navegador OK.
+- Siguiente paso exacto: abrir el PR de `claude/v4.6.2-farmacia-gunmas-errata` a `main`, mergear con squash, publicar en gh-pages (build de `frontend/dist` → force-push a `gh-pages`) y verificar en vivo.
+- Después: plan 5 v4.7.0 enemigos canon (Danger Gal, Hardened, Red Chrome Cargo, armas CEMK 2077 Tamayura/Achilles/Chao y la errata del Security Officer del Core p.415).
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
-- Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`. El Ripperdoc ahora está dividido en componentes en `frontend/src/features/cyberware/` (ver v4.6.0 abajo).
 
 ## Último trabajo terminado
 
-- [Claude Code · 2026-10-21] v4.6.1 Cyberfists of Fury canon, mergeada (PR #18, squash 5ed7296) y publicada (plan 5, bloque 1; cierra la fase 5 del plan 2). IR4 pp. 74-84: 23 formas y 46 movimientos con `sourcePage`; borradas 10 formas inventadas y agregadas 10 faltantes; corregidos los movimientos de las 13 restantes (ids conservados). `opposedBy` en los movimientos enfrentados. La UI muestra la página. Persist v2 migra los ids huérfanos. 38 tests. Registro: `docs/canon-audit/v4.5.1-cyberfists.md` + índice `docs/canon-audit/README.md`. JSON canon extraído (scratchpad de la sesión, no versionado).
-- [Claude Code · 2026-10-21] v4.6.0 Ripperdoc estilo Cyberpunk 2077 (plan 4), mergeada a `main` (PR #17, squash 458cc3c) y publicada. Componentes en `features/cyberware/`: `ripperdocZones.tsx`, `HoloBody.tsx` (holograma, 9 zonas), `ZoneCard.tsx`, `SlotBox.tsx`, `ZoneConnectors.tsx`, `ZoneDetailPanel.tsx`, `GoingMetalBanner.tsx`, `cyberwareCardArt.ts` (6 cartas del Mission Kit, visibles al inspeccionar). Fix: 'Cyberarm Option', 'Neuralware Option' y 'Borgware x2' sin zona. `animate-in`/`fade-in`/`zoom-in-95` definidas en `index.css`. 33 tests. Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
-- [Claude Code · 2026-10-21] v4.5.0 (plan 2, fase 4) Going Metal canon, mergeada a `main` (PR #16, squash 44baf2c) y publicada en https://notefuk.github.io/Cyberpunk-/. Rehecha desde el PDF porque el trabajo a medias de claude.ai nunca se había pusheado (también se perdió el plan 3).
-  - `goingMetalFbcData.ts` canon: 13 cuerpos `gm-*`, 20 ciberwares (con `gm-biosystem`), 6 de equipo, `ABOUT_FBCS_GUIDE`, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14, `LINEAR_FRAME_OMEGA_HP_CHART`. Sin `moveOverride`.
-  - Reglas: HL de conversión 14 + paquete y de cambio de cuerpo = paquete; HP al máximo; penalizador de armadura del chasis; REF/DEX/MOVE con mínimo `statFloor`; FBC sin Wound States, sin Speedheal ni Cryotank x2; inmune a 9 críticas y su +5; `Borgware x2` = -8 en terapia. Pack sin 29 `fbc-*` + 4 inventados; `fbc-rules` reescrito. 32 tests.
-  - Desvíos: en el pack había 29 `fbc-*`, no 33; el +5 del crítico vive en `combatEngine.ts` (~l. 237), así que el HUD devuelve hasta 5 HP con `adjustHp` cuando un FBC es inmune.
-- [Claude Code · 2026-10-21] Setup de Claude Code local: subagentes `cpr-scout`/`cpr-worker`/`github-web-deployer` en Sonnet; skill `checkpoint` + hook `Stop` `checkpoint-guard.sh`; skill de PDFs con lectura local; `.gitattributes` con LF para `.sh`; GitHub CLI portable v2.102.1 en `.tools/` (ignorado) con login de Notefuk, usar `scripts\gh.cmd` / `./scripts/gh` (ver CLAUDE.md "GitHub CLI portable").
-- [Claude Code · 2026-10-20] v4.4.0 (plan 2, fase 3): sin modos de carga, roles del Core pp. 143-162, Combat Awareness validado, Pharmaceuticals canon, Special Moves del Core, tope de Humanidad por terapia, granadas por tabla de rango, curación con estabilización. Desvío: las menciones a Ballistic Coprocessor/Tamayura/Achilles/Chao en `enemiesCatalog.ts` y `redChromeCargoData.ts` no se tocaron: el catálogo de PNJ entero parece tener contenido inventado y necesita su propia auditoría (preguntar al usuario).
-- [Claude Code · 2026-10-20] v4.3.1 (plan 2, fase 2): 13 armas CEMK canon, ciberware y Immunoblockers con costo/HL del libro, inventados borrados, Rebuilds 1,000 €$ sin Maker ni Ballistic Coprocessor, Boosterganger BODY 2. Desvío: X12 Hardpoint era falso positivo. Quedan menciones a Ballistic Coprocessor/Tamayura en `enemiesCatalog.ts` (~355, 1009-1011, 1129) y `redChromeCargoData.ts` (~792, 1012, 1058, 1087) para v4.4.0.
-- [Claude Code · 2026-10-20] v4.3.0 (plan 2, fase 1): NET Actions = 3 (`NET_ACTIONS_PER_TURN`), Quickhacks sin RAM (14 `qh-*` fuera del pack), alcance por conexión y 1 Quickhack por turno en el HUD, `BLACK_ICE_STATS`, dificultades Core, Scanner sin DV, Flak/Shield, `rollCheckD10`/`beatsDv`. Desvío: los Checks de rol con `>= DV` (Medtech DV 13, EMP DV 15 del HUD) pasan a v4.4.0.
-- [Claude Code · 2026-10-20] v4.2.1 (plan 1, fase 5): React.lazy, calculateIncomingImpact en el motor, 14 tests Vitest (`npm test`), código/deps muertas fuera, PIN GM `cpr_gm_pin_v1`. Plan 1 completo.
-- [Claude Code · 2026-10-20] v4.2.0 (plan 1, fase 4): melee enfrentado, Cyberarm 2d6, munición/autofire, empates, quickhacks con WILL real. Desvíos: la "tabla de DV duplicada" de types/cyberpunk.ts eran ejemplos correctos; la calculadora al motor pasa a fase 5.
-- [Claude Code · 2026-10-20] v4.1.1 (plan 1, fase 3): FBC reversible, HP máx con BODY efectivo, parseHumanityLossAverage, validaciones, version+migrate. B1 se mantiene (premades vuelven, pedido del usuario).
-- [Claude Code · 2026-10-20] v4.1.0 (plan 1, fase 2): Mortally Wounded, botón Tirar Death Save, críticos automáticos en la calculadora, Cracked Skull x3, EMP efectiva. Desvío: B11 queda como texto (objetivo es PNJ).
-- [Claude Code · 2026-10-20] v4.0.3 (plan 1, fase 1): tablas de críticos canon Core pp. 187-188 con re-tirada, Neural Link 500eb, munición Smart, Asp ATK 2, `<` de Seriously Wounded en CLAUDE.md.
-- [Claude Code · 2026-10-20] Migración de las instrucciones de Antigravity a Claude Code (PRs #1-#4), `CHECKPOINT.md`, convención de firma de autoría y flujo de planificación con `docs/plans/`.
-  - `CLAUDE.md`, subagentes `.claude/agents/` (`cpr-scout` Haiku, `cpr-worker` Sonnet, `github-web-deployer` Haiku) y skills `.claude/skills/` (`cpr-pdf-extractor`, `cpr-version-release`).
-  - `.agent/` queda como config de Antigravity, con copia de `AGENTS.md`, `gemini-scout` y `gemini-worker`.
-- [Claude Code · 2026-10-20] Acceso a los PDFs desde Claude verificado: se leyó el Core Rulebook p. 174 trayéndolo desde la PC del usuario.
+- [Claude Code · 2026-10-21] v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 canon (plan 5, bloque 2):
+  - Se borraron 6 ítems inventados (Hover, Red Glass, Detox, Erebus, Fox, Kolokol) y se agregaron 19 canon (8 de Hornet's, 11 de Gunmas).
+  - Se corrigieron Berserker, Prime Time, Sixgun, Timewarp, el Cityhunter y 5 erratas.
+  - `sourcePage` en 5 tipos, visible en el Compendium (`renderSourceBookBadge(sourceBook, sourcePage)`).
+  - Registro: `docs/canon-audit/v4.6.2-farmacia-gunmas-errata.md`.
+- [Claude Code · 2026-10-21] v4.6.1 Cyberfists of Fury canon (PR #18, squash 5ed7296, publicada):
+  - IR4 pp. 74-84: 23 formas y 46 movimientos con página; se borraron 10 formas inventadas y se agregaron 10.
+  - `opposedBy` en los movimientos enfrentados; persist v2 migra los ids huérfanos.
+  - Registro: `docs/canon-audit/v4.5.1-cyberfists.md`.
+- Versiones anteriores (v4.0.3 a v4.6.0, setup de Claude Code y gh portable): ver `CHANGELOG_AND_ARCHITECTURE.md`.
 
 ## Contexto permanente
 
-- Dudas del libro (anotadas en docs): `packageHlAverage` impreso no siempre cuadra con su fórmula (Enforcer 53 vs 55 en el ejemplo de p. 95); BODY de Sigma/Beta y SP de Skin Weave/Subdermal salen del Core.
-- Fuera de alcance de v4.5.0: marcos Black Chrome (Vermilion, Fūma Kotarō); el HL de cada pieza del paquete no se instala como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad.
-- Decisiones del usuario: todo canon, borrar lo inventado (no homebrew), NET Actions según CEMK (hasta 3), subagentes todos en Sonnet, publicar en gh-pages al cerrar versión.
-- PDFs locales: Going Metal = `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\ilide.info-going-metal-pr_f86aec80bbb3b8b8c08ede7e5181f832.pdf` (21 págs.; impresa = PDF + 90). Interface RED Vol. 1-4 en `Sourcebooks\Interface-RED\`.
+- Método del plan 5:
+  - Un scout extrae el canon del PDF (`.venv\Scripts\python.exe -I scripts\inspect_pdf_pages.py "<pdf>" a b`) a un JSON con página.
+  - Un worker aplica los cambios con una spec quirúrgica. Yo audito el diff y corro tsc, tests, build y navegador.
+  - El registro va en `docs/canon-audit/` con tres listas: se perdió, se ganó y se corrigió.
+- **Pack**: las dos copias (`frontend/src/data/` y `data/`) deben quedar idénticas. Se editan a mano y el cambio se replica en `scripts/extract_core_pack.py`.
+  - **No correr el script**: está desincronizado (tiene maxdoc-mk1 y bounceback-mk1, que no están en el pack).
+- Numeración: el plan 5 dice v4.5.1/v4.6.1/…, pero se corre un paso porque `main` ya estaba en v4.6.0. Próximas versiones: v4.7.0 enemigos, v4.8.0 Black Chrome + catálogo de vehículos (decidido: catálogo + vista simple), v4.8.1 docs.
+- Decisiones de Giuliano:
+  - Todo canon: borrar lo inventado, sin homebrew. NET Actions según CEMK (hasta 3).
+  - Subagentes en Sonnet. Publicar en gh-pages al cerrar cada versión.
+  - IR Vol. 1-3 quedan para después, como libros nuevos.
+- PDFs: `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\`.
+  - Carpetas: `Core-Rules\`, `Sourcebooks\` (Interface RED Vol. 1-4), `DLC-Supplements\` y `Reference-Aids\` (Errata).
+  - Going Metal está en la raíz de esa carpeta (impresa = PDF + 90). En IR4, PDF = impresa + 1.
+- Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173). GitHub CLI portable: `scripts\gh.cmd` / `./scripts/gh`.
 
 ## Próximos pasos
 
-1. Plan 5 (`docs/plans/plan5-canon-audit.md`), en orden: v4.6.2 Farmacia + Gunmas + Errata; v4.7.0 enemigos canon (Danger Gal, Hardened, Red Chrome Cargo y CEMK 2077; reemplaza al plan 3 perdido); v4.8.0 Black Chrome completo + catálogo de vehículos; v4.8.1 docs. Desvío de numeración: el plan dice v4.5.1/v4.6.1/..., pero como `main` ya estaba en v4.6.0, cada versión corre un paso (Cyberfists = v4.6.1).
-2. Plan 3: se perdió y lo reemplaza el bloque de enemigos del plan 5 (v4.7.0).
-3. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.
-4. GM Master Screen (`FixerDeckView.tsx`).
+1. PR, merge y publicación de v4.6.2.
+2. Plan 5 v4.7.0: enemigos canon.
+   - Danger Gal: 16 facciones y ~118 fichas de PNJ (pp. 10-143), más el New Gear (pp. 144-149).
+   - Hardened: 4 Mooks, 6 Lieutenants, 6 Mini-Bosses y el Punknaught.
+   - Red Chrome Cargo, las armas CEMK 2077 (verificarlas en el zip del Mission Kit) y la errata del Security Officer.
+3. Plan 5 v4.8.0: Black Chrome completo (~160 ítems, más Black Chrome+ de IR4) y catálogo de vehículos. Después, v4.8.1: totales reales en los docs.
+4. Después del plan 5: modo Settings, GM Master Screen (`FixerDeckView.tsx`) y libros nuevos (IR Vol. 1-3, Gang Guide, Woodchipper…).
 
 ## Notas y bloqueos
 
-- Antes de volver a Antigravity, `git pull` en `main` en `C:\Users\TeseoHeracles\cpr-omni-deck`. Las ramas `claude/v4.5.0-going-metal` y `claude/project-thread-5rr1t9` ya no tienen nada que no esté en `main`.
-- Seguridad: el remote `origin` tiene un token de GitHub en la URL; Giuliano debe revocarlo. Ahora `gh` maneja el login, así que se puede pasar el remote a una URL sin token.
+- Seguridad: el remote `origin` tiene un token de GitHub en la URL; Giuliano debe revocarlo. `gh` ya maneja el login, así que se puede pasar el remote a una URL sin token.
+- El Engine no aplica el efecto de Grafted Muscle (el +2 a BODY es solo texto en el Compendium).
 - El hook `Stop` solo corre en sesiones abiertas en la carpeta del repo.
 - Los docs mencionan `characterLifepathData.ts` / `ROLE_SPECIFIC_LIFEPATHS`, que no existen en el código.
