@@ -55,6 +55,8 @@ export interface CreatorPurchase {
   qty: number;
   humanityLoss: number;
   sourceBook?: string;
+  /** Armadura por ubicación (Core p.97). Sin location = vale para cabeza y cuerpo (compatibilidad). */
+  location?: 'head' | 'body';
 }
 
 export interface FashionPurchase {
@@ -1170,7 +1172,8 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
     }
     for (const p of draft.purchases) {
       const a = p.category === 'armor' ? armorDb.find((x) => x.id === p.catalogId) : undefined;
-      if (a && !/shield/i.test(a.name)) out.push({ name: a.name, sp: a.sp ?? 0, penalty: a.penalty ?? 0 });
+      const locationOk = !p.location || p.location === (kind === 'Head' ? 'head' : 'body');
+      if (a && locationOk && !/shield/i.test(a.name)) out.push({ name: a.name, sp: a.sp ?? 0, penalty: a.penalty ?? 0 });
     }
     return out;
   };

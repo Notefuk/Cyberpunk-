@@ -382,4 +382,21 @@ describe('Construcción de la ficha', () => {
     expect(sheet.id).toBe('char-test-4');
     expect(sheet.creationMethod).toBe('pregen');
   });
+
+  it('la armadura comprada con location solo cuenta en esa ubicación; sin location vale en ambas (Core p.97)', () => {
+    const base = { ...streetratSolo('2045'), handle: 'Tester', packageChoices: {} };
+    const buy = (location?: 'head' | 'body'): CreatorDraft => ({
+      ...base,
+      purchases: [{ category: 'armor', catalogId: 'heavy-armorjack', name: 'Heavy Armorjack', cost: 100, qty: 1, humanityLoss: 0, ...(location ? { location } : {}) }]
+    });
+    const head = buildCharacterSheetFromDraft(buy('head'), 'a').sheet;
+    expect(head.headArmor.maxSp).toBe(13);
+    expect(head.bodyArmor.maxSp).toBe(11);
+    const body = buildCharacterSheetFromDraft(buy('body'), 'b').sheet;
+    expect(body.bodyArmor.maxSp).toBe(13);
+    expect(body.headArmor.maxSp).toBe(11);
+    const both = buildCharacterSheetFromDraft(buy(), 'c').sheet;
+    expect(both.headArmor.maxSp).toBe(13);
+    expect(both.bodyArmor.maxSp).toBe(13);
+  });
 });
