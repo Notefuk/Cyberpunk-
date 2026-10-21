@@ -158,12 +158,11 @@ export const CREATION_METHODS_CATALOG: CreationMethodInfo[] = [
     subtitle: 'Salta directo a Night City encarnando leyendas de 2045 o 2077',
     difficultyBadge: 'Instant-Play / Canónico',
     summary:
-      'Fichas oficiales completas listas para la acción, extraídas directamente del Single-Shot Pack 2045 y del Cyberpunk Edgerunners Mission Kit 2077. Incluyen estadísticas canónicas, inventario, ciberware preinstalado, trasfondo e ilustraciones.',
+      'Fichas oficiales listas para jugar: las 5 del Easy Mode del Core (2045) y los 7 Folios de CEMK (2077), tal como las imprime cada libro.',
     whatYouGet: [
-      '7 Edgerunners oficiales de CEMK 2077: David Martinez, Lucy, Rebecca, Maine, Kiwi, Falco y Pilar.',
-      '6 Edgerunners oficiales de 2045 (Single-Shot Pack): Forty, Torch, Redtail, Hound, Bug y Doc.',
-      '4 Plantillas de Rivales/Enemigos jugables: Arasaka Agent, Maelstrom Psycho, Militech Trooper y Tyger Claws Ronin.',
-      'Ficha 100% armada con armas en mano, munición, SP y Lifepath canónico listo en 1 clic.'
+      '7 Folios de CEMK 2077: Hardpoint, Wrench, Connect, Bluescreen, Insurance, Thorn y Maven.',
+      '5 pregens del Easy Mode (2045): Forty, Mover, Torch, Redtail y 24/7.',
+      'Las pregens CEMK son fichas de CEMK: no siguen los límites del Core y las skills que no traen quedan en 0.'
     ]
   }
 ];
