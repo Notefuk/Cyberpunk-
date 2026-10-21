@@ -1,0 +1,6 @@
+#!/bin/bash
+# GitHub CLI portable para Git Bash: binario y configuración viven en .tools/ del repo (ignorado por git).
+repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export GH_CONFIG_DIR="$repo_dir/.tools/gh-config"
+export GH_NO_UPDATE_NOTIFIER=1
+exec "$repo_dir/.tools/gh/bin/gh.exe" "$@"

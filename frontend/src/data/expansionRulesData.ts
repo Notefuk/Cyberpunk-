@@ -1,5 +1,6 @@
 import type { CharacterEra } from '../types/cyberpunk';
 import type { SourceBookId } from './enemiesCatalog';
+import { ABOUT_FBCS_GUIDE, FBC_13_BODIES } from './goingMetalFbcData';
 
 export interface SourceBookMeta {
   id: SourceBookId | 'all';
@@ -187,40 +188,24 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
     title: 'Conversión de Cuerpo Completo (Full Body Conversion — FBC)',
     subtitle: 'La transformación total de carne a cromo: Biovaina y chasis robóticos acorazados',
     sourceBook: 'interface_red',
-    sourceBookTitle: 'Interface RED Vol. 3 (Going Metal)',
+    sourceBookTitle: 'Going Metal',
     era: '2045',
     categoryBadge: 'CIBERNETICA AVANZADA // BORG',
-    introDescription:
-      'Una Conversión de Cuerpo Completo (FBC) no es simplemente instalar muchos implantes: es la extirpación quirúrgica total del cerebro, cerebelo y tronco encefálico de un ser humano para encapsularlo en una Biovaina blindada (Biopod). Esta Biovaina se conecta luego a un chasis robótico de tamaño completo, otorgando fuerza titánica, blindaje estructural de grado militar e inmunidad absoluta a todas las debilidades biológicas de la carne.',
-    howItWorksSteps: [
-      'Paso 1 (La Biovaina / Biopod): El cerebro del personaje se preserva en un contenedor con soporte vital autónomo. La Biovaina posee SP 15 o SP 18 de blindaje y puede retirarse de un chasis dañado para instalarse en otro chasis en una clínica médica en solo 1 hora.',
-      'Paso 2 (Elección del Chasis): El personaje adquiere uno de los 7 chasis oficiales (IEC Alpha, Gemini, Enforcer, Samson, Dragoon, DaiOni o Vermilion), cada uno con estadísticas fijas de BODY, MOVE, SP estructural y ranuras de ciberware preinstaladas.',
-      'Paso 3 (Instalación de Cromo FBC): Los implantes instalados en un chasis FBC cuestan solo la MITAD de la pérdida de Humanidad habitual (mínimo 1), ya que el chasis ya es una máquina y el cerebro ya ha superado el trauma de perder el cuerpo de carne.',
-      'Paso 4 (Mantenimiento y Reparación): Los Puntos de Golpe (HP) de un FBC no se curan con medicina biológica tradicional, sino que se reparan mediante la habilidad Cybertech con piezas y talleres mecánicos.'
-    ],
-    keyBenefits: [
-      'Inmunidad absoluta a gases tóxicos, asfixia, ahogamiento, venenos biológicos y drogas (salvo software viral inyectado en la Biovaina).',
-      'No sufre heridas críticas de carne (hemorragias, desgarros musculares, pérdida de ojos biológicos); sus heridas críticas son mecánicas y se reparan con Cybertech.',
-      'Intercambiabilidad de cuerpos: Un edgerunner puede usar un chasis civil discreto (Raven Gemini) para una gala corporativa y transferirse a un chasis de guerra (IEC Dragoon) para un asalto nocturno.',
-      'Fuerza sobrehumana de serie: Chasis con BODY 11 a 15 que permiten empuñar armas pesadas de dos manos a una mano sin penalizador.'
-    ],
-    drawbacksAndRisks: [
-      'Costo exorbitante: Una conversión FBC completa con chasis de combate cuesta entre 25,000 €$ y 100,000 €$.',
-      'Trauma neural masivo: La conversión inicial exige una tirada de Humanidad severa que exige terapia psicológica intensiva obligatoria.',
-      'Dependencia de recarga y refrigerante: Requiere mantenimiento periódico de fluidos nutritivos para mantener vivo el cerebro dentro del Biopod.',
-      'Vulnerabilidad a pulsos EMP y microondas: Las armas EMP y munición eléctrica causan daño crítico que puede paralizar el chasis entero.'
-    ],
+    introDescription: ABOUT_FBCS_GUIDE.summary,
+    howItWorksSteps: ABOUT_FBCS_GUIDE.conversionSteps.map((st) => `Paso ${st.step} (${st.title}): ${st.detail}`),
+    keyBenefits: ABOUT_FBCS_GUIDE.tacticalProsAndCons.pros,
+    drawbacksAndRisks: ABOUT_FBCS_GUIDE.tacticalProsAndCons.cons,
     referenceTable: {
-      headers: ['Chasis FBC', 'Rol Principal', 'BODY', 'MOVE', 'SP Base', 'Coste (€$)', 'HL Base'],
-      rows: [
-        ['IEC Alpha Class', 'Civil / Polivalente', '10', '5', 'SP 11', '15,000 €$', '14 (4d6)'],
-        ['Raven Gemini', 'Infiltración / Réplica Humana', '8', '6', 'SP 11', '25,000 €$', '14 (4d6)'],
-        ['Militech Enforcer', 'Seguridad / Antidisturbios', '12', '5', 'SP 13', '30,000 €$', '21 (6d6)'],
-        ['Zetatech Samson', 'Construcción / Industrial', '13', '4', 'SP 13', '28,000 €$', '21 (6d6)'],
-        ['Vermilion Borg', 'Asalto Sigiloso / Shinobi', '11', '8', 'SP 13', '35,000 €$', '24 (7d6)'],
-        ['IEC Dragoon', 'Dominación Militar Pesada', '14', '7', 'SP 15', '50,000 €$', '28 (8d6)'],
-        ['Arasaka DaiOni', 'Superpesado Experimental', '15', '6', 'SP 18', '100,000 €$', '35 (10d6)']
-      ]
+      headers: ['Cuerpo', 'BODY', 'REF/DEX/MOVE mín.', 'SP', 'Penalizador', 'HL paquete', 'Pág.'],
+      rows: FBC_13_BODIES.map((b) => [
+        b.name,
+        String(b.bodyOverride),
+        b.statFloor ? String(b.statFloor) : '—',
+        `SP ${b.baseArmorSp}`,
+        b.armorPenalty ? `-${b.armorPenalty}` : '—',
+        String(b.packageHlAverage),
+        String(b.sourcePage)
+      ])
     }
   },
 

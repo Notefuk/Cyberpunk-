@@ -152,8 +152,9 @@ export function calculateWeaponAttackBreakdown(
   if (statKey === 'BODY' && character.fbcState?.isFullBodyConversion && (character.fbcState.bodyOverride ?? 0) > 0) {
     statVal = Math.max(statVal, character.fbcState.bodyOverride);
   }
-  if (statKey === 'MOVE' && character.fbcState?.isFullBodyConversion && (character.fbcState.moveOverride ?? 0) > 0) {
-    statVal = character.fbcState.moveOverride;
+  // Going Metal p. 107-108: en FBC, REF/DEX/MOVE no bajan del mínimo del chasis.
+  if ((statKey === 'REF' || statKey === 'DEX' || statKey === 'MOVE') && character.fbcState?.isFullBodyConversion) {
+    statVal = Math.max(statVal, character.fbcState.statFloor ?? 0);
   }
   const skillVal = character.skills?.[skillKey] ?? 0;
 
@@ -174,8 +175,12 @@ export function calculateWeaponAttackBreakdown(
   const woundThreshold = calculateSeriouslyWoundedThreshold(maxHp);
   const isMortallyWoundedNow = isMortallyWounded(character.currentHp ?? 0);
   const isSeriouslyWounded = (character.currentHp ?? 0) < woundThreshold;
-  const seriousWoundPenalty = isMortallyWoundedNow ? 4 : isSeriouslyWounded ? 2 : 0;
-  if (isMortallyWoundedNow) {
+  // Going Metal p. 94: un FBC ignora los penalizadores de Wound State.
+  const isFbcChar = Boolean(character.fbcState?.isFullBodyConversion);
+  const seriousWoundPenalty = isFbcChar ? 0 : isMortallyWoundedNow ? 4 : isSeriouslyWounded ? 2 : 0;
+  if (isFbcChar) {
+    // sin penalizador de Wound State
+  } else if (isMortallyWoundedNow) {
     penaltyBreakdown.push('[Salud] Mortalmente Herido (<1 HP): -4');
   } else if (seriousWoundPenalty > 0) {
     penaltyBreakdown.push(`[Salud] Gravemente Herido (<${woundThreshold} HP): -2`);
@@ -248,17 +253,17 @@ export function calculateWeaponAttackBreakdown(
 }
 
 export function getEffectiveMove(character: CharacterSheet): number {
-  let baseMove = character.stats?.MOVE ?? 0;
-  if (character.fbcState?.isFullBodyConversion && (character.fbcState.moveOverride ?? 0) > 0) {
-    baseMove = character.fbcState.moveOverride;
-  }
+  const isFbc = Boolean(character.fbcState?.isFullBodyConversion);
+  const baseMove = isFbc
+    ? Math.max(character.stats?.MOVE ?? 0, character.fbcState?.statFloor ?? 0)
+    : (character.stats?.MOVE ?? 0);
   let penalty = 0;
   const headPen = Math.abs(character.headArmor?.penalty ?? 0);
   const bodyPen = Math.abs(character.bodyArmor?.penalty ?? 0);
   penalty += Math.max(headPen, bodyPen);
 
   // Core p. 186: Mortally Wounded da -6 a MOVE (mínimo 1).
-  if (isMortallyWounded(character.currentHp ?? 0)) {
+  if (!isFbc && isMortallyWounded(character.currentHp ?? 0)) {
     penalty += 6;
   }
 
@@ -420,7 +425,8 @@ export function naturalHealingPerDay(body: number, hasEnhancedAntibodies = false
 }
 
 // Core p. 150: Speedheal cura BODY + WILL; no sirve en Mortally Wounded y solo 1 vez por día.
-export function speedhealAmount(body: number, will: number, currentHp: number): number {
+export function speedhealAmount(body: number, will: number, currentHp: number, isFbc = false): number {
+  if (isFbc) return 0;
   return isMortallyWounded(currentHp) ? 0 : body + will;
 }
 
@@ -434,7 +440,8 @@ export function calculateTherapyMaxHumanity(
   for (const cw of installed) {
     const hl = cw.humanityLoss === undefined ? 7 : parseHumanityLossAverage(String(cw.humanityLoss));
     if (hl === 0) continue;
-    cap -= (cw.type || '').toLowerCase() === 'borgware' ? 4 : 2;
+    const cwType = (cw.type || '').toLowerCase();
+    cap -= cwType === 'borgware x2' ? 8 : cwType === 'borgware' ? 4 : 2;
   }
   return Math.max(0, cap);
 }

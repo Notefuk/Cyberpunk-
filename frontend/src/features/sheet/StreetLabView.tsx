@@ -1018,12 +1018,12 @@ export const StreetLabView: React.FC = () => {
         {!isStatsCollapsed && (
           <div className="grid grid-cols-5 lg:grid-cols-10 gap-1.5 animate-fade-in relative z-30 overflow-visible">
             {STAT_KEYS.map((stat, idx) => {
-              // Con Full Body Conversion el chasis reemplaza BODY y MOVE sin pisar los stats base.
-              const fbcMove = activeChar?.fbcState?.isFullBodyConversion ? activeChar.fbcState.moveOverride : 0;
+              // Con Full Body Conversion el chasis reemplaza BODY y fija un mínimo a REF/DEX/MOVE sin pisar los stats base.
+              const isFbcActive = Boolean(activeChar?.fbcState?.isFullBodyConversion);
               const val = stat === 'BODY' && activeChar
                 ? getEffectiveBody(activeChar)
-                : stat === 'MOVE' && fbcMove > 0
-                  ? fbcMove
+                : isFbcActive && (stat === 'REF' || stat === 'DEX' || stat === 'MOVE')
+                  ? Math.max(activeChar?.stats?.[stat] ?? 6, activeChar?.fbcState?.statFloor ?? 0)
                   : activeChar?.stats?.[stat] ?? 6;
               const penalty = getStatPenalty(stat);
               const isRightSide = idx >= 5;
@@ -3535,9 +3535,10 @@ export const StreetLabView: React.FC = () => {
                 };
 
                 const handleInjectSpeedheal = () => {
-                  const healAmount = speedhealAmount(effBody, effWill, currentHp);
+                  const isFbcChar = Boolean(activeChar?.fbcState?.isFullBodyConversion);
+                  const healAmount = speedhealAmount(effBody, effWill, currentHp, isFbcChar);
                   if (healAmount === 0) {
-                    setRestFeedback('Speedheal no funciona en Mortally Wounded: primero hay que estabilizar (Core p. 150).');
+                    setRestFeedback(isFbcChar ? 'Speedheal no funciona en un FBC' : 'Speedheal no funciona en Mortally Wounded: primero hay que estabilizar (Core p. 150).');
                     setTimeout(() => setRestFeedback(null), 4000);
                     return;
                   }

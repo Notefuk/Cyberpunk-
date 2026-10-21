@@ -12,7 +12,8 @@ import {
   isValidSoloAllocation,
   naturalHealingPerDay,
   speedhealAmount,
-  calculateTherapyMaxHumanity
+  calculateTherapyMaxHumanity,
+  getEffectiveMove
 } from '../characterEngine';
 import { MARTIAL_ARTS_FORMS, SHARED_MARTIAL_ARTS_MOVES } from '../../data/cyberfistsMartialArtsData';
 import { beatsDv, calculateIncomingImpact, createDamageRoll, rollCheckD10 } from '../combatEngine';
@@ -249,5 +250,35 @@ describe('Roles, curación y Humanidad del Core', () => {
     const bone = core.flatMap((f) => f.moves).find((m) => m.name === 'Bone Breaking Strike');
     expect(bone?.isOpposed).toBe(true);
     expect(SHARED_MARTIAL_ARTS_MOVES[0].resolutionDv).toBe(13);
+  });
+});
+
+describe('Full Body Conversion (Going Metal pp. 94, 107-108)', () => {
+  const fbc = (statFloor: number): CharacterSheet['fbcState'] => ({
+    isFullBodyConversion: true,
+    hasBiopod: true,
+    activeChassisId: 'test',
+    activeChassisName: 'Test',
+    bodyOverride: 10,
+    statFloor,
+    baseArmorSp: 11,
+    immunities: []
+  });
+  it('MOVE no baja del mínimo del chasis y lo respeta si es mayor', () => {
+    const low = baseCharacter({ stats: { ...baseCharacter().stats, MOVE: 4 }, fbcState: fbc(6) });
+    const high = baseCharacter({ stats: { ...baseCharacter().stats, MOVE: 8 }, fbcState: fbc(6) });
+    expect(getEffectiveMove(low)).toBe(6);
+    expect(getEffectiveMove(high)).toBe(8);
+  });
+  it('FBC Mortally Wounded no pierde MOVE por Wound State (p. 94)', () => {
+    const c = baseCharacter({ currentHp: 0, fbcState: fbc(6) });
+    expect(getEffectiveMove(c)).toBe(6);
+  });
+  it('Speedheal no funciona en un FBC', () => {
+    expect(speedhealAmount(6, 6, 30, true)).toBe(0);
+  });
+  it('Borgware x2 baja 8 el tope de terapia', () => {
+    const base = calculateTherapyMaxHumanity(6, []);
+    expect(calculateTherapyMaxHumanity(6, [{ humanityLoss: '7', type: 'Borgware x2' }])).toBe(base - 8);
   });
 });

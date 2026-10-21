@@ -1,8 +1,8 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v4.4.0 OPERATIVO`**  
-> **FECHA DE CORTE**: [Claude Code · 2026-10-20]  
-> **PLAN ACTIVO**: `docs/plans/plan2-auditoria-expansiones.md` (contenido canon de expansiones; fases 1 a 3 hechas, v4.3.0 a v4.4.0). Plan 1 terminado en v4.2.1.  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v4.5.0 OPERATIVO`**  
+> **FECHA DE CORTE**: [Claude Code · 2026-10-21]  
+> **PLAN ACTIVO**: `docs/plans/plan2-auditoria-expansiones.md` (contenido canon de expansiones; fases 1 a 4 hechas, v4.3.0 a v4.5.0; siguiente v4.5.1 Cyberfists of Fury). Plan 1 terminado en v4.2.1.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 
@@ -29,7 +29,7 @@ CPR Omni-Deck es una plataforma táctica digital offline-first de alta fidelidad
 * **Disciplinas Marciales Ergonómicas**: 27 artes marciales colapsables en formato compacto con fórmula estándar `Nombre • Stats • Fuente` (Core Rulebook + Interface RED Vol. 4).
 * **Módulos de Sistema Principales**: 8 sistemas completamente integrados y operativos.
 * **Enemigos y Facciones GM**: 44 perfiles base + 15 facciones oficiales (118 PNJs de Danger Gal Dossier).
-* **Chasis e Implantes de Conversión Total (FBC)**: 13 cuerpos FBC y 16 ciberwares de cuerpo completo (*Going Metal*).
+* **Chasis e Implantes de Conversión Total (FBC)**: 13 cuerpos FBC canon y 20 ciberwares de cuerpo completo (*Going Metal* pp. 91-111, cerrado en v4.5.0).
 * **Módulos de Ergonomía Táctica**: Matriz de Blindaje SP/SDP, Calculadora Táctica de Daño en tiempo real y Workspace reconfigurable en 3, 4 o 5 columnas con arranque de centro despejado (`cpr_combat_active_center_v3`).
 
 ---
@@ -242,6 +242,7 @@ flowchart TD
     - *13 FBC Bodies*: 13 cuerpos FBC oficiales completos (Aquarius, Dragoon, Enforcer, Samson, Wingman, Gemini, Spyder, etc.).
     - *16 New Pieces of Cyberware*: 16 implantes exclusivos para chasis cyborg y blindajes estructurales.
     - *About FBCs Section*: Guía canónica de lore, protocolos de instalación y conversión en compendio.
+  - **[Claude Code · 2026-10-21] Going Metal cerrado en v4.5.0 (plan 2, fase 4)**: datos canon pp. 91-111 (13 cuerpos, 20 ciberwares, 6 de equipo), conversión con HL, inmunidades de FBC y limpieza de lo inventado. Los dos pendientes de abajo se resolvieron borrando `external-linear-frame-omega` y `grenade-laser-chaff` del pack por no ser canon. Pendiente nuevo: marcos Black Chrome (Vermilion, Fūma Kotarō), HL por pieza del paquete para el tope de terapia y tope de Humanidad al volver a un cuerpo viejo.
   - **⏳ Pendiente de Cierre Going Metal**:
     - *Verificar/añadir el `New External Linear Frame` específico*: Comprobar y dar de alta la variante canónica externa individualizada de Going Metal si no figura ya como Linear Frame independiente.
     - *Verificar/añadir el `New Grenade Type`*: Comprobar y dar de alta el tipo específico de granada de Going Metal (Laser/Chaff o variante de gas) en el catálogo de arrojables.

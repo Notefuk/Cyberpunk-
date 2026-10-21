@@ -9,6 +9,16 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/checkpoint-guard.sh\""
+          }
+        ]
+      }
     ]
   },
   "permissions": {
@@ -16,7 +26,8 @@
       "Bash(npm run build)",
       "Bash(npm run lint)",
       "Bash(npm run dev)",
-      "Bash(npx tsc -b --noEmit)"
+      "Bash(npx tsc -b --noEmit)",
+      "Bash(npm test)"
     ]
   }
 }

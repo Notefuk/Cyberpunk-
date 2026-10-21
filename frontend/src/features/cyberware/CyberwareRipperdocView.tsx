@@ -34,6 +34,8 @@ import {
   FBC_16_CYBERWARE,
   GOING_METAL_GEAR,
   ABOUT_FBCS_GUIDE,
+  BIOSYSTEM_HL_AVERAGE,
+  FBC_IMMUNITIES,
   type FbcBody
 } from '../../data/goingMetalFbcData';
 import {
@@ -274,7 +276,7 @@ export function CyberwareRipperdocView() {
   const maxHum = calculateTherapyMaxHumanity(
     activeChar.stats?.EMP || 5,
     (activeChar.installedCyberwareIds || []).map(
-      (id) => (coreData.cyberware as { id: string; humanityLoss?: string; type?: string }[]).find((cw) => cw.id === id) ?? {}
+      (id) => (allCyberware as { id: string; humanityLoss?: string; type?: string }[]).find((cw) => cw.id === id) ?? {}
     )
   );
   const effectiveEmp = Math.max(0, Math.floor(currentHum / 10));
@@ -359,19 +361,20 @@ export function CyberwareRipperdocView() {
 
   const handleActivateChassis = (body: FbcBody) => {
     const isAlreadyFbc = Boolean(activeChar.fbcState?.isFullBodyConversion);
-    const humanityCost = isAlreadyFbc ? 0 : 14;
+    const humanityCost = isAlreadyFbc ? body.packageHlAverage : BIOSYSTEM_HL_AVERAGE + body.packageHlAverage; // Going Metal p. 95
     activateFullBodyConversion({
       id: body.id,
       name: body.name,
       bodyOverride: body.bodyOverride,
-      moveOverride: body.moveOverride,
+      statFloor: body.statFloor,
+      armorPenalty: body.armorPenalty,
       baseArmorSp: body.baseArmorSp,
       humanityCost,
-      immunities: ['Sangrado', 'Asfixia biológica', 'Toxinas y Venenos', 'Hipotermia / Presión abisal']
+      immunities: FBC_IMMUNITIES
     });
     showToast(
       isAlreadyFbc
-        ? `🔄 Biopod acoplado exitosamente al chasis ${body.name} (0 coste de Humanidad).`
+        ? `🔄 Biopod acoplado exitosamente al chasis ${body.name} (-${humanityCost} HUM).`
         : `🦾 Conversión FBC completada con chasis ${body.name} (-${humanityCost} HUM por Biopod).`,
       'success'
     );
@@ -738,7 +741,7 @@ export function CyberwareRipperdocView() {
                 }`}
               >
                 <Zap className="w-3.5 h-3.5" />
-                <span>16 CYBERWARE FBC ({FBC_16_CYBERWARE.length})</span>
+                <span>CYBERWARE GOING METAL ({FBC_16_CYBERWARE.length})</span>
               </button>
               <button
                 onClick={() => setGoingMetalTab('gear')}
@@ -784,8 +787,7 @@ export function CyberwareRipperdocView() {
                       FBC_13_BODIES.filter(
                         (b) =>
                           b.name.toLowerCase().includes(fbcFilterText.toLowerCase()) ||
-                          b.manufacturer.toLowerCase().includes(fbcFilterText.toLowerCase()) ||
-                          b.tacticalRole.toLowerCase().includes(fbcFilterText.toLowerCase())
+                          b.manufacturer.toLowerCase().includes(fbcFilterText.toLowerCase())
                       ).length
                     }{' '}
                     de 13 chasis
@@ -796,8 +798,7 @@ export function CyberwareRipperdocView() {
                   {FBC_13_BODIES.filter(
                     (b) =>
                       b.name.toLowerCase().includes(fbcFilterText.toLowerCase()) ||
-                      b.manufacturer.toLowerCase().includes(fbcFilterText.toLowerCase()) ||
-                      b.tacticalRole.toLowerCase().includes(fbcFilterText.toLowerCase())
+                      b.manufacturer.toLowerCase().includes(fbcFilterText.toLowerCase())
                   ).map((chassis) => {
                     const isActive = activeChar.fbcState?.activeChassisId === chassis.id;
                     const isAlreadyFbc = Boolean(activeChar.fbcState?.isFullBodyConversion);
@@ -838,9 +839,9 @@ export function CyberwareRipperdocView() {
                               </span>
                             </div>
                             <div className="bg-[#0b0d14] border border-[#1b2030] p-1.5 rounded text-center">
-                              <span className="text-[8px] font-mono-code text-[#94a3b8] block">MOVE</span>
+                              <span className="text-[8px] font-mono-code text-[#94a3b8] block">REF/DEX/MOVE MÍN.</span>
                               <span className="font-tech text-sm font-black text-[#38bdf8]">
-                                {chassis.moveOverride}
+                                {chassis.statFloor || '—'}
                               </span>
                             </div>
                             <div className="bg-[#0b0d14] border border-[#1b2030] p-1.5 rounded text-center">
@@ -900,8 +901,8 @@ export function CyberwareRipperdocView() {
                               <Binary className="w-3.5 h-3.5" />
                               <span>
                                 {isAlreadyFbc
-                                  ? 'TRANSFERIR BIOPOD (0 HL)'
-                                  : 'CONVERTIR FBC (-14 HL)'}
+                                  ? `TRANSFERIR BIOPOD (-${chassis.packageHlAverage} HL)`
+                                  : `CONVERTIR FBC (-${BIOSYSTEM_HL_AVERAGE + chassis.packageHlAverage} HL)`}
                               </span>
                             </button>
                           )}
@@ -918,7 +919,7 @@ export function CyberwareRipperdocView() {
               <div className="space-y-3">
                 <div className="bg-[#141724] border border-[#22283a] p-3 rounded-xs text-xs font-mono-code text-[#94a3b8] flex items-center justify-between">
                   <span>
-                    ⚡ Implantes canónicos de Going Metal (Interface RED Vol. 3) diseñados para chasis FBC y marcos mecánicos.
+                    ⚡ Implantes canónicos de Going Metal (Going Metal) diseñados para chasis FBC y marcos mecánicos.
                   </span>
                   <span className="text-[#00f5d4] font-bold">{FBC_16_CYBERWARE.length} piezas disponibles</span>
                 </div>

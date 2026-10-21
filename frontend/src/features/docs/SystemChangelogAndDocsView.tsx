@@ -26,6 +26,40 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.5.0',
+    date: '2026-10-21',
+    phase: 'Codex',
+    category: 'Datos de expansión',
+    title: 'Going Metal canon: Full Body Conversion',
+    summary: 'Cuarta fase del plan 2. Los cuerpos, el ciberware y las reglas de FBC siguen Going Metal pp. 91-111, y se borró lo inventado.',
+    highlights: [
+      '13 cuerpos canon con BODY, piso de REF/DEX/MOVE, SP y penalizador de armadura; 20 ciberwares y 6 de equipo.',
+      'Conversión con HL = 14 (Biosystem) + HL del paquete; cambiar de cuerpo cuesta el HL del paquete y los HP quedan al máximo.',
+      'El FBC no sufre Wound State, no usa Speedheal ni Cryotank doble, e ignora 9 heridas críticas.',
+      'Borrados 29 FBC inventados y 4 ítems del pack; fbc-rules reescrito desde la guía canon.',
+      'Tests: 32 (4 nuevos de FBC).'
+    ],
+    filesTouched: [
+      'data/core-rules.cprpack.json',
+      'frontend/src/data/core-rules.cprpack.json',
+      'frontend/src/data/expansionRulesData.ts',
+      'frontend/src/data/goingMetalFbcData.ts',
+      'frontend/src/engine/__tests__/rules.test.ts',
+      'frontend/src/engine/characterEngine.ts',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/cyberware/CyberwareRipperdocView.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/types/cyberpunk.ts',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CONTENT_CHECKLIST.md'
+    ],
+    metricsBadge: 'v4.5.0 • Going Metal • Plan 2 fase 4'
+  },
+  {
     version: 'v4.4.0',
     date: '2026-10-20',
     phase: 'Codex',
@@ -522,6 +556,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.5.0': true,
     'v4.4.0': true,
     'v4.3.1': true,
     'v4.3.0': true,
