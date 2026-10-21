@@ -7,12 +7,12 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-22]
-**Versión de la app**: v4.8.1 lista en la rama `claude/v4.8.1-datos-creacion` (sin PR). `main` = v4.8.0, publicada.
+**Versión de la app**: v4.8.1 (en `main`, squash 8985aa8, PR #22; publicada en gh-pages y verificada en vivo)
 **Plan activo**: plan 7 (`docs/plans/plan7-creador-personajes.md`, creador de personajes CEMK-first, persistente y con Modo Novato; v4.8.0-v4.8.3). En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2) y plan 5 (Black Chrome y vehículos, ahora v4.9.x). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.1 Datos canon del creador terminada y verificada (tsc, 95 tests, build, navegador) en la rama `claude/v4.8.1-datos-creacion`. Falta: PR, merge y gh-pages. Después: v4.8.2 wizard funcional (motor `engine/characterCreation.ts`, pasos del libro, lifepath CEMK/Core, habilidad de rol Core/CEMK, 66 skills, borrador autoguardado). Pregunta abierta: ¿se quita el personaje demo "V" (videojuego, no está en los libros)? Antigravity: no tocar `characterCreationData.ts`, `data/creation*/` ni el wizard hasta el merge.
+- [Claude Code · 2026-10-22] Nada en curso. Siguiente: v4.8.2 wizard funcional (plan 7): motor `engine/characterCreation.ts` con tests, pasos en el orden del libro, lifepath CEMK/Core, habilidad de rol Core/CEMK (`roleAbilityVariant`), las 66 skills con etiqueta de libro, "Running Out of Cash?" en vez de deuda, dinero por método y borrador `cpr_creator_draft_v1`. Rama `claude/v4.8.2-wizard`. Preguntas abiertas: personaje demo "V" (no está en los libros) y las discrepancias 10-15 de `docs/canon-audit/discrepancias-cemk-core.md`.
 
 ## Traspaso
 
@@ -24,6 +24,7 @@
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-22] v4.8.1 Datos canon del creador (plan 7, bloque 2), mergeada (PR #22, squash 8985aa8) y publicada: STATs, skills y paquetes de los 10 roles del Core, Neuroport canon, 5 pregens de Easy Mode, 11 pregens sin ficha borradas. Registro: `docs/canon-audit/v4.8.1-creador.md`.
 - [Claude Code · 2026-10-22] v4.8.0 Guardado robusto (plan 7, bloque 1), mergeada (PR #21, squash bcaaddc) y publicada: persist v3 con migraciones, copia previa, respaldo completo, importar por archivo, premades que no vuelven.
 - [Claude Code · 2026-10-22] v4.7.0 Enemigos canon + porte CEMK (plan 6, bloque 1), mergeada (PR #20, squash ea8268f) y publicada:
   - 40 fichas canon (Core 10, CEMK 14, Hardened 16) reemplazan a 36 inventadas.
