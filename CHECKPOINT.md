@@ -6,13 +6,16 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 
 **Última actualización**: [Claude Code · 2026-10-21]
-**Versión de la app**: v4.4.0 (v4.5.0 en curso en la rama `claude/v4.5.0-going-metal`, Claude Code local)
-
-> [Claude Code · 2026-10-21] **El trabajo a medias de v4.5.0 se perdió**: la rama `claude/project-thread-5rr1t9` apunta al mismo commit que `main` (v4.4.0) porque el sandbox de claude.ai nunca pusheó. Se perdieron la reescritura de `goingMetalFbcData.ts`, el parche de `CyberwareRipperdocView.tsx` y `docs/plans/plan3-auditoria-enemigos-red-chrome.md` (con sus 5 preguntas). Se rehace en la rama nueva. Setup local: subagentes `cpr-scout`/`cpr-worker`/`github-web-deployer` en Sonnet, skill `checkpoint` + hook `Stop` `checkpoint-guard.sh`, skill de PDFs con lectura local (Going Metal = `ilide.info-going-metal-pr_*.pdf` en la raíz de la carpeta de PDFs).
-**Plan activo**: plan 2 (`docs/plans/plan2-auditoria-expansiones.md`), fase 4 a medias. Plan 1 terminado en v4.2.1. Plan 3 escrito, sin aprobar.
+**Versión de la app**: v4.5.0 (en `main`, commit 44baf2c, PR #16; publicada en gh-pages)
+**Plan activo**: plan 2 (`docs/plans/plan2-auditoria-expansiones.md`), fases 1-4 hechas; falta la fase 5 (v4.5.1). Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-21] v4.5.0 (plan 2, fase 4) Going Metal canon, mergeada a `main` (PR #16, squash 44baf2c) y publicada en https://notefuk.github.io/Cyberpunk-/. Rehecha desde el PDF porque el trabajo a medias de claude.ai nunca se había pusheado (también se perdió el plan 3).
+  - `goingMetalFbcData.ts` canon: 13 cuerpos `gm-*`, 20 ciberwares (con `gm-biosystem`), 6 de equipo, `ABOUT_FBCS_GUIDE`, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14, `LINEAR_FRAME_OMEGA_HP_CHART`. Sin `moveOverride`.
+  - Reglas: HL de conversión 14 + paquete y de cambio de cuerpo = paquete; HP al máximo; penalizador de armadura del chasis; REF/DEX/MOVE con mínimo `statFloor`; FBC sin Wound States, sin Speedheal ni Cryotank x2; inmune a 9 críticas y su +5; `Borgware x2` = -8 en terapia. Pack sin 29 `fbc-*` + 4 inventados; `fbc-rules` reescrito. 32 tests.
+  - Desvíos: en el pack había 29 `fbc-*`, no 33; el +5 del crítico vive en `combatEngine.ts` (~l. 237), así que el HUD devuelve hasta 5 HP con `adjustHp` cuando un FBC es inmune.
+- [Claude Code · 2026-10-21] Setup de Claude Code local: subagentes `cpr-scout`/`cpr-worker`/`github-web-deployer` en Sonnet; skill `checkpoint` + hook `Stop` `checkpoint-guard.sh`; skill de PDFs con lectura local; `.gitattributes` con LF para `.sh`; GitHub CLI portable v2.102.1 en `.tools/` (ignorado) con login de Notefuk, usar `scripts\gh.cmd` / `./scripts/gh` (ver CLAUDE.md "GitHub CLI portable").
 - [Claude Code · 2026-10-20] v4.4.0 (plan 2, fase 3): sin modos de carga, roles del Core pp. 143-162, Combat Awareness validado, Pharmaceuticals canon, Special Moves del Core, tope de Humanidad por terapia, granadas por tabla de rango, curación con estabilización. Desvío: las menciones a Ballistic Coprocessor/Tamayura/Achilles/Chao en `enemiesCatalog.ts` y `redChromeCargoData.ts` no se tocaron: el catálogo de PNJ entero parece tener contenido inventado y necesita su propia auditoría (preguntar al usuario).
 - [Claude Code · 2026-10-20] v4.3.1 (plan 2, fase 2): 13 armas CEMK canon, ciberware y Immunoblockers con costo/HL del libro, inventados borrados, Rebuilds 1,000 €$ sin Maker ni Ballistic Coprocessor, Boosterganger BODY 2. Desvío: X12 Hardpoint era falso positivo. Quedan menciones a Ballistic Coprocessor/Tamayura en `enemiesCatalog.ts` (~355, 1009-1011, 1129) y `redChromeCargoData.ts` (~792, 1012, 1058, 1087) para v4.4.0.
 - [Claude Code · 2026-10-20] v4.3.0 (plan 2, fase 1): NET Actions = 3 (`NET_ACTIONS_PER_TURN`), Quickhacks sin RAM (14 `qh-*` fuera del pack), alcance por conexión y 1 Quickhack por turno en el HUD, `BLACK_ICE_STATS`, dificultades Core, Scanner sin DV, Flak/Shield, `rollCheckD10`/`beatsDv`. Desvío: los Checks de rol con `>= DV` (Medtech DV 13, EMP DV 15 del HUD) pasan a v4.4.0.
@@ -25,30 +28,24 @@
   - `CLAUDE.md`, subagentes `.claude/agents/` (`cpr-scout` Haiku, `cpr-worker` Sonnet, `github-web-deployer` Haiku) y skills `.claude/skills/` (`cpr-pdf-extractor`, `cpr-version-release`).
   - `.agent/` queda como config de Antigravity, con copia de `AGENTS.md`, `gemini-scout` y `gemini-worker`.
 - [Claude Code · 2026-10-20] Acceso a los PDFs desde Claude verificado: se leyó el Core Rulebook p. 174 trayéndolo desde la PC del usuario.
-
 ## En curso
 
-- [Claude Code · 2026-10-21] **v4.5.0 Going Metal (plan 2, fase 4): código terminado, falta cerrar.** Rama `claude/v4.5.0-going-metal` (Claude Code local). `tsc` limpio y 32/32 tests.
-  - Hecho (rehecho desde el PDF): `goingMetalFbcData.ts` canon (13 cuerpos `gm-*`, 20 ciberwares con `gm-biosystem`, 6 de equipo, `ABOUT_FBCS_GUIDE`, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14, `LINEAR_FRAME_OMEGA_HP_CHART`).
-  - Hecho: ítems 1-6 del checkpoint anterior (Ripperdoc con HL real, `ActiveFbcState.statFloor/armorPenalty`, store, motor, StreetLab, HUD, pack sin 29 `fbc-*` + 4 inventados, `fbc-rules` reescrito) y 4 tests FBC. Desvíos: en el pack había 29 `fbc-*`, no 33; el +5 del crítico vive en `combatEngine.ts` (~l. 237), así que el HUD devuelve hasta 5 HP con `adjustHp` cuando un FBC es inmune.
-  - Hecho: docs firmados (CHANGELOG, HANDOFF, STATUS, CONTENT_CHECKLIST), changelog in-app v4.5.0, `npm run build` OK, commit local `v4.5.0 Going Metal canon: Full Body Conversion`.
-  - [Claude Code · 2026-10-21] Rama pusheada y web publicada en gh-pages (https://notefuk.github.io/Cyberpunk-/) con el build de v4.5.0. PR abierto: https://github.com/Notefuk/Cyberpunk-/pull/16. Falta mergearlo. `gh` portable v2.102.1 en `.tools/` con login de Notefuk (usar `scripts\gh.cmd`, ver CLAUDE.md "GitHub CLI portable").
-- Dudas del libro (anotadas en docs): `packageHlAverage` impreso no siempre cuadra con su fórmula (Enforcer 53 vs 55 en el ejemplo de p. 95); BODY de Sigma/Beta y SP de Skin Weave/Subdermal salen del Core; el filtro por zona del Ripperdoc ahora usa `Internal`/`External`/`Cyberlimb`.
+- Nada a medias.
+- Dudas del libro (anotadas en docs): `packageHlAverage` impreso no siempre cuadra con su fórmula (Enforcer 53 vs 55 en el ejemplo de p. 95); BODY de Sigma/Beta y SP de Skin Weave/Subdermal salen del Core.
 - Fuera de alcance de v4.5.0: marcos Black Chrome (Vermilion, Fūma Kotarō); el HL de cada pieza del paquete no se instala como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad.
-- Decisiones del usuario: todo canon, borrar lo inventado (no homebrew), NET Actions según CEMK (hasta 3), subagentes todos en Sonnet. Publicar en gh-pages: sí (2026-10-21).
+- Decisiones del usuario: todo canon, borrar lo inventado (no homebrew), NET Actions según CEMK (hasta 3), subagentes todos en Sonnet, publicar en gh-pages al cerrar versión.
 - PDFs locales: Going Metal = `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\ilide.info-going-metal-pr_f86aec80bbb3b8b8c08ede7e5181f832.pdf` (21 págs.; impresa = PDF + 90). Interface RED Vol. 1-4 en `Sourcebooks\Interface-RED\`.
 
 ## Próximos pasos
 
-1. Mergear el PR de v4.5.0 a `main`.
-2. v4.5.1 Cyberfists of Fury (IR4 pp. 73-83: 23 formas y 46 movimientos, `isOpposed` donde aplique) en `cyberfistsMartialArtsData.ts`. Cierra el plan 2.
-3. Plan 3 (enemigos y Red Chrome Cargo): **se perdió**; hay que reescribirlo y volver a hacerle a Giuliano sus preguntas antes de ejecutarlo.
-4. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.
-5. GM Master Screen (`FixerDeckView.tsx`).
+1. v4.5.1 Cyberfists of Fury (IR4 pp. 73-83: 23 formas y 46 movimientos, `isOpposed` donde aplique) en `cyberfistsMartialArtsData.ts`. Cierra el plan 2.
+2. Plan 3 (enemigos y Red Chrome Cargo): **se perdió**; hay que reescribirlo y volver a hacerle a Giuliano sus preguntas antes de ejecutarlo.
+3. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.
+4. GM Master Screen (`FixerDeckView.tsx`).
 
 ## Notas y bloqueos
 
-- Antes de volver a Antigravity, `git pull` en `C:\Users\TeseoHeracles\cpr-omni-deck` y traer la rama `claude/v4.5.0-going-metal` hasta que se mergee. `claude/project-thread-5rr1t9` no tiene nada nuevo.
-- Seguridad: el remote `origin` tiene un token de GitHub en la URL; Giuliano debe revocarlo y pasar a Git Credential Manager.
+- Antes de volver a Antigravity, `git pull` en `main` en `C:\Users\TeseoHeracles\cpr-omni-deck`. Las ramas `claude/v4.5.0-going-metal` y `claude/project-thread-5rr1t9` ya no tienen nada que no esté en `main`.
+- Seguridad: el remote `origin` tiene un token de GitHub en la URL; Giuliano debe revocarlo. Ahora `gh` maneja el login, así que se puede pasar el remote a una URL sin token.
 - El hook `Stop` solo corre en sesiones abiertas en la carpeta del repo.
 - Los docs mencionan `characterLifepathData.ts` / `ROLE_SPECIFIC_LIFEPATHS`, que no existen en el código.
