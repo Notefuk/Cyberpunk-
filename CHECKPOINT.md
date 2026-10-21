@@ -13,7 +13,7 @@
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `main` @ el commit "Protocolo de cowork..." (pusheada: sí)
+- Rama y último commit: `main` @ 606c15e "Protocolo de cowork..." (pusheada: sí). Web gh-pages publicada desde ese commit (deploy bacc1ce, con badges de autor en el changelog in-app).
 - A medias: nada.
 - Siguiente paso exacto: v4.5.1 Cyberfists of Fury (ver Próximos pasos 1), en una rama nueva `claude/...` o `antigravity/...` según quién la tome.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
