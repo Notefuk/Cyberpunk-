@@ -12,7 +12,7 @@
 
 ## En curso (a cargo)
 
-- Nada a medias. `main` libre. Siguiente bloque del plan 5: v4.6.2 (ver Traspaso).
+- [Claude Code · 2026-10-21] v4.6.2 (plan 5: Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25) en la rama `claude/v4.6.2-farmacia-gunmas-errata`. Fase: extracción de los PDFs. Antigravity: no tocar el pack, `expansionRulesData.ts` ni `extract_core_pack.py` hasta el merge.
 
 ## Traspaso
 
