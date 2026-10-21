@@ -12,7 +12,7 @@
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.2 Wizard funcional terminada y verificada (tsc, 138 tests, build, navegador) en la rama `claude/v4.8.2-wizard`. Falta: PR, merge y gh-pages. Después: v4.8.3 Modo Novato (interruptor `cpr_creator_novice_v1`, "qué es esto / qué te conviene" por paso, checklist y tooltips de skills completos). Pendientes chicos: en lifepath CEMK los amigos muestran "Ninguno" del campo de rol; la tienda no tiene paginación. Antigravity: no tocar `features/creator/` ni `engine/characterCreation.ts` hasta el merge.
+- [Claude Code · 2026-10-22] v4.8.2 Wizard funcional terminada y verificada (tsc, 138 tests, build, navegador) en la rama `claude/v4.8.2-wizard`. Falta: PR, merge y gh-pages. Después: v4.8.3 Modo Novato (interruptor `cpr_creator_novice_v1`, "qué es esto / qué te conviene" por paso, checklist y tooltips de skills completos). Para planificar (pedido de Giuliano, sin código todavía): fichas de jugadores siempre disponibles desde cualquier dispositivo, ver `PROJECT_STATUS_AND_ROADMAP.md`. Pendientes chicos: en lifepath CEMK los amigos muestran "Ninguno" del campo de rol; la tienda no tiene paginación. Antigravity: no tocar `features/creator/` ni `engine/characterCreation.ts` hasta el merge.
 
 ## Traspaso
 
