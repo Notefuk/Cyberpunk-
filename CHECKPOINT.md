@@ -7,30 +7,25 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-21]
-**Versión de la app**: v4.6.0 en la rama `claude/v4.6.0-ripperdoc-2077` (PR a `main` abierto, sin mergear; ya publicada en gh-pages). `main` sigue en v4.5.0 + protocolo de cowork (606c15e).
-**Plan activo**: plan 4 (`docs/plans/plan4-ripperdoc-visual-2077.md`) terminado salvo el merge. Plan 2: fases 1-4 hechas, falta la fase 5 (v4.5.1). Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
+**Versión de la app**: v4.6.0 (en `main`, squash 458cc3c, PR #17; publicada en gh-pages)
+**Plan activo**: ninguno en ejecución. Plan 4 terminado en v4.6.0. Plan 2: fases 1-4 hechas, falta la fase 5 (v4.5.1 Cyberfists of Fury). Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-21] **v4.6.0 Ripperdoc estilo 2077 (plan 4): las 5 fases hechas**, rama `claude/v4.6.0-ripperdoc-2077`, falta mergear el PR. Antigravity: no tocar `frontend/src/features/cyberware/` ni `index.css` hasta el merge.
-  - Componentes en `features/cyberware/`: `ripperdocZones.tsx` (zonas, colores, `ZONE_HOTSPOTS`, `itemMatchesZone`), `HoloBody.tsx` (holograma anatómico, 9 zonas incl. Fashionware en la muñeca), `ZoneCard.tsx`, `SlotBox.tsx` (biselado, indicador ▣ de carta), `ZoneConnectors.tsx` (líneas tarjeta↔cuerpo en xl), `ZoneDetailPanel.tsx`, `GoingMetalBanner.tsx`, `cyberwareCardArt.ts` (6 cartas del Mission Kit en `public/cemk/cyberware/`, se ven al inspeccionar). La vista bajó de 2235 a ~1030 líneas.
-  - Fix: 'Cyberarm Option', 'Neuralware Option' y 'Borgware x2' no caían en ninguna zona (test de cobertura, 33 tests).
-  - Fase 5: textos de Going Metal corregidos en banner y chips; `animate-in`/`fade-in`/`zoom-in-95` definidas en `index.css` (antes no hacían nada; afecta a toda la app, desactivadas con reduced motion). Ojo al verificar: con el panel del navegador oculto las animaciones nuevas quedan congeladas en opacidad 0 porque no hay frames; en un navegador visible funcionan.
-  - Docs firmados (CHANGELOG, HANDOFF, STATUS, CHECKLIST) y changelog in-app v4.6.0 con `author: 'Claude Code'`.
-  - Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
+- Nada a medias. `main` libre para cualquiera de las dos herramientas.
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `claude/v4.6.0-ripperdoc-2077` @ commit "v4.6.0 fase 5..." (pusheada: sí), con PR abierto a `main`. Web gh-pages publicada desde esa rama.
-- A medias: nada de código; falta mergear el PR de v4.6.0.
-- Siguiente paso exacto: mergear el PR de v4.6.0; después v4.5.1 Cyberfists of Fury (IR4 pp. 73-83).
+- Rama y último commit: `main` @ commit "CHECKPOINT: v4.6.0 mergeada..." (pusheada: sí). Web gh-pages publicada con el build de v4.6.0.
+- A medias: nada.
+- Siguiente paso exacto: v4.5.1 Cyberfists of Fury (IR4 pp. 73-83) en una rama nueva `claude/...` o `antigravity/...` según quién la tome.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
-- Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`.
-
+- Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`. El Ripperdoc ahora está dividido en componentes en `frontend/src/features/cyberware/` (ver v4.6.0 abajo).
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-21] v4.6.0 Ripperdoc estilo Cyberpunk 2077 (plan 4), mergeada a `main` (PR #17, squash 458cc3c) y publicada. Componentes en `features/cyberware/`: `ripperdocZones.tsx`, `HoloBody.tsx` (holograma, 9 zonas), `ZoneCard.tsx`, `SlotBox.tsx`, `ZoneConnectors.tsx`, `ZoneDetailPanel.tsx`, `GoingMetalBanner.tsx`, `cyberwareCardArt.ts` (6 cartas del Mission Kit, visibles al inspeccionar). Fix: 'Cyberarm Option', 'Neuralware Option' y 'Borgware x2' sin zona. `animate-in`/`fade-in`/`zoom-in-95` definidas en `index.css`. 33 tests. Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
 - [Claude Code · 2026-10-21] v4.5.0 (plan 2, fase 4) Going Metal canon, mergeada a `main` (PR #16, squash 44baf2c) y publicada en https://notefuk.github.io/Cyberpunk-/. Rehecha desde el PDF porque el trabajo a medias de claude.ai nunca se había pusheado (también se perdió el plan 3).
   - `goingMetalFbcData.ts` canon: 13 cuerpos `gm-*`, 20 ciberwares (con `gm-biosystem`), 6 de equipo, `ABOUT_FBCS_GUIDE`, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14, `LINEAR_FRAME_OMEGA_HP_CHART`. Sin `moveOverride`.
   - Reglas: HL de conversión 14 + paquete y de cambio de cuerpo = paquete; HP al máximo; penalizador de armadura del chasis; REF/DEX/MOVE con mínimo `statFloor`; FBC sin Wound States, sin Speedheal ni Cryotank x2; inmune a 9 críticas y su +5; `Borgware x2` = -8 en terapia. Pack sin 29 `fbc-*` + 4 inventados; `fbc-rules` reescrito. 32 tests.
@@ -58,7 +53,6 @@
 
 ## Próximos pasos
 
-0. Mergear el PR de v4.6.0 (Ripperdoc 2077).
 1. v4.5.1 Cyberfists of Fury (IR4 pp. 73-83: 23 formas y 46 movimientos, `isOpposed` donde aplique) en `cyberfistsMartialArtsData.ts`. Cierra el plan 2.
 2. Plan 3 (enemigos y Red Chrome Cargo): **se perdió**; hay que reescribirlo y volver a hacerle a Giuliano sus preguntas antes de ejecutarlo.
 3. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.
