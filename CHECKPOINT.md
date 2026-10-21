@@ -7,12 +7,12 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-22]
-**Versión de la app**: v4.8.1 (en `main`, squash 8985aa8, PR #22; publicada en gh-pages y verificada en vivo)
+**Versión de la app**: v4.8.2 lista en la rama `claude/v4.8.2-wizard` (sin PR). `main` = v4.8.1, publicada.
 **Plan activo**: plan 7 (`docs/plans/plan7-creador-personajes.md`, creador de personajes CEMK-first, persistente y con Modo Novato; v4.8.0-v4.8.3). En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2) y plan 5 (Black Chrome y vehículos, ahora v4.9.x). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.2 wizard funcional (plan 7) en la rama `claude/v4.8.2-wizard`. Hecho: personaje demo "V" quitado (fallback = Folio de Hardpoint) y discrepancias 10-15 decididas por Giuliano (ver `docs/canon-audit/discrepancias-cemk-core.md`; nota de daño 3d6/4d6 en la Zhuo de Wrench). Motor HECHO (`engine/characterCreation.ts`, 35 tests, 130 en total). Wizard nuevo HECHO (orquestador + `features/creator/steps/` + borrador `cpr_creator_draft_v1`, 138 tests). Paso actual: prueba de punta a punta en el navegador (cada método, dos eras, recarga a mitad). Incluye: pasos del libro, lifepath CEMK/Core, habilidad de rol Core/CEMK (`roleAbilityVariant`), 66 skills con etiqueta, Surgery solo Medtech por habilidad de rol, "Running Out of Cash?", dinero por método y borrador `cpr_creator_draft_v1`. Decisiones de diseño de Giuliano (2026-10-22): "Rocker" en 2077 y "Rockerboy" en 2045; tienda de Complete Package en 2077 = Core + CEMK etiquetados; lifepath con tirar o elegir; Media/Exec/Lawman solo con la habilidad del Core. Antigravity: no tocar el wizard, `characterCreationData.ts` ni el store hasta el merge.
+- [Claude Code · 2026-10-22] v4.8.2 Wizard funcional terminada y verificada (tsc, 138 tests, build, navegador) en la rama `claude/v4.8.2-wizard`. Falta: PR, merge y gh-pages. Después: v4.8.3 Modo Novato (interruptor `cpr_creator_novice_v1`, "qué es esto / qué te conviene" por paso, checklist y tooltips de skills completos). Pendientes chicos: en lifepath CEMK los amigos muestran "Ninguno" del campo de rol; la tienda no tiene paginación. Antigravity: no tocar `features/creator/` ni `engine/characterCreation.ts` hasta el merge.
 
 ## Traspaso
 

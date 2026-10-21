@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { CEMK_FOLIO_METADATA_MAP } from '../../../data/cemkFolioPremadesData';
 import { PREGEN_TEMPLATES } from '../../../data/characterCreationData';
-import { CORE_GEAR_SKILLS } from '../../../data/creation';
+import { CORE_GEAR_SKILLS, type CoreRoleName } from '../../../data/creation';
 import {
   STAT_KEYS,
   buildCharacterLifepath,
@@ -107,6 +107,15 @@ export const SummaryStep: React.FC<SummaryProps> = ({ draft, update, onGoTo, onC
         <Line label="Era">{draft.era}</Line>
         <Line label="Método">{draft.method ? METHOD_LABEL[draft.method] : '—'}</Line>
         {pregen && <Line label="Pregen">{pregenName ?? '—'}</Line>}
+        {pregen && built.sheet && (
+          <>
+            <Line label="Rol">{`${getRoleDisplayName(built.sheet.role as CoreRoleName, draft.era)} ${built.sheet.roleRank}${built.sheet.roleAbilityName ? ` · ${built.sheet.roleAbilityName}` : ''}`}</Line>
+            <Line label="Stats">{(Object.entries(built.sheet.stats) as Array<[string, number]>).map(([k, v]) => `${k} ${v}`).join(' · ')}</Line>
+            <Line label="Derivados">{`HP ${built.sheet.currentHp} · Humanidad ${built.sheet.currentHumanity}`}</Line>
+            <Line label="Armas">{built.sheet.equippedWeapons.map((w) => w.name).join(', ') || '—'}</Line>
+            <Line label="Dinero">{`${built.sheet.eurodollars} €$`}</Line>
+          </>
+        )}
         {!pregen && draft.role && (
           <Line label="Rol">
             {getRoleDisplayName(draft.role, draft.era)} · habilidad {draft.roleAbilityVariant === 'cemk' ? 'CEMK simple (+4)' : 'Core completa (rango 4)'}

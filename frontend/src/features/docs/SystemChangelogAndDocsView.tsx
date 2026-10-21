@@ -26,6 +26,37 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.8.2',
+    date: '2026-10-22',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Creador de personajes',
+    title: 'Wizard de creación nuevo: pasos del libro, motor con reglas y borrador que no se pierde',
+    summary: 'Plan 7, bloque 3: el creador se reescribió entero. Sigue los pasos del Core, calcula todo con un motor probado (STATs, skills, Humanidad, dinero) y guarda el borrador solo: si cerrás o recargás, retomás donde estabas.',
+    highlights: [
+      'Métodos: pregen de CEMK (los 7 Folios), pregen del Easy Mode (2045), Streetrat, Edgerunner y Complete Package, cada uno con sus reglas y su página.',
+      'Pasos en el orden del libro: era y método, rol, lifepath, STATs, skills, equipo y resumen. No se avanza si falta algo y se ve qué falta.',
+      'Rol: los 7 de CEMK primero y Media, Exec y Lawman con la etiqueta Core RED. "Rocker" en 2077 y "Rockerboy" en 2045. Habilidad de rol completa del Core o versión simple de CEMK (+4), con las dos explicadas.',
+      'Lifepath de CEMK (rápido) o del Core completo, con tirada que muestra el número o elección a mano, y "Tirar todo".',
+      'Las 66 skills con la etiqueta del libro (46 también en CEMK), costo ×2 y el idioma de origen gratis en 4.',
+      'Equipo: el paquete del rol con sus opciones "o", tienda Core + CEMK etiquetada, armadura por ubicación, moda en Complete Package, Neuroport y Cyberdeck Port en 2077, y "Running Out of Cash?" en lugar de las deudas inventadas.',
+      'La Humanidad descuenta el ciberware (el Neuroport no, CEMK RB p.25). Se quitó el personaje demo "V". 138 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/characterCreation.ts',
+      'frontend/src/features/creator/CharacterCreatorWizard.tsx',
+      'frontend/src/features/creator/steps/',
+      'frontend/src/features/creator/creatorDraftStorage.ts',
+      'frontend/src/types/cyberpunk.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/data/cemkFolioPremadesData.ts',
+      'frontend/src/engine/__tests__/characterCreation.test.ts',
+      'frontend/src/engine/__tests__/creatorDraftStorage.test.ts',
+      'docs/canon-audit/discrepancias-cemk-core.md'
+    ],
+    metricsBadge: 'v4.8.2 • Wizard funcional • Plan 7'
+  },
+  {
     version: 'v4.8.1',
     date: '2026-10-22',
     author: 'Claude Code',
@@ -775,6 +806,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.8.2': true,
     'v4.8.1': true,
     'v4.8.0': true,
     'v4.7.0': true,

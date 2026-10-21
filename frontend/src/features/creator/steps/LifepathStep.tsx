@@ -1,4 +1,4 @@
-// Paso 3 del creador: Lifepath (Core pp. 44-69; CEMK RB pp. 21-24). [Claude Code · 2026-10-22]
+// Paso 3 del creador: Lifepath (Core pp. 44-69; CEMK RB pp. 19-24). [Claude Code · 2026-10-22]
 import React from 'react';
 import type { LifepathTable } from '../../../data/creation';
 import {
@@ -159,7 +159,7 @@ export const LifepathStep: React.FC<StepProps> = ({ draft, update }) => {
 
   return (
     <div>
-      <StepHeader title="Lifepath" subtitle="Tu pasado: tirá cada tabla o elegí el resultado a mano." page={source === 'cemk' ? 'CEMK RB pp. 21-24' : 'Core pp. 44-69'} />
+      <StepHeader title="Lifepath" subtitle="Tu pasado: tirá cada tabla o elegí el resultado a mano." page={source === 'cemk' ? 'CEMK RB pp. 19-24' : 'Core pp. 44-69'} />
 
       <Panel className="mb-4">
         <div className="flex flex-wrap items-center gap-2">
