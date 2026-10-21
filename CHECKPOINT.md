@@ -12,7 +12,7 @@
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.1 datos canon de creación (plan 7) en la rama `claude/v4.8.1-datos-creacion`. Paso actual: los 5 JSON de `data/creation-src/` están extraídos; verificación visual HECHA (STATs, paquetes pp.98-99, MOVE/LUCK Easy Mode corregido, Folio Hardpoint); sigue: preguntar a Giuliano por las pregens del anime y diseñar el generador `scripts/gen_creation.py` → `frontend/src/data/creation/`. Si la sesión se corta: ver qué JSON existen y están completos; relanzar solo los que falten. Antigravity: no tocar `data/creation-src/` ni `characterCreationData.ts`.
+- [Claude Code · 2026-10-22] v4.8.1 datos canon de creación (plan 7) en la rama `claude/v4.8.1-datos-creacion`. Paso actual: los 5 JSON de `data/creation-src/` están extraídos; verificación visual HECHA (STATs, paquetes pp.98-99, MOVE/LUCK Easy Mode corregido, Folio Hardpoint); Giuliano decidió: borrar las 11 pregens no canon (no hay fichas del anime en ningún PDF; HB pp.35-41 solo biografías) y dejar 7 Folios + 5 Easy Mode. Paso actual: worker A escribe `scripts/gen_creation.py` + `frontend/src/data/creation/` (types.ts y 5 .ts generados). Después: worker B recablea `characterCreationData.ts`. Si la sesión se corta: ver qué JSON existen y están completos; relanzar solo los que falten. Antigravity: no tocar `data/creation-src/` ni `characterCreationData.ts`.
 
 ## Traspaso
 
