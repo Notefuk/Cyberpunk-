@@ -496,8 +496,14 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
   const handleLoadOfficialRoleLoadout = () => {
     if (!currentRoleInfo) return;
     const lo = currentRoleInfo.startingLoadout;
-    setInstalledCyberwareIds([...lo.cyberwareIds]);
-    const invItems: InventoryItem[] = lo.gearNames.map((name, idx) => ({
+    // [Claude Code · 2026-10-22] En 2077 el Neuroport (incluido) cubre Agent, Neural Link e Interface Plugs (CEMK RB pp. 35-36).
+    const is2077 = selectedEra === '2077';
+    const loGearNames = is2077 ? lo.gearNames.filter((name) => name !== 'Agent') : lo.gearNames;
+    const loCyberwareIds = is2077
+      ? lo.cyberwareIds.filter((id) => id !== 'neuralware-processor' && id !== 'interface-plugs')
+      : lo.cyberwareIds;
+    setInstalledCyberwareIds([...loCyberwareIds]);
+    const invItems: InventoryItem[] = loGearNames.map((name, idx) => ({
       id: `inv-${Date.now()}-${idx}`,
       catalogId: name.toLowerCase().replace(/\s+/g, '-'),
       name,
@@ -507,7 +513,10 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
       details: 'Equipo inicial reglamentario de rol'
     }));
     setInventory(invItems);
-    showToast(`📦 Paquete de equipo inicial de ${currentRoleInfo.name} cargado con éxito.`);
+    showToast(
+      `📦 Paquete de equipo inicial de ${currentRoleInfo.name} cargado con éxito.` +
+        (is2077 ? ' Se omitieron Agent, Neural Link e Interface Plugs: los cubre el Neuroport (CEMK RB pp. 35-36).' : '')
+    );
   };
 
   // Final confirmation: build CharacterSheet & send to store
