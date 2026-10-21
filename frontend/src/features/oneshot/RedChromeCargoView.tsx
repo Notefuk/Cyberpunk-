@@ -179,7 +179,7 @@ export const RedChromeCargoView: React.FC = () => {
     newEnemies.push({
       instanceId: `enemy-front-officer-${Date.now()}`,
       templateKey: 'rcl_officer',
-      name: `RCL Oficial Teniente (Masamune)`,
+      name: `RCL Oficial (Security Operative)`,
       carId: 'front',
       currentHp: officerVariant.hp,
       maxHp: officerVariant.hp,
@@ -239,7 +239,7 @@ export const RedChromeCargoView: React.FC = () => {
     const profile = RED_CHROME_ENEMY_PROFILES[enemy.templateKey];
     const variant = enemy.mode === '2077' ? profile.variant2077Cemk : profile.variant2045;
     const ref = variant.stats.REF || 6;
-    const bonus = enemy.templateKey === 'rcl_officer' ? 2 : 0; // Kerenzikov
+    const bonus = 0; // Sin bonos: los bloques del Core no traen Kerenzikov
     const d10 = rollD10();
     const total = d10 + ref + bonus;
 
@@ -306,7 +306,7 @@ export const RedChromeCargoView: React.FC = () => {
   const tokenPositions: Record<string, 'rear' | 'middle' | 'front' | 'driver'> = {
     'token-hatch': 'rear',
     'token-net-port': 'middle',
-    'token-cargo-crates': 'middle',
+    'token-cargo-crates': 'front',
     'token-turret-control': 'front',
     'token-turret': 'front',
     'token-train-control': 'driver'
@@ -800,14 +800,14 @@ export const RedChromeCargoView: React.FC = () => {
             }`}>
               <div className="flex items-center justify-between border-b border-[#1b2336] pb-1 mb-1">
                 <span className="font-tech text-xs font-black text-cyan-300 uppercase">
-                  1. REAR CAR (Vagón Trasero de Acceso)
+                  1. REAR CAR (Vagón Trasero)
                 </span>
                 <span className="text-[10px] text-red-400 font-bold bg-red-950/80 px-1.5 rounded">
                   {rearGuardsCount} Guardias RCL
                 </span>
               </div>
               <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
-                Entrada superior por <strong>Escotilla [▼] (DV 13 Basic Tech)</strong>. 4 bloques de contenedores altos rayados (cobertura <strong>SP 13 / 30 HP</strong>) que permiten sigilo tras contenedores (<strong>DV 10 Stealth</strong>).
+                Entrada superior por <strong>Escotilla [▼] (DV 13 Basic Tech)</strong>. Los contenedores altos ocultan la escotilla y permiten intentar una entrada sigilosa para sorprender a los guardias (la aventura no da DV).
               </p>
             </div>
 
@@ -824,7 +824,7 @@ export const RedChromeCargoView: React.FC = () => {
                 </span>
               </div>
               <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
-                2 contenedores de cobertura a la izquierda y el nodo <strong>[▲ Network Port]</strong> a la derecha: jack-in físico con interface plugs para hackear el <strong>Hammerhead Mainframe</strong> de 5 pisos.
+                Vacío salvo algunos contenedores y el <strong>[▲ Network Port]</strong> (puerto de mantenimiento): un Netrunner puede conectarse al <strong>Hammerhead Mainframe</strong> de 5 pisos.
               </p>
             </div>
 
@@ -841,7 +841,7 @@ export const RedChromeCargoView: React.FC = () => {
                 </span>
               </div>
               <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
-                Arriba izq: <strong>[★ Hornet's Cargo (4 Cajas ADN)]</strong>. Centro: <strong>[⬢ Torreta Automática]</strong> (+14 atk, 5d6 daño). Arriba der: <strong>[▣ Turret Control]</strong> para anulación manual.
+                <strong>[★ Hornet's Cargo (4 Cajas ADN)]</strong>. Centro: <strong>[⬢ Automated Turret]</strong> (Combat Number 14, 25 HP; DV 17 Electronics/Security Tech para contrarrestarla). <strong>[▣ Turret Control]</strong>: controles de la torreta.
               </p>
             </div>
 
@@ -858,7 +858,7 @@ export const RedChromeCargoView: React.FC = () => {
                 </span>
               </div>
               <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
-                Consola frontal <strong>[● Train Control]</strong>. Prueba <strong>DV 9 Drive Land Vehicle</strong> para acoplar los frenos neumáticos y detener por completo el convoy antes del pueblo fantasma.
+                Consola frontal <strong>[● Train Control]</strong>. Prueba <strong>DV 9 Drive Land Vehicle</strong> para detener el Hammerhead (normalmente automático).
               </p>
             </div>
           </div>
@@ -1285,6 +1285,19 @@ export const RedChromeCargoView: React.FC = () => {
                             </div>
                           ))}
                         </div>
+
+                        {/* Porte CEMK (plan 6): todo PNJ 2077 tiene Neuroport y es hackeable (RB pp.15, 35-36) */}
+                        {conversionMode === '2077' && (
+                          <div className="p-1.5 bg-[#171308] border border-amber-600/40 rounded text-[10px] text-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                            <strong className="text-amber-400 uppercase">⚡ NEUROPORT · HACKEABLE</strong>
+                            <button
+                              onClick={() => setActiveQuickhackModal(profile.id)}
+                              className="px-2 py-0.5 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded text-[9px] cursor-pointer shrink-0"
+                            >
+                              Lanzar Quickhack ➔
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       {/* BLOQUE 4: LOOT / BOTÍN AL MORIR */}
@@ -1564,7 +1577,7 @@ export const RedChromeCargoView: React.FC = () => {
                       MANIFIESTO DE CARGA MILITAR (HAMMERHEAD_MANIFEST_LOOT)
                     </h3>
                   </div>
-                  <span className="text-[10px] text-slate-400">5 Envíos Registrados</span>
+                  <span className="text-[10px] text-slate-400">Contenido a criterio del GM (p. 3)</span>
                 </div>
 
                 <div className="space-y-3">
@@ -1631,7 +1644,6 @@ export const RedChromeCargoView: React.FC = () => {
                       >
                         <div className="flex items-baseline justify-between border-b border-[#1a2336] pb-1">
                           <strong className="text-white text-xs">{crate.label}</strong>
-                          <span className="text-[10px] text-amber-400 font-bold">{crate.totalValueEb} €$</span>
                         </div>
                         <span className="text-[10px] text-cyan-300 block">{crate.intendedRecipient}</span>
                         <p className="text-[9px] text-[#94a3b8]">{crate.transportRequirement}</p>

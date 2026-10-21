@@ -33,7 +33,7 @@ export interface CemkEnemyPort {
   bodySp: number;
   headSpVsMelee: number;
   bodySpVsMelee: number;
-  weapons: Array<EnemyWeaponProfile & { weaponType2077: 'Power' | 'Smart' | 'Tech' }>;
+  weapons: Array<EnemyWeaponProfile & { weaponType2077: 'Power' | 'Smart' | 'Tech' | 'Melee' }>;
   hp: number;
   hpFormula: number;
   hpMatchesFormula: boolean;
@@ -90,11 +90,16 @@ export function portEnemyToCemk(enemy: EnemySheet): CemkEnemyPort {
   notes.push('SP contra melee/artes marciales a la mitad, redondeo hacia arriba (RB p.10)');
 
   const isCemkType = (t: unknown): t is 'Power' | 'Smart' | 'Tech' => t === 'Power' || t === 'Smart' || t === 'Tech';
+  // Las fichas CEMK imprimen "Melee Weapon" como tipo aparte; RED: Melee Weapon/Brawling/Martial Arts cuentan como melee.
+  const isMelee = (w: EnemyWeaponProfile) =>
+    w.weaponType2077 === 'Melee' || /melee|brawling|martial/i.test(w.skill ?? '');
   const weapons = enemy.weapons.map(w => ({
     ...w,
     weaponType2077: isCemkType(w.weaponType2077)
       ? w.weaponType2077
-      : (/smart/i.test(`${w.name} ${w.notes ?? ''}`) ? 'Smart' : 'Power') as 'Power' | 'Smart' | 'Tech'
+      : isMelee(w)
+        ? 'Melee'
+        : (/smart/i.test(`${w.name} ${w.notes ?? ''}`) ? 'Smart' : 'Power') as 'Power' | 'Smart' | 'Tech' | 'Melee'
   }));
   notes.push('Armas clasificadas Power/Smart/Tech (RB p.8)');
 

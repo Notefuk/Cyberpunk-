@@ -10,6 +10,7 @@ import {
   type EnemyWeaponProfile
 } from '../../data/enemiesCatalog';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { portEnemyToCemk } from '../../engine/cemkPort';
 import type { StatKey, CharacterEra } from '../../types/cyberpunk';
 import { 
   Search, 
@@ -151,6 +152,110 @@ interface EnemiesCompendiumPanelProps {
   onSpawnToInitiative?: (enemy: EnemySheet) => void;
 }
 
+const ENEMY_SHEET_MODE_KEY = 'cpr_enemy_sheet_mode_v1';
+type EnemySheetMode = 'cemk' | 'red';
+
+// Vista de la ficha de un PNJ en modo CEMK (porte, plan 6) o RED (datos originales del libro).
+const EnemyPortView: React.FC<{ enemy: EnemySheet; mode: EnemySheetMode }> = ({ enemy, mode }) => {
+  const port = useMemo(() => portEnemyToCemk(enemy), [enemy]);
+  const [notesOpen, setNotesOpen] = useState(false);
+  const source = enemy.sourcePage ? (
+    <p className="text-[10px] text-slate-500">
+      Fuente: {enemy.sourceBookTitle} p.{enemy.sourcePage}
+    </p>
+  ) : null;
+
+  if (mode === 'red') {
+    return (
+      <div className="p-3 bg-[#131622] rounded-xs border border-[#232b3f] space-y-2 text-[11px]">
+        <span className="text-[10px] font-bold text-slate-300 uppercase block">FICHA RED ORIGINAL (LIBRO):</span>
+        <p className="text-slate-300">
+          HP {enemy.hp} • Herida grave {enemy.seriouslyWounded} • Death Save {enemy.deathSave} • SP C{enemy.headSp} / T{enemy.bodySp}
+          {enemy.stats.LUCK !== undefined && <> • LUCK {enemy.stats.LUCK}</>}
+          {enemy.luck !== undefined && enemy.stats.LUCK === undefined && <> • LUCK {enemy.luck}</>}
+        </p>
+        {enemy.roleAbility && (
+          <p className="text-slate-300">Role Ability: {enemy.roleAbility.name} rank {enemy.roleAbility.rank}</p>
+        )}
+        {enemy.skillBases && Object.keys(enemy.skillBases).length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {Object.entries(enemy.skillBases).map(([k, v]) => (
+              <span key={k} className="px-1.5 py-0.5 bg-[#1b2030] text-slate-300 border border-[#28324a] rounded-xs text-[10px]">
+                {k} +{v}
+              </span>
+            ))}
+          </div>
+        )}
+        {enemy.cyberdeckPrograms && enemy.cyberdeckPrograms.length > 0 && (
+          <p className="text-slate-300">Cyberdeck (programas): {enemy.cyberdeckPrograms.join(', ')}</p>
+        )}
+        {source}
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-3 bg-[#0f1d24] rounded-xs border border-cyan-800/40 space-y-2 text-[11px]">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs border bg-cyan-950/60 text-cyan-300 border-cyan-500/50">
+          NEUROPORT · HACKEABLE
+        </span>
+        <span className="text-[10px] font-bold text-cyan-300 uppercase">PORTE CEMK</span>
+      </div>
+      <p className="text-slate-300">
+        SP {port.headSp}/{port.bodySp} • vs melee {port.headSpVsMelee}/{port.bodySpVsMelee}
+      </p>
+      <div className="space-y-0.5">
+        {port.weapons.map((w, i) => (
+          <p key={i} className="text-slate-300">
+            <span className="px-1 py-0.5 mr-1.5 bg-cyan-950/40 text-cyan-300 border border-cyan-800/40 rounded-xs text-[9px] font-bold">
+              {w.weaponType2077}
+            </span>
+            {w.name} ({w.damage})
+          </p>
+        ))}
+      </div>
+      {port.isNetrunner && (
+        <div className="space-y-1">
+          <p className="text-[#c084fc]">
+            Interface {port.interfaceRank} • {port.netActionsPerTurn} NET Actions • Cyberdeck Port {port.cyberdeckPortRangeM} m • Quickhacks hasta DV{port.maxQuickhackDv}
+          </p>
+          {port.availableQuickhacks.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {port.availableQuickhacks.map((q) => (
+                <span key={q} className="px-1.5 py-0.5 bg-[#1b1522] text-[#c084fc] border border-[#44284d] rounded-xs text-[10px]">
+                  {q}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+      {port.selfIcePasswalls.length > 0 && (
+        <p className="text-amber-300">Passwall {port.selfIcePasswalls.map((p) => `DV ${p.dv}`).join(' / ')}</p>
+      )}
+      <div>
+        <button
+          type="button"
+          onClick={() => setNotesOpen((v) => !v)}
+          className="text-[10px] font-bold text-slate-400 hover:text-amber-400 uppercase flex items-center gap-1"
+        >
+          {notesOpen ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+          Reglas de porte
+        </button>
+        {notesOpen && (
+          <ul className="mt-1 space-y-0.5 text-slate-400">
+            {port.notes.map((n, i) => (
+              <li key={i}>▸ {n}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+      {source}
+    </div>
+  );
+};
+
 export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ onSpawnToInitiative }) => {
   // Store hook to import character into active roster
   const createCharacterFromWizard = useCharacterStore((state) => state.createCharacterFromWizard);
@@ -175,6 +280,21 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
   }, [activeEnemies]);
 
   // Filter states
+  const [sheetMode, setSheetModeState] = useState<EnemySheetMode>(() => {
+    try {
+      return localStorage.getItem(ENEMY_SHEET_MODE_KEY) === 'red' ? 'red' : 'cemk';
+    } catch {
+      return 'cemk';
+    }
+  });
+  const setSheetMode = (m: EnemySheetMode) => {
+    setSheetModeState(m);
+    try {
+      localStorage.setItem(ENEMY_SHEET_MODE_KEY, m);
+    } catch {
+      /* sin persistencia */
+    }
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedThreatTier, setSelectedThreatTier] = useState<ThreatTier | 'all'>('all');
   const [selectedSourceBook, setSelectedSourceBook] = useState<SourceBookId | 'all'>('all');
@@ -1212,6 +1332,26 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
                 {/* Contenido Desplegable Completo de la Ficha */}
                 {isExpanded && (
                   <div className="p-4 pt-2 border-t border-[#1c2236] bg-[#0c0e17] space-y-4 font-mono-code text-xs">
+                    {/* Selector de modo de ficha: porte CEMK / original RED */}
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[10px] text-slate-400 uppercase font-bold">FICHA:</span>
+                      {(['cemk', 'red'] as const).map((m) => (
+                        <button
+                          key={m}
+                          type="button"
+                          onClick={() => setSheetMode(m)}
+                          className={`px-2 py-0.5 rounded-xs border text-[10px] font-bold uppercase transition-colors ${
+                            sheetMode === m
+                              ? 'bg-amber-400 text-black border-amber-400'
+                              : 'bg-[#141824] text-slate-400 border-[#232b3f] hover:text-amber-400'
+                          }`}
+                        >
+                          {m === 'cemk' ? 'CEMK' : 'RED'}
+                        </button>
+                      ))}
+                    </div>
+                    <EnemyPortView enemy={enemy} mode={sheetMode} />
+
                     {/* Lore & Tácticas */}
                     <div className="p-3 bg-[#131622] rounded-xs border-l-4 border-amber-400 space-y-1">
                       <span className="text-[10px] font-bold text-amber-300 uppercase tracking-wider block">

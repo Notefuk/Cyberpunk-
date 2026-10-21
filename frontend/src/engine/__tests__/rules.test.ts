@@ -20,7 +20,10 @@ import { beatsDv, calculateIncomingImpact, createDamageRoll, rollCheckD10 } from
 import { BLACK_ICE_STATS, NET_ACTIONS_PER_TURN, QUICKHACKS_2077_CATALOG } from '../../data/netAndRolesData';
 import { BODY_CRITICAL_INJURIES, HEAD_CRITICAL_INJURIES, rollCriticalInjury } from '../../data/criticalInjuries';
 import { CEMK_WEAPON_REBUILD_SYSTEM_GUIDE } from '../../data/weaponAndCyberwareTooltips';
-import { ENEMIES_CATALOG, type EnemySheet } from '../../data/enemiesCatalog';
+import { ENEMIES_CATALOG, convertEnemyToCharacterSheet, type EnemySheet } from '../../data/enemiesCatalog';
+import { CORE_ENEMIES } from '../../data/enemies/core';
+import { CEMK_ENEMIES } from '../../data/enemies/cemk';
+import { HARDENED_ENEMIES } from '../../data/enemies/hardened';
 import { portEnemyToCemk } from '../cemkPort';
 import pack from '../../data/core-rules.cprpack.json';
 import type { CharacterSheet } from '../../types/cyberpunk';
@@ -478,5 +481,76 @@ describe('Porte CEMK de PNJ (plan 6)', () => {
     const q = portEnemyToCemk(mk({ hp: 30 }));
     expect(q.hpMatchesFormula).toBe(false);
     expect(q.notes.some(n => n.includes('HP del libro (30)'))).toBe(true);
+  });
+});
+
+describe('Enemigos canon v4.7.0', () => {
+  const isCoreOrHardened = (e: { sourceBook: string }) => e.sourceBook === 'core' || e.sourceBook === 'dlc';
+
+  it('Conteos por libro: Core 10, CEMK 14, Hardened 16', () => {
+    expect(CORE_ENEMIES).toHaveLength(10);
+    expect(CEMK_ENEMIES).toHaveLength(14);
+    expect(HARDENED_ENEMIES).toHaveLength(16);
+  });
+
+  it('Todos los PNJ canon tienen sourcePage', () => {
+    for (const e of [...CORE_ENEMIES, ...CEMK_ENEMIES, ...HARDENED_ENEMIES]) {
+      expect(typeof e.sourcePage, e.id).toBe('number');
+    }
+  });
+
+  it('ids únicos en ENEMIES_CATALOG y sin entradas interface_red', () => {
+    const ids = ENEMIES_CATALOG.map((e) => e.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ENEMIES_CATALOG.some((e) => e.sourceBook === 'interface_red')).toBe(false);
+  });
+
+  it('Boosterganger Core: BODY 2 y Death Save 2 (Errata v1.25 p. 412)', () => {
+    const e = ENEMIES_CATALOG.find((x) => x.id === 'core-boosterganger');
+    expect(e?.stats.BODY).toBe(2);
+    expect(e?.deathSave).toBe(2);
+  });
+
+  it('Security Officer Core: SP de cabeza 12 (Errata v1.25 p. 415)', () => {
+    const e = ENEMIES_CATALOG.find((x) => x.id === 'core-security-officer');
+    expect(e?.headSp).toBe(12);
+  });
+
+  it('Todos los PNJ CEMK tienen format cemk', () => {
+    for (const e of CEMK_ENEMIES) expect(e.format, e.id).toBe('cemk');
+  });
+
+  it('HP de Core y Hardened = 10 + 5 * ceil((BODY + WILL) / 2) (Core p. 187)', () => {
+    const mismatches = ENEMIES_CATALOG.filter(isCoreOrHardened)
+      .filter((e) => e.hp !== 10 + 5 * Math.ceil((e.stats.BODY + e.stats.WILL) / 2))
+      .map((e) => e.id);
+    expect(mismatches).toEqual([]);
+  });
+});
+
+describe('Porte en UI/conversión v4.7.0', () => {
+  it('convertEnemyToCharacterSheet(core-netrunner): Neuroport e Interface 4', () => {
+    const e = ENEMIES_CATALOG.find((x) => x.id === 'core-netrunner');
+    expect(e).toBeDefined();
+    const sheet = convertEnemyToCharacterSheet(e!);
+    expect(sheet.hasNeuroport).toBe(true);
+    expect(sheet.roleRank).toBe(4);
+  });
+
+  it('todo el catálogo porta sin lanzar y tiene Neuroport', () => {
+    for (const e of ENEMIES_CATALOG) {
+      expect(() => portEnemyToCemk(e)).not.toThrow();
+      expect(convertEnemyToCharacterSheet(e).hasNeuroport).toBe(true);
+    }
+  });
+
+  it('armas Brawling/Martial Arts/ciberware melee con ROF del Core (pp.114-115, 176, 178)', () => {
+    const find = (n: string) => ENEMIES_CATALOG.flatMap((e) => e.weapons).filter((w) => w.name === n);
+    for (const n of ['Brawling', 'Martial Arts Strike', 'Rippers', 'Wolvers']) {
+      const ws = find(n);
+      expect(ws.length).toBeGreaterThan(0);
+      ws.forEach((w) => expect(w.rof).toBe(2));
+    }
+    find('Cybersnake').forEach((w) => expect(w.rof).toBe(1));
   });
 });

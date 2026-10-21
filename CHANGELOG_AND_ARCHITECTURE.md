@@ -247,6 +247,26 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.7.0] - 2026-10-22 (Enemigos canon Core/CEMK/Hardened + porte CEMK) [Claude Code · 2026-10-22]
+* **Category**: Canon / enemigos (plan 6, bloque 1: `docs/plans/plan6-enemigos-canon-cemk.md`). Registro: `docs/canon-audit/v4.7.0-enemigos-core-cemk-hardened.md` y `docs/canon-audit/v4.7.0-rcc-notes.md`.
+* **Se perdió**: 36 fichas inventadas (sourceBook core 11, cemk_2077 14, dlc 10, interface_red 1) y Tamayura, Achilles, Chao y el Ballistic Coprocessor.
+* **Se ganó**: 40 fichas canon (Core 10, CEMK 14, Hardened 16) con `sourcePage`. Las fuentes están en `data/enemies-src/*.json`; `scripts/gen_enemies.py` genera `frontend/src/data/enemies/*.ts` (no se editan a mano).
+* **Se corrigió**: Security Officer SP 13 → 12 (Errata v1.25, Core p.415).
+* **Porte CEMK**: `frontend/src/engine/cemkPort.ts` (`portEnemyToCemk`), con reglas del Rule Book de CEMK:
+  - Neuroport para todos (pp. 15, 35-36).
+  - Cyberdeck Port de 50 m y hasta 3 NET Actions (pp. 16-17).
+  - Quickhacks según el rango de Interface (p.25).
+  - Self-ICE solo si el libro lo trae (p.36).
+  - Power/Smart/Tech/Melee (p.8) y SP contra melee a la mitad (p.10).
+  - En las fichas CEMK nativas gana lo impreso.
+* **UI**:
+  - Selector CEMK | RED en `EnemiesCompendiumPanel.tsx` (`cpr_enemy_sheet_mode_v1`).
+  - Botón de Quickhack restaurado en `RedChromeCargoView.tsx`.
+  - `convertEnemyToCharacterSheet` usa el porte.
+* **Red Chrome Cargo**: `redChromeCargoData.ts` pasa de 1940 a ~800 líneas, solo con canon.
+* **Tests**: 62.
+* **Persistencia**: los encuentros y los PNJ custom guardados son copias completas; los campos nuevos son opcionales.
+
 ### [v4.6.2] - 2026-10-21 (Hornet's Pharmacy, 12 Days of Gunmas y Errata v1.25 canon) [Claude Code · 2026-10-21]
 * **Category**: Canon / datos (plan 5, bloque 2). Registro detallado: `docs/canon-audit/v4.6.2-farmacia-gunmas-errata.md`.
 * **Hornet's Pharmacy** (pp. 2-5). Se perdió: Hover, Red Glass y Detox (inventados). Se ganó: 3 compuestos aditivos, Sedative, Veritas, el Suzumebachi Assassin Drone, Bodyweight AutoInjector y el Gas Jet. Se corrigió: Berserker, Prime Time, Sixgun y Timewarp (antes etiquetado como Core).
