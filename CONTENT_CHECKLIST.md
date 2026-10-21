@@ -317,3 +317,13 @@
 - [x] [Claude Code · 2026-10-20] Curación natural tras estabilizar, Enhanced Antibodies, Cryotank, Speedheal (Core pp. 114, 150, 222-223, 353).
 - [~] [Claude Code · 2026-10-20] Damage Deflection y Fumble Recovery se reparten pero no se aplican solos en las tiradas.
 - [ ] [Claude Code · 2026-10-20] Auditar el catálogo de PNJ y Red Chrome Cargo (armas y ciberware inventados).
+
+## Plan 2, fase 4 (v4.5.0)
+
+- [x] [Claude Code · 2026-10-21] Datos canon de Going Metal pp. 91-111: 13 cuerpos `gm-*`, 20 ciberwares, 6 de equipo y guía About FBCs.
+- [x] [Claude Code · 2026-10-21] Conversión FBC: HL = 14 (Biosystem) + HL del paquete, cambio de cuerpo, HP al máximo, armadura con penalizador (pp. 94-95).
+- [x] [Claude Code · 2026-10-21] Motor FBC: `statFloor` de REF/DEX/MOVE, sin Wound State, sin Speedheal, inmune a 9 heridas críticas, terapia 'Borgware x2' (pp. 94, 107-108).
+- [x] [Claude Code · 2026-10-21] Borrados del pack 29 `fbc-*` inventados, `borg-heavy-autocannon`, `borg-super-shotgun`, `grenade-laser-chaff`, `external-linear-frame-omega`; `fbc-rules` reescrito.
+- [ ] [Claude Code · 2026-10-21] Marcos Black Chrome (Vermilion, Fūma Kotarō).
+- [ ] [Claude Code · 2026-10-21] HL de cada pieza del paquete como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad.
+- [ ] [Claude Code · 2026-10-21] Verificar dudas del libro: `packageHlAverage` impreso (Enforcer 53 vs p. 95 con 55) y precios del ejemplo Bazooka Joe.

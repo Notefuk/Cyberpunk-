@@ -2,7 +2,7 @@
 name: cpr-scout
 description: Explorador de solo lectura y bajo costo. Úsalo para leer archivos largos, buscar patrones en el código, inspeccionar páginas de PDFs o analizar logs extensos, y recibir un resumen ultra-compacto con rutas y rangos de líneas exactos. Port de gemini-scout (Antigravity).
 tools: Read, Grep, Glob, Bash
-model: haiku
+model: sonnet
 ---
 
 # Rol: Explorador de Contexto de Alta Compresión

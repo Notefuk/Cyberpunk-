@@ -5,9 +5,11 @@
 > Toda actualización va firmada: `[Claude Code · AAAA-MM-DD]` o `[Antigravity · AAAA-MM-DD]`.
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 
-**Última actualización**: [Claude Code · 2026-10-20]
-**Versión de la app**: v4.4.0
-**Plan activo**: plan 2 (`docs/plans/plan2-auditoria-expansiones.md`). Plan 1 terminado en v4.2.1.
+**Última actualización**: [Claude Code · 2026-10-21]
+**Versión de la app**: v4.4.0 (v4.5.0 en curso en la rama `claude/v4.5.0-going-metal`, Claude Code local)
+
+> [Claude Code · 2026-10-21] **El trabajo a medias de v4.5.0 se perdió**: la rama `claude/project-thread-5rr1t9` apunta al mismo commit que `main` (v4.4.0) porque el sandbox de claude.ai nunca pusheó. Se perdieron la reescritura de `goingMetalFbcData.ts`, el parche de `CyberwareRipperdocView.tsx` y `docs/plans/plan3-auditoria-enemigos-red-chrome.md` (con sus 5 preguntas). Se rehace en la rama nueva. Setup local: subagentes `cpr-scout`/`cpr-worker`/`github-web-deployer` en Sonnet, skill `checkpoint` + hook `Stop` `checkpoint-guard.sh`, skill de PDFs con lectura local (Going Metal = `ilide.info-going-metal-pr_*.pdf` en la raíz de la carpeta de PDFs).
+**Plan activo**: plan 2 (`docs/plans/plan2-auditoria-expansiones.md`), fase 4 a medias. Plan 1 terminado en v4.2.1. Plan 3 escrito, sin aprobar.
 
 ## Último trabajo terminado
 
@@ -26,18 +28,27 @@
 
 ## En curso
 
-- [Claude Code · 2026-10-20] Plan 2 guardado. Fases: 1 ✓ v4.3.0 NET/Quickhacks (X1-X3, X7) · 2 ✓ v4.3.1 datos CEMK (X4-X6, X12) · 3 ✓ v4.4.0 roles/Martial Arts/Humanidad/granadas/curación + borrar modos de carga (X8-X11, X13, R10) · 4 ○ v4.5.0 Going Metal canon (G1-G3) · 5 ○ v4.5.1 Cyberfists of Fury canon (C1-C2).
-- Decisiones del usuario: todo canon, borrar lo inventado (no homebrew), NET Actions según CEMK (hasta 3).
-- Texto de los PDFs extraído en el contenedor (no persiste): Going Metal es un PDF de 21 páginas (página impresa = PDF + 90); Interface RED 4 tiene Cyberfists of Fury en pp. 73-83.
+- [Claude Code · 2026-10-21] **v4.5.0 Going Metal (plan 2, fase 4): código terminado, falta cerrar.** Rama `claude/v4.5.0-going-metal` (Claude Code local). `tsc` limpio y 32/32 tests.
+  - Hecho (rehecho desde el PDF): `goingMetalFbcData.ts` canon (13 cuerpos `gm-*`, 20 ciberwares con `gm-biosystem`, 6 de equipo, `ABOUT_FBCS_GUIDE`, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14, `LINEAR_FRAME_OMEGA_HP_CHART`).
+  - Hecho: ítems 1-6 del checkpoint anterior (Ripperdoc con HL real, `ActiveFbcState.statFloor/armorPenalty`, store, motor, StreetLab, HUD, pack sin 29 `fbc-*` + 4 inventados, `fbc-rules` reescrito) y 4 tests FBC. Desvíos: en el pack había 29 `fbc-*`, no 33; el +5 del crítico vive en `combatEngine.ts` (~l. 237), así que el HUD devuelve hasta 5 HP con `adjustHp` cuando un FBC es inmune.
+  - Hecho: docs firmados (CHANGELOG, HANDOFF, STATUS, CONTENT_CHECKLIST), changelog in-app v4.5.0, `npm run build` OK, commit local `v4.5.0 Going Metal canon: Full Body Conversion`.
+  - Falta: push de la rama y PR a `main` (esperando OK de Giuliano).
+- Dudas del libro (anotadas en docs): `packageHlAverage` impreso no siempre cuadra con su fórmula (Enforcer 53 vs 55 en el ejemplo de p. 95); BODY de Sigma/Beta y SP de Skin Weave/Subdermal salen del Core; el filtro por zona del Ripperdoc ahora usa `Internal`/`External`/`Cyberlimb`.
+- Fuera de alcance de v4.5.0: marcos Black Chrome (Vermilion, Fūma Kotarō); el HL de cada pieza del paquete no se instala como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad.
+- Decisiones del usuario: todo canon, borrar lo inventado (no homebrew), NET Actions según CEMK (hasta 3), subagentes todos en Sonnet. Pendiente de respuesta: ¿publicar en gh-pages?
+- PDFs locales: Going Metal = `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\ilide.info-going-metal-pr_f86aec80bbb3b8b8c08ede7e5181f832.pdf` (21 págs.; impresa = PDF + 90). Interface RED Vol. 1-4 en `Sourcebooks\Interface-RED\`.
 
 ## Próximos pasos
 
-1. Ejecutar la fase 4 del plan 2 (v4.5.0 Going Metal: G1-G3).
-2. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.
-3. GM Master Screen (`FixerDeckView.tsx`).
-4. Scripts de extracción: pasar las rutas Windows hardcodeadas a rutas configurables.
+1. Cerrar v4.5.0 (docs, commit, push, PR).
+2. v4.5.1 Cyberfists of Fury (IR4 pp. 73-83: 23 formas y 46 movimientos, `isOpposed` donde aplique) en `cyberfistsMartialArtsData.ts`. Cierra el plan 2.
+3. Plan 3 (enemigos y Red Chrome Cargo): **se perdió**; hay que reescribirlo y volver a hacerle a Giuliano sus preguntas antes de ejecutarlo.
+4. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.
+5. GM Master Screen (`FixerDeckView.tsx`).
 
 ## Notas y bloqueos
 
-- Antes de volver a Antigravity, hacer `git pull` en `C:\Users\TeseoHeracles\cpr-omni-deck`.
+- Antes de volver a Antigravity, `git pull` en `C:\Users\TeseoHeracles\cpr-omni-deck` y traer la rama `claude/v4.5.0-going-metal` hasta que se mergee. `claude/project-thread-5rr1t9` no tiene nada nuevo.
+- Seguridad: el remote `origin` tiene un token de GitHub en la URL; Giuliano debe revocarlo y pasar a Git Credential Manager.
+- El hook `Stop` solo corre en sesiones abiertas en la carpeta del repo.
 - Los docs mencionan `characterLifepathData.ts` / `ROLE_SPECIFIC_LIFEPATHS`, que no existen en el código.

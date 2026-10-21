@@ -247,6 +247,37 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.5.0] - 2026-10-21 (Going Metal canon: Full Body Conversion) [Claude Code · 2026-10-21]
+* **Category**: Datos de expansión y reglas (plan 2, fase 4: `docs/plans/plan2-auditoria-expansiones.md`)
+* **Files Modified**:
+  - `data/core-rules.cprpack.json`
+  - `frontend/src/data/core-rules.cprpack.json`
+  - `frontend/src/data/expansionRulesData.ts`
+  - `frontend/src/data/goingMetalFbcData.ts`
+  - `frontend/src/engine/__tests__/rules.test.ts`
+  - `frontend/src/engine/characterEngine.ts`
+  - `frontend/src/features/combat/CombatHudView.tsx`
+  - `frontend/src/features/cyberware/CyberwareRipperdocView.tsx`
+  - `frontend/src/features/sheet/StreetLabView.tsx`
+  - `frontend/src/store/useCharacterStore.ts`
+  - `frontend/src/types/cyberpunk.ts`
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CONTENT_CHECKLIST.md`
+  - `CHECKPOINT.md`
+* **What Changed**:
+  1. Datos canon de Going Metal pp. 91-111 en `goingMetalFbcData.ts` (reescrito): 13 cuerpos `gm-*` (Copernicus, Aquarius, Brimstone, Dragoon, Eclipse, Enforcer, Spyder-2, Sheol, Samson, Gemini, Wiseman, Alpha Class, Kildare) con BODY del frame, `statFloor` (mínimo REF/DEX/MOVE por hidráulica), SP base, `armorPenalty` (Dragoon -2), `packageHlAverage` y ciberware con y sin HL y página. 20 ciberwares (incluye Biosystem y Borgware), 6 de equipo, guía About FBCs, `FBC_IMMUNE_CRITICAL_INJURIES` (9 heridas), `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14 y tabla de HP de Linear Frame Omega. Se quitó `moveOverride`.
+  2. Conversión: HL = 14 (Biosystem) + HL del paquete del cuerpo; cambiar de cuerpo cuesta el HL del paquete (p. 95). HP al máximo del cuerpo nuevo (p. 94). Armadura del chasis con su penalizador. `gm-biosystem` se instala en la primera conversión y cuenta como Borgware para el tope de terapia.
+  3. Motor (`characterEngine.ts`): REF/DEX/MOVE = max(base, `statFloor`) (pp. 107-108); el FBC no sufre penalizadores de Wound State ni el -6 MOVE de Mortally Wounded (p. 94); Speedheal no funciona en FBC; Cryotank no duplica la curación en FBC; inmune a 9 heridas críticas y a su +5 de daño (p. 94); la terapia cuenta 'Borgware x2' como -8.
+  4. Ripperdoc: textos con el HL real, 'Going Metal' en lugar de 'Interface RED Vol. 3', y tope de Humanidad que suma todo el ciberware (pack + Going Metal).
+  5. Pack `core-rules.cprpack.json` (ambas copias): borrados 29 `fbc-*` inventados y `borg-heavy-autocannon`, `borg-super-shotgun`, `grenade-laser-chaff`, `external-linear-frame-omega`.
+  6. `expansionRulesData.ts`: `fbc-rules` reescrito desde la guía canon; se borró lo inventado (medio HL, 7 chasis, DaiOni, Vermilion).
+  7. Tests: 32 en total (4 nuevos de FBC). `tsc -b --noEmit` limpio.
+  8. Setup local de Claude Code (no afecta a la app): subagentes en Sonnet, skill `checkpoint` + hook Stop `checkpoint-guard.sh`, skill de PDFs con lectura local.
+  9. Pendiente (fuera de alcance): marcos Black Chrome (Vermilion, Fūma Kotarō); el HL de cada pieza del paquete no se instala como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad. Dudas del libro: el `packageHlAverage` impreso no siempre cuadra con su fórmula (Enforcer 53 vs el ejemplo de p. 95 con 55); los precios del ejemplo Bazooka Joe son inconsistentes.
+
 ### [v4.4.0] - 2026-10-20 (Roles, Martial Arts, curación, terapia y granadas del Core; sin modos de carga) [Claude Code · 2026-10-20]
 * **Category**: Reglas del Core (plan 2, fase 3: `docs/plans/plan2-auditoria-expansiones.md`)
 * **Files Modified**:

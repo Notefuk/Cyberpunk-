@@ -35,8 +35,13 @@ import {
   calculateModifiedMagazineSize
 } from '../data/weaponAttachmentsAndTechData';
 
+import { FBC_16_CYBERWARE, FBC_IMMUNE_CRITICAL_INJURIES } from '../data/goingMetalFbcData';
+
 const PACK_CYBERWARE_BY_ID = new Map(
-  (coreRulesPack.cyberware as { id: string; humanityLoss?: string; type?: string }[]).map((cw) => [cw.id, cw])
+  [
+    ...(coreRulesPack.cyberware as { id: string; humanityLoss?: string; type?: string }[]),
+    ...FBC_16_CYBERWARE
+  ].map((cw) => [cw.id, cw] as const)
 );
 
 // Core p. 230: la Humanidad que se recupera no puede pasar el máximo de terapia (-2 por ciberware, -4 por borgware).
@@ -424,7 +429,7 @@ export interface CharacterStoreState {
   }) => { success: boolean; message: string };
   uninstallCyberware: (cyberwareId: string, humanityRefundAmount?: number) => void;
   adjustHumanity: (delta: number) => void;
-  inflictRandomInjury: (location: 'head' | 'body') => ActiveCriticalInjury;
+  inflictRandomInjury: (location: 'head' | 'body') => ActiveCriticalInjury | null;
   toggleTreatInjury: (injuryId: string) => void;
   removeInjury: (injuryId: string) => void;
   exportActiveCharacterJson: () => string;
@@ -477,7 +482,8 @@ export interface CharacterStoreState {
     id: string;
     name: string;
     bodyOverride: number;
-    moveOverride: number;
+    statFloor: number;
+    armorPenalty: number;
     baseArmorSp: number;
     humanityCost: number;
     immunities: string[];
@@ -1487,7 +1493,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
             // Core p. 223: sin estabilizar a 1+ HP no empieza la curación natural.
             if ((c.currentHp || 0) <= 0) return c;
             const effBody = getEffectiveBody(c);
-            const healAmount = naturalHealingPerDay(effBody, hasEnhancedAntibodies, inCryotank) * Math.max(1, days);
+            const healAmount = naturalHealingPerDay(effBody, hasEnhancedAntibodies, c.fbcState?.isFullBodyConversion ? false : inCryotank) * Math.max(1, days);
             const maxHp = calculateMaxHp(effBody, c.stats?.WILL ?? 0);
             const newHp = Math.min(maxHp, (c.currentHp || 0) + healAmount);
             return {
@@ -1664,6 +1670,14 @@ export const useCharacterStore = create<CharacterStoreState>()(
         const active = get().characters.find(c => c.id === get().activeCharacterId);
         const currentNames = (active?.activeInjuries ?? []).filter(i => !i.isTreated).map(i => i.name);
         const rolled = rollCriticalInjury(location, currentNames);
+        // Going Metal p. 94: un FBC es inmune a ciertas heridas críticas.
+        if (active?.fbcState?.isFullBodyConversion) {
+          const paren = rolled.name.match(/\(([^)]+)\)/);
+          const enName = (paren ? paren[1] : rolled.name).trim().toLowerCase();
+          if ((FBC_IMMUNE_CRITICAL_INJURIES as readonly string[]).some((n) => n.toLowerCase() === enName)) {
+            return null;
+          }
+        }
         const newInjury: ActiveCriticalInjury = {
           id: `injury-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
           name: rolled.name,
@@ -2143,7 +2157,8 @@ export const useCharacterStore = create<CharacterStoreState>()(
         id: string;
         name: string;
         bodyOverride: number;
-        moveOverride: number;
+        statFloor: number;
+        armorPenalty: number;
         baseArmorSp: number;
         humanityCost: number;
         immunities: string[];
@@ -2153,10 +2168,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
             if (c.id !== state.activeCharacterId) return c;
 
             const wasAlreadyFbc = Boolean(c.fbcState?.isFullBodyConversion);
-            const humanityCost = wasAlreadyFbc ? 0 : (chassis.humanityCost ?? 0);
+            const humanityCost = chassis.humanityCost ?? 0;
             const newHumanity = Math.max(0, (c.currentHumanity ?? 0) - humanityCost);
 
-            const oldMaxHp = calculateMaxHp(getEffectiveBody(c), c.stats?.WILL ?? 0);
 
             const newFbcState: ActiveFbcState = {
               isFullBodyConversion: true,
@@ -2164,7 +2178,8 @@ export const useCharacterStore = create<CharacterStoreState>()(
               activeChassisId: chassis.id,
               activeChassisName: chassis.name,
               bodyOverride: chassis.bodyOverride,
-              moveOverride: chassis.moveOverride,
+              statFloor: chassis.statFloor,
+              armorPenalty: chassis.armorPenalty,
               baseArmorSp: chassis.baseArmorSp,
               immunities: chassis.immunities || [],
               // Al cambiar de chasis se conserva la armadura original de antes de la primera conversión.
@@ -2180,8 +2195,8 @@ export const useCharacterStore = create<CharacterStoreState>()(
             };
 
             const newMaxHp = calculateMaxHp(getEffectiveBody(updatedCharTemp), updatedCharTemp.stats?.WILL ?? 0);
-            const hpDiff = newMaxHp - oldMaxHp;
-            const newHp = Math.min(newMaxHp, Math.max(0, (c.currentHp ?? 0) + (hpDiff > 0 ? hpDiff : 0)));
+            // Going Metal p. 94: al convertir o cambiar de cuerpo, HP actual = nuevo HP máximo.
+            const newHp = newMaxHp;
 
             let headArmor = c.headArmor;
             let bodyArmor = c.bodyArmor;
@@ -2192,7 +2207,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
                   name: `${chassis.name} Chassis Plating (Head)`,
                   maxSp: chassis.baseArmorSp,
                   currentSp: chassis.baseArmorSp,
-                  penalty: 0
+                  penalty: chassis.armorPenalty
                 };
               }
               if (!bodyArmor || chassis.baseArmorSp > bodyArmor.maxSp) {
@@ -2200,13 +2215,18 @@ export const useCharacterStore = create<CharacterStoreState>()(
                   name: `${chassis.name} Chassis Plating (Body)`,
                   maxSp: chassis.baseArmorSp,
                   currentSp: chassis.baseArmorSp,
-                  penalty: 0
+                  penalty: chassis.armorPenalty
                 };
               }
             }
 
+            const installedCyberwareIds = !wasAlreadyFbc && !(c.installedCyberwareIds || []).includes('gm-biosystem')
+              ? [...(c.installedCyberwareIds || []), 'gm-biosystem']
+              : c.installedCyberwareIds;
+
             return {
               ...updatedCharTemp,
+              installedCyberwareIds,
               currentHumanity: newHumanity,
               currentHp: newHp,
               headArmor,

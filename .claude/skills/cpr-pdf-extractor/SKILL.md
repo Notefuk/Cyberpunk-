@@ -18,7 +18,19 @@ C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\
 
 Subcarpetas: `Core-Rules/` (Core Rulebook v1.24, CEMK Rulebook, Easy Mode), `Sourcebooks/` (Black Chrome, Danger Gal Dossier, Night City Gang Guide, CEMK Handbook, `Interface-RED/` Vol. 1-3), `DLC-Supplements/`, `Adventures/`, `Reference-Aids/` (errata v1.25, Data Pack, folios CEMK), `Cyberpunk Edgerunners Mission Kit Digital/` (mapas, tokens y cartas en JPG/PNG).
 
-### Acceso desde Claude Code
+### Acceso desde Claude Code local (Windows, la PC del usuario)
+
+Los PDFs se leen directo del disco, sin traerlos a ningún contenedor:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\inspect_pdf_pages.py "C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\<subcarpeta>\<archivo>.pdf" <inicio> <fin>
+```
+
+- Going Metal **no** está en `Sourcebooks/`: es `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\ilide.info-going-metal-pr_f86aec80bbb3b8b8c08ede7e5181f832.pdf` (página impresa = página del PDF + 90).
+- Interface RED Vol. 1-4 están en `Sourcebooks\Interface-RED\`.
+- Las lecturas de PDF las hace siempre `cpr-scout`, que devuelve solo los datos pedidos.
+
+### Acceso desde Claude Code en la nube (claude.ai)
 
 Con la PC del usuario conectada (app de escritorio de Claude y carpeta autorizada):
 1. Ubica el archivo con `device_list_dir` sobre `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY`.

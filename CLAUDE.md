@@ -18,7 +18,8 @@ El proyecto se trabaja alternando Claude Code y Antigravity (cuando se agota el 
 `CHECKPOINT.md` en la raíz es el estado vivo del trabajo, compartido con Antigravity.
 - **Léelo primero** al iniciar sesión o tras una compactación de contexto.
 - **Actualízalo** al terminar cada tarea, antes de compactar contexto (o cuando la conversación ya sea larga) y antes de que el usuario cambie de herramienta: último trabajo terminado, qué quedó a medias (archivos y líneas), próximos pasos y bloqueos. Mantenlo breve y reemplaza lo viejo en vez de acumular historial.
-- Commitéalo junto con el trabajo al que corresponde.
+- Commitéalo junto con el trabajo al que corresponde, y **pushéalo**: un trabajo a medias que no está en GitHub se pierde (le pasó a v4.5.0 al pasar de claude.ai a Claude Code local).
+- Para actualizarlo usa la skill `checkpoint`. El hook `Stop` (`.claude/hooks/checkpoint-guard.sh`) frena el cierre de un turno si hay archivos cambiados más nuevos que `CHECKPOINT.md`.
 
 ## Firma de autoría (Claude Code ↔ Antigravity)
 

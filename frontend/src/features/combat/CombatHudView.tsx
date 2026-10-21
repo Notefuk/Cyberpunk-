@@ -1725,7 +1725,11 @@ export const CombatHudView: React.FC = () => {
 
     // Core p. 187: con dos o más 6 se sufre la Herida Crítica aunque el daño no atraviese el SP.
     if (calcIsCritical && (calcLocation !== 'shield' || calcExcessDamage > 0)) {
-      inflictRandomInjury(critLocation);
+      const injury = inflictRandomInjury(critLocation);
+      // Going Metal p. 94: un FBC inmune a la herida crítica también ignora el daño extra (+5).
+      if (injury === null && activeChar?.fbcState?.isFullBodyConversion && calcLocation !== 'shield' && calcHpLoss > 0) {
+        adjustHp(Math.min(5, calcHpLoss));
+      }
     }
     // Core p. 188: Mortally Wounded sufre una Herida Crítica por cada ataque que le hace daño y su Death Save Penalty sube 1.
     if (wasMortallyWounded && calcAttackType !== 'direct' && appliedHpLoss > 0) {
@@ -2557,7 +2561,7 @@ export const CombatHudView: React.FC = () => {
     });
 
     if (drug.name.toLowerCase().includes('speedheal')) {
-      const healAmount = speedhealAmount(effectiveBody, activeChar?.stats?.WILL ?? 6, activeChar?.currentHp ?? 0);
+      const healAmount = speedhealAmount(effectiveBody, activeChar?.stats?.WILL ?? 6, activeChar?.currentHp ?? 0, Boolean(activeChar?.fbcState?.isFullBodyConversion));
       if (healAmount > 0) adjustHp(healAmount);
     }
   };
@@ -2955,9 +2959,10 @@ export const CombatHudView: React.FC = () => {
                   };
 
                   const handleInjectSpeedhealHud = () => {
-                    const healAmount = speedhealAmount(effectiveBody, effWill, currentHp);
+                    const isFbcChar = Boolean(activeChar?.fbcState?.isFullBodyConversion);
+                    const healAmount = speedhealAmount(effectiveBody, effWill, currentHp, isFbcChar);
                     if (healAmount === 0) {
-                      setCombatRestFeedback('Speedheal no funciona en Mortally Wounded (Core p. 150).');
+                      setCombatRestFeedback(isFbcChar ? 'Speedheal no funciona en un FBC' : 'Speedheal no funciona en Mortally Wounded (Core p. 150).');
                       setTimeout(() => setCombatRestFeedback(null), 3000);
                       return;
                     }

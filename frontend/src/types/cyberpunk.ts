@@ -490,7 +490,9 @@ export interface ActiveFbcState {
   activeChassisId: string;
   activeChassisName: string;
   bodyOverride: number;
-  moveOverride: number;
+  moveOverride?: number; // legacy, ignorado
+  statFloor?: number;
+  armorPenalty?: number;
   baseArmorSp: number;
   immunities: string[];
   /** Armadura que tenía el personaje antes de la conversión, para restaurarla al desactivar. */

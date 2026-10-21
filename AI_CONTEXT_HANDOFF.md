@@ -1,7 +1,7 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.4.0 OPERATIVO`  
-> **LAST UPDATED**: [Claude Code · 2026-10-20]  
+> **SYSTEM VERSION**: `v4.5.0 OPERATIVO`  
+> **LAST UPDATED**: [Claude Code · 2026-10-21]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
 > **ARCHITECTURE**: COMP/CON decoupled offline-first model. Single source of truth in typed registries and Zustand stores.
@@ -20,7 +20,11 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 
 ---
 
-## 🚀 2. What Was Added in v4.4.0
+## 🚀 2. What Was Added in v4.5.0
+
+[Claude Code · 2026-10-21] Plan 2, fase 4 (Going Metal canon, pp. 91-111). `goingMetalFbcData.ts` reescrito: 13 cuerpos `gm-*` con `statFloor`, `armorPenalty`, `packageHlAverage`, 20 ciberwares, 6 de equipo, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14. Conversión: HL = 14 + HL del paquete, cambiar de cuerpo cuesta el HL del paquete, HP al máximo. Motor: REF/DEX/MOVE = max(base, `statFloor`), sin penalizadores de Wound State, sin Speedheal ni doble Cryotank, inmune a 9 heridas críticas, terapia 'Borgware x2' = -8. Se borraron del pack 29 `fbc-*` y 4 ítems inventados (ambas copias de `core-rules.cprpack.json`) y se reescribió `fbc-rules`. Tests: 32. Pendiente: marcos Black Chrome (Vermilion, Fūma Kotarō), HL por pieza del paquete para el tope de terapia, tope de Humanidad al volver a un cuerpo viejo. Siguiente: v4.5.1 Cyberfists of Fury.
+
+## 📦 2.0 Historical Summary: What Was Added in v4.4.0
 
 [Claude Code · 2026-10-20] Plan 2, fase 3. Reglas del Core: sin modos de carga (`ENCUMBRANCE_MODES` borrado), Role Abilities reescritas desde Core pp. 143-162, Combat Awareness validado (`isValidSoloAllocation`), Pharmaceuticals canon, Special Moves del Core con `isOpposed` y `SHARED_MARTIAL_ARTS_MOVES`, tope de Humanidad por terapia (`calculateTherapyMaxHumanity`), terapias Standard/Extreme, granadas por tabla de rango y municiones del Core, `naturalHealingPerDay` y `speedhealAmount`. Siguiente: v4.5.0 Going Metal.
 
