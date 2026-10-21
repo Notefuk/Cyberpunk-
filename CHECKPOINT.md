@@ -7,12 +7,12 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-22]
-**Versión de la app**: v4.8.2 lista en la rama `claude/v4.8.2-wizard` (sin PR). `main` = v4.8.1, publicada.
+**Versión de la app**: v4.8.2 (en `main`, squash 0143f1a, PR #23; publicada en gh-pages y verificada en vivo, también a 375 px)
 **Plan activo**: plan 7 (`docs/plans/plan7-creador-personajes.md`, creador de personajes CEMK-first, persistente y con Modo Novato; v4.8.0-v4.8.3). En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2) y plan 5 (Black Chrome y vehículos, ahora v4.9.x). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.2 Wizard funcional terminada y verificada (tsc, 138 tests, build, navegador) en la rama `claude/v4.8.2-wizard`. Falta: PR, merge y gh-pages. Después: v4.8.3 Modo Novato (interruptor `cpr_creator_novice_v1`, "qué es esto / qué te conviene" por paso, checklist y tooltips de skills completos). Para planificar (pedido de Giuliano, sin código todavía): fichas de jugadores siempre disponibles desde cualquier dispositivo, ver `PROJECT_STATUS_AND_ROADMAP.md`. Pendientes chicos: en lifepath CEMK los amigos muestran "Ninguno" del campo de rol; la tienda no tiene paginación. Antigravity: no tocar `features/creator/` ni `engine/characterCreation.ts` hasta el merge.
+- [Claude Code · 2026-10-22] Nada en curso. Giuliano está probando v4.8.2 desde el celular. Siguiente: v4.8.3 Modo Novato (interruptor `cpr_creator_novice_v1`, "qué es esto / qué te conviene" por paso, checklist y tooltips de skills completos) más lo que salga de su prueba. Visto a 375 px: sin scroll horizontal; el stepper ocupa mucha altura y la pestaña lateral "Reglas & Machete" tapa el borde derecho. Pendientes chicos: "Ninguno" de más en amigos del lifepath CEMK; tienda sin paginación. Para planificar (sin código): fichas de jugadores accesibles desde cualquier dispositivo, ver `PROJECT_STATUS_AND_ROADMAP.md`.
 
 ## Traspaso
 
@@ -24,6 +24,7 @@
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-22] v4.8.2 Wizard funcional (plan 7, bloque 3), mergeada (PR #23, squash 0143f1a) y publicada: motor `engine/characterCreation.ts`, wizard por pasos con borrador `cpr_creator_draft_v1`, pregens CEMK y Easy Mode, sin el demo "V".
 - [Claude Code · 2026-10-22] v4.8.1 Datos canon del creador (plan 7, bloque 2), mergeada (PR #22, squash 8985aa8) y publicada: STATs, skills y paquetes de los 10 roles del Core, Neuroport canon, 5 pregens de Easy Mode, 11 pregens sin ficha borradas. Registro: `docs/canon-audit/v4.8.1-creador.md`.
 - [Claude Code · 2026-10-22] v4.8.0 Guardado robusto (plan 7, bloque 1), mergeada (PR #21, squash bcaaddc) y publicada: persist v3 con migraciones, copia previa, respaldo completo, importar por archivo, premades que no vuelven.
 - [Claude Code · 2026-10-22] v4.7.0 Enemigos canon + porte CEMK (plan 6, bloque 1), mergeada (PR #20, squash ea8268f) y publicada:
