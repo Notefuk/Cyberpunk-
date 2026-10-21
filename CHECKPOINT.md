@@ -8,11 +8,11 @@
 
 **Última actualización**: [Claude Code · 2026-10-22]
 **Versión de la app**: v4.7.0 (en `main`, squash ea8268f, PR #20; publicada en gh-pages y verificada en vivo)
-**Plan activo**: plan 6 (`docs/plans/plan6-enemigos-canon-cemk.md`, enemigos canon porteados a CEMK; v4.7.0-v4.7.2) y plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, página de origen en cada ítem y registro en `docs/canon-audit/`. Bloques 1 (v4.6.1) y 2 (v4.6.2) hechos. Planes 1, 2 y 4 terminados. El plan 3 se perdió y lo reemplaza v4.7.0.
+**Plan activo**: plan 7 (`docs/plans/plan7-creador-personajes.md`, creador de personajes CEMK-first, persistente y con Modo Novato; v4.8.0-v4.8.3). En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2) y plan 5 (Black Chrome y vehículos, ahora v4.9.x). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- Nada a medias. `main` libre para cualquiera de las dos herramientas.
+- [Claude Code · 2026-10-22] v4.8.0 Guardado robusto (plan 7) en la rama `claude/v4.8.0-guardado`. Antigravity: no tocar `useCharacterStore.ts` ni `StreetLabView.tsx` hasta el merge.
 
 ## Traspaso
 
