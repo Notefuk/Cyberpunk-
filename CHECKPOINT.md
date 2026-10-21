@@ -7,25 +7,25 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-21]
-**Versión de la app**: v4.6.1 lista en la rama `claude/v4.5.1-cyberfists` (sin mergear todavía). `main` sigue en v4.6.0, publicada en gh-pages.
+**Versión de la app**: v4.6.1 (en `main`, squash 5ed7296, PR #18; publicada en gh-pages y verificada en vivo)
 **Plan activo**: plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, `source` libro+página en cada ítem y registro en `docs/canon-audit/`. En curso: v4.5.1 Cyberfists (absorbe la fase 5 del plan 2). Plan 4 terminado en v4.6.0. Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-21] v4.6.1 Cyberfists (plan 5, bloque 1) terminada y verificada en la rama `claude/v4.5.1-cyberfists`. Falta: PR a main, merge y gh-pages. Antigravity: no tocar `cyberfistsMartialArtsData.ts` hasta el merge.
+- Nada a medias. `main` libre. Siguiente bloque del plan 5: v4.6.2 (ver Traspaso).
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `claude/v4.5.1-cyberfists` @ commit "v4.6.1 Cyberfists of Fury canon" (pusheada: sí).
-- A medias: el PR de v4.6.1 a main y la publicación.
-- Siguiente paso exacto: mergear v4.6.1 y luego plan 5, bloque siguiente: v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 (mismo método: scout extrae del PDF con página, worker aplica, registro en `docs/canon-audit/`).
+- Rama y último commit: `main` @ commit "CHECKPOINT: v4.6.1 mergeada..." (pusheada: sí). gh-pages publicada con el build de v4.6.1.
+- A medias: nada.
+- Siguiente paso exacto: plan 5, v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 en una rama nueva (scout extrae del PDF con página, worker aplica, registro en `docs/canon-audit/`).
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
 - Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`. El Ripperdoc ahora está dividido en componentes en `frontend/src/features/cyberware/` (ver v4.6.0 abajo).
 
 ## Último trabajo terminado
 
-- [Claude Code · 2026-10-21] v4.6.1 Cyberfists of Fury canon (plan 5, bloque 1; cierra la fase 5 del plan 2). IR4 pp. 74-84: 23 formas y 46 movimientos con `sourcePage`; borradas 10 formas inventadas y agregadas 10 faltantes; corregidos los movimientos de las 13 restantes (ids conservados). `opposedBy` en los movimientos enfrentados. La UI muestra la página. Persist v2 migra los ids huérfanos. 38 tests. Registro: `docs/canon-audit/v4.5.1-cyberfists.md` + índice `docs/canon-audit/README.md`. JSON canon extraído (scratchpad de la sesión, no versionado).
+- [Claude Code · 2026-10-21] v4.6.1 Cyberfists of Fury canon, mergeada (PR #18, squash 5ed7296) y publicada (plan 5, bloque 1; cierra la fase 5 del plan 2). IR4 pp. 74-84: 23 formas y 46 movimientos con `sourcePage`; borradas 10 formas inventadas y agregadas 10 faltantes; corregidos los movimientos de las 13 restantes (ids conservados). `opposedBy` en los movimientos enfrentados. La UI muestra la página. Persist v2 migra los ids huérfanos. 38 tests. Registro: `docs/canon-audit/v4.5.1-cyberfists.md` + índice `docs/canon-audit/README.md`. JSON canon extraído (scratchpad de la sesión, no versionado).
 - [Claude Code · 2026-10-21] v4.6.0 Ripperdoc estilo Cyberpunk 2077 (plan 4), mergeada a `main` (PR #17, squash 458cc3c) y publicada. Componentes en `features/cyberware/`: `ripperdocZones.tsx`, `HoloBody.tsx` (holograma, 9 zonas), `ZoneCard.tsx`, `SlotBox.tsx`, `ZoneConnectors.tsx`, `ZoneDetailPanel.tsx`, `GoingMetalBanner.tsx`, `cyberwareCardArt.ts` (6 cartas del Mission Kit, visibles al inspeccionar). Fix: 'Cyberarm Option', 'Neuralware Option' y 'Borgware x2' sin zona. `animate-in`/`fade-in`/`zoom-in-95` definidas en `index.css`. 33 tests. Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
 - [Claude Code · 2026-10-21] v4.5.0 (plan 2, fase 4) Going Metal canon, mergeada a `main` (PR #16, squash 44baf2c) y publicada en https://notefuk.github.io/Cyberpunk-/. Rehecha desde el PDF porque el trabajo a medias de claude.ai nunca se había pusheado (también se perdió el plan 3).
   - `goingMetalFbcData.ts` canon: 13 cuerpos `gm-*`, 20 ciberwares (con `gm-biosystem`), 6 de equipo, `ABOUT_FBCS_GUIDE`, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14, `LINEAR_FRAME_OMEGA_HP_CHART`. Sin `moveOverride`.
