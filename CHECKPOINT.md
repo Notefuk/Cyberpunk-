@@ -12,7 +12,7 @@
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] Nada en curso. Siguiente: v4.8.2 wizard funcional (plan 7): motor `engine/characterCreation.ts` con tests, pasos en el orden del libro, lifepath CEMK/Core, habilidad de rol Core/CEMK (`roleAbilityVariant`), las 66 skills con etiqueta de libro, "Running Out of Cash?" en vez de deuda, dinero por método y borrador `cpr_creator_draft_v1`. Rama `claude/v4.8.2-wizard`. Preguntas abiertas: personaje demo "V" (no está en los libros) y las discrepancias 10-15 de `docs/canon-audit/discrepancias-cemk-core.md`.
+- [Claude Code · 2026-10-22] v4.8.2 wizard funcional (plan 7) en la rama `claude/v4.8.2-wizard`. Hecho: personaje demo "V" quitado (fallback = Folio de Hardpoint) y discrepancias 10-15 decididas por Giuliano (ver `docs/canon-audit/discrepancias-cemk-core.md`; nota de daño 3d6/4d6 en la Zhuo de Wrench). Siguiente: motor `engine/characterCreation.ts` con tests, pasos del libro, lifepath CEMK/Core, habilidad de rol Core/CEMK (`roleAbilityVariant`), 66 skills con etiqueta, Surgery solo Medtech por habilidad de rol, "Running Out of Cash?", dinero por método y borrador `cpr_creator_draft_v1`. Antigravity: no tocar el wizard, `characterCreationData.ts` ni el store hasta el merge.
 
 ## Traspaso
 

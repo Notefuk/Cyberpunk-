@@ -20,16 +20,16 @@ Páginas: Core = Core Rulebook v1.24, página impresa. RB = CEMK Rule Book, pág
 | 8 | Humanidad | Los Folios no la imprimen | EMP×10 menos la HL (p.111) | Regla del Core, también para las pregens CEMK |
 | 9 | Neuroport y ciberware del Core | El Neuroport cubre Holophone, Neural Link y Personal Link (RB pp. 35-36) | El paquete del rol trae Agent, Neural Link e Interface Plugs (pp. 103, 117) | En 2077 se quitan del paquete del Core; en 2045 queda intacto |
 
-## Detectadas en la extracción de v4.8.1 (pendientes de decisión)
+## Detectadas en la extracción de v4.8.1 (decididas por Giuliano el 2026-10-22)
 
 | # | Tema | Detalle | Estado |
 |---|---|---|---|
-| 10 | Skill "Surgery" | La ficha de Insurance (Folios) tiene Surgery con BASE 12, pero no está en la lista de skills del RB. En el Core, Surgery es una especialidad de Medicine (Medtech, p.149) | Pendiente |
-| 11 | Check de "Performance" | La regla de COOL (RB p.5) nombra una Check de Performance que no está entre las 46 skills del RB | Pendiente |
-| 12 | Rango de rol en los Folios | Solo Bluescreen imprime su rango (Interface 4); los otros 6 no lo imprimen | Pendiente (se asume rango 4, como en el Core) |
-| 13 | Nombre de la habilidad de rol en CEMK | El RB solo nombra Operator, Moto e Interface; los Folios no imprimen el nombre de las otras 4 | Pendiente (se usan los nombres del Core) |
-| 14 | Lifepath CEMK, tablas de relación | Las dos tablas "The relationship" (RB p.23) no tienen rótulo. El ejemplo de RB p.24 dice que un 6 da "enemigo vuelto amigo", pero en la tabla ese resultado es el 5 | Pendiente |
-| 15 | Arma de Wrench | La Kang Tao L-69 Zhuo imprime 3d6 en el bloque del arma y 4d6 en la tabla de ataques (Folios) | Pendiente |
+| 10 | Skill "Surgery" | La ficha de Insurance (Folios) tiene Surgery con BASE 12, pero no está en la lista de skills del RB. En el Core, Surgery es una especialidad de Medicine (Medtech, p.149) | **Decidida**: es canon en los dos libros como skill exclusiva del Medtech que sale de su habilidad de rol. CEMK RB pp. 13-14 (tabla de Críticos p.13 y texto de Treatment p.14): "the Surgery Skill only available to Medtechs"; el Folio de Insurance la da con BASE 12 en su habilidad de rol. En el Core es la especialidad Surgery de Medicine (p.149). No va en la lista general de skills |
+| 11 | Check de "Performance" | La regla de COOL (RB p.5) nombra una Check de Performance que no está entre las 46 skills del RB | **Decidida**: se ignora (no se crea skill ni mapeo) |
+| 12 | Rango de rol en los Folios | Solo Bluescreen imprime su rango (Interface 4); los otros 6 no lo imprimen | **Decidida**: rango 4 para los 7 |
+| 13 | Nombre de la habilidad de rol en CEMK | El RB solo nombra Operator, Moto e Interface; los Folios no imprimen el nombre de las otras 4 | **Decidida**: nombres del Core (Medicine, Charismatic Impact, Combat Awareness, Maker), con la etiqueta "nombre del Core" |
+| 14 | Lifepath CEMK, tablas de relación | Las dos tablas "The relationship" (RB p.23) no tienen rótulo. El ejemplo de RB p.24 dice que un 6 da "enemigo vuelto amigo", pero en la tabla ese resultado es el 5 | **Decidida**: gana la tabla impresa (5 = enemigo vuelto amigo, 6 = afición compartida); el ejemplo de p.24 queda anotado como error del libro. La asignación Amigos/Enemigos por contenido se mantiene |
+| 15 | Arma de Wrench | La Kang Tao L-69 Zhuo imprime 3d6 en el bloque del arma y 4d6 en la tabla de ataques (Folios) | **Decidida**: se muestran ambos (3d6 del bloque y 4d6 de la tabla de ataques y el modo Shell), con nota en la ficha |
 
 ## Combate (van a un plan aparte, después del plan 7)
 

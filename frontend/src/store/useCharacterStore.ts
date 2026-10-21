@@ -76,155 +76,9 @@ function mapInjuryIcon(icon: string): ActiveCriticalInjury['iconType'] {
   return 'skull';
 }
 
-export const INITIAL_CHARACTER_V: CharacterSheet = {
-  id: 'char-v-solo',
-  handle: 'V (Valerie)',
-  role: 'Solo',
-  roleRank: 4,
-  notes: 'Solo táctico de Night City. Especialista en combate urbano, asalto con armas automáticas y armas pesadas.',
-  stats: {
-    INT: 6,
-    REF: 8,
-    DEX: 7,
-    TECH: 5,
-    COOL: 7,
-    WILL: 8,
-    LUCK: 7,
-    MOVE: 7,
-    BODY: 8,
-    EMP: 6
-  },
-  currentHp: 50, // calculateMaxHp(8, 8) = 10 + 5 * Math.ceil(16/2) = 50
-  currentLuck: 7,
-  currentHumanity: 52,
-  headArmor: {
-    name: 'Light Armorjack (Head)',
-    maxSp: 11,
-    currentSp: 11,
-    penalty: 0
-  },
-  bodyArmor: {
-    name: 'Light Armorjack (Body)',
-    maxSp: 11,
-    currentSp: 11,
-    penalty: 0
-  },
-  skills: {
-    handgun: 6,
-    shoulderArms: 6,
-    autofire: 4,
-    heavyWeapons: 2,
-    archery: 0,
-    meleeWeapon: 5,
-    brawling: 4,
-    martialArts: 2,
-    evasion: 6,
-    athletics: 4,
-    firstAid: 3,
-    paramedic: 1,
-    cybertech: 2,
-    perception: 5,
-    concentration: 4,
-    resistTortureDrugs: 4
-  },
-  equippedWeapons: [
-    {
-      id: 'heavy-pistol',
-      instanceId: 'wep-v-1-hp',
-      name: 'Heavy Pistol',
-      type: 'Ranged',
-      skill: 'Handgun',
-      damage: '3d6',
-      rof: 2,
-      hands: 1,
-      concealable: true,
-      cost: 100,
-      costTier: 'Premium',
-      standardMag: 8,
-      currentMag: 8,
-      ammoType: 'Heavy Pistol',
-      loadedAmmoType: 'Heavy Pistol',
-      inHand: true,
-      reserveAmmo: 48,
-      notes: 'Pistola pesada estándar de gran poder de detención.'
-    },
-    {
-      id: 'assault-rifle',
-      instanceId: 'wep-v-2-ar',
-      name: 'Assault Rifle',
-      type: 'Ranged',
-      skill: 'Shoulder Arms',
-      damage: '5d6',
-      rof: 1,
-      hands: 2,
-      concealable: false,
-      cost: 500,
-      costTier: 'Expensive',
-      standardMag: 25,
-      currentMag: 25,
-      ammoType: 'Rifle',
-      loadedAmmoType: 'Rifle',
-      altFireModes: 'Autofire (4), Suppressive Fire',
-      autofireMaxMult: 4,
-      inHand: true,
-      reserveAmmo: 48,
-      notes: 'Fusil de asalto militar versátil con selector de Fuego Automático x4.'
-    },
-    {
-      id: 'heavy-smg',
-      instanceId: 'wep-v-3-smg',
-      name: 'Heavy SMG',
-      type: 'Ranged',
-      skill: 'Handgun',
-      damage: '3d6',
-      rof: 1,
-      hands: 1,
-      concealable: false,
-      cost: 100,
-      costTier: 'Premium',
-      standardMag: 40,
-      currentMag: 40,
-      ammoType: 'Heavy Pistol',
-      loadedAmmoType: 'Heavy Pistol',
-      altFireModes: 'Autofire (3), Suppressive Fire',
-      autofireMaxMult: 3,
-      inHand: false,
-      reserveAmmo: 48,
-      notes: 'Subfusil pesado con cargador extendido y modo Autofire x3.'
-    },
-    {
-      id: 'medium-melee',
-      instanceId: 'wep-v-4-katana',
-      name: 'Medium Melee Weapon (Katana)',
-      type: 'Melee',
-      skill: 'Melee Weapon',
-      damage: '2d6',
-      rof: 2,
-      hands: 1,
-      concealable: false,
-      cost: 50,
-      costTier: 'Costly',
-      standardMag: 0,
-      currentMag: 0,
-      ammoType: 'N/A',
-      loadedAmmoType: 'N/A',
-      inHand: false,
-      reserveAmmo: 0,
-      notes: 'Hoja afilada de combate cuerpo a cuerpo. Halves defender SP.'
-    }
-  ],
-  installedCyberwareIds: ['neuralware-processor', 'cybereye', 'subdermal-armor'],
-  activeInjuries: [],
-  eurodollars: 2450,
-  inventory: [],
-  transactions: [],
-  unarmedInHand: { brawling: true, martialArts: false },
-  activeDrugs: [],
-  improvementPoints: 120,
-  knownMartialArts: { karate: 2 },
-  ownedMartialArtChips: [],
-  equippedMartialArtChips: []
-};
+// [Claude Code · 2026-10-22] Se quitó el personaje demo "V" (videojuego, no está en los libros; v4.8.2).
+// Si no queda ninguna ficha, se usa una copia del Folio de Hardpoint (CEMK).
+const FALLBACK_CHARACTER: CharacterSheet = CEMK_FOLIO_PREMADE_CHARACTERS[0];
 
 export const INITIAL_CHARACTER_KIWI: CharacterSheet = {
   id: 'char-kiwi-netrunner',
@@ -370,8 +224,7 @@ export function buildCemk2077Characters(): CharacterSheet[] {
 }
 
 export const DEFAULT_CHARACTERS: CharacterSheet[] = [
-  ...CEMK_FOLIO_PREMADE_CHARACTERS,
-  INITIAL_CHARACTER_V
+  ...CEMK_FOLIO_PREMADE_CHARACTERS
 ];
 
 export function loadInitialCharacters(): { characters: CharacterSheet[]; activeCharacterId: string } {
@@ -386,7 +239,7 @@ export function loadInitialCharacters(): { characters: CharacterSheet[]; activeC
   const hardpoint = deduped.find((c) => c.id === 'cemk-folio-hardpoint');
   return {
     characters: deduped,
-    activeCharacterId: hardpoint?.id || deduped[0]?.id || INITIAL_CHARACTER_V.id
+    activeCharacterId: hardpoint?.id || deduped[0]?.id || FALLBACK_CHARACTER.id
   };
 }
 
@@ -558,7 +411,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
       getActiveCharacter: () => {
         const state = get();
         const found = state.characters.find(c => c.id === state.activeCharacterId);
-        return found || state.characters[0] || INITIAL_CHARACTER_V;
+        return found || state.characters[0] || FALLBACK_CHARACTER;
       },
 
       setActiveCharacter: (id: string) => {
@@ -651,7 +504,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
             }
           }
           if (remaining.length === 0) {
-            remaining.push(INITIAL_CHARACTER_V);
+            remaining.push(FALLBACK_CHARACTER);
           }
           const newActive = state.activeCharacterId === id ? remaining[0].id : state.activeCharacterId;
           return {
