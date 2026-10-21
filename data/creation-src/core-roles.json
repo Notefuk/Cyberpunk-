@@ -5,185 +5,461 @@
     {
       "role": "Rockerboy",
       "descEs": "Poeta callejero, conciencia social y rebelde del Tiempo del Rojo: usa musica, discursos, arte o escritura para desafiar a la autoridad e inspirar a la gente. No tiene por que ser musico; puede ser tambien lider de culto.",
-      "source": { "book": "Core RED", "page": 30 },
+      "source": {
+        "book": "Core RED",
+        "page": 30
+      },
       "ability": {
         "name": "Charismatic Impact",
         "summaryEs": "Solo funciona sobre Fans. Fuera de combate, tira Charismatic Impact + 1d10 contra DV8 (una persona), DV10 (grupo pequeno de hasta 6) o DV12 (grupo enorme) para convertir en fans a quienes no lo son (salvo que lo detesten activamente). El GM decide quien ya es fan. Para pedir un favor a fans, el GM verifica con la tabla de Rangos si el favor esta al alcance; si no, falla solo. Si esta al alcance, se tira Charismatic Impact + 1d10 contra el DV segun el tamano del grupo; si falla, no se puede pedir el mismo favor a esos fans durante una semana.",
         "rank4Es": "Rangos 3 y 4: Locales: clubes conocidos. Un fan (DV8): puede lograr un gran favor (acostarse con el Rockerboy, hablar bien de el, etc.). Grupo pequeno de hasta 6 (DV10): convencerlos de frecuentar al Rockerboy y proveerle alcohol, drogas u otros extras de fiesta. Grupo enorme (DV12): seguimiento local fuerte; compran sus grabaciones y merchandising.",
         "options": [
-          { "name": "Rangos 1-2", "costOrRank": "Rango 1-2", "effectEs": "Locales: pequenos clubes locales. Un fan (DV8): favor pequeno (invitar una bebida o comida, llevarlo a algun lado). Grupo pequeno (DV10): hasta 6 fans piden autografos y recuerdos; paran al Rockerboy en la calle para hacerse amigos. Grupo enorme (DV12): todavia no se tiene." },
-          { "name": "Rangos 3-4", "costOrRank": "Rango 3-4", "effectEs": "Locales: clubes conocidos. Un fan (DV8): gran favor (ir a la cama con el Rockerboy, hablar bien de el, etc.). Grupo pequeno (DV10): hasta 6 fans se juntan regularmente con el y le proveen alcohol, drogas u otros extras. Grupo enorme (DV12): seguimiento local fuerte, compran grabaciones y merch." },
-          { "name": "Rangos 5-6", "costOrRank": "Rango 5-6", "effectEs": "Locales: clubes grandes e importantes. Un fan (DV8): comete un delito menor por el Rockerboy (robar en una tienda, ayudar en una pelea). Grupo pequeno (DV10): hasta 6 fans actuan como su 'posse' personal, estan siempre con el, le hacen favores y le proveen lo que necesite. Grupo enorme (DV12): fans por toda la ciudad y ciudades cercanas, muy leales; suelen hacer grandes favores a cambio de atencion." },
-          { "name": "Rangos 7-8", "costOrRank": "Rango 7-8", "effectEs": "Locales: salas de conciertos pequenas, transmision de video local. Un fan (DV8): arriesga la vida por el Rockerboy sin dudar. Grupo pequeno (DV10): hasta 6 fans cometen un delito menor por el. Grupo enorme (DV12): fans rabiosamente leales; pelean con grupos rivales, mantienen redes de informacion y se unen para ayudarlo." },
-          { "name": "Rango 9", "costOrRank": "Rango 9", "effectEs": "Locales: grandes salas de conciertos, transmision nacional. Un fan (DV8): comete un delito grave (robar un objeto caro, golpear a alguien). Grupo pequeno (DV10): hasta 6 fans cometen un delito grave. Grupo enorme (DV12): seguimiento casi de culto; pueden amotinarse, destruir propiedad e incluso matar por el." },
-          { "name": "Rango 10", "costOrRank": "Rango 10", "effectEs": "Locales: enormes estadios o transmision internacional. Un fan (DV8): se sacrificaria sin dudar. Grupo pequeno (DV10): hasta 6 fans arriesgan la vida como proteccion personal. Grupo enorme (DV12): seguimiento mundial tipo culto; ejercito privado basado en su carisma." }
+          {
+            "name": "Rangos 1-2",
+            "costOrRank": "Rango 1-2",
+            "effectEs": "Locales: pequenos clubes locales. Un fan (DV8): favor pequeno (invitar una bebida o comida, llevarlo a algun lado). Grupo pequeno (DV10): hasta 6 fans piden autografos y recuerdos; paran al Rockerboy en la calle para hacerse amigos. Grupo enorme (DV12): todavia no se tiene."
+          },
+          {
+            "name": "Rangos 3-4",
+            "costOrRank": "Rango 3-4",
+            "effectEs": "Locales: clubes conocidos. Un fan (DV8): gran favor (ir a la cama con el Rockerboy, hablar bien de el, etc.). Grupo pequeno (DV10): hasta 6 fans se juntan regularmente con el y le proveen alcohol, drogas u otros extras. Grupo enorme (DV12): seguimiento local fuerte, compran grabaciones y merch."
+          },
+          {
+            "name": "Rangos 5-6",
+            "costOrRank": "Rango 5-6",
+            "effectEs": "Locales: clubes grandes e importantes. Un fan (DV8): comete un delito menor por el Rockerboy (robar en una tienda, ayudar en una pelea). Grupo pequeno (DV10): hasta 6 fans actuan como su 'posse' personal, estan siempre con el, le hacen favores y le proveen lo que necesite. Grupo enorme (DV12): fans por toda la ciudad y ciudades cercanas, muy leales; suelen hacer grandes favores a cambio de atencion."
+          },
+          {
+            "name": "Rangos 7-8",
+            "costOrRank": "Rango 7-8",
+            "effectEs": "Locales: salas de conciertos pequenas, transmision de video local. Un fan (DV8): arriesga la vida por el Rockerboy sin dudar. Grupo pequeno (DV10): hasta 6 fans cometen un delito menor por el. Grupo enorme (DV12): fans rabiosamente leales; pelean con grupos rivales, mantienen redes de informacion y se unen para ayudarlo."
+          },
+          {
+            "name": "Rango 9",
+            "costOrRank": "Rango 9",
+            "effectEs": "Locales: grandes salas de conciertos, transmision nacional. Un fan (DV8): comete un delito grave (robar un objeto caro, golpear a alguien). Grupo pequeno (DV10): hasta 6 fans cometen un delito grave. Grupo enorme (DV12): seguimiento casi de culto; pueden amotinarse, destruir propiedad e incluso matar por el."
+          },
+          {
+            "name": "Rango 10",
+            "costOrRank": "Rango 10",
+            "effectEs": "Locales: enormes estadios o transmision internacional. Un fan (DV8): se sacrificaria sin dudar. Grupo pequeno (DV10): hasta 6 fans arriesgan la vida como proteccion personal. Grupo enorme (DV12): seguimiento mundial tipo culto; ejercito privado basado en su carisma."
+          }
         ],
-        "source": { "book": "Core RED", "page": 144 }
+        "source": {
+          "book": "Core RED",
+          "page": 144
+        }
       }
     },
     {
       "role": "Solo",
       "descEs": "Asesino y combatiente de elite, mercenario o cibersoldado corporativo; la mayoria hizo servicio en la 4ta Guerra Corporativa. Depende cada vez mas de la tecnologia (cyberlimbs, chips, drogas de combate) y paga el precio en humanidad y adicciones.",
-      "source": { "book": "Core RED", "page": 31 },
+      "source": {
+        "book": "Core RED",
+        "page": 31
+      },
       "ability": {
         "name": "Combat Awareness",
         "summaryEs": "Al empezar el combate (antes de la Iniciativa), en cualquier momento fuera de combate, o dentro de combate gastando una Accion, el Solo reparte el total de puntos de Combat Awareness (= su Rango) entre las habilidades siguientes. Si no cambia la asignacion, la anterior persiste. Cada habilidad tiene un costo distinto.",
         "rank4Es": "Con Rango 4 se tienen 4 puntos para repartir entre las 6 opciones (p. ej. Damage Deflection 4 pts = -2 al primer dano; o Fumble Recovery 4 pts; o Initiative Reaction +4; o Precision Attack +1 (3 pts) mas 1 punto en otra; o Spot Weakness +4; o Threat Detection +4; o combinaciones).",
         "options": [
-          { "name": "Damage Deflection", "costOrRank": "2/4/6/8/10 puntos", "effectEs": "Reduce el primer dano recibido en la Ronda: 2 pts = -1; 4 pts = -2; 6 pts = -3; 8 pts = -4; 10 pts = -5." },
-          { "name": "Fumble Recovery", "costOrRank": "4 puntos", "effectEs": "Ignora los fallos criticos (1 natural) al atacar; la tirada sigue contando como 1." },
-          { "name": "Initiative Reaction", "costOrRank": "1 punto por +1", "effectEs": "Cada punto suma +1 a las tiradas de Iniciativa." },
-          { "name": "Precision Attack", "costOrRank": "3/6/9 puntos", "effectEs": "3 pts = +1 a todos los Ataques; 6 pts = +2; 9 pts = +3." },
-          { "name": "Spot Weakness", "costOrRank": "1 punto por +1", "effectEs": "Cada punto suma +1 al dano (antes de armadura) del primer Ataque exitoso de la Ronda." },
-          { "name": "Threat Detection", "costOrRank": "1 punto por +1", "effectEs": "Cada punto suma +1 a las Pruebas de Perception." }
+          {
+            "name": "Damage Deflection",
+            "costOrRank": "2/4/6/8/10 puntos",
+            "effectEs": "Reduce el primer dano recibido en la Ronda: 2 pts = -1; 4 pts = -2; 6 pts = -3; 8 pts = -4; 10 pts = -5."
+          },
+          {
+            "name": "Fumble Recovery",
+            "costOrRank": "4 puntos",
+            "effectEs": "Ignora los fallos criticos (1 natural) al atacar; la tirada sigue contando como 1."
+          },
+          {
+            "name": "Initiative Reaction",
+            "costOrRank": "1 punto por +1",
+            "effectEs": "Cada punto suma +1 a las tiradas de Iniciativa."
+          },
+          {
+            "name": "Precision Attack",
+            "costOrRank": "3/6/9 puntos",
+            "effectEs": "3 pts = +1 a todos los Ataques; 6 pts = +2; 9 pts = +3."
+          },
+          {
+            "name": "Spot Weakness",
+            "costOrRank": "1 punto por +1",
+            "effectEs": "Cada punto suma +1 al dano (antes de armadura) del primer Ataque exitoso de la Ronda."
+          },
+          {
+            "name": "Threat Detection",
+            "costOrRank": "1 punto por +1",
+            "effectEs": "Cada punto suma +1 a las Pruebas de Perception."
+          }
         ],
-        "source": { "book": "Core RED", "page": 145 }
+        "source": {
+          "book": "Core RED",
+          "page": 146
+        }
       }
     },
     {
       "role": "Netrunner",
       "descEs": "Hacker cerebral y maestro del ciberverso Post-NET que desde nino vive pegado a un cyberdeck e interfaces neurales. Se zambulle en las Arquitecturas de la NET.",
-      "source": { "book": "Core RED", "page": 32 },
+      "source": {
+        "book": "Core RED",
+        "page": 32
+      },
       "ability": {
         "name": "Interface",
         "summaryEs": "Permite Netrunear, determina cuantas Acciones NET se pueden hacer por Turno y da acceso a un conjunto de Habilidades de Interface. Acciones NET por Turno segun Rango: 1-3 = 2; 4-6 = 3; 7-9 = 4; 10 = 5. El detalle se explica en la seccion de Netrunning (pg. 198).",
         "rank4Es": "Rango 4: 3 Acciones NET por Turno y acceso a las 9 Habilidades de Interface (la tabla no distingue habilidades por Rango).",
         "options": [
-          { "name": "Backdoor", "costOrRank": "Interface", "effectEs": "Permite romper Passwords y otras obstrucciones en la Arquitectura." },
-          { "name": "Cloak", "costOrRank": "Interface", "effectEs": "Permite ocultar las acciones del Netrunner en la Arquitectura antes de irse." },
-          { "name": "Control", "costOrRank": "Interface", "effectEs": "Permite controlar cosas conectadas a la Arquitectura." },
-          { "name": "Eye-Dee", "costOrRank": "Interface", "effectEs": "Permite saber que es un dato encontrado y cuanto vale." },
-          { "name": "Pathfinder", "costOrRank": "Interface", "effectEs": "Permite aprender el 'mapa' de la Arquitectura." },
-          { "name": "Scanner", "costOrRank": "Interface", "effectEs": "Permite hallar la ubicacion de sistemas en un area." },
-          { "name": "Slide", "costOrRank": "Interface", "effectEs": "Permite escabullirse de un Black ICE que lo esta siguiendo." },
-          { "name": "Virus", "costOrRank": "Interface", "effectEs": "Permite dejar un virus personalizado en el nucleo de la Arquitectura." },
-          { "name": "Zap", "costOrRank": "Interface", "effectEs": "Ataque basico del Netrunner; funciona contra Programas y otros Netrunners." }
+          {
+            "name": "Backdoor",
+            "costOrRank": "Interface",
+            "effectEs": "Permite romper Passwords y otras obstrucciones en la Arquitectura."
+          },
+          {
+            "name": "Cloak",
+            "costOrRank": "Interface",
+            "effectEs": "Permite ocultar las acciones del Netrunner en la Arquitectura antes de irse."
+          },
+          {
+            "name": "Control",
+            "costOrRank": "Interface",
+            "effectEs": "Permite controlar cosas conectadas a la Arquitectura."
+          },
+          {
+            "name": "Eye-Dee",
+            "costOrRank": "Interface",
+            "effectEs": "Permite saber que es un dato encontrado y cuanto vale."
+          },
+          {
+            "name": "Pathfinder",
+            "costOrRank": "Interface",
+            "effectEs": "Permite aprender el 'mapa' de la Arquitectura."
+          },
+          {
+            "name": "Scanner",
+            "costOrRank": "Interface",
+            "effectEs": "Permite hallar la ubicacion de sistemas en un area."
+          },
+          {
+            "name": "Slide",
+            "costOrRank": "Interface",
+            "effectEs": "Permite escabullirse de un Black ICE que lo esta siguiendo."
+          },
+          {
+            "name": "Virus",
+            "costOrRank": "Interface",
+            "effectEs": "Permite dejar un virus personalizado en el nucleo de la Arquitectura."
+          },
+          {
+            "name": "Zap",
+            "costOrRank": "Interface",
+            "effectEs": "Ataque basico del Netrunner; funciona contra Programas y otros Netrunners."
+          }
         ],
-        "source": { "book": "Core RED", "page": 147 }
+        "source": {
+          "book": "Core RED",
+          "page": 147
+        }
       }
     },
     {
       "role": "Tech",
       "descEs": "Constructor y reparador compulsivo: arregla, modifica y fabrica tecnologia en un mundo cuya cadena de suministro rompio la Guerra. Gana dinero con reparaciones cotidianas y mas con inventos.",
-      "source": { "book": "Core RED", "page": 33 },
+      "source": {
+        "book": "Core RED",
+        "page": 33
+      },
       "ability": {
         "name": "Maker",
         "summaryEs": "Permite arreglar, mejorar, modificar, fabricar e inventar objetos. Cada vez que el Tech sube 1 Rango de Maker, gana 1 Rango en dos Especialidades de Maker distintas a su eleccion (Field Expertise, Upgrade Expertise, Fabrication Expertise, Invention Expertise). Upgrade, Fabricate e Invent usan DV y tiempo segun la categoria de precio: Cheap/Everyday DV9 1 hora; Costly DV13 6 horas; Premium DV17 1 dia; Expensive DV21 1 semana; Very Expensive DV24 2 semanas; Luxury DV29 1 mes; Super Luxury DV29 1 mes por cada 10.000eb de costo.",
         "rank4Es": "Rango 4: 4 especialidades disponibles; a 2 Rangos de especialidad por Rango de Maker, la regla da 8 Rangos de especialidad repartidos a eleccion entre las 4 (ver duda sobre si el Rango 1 inicial ya otorga los 2).",
         "options": [
-          { "name": "Field Expertise", "costOrRank": "1 Rango de especialidad por eleccion", "effectEs": "Suma el Rango en esta especialidad a cualquier Prueba de Basic Tech, Cybertech, Electronics/Security Tech, Weaponstech o Tech de vehiculos terrestres/maritimos/aereos hecha con un fin que no sea de especialidad Maker. Con al menos 1 Rango, en vez de una reparacion completa larga puede reparar temporalmente el objeto (mismo DV de una reparacion tipica) como Accion, dejandolo en perfecto estado (SP y HP completos); suma su Rango a esa Prueba. Dura 10 minutos por Rango; despues vuelve al estado previo y no puede volver a improvisarse hasta una reparacion completa." },
-          { "name": "Upgrade Expertise", "costOrRank": "1 Rango de especialidad por eleccion", "effectEs": "Mejora un objeto (un objeto solo recibe 1 mejora de esta especialidad): -1d6 a la perdida de Humanidad de ciberware no-borgware cuya perdida tipica sea 2d6 o mas; +1 ranura de un tipo que el objeto ya tenga; simplificarlo (reduce a la mitad el tiempo de futuras reparaciones completas); hacer ocultable un arma a una mano normalmente no ocultable; subir un arma de Calidad Promedio a Excelente; dar una ranura de Accesorio a un arma Exotica; permitir a un arma Exotica disparar una variedad de municion no basica de su tipo; +1 SP a un objeto que ya tuviera; instalar a un vehiculo una mejora que solo requiera Rango 1 de Moto; instalar una mejora inventada con Invention Expertise (requiere materiales adicionales segun la categoria de precio). Tirada: TECH + la Habilidad TECH con que se repara + Rango en la especialidad + 1d10; se compran materiales de la misma categoria de precio, que se consumen. Mejoras de vehiculo se tratan como 1.000eb (Very Expensive). Si falla, hay que empezar de cero (materiales y objeto quedan intactos)." },
-          { "name": "Fabrication Expertise", "costOrRank": "1 Rango de especialidad por eleccion", "effectEs": "Fabrica un objeto existente o inventado con Invention Expertise. Tirada: TECH + la Habilidad TECH con que se repara + Rango en la especialidad + 1d10. Se compran materiales de una categoria de precio inferior (Super Luxury: materiales por la mitad de su precio). DV y tiempo segun la tabla de categoria de precio. Si falla, hay que empezar de cero." },
-          { "name": "Invention Expertise", "costOrRank": "1 Rango de especialidad por eleccion", "effectEs": "Inventa una mejora o un objeto totalmente nuevo: se describe al GM su funcion y mecanismo; si lo aprueba, el GM escribe sus reglas y le asigna una categoria de precio (la minima posible es Expensive). Tirada: TECH + la Habilidad TECH asociada + Rango en la especialidad + 1d10 contra el DV de esa categoria. Una vez inventado, el Tech (u otro Tech con los planos) puede construirlo con Fabrication o Upgrade Expertise." }
+          {
+            "name": "Field Expertise",
+            "costOrRank": "1 Rango de especialidad por eleccion",
+            "effectEs": "Suma el Rango en esta especialidad a cualquier Prueba de Basic Tech, Cybertech, Electronics/Security Tech, Weaponstech o Tech de vehiculos terrestres/maritimos/aereos hecha con un fin que no sea de especialidad Maker. Con al menos 1 Rango, en vez de una reparacion completa larga puede reparar temporalmente el objeto (mismo DV de una reparacion tipica) como Accion, dejandolo en perfecto estado (SP y HP completos); suma su Rango a esa Prueba. Dura 10 minutos por Rango; despues vuelve al estado previo y no puede volver a improvisarse hasta una reparacion completa."
+          },
+          {
+            "name": "Upgrade Expertise",
+            "costOrRank": "1 Rango de especialidad por eleccion",
+            "effectEs": "Mejora un objeto (un objeto solo recibe 1 mejora de esta especialidad): -1d6 a la perdida de Humanidad de ciberware no-borgware cuya perdida tipica sea 2d6 o mas; +1 ranura de un tipo que el objeto ya tenga; simplificarlo (reduce a la mitad el tiempo de futuras reparaciones completas); hacer ocultable un arma a una mano normalmente no ocultable; subir un arma de Calidad Promedio a Excelente; dar una ranura de Accesorio a un arma Exotica; permitir a un arma Exotica disparar una variedad de municion no basica de su tipo; +1 SP a un objeto que ya tuviera; instalar a un vehiculo una mejora que solo requiera Rango 1 de Moto; instalar una mejora inventada con Invention Expertise (requiere materiales adicionales segun la categoria de precio). Tirada: TECH + la Habilidad TECH con que se repara + Rango en la especialidad + 1d10; se compran materiales de la misma categoria de precio, que se consumen. Mejoras de vehiculo se tratan como 1.000eb (Very Expensive). Si falla, hay que empezar de cero (materiales y objeto quedan intactos)."
+          },
+          {
+            "name": "Fabrication Expertise",
+            "costOrRank": "1 Rango de especialidad por eleccion",
+            "effectEs": "Fabrica un objeto existente o inventado con Invention Expertise. Tirada: TECH + la Habilidad TECH con que se repara + Rango en la especialidad + 1d10. Se compran materiales de una categoria de precio inferior (Super Luxury: materiales por la mitad de su precio). DV y tiempo segun la tabla de categoria de precio. Si falla, hay que empezar de cero."
+          },
+          {
+            "name": "Invention Expertise",
+            "costOrRank": "1 Rango de especialidad por eleccion",
+            "effectEs": "Inventa una mejora o un objeto totalmente nuevo: se describe al GM su funcion y mecanismo; si lo aprueba, el GM escribe sus reglas y le asigna una categoria de precio (la minima posible es Expensive). Tirada: TECH + la Habilidad TECH asociada + Rango en la especialidad + 1d10 contra el DV de esa categoria. Una vez inventado, el Tech (u otro Tech con los planos) puede construirlo con Fabrication o Upgrade Expertise."
+          }
         ],
-        "source": { "book": "Core RED", "page": 147 }
+        "source": {
+          "book": "Core RED",
+          "page": 147
+        }
       }
     },
     {
       "role": "Medtech",
       "descEs": "Artista del cuerpo humano: cirujano, paramedico o ripperdoc que mantiene vivas a personas que deberian estar muertas, a menudo mas maquina que humano. Puede trabajar en la calle o en un Trauma Team.",
-      "source": { "book": "Core RED", "page": 34 },
+      "source": {
+        "book": "Core RED",
+        "page": 34
+      },
       "ability": {
         "name": "Medicine",
         "summaryEs": "Cada vez que el Medtech sube su Rango de Medicine, elige una de tres Especialidades (Surgery, Medical Tech [Pharmaceuticals] o Medical Tech [Cryosystem Operation]) para asignarle 1 punto. Los usos adicionales de Surgery y Medical Tech (instalacion y extraccion de ciberware, Bodysculpting, Therapy; ver pg. 226) solo estan disponibles para Medtechs mediante esta Habilidad de Rol. El nivel de Medical Tech es la suma de puntos en Pharmaceuticals mas puntos en Cryosystem Operation.",
         "rank4Es": "Rango 4: 4 puntos de especialidad repartidos entre Surgery, Pharmaceuticals y Cryosystem Operation (max. 5 puntos en cada una de las dos de Medical Tech).",
         "options": [
-          { "name": "Surgery", "costOrRank": "1 punto = +2 niveles en la Habilidad Surgery (max. 10)", "effectEs": "La Habilidad Surgery (TECH) sirve para tratar las Heridas Criticas mas graves e implantar ciberware; solo la tienen los Medtechs via esta especialidad." },
-          { "name": "Medical Tech (Pharmaceuticals)", "costOrRank": "1 punto = +1 nivel en Medical Tech (max. 5 puntos en esta especialidad, max. 10 de Habilidad)", "effectEs": "Cada punto otorga acceso a una de estas farmaceuticas, sintetizable con una Prueba de Medical Tech DV13 (si falla se pierden los materiales); con 200eb de materiales se hacen en 1 hora tantas dosis como el nivel de Medical Tech. No se sintetizan Drogas Callejeras. Aplicar una dosis lleva una Accion; a un objetivo no dispuesto se le hace un Ataque Melee con el Airhypo que en vez de dano aplica la dosis. Los no-Medtech no pueden administrarlas bien. Antibiotic: objetivo que ya inicio la curacion natural cura 2 HP extra por dia durante una semana (un uso a la vez). Rapidetox: purga de inmediato los efectos de una droga, veneno o intoxicante. Speedheal: objetivo que no este Mortally Wounded cura HP igual a su BODY + WILL (un uso por dia). Stim: ignora las penalizaciones del estado Seriously Wounded durante una hora (un uso por dia). Surge: funciona sin dormir 24 horas (un uso por semana)." },
-          { "name": "Medical Tech (Cryosystem Operation)", "costOrRank": "1 punto = +1 nivel en Medical Tech (max. 5 puntos en esta especialidad, max. 10 de Habilidad)", "effectEs": "Beneficios por nivel de la especialidad: 1 = recibe una Cryopump; 2 = Registered Cryotank Technician con acceso ilimitado 24/7 a 1 Cryotank a la vez en cualquier instalacion criotanque de corporaciones medicas o agencias gubernamentales; 3 = recibe 1 Cryotank instalado en una sala a su eleccion; 4 = 2 Cryotanks mas en la misma sala, y su Cryopump pasa a 2 cargas con capacidad maxima de 2 personas en estasis; 5 = 3 Cryotanks mas en la misma sala que los tres primeros, Cryopump con 3 cargas y capacidad de 3 personas en estasis. Mas informacion de Cryopumps y Cryotanks en pg. 353." }
+          {
+            "name": "Surgery",
+            "costOrRank": "1 punto = +2 niveles en la Habilidad Surgery (max. 10)",
+            "effectEs": "La Habilidad Surgery (TECH) sirve para tratar las Heridas Criticas mas graves e implantar ciberware; solo la tienen los Medtechs via esta especialidad."
+          },
+          {
+            "name": "Medical Tech (Pharmaceuticals)",
+            "costOrRank": "1 punto = +1 nivel en Medical Tech (max. 5 puntos en esta especialidad, max. 10 de Habilidad)",
+            "effectEs": "Cada punto otorga acceso a una de estas farmaceuticas, sintetizable con una Prueba de Medical Tech DV13 (si falla se pierden los materiales); con 200eb de materiales se hacen en 1 hora tantas dosis como el nivel de Medical Tech. No se sintetizan Drogas Callejeras. Aplicar una dosis lleva una Accion; a un objetivo no dispuesto se le hace un Ataque Melee con el Airhypo que en vez de dano aplica la dosis. Los no-Medtech no pueden administrarlas bien. Antibiotic: objetivo que ya inicio la curacion natural cura 2 HP extra por dia durante una semana (un uso a la vez). Rapidetox: purga de inmediato los efectos de una droga, veneno o intoxicante. Speedheal: objetivo que no este Mortally Wounded cura HP igual a su BODY + WILL (un uso por dia). Stim: ignora las penalizaciones del estado Seriously Wounded durante una hora (un uso por dia). Surge: funciona sin dormir 24 horas (un uso por semana)."
+          },
+          {
+            "name": "Medical Tech (Cryosystem Operation)",
+            "costOrRank": "1 punto = +1 nivel en Medical Tech (max. 5 puntos en esta especialidad, max. 10 de Habilidad)",
+            "effectEs": "Beneficios por nivel de la especialidad: 1 = recibe una Cryopump; 2 = Registered Cryotank Technician con acceso ilimitado 24/7 a 1 Cryotank a la vez en cualquier instalacion criotanque de corporaciones medicas o agencias gubernamentales; 3 = recibe 1 Cryotank instalado en una sala a su eleccion; 4 = 2 Cryotanks mas en la misma sala, y su Cryopump pasa a 2 cargas con capacidad maxima de 2 personas en estasis; 5 = 3 Cryotanks mas en la misma sala que los tres primeros, Cryopump con 3 cargas y capacidad de 3 personas en estasis. Mas informacion de Cryopumps y Cryotanks en pg. 353."
+          }
         ],
-        "source": { "book": "Core RED", "page": 149 }
+        "source": {
+          "book": "Core RED",
+          "page": 149
+        }
       }
     },
     {
       "role": "Media",
       "descEs": "Periodista, reportero o comunicador que destapa la verdad sobre las corporaciones y el poder. Es quien, tras la Guerra, hizo que todos supieran lo que pasaba realmente.",
-      "source": { "book": "Core RED", "page": 35 },
+      "source": {
+        "book": "Core RED",
+        "page": 35
+      },
       "ability": {
         "name": "Credibility",
         "summaryEs": "Mide el acceso a fuentes, el tamano de la audiencia, cuanto le creen y el impacto de sus historias. Rumores pasivos: al menos dos veces por semana el GM tira en secreto Rango de Credibility + 1d10; si supera algun DV de la columna Pasivo, el Media se entera del rumor de mayor DV superado. Rumor activo: STAT + Habilidad relevante (Library Search, Conversation, Interrogation) + 1d10 contra la columna Activo. Vago 7/13; Tipico 9/15; Sustancial 11/17; Detallado 13/21 (Pasivo/Activo). Al publicar una historia se tira 1d10 contra Believability; +1 a la probabilidad si hay al menos una prueba verificable y facil de entender, +2 si hay mas de 4 pruebas duras distintas (se acumulan). Nunca se puede gastar LUCK en una Prueba de Believability. No se puede publicar otra historia del mismo tema sin informacion nueva.",
         "rank4Es": "Rangos 3-4: Acceso/Fuentes: honcho de pandilla de la ciudad, politico menor, ejecutivo corporativo, persona conocida del barrio. Audiencia: conocido colaborador de la gaceta o Data Pool local. Believability: 3 de 10 de que la audiencia le crea. Impacto: efecto directo; malos de poca monta son arrestados o pierden el poder, se hace justicia.",
         "options": [
-          { "name": "Rangos 1-2", "costOrRank": "Rango 1-2", "effectEs": "Fuentes: honcho local, jefe de pandilla, liderazgo del barrio. Audiencia: el barrio inmediato. Believability: 2 de 10. Impacto: cambio pequeno e incremental; los malos de poca monta se asustan y cambian un poco." },
-          { "name": "Rangos 3-4", "costOrRank": "Rango 3-4", "effectEs": "Fuentes: honcho de pandilla de la ciudad, politico menor, ejecutivo corporativo, persona conocida del barrio. Audiencia: colaborador conocido de la gaceta o Data Pool local. Believability: 3 de 10. Impacto: efecto directo; malos locales arrestados o desplazados." },
-          { "name": "Rangos 5-6", "costOrRank": "Rango 5-6", "effectEs": "Fuentes: gran figura de la ciudad, politico de la ciudad, celebridad local. Audiencia: toda la ciudad; columnista o colaborador habitual de gacetas o TV locales. Believability: 4 de 10. Impacto: cambia cosas en toda la ciudad; malos de mayor nivel pueden ir presos o perder poder; pueden aprobarse leyes locales." },
-          { "name": "Rangos 7-8", "costOrRank": "Rango 7-8", "effectEs": "Fuentes: presidente de una corporacion local, alcalde o administrador de la ciudad, celebridad de la ciudad. Audiencia: todo el estado; celebridad menor. Believability: 5 de 10. Impacto: cambia cosas en varias ciudades; corporaciones o gobiernos de nivel medio pueden caer; leyes que afectan varias ciudades." },
-          { "name": "Rango 9", "costOrRank": "Rango 9", "effectEs": "Fuentes: jefe de division corporativa, politico estatal, celebridad conocida. Audiencia: conocido por muchos en el pais, no por todos; sale en noticieros nacionales. Believability: 6 de 10. Impacto: cambia cosas en un area grande como una nacion; grandes corporaciones o gobiernos locales pueden ser derribados; leyes nacionales." },
-          { "name": "Rango 10", "costOrRank": "Rango 10", "effectEs": "Fuentes: gran lider mundial, jefe de una gran corporacion, celebridad mundial. Audiencia: conocido en todo el mundo. Believability: 7 de 10. Impacto: puede cambiar todo el mundo; megacorporaciones y gobiernos poderosos pueden caer; leyes internacionales; afecta a millones." }
+          {
+            "name": "Rangos 1-2",
+            "costOrRank": "Rango 1-2",
+            "effectEs": "Fuentes: honcho local, jefe de pandilla, liderazgo del barrio. Audiencia: el barrio inmediato. Believability: 2 de 10. Impacto: cambio pequeno e incremental; los malos de poca monta se asustan y cambian un poco."
+          },
+          {
+            "name": "Rangos 3-4",
+            "costOrRank": "Rango 3-4",
+            "effectEs": "Fuentes: honcho de pandilla de la ciudad, politico menor, ejecutivo corporativo, persona conocida del barrio. Audiencia: colaborador conocido de la gaceta o Data Pool local. Believability: 3 de 10. Impacto: efecto directo; malos locales arrestados o desplazados."
+          },
+          {
+            "name": "Rangos 5-6",
+            "costOrRank": "Rango 5-6",
+            "effectEs": "Fuentes: gran figura de la ciudad, politico de la ciudad, celebridad local. Audiencia: toda la ciudad; columnista o colaborador habitual de gacetas o TV locales. Believability: 4 de 10. Impacto: cambia cosas en toda la ciudad; malos de mayor nivel pueden ir presos o perder poder; pueden aprobarse leyes locales."
+          },
+          {
+            "name": "Rangos 7-8",
+            "costOrRank": "Rango 7-8",
+            "effectEs": "Fuentes: presidente de una corporacion local, alcalde o administrador de la ciudad, celebridad de la ciudad. Audiencia: todo el estado; celebridad menor. Believability: 5 de 10. Impacto: cambia cosas en varias ciudades; corporaciones o gobiernos de nivel medio pueden caer; leyes que afectan varias ciudades."
+          },
+          {
+            "name": "Rango 9",
+            "costOrRank": "Rango 9",
+            "effectEs": "Fuentes: jefe de division corporativa, politico estatal, celebridad conocida. Audiencia: conocido por muchos en el pais, no por todos; sale en noticieros nacionales. Believability: 6 de 10. Impacto: cambia cosas en un area grande como una nacion; grandes corporaciones o gobiernos locales pueden ser derribados; leyes nacionales."
+          },
+          {
+            "name": "Rango 10",
+            "costOrRank": "Rango 10",
+            "effectEs": "Fuentes: gran lider mundial, jefe de una gran corporacion, celebridad mundial. Audiencia: conocido en todo el mundo. Believability: 7 de 10. Impacto: puede cambiar todo el mundo; megacorporaciones y gobiernos poderosos pueden caer; leyes internacionales; afecta a millones."
+          }
         ],
-        "source": { "book": "Core RED", "page": 151 }
+        "source": {
+          "book": "Core RED",
+          "page": 151
+        }
       }
     },
     {
       "role": "Exec",
       "descEs": "Ejecutivo corporativo que forma un equipo que lo ayuda a cumplir sus metas, legales o no, mientras la moral lo permita.",
-      "source": { "book": "Core RED", "page": 36 },
+      "source": {
+        "book": "Core RED",
+        "page": 36
+      },
       "ability": {
         "name": "Teamwork",
         "summaryEs": "Da beneficios corporativos por Rango y Miembros de Equipo. Signing Bonus (Rango 1): traje de negocios (Businesswear Jacket, Top, Bottom y Footwear) que no se puede revender sin levantar sospechas. Corporate Housing (Rango 2): conapt corporativo sin renta mientras siga en la Corporacion (el Estilo de Vida se paga aparte); Rango 7: casa Beaverville en la Executive Zone; Rango 10: McMansion Beaverville en la Executive Zone o Penthouse de lujo en la Corporate Zone. Seguro de salud (Rango 6): Trauma Team Silver pagado por la Corporacion; Rango 8: Trauma Team Executive. Miembros de Equipo: 1 desde Rango 3, +1 en Rangos 5 y 9 (maximo 3). Se generan en tabla especial (1d6), no mejoran Habilidades, solo usan Light Armorjack, los controla el GM y obedecen segun su Loyalty (Loyalty Save: 1d6 igual o menor que su Loyalty actual; si Loyalty llega a 0 o menos traicionan; tope de 10 entre sesiones; Loyalty inicial = 1d6 + 1). Perder un miembro cuesta 200eb extra de 'honorarios' y el reemplazo empieza con Loyalty 1. Tipos de miembro: Company Bodyguard, Company Covert Operative, Company Driver, Company Netrunner, Company Technician.",
         "rank4Es": "Rango 4: Signing Bonus (traje), Corporate Housing (conapt corporativo sin renta) y 1 Miembro de Equipo (el segundo llega en Rango 5). Aun sin seguro Trauma Team (empieza en Rango 6).",
         "options": [
-          { "name": "Signing Bonus", "costOrRank": "Rango 1", "effectEs": "Traje de negocios completo (Jacket, Top, Bottom, Footwear) que identifica al Exec como parte de la elite; no puede revenderse sin levantar sospechas." },
-          { "name": "Corporate Housing", "costOrRank": "Rango 2 (mejora en 7 y 10)", "effectEs": "Conapt corporativo sin renta ni cargos mientras siga en la Corporacion; el Estilo de Vida se paga aparte. Rango 7: casa Beaverville en la Executive Zone. Rango 10: McMansion Beaverville en la Executive Zone o Penthouse de lujo en la Corporate Zone." },
-          { "name": "Team Members", "costOrRank": "Rango 3 (1), Rango 5 (+1), Rango 9 (+1); max. 3", "effectEs": "Miembros del equipo creados con tablas especiales; obedecen segun Loyalty. Ganar Loyalty: elogiar su trabajo +1 (pierde efecto si se abusa en la semana), bono o beneficio de al menos 200eb +4, apoyarlo contra la Gerencia +4, darle 20% de la ganancia de un trabajo +6, dia libre pagado por toda una sesion +6, arriesgar dano fisico por el +8. Perder Loyalty: no ganar Loyalty con el durante toda una sesion -1, humillar su trabajo -2, ignorar su contribucion u olvidar su cumpleanos -4, no cumplir un bono prometido -6, entregarlo a la Gerencia -6, abandonarlo bajo fuego -8." },
-          { "name": "Corporate Health Insurance", "costOrRank": "Rango 6 (mejora en 8)", "effectEs": "Rango 6: cobertura Trauma Team Silver pagada mensualmente por la Corporacion. Rango 8: mejora a Trauma Team Executive. Si deja la Corporacion para unirse a otra, esta le extiende la misma oferta." }
+          {
+            "name": "Signing Bonus",
+            "costOrRank": "Rango 1",
+            "effectEs": "Traje de negocios completo (Jacket, Top, Bottom, Footwear) que identifica al Exec como parte de la elite; no puede revenderse sin levantar sospechas."
+          },
+          {
+            "name": "Corporate Housing",
+            "costOrRank": "Rango 2 (mejora en 7 y 10)",
+            "effectEs": "Conapt corporativo sin renta ni cargos mientras siga en la Corporacion; el Estilo de Vida se paga aparte. Rango 7: casa Beaverville en la Executive Zone. Rango 10: McMansion Beaverville en la Executive Zone o Penthouse de lujo en la Corporate Zone."
+          },
+          {
+            "name": "Team Members",
+            "costOrRank": "Rango 3 (1), Rango 5 (+1), Rango 9 (+1); max. 3",
+            "effectEs": "Miembros del equipo creados con tablas especiales; obedecen segun Loyalty. Ganar Loyalty: elogiar su trabajo +1 (pierde efecto si se abusa en la semana), bono o beneficio de al menos 200eb +4, apoyarlo contra la Gerencia +4, darle 20% de la ganancia de un trabajo +6, dia libre pagado por toda una sesion +6, arriesgar dano fisico por el +8. Perder Loyalty: no ganar Loyalty con el durante toda una sesion -1, humillar su trabajo -2, ignorar su contribucion u olvidar su cumpleanos -4, no cumplir un bono prometido -6, entregarlo a la Gerencia -6, abandonarlo bajo fuego -8."
+          },
+          {
+            "name": "Corporate Health Insurance",
+            "costOrRank": "Rango 6 (mejora en 8)",
+            "effectEs": "Rango 6: cobertura Trauma Team Silver pagada mensualmente por la Corporacion. Rango 8: mejora a Trauma Team Executive. Si deja la Corporacion para unirse a otra, esta le extiende la misma oferta."
+          }
         ],
-        "source": { "book": "Core RED", "page": 153 }
+        "source": {
+          "book": "Core RED",
+          "page": 153
+        }
       }
     },
     {
       "role": "Lawman",
       "descEs": "Agente del orden (policia, alguacil, C-SWAT, etc.) en una ciudad en ruinas llena de boosters y cyberpsicopatas; jura mantener las calles seguras y cuenta con el respaldo de otros agentes.",
-      "source": { "book": "Core RED", "page": 37 },
+      "source": {
+        "book": "Core RED",
+        "page": 37
+      },
       "ability": {
         "name": "Backup",
         "summaryEs": "Permite pedir ayuda a otros agentes. En peligro, el Lawman puede llamar refuerzos de un grupo de su Rango de Backup o inferior. Como Accion, tira 1d10 y debe sacar igual o menos que su Rango de Backup para que alguien responda; si abusa, su Jefe lo echa o multa. Si alguien responde, tira 1d6 para saber en cuantas Rondas llegan; con un 6 llega el refuerzo del siguiente nivel superior (en Rango 10 llegan dos grupos distintos). Si nadie responde, puede reintentar al Turno siguiente. Los refuerzos los juega el GM, no esquivan balas y usan su Combat Number (STAT + Habilidad) + d10 para atacar o defender. Tabla de grupos por Rango: 1-2 Seguridad Corporativa; 3-4 Policias locales; 5-7 Departamento del Sheriff; 8 Marshal de Recovery Zone; 9 C-SWAT; 10 Policia nacional/Interpol/FBI/Netwatch.",
         "rank4Es": "Rango 4: puede llamar a Backup de Rango 4 o inferior (Seguridad Corporativa o Policias locales); sale con 1-4 en el d10. Grupo de Rango 3-4: Local Beat Cops: Combat Number 10, SP 7, HP 25, MOVE y BODY 5; cuatro policias locales de ronda que llegan en dos Compact Groundcars con Heavy Pistols y armadura Kevlar. Con un 6 en el d6 llegan en cambio los del siguiente nivel (Sheriff's Department).",
         "options": [
-          { "name": "Backup Rango 1-2: Corporate Security", "costOrRank": "Rango 1-2", "effectEs": "Combat Number 8, SP 7, HP 20, MOVE y BODY 4. Cuatro renta-cops locales que llegan a pie con Heavy Pistols y Kevlar." },
-          { "name": "Backup Rango 3-4: Local Beat Cops", "costOrRank": "Rango 3-4", "effectEs": "Combat Number 10, SP 7, HP 25, MOVE y BODY 5. Cuatro policias locales en dos Compact Groundcars, Heavy Pistols y Kevlar." },
-          { "name": "Backup Rango 5-7: Sheriff's Department", "costOrRank": "Rango 5-7", "effectEs": "Combat Number 14, SP 13, HP 35, MOVE y BODY 4. Dos 'County Mounties' en un High Performance Groundcar, con Heavy Pistols y Assault Rifles, en Heavy Armorjack." },
-          { "name": "Backup Rango 8: Recovery Zone Marshal", "costOrRank": "Rango 8", "effectEs": "Combat Number 16, SP 15, HP 50, MOVE y BODY 6. Un marshal solitario en una Superbike con Very Heavy Pistol, Assault Rifle y Grenade Launcher, con Flak Armor." },
-          { "name": "Backup Rango 9: C-SWAT", "costOrRank": "Rango 9", "effectEs": "Combat Number 15, SP 18, HP 35, MOVE y BODY 4. Dos C-SWAT del Psycho Squad con fusiles de asalto y lanzacohetes, armadura Metalgear, llegan por aire en un AV-4." },
-          { "name": "Backup Rango 10: National Law Enforcement/Interpol/FBI/Netwatch", "costOrRank": "Rango 10", "effectEs": "Combat Number 14, SP 11, HP 35, MOVE y BODY 6. Dos agentes que llegan en un AV-4 con Very Heavy Pistols y Assault Rifles, en Light Armorjack. Se quedan a investigar y los mismos 2 responden a llamados conectados al mismo caso hasta cerrarlo o caer en servicio. Su Combat Number tambien vale para Accounting, Acting, Conceal/Reveal Object, Criminology, Cryptography, Deduction, Education, Forgery, Interrogation, Paramedic, Perception, Personal Grooming, Resist Torture/Drugs, Stealth y Tracking." }
+          {
+            "name": "Backup Rango 1-2: Corporate Security",
+            "costOrRank": "Rango 1-2",
+            "effectEs": "Combat Number 8, SP 7, HP 20, MOVE y BODY 4. Cuatro renta-cops locales que llegan a pie con Heavy Pistols y Kevlar."
+          },
+          {
+            "name": "Backup Rango 3-4: Local Beat Cops",
+            "costOrRank": "Rango 3-4",
+            "effectEs": "Combat Number 10, SP 7, HP 25, MOVE y BODY 5. Cuatro policias locales en dos Compact Groundcars, Heavy Pistols y Kevlar."
+          },
+          {
+            "name": "Backup Rango 5-7: Sheriff's Department",
+            "costOrRank": "Rango 5-7",
+            "effectEs": "Combat Number 14, SP 13, HP 35, MOVE y BODY 4. Dos 'County Mounties' en un High Performance Groundcar, con Heavy Pistols y Assault Rifles, en Heavy Armorjack."
+          },
+          {
+            "name": "Backup Rango 8: Recovery Zone Marshal",
+            "costOrRank": "Rango 8",
+            "effectEs": "Combat Number 16, SP 15, HP 50, MOVE y BODY 6. Un marshal solitario en una Superbike con Very Heavy Pistol, Assault Rifle y Grenade Launcher, con Flak Armor."
+          },
+          {
+            "name": "Backup Rango 9: C-SWAT",
+            "costOrRank": "Rango 9",
+            "effectEs": "Combat Number 15, SP 18, HP 35, MOVE y BODY 4. Dos C-SWAT del Psycho Squad con fusiles de asalto y lanzacohetes, armadura Metalgear, llegan por aire en un AV-4."
+          },
+          {
+            "name": "Backup Rango 10: National Law Enforcement/Interpol/FBI/Netwatch",
+            "costOrRank": "Rango 10",
+            "effectEs": "Combat Number 14, SP 11, HP 35, MOVE y BODY 6. Dos agentes que llegan en un AV-4 con Very Heavy Pistols y Assault Rifles, en Light Armorjack. Se quedan a investigar y los mismos 2 responden a llamados conectados al mismo caso hasta cerrarlo o caer en servicio. Su Combat Number tambien vale para Accounting, Acting, Conceal/Reveal Object, Criminology, Cryptography, Deduction, Education, Forgery, Interrogation, Paramedic, Perception, Personal Grooming, Resist Torture/Drugs, Stealth y Tracking."
+          }
         ],
-        "source": { "book": "Core RED", "page": 158 }
+        "source": {
+          "book": "Core RED",
+          "page": 158
+        }
       }
     },
     {
       "role": "Fixer",
       "descEs": "Intermediario del mercado negro con una vasta red de contactos y clientes, capaz de conseguir armas, vehiculos, equipo o favores y de moverse entre las culturas de la calle. Su lema: 'solo soy el intermediario'.",
-      "source": { "book": "Core RED", "page": 38 },
+      "source": {
+        "book": "Core RED",
+        "page": 38
+      },
       "ability": {
         "name": "Operator",
         "summaryEs": "Cuatro componentes: Contacts & Clients (a quien puede acudir para bienes, favores o informacion; siempre hay que pagar), Reach (la categoria de precio mas alta que siempre puede conseguir pieza por pieza, y la capacidad de organizar con otros Fixers un Night Market), Haggle y Grease (integrarse en culturas, idiomas y codigos). Haggle: tira COOL + Trading + Rango de Operator + 1d10 contra COOL + Trading + (su Rango de Operator si es Fixer) + 1d10 del otro; si gana, puede hacer 1 trato de su Rango de Operator o inferior. Solo se puede hacer 1 trato de Fixer por transaccion.",
         "rank4Es": "Rangos 3-4: Contactos: honcho de pandilla de la ciudad, politico menor, ejecutivo corporativo, persona conocida del barrio. Reach: siempre consigue hasta objetos Expensive pieza por pieza, aunque no esten disponibles. Haggle: si gana, al comprar 5 o mas del mismo objeto recibe uno gratis. Grease: se lleva bien con al menos 1 cultura mas de su zona y gana un idioma que no tuviera, asociado a esa cultura, en nivel 4.",
         "options": [
-          { "name": "Operator Rangos 1-2", "costOrRank": "Rango 1-2", "effectEs": "Contactos: honcho local, jefe de pandilla, liderazgo del barrio. Reach: siempre consigue objetos Cheap y Everyday pieza por pieza. Haggle: 10% mas o menos del precio de mercado al comprar o vender. Grease: conoce la cultura de su barrio inmediato, incluidas las pandillas locales." },
-          { "name": "Operator Rangos 3-4", "costOrRank": "Rango 3-4", "effectEs": "Contactos: honcho de pandilla de la ciudad, politico menor, ejecutivo corporativo, persona conocida del barrio. Reach: hasta Expensive pieza por pieza. Haggle: comprando 5 o mas del mismo objeto, uno gratis. Grease: se lleva bien con 1 cultura mas y gana un idioma asociado en nivel 4." },
-          { "name": "Operator Rangos 5-6", "costOrRank": "Rango 5-6", "effectEs": "Contactos: gran figura de la ciudad, politico de la ciudad, celebridad del barrio. Reach: una vez al mes, con otros Fixers de su rango, monta un Night Market; en un Night Market que ayudo a organizar siempre consigue hasta Super Luxury. Haggle: puede negociar el pago por persona de un Trabajo +20%. Grease: 2 culturas adicionales (3 en total) y un idioma por cada una en nivel 4." },
-          { "name": "Operator Rangos 7-8", "costOrRank": "Rango 7-8", "effectEs": "Contactos: presidente de corporacion local, alcalde o administrador de la ciudad, celebridad local. Reach: hasta Very Expensive pieza por pieza. Haggle: al comprar Luxury o Super Luxury, paga mitad ahora y mitad en un mes; si no paga a tiempo, nadie vuelve a hacer ese trato con el. Grease: 3 culturas adicionales (6 en total) y un idioma por cada una en nivel 4." },
-          { "name": "Operator Rango 9", "costOrRank": "Rango 9", "effectEs": "Contactos: jefe de division corporativa, politico estatal o de zona de la ciudad, celebridad conocida. Reach: hasta Luxury pieza por pieza; al montar un Night Market puede sumar un Midnight Market con la cupula del hampa. Haggle: 20% mas o menos del precio de mercado. Grease: se integra perfectamente con muchas culturas y con agencias corporativas y gubernamentales." },
-          { "name": "Operator Rango 10", "costOrRank": "Rango 10", "effectEs": "Contactos: gran lider mundial, jefe de gran corporacion, celebridad mundial. Reach: hasta Super Luxury pieza por pieza. Haggle: puede negociar doblar el pago por persona de un Trabajo Peligroso. Grease: se integra con casi cualquier grupo, incluso muy cerrados como sociedades secretas, cultos o clubes exclusivos." }
+          {
+            "name": "Operator Rangos 1-2",
+            "costOrRank": "Rango 1-2",
+            "effectEs": "Contactos: honcho local, jefe de pandilla, liderazgo del barrio. Reach: siempre consigue objetos Cheap y Everyday pieza por pieza. Haggle: 10% mas o menos del precio de mercado al comprar o vender. Grease: conoce la cultura de su barrio inmediato, incluidas las pandillas locales."
+          },
+          {
+            "name": "Operator Rangos 3-4",
+            "costOrRank": "Rango 3-4",
+            "effectEs": "Contactos: honcho de pandilla de la ciudad, politico menor, ejecutivo corporativo, persona conocida del barrio. Reach: hasta Expensive pieza por pieza. Haggle: comprando 5 o mas del mismo objeto, uno gratis. Grease: se lleva bien con 1 cultura mas y gana un idioma asociado en nivel 4."
+          },
+          {
+            "name": "Operator Rangos 5-6",
+            "costOrRank": "Rango 5-6",
+            "effectEs": "Contactos: gran figura de la ciudad, politico de la ciudad, celebridad del barrio. Reach: una vez al mes, con otros Fixers de su rango, monta un Night Market; en un Night Market que ayudo a organizar siempre consigue hasta Super Luxury. Haggle: puede negociar el pago por persona de un Trabajo +20%. Grease: 2 culturas adicionales (3 en total) y un idioma por cada una en nivel 4."
+          },
+          {
+            "name": "Operator Rangos 7-8",
+            "costOrRank": "Rango 7-8",
+            "effectEs": "Contactos: presidente de corporacion local, alcalde o administrador de la ciudad, celebridad local. Reach: hasta Very Expensive pieza por pieza. Haggle: al comprar Luxury o Super Luxury, paga mitad ahora y mitad en un mes; si no paga a tiempo, nadie vuelve a hacer ese trato con el. Grease: 3 culturas adicionales (6 en total) y un idioma por cada una en nivel 4."
+          },
+          {
+            "name": "Operator Rango 9",
+            "costOrRank": "Rango 9",
+            "effectEs": "Contactos: jefe de division corporativa, politico estatal o de zona de la ciudad, celebridad conocida. Reach: hasta Luxury pieza por pieza; al montar un Night Market puede sumar un Midnight Market con la cupula del hampa. Haggle: 20% mas o menos del precio de mercado. Grease: se integra perfectamente con muchas culturas y con agencias corporativas y gubernamentales."
+          },
+          {
+            "name": "Operator Rango 10",
+            "costOrRank": "Rango 10",
+            "effectEs": "Contactos: gran lider mundial, jefe de gran corporacion, celebridad mundial. Reach: hasta Super Luxury pieza por pieza. Haggle: puede negociar doblar el pago por persona de un Trabajo Peligroso. Grease: se integra con casi cualquier grupo, incluso muy cerrados como sociedades secretas, cultos o clubes exclusivos."
+          }
         ],
-        "source": { "book": "Core RED", "page": 159 }
+        "source": {
+          "book": "Core RED",
+          "page": 159
+        }
       }
     },
     {
       "role": "Nomad",
       "descEs": "Miembro de una Familia Nomad: gente criada al volante y bajo el capo que ahora, tras el colapso, transporta carga y suministros y protege las rutas. Los Nomads tienen mejores vehiculos que casi todos.",
-      "source": { "book": "Core RED", "page": 39 },
+      "source": {
+        "book": "Core RED",
+        "page": 39
+      },
       "ability": {
         "name": "Moto",
         "summaryEs": "Vehicle Familiarity: suma su Rango de Moto a cualquier Prueba de Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech o Sea Vehicle Tech. Family Motorpool: cada vez que sube de Rango puede (a) agregar al pool de vehiculos que tiene permiso de usar un vehiculo de serie (especificaciones minimas) de su Rango de Moto o inferior, o (b) darle a uno de sus Vehiculos Familiares ya permitidos una mejora unica de su Rango de Moto o inferior. Solo puede tener un Vehiculo Familiar fuera a la vez; la Familia lo cambia a la manana siguiente si esta cerca. Si se destruye, la Familia lo repara por completo en una semana y el Nomad paga 500eb (puede eximirse si esta pelado, a costa de reputacion). En Rango 10 pasa a lider de la Familia: puede tener todos sus Vehiculos Familiares fuera a la vez, compra nuevos a precio de mercado y las mejoras cuestan 1.000eb cada una.",
         "rank4Es": "Rango 4: +4 a las Pruebas de vehiculo (Moto Rank 4) y vehiculos disponibles del Family Motorpool de Rango 1-4: Compact Groundcar, Gyrocopter, Jetski, Roadbike (a razon de una adicion o una mejora por cada subida de Rango).",
         "options": [
-          { "name": "Family Motorpool Rango 1-4", "costOrRank": "Rango 1-4", "effectEs": "Compact Groundcar, Gyrocopter, Jetski, Roadbike." },
-          { "name": "Family Motorpool Rango 5-6", "costOrRank": "Rango 5-6", "effectEs": "Helicopter, High Performance Groundcar, Speedboat." },
-          { "name": "Family Motorpool Rango 7-8", "costOrRank": "Rango 7-8", "effectEs": "AV-4, Cabin Cruiser, Superbike." },
-          { "name": "Family Motorpool Rango 9-10", "costOrRank": "Rango 9-10", "effectEs": "Aerozep, AV-9, Super Groundcar, Yacht." }
+          {
+            "name": "Family Motorpool Rango 1-4",
+            "costOrRank": "Rango 1-4",
+            "effectEs": "Compact Groundcar, Gyrocopter, Jetski, Roadbike."
+          },
+          {
+            "name": "Family Motorpool Rango 5-6",
+            "costOrRank": "Rango 5-6",
+            "effectEs": "Helicopter, High Performance Groundcar, Speedboat."
+          },
+          {
+            "name": "Family Motorpool Rango 7-8",
+            "costOrRank": "Rango 7-8",
+            "effectEs": "AV-4, Cabin Cruiser, Superbike."
+          },
+          {
+            "name": "Family Motorpool Rango 9-10",
+            "costOrRank": "Rango 9-10",
+            "effectEs": "Aerozep, AV-9, Super Groundcar, Yacht."
+          }
         ],
-        "source": { "book": "Core RED", "page": 161 }
+        "source": {
+          "book": "Core RED",
+          "page": 161
+        }
       }
     }
   ],
@@ -191,116 +467,478 @@
     {
       "handle": "Forty",
       "role": "Rockerboy",
-      "stats": { "INT": 5, "REF": 6, "DEX": 7, "TECH": 5, "COOL": 7, "WILL": 8, "EMP": 6, "BODY": 3, "MOVE": null, "LUCK": null, "moveOrLuckRaw": [7, 5], "HP": 40, "seriouslyWounded": 20, "deathSave": 3 },
-      "skills": { "Athletics": 2, "Brawling": 6, "Composition": 6, "Concentration": 2, "Conversation": 2, "Education": 2, "Evasion": 6, "First Aid": 6, "Handgun": 6, "Human Perception": 6, "Local Expert": 4, "Melee Weapon": 6, "Perception": 2, "Persuasion": 6, "Play Instrument": 6, "Stealth": 2, "Streetwise": 6, "Wardrobe and Style": 4 },
+      "stats": {
+        "INT": 5,
+        "REF": 6,
+        "DEX": 7,
+        "TECH": 5,
+        "COOL": 7,
+        "WILL": 8,
+        "EMP": 6,
+        "BODY": 3,
+        "MOVE": null,
+        "LUCK": null,
+        "moveOrLuckRaw": [
+          7,
+          5
+        ],
+        "HP": 40,
+        "seriouslyWounded": 20,
+        "deathSave": 3
+      },
+      "skills": {
+        "Athletics": 2,
+        "Brawling": 6,
+        "Composition": 6,
+        "Concentration": 2,
+        "Conversation": 2,
+        "Education": 2,
+        "Evasion": 6,
+        "First Aid": 6,
+        "Handgun": 6,
+        "Human Perception": 6,
+        "Local Expert": 4,
+        "Melee Weapon": 6,
+        "Perception": 2,
+        "Persuasion": 6,
+        "Play Instrument": 6,
+        "Stealth": 2,
+        "Streetwise": 6,
+        "Wardrobe and Style": 4
+      },
       "weapons": [
-        { "name": "Very Heavy Pistol", "dmg": "4d6", "ammo": 8, "rof": 1, "notes": "16 rondas extra de municion" },
-        { "name": "Heavy Melee Weapon", "dmg": "3d6", "ammo": null, "rof": 2, "notes": "Una espada o un bate de beisbol, a eleccion" }
+        {
+          "name": "Very Heavy Pistol",
+          "dmg": "4d6",
+          "ammo": 8,
+          "rof": 1,
+          "notes": "16 rondas extra de municion"
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "dmg": "3d6",
+          "ammo": null,
+          "rof": 2,
+          "notes": "Una espada o un bate de beisbol, a eleccion"
+        }
       ],
-      "armor": { "name": "Light Armorjack", "sp": 11 },
+      "armor": {
+        "name": "Light Armorjack",
+        "sp": 11
+      },
       "cyberware": [
-        { "name": "Internal Agent", "notes": "Smartphone con IA autoadaptable en la cabeza, controlado totalmente por voz" },
-        { "name": "Pain Editor (Chipware)", "notes": "Permite apagar los receptores de dolor e ignorar el -2 a todas las Pruebas del estado Seriously Wounded" }
+        {
+          "name": "Internal Agent",
+          "notes": "Smartphone con IA autoadaptable en la cabeza, controlado totalmente por voz"
+        },
+        {
+          "name": "Pain Editor (Chipware)",
+          "notes": "Permite apagar los receptores de dolor e ignorar el -2 a todas las Pruebas del estado Seriously Wounded"
+        }
       ],
       "gear": [
-        { "name": "Musical Instrument", "notes": "A eleccion del jugador" },
-        { "name": "Pocket Amp", "notes": "Amplifica un instrumento musical" },
-        { "name": "Glow Paint", "notes": "Pintura en aerosol que brilla en la oscuridad" },
-        { "name": "Video Camera", "notes": "Graba hasta 12 horas" }
+        {
+          "name": "Musical Instrument",
+          "notes": "A eleccion del jugador"
+        },
+        {
+          "name": "Pocket Amp",
+          "notes": "Amplifica un instrumento musical"
+        },
+        {
+          "name": "Glow Paint",
+          "notes": "Pintura en aerosol que brilla en la oscuridad"
+        },
+        {
+          "name": "Video Camera",
+          "notes": "Graba hasta 12 horas"
+        }
       ],
-      "roleAbility": { "name": "Charismatic Impact", "notes": "Sabe cuando alguien es fan y recibe +2 a cualquier Prueba de Habilidad basada en EMP o COOL contra el, incluidos los Facedowns" },
+      "roleAbility": {
+        "name": "Charismatic Impact",
+        "notes": "Sabe cuando alguien es fan y recibe +2 a cualquier Prueba de Habilidad basada en EMP o COOL contra el, incluidos los Facedowns"
+      },
       "eurodollars": null,
-      "source": { "book": "Easy Mode", "page": 37 }
+      "source": {
+        "book": "Easy Mode",
+        "page": 37
+      }
     },
     {
       "handle": "Mover",
       "role": "Solo",
-      "stats": { "INT": 7, "REF": 7, "DEX": 6, "TECH": 5, "COOL": 7, "WILL": 6, "EMP": 3, "BODY": 7, "MOVE": null, "LUCK": null, "moveOrLuckRaw": [7, 6], "HP": 45, "seriouslyWounded": 23, "deathSave": 7 },
-      "skills": { "Athletics": 2, "Brawling": 2, "Conceal/Reveal Object": 8, "Concentration": 2, "Conversation": 2, "Education": 2, "Evasion": 6, "First Aid": 6, "Handgun": 6, "Human Perception": 2, "Interrogation": 6, "Local Expert": 2, "Perception": 8, "Persuasion": 2, "Resist Torture/Drugs": 6, "Shoulder Arms": 6, "Stealth": 6, "Tactics": 6 },
+      "stats": {
+        "INT": 7,
+        "REF": 7,
+        "DEX": 6,
+        "TECH": 5,
+        "COOL": 7,
+        "WILL": 6,
+        "EMP": 3,
+        "BODY": 7,
+        "MOVE": null,
+        "LUCK": null,
+        "moveOrLuckRaw": [
+          7,
+          6
+        ],
+        "HP": 45,
+        "seriouslyWounded": 23,
+        "deathSave": 7
+      },
+      "skills": {
+        "Athletics": 2,
+        "Brawling": 2,
+        "Conceal/Reveal Object": 8,
+        "Concentration": 2,
+        "Conversation": 2,
+        "Education": 2,
+        "Evasion": 6,
+        "First Aid": 6,
+        "Handgun": 6,
+        "Human Perception": 2,
+        "Interrogation": 6,
+        "Local Expert": 2,
+        "Perception": 8,
+        "Persuasion": 2,
+        "Resist Torture/Drugs": 6,
+        "Shoulder Arms": 6,
+        "Stealth": 6,
+        "Tactics": 6
+      },
       "weapons": [
-        { "name": "Shotgun", "dmg": "5d6", "ammo": 4, "rof": 1, "notes": "8 rondas extra de municion" },
-        { "name": "Assault Rifle", "dmg": "5d6", "ammo": 25, "rof": 1, "notes": "25 rondas extra de municion" }
+        {
+          "name": "Shotgun",
+          "dmg": "5d6",
+          "ammo": 4,
+          "rof": 1,
+          "notes": "8 rondas extra de municion"
+        },
+        {
+          "name": "Assault Rifle",
+          "dmg": "5d6",
+          "ammo": 25,
+          "rof": 1,
+          "notes": "25 rondas extra de municion"
+        }
       ],
-      "armor": { "name": "Light Armorjack", "sp": 11 },
+      "armor": {
+        "name": "Light Armorjack",
+        "sp": 11
+      },
       "cyberware": [
-        { "name": "Image Enhance Cybereyes", "notes": "+2 a Perception y Conceal/Reveal Object (ya incluido en los totales de la hoja)" },
-        { "name": "Teleoptic Cybereye", "notes": "Ve detalle hasta 800 m/yds" }
+        {
+          "name": "Image Enhance Cybereyes",
+          "notes": "+2 a Perception y Conceal/Reveal Object (ya incluido en los totales de la hoja)"
+        },
+        {
+          "name": "Teleoptic Cybereye",
+          "notes": "Ve detalle hasta 800 m/yds"
+        }
       ],
       "gear": [
-        { "name": "Burner Phone", "notes": "Telefono desechable" }
+        {
+          "name": "Burner Phone",
+          "notes": "Telefono desechable"
+        }
       ],
-      "roleAbility": { "name": "Combat Awareness", "notes": "Suma +4 a cualquier tirada de Iniciativa" },
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "notes": "Suma +4 a cualquier tirada de Iniciativa"
+      },
       "eurodollars": null,
-      "source": { "book": "Easy Mode", "page": 39 }
+      "source": {
+        "book": "Easy Mode",
+        "page": 39
+      }
     },
     {
       "handle": "Torch",
       "role": "Tech",
-      "stats": { "INT": 8, "REF": 7, "DEX": 5, "TECH": 6, "COOL": 3, "WILL": 3, "EMP": 5, "BODY": 6, "MOVE": null, "LUCK": null, "moveOrLuckRaw": [6, 7], "HP": 35, "seriouslyWounded": 18, "deathSave": 6 },
-      "skills": { "Athletics": 2, "Brawling": 2, "Concentration": 2, "Conversation": 2, "Education": 6, "Electronics/Security Tech": 10, "Evasion": 6, "First Aid": 6, "Forgery": 6, "Handgun": 6, "Human Perception": 2, "Local Expert": 2, "Perception": 2, "Persuasion": 2, "Pick Lock": 6, "Pick Pocket": 6, "Shoulder Arms": 6, "Stealth": 6 },
+      "stats": {
+        "INT": 8,
+        "REF": 7,
+        "DEX": 5,
+        "TECH": 6,
+        "COOL": 3,
+        "WILL": 3,
+        "EMP": 5,
+        "BODY": 6,
+        "MOVE": null,
+        "LUCK": null,
+        "moveOrLuckRaw": [
+          6,
+          7
+        ],
+        "HP": 35,
+        "seriouslyWounded": 18,
+        "deathSave": 6
+      },
+      "skills": {
+        "Athletics": 2,
+        "Brawling": 2,
+        "Concentration": 2,
+        "Conversation": 2,
+        "Education": 6,
+        "Electronics/Security Tech": 10,
+        "Evasion": 6,
+        "First Aid": 6,
+        "Forgery": 6,
+        "Handgun": 6,
+        "Human Perception": 2,
+        "Local Expert": 2,
+        "Perception": 2,
+        "Persuasion": 2,
+        "Pick Lock": 6,
+        "Pick Pocket": 6,
+        "Shoulder Arms": 6,
+        "Stealth": 6
+      },
       "weapons": [
-        { "name": "Heavy Pistol", "dmg": "3d6", "ammo": 8, "rof": 2, "notes": "16 rondas extra de municion" },
-        { "name": "Shotgun", "dmg": "5d6", "ammo": 4, "rof": 1, "notes": "8 rondas extra de municion" }
+        {
+          "name": "Heavy Pistol",
+          "dmg": "3d6",
+          "ammo": 8,
+          "rof": 2,
+          "notes": "16 rondas extra de municion"
+        },
+        {
+          "name": "Shotgun",
+          "dmg": "5d6",
+          "ammo": 4,
+          "rof": 1,
+          "notes": "8 rondas extra de municion"
+        }
       ],
-      "armor": { "name": "Light Armorjack", "sp": 11 },
+      "armor": {
+        "name": "Light Armorjack",
+        "sp": 11
+      },
       "cyberware": [
-        { "name": "Tool Hand", "notes": "Dedos con destornillador, llave, taladro pequeno y cualquier herramienta de campo necesaria" },
-        { "name": "Internal Agent", "notes": "Smartphone con IA autoadaptable en la cabeza, controlado totalmente por voz" }
+        {
+          "name": "Tool Hand",
+          "notes": "Dedos con destornillador, llave, taladro pequeno y cualquier herramienta de campo necesaria"
+        },
+        {
+          "name": "Internal Agent",
+          "notes": "Smartphone con IA autoadaptable en la cabeza, controlado totalmente por voz"
+        }
       ],
       "gear": [
-        { "name": "Duct Tape", "notes": "Perfecta para arreglar cualquier cosa" },
-        { "name": "Flashlight", "notes": "Haz de luz de 100 m/yd" },
-        { "name": "Road Flare", "notes": "Ilumina un area de 100 m/yd" }
+        {
+          "name": "Duct Tape",
+          "notes": "Perfecta para arreglar cualquier cosa"
+        },
+        {
+          "name": "Flashlight",
+          "notes": "Haz de luz de 100 m/yd"
+        },
+        {
+          "name": "Road Flare",
+          "notes": "Ilumina un area de 100 m/yd"
+        }
       ],
-      "roleAbility": { "name": "Maker", "notes": "Su Habilidad Electronics/Security Tech tiene +4 (ya incluido en la hoja)" },
+      "roleAbility": {
+        "name": "Maker",
+        "notes": "Su Habilidad Electronics/Security Tech tiene +4 (ya incluido en la hoja)"
+      },
       "eurodollars": null,
-      "source": { "book": "Easy Mode", "page": 41 }
+      "source": {
+        "book": "Easy Mode",
+        "page": 41
+      }
     },
     {
       "handle": "Redtail",
       "role": "Medtech",
-      "stats": { "INT": 8, "REF": 5, "DEX": 5, "TECH": 8, "COOL": 5, "WILL": 5, "EMP": 4, "BODY": 5, "MOVE": null, "LUCK": null, "moveOrLuckRaw": [6, 6], "HP": 35, "seriouslyWounded": 18, "deathSave": 5 },
-      "skills": { "Athletics": 2, "Brawling": 2, "Concentration": 2, "Conversation": 6, "Deduction": 6, "Education": 6, "Electronics/Security Tech": 4, "Evasion": 6, "First Aid": 2, "Human Perception": 6, "Local Expert": 2, "Paramedic": 6, "Perception": 6, "Persuasion": 5, "Resist Torture/Drugs": 4, "Shoulder Arms": 6, "Stealth": 6, "Surgery": 4 },
+      "stats": {
+        "INT": 8,
+        "REF": 5,
+        "DEX": 5,
+        "TECH": 8,
+        "COOL": 5,
+        "WILL": 5,
+        "EMP": 4,
+        "BODY": 5,
+        "MOVE": null,
+        "LUCK": null,
+        "moveOrLuckRaw": [
+          6,
+          6
+        ],
+        "HP": 35,
+        "seriouslyWounded": 18,
+        "deathSave": 5
+      },
+      "skills": {
+        "Athletics": 2,
+        "Brawling": 2,
+        "Concentration": 2,
+        "Conversation": 6,
+        "Deduction": 6,
+        "Education": 6,
+        "Electronics/Security Tech": 4,
+        "Evasion": 6,
+        "First Aid": 2,
+        "Human Perception": 6,
+        "Local Expert": 2,
+        "Paramedic": 6,
+        "Perception": 6,
+        "Persuasion": 5,
+        "Resist Torture/Drugs": 4,
+        "Shoulder Arms": 6,
+        "Stealth": 6,
+        "Surgery": 4
+      },
       "weapons": [
-        { "name": "Shotgun", "dmg": "5d6", "ammo": 4, "rof": 1, "notes": "8 rondas extra de municion" },
-        { "name": "Light Melee Weapon", "dmg": "1d6", "ammo": null, "rof": 2, "notes": "Un cuchillo pequeno para rescates de campo" }
+        {
+          "name": "Shotgun",
+          "dmg": "5d6",
+          "ammo": 4,
+          "rof": 1,
+          "notes": "8 rondas extra de municion"
+        },
+        {
+          "name": "Light Melee Weapon",
+          "dmg": "1d6",
+          "ammo": null,
+          "rof": 2,
+          "notes": "Un cuchillo pequeno para rescates de campo"
+        }
       ],
-      "armor": { "name": "Light Armorjack", "sp": 11 },
+      "armor": {
+        "name": "Light Armorjack",
+        "sp": 11
+      },
       "cyberware": [
-        { "name": "Tool Hand", "notes": "Dedos con destornillador, llave, taladro pequeno y cualquier herramienta de campo necesaria" },
-        { "name": "Pain Editor (Chipware)", "notes": "Permite apagar los receptores de dolor e ignorar el -2 a todas las Pruebas del estado Seriously Wounded" }
+        {
+          "name": "Tool Hand",
+          "notes": "Dedos con destornillador, llave, taladro pequeno y cualquier herramienta de campo necesaria"
+        },
+        {
+          "name": "Pain Editor (Chipware)",
+          "notes": "Permite apagar los receptores de dolor e ignorar el -2 a todas las Pruebas del estado Seriously Wounded"
+        }
       ],
       "gear": [
-        { "name": "Agent", "notes": "Smartphone con IA" },
-        { "name": "Medtech Bag", "notes": "Seleccion completa de herramientas medicas" },
-        { "name": "Glow Paint", "notes": "Pintura en aerosol que brilla en la oscuridad" },
-        { "name": "Flashlight", "notes": "Haz de luz de 100 m/yd" }
+        {
+          "name": "Agent",
+          "notes": "Smartphone con IA"
+        },
+        {
+          "name": "Medtech Bag",
+          "notes": "Seleccion completa de herramientas medicas"
+        },
+        {
+          "name": "Glow Paint",
+          "notes": "Pintura en aerosol que brilla en la oscuridad"
+        },
+        {
+          "name": "Flashlight",
+          "notes": "Haz de luz de 100 m/yd"
+        }
       ],
-      "roleAbility": { "name": "Medicine", "notes": "Tiene acceso a la Habilidad Surgery (ya incluida en la hoja)" },
+      "roleAbility": {
+        "name": "Medicine",
+        "notes": "Tiene acceso a la Habilidad Surgery (ya incluida en la hoja)"
+      },
       "eurodollars": null,
-      "source": { "book": "Easy Mode", "page": 43 }
+      "source": {
+        "book": "Easy Mode",
+        "page": 43
+      }
     },
     {
       "handle": "24/7",
       "role": "Media",
-      "stats": { "INT": 7, "REF": 5, "DEX": 5, "TECH": 4, "COOL": 8, "WILL": 7, "EMP": 7, "BODY": 5, "MOVE": null, "LUCK": null, "moveOrLuckRaw": [7, 6], "HP": 40, "seriouslyWounded": 20, "deathSave": 5 },
-      "skills": { "Athletics": 2, "Brawling": 2, "Composition": 6, "Conceal/Reveal Object": 8, "Concentration": 2, "Conversation": 6, "Education": 2, "Evasion": 6, "First Aid": 2, "Forgery": 6, "Handgun": 6, "Human Perception": 6, "Library Search": 4, "Local Expert": 6, "Melee Weapon": 6, "Perception": 8, "Persuasion": 6, "Stealth": 6 },
+      "stats": {
+        "INT": 7,
+        "REF": 5,
+        "DEX": 5,
+        "TECH": 4,
+        "COOL": 8,
+        "WILL": 7,
+        "EMP": 7,
+        "BODY": 5,
+        "MOVE": null,
+        "LUCK": null,
+        "moveOrLuckRaw": [
+          7,
+          6
+        ],
+        "HP": 40,
+        "seriouslyWounded": 20,
+        "deathSave": 5
+      },
+      "skills": {
+        "Athletics": 2,
+        "Brawling": 2,
+        "Composition": 6,
+        "Conceal/Reveal Object": 8,
+        "Concentration": 2,
+        "Conversation": 6,
+        "Education": 2,
+        "Evasion": 6,
+        "First Aid": 2,
+        "Forgery": 6,
+        "Handgun": 6,
+        "Human Perception": 6,
+        "Library Search": 4,
+        "Local Expert": 6,
+        "Melee Weapon": 6,
+        "Perception": 8,
+        "Persuasion": 6,
+        "Stealth": 6
+      },
       "weapons": [
-        { "name": "Heavy Pistol", "dmg": "3d6", "ammo": 8, "rof": 2, "notes": "16 rondas extra de municion" },
-        { "name": "Heavy Melee Weapon", "dmg": "3d6", "ammo": null, "rof": 2, "notes": "Una espada o un tripode plegado, a eleccion" }
+        {
+          "name": "Heavy Pistol",
+          "dmg": "3d6",
+          "ammo": 8,
+          "rof": 2,
+          "notes": "16 rondas extra de municion"
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "dmg": "3d6",
+          "ammo": null,
+          "rof": 2,
+          "notes": "Una espada o un tripode plegado, a eleccion"
+        }
       ],
-      "armor": { "name": "Light Armorjack", "sp": 11 },
+      "armor": {
+        "name": "Light Armorjack",
+        "sp": 11
+      },
       "cyberware": [
-        { "name": "Internal Agent", "notes": "Smartphone con IA autoadaptable en la cabeza, controlado totalmente por voz" },
-        { "name": "Image Enhance Cybereyes", "notes": "+2 a Perception y Conceal/Reveal Object (ya incluido en los totales de la hoja)" }
+        {
+          "name": "Internal Agent",
+          "notes": "Smartphone con IA autoadaptable en la cabeza, controlado totalmente por voz"
+        },
+        {
+          "name": "Image Enhance Cybereyes",
+          "notes": "+2 a Perception y Conceal/Reveal Object (ya incluido en los totales de la hoja)"
+        }
       ],
       "gear": [
-        { "name": "Video Camera", "notes": "Graba hasta 12 horas" },
-        { "name": "Audio Recorder", "notes": "Graba hasta 24 horas" }
+        {
+          "name": "Video Camera",
+          "notes": "Graba hasta 12 horas"
+        },
+        {
+          "name": "Audio Recorder",
+          "notes": "Graba hasta 24 horas"
+        }
       ],
-      "roleAbility": { "name": "Credibility", "notes": "Una vez por hora tira 1d10; si saca mas de 4, se entera de un rumor pertinente a su situacion actual" },
+      "roleAbility": {
+        "name": "Credibility",
+        "notes": "Una vez por hora tira 1d10; si saca mas de 4, se entera de un rumor pertinente a su situacion actual"
+      },
       "eurodollars": null,
-      "source": { "book": "Easy Mode", "page": 45 }
+      "source": {
+        "book": "Easy Mode",
+        "page": 45
+      }
     }
   ],
   "doubts": [

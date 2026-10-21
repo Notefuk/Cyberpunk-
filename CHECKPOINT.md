@@ -12,7 +12,7 @@
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.1 datos canon de creación (plan 7) en la rama `claude/v4.8.1-datos-creacion`. Paso actual: extractores escriben `data/creation-src/*.json` (HECHOS: core-role-tables, core-gear-skills, core-lifepath; reanudados tras límite de API: core-roles, cemk-creation). Si la sesión se corta: ver qué JSON existen y están completos; relanzar solo los que falten. Antigravity: no tocar `data/creation-src/` ni `characterCreationData.ts`.
+- [Claude Code · 2026-10-22] v4.8.1 datos canon de creación (plan 7) en la rama `claude/v4.8.1-datos-creacion`. Paso actual: extractores escriben `data/creation-src/*.json` (HECHOS: core-role-tables, core-gear-skills, core-lifepath, core-roles; falta: cemk-creation). Si la sesión se corta: ver qué JSON existen y están completos; relanzar solo los que falten. Antigravity: no tocar `data/creation-src/` ni `characterCreationData.ts`.
 
 ## Traspaso
 
