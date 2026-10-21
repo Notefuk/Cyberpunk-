@@ -204,6 +204,12 @@ flowchart TD
   - Sala local peer-to-peer para que el GM reciba las tiradas del jugador en tiempo real en su pantalla.
   - Exportación e importación de estado completo de partida en archivo `.cprsave.json`.
 
+### ⏳ Pendiente de planificar: fichas de jugadores siempre disponibles desde cualquier lado [Claude Code · 2026-10-22]
+* **Pedido de Giuliano (2026-10-22)**: buscar una forma de que las fichas de los jugadores estén siempre activas para uso general y se puedan abrir desde cualquier dispositivo (celular, PC, otra casa), no solo en el navegador donde se crearon.
+* **Estado**: solo anotado. Nada implementado ni decidido. Antes de tocar código hace falta un plan propio (`docs/plans/planN-...`) con las preguntas de alcance a Giuliano.
+* **Preguntas para el plan**: dónde viven los datos (servicio en la nube, GitHub, archivo compartido), quién puede ver y editar cada ficha (jugador, GM), si hace falta cuenta o login, qué pasa sin conexión y cómo se resuelven ediciones simultáneas.
+* **Punto de partida**: el respaldo completo de v4.8.0 (`buildFullBackup` / `parseFullBackup`) ya define el formato de exportación con migraciones, y sirve de base para cualquier sincronización.
+
 ### 💎 Premium Modules & Fases Futuras (Paridad Companion App)
 * **Objetivo**: Integración exhaustiva y desacoplada de las expansiones Premium catalogadas de la *Cyberpunk RED Companion App*, garantizando cero duplicación y máxima fidelidad a las especificaciones oficiales.
 

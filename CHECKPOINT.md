@@ -7,12 +7,12 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-22]
-**Versión de la app**: v4.8.1 (en `main`, squash 8985aa8, PR #22; publicada en gh-pages y verificada en vivo)
+**Versión de la app**: v4.8.2 lista en la rama `claude/v4.8.2-wizard` (sin PR). `main` = v4.8.1, publicada.
 **Plan activo**: plan 7 (`docs/plans/plan7-creador-personajes.md`, creador de personajes CEMK-first, persistente y con Modo Novato; v4.8.0-v4.8.3). En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2) y plan 5 (Black Chrome y vehículos, ahora v4.9.x). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] Nada en curso. Siguiente: v4.8.2 wizard funcional (plan 7): motor `engine/characterCreation.ts` con tests, pasos en el orden del libro, lifepath CEMK/Core, habilidad de rol Core/CEMK (`roleAbilityVariant`), las 66 skills con etiqueta de libro, "Running Out of Cash?" en vez de deuda, dinero por método y borrador `cpr_creator_draft_v1`. Rama `claude/v4.8.2-wizard`. Preguntas abiertas: personaje demo "V" (no está en los libros) y las discrepancias 10-15 de `docs/canon-audit/discrepancias-cemk-core.md`.
+- [Claude Code · 2026-10-22] v4.8.2 Wizard funcional terminada y verificada (tsc, 138 tests, build, navegador) en la rama `claude/v4.8.2-wizard`. Falta: PR, merge y gh-pages. Después: v4.8.3 Modo Novato (interruptor `cpr_creator_novice_v1`, "qué es esto / qué te conviene" por paso, checklist y tooltips de skills completos). Para planificar (pedido de Giuliano, sin código todavía): fichas de jugadores siempre disponibles desde cualquier dispositivo, ver `PROJECT_STATUS_AND_ROADMAP.md`. Pendientes chicos: en lifepath CEMK los amigos muestran "Ninguno" del campo de rol; la tienda no tiene paginación. Antigravity: no tocar `features/creator/` ni `engine/characterCreation.ts` hasta el merge.
 
 ## Traspaso
 

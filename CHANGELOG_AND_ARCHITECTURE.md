@@ -247,6 +247,16 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.8.2] - 2026-10-22 (Wizard funcional) [Claude Code · 2026-10-22]
+* **Category**: Creador de personajes (plan 7, bloque 3).
+* **Motor puro** `frontend/src/engine/characterCreation.ts` (sin React ni storage): `CreatorDraft` v1, métodos (`applyStreetratRow`, `applyEdgerunnerRoll`), puntos (62 STAT, 86 skills, ×2), lifepath CEMK/Core (`getLifepathTables`, `rollLifepathTable`, `buildCharacterLifepath` con `LIFEPATH_FIELD_MAP`), paquete de rol (`getRolePackage`), dinero (`getStartingMoney`, Running Out of Cash), Humanidad (`getCyberwareList`, `computeDerived`), validación (`validateStep`, `getMissingChecklist`) y `buildCharacterSheetFromDraft`. 36 tests.
+* **Wizard** `features/creator/CharacterCreatorWizard.tsx` (orquestador, mismas props) + `features/creator/steps/` (Method, Role, Lifepath, Stats, Skills, Gear, Summary, CreatorUi). Borrador `cpr_creator_draft_v1` (`creatorDraftStorage.ts`, 7 tests).
+* **Ficha**: `CharacterSheet.roleAbilityVariant?: 'core' | 'cemk'`. `CreatorPurchase.location` para la armadura por ubicación (Core p.97).
+* **Store**: se quita el personaje demo "V" (`INITIAL_CHARACTER_V`); si no queda ninguna ficha se usa el Folio de Hardpoint.
+* **Discrepancias 10-15** decididas por Giuliano y registradas en `docs/canon-audit/discrepancias-cemk-core.md`; nota de daño 3d6/4d6 en la Zhuo de Wrench.
+* **Decisiones de diseño**: "Rocker" en 2077 / "Rockerboy" en 2045; tienda de 2077 Core + CEMK etiquetada; lifepath tirar o elegir; Media/Exec/Lawman solo con la habilidad del Core.
+* **Verificación**: tsc, 138 tests y build. Navegador: Streetrat Solo 2077 de punta a punta (HP 45, Humanidad 33/40, Neuroport, paquete y compra), recarga a mitad con borrador retomado, pregen CEMK (copia con Humanidad EMP×10 − HL) y validación de Complete Package 2045.
+
 ### [v4.8.1] - 2026-10-22 (Datos canon del creador) [Claude Code · 2026-10-22]
 * **Category**: Canon / creador (plan 7, bloque 2). Registro: `docs/canon-audit/v4.8.1-creador.md`. Discrepancias: `docs/canon-audit/discrepancias-cemk-core.md`.
 * **Datos**: `data/creation-src/*.json` (5 archivos con página por dato y lista `doubts`) → `scripts/gen_creation.py` → `frontend/src/data/creation/*.ts` (generados) + `types.ts`.

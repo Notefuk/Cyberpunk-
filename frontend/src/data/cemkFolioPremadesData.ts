@@ -3801,7 +3801,7 @@ export const CEMK_FOLIO_PREMADE_CHARACTERS: CharacterSheet[] = [
             "weaponTechType": "smart",
             "inHand": true,
             "reserveAmmo": 32,
-            "notes": "Smart Weapon: +1 a Tiradas de Ataque (ya incluido en la base 13). Requiere munición Smart Mejorada. Disparo en área (Shell): Shoulder Arms vs DV 13. Causa 4d6 de daño a todos los objetivos en un cono de 6m delante del usuario consumiendo 8 cartuchos. No puede disparar postas (slugs). Gracias a los Gorilla Arms puede empuñarse con 1 sola mano.",
+            "notes": "Daño: el Folio imprime 3d6 en el bloque del arma y 4d6 en la tabla de ataques y en el modo Shell; se muestran ambos (discrepancia 15, decisión de Giuliano 2026-10-22). Smart Weapon: +1 a Tiradas de Ataque (ya incluido en la base 13). Requiere munición Smart Mejorada. Disparo en área (Shell): Shoulder Arms vs DV 13. Causa 4d6 de daño a todos los objetivos en un cono de 6m delante del usuario consumiendo 8 cartuchos. No puede disparar postas (slugs). Gracias a los Gorilla Arms puede empuñarse con 1 sola mano.",
             "sourceBook": "cemk_2077",
             "sourceBookTitle": "Cyberpunk: Edgerunners Mission Kit",
             "era": "2077"
