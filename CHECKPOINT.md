@@ -19,7 +19,7 @@
 - Cierra: [Claude Code · 2026-10-22]
 - Rama y último commit: `main` @ commit "CHECKPOINT: v4.7.0 mergeada..." (pusheada: sí). gh-pages publicada con el build de v4.7.0.
 - A medias: nada.
-- Siguiente paso exacto: 
+- Siguiente paso exacto: plan 6 v4.7.1 Danger Gal: 118 fichas y 15 facciones. Extraer por tandas de facciones con `data/enemies-src/SCHEMA.md`, agregar el libro a `scripts/gen_enemies.py` para generar `frontend/src/data/enemies/dangerGal.ts` y borrar las 95 fichas danger_gal inventadas de `enemiesCatalog.ts`.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
 
 ## Último trabajo terminado
