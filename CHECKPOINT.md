@@ -7,17 +7,27 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-21]
-**Versión de la app**: v4.5.0 (en `main`, commit 44baf2c, PR #16; publicada en gh-pages)
-**Plan activo**: plan 2 (`docs/plans/plan2-auditoria-expansiones.md`), fases 1-4 hechas; falta la fase 5 (v4.5.1). Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
+**Versión de la app**: v4.6.0 en la rama `claude/v4.6.0-ripperdoc-2077` (PR a `main` abierto, sin mergear; ya publicada en gh-pages). `main` sigue en v4.5.0 + protocolo de cowork (606c15e).
+**Plan activo**: plan 4 (`docs/plans/plan4-ripperdoc-visual-2077.md`) terminado salvo el merge. Plan 2: fases 1-4 hechas, falta la fase 5 (v4.5.1). Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
+
+## En curso (a cargo)
+
+- [Claude Code · 2026-10-21] **v4.6.0 Ripperdoc estilo 2077 (plan 4): las 5 fases hechas**, rama `claude/v4.6.0-ripperdoc-2077`, falta mergear el PR. Antigravity: no tocar `frontend/src/features/cyberware/` ni `index.css` hasta el merge.
+  - Componentes en `features/cyberware/`: `ripperdocZones.tsx` (zonas, colores, `ZONE_HOTSPOTS`, `itemMatchesZone`), `HoloBody.tsx` (holograma anatómico, 9 zonas incl. Fashionware en la muñeca), `ZoneCard.tsx`, `SlotBox.tsx` (biselado, indicador ▣ de carta), `ZoneConnectors.tsx` (líneas tarjeta↔cuerpo en xl), `ZoneDetailPanel.tsx`, `GoingMetalBanner.tsx`, `cyberwareCardArt.ts` (6 cartas del Mission Kit en `public/cemk/cyberware/`, se ven al inspeccionar). La vista bajó de 2235 a ~1030 líneas.
+  - Fix: 'Cyberarm Option', 'Neuralware Option' y 'Borgware x2' no caían en ninguna zona (test de cobertura, 33 tests).
+  - Fase 5: textos de Going Metal corregidos en banner y chips; `animate-in`/`fade-in`/`zoom-in-95` definidas en `index.css` (antes no hacían nada; afecta a toda la app, desactivadas con reduced motion). Ojo al verificar: con el panel del navegador oculto las animaciones nuevas quedan congeladas en opacidad 0 porque no hay frames; en un navegador visible funcionan.
+  - Docs firmados (CHANGELOG, HANDOFF, STATUS, CHECKLIST) y changelog in-app v4.6.0 con `author: 'Claude Code'`.
+  - Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `main` @ 606c15e "Protocolo de cowork..." (pusheada: sí). Web gh-pages publicada desde ese commit (deploy bacc1ce, con badges de autor en el changelog in-app).
-- A medias: nada.
-- Siguiente paso exacto: v4.5.1 Cyberfists of Fury (ver Próximos pasos 1), en una rama nueva `claude/...` o `antigravity/...` según quién la tome.
+- Rama y último commit: `claude/v4.6.0-ripperdoc-2077` @ commit "v4.6.0 fase 5..." (pusheada: sí), con PR abierto a `main`. Web gh-pages publicada desde esa rama.
+- A medias: nada de código; falta mergear el PR de v4.6.0.
+- Siguiente paso exacto: mergear el PR de v4.6.0; después v4.5.1 Cyberfists of Fury (IR4 pp. 73-83).
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
-- Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app ahora tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`.
+- Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`.
+
 
 ## Último trabajo terminado
 
@@ -38,9 +48,9 @@
   - `CLAUDE.md`, subagentes `.claude/agents/` (`cpr-scout` Haiku, `cpr-worker` Sonnet, `github-web-deployer` Haiku) y skills `.claude/skills/` (`cpr-pdf-extractor`, `cpr-version-release`).
   - `.agent/` queda como config de Antigravity, con copia de `AGENTS.md`, `gemini-scout` y `gemini-worker`.
 - [Claude Code · 2026-10-20] Acceso a los PDFs desde Claude verificado: se leyó el Core Rulebook p. 174 trayéndolo desde la PC del usuario.
-## En curso
 
-- Nada a medias.
+## Contexto permanente
+
 - Dudas del libro (anotadas en docs): `packageHlAverage` impreso no siempre cuadra con su fórmula (Enforcer 53 vs 55 en el ejemplo de p. 95); BODY de Sigma/Beta y SP de Skin Weave/Subdermal salen del Core.
 - Fuera de alcance de v4.5.0: marcos Black Chrome (Vermilion, Fūma Kotarō); el HL de cada pieza del paquete no se instala como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad.
 - Decisiones del usuario: todo canon, borrar lo inventado (no homebrew), NET Actions según CEMK (hasta 3), subagentes todos en Sonnet, publicar en gh-pages al cerrar versión.
@@ -48,6 +58,7 @@
 
 ## Próximos pasos
 
+0. Mergear el PR de v4.6.0 (Ripperdoc 2077).
 1. v4.5.1 Cyberfists of Fury (IR4 pp. 73-83: 23 formas y 46 movimientos, `isOpposed` donde aplique) en `cyberfistsMartialArtsData.ts`. Cierra el plan 2.
 2. Plan 3 (enemigos y Red Chrome Cargo): **se perdió**; hay que reescribirlo y volver a hacerle a Giuliano sus preguntas antes de ejecutarlo.
 3. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.

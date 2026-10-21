@@ -282,3 +282,14 @@ describe('Full Body Conversion (Going Metal pp. 94, 107-108)', () => {
     expect(calculateTherapyMaxHumanity(6, [{ humanityLoss: '7', type: 'Borgware x2' }])).toBe(base - 8);
   });
 });
+
+describe('Ripperdoc: todo el ciberware tiene zona anatómica', () => {
+  it('cada implante del pack y de Going Metal cae en al menos una zona', async () => {
+    const { itemMatchesZone, ZONE_CONFIGS } = await import('../../features/cyberware/ripperdocZones');
+    const { FBC_16_CYBERWARE } = await import('../../data/goingMetalFbcData');
+    const zones = Object.keys(ZONE_CONFIGS) as (keyof typeof ZONE_CONFIGS)[];
+    const all = [...(pack.cyberware as { id: string; type: string }[]), ...FBC_16_CYBERWARE] as Parameters<typeof itemMatchesZone>[0][];
+    const sinZona = all.filter((cw) => !zones.some((z) => itemMatchesZone(cw, z))).map((cw) => `${cw.id} (${cw.type})`);
+    expect(sinZona).toEqual([]);
+  });
+});

@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.5.0 OPERATIVO`  
+> **SYSTEM VERSION**: `v4.6.0 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-10-21]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -20,7 +20,11 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
 
 ---
 
-## 🚀 2. What Was Added in v4.5.0
+## 🚀 2. What Was Added in v4.6.0
+
+[Claude Code · 2026-10-21] Plan 4 (`docs/plans/plan4-ripperdoc-visual-2077.md`), Ripperdoc estilo Cyberpunk 2077, solo visual. `CyberwareRipperdocView.tsx` 2235 a ~1030 líneas con componentes nuevos en `features/cyberware/`: `ripperdocZones.tsx`, `HoloBody.tsx`, `ZoneCard.tsx`, `SlotBox.tsx`, `GoingMetalBanner.tsx`, `ZoneConnectors.tsx`, `ZoneDetailPanel.tsx`, `cyberwareCardArt.ts`. Figura holográfica con 9 zonas interactivas (nueva: Fashionware), slots biselados `.chamfer-slot`, conectores medidos en xl, panel de detalle y layout móvil. 6 cartas CEMK de ciberware en `frontend/public/cemk/cyberware/` (se ven al inspeccionar; los slots muestran ▣). Fix de `itemMatchesZone` para 'Cyberarm Option', 'Neuralware Option' y 'Borgware x2', con test de cobertura de zonas (33 tests). Textos de Going Metal corregidos; `animate-in`/`fade-in`/`zoom-in-95` definidos en `index.css`. `.claude/launch.json` para el dev server (puerto 5173). Pendiente: v4.5.1 Cyberfists of Fury (plan 2 fase 5), plan 3 perdido, modo Settings, GM Master Screen.
+
+## 📦 2.0 Historical Summary: What Was Added in v4.5.0
 
 [Claude Code · 2026-10-21] Plan 2, fase 4 (Going Metal canon, pp. 91-111). `goingMetalFbcData.ts` reescrito: 13 cuerpos `gm-*` con `statFloor`, `armorPenalty`, `packageHlAverage`, 20 ciberwares, 6 de equipo, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14. Conversión: HL = 14 + HL del paquete, cambiar de cuerpo cuesta el HL del paquete, HP al máximo. Motor: REF/DEX/MOVE = max(base, `statFloor`), sin penalizadores de Wound State, sin Speedheal ni doble Cryotank, inmune a 9 heridas críticas, terapia 'Borgware x2' = -8. Se borraron del pack 29 `fbc-*` y 4 ítems inventados (ambas copias de `core-rules.cprpack.json`) y se reescribió `fbc-rules`. Tests: 32. Pendiente: marcos Black Chrome (Vermilion, Fūma Kotarō), HL por pieza del paquete para el tope de terapia, tope de Humanidad al volver a un cuerpo viejo. Siguiente: v4.5.1 Cyberfists of Fury.
 

@@ -26,6 +26,45 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.6.0',
+    date: '2026-10-21',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Diseño visual',
+    title: 'Ripperdoc estilo Cyberpunk 2077',
+    summary: 'Plan 4 aprobado por Giuliano, en 5 fases y solo visual: el Ripperdoc tiene una figura holográfica con zonas interactivas, slots biselados y cartas oficiales CEMK. No cambian reglas ni datos salvo el fix de zonas.',
+    highlights: [
+      'CyberwareRipperdocView.tsx pasó de 2235 a ~1030 líneas; componentes nuevos en features/cyberware/ (ripperdocZones, HoloBody, ZoneCard, SlotBox, GoingMetalBanner, ZoneConnectors, ZoneDetailPanel, cyberwareCardArt).',
+      'Figura holográfica en pose A con 9 zonas interactivas (nueva: Fashionware en la muñeca), hover y selección con el color de la zona, foco por teclado y animaciones con reduced motion.',
+      'Slots biselados con hover amarillo 2077, tarjetas de zona con contador en segmentos, conectores medidos en xl, panel de detalle y layout móvil con la figura primero.',
+      '6 cartas oficiales de ciberware del CEMK; son cartas de texto, se ven completas al inspeccionar y los slots muestran un indicador ▣.',
+      'Fix: Cyberarm Option, Neuralware Option y Borgware x2 (Mantis Blade, Gorilla Arm, Monowire, Berserk, Omega Internal) no aparecían en ningún catálogo ni slot. Test de cobertura de zonas (33 tests).',
+      'Textos de Going Metal corregidos y animate-in/fade-in/zoom-in-95 definidos en index.css (antes no hacían nada).',
+      'Pendiente: v4.5.1 Cyberfists of Fury (plan 2 fase 5), plan 3 perdido, modo Settings y GM Master Screen.'
+    ],
+    filesTouched: [
+      'frontend/src/features/cyberware/CyberwareRipperdocView.tsx',
+      'frontend/src/features/cyberware/ripperdocZones.tsx',
+      'frontend/src/features/cyberware/HoloBody.tsx',
+      'frontend/src/features/cyberware/ZoneCard.tsx',
+      'frontend/src/features/cyberware/SlotBox.tsx',
+      'frontend/src/features/cyberware/GoingMetalBanner.tsx',
+      'frontend/src/features/cyberware/ZoneConnectors.tsx',
+      'frontend/src/features/cyberware/ZoneDetailPanel.tsx',
+      'frontend/src/features/cyberware/cyberwareCardArt.ts',
+      'frontend/public/cemk/cyberware/',
+      'frontend/src/index.css',
+      'frontend/src/engine/__tests__/rules.test.ts',
+      '.claude/launch.json',
+      'frontend/src/features/docs/SystemChangelogAndDocsView.tsx',
+      'CHANGELOG_AND_ARCHITECTURE.md',
+      'AI_CONTEXT_HANDOFF.md',
+      'PROJECT_STATUS_AND_ROADMAP.md',
+      'CONTENT_CHECKLIST.md'
+    ],
+    metricsBadge: 'v4.6.0 • Ripperdoc 2077 • Plan 4'
+  },
+  {
     version: 'v4.5.0',
     date: '2026-10-21',
     author: 'Claude Code',
@@ -574,6 +613,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.6.0': true,
     'v4.5.0': true,
     'v4.4.0': true,
     'v4.3.1': true,
