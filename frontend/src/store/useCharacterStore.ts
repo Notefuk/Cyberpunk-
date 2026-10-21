@@ -36,6 +36,7 @@ import {
 } from '../data/weaponAttachmentsAndTechData';
 
 import { FBC_16_CYBERWARE, FBC_IMMUNE_CRITICAL_INJURIES } from '../data/goingMetalFbcData';
+import { MARTIAL_ARTS_FORMS } from '../data/cyberfistsMartialArtsData';
 
 const PACK_CYBERWARE_BY_ID = new Map(
   [
@@ -2578,8 +2579,32 @@ export const useCharacterStore = create<CharacterStoreState>()(
       name: 'cpr-omni-deck-characters-v2',
       // Versión del esquema persistido. Al cambiar la forma de los datos, subir el número y migrar aquí.
       // v0 -> v1: solo agrega campos opcionales (deathSavePenalty, isDead, preFbc*Armor); no hace falta transformar.
-      version: 1,
-      migrate: (persistedState: unknown) => persistedState as CharacterStoreState,
+      version: 2,
+      migrate: (persistedState: unknown, persistedVersion: number) => {
+        // v4.5.1: formas de artes marciales inventadas eliminadas (IR4 canon)
+        if (persistedVersion < 2 && persistedState && typeof persistedState === 'object') {
+          const validFormIds = new Set(MARTIAL_ARTS_FORMS.map((f) => f.id));
+          const state = persistedState as Partial<CharacterStoreState>;
+          if (Array.isArray(state.characters)) {
+            state.characters = state.characters.map((c) => {
+              const cleaned = { ...c };
+              if (c.knownMartialArts && typeof c.knownMartialArts === 'object') {
+                cleaned.knownMartialArts = Object.fromEntries(
+                  Object.entries(c.knownMartialArts).filter(([formId]) => validFormIds.has(formId))
+                );
+              }
+              if (Array.isArray(c.ownedMartialArtChips)) {
+                cleaned.ownedMartialArtChips = c.ownedMartialArtChips.filter((formId) => validFormIds.has(formId));
+              }
+              if (Array.isArray(c.equippedMartialArtChips)) {
+                cleaned.equippedMartialArtChips = c.equippedMartialArtChips.filter((formId) => validFormIds.has(formId));
+              }
+              return cleaned;
+            });
+          }
+        }
+        return persistedState as CharacterStoreState;
+      },
       merge: (persistedState: unknown, currentState: CharacterStoreState) => {
         if (!persistedState || typeof persistedState !== 'object') {
           return currentState;

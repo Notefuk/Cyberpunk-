@@ -293,3 +293,48 @@ describe('Ripperdoc: todo el ciberware tiene zona anatómica', () => {
     expect(sinZona).toEqual([]);
   });
 });
+
+describe('Cyberfists of Fury canon (IR4 pp. 74-84)', () => {
+  const ir4Forms = MARTIAL_ARTS_FORMS.filter((f) => f.sourceBook === 'interface_red');
+  const CANON_NAMES = [
+    'Arasaka-te', 'Arnis', 'Boxing', 'Capoeira', 'Choy Li Fut', 'Drunken Fist', 'Gun Fu', 'Jujutsu',
+    'Kendo', 'Krav Maga', 'Kung Fu', 'Kyudo', 'Militech Commando Training', 'Muay Thai', 'Multiarm Melee',
+    'PanzerFaust', 'Silat', 'Sov-System', 'Sumo', 'Tai Chi', 'Thamoc', 'Thrash Sambo', 'Wrestling'
+  ];
+  const DELETED_IDS = [
+    'animal-kung-fu', 'chornobogs-kommando', 'cyber-wrestling', 'hapkido', 'jeet-kune-do',
+    'jiu-jitsu', 'lethwei', 'ninjutsu', 'savate', 'systema'
+  ];
+
+  it('hay exactamente 23 formas de Interface RED con los nombres canon (IR4 pp. 76-83)', () => {
+    expect(ir4Forms).toHaveLength(23);
+    expect(ir4Forms.map((f) => f.name).sort()).toEqual([...CANON_NAMES].sort());
+  });
+
+  it('total 27 formas y 54 movimientos (4 Core + 23 IR4)', () => {
+    expect(MARTIAL_ARTS_FORMS).toHaveLength(27);
+    expect(MARTIAL_ARTS_FORMS.flatMap((f) => f.moves)).toHaveLength(54);
+  });
+
+  it('cada forma y movimiento IR4 cita una página entre 74 y 84', () => {
+    for (const f of ir4Forms) {
+      expect(f.sourcePage, f.id).toBeGreaterThanOrEqual(74);
+      expect(f.sourcePage, f.id).toBeLessThanOrEqual(84);
+      for (const m of f.moves) {
+        expect(m.sourcePage, m.id).toBeGreaterThanOrEqual(74);
+        expect(m.sourcePage, m.id).toBeLessThanOrEqual(84);
+      }
+    }
+  });
+
+  it('las formas inventadas eliminadas ya no existen', () => {
+    const ids = MARTIAL_ARTS_FORMS.map((f) => f.id);
+    for (const id of DELETED_IDS) expect(ids).not.toContain(id);
+  });
+
+  it('todo movimiento IR4 no enfrentado tiene un DV fijo mayor que 0', () => {
+    for (const m of ir4Forms.flatMap((f) => f.moves).filter((mv) => !mv.isOpposed)) {
+      expect(m.resolutionDv, m.id).toBeGreaterThan(0);
+    }
+  });
+});

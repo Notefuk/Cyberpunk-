@@ -3047,7 +3047,7 @@ export const StreetLabView: React.FC = () => {
                                         className="text-[10px] font-mono-code flex items-center justify-between bg-[#0e111a] px-2 py-1 rounded border border-[#1b2234]"
                                       >
                                         <span className="text-white font-bold">{m.name}</span>
-                                        <span className="text-amber-400 font-bold">{m.isOpposed ? 'vs DEX + Evasion' : `DV ${m.resolutionDv}`}</span>
+                                        <span className="text-amber-400 font-bold">{m.isOpposed ? `vs ${m.opposedBy ?? 'DEX + Evasion'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
                                       </div>
                                     ))}
                                   </div>
@@ -3180,7 +3180,7 @@ export const StreetLabView: React.FC = () => {
                                   >
                                     <div className="flex items-center justify-between font-bold">
                                       <span className="text-white">{m.name}</span>
-                                      <span className="text-amber-400">{m.isOpposed ? 'vs DEX + Evasion' : `DV ${m.resolutionDv}`}</span>
+                                      <span className="text-amber-400">{m.isOpposed ? `vs ${m.opposedBy ?? 'DEX + Evasion'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
                                     </div>
                                     <div className="text-[9px] text-slate-400 font-sans leading-tight">
                                       <strong>Req:</strong> {m.requirements}

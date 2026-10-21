@@ -7,24 +7,25 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-21]
-**Versión de la app**: v4.6.0 (en `main`, squash 458cc3c, PR #17; publicada en gh-pages)
-**Plan activo**: ninguno en ejecución. Plan 4 terminado en v4.6.0. Plan 2: fases 1-4 hechas, falta la fase 5 (v4.5.1 Cyberfists of Fury). Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
+**Versión de la app**: v4.6.1 lista en la rama `claude/v4.5.1-cyberfists` (sin mergear todavía). `main` sigue en v4.6.0, publicada en gh-pages.
+**Plan activo**: plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, `source` libro+página en cada ítem y registro en `docs/canon-audit/`. En curso: v4.5.1 Cyberfists (absorbe la fase 5 del plan 2). Plan 4 terminado en v4.6.0. Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
 
 ## En curso (a cargo)
 
-- Nada a medias. `main` libre para cualquiera de las dos herramientas.
+- [Claude Code · 2026-10-21] v4.6.1 Cyberfists (plan 5, bloque 1) terminada y verificada en la rama `claude/v4.5.1-cyberfists`. Falta: PR a main, merge y gh-pages. Antigravity: no tocar `cyberfistsMartialArtsData.ts` hasta el merge.
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `main` @ commit "CHECKPOINT: v4.6.0 mergeada..." (pusheada: sí). Web gh-pages publicada con el build de v4.6.0.
-- A medias: nada.
-- Siguiente paso exacto: v4.5.1 Cyberfists of Fury (IR4 pp. 73-83) en una rama nueva `claude/...` o `antigravity/...` según quién la tome.
+- Rama y último commit: `claude/v4.5.1-cyberfists` @ commit "v4.6.1 Cyberfists of Fury canon" (pusheada: sí).
+- A medias: el PR de v4.6.1 a main y la publicación.
+- Siguiente paso exacto: mergear v4.6.1 y luego plan 5, bloque siguiente: v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 (mismo método: scout extrae del PDF con página, worker aplica, registro en `docs/canon-audit/`).
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
 - Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`. El Ripperdoc ahora está dividido en componentes en `frontend/src/features/cyberware/` (ver v4.6.0 abajo).
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-21] v4.6.1 Cyberfists of Fury canon (plan 5, bloque 1; cierra la fase 5 del plan 2). IR4 pp. 74-84: 23 formas y 46 movimientos con `sourcePage`; borradas 10 formas inventadas y agregadas 10 faltantes; corregidos los movimientos de las 13 restantes (ids conservados). `opposedBy` en los movimientos enfrentados. La UI muestra la página. Persist v2 migra los ids huérfanos. 38 tests. Registro: `docs/canon-audit/v4.5.1-cyberfists.md` + índice `docs/canon-audit/README.md`. JSON canon extraído (scratchpad de la sesión, no versionado).
 - [Claude Code · 2026-10-21] v4.6.0 Ripperdoc estilo Cyberpunk 2077 (plan 4), mergeada a `main` (PR #17, squash 458cc3c) y publicada. Componentes en `features/cyberware/`: `ripperdocZones.tsx`, `HoloBody.tsx` (holograma, 9 zonas), `ZoneCard.tsx`, `SlotBox.tsx`, `ZoneConnectors.tsx`, `ZoneDetailPanel.tsx`, `GoingMetalBanner.tsx`, `cyberwareCardArt.ts` (6 cartas del Mission Kit, visibles al inspeccionar). Fix: 'Cyberarm Option', 'Neuralware Option' y 'Borgware x2' sin zona. `animate-in`/`fade-in`/`zoom-in-95` definidas en `index.css`. 33 tests. Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
 - [Claude Code · 2026-10-21] v4.5.0 (plan 2, fase 4) Going Metal canon, mergeada a `main` (PR #16, squash 44baf2c) y publicada en https://notefuk.github.io/Cyberpunk-/. Rehecha desde el PDF porque el trabajo a medias de claude.ai nunca se había pusheado (también se perdió el plan 3).
   - `goingMetalFbcData.ts` canon: 13 cuerpos `gm-*`, 20 ciberwares (con `gm-biosystem`), 6 de equipo, `ABOUT_FBCS_GUIDE`, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14, `LINEAR_FRAME_OMEGA_HP_CHART`. Sin `moveOverride`.
@@ -53,8 +54,8 @@
 
 ## Próximos pasos
 
-1. v4.5.1 Cyberfists of Fury (IR4 pp. 73-83: 23 formas y 46 movimientos, `isOpposed` donde aplique) en `cyberfistsMartialArtsData.ts`. Cierra el plan 2.
-2. Plan 3 (enemigos y Red Chrome Cargo): **se perdió**; hay que reescribirlo y volver a hacerle a Giuliano sus preguntas antes de ejecutarlo.
+1. Plan 5 (`docs/plans/plan5-canon-audit.md`), en orden: v4.6.2 Farmacia + Gunmas + Errata; v4.7.0 enemigos canon (Danger Gal, Hardened, Red Chrome Cargo y CEMK 2077; reemplaza al plan 3 perdido); v4.8.0 Black Chrome completo + catálogo de vehículos; v4.8.1 docs. Desvío de numeración: el plan dice v4.5.1/v4.6.1/..., pero como `main` ya estaba en v4.6.0, cada versión corre un paso (Cyberfists = v4.6.1).
+2. Plan 3: se perdió y lo reemplaza el bloque de enemigos del plan 5 (v4.7.0).
 3. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.
 4. GM Master Screen (`FixerDeckView.tsx`).
 
