@@ -516,6 +516,10 @@ export function CyberwareRipperdocView() {
           {/* Central High-Tech Vector Holographic Body */}
           <HoloBody
             hoveredZone={hoveredZone}
+            selectedZone={selectedZone}
+            installedCountByZone={Object.fromEntries(
+              (Object.keys(ZONE_CONFIGS) as AnatomicalZoneKey[]).map((k) => [k, getInstalledInZone(k).length])
+            ) as Record<AnatomicalZoneKey, number>}
             setHoveredZone={setHoveredZone}
             setSelectedZone={setSelectedZone}
           />

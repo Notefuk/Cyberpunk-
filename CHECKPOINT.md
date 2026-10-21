@@ -14,15 +14,16 @@
 
 - [Claude Code · 2026-10-21] **v4.6.0 Ripperdoc visual 2077 (plan 4)**, rama `claude/v4.6.0-ripperdoc-2077`. Antigravity: no tocar `frontend/src/features/cyberware/` ni `index.css` hasta que se mergee.
   - Fase 1 hecha: `CyberwareRipperdocView.tsx` 2235 → 1022 líneas; nuevos `ripperdocZones.tsx` (zonas, `ZoneConfig.color`, `itemMatchesZone`, `parseHumanityLoss`, `renderCategoryFloatingTooltip`), `HoloBody.tsx` (SVG tal cual), `ZoneCard.tsx`, `SlotBox.tsx`, `GoingMetalBanner.tsx`. Verificado: HTML de la vista idéntico al original (102204 caracteres, hash 1959140848, 1440x900, Hardpoint), catálogo/instalar/inspeccionar/desinstalar y banner FBC funcionan, tsc, 32 tests y build OK.
-  - Siguiente: fase 2, figura holográfica nueva en `HoloBody.tsx` (hotspots desde `ZONE_CONFIGS` con `.map`, keyframes de scanline en `index.css`). Fases 3-5 pendientes.
+  - [Claude Code · 2026-10-21] Fase 2 hecha: `HoloBody.tsx` reescrito (~330 líneas) con silueta anatómica en pose A, rejilla hex con clipPath, glow, columna/costillas/articulaciones, retícula y regla de altura; `ZONE_HOTSPOTS` en `ripperdocZones.tsx` (9 zonas, fashionware en la muñeca izquierda) renderizados con `.map`; hover/selección con el color de cada zona, badge de implantes, líneas guía 2077 a cada lado; foco por teclado; `.holo-scanline`/`.holo-flicker`/`.holo-pulse` en `index.css` (solo sin reduced motion). La vista pasa `selectedZone` e `installedCountByZone`. Revisado en el navegador (brazos y Operating System); tsc, 32 tests y build OK.
+  - Siguiente: fase 3 (slots biselados 2077, líneas guía hasta las tarjetas, panel de detalle de zona, layout móvil con la figura arriba). Fases 4-5 pendientes.
   - Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `claude/v4.6.0-ripperdoc-2077` @ commit "v4.6.0 fase 1..." (pusheada: sí). `main` @ 606c15e; web gh-pages del 606c15e.
-- A medias: v4.6.0 Ripperdoc 2077 (plan 4), fase 1 de 5 hecha (ver "En curso").
-- Siguiente paso exacto: fase 2 del plan 4 (figura holográfica en `HoloBody.tsx`). Después, v4.5.1 Cyberfists of Fury.
+- Rama y último commit: `claude/v4.6.0-ripperdoc-2077` @ commit "v4.6.0 fase 2..." (pusheada: sí). `main` @ 606c15e; web gh-pages del 606c15e.
+- A medias: v4.6.0 Ripperdoc 2077 (plan 4), fases 1-2 de 5 hechas (ver "En curso").
+- Siguiente paso exacto: fase 3 del plan 4 (slots 2077 y layout). Después, v4.5.1 Cyberfists of Fury.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
 - Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app ahora tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`.
 
