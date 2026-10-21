@@ -112,7 +112,7 @@ export function HoloBody({
   return (
     <svg
       viewBox="0 0 420 680"
-      className="w-full h-auto max-h-[620px] select-none cursor-crosshair z-0"
+      className="w-full h-auto max-h-[720px] select-none cursor-crosshair z-0"
     >
       <defs>
         <filter id="holo-glow" x="-20%" y="-20%" width="140%" height="140%">
@@ -302,6 +302,7 @@ export function HoloBody({
           const { x, y } = hs.marker;
           return (
             <g key={`marker-${key}`}>
+              <circle data-zone-marker={key} cx={x} cy={y} r="1" fill="none" />
               {selectedZone === key && (
                 <>
                   <circle className="holo-pulse" cx={x} cy={y} r="11" fill="none" stroke={color} strokeWidth="1.5" />

@@ -33,33 +33,36 @@ export function ZoneCard({
   onInstall
 }: ZoneCardProps) {
   const zoneCfg = ZONE_CONFIGS[zoneKey];
+  const color = zoneCfg.color ?? '#00f5d4';
   const slots = Array.from({ length: zoneCfg.maxSlots }).map((_, i) => installed[i]);
   const isHovered = hoveredZone === zoneKey;
   const isSelected = selectedZone === zoneKey;
+  const active = isHovered || isSelected;
 
   return (
     <div
       key={zoneKey}
+      data-zone-card={zoneKey}
       onMouseEnter={() => setHoveredZone(zoneKey)}
       onMouseLeave={() => setHoveredZone(null)}
       onClick={() => setSelectedZone(zoneKey)}
-      className={`p-3 rounded-xs border transition-all duration-200 relative bg-[#0e1017]/90 ${
-        isHovered || isSelected
-          ? 'border-[#00f5d4] shadow-[0_0_16px_rgba(0,245,212,0.2)] bg-[#121520]'
-          : 'border-[#1e2230] hover:border-[#38bdf8]/60'
+      style={active ? { borderColor: color, boxShadow: `0 0 16px ${color}33` } : undefined}
+      className={`p-3 xl:p-2 rounded-xs border transition-all duration-200 relative z-10 bg-[#0e1017]/90 ${
+        active ? '' : 'border-[#1e2230]'
       }`}
     >
-      <div className="flex items-center justify-between border-b border-[#1b1f2c] pb-2 mb-2.5">
-        <div className="flex items-center gap-2">
-          <span className="p-1 rounded-2xs bg-[#171a26] border border-[#23283a]">
+      <div className="flex items-stretch justify-between gap-2 border-b border-[#1b1f2c] pb-2 mb-2.5">
+        <div className="flex items-stretch gap-2 min-w-0">
+          <span className="w-1 shrink-0 rounded-2xs" style={{ backgroundColor: color }} />
+          <span className="p-1 rounded-2xs bg-[#171a26] border border-[#23283a] self-center">
             {zoneCfg.icon}
           </span>
-          <div 
+          <div
             className="relative cursor-help"
             onMouseEnter={() => setHoveredCategoryTooltipKey(zoneKey)}
             onMouseLeave={() => setHoveredCategoryTooltipKey(null)}
           >
-            <h4 className="font-tech text-xs sm:text-sm font-bold text-white tracking-wider flex items-center gap-1.5 hover:text-[#00f5d4] transition-colors">
+            <h4 className="font-tech text-xs sm:text-sm font-bold text-white tracking-wider flex items-center gap-1.5 transition-colors">
               {zoneCfg.title}
               <Info className="w-3 h-3 text-[#64748b]" />
             </h4>
@@ -69,32 +72,46 @@ export function ZoneCard({
             {hoveredCategoryTooltipKey === zoneKey && renderCategoryFloatingTooltip(zoneKey)}
           </div>
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="text-[10px] font-mono-code px-1.5 py-0.5 rounded-2xs bg-[#151824] border border-[#222738] text-[#94a3b8]">
-            {installed.length} / {zoneCfg.maxSlots}
-          </span>
+        <div className="flex flex-col items-end justify-between gap-1.5 shrink-0">
+          <div
+            className="flex items-center gap-[3px]"
+            role="img"
+            aria-label={`${installed.length} de ${zoneCfg.maxSlots} slots ocupados`}
+          >
+            {slots.map((s, i) => (
+              <span
+                key={`seg-${zoneKey}-${i}`}
+                className="w-2 h-2 border"
+                style={
+                  s
+                    ? { backgroundColor: color, borderColor: color }
+                    : { backgroundColor: 'transparent', borderColor: `${color}55` }
+                }
+              />
+            ))}
+          </div>
           <button
             onClick={(e) => {
               e.stopPropagation();
               onInstall(zoneKey);
             }}
-            className="px-2 py-0.5 bg-[#dc2626]/20 hover:bg-[#dc2626] text-[#dc2626] hover:text-white border border-[#dc2626]/40 text-[10px] font-tech font-bold uppercase rounded-2xs transition-colors cursor-pointer"
+            className="px-2 py-0.5 bg-transparent hover:bg-[#fcee0a] text-[#fcee0a] hover:text-black border border-[#fcee0a] text-[10px] font-tech font-bold uppercase rounded-2xs transition-colors cursor-pointer"
           >
             + Catálogo
           </button>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 justify-start items-center">
+      <div className="flex flex-wrap xl:flex-nowrap gap-2 xl:gap-1.5 justify-start items-center">
         {slots.map((item, idx) => (
-        <SlotBox
-          key={item ? `${zoneKey}-slot-${idx}` : `${zoneKey}-empty-${idx}`}
-          item={item}
-          zoneKey={zoneKey}
-          onInspect={onInspect}
-          onInstall={onInstall}
-        />
-      ))}
+          <SlotBox
+            key={item ? `${zoneKey}-slot-${idx}` : `${zoneKey}-empty-${idx}`}
+            item={item}
+            zoneKey={zoneKey}
+            onInspect={onInspect}
+            onInstall={onInstall}
+          />
+        ))}
       </div>
     </div>
   );

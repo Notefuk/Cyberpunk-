@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import coreData from '../../data/core-rules.cprpack.json';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { calculateTherapyMaxHumanity } from '../../engine/characterEngine';
@@ -42,6 +42,8 @@ import {
 import { HoloBody } from './HoloBody';
 import { ZoneCard } from './ZoneCard';
 import { SlotBox } from './SlotBox';
+import { ZoneConnectors } from './ZoneConnectors';
+import { ZoneDetailPanel } from './ZoneDetailPanel';
 import { GoingMetalBanner } from './GoingMetalBanner';
 
 export type { CyberwareItemData };
@@ -58,6 +60,7 @@ export function CyberwareRipperdocView() {
 
   const [hoveredZone, setHoveredZone] = useState<AnatomicalZoneKey | null>(null);
   const [selectedZone, setSelectedZone] = useState<AnatomicalZoneKey | null>(null);
+  const workstationRef = useRef<HTMLDivElement>(null);
   const [selectedInstalledCyber, setSelectedInstalledCyber] = useState<CyberwareItemData | null>(null);
   const [installModalZone, setInstallModalZone] = useState<AnatomicalZoneKey | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -378,9 +381,15 @@ export function CyberwareRipperdocView() {
       </div>
 
       {/* 5-COLUMN MAIN RIPPERDOC WORKSTATION GRID */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start">
+      <div ref={workstationRef} className="relative grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 items-start">
+        <ZoneConnectors
+          containerRef={workstationRef}
+          hoveredZone={hoveredZone}
+          selectedZone={selectedZone}
+          deps={[Object.keys(ZONE_CONFIGS).map((k) => getInstalledInZone(k as AnatomicalZoneKey).length)]}
+        />
         {/* COL 1: HUMANITY TOWER (xl:col-span-1) */}
-        <div className="xl:col-span-1 bg-[#0d0f15] border border-[#1e2332] p-3 rounded-xs flex flex-col items-center justify-between min-h-[640px] relative overflow-hidden">
+        <div className="order-4 xl:order-none xl:col-span-1 bg-[#0d0f15] border border-[#1e2332] p-3 rounded-xs flex flex-col items-center justify-between xl:min-h-[640px] relative overflow-hidden">
           <div className="text-center w-full">
             <span className="text-[10px] font-tech font-bold text-[#f59e0b] uppercase tracking-wider block">
               HUM
@@ -393,7 +402,7 @@ export function CyberwareRipperdocView() {
           </div>
 
           {/* 30-Segment Vertical Bar */}
-          <div className="flex-1 w-full flex flex-col-reverse items-center justify-center gap-[3px] my-3 py-2 bg-[#08090d] rounded-xs border border-[#171922] px-1">
+          <div className="w-full xl:flex-1 flex flex-row xl:flex-col-reverse items-center justify-center gap-[3px] my-3 py-2 bg-[#08090d] rounded-xs border border-[#171922] px-1">
             {Array.from({ length: 30 }).map((_, idx) => {
               const segmentThreshold = (idx + 1) / 30;
               const ratio = currentHum / (maxHum || 1);
@@ -402,7 +411,7 @@ export function CyberwareRipperdocView() {
               return (
                 <div
                   key={`hum-seg-${idx}`}
-                  className={`w-full h-3 rounded-[1px] transition-all duration-300 ${
+                  className={`flex-1 h-4 xl:flex-none xl:w-full xl:h-3 rounded-[1px] transition-all duration-300 ${
                     isActive
                       ? isWarning
                         ? 'bg-[#ef4444] shadow-[0_0_6px_#ef4444]'
@@ -462,7 +471,7 @@ export function CyberwareRipperdocView() {
         </div>
 
         {/* COL 2: 4 LEFT ANATOMICAL ZONES (xl:col-span-3) */}
-        <div className="xl:col-span-3 space-y-3">
+        <div className="order-2 xl:order-none xl:col-span-3 space-y-3">
           {leftZoneKeys.map((key) => (
             <ZoneCard
               key={key}
@@ -481,7 +490,7 @@ export function CyberwareRipperdocView() {
         </div>
 
         {/* COL 3: CENTRAL HOLOGRAPHIC BODY SVG & CALLOUTS (xl:col-span-4) */}
-        <div className="xl:col-span-4 bg-[#090b10] border border-[#1a1e2c] p-2 rounded-xs flex flex-col items-center justify-center relative min-h-[640px] overflow-hidden shadow-2xl">
+        <div className="order-1 xl:order-none md:col-span-2 xl:col-span-4 bg-[#090b10] border border-[#1a1e2c] p-2 rounded-xs flex flex-col items-center justify-start relative min-h-[640px] shadow-2xl">
           {/* Hologram Reticle Background Grid & Radar circles */}
           <div className="absolute inset-0 bg-[radial-gradient(#1f293d_1px,transparent_1px)] [background-size:16px_16px] opacity-25 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#00f5d4]/5 to-transparent pointer-events-none" />
@@ -551,10 +560,18 @@ export function CyberwareRipperdocView() {
                 );
               })}
           </div>
+
+          {/* Panel de detalle de la zona seleccionada */}
+          <ZoneDetailPanel
+            selectedZone={selectedZone}
+            installed={selectedZone ? getInstalledInZone(selectedZone) : []}
+            onInspect={setSelectedInstalledCyber}
+            onInstall={openInstallModal}
+          />
         </div>
 
         {/* COL 4: 4 RIGHT ANATOMICAL ZONES (xl:col-span-3) */}
-        <div className="xl:col-span-3 space-y-3">
+        <div className="order-3 xl:order-none xl:col-span-3 space-y-3">
           {rightZoneKeys.map((key) => (
             <ZoneCard
               key={key}
@@ -573,7 +590,7 @@ export function CyberwareRipperdocView() {
         </div>
 
         {/* COL 5: ARMOR SP & STATS TOWER (xl:col-span-1) */}
-        <div className="xl:col-span-1 bg-[#0d0f15] border border-[#1e2332] p-3 rounded-xs flex flex-col items-center justify-between min-h-[640px] relative overflow-hidden">
+        <div className="order-5 xl:order-none xl:col-span-1 bg-[#0d0f15] border border-[#1e2332] p-3 rounded-xs flex flex-col items-center justify-between xl:min-h-[640px] relative overflow-hidden">
           <div className="text-center w-full">
             <span className="text-[10px] font-tech font-bold text-[#00f5d4] uppercase tracking-wider block">
               ARMOR
@@ -586,14 +603,14 @@ export function CyberwareRipperdocView() {
           </div>
 
           {/* 30-Segment Cyan Tower */}
-          <div className="flex-1 w-full flex flex-col-reverse items-center justify-center gap-[3px] my-3 py-2 bg-[#08090d] rounded-xs border border-[#171922] px-1">
+          <div className="w-full xl:flex-1 flex flex-row xl:flex-col-reverse items-center justify-center gap-[3px] my-3 py-2 bg-[#08090d] rounded-xs border border-[#171922] px-1">
             {Array.from({ length: 30 }).map((_, idx) => {
               const segTarget = (idx + 1) * (18 / 30);
               const isActive = maxDisplayedSp >= segTarget;
               return (
                 <div
                   key={`sp-seg-${idx}`}
-                  className={`w-full h-3 rounded-[1px] transition-all duration-300 ${
+                  className={`flex-1 h-4 xl:flex-none xl:w-full xl:h-3 rounded-[1px] transition-all duration-300 ${
                     isActive
                       ? 'bg-[#00f5d4] shadow-[0_0_6px_rgba(0,245,212,0.8)]'
                       : 'bg-[#132227] opacity-40'
