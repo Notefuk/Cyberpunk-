@@ -104,6 +104,16 @@ const THREAT_TIER_CONFIG: Record<ThreatTier, { label: string; badgeClass: string
     badgeClass: 'bg-fuchsia-950/80 text-fuchsia-300 border-fuchsia-500/50',
     borderClass: 'border-fuchsia-700/50'
   },
+  hardened_mini_boss: {
+    label: 'Hardened Mini-Boss',
+    badgeClass: 'bg-orange-950/80 text-orange-300 border-orange-500/50',
+    borderClass: 'border-orange-700/50'
+  },
+  hardened_boss: {
+    label: 'Hardened Boss',
+    badgeClass: 'bg-rose-950/80 text-rose-300 border-rose-500/50',
+    borderClass: 'border-rose-700/50'
+  },
   legend: {
     label: 'LEGEND (ADAM SMASHER)',
     badgeClass: 'bg-gradient-to-r from-amber-500/30 to-red-600/30 text-amber-300 border-amber-400 font-black',

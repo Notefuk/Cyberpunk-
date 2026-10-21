@@ -14,7 +14,9 @@ export type ThreatTier =
   | 'mini_boss'
   | 'boss'
   | 'cyberpsycho'
-  | 'legend';
+  | 'legend'
+  | 'hardened_mini_boss'
+  | 'hardened_boss';
 
 export type SourceBookId =
   | 'core'
@@ -39,6 +41,8 @@ export interface EnemyWeaponProfile {
   rof: number;
   mag: number;
   notes?: string;
+  weaponType2077?: 'Power' | 'Smart' | 'Tech' | 'Melee' | 'Automated'; // Tipo de arma CEMK (RB p.8)
+  skill?: string; // Habilidad usada por el arma
 }
 
 export interface EnemySheet {
@@ -63,6 +67,22 @@ export interface EnemySheet {
   gear: string[];
   specialRules: string[];
   loreSummary: string;
+  sourcePage?: number; // Página del libro fuente
+  format?: 'red' | 'cemk'; // Formato del bloque de stats
+  level?: number; // Nivel del PNJ
+  rep?: number; // Reputación (REP)
+  luck?: number; // Suerte del PNJ
+  roleAbility?: { name: string; rank: number }; // Habilidad de rol y su rango
+  skillBases?: Record<string, number>; // Bases de habilidad (stat + skill)
+  isNetrunner?: boolean; // Es netrunner
+  interfaceRank?: number; // Rango de Interface
+  cyberdeckPrograms?: string[]; // Programas del cyberdeck (RED)
+  hasNeuroport?: boolean; // Tiene Neuroport
+  selfIce?: number; // Cantidad de Passwalls Self-ICE
+  netActionsPerTurn?: number; // Solo fichas CEMK nativas: NET Actions impresas en la ficha
+  quickhacks?: string[]; // Quickhacks del PNJ
+  headSpVsMelee?: number; // SP de cabeza vs melee
+  bodySpVsMelee?: number; // SP de cuerpo vs melee
 }
 
 // ============================================================================

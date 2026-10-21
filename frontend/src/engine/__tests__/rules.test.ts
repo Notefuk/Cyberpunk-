@@ -20,7 +20,8 @@ import { beatsDv, calculateIncomingImpact, createDamageRoll, rollCheckD10 } from
 import { BLACK_ICE_STATS, NET_ACTIONS_PER_TURN, QUICKHACKS_2077_CATALOG } from '../../data/netAndRolesData';
 import { BODY_CRITICAL_INJURIES, HEAD_CRITICAL_INJURIES, rollCriticalInjury } from '../../data/criticalInjuries';
 import { CEMK_WEAPON_REBUILD_SYSTEM_GUIDE } from '../../data/weaponAndCyberwareTooltips';
-import { ENEMIES_CATALOG } from '../../data/enemiesCatalog';
+import { ENEMIES_CATALOG, type EnemySheet } from '../../data/enemiesCatalog';
+import { portEnemyToCemk } from '../cemkPort';
 import pack from '../../data/core-rules.cprpack.json';
 import type { CharacterSheet } from '../../types/cyberpunk';
 
@@ -409,5 +410,73 @@ describe('Plan 5 v4.6.2 canon', () => {
 
   it('Errata v1.25 p.2 (Core p.114): Grafted Muscle and Bone Lace cambia el Wound Threshold', () => {
     expect(byId('grafted-muscle-bone-lace')?.description).toContain('Wound Threshold');
+  });
+});
+
+describe('Porte CEMK de PNJ (plan 6)', () => {
+  const mk = (o: Record<string, unknown> = {}): EnemySheet =>
+    ({
+      id: 't', name: 'T', role: 'Solo', hp: 35, deathSave: 5, headSp: 11, bodySp: 11,
+      stats: { INT: 5, REF: 5, DEX: 5, TECH: 5, COOL: 5, WILL: 6, LUCK: 5, MOVE: 5, BODY: 6, EMP: 5 },
+      weapons: [{ name: 'Unity Handgun', skillBase: 10, damage: '3d6', rof: 2, mag: 12 }],
+      ...o
+    }) as unknown as EnemySheet;
+
+  it('RB pp.15, 35-36: todo PNJ portado tiene Neuroport y es hackeable', () => {
+    const p = portEnemyToCemk(mk());
+    expect(p.hasNeuroport).toBe(true);
+    expect(p.hackable).toBe(true);
+  });
+
+  it('RB p.16-17, 25: netrunner Interface 4 = 3 Net Actions, 50 m, DV max 12', () => {
+    const p = portEnemyToCemk(mk({ role: 'Netrunner', roleAbility: { name: 'Interface', rank: 4 } }));
+    expect(p.netActionsPerTurn).toBe(3);
+    expect(p.cyberdeckPortRangeM).toBe(50);
+    expect(p.maxQuickhackDv).toBe(12);
+    expect(p.availableQuickhacks.length).toBeGreaterThan(0);
+    const dvByName = Object.fromEntries(QUICKHACKS_2077_CATALOG.map(q => [q.name, q.dv]));
+    expect(p.availableQuickhacks.every(n => dvByName[n] <= 12)).toBe(true);
+  });
+
+  it('RB p.25: Interface 3 limita a DV 10', () => {
+    const p = portEnemyToCemk(mk({ isNetrunner: true, interfaceRank: 3 }));
+    expect(p.maxQuickhackDv).toBe(10);
+    expect(p.availableQuickhacks.every(n => QUICKHACKS_2077_CATALOG.find(q => q.name === n)!.dv <= 10)).toBe(true);
+  });
+
+  it('No netrunner: sin DV máximo de Quickhack', () => {
+    const p = portEnemyToCemk(mk());
+    expect(p.maxQuickhackDv).toBeNull();
+    expect(p.availableQuickhacks).toEqual([]);
+  });
+
+  it('RB p.10: SP contra melee a la mitad redondeando hacia arriba (igual que combatEngine)', () => {
+    const p = portEnemyToCemk(mk({ headSp: 11, bodySp: 7 }));
+    expect(p.headSpVsMelee).toBe(6);
+    expect(p.bodySpVsMelee).toBe(4);
+  });
+
+  it('RB p.8: Smart Pistol es Smart, el resto Power', () => {
+    const p = portEnemyToCemk(mk({
+      weapons: [
+        { name: 'Smart Pistol', skillBase: 10, damage: '2d6', rof: 1, mag: 10 },
+        { name: 'Unity Handgun', skillBase: 10, damage: '3d6', rof: 2, mag: 12 }
+      ]
+    }));
+    expect(p.weapons.map(w => w.weaponType2077)).toEqual(['Smart', 'Power']);
+  });
+
+  it('RB p.36: Self-ICE 2 = Passwalls DV 6 y 8; sin selfIce = ninguno', () => {
+    expect(portEnemyToCemk(mk({ selfIce: 2 })).selfIcePasswalls).toEqual([{ dv: 6 }, { dv: 8 }]);
+    expect(portEnemyToCemk(mk()).selfIcePasswalls).toEqual([]);
+  });
+
+  it('Fórmula de HP CEMK: discrepancia con el libro genera nota', () => {
+    const p = portEnemyToCemk(mk({ hp: 40 }));
+    expect(p.hpFormula).toBe(40);
+    expect(p.hpMatchesFormula).toBe(true);
+    const q = portEnemyToCemk(mk({ hp: 30 }));
+    expect(q.hpMatchesFormula).toBe(false);
+    expect(q.notes.some(n => n.includes('HP del libro (30)'))).toBe(true);
   });
 });
