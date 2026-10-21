@@ -54,8 +54,6 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
                 <span className="h-1.5 w-1.5 rounded-full bg-[#10b981] animate-pulse"></span>
                 SISTEMA OPERATIVO
               </span>
-              <span>•</span>
-              <span className="hidden sm:inline">OFFLINE PWA READY</span>
             </div>
           </div>
         </div>
