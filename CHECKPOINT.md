@@ -7,12 +7,12 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-22]
-**Versión de la app**: v4.8.0 (en `main`, squash bcaaddc, PR #21; publicada en gh-pages y verificada en vivo)
+**Versión de la app**: v4.8.1 lista en la rama `claude/v4.8.1-datos-creacion` (sin PR). `main` = v4.8.0, publicada.
 **Plan activo**: plan 7 (`docs/plans/plan7-creador-personajes.md`, creador de personajes CEMK-first, persistente y con Modo Novato; v4.8.0-v4.8.3). En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2) y plan 5 (Black Chrome y vehículos, ahora v4.9.x). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.1 datos canon de creación (plan 7) en la rama `claude/v4.8.1-datos-creacion`. Paso actual: los 5 JSON de `data/creation-src/` están extraídos; verificación visual HECHA (STATs, paquetes pp.98-99, MOVE/LUCK Easy Mode corregido, Folio Hardpoint); Giuliano decidió: borrar las 11 pregens no canon (no hay fichas del anime en ningún PDF; HB pp.35-41 solo biografías) y dejar 7 Folios + 5 Easy Mode. Workers A y B HECHOS (tsc, 95 tests y build OK). Paso actual: verificar en el navegador el wizard (tabla STATs, paquete, Neuroport, pregens Easy Mode), escribir `docs/canon-audit/v4.8.1-creador.md`, changelog y commit. Si la sesión se corta: ver qué JSON existen y están completos; relanzar solo los que falten. Antigravity: no tocar `data/creation-src/` ni `characterCreationData.ts`.
+- [Claude Code · 2026-10-22] v4.8.1 Datos canon del creador terminada y verificada (tsc, 95 tests, build, navegador) en la rama `claude/v4.8.1-datos-creacion`. Falta: PR, merge y gh-pages. Después: v4.8.2 wizard funcional (motor `engine/characterCreation.ts`, pasos del libro, lifepath CEMK/Core, habilidad de rol Core/CEMK, 66 skills, borrador autoguardado). Pregunta abierta: ¿se quita el personaje demo "V" (videojuego, no está en los libros)? Antigravity: no tocar `characterCreationData.ts`, `data/creation*/` ni el wizard hasta el merge.
 
 ## Traspaso
 

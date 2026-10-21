@@ -26,6 +26,37 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.8.1',
+    date: '2026-10-22',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Canon / Creador de personajes',
+    title: 'Datos canon del creador: STATs, paquetes de rol, Neuroport y pregens del libro',
+    summary: 'Plan 7, bloque 2: el creador deja de usar tablas inventadas. STATs, skills y paquetes de los 10 roles salen del Core, el Neuroport es el paquete canon de CEMK y las pregens son solo las de los libros. Registro: docs/canon-audit/v4.8.1-creador.md.',
+    highlights: [
+      'STATs de los 10 roles: las 10 filas del Core (pp. 74-77), verificadas contra la imagen del libro. Antes ninguna fila coincidía.',
+      'Paquetes de rol del Core: armas y armadura con sus opciones "o" y munición (pp. 98-99), outfit (p.103) y ciberware con su HL (p.117). En 2077 se omiten Agent, Neural Link e Interface Plugs porque los cubre el Neuroport.',
+      'Neuroport: el paquete de 7 piezas de CEMK (RB pp. 35-36), gratis al crear con 0 HL (RB p.25). Se quitaron los costos por pieza y el "ahorro de 2,500 €$" inventados.',
+      'Pregens: entran las 5 del Easy Mode (Forty, Mover, Torch, Redtail y 24/7) y siguen los 7 Folios de CEMK. Se quitaron 11 que no tienen ficha en ningún libro (la banda del anime, Hound, el agente de Arasaka y el psicópata de Maelstrom). Las fichas que ya guardaste no se tocan.',
+      'Datos fuente en data/creation-src/ con página por dato y generador scripts/gen_creation.py. Lifepath, habilidades de rol completas y las 66 skills ya están cargados para el wizard nuevo (v4.8.2).',
+      'Discrepancias CEMK/Core registradas en docs/canon-audit/discrepancias-cemk-core.md. 95 tests.'
+    ],
+    filesTouched: [
+      'data/creation-src/',
+      'scripts/gen_creation.py',
+      'frontend/src/data/creation/',
+      'frontend/src/data/characterCreationData.ts',
+      'frontend/src/data/expansionRulesData.ts',
+      'frontend/src/features/creator/CharacterCreatorWizard.tsx',
+      'frontend/src/features/oneshot/RedChromeCargoView.tsx',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/engine/__tests__/creationData.test.ts',
+      'docs/canon-audit/v4.8.1-creador.md',
+      'docs/canon-audit/discrepancias-cemk-core.md'
+    ],
+    metricsBadge: 'v4.8.1 • Datos canon del creador • Plan 7'
+  },
+  {
     version: 'v4.8.0',
     date: '2026-10-22',
     author: 'Claude Code',
@@ -744,6 +775,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.8.1': true,
     'v4.8.0': true,
     'v4.7.0': true,
     'v4.6.2': true,
