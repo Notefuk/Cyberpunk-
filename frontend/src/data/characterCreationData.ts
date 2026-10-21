@@ -1480,7 +1480,7 @@ function splitCanonSkills(entries: Array<{ name: string; level: number }>): {
 }
 
 // Nombre canon de ciberware -> id del catálogo de la app (data/core-rules.cprpack.json). Solo coincidencias exactas o alias obvios.
-const CANON_CYBERWARE_IDS: Record<string, string> = {
+export const CANON_CYBERWARE_IDS: Record<string, string> = {
   'Neural Link': 'neuralware-processor',
   'Interface Plugs': 'interface-plugs',
   Biomonitor: 'biomonitor',
