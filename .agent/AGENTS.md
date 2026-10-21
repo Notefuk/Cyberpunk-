@@ -71,3 +71,11 @@ Tareas chicas no necesitan plan.
 ## 7. Verificación y Tests de Reglas (Compartido con Claude Code)
 
 [Claude Code · 2026-10-20] Desde v4.2.1 hay tests de reglas canon con Vitest en `frontend/src/engine/__tests__/rules.test.ts` (cada caso cita libro y página). Antes de dar algo por terminado, desde `frontend/`: `npx tsc -b --noEmit`, `npm test` y `npm run build` con 0 errores. Si cambias una regla del motor, actualiza o agrega su test.
+
+## 8. Cowork con Claude Code: firma, inicio y cierre de sesión
+
+[Claude Code · 2026-10-21] Protocolo completo y compartido en `docs/COWORK.md` (léelo al iniciar cada sesión). Resumen obligatorio:
+- **Firma todo**: docs, CHECKPOINT, changelogs, planes, commits (`Autor-IA: Antigravity`), PRs y el changelog in-app (campo `author: 'Antigravity'` en cada `VersionChangelogEntry`, se muestra como badge).
+- **Inicio**: `git pull`, leer `CHECKPOINT.md` (sección `## Traspaso` primero), no tocar lo que "En curso" marca a cargo de Claude Code, verificar contra el código lo que el checkpoint da por hecho.
+- **Durante**: una rama por tarea (`antigravity/<tema>`), checkpoint y commit al cerrar cada paso, push seguido.
+- **Cierre de sesión** (el usuario se va o cambia de herramienta): seguir `.agent/skills/cierre-sesion/SKILL.md` — checkpoint comprimido con `## Traspaso`, docs firmados, commit y push.

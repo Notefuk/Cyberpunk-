@@ -28,6 +28,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.5.0',
     date: '2026-10-21',
+    author: 'Claude Code',
     phase: 'Codex',
     category: 'Datos de expansión',
     title: 'Going Metal canon: Full Body Conversion',
@@ -62,6 +63,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.4.0',
     date: '2026-10-20',
+    author: 'Claude Code',
     phase: 'Codex',
     category: 'Reglas del Core',
     title: 'Roles, Martial Arts, curación, terapia y granadas del Core; sin modos de carga',
@@ -102,6 +104,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.3.1',
     date: '2026-10-20',
+    author: 'Claude Code',
     phase: 'Codex',
     category: 'Datos de expansión',
     title: 'Datos CEMK canon: 13 armas, ciberware, Immunoblockers y Rebuilds de 1,000 €$',
@@ -135,6 +138,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.3.0',
     date: '2026-10-20',
+    author: 'Claude Code',
     phase: 'Codex',
     category: 'Reglas de NET',
     title: 'NET y Quickhacks canon: 3 NET Actions, sin RAM, Black ICE del Core',
@@ -173,6 +177,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.2.1',
     date: '2026-10-20',
+    author: 'Claude Code',
     phase: 'Codex',
     category: 'Arquitectura y calidad',
     title: 'Carga por pestaña, calculadora de impactos en el motor y tests de reglas',
@@ -207,6 +212,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.2.0',
     date: '2026-10-20',
+    author: 'Claude Code',
     phase: 'Codex',
     category: 'Reglas de combate',
     title: 'Melee enfrentado, munición y autofire corregidos, quickhacks con WILL real',
@@ -232,6 +238,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.1.1',
     date: '2026-10-20',
+    author: 'Claude Code',
     phase: 'Codex',
     category: 'Corrección de bugs de estado',
     title: 'FBC reversible, HP máximo único y parseo de Humanity Loss',
@@ -263,6 +270,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.1.0',
     date: '2026-10-20',
+    author: 'Claude Code',
     phase: 'Codex',
     category: 'Reglas de heridas y muerte del Core Rulebook',
     title: 'Mortally Wounded, Death Saves, críticos automáticos y EMP por Humanidad',
@@ -292,6 +300,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.0.3',
     date: '2026-10-20',
+    author: 'Claude Code',
     phase: 'Codex',
     category: 'Corrección de reglas contra el Core Rulebook',
     title: 'Tablas canon de Heridas Críticas, Neural Link y correcciones de datos',
@@ -323,6 +332,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.0.2',
     date: '2026-10-20',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'Canonical CEMK Quickhacking, Combat HUD Damage Calculator & Ergonomic Header Layout',
     title: 'CEMK Canonical Quickhacking (Zero RAM, 11 Quickhacks, 4-Step Combat Flow), Rediseño de Calculadora de Daño y Cabeceras HUD de Dos Filas',
@@ -350,6 +360,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.0.1',
     date: '2026-10-20',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'STATS Tooltips Ergonomics, Canonical Medical Care & Netrunning GM Architecture Mode',
     title: 'Ergonomía de STATS Tooltips, Asistencia Médica Canónica (Enhanced Antibodies, Cryotank, Cryopump, Speedheal), Modo Master en Netrunning y Acciones de Interfaz con Selector DV',
@@ -379,6 +390,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v4.0.0',
     date: '2026-10-19',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'Weapon Attachments Engine, Maker Tech Upgrade Workshop, Armor +1 SP & Official Role/Tech Lifepath',
     title: 'Motor Canónico de Accesorios de Armas (13 Tipos), Taller Maker de Mejoras de Armas y Blindaje (+1 SP) y Lifepath de Rol Específico (10 Roles + Tech p. 55)',
@@ -405,6 +417,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v3.9.0',
     date: '2026-10-19',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'CEMK 2077 Weapon Rebuild Workshop, EMP Cyberware Manager, Role Rank 1-10 Progression, Resting & Armor Repair, Combat Clutter Filter',
     title: 'Taller de Reconstrucción CEMK 2077, Gestor de Averías/EMP, Progresión de Rol 1-10, Motor de Descanso/Reparación y Filtro de Decluttering del HUD',
@@ -431,6 +444,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v3.8.0',
     date: '2026-10-19',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'Weapons, Cyberware & Ammo Tooltips Engine, 2077 Rebuild System & Collapsible Martial Arts Deck',
     title: 'Motor Táctico de Tooltips para Armas, Ciberware y Municiones, Reconstrucción 2077 y Cartas Colapsables de Artes Marciales',
@@ -458,6 +472,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v3.7.0',
     date: '2026-10-18',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'CEMK 2077 Folio Premades Roster, 28-Page Canonical Skills & Red Chrome Cargo Hub',
     title: 'Integración Canónica de los 7 Folios Oficiales CEMK 2077, Dossier de 4 Páginas y Roster Dual en Red Chrome Cargo',
@@ -486,6 +501,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v3.6.2',
     date: '2026-10-18',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'Combat HUD Ergonomics, Visual SP/SDP Plates, Damage Calculator & Workspace Sizing',
     title: 'Matriz Visual de SP y SDP, Calculadora Táctica de Daño y Controles de Ancho de Workspace',
@@ -511,6 +527,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v3.6.1',
     date: '2026-10-18',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'Combat HUD Optimization & Modular Layout Architecture',
     title: 'Optimización de Columna Central y Bandeja Táctica Lateral',
@@ -528,6 +545,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
     version: 'v3.6.0',
     date: '2026-10-18',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'Modular Combat HUD 3-Zone Architecture & Tactical Presets',
     title: 'Arquitectura Modular de Combate en 3 Zonas y Presets Tácticos',
@@ -611,6 +629,7 @@ export function SystemChangelogAndDocsView() {
         item.title.toLowerCase().includes(q) ||
         item.summary.toLowerCase().includes(q) ||
         item.category.toLowerCase().includes(q) ||
+        (item.author ?? '').toLowerCase().includes(q) ||
         item.highlights.some((h) => h.toLowerCase().includes(q)) ||
         item.filesTouched.some((f) => f.toLowerCase().includes(q))
       );
@@ -825,6 +844,11 @@ export function SystemChangelogAndDocsView() {
                           <div className="text-xs text-[#64748b] font-mono flex items-center gap-2 mt-0.5">
                             <Calendar className="w-3 h-3" />
                             <span>{item.date}</span>
+                            {item.author && (
+                              <span className={`px-2 py-0.2 text-[11px] font-mono bg-[#181c2b] border ${item.author === 'Claude Code' ? 'text-cyan-300 border-cyan-500/40' : 'text-amber-300 border-amber-500/40'}`}>
+                                ✍ {item.author}
+                              </span>
+                            )}
                             <span>•</span>
                             <span>{item.category}</span>
                           </div>

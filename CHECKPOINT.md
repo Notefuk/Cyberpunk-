@@ -4,10 +4,20 @@
 > **Actualízalo** al terminar cada tarea, antes de compactar contexto y antes de cambiar de herramienta.
 > Toda actualización va firmada: `[Claude Code · AAAA-MM-DD]` o `[Antigravity · AAAA-MM-DD]`.
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
+> Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-21]
 **Versión de la app**: v4.5.0 (en `main`, commit 44baf2c, PR #16; publicada en gh-pages)
 **Plan activo**: plan 2 (`docs/plans/plan2-auditoria-expansiones.md`), fases 1-4 hechas; falta la fase 5 (v4.5.1). Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
+
+## Traspaso
+
+- Cierra: [Claude Code · 2026-10-21]
+- Rama y último commit: `main` @ el commit "Protocolo de cowork..." (pusheada: sí)
+- A medias: nada.
+- Siguiente paso exacto: v4.5.1 Cyberfists of Fury (ver Próximos pasos 1), en una rama nueva `claude/...` o `antigravity/...` según quién la tome.
+- Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
+- Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app ahora tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`.
 
 ## Último trabajo terminado
 

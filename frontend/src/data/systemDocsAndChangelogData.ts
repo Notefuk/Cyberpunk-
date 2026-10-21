@@ -24,6 +24,7 @@ export type SystemPhaseId = 'Fase 0' | 'Fase 1' | 'Fase 2' | 'Fase 3' | 'Fase 4'
 export interface VersionChangelogEntry {
   version: string;
   date: string;
+  author?: 'Claude Code' | 'Antigravity'; // Quién escribió la versión (cowork Claude Code ↔ Antigravity).
   phase: SystemPhaseId;
   category: string;
   title: string;
@@ -37,6 +38,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v3.5.0',
     date: '2026-10-18',
+    author: 'Antigravity',
     phase: 'Codex',
     category: 'System Codex, Interactive Documentation & Full Changelog Portal',
     title: 'Portal de Documentación Interactiva, Historial de Versiones e Inventario de Sistemas',
@@ -59,6 +61,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v3.4.5',
     date: '2026-10-17',
+    author: 'Antigravity',
     phase: 'Oneshot',
     category: 'Official Adventure Engine, Oneshot Operations & Roster Automation',
     title: 'Centro de Comando Oneshot: RED CHROME CARGO (CEMK 2077) & Precarga Roster Edgerunners',
@@ -86,6 +89,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v3.4.0',
     date: '2026-10-17',
+    author: 'Antigravity',
     phase: 'Fase 3',
     category: 'Phase 3 Complete: Netrunning, Quickhacks, 10 Roles & Premium Expansions',
     title: 'Cierre Completo de Fase 3: Netrunning 2045, Quickhacks 2077, 10 Roles, Vehículos SDP & 3 Módulos Premium',
@@ -114,6 +118,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v2.9.0',
     date: '2026-10-17',
+    author: 'Antigravity',
     phase: 'Fase 2',
     category: 'Phase 2 Complete: Aimed Shots, 44-Enemy Bestiary & Multi-Book Compendium',
     title: 'Cierre Completo de Fase 2: Disparos Apuntados, Bestiario de 44 Enemigos, 8 Sistemas y 368 Ítems',
@@ -138,6 +143,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v2.6.0',
     date: '2026-10-17',
+    author: 'Antigravity',
     phase: 'Fase 2',
     category: 'Character Creation Engine, Onboarding Wizard & Lifepath',
     title: 'Creador Guiado de 6 Pasos, Pregenerados CEMK/2045, Lifepath Híbrido y Sistema de Deuda',
@@ -163,6 +169,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v2.5.0',
     date: '2026-10-17',
+    author: 'Antigravity',
     phase: 'Fase 1',
     category: 'Tabletop Utilities, Rules Engine & Master GM Operations',
     title: 'Cierre Completo de Fase 1: Machete de Reglas Lateral, Sobrepeso Situacional y Consola Fixer con PIN',
@@ -184,6 +191,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v2.4.0',
     date: '2026-10-17',
+    author: 'Antigravity',
     phase: 'Fase 1',
     category: 'Deep Systems, Cyberware Ergonomics & 2077 Ripperdoc Interface',
     title: 'Menú Ripperdoc Estilo Cyberpunk 2077 con Maniquí Anatómico en A-Pose',
@@ -203,6 +211,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v2.3.3',
     date: '2026-10-17',
+    author: 'Antigravity',
     phase: 'Fase 0',
     category: 'Combat HUD Ergonomics & Modular Weapon Telemetry',
     title: 'Telémetro de Distancia Colapsable & Estación de Armas en Mano con 4 Subpestañas',
@@ -217,6 +226,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v2.3.0',
     date: '2026-10-16',
+    author: 'Antigravity',
     phase: 'Fase 0',
     category: 'Combat HUD Architecture, Ammo Telemetry & Unarmed/Consumables Engine',
     title: 'Rack de Ataque en 4 Categorías, Cartuchitos Interactivos y Motor Desarmado/Drogas',
@@ -238,6 +248,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v2.2.0',
     date: '2026-10-16',
+    author: 'Antigravity',
     phase: 'Fase 0',
     category: 'Economy Engine, Inventory & Interactive Compendium Accordions',
     title: 'Acordeones de Detalle en Compendio, Compra con Eurodólares y Mochila de Inventario',
@@ -257,6 +268,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v2.1.0',
     date: '2026-10-16',
+    author: 'Antigravity',
     phase: 'Fase 0',
     category: 'UX/UI High-Density Layout & Rule Examples Integration',
     title: 'Dashboard Compacto de Street Lab, Ejemplos de DVs por Habilidad y Tabla Densa COMP/CON',
@@ -275,6 +287,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v2.0.0',
     date: '2026-10-16',
+    author: 'Antigravity',
     phase: 'Fase 0',
     category: 'Modular Architecture, Real Math Engine & Complete Core Catalog',
     title: 'Arquitectura Modular Estilo COMP/CON, Motor Matemático Real y Catálogo Canónico de 272 Ítems',
@@ -303,6 +316,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v1.2.0',
     date: '2026-10-15',
+    author: 'Antigravity',
     phase: 'Fase 0',
     category: 'Visual Hierarchy & Rule Mechanics Expansion',
     title: 'Marcos Tácticos Militares SVG y Tablas 2d6 de Heridas Críticas',
@@ -320,6 +334,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v1.1.5',
     date: '2026-10-15',
+    author: 'Antigravity',
     phase: 'Fase 0',
     category: 'Combat Mechanics & Range Engine',
     title: 'Matrices de Distancia de Combate y DVs por Metro',
@@ -334,6 +349,7 @@ export const VERSION_CHANGELOG_HISTORY: VersionChangelogEntry[] = [
   {
     version: 'v1.0.0',
     date: '2026-10-15',
+    author: 'Antigravity',
     phase: 'Fase 0',
     category: 'Project Scaffolding & Initial Data Pipeline',
     title: 'Scaffolding Inicial del Proyecto y Pipeline de Extracción de Reglas',

@@ -12,6 +12,7 @@ El proyecto se trabaja alternando Claude Code y Antigravity (cuando se agota el 
 - **No borrar ni mover** `.agent/` (config de Antigravity) ni los docs de la raíz (`AI_CONTEXT_HANDOFF.md`, `PROJECT_STATUS_AND_ROADMAP.md`, `CHANGELOG_AND_ARCHITECTURE.md`, `CONTENT_CHECKLIST.md`). Son la memoria compartida entre ambas herramientas.
 - `.claude/` es la config de Claude Code. Si cambias una instrucción en un lado, replícala en el otro (`.agent/skills/` ↔ `.claude/skills/`, `.agent/agents/` ↔ `.claude/agents/`).
 - Al cerrar cada versión, deja `AI_CONTEXT_HANDOFF.md` al día para que la otra herramienta pueda retomar sin perder contexto.
+- **Protocolo de cowork en `docs/COWORK.md`** (compartido con Antigravity): firma, inicio de sesión, ramas por herramienta y cierre de sesión. Al inicio el hook `SessionStart` (`.claude/hooks/checkpoint-start.sh`) carga `CHECKPOINT.md` en contexto; cuando Giuliano se va o cambia de herramienta, usa la skill `cierre-sesion` (checkpoint comprimido con `## Traspaso`, docs firmados, commit y push).
 
 ## CHECKPOINT.md (obligatorio)
 
@@ -25,8 +26,8 @@ El proyecto se trabaja alternando Claude Code y Antigravity (cuando se agota el 
 
 Toda entrada o actualización de documentación se firma con quién la escribió y la fecha, para que cada herramienta sepa qué escribió la otra:
 - Formato: `[Claude Code · AAAA-MM-DD]` (Antigravity firma `[Antigravity · AAAA-MM-DD]`).
-- Dónde: cada actualización de `CHECKPOINT.md`, cada entrada de versión en `CHANGELOG_AND_ARCHITECTURE.md`, la cabecera `LAST UPDATED` y cada sección nueva de `AI_CONTEXT_HANDOFF.md` y `PROJECT_STATUS_AND_ROADMAP.md`, y los ítems nuevos de `CONTENT_CHECKLIST.md`.
-- En los commits, agrega la línea `Autor-IA: Claude Code` al final del mensaje.
+- Dónde: cada actualización de `CHECKPOINT.md`, cada entrada de versión en `CHANGELOG_AND_ARCHITECTURE.md`, la cabecera `LAST UPDATED` y cada sección nueva de `AI_CONTEXT_HANDOFF.md` y `PROJECT_STATUS_AND_ROADMAP.md`, los ítems nuevos de `CONTENT_CHECKLIST.md`, la cabecera de cada plan en `docs/plans/` y las páginas de la app: cada entrada del changelog in-app (`VersionChangelogEntry`) lleva `author: 'Claude Code'`.
+- En los commits, agrega la línea `Autor-IA: Claude Code` al final del mensaje; en los PRs, como primera línea de la descripción.
 - Lo firmado por Antigravity se verifica contra el código antes de darlo por cierto. No borres su firma; agrega la tuya debajo.
 
 ## Planificación de features grandes (plan primero)
