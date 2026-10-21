@@ -21,3 +21,6 @@ Thumbs.db
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Herramientas portables (GitHub CLI y su login): viven solo en esta PC
+.tools/

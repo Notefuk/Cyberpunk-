@@ -137,3 +137,10 @@ En sesiones cloud de Claude Code se trabaja en una rama y se abre PR hacia `main
 Los PDFs oficiales **no están en el repo** (`*.pdf` en `.gitignore`, por tamaño y licencia). Viven en la PC del usuario, en `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\` (Core-Rules, Sourcebooks incl. Interface RED, DLC-Supplements, Adventures, Reference-Aids, CEMK). La copia local del repo donde trabaja Antigravity es `C:\Users\TeseoHeracles\cpr-omni-deck`.
 
 En una sesión de Claude con la PC conectada (app de escritorio), los PDFs se traen al contenedor con `device_stage_files` y se leen con `scripts/inspect_pdf_pages.py`. Detalle en la skill `cpr-pdf-extractor`. Los scripts `extract_core_pack.py` y `find_sections.py` tienen rutas de Windows hardcodeadas.
+
+## GitHub CLI portable
+
+`gh` no está instalado en el sistema: vive en `.tools/gh/` (ignorado por git) y su configuración y login en `.tools/gh-config/`.
+- PowerShell / cmd: `scripts\gh.cmd <comando>`. Git Bash: `./scripts/gh <comando>`.
+- Login (lo hace el usuario, una vez por PC): `scripts\gh.cmd auth login --hostname github.com --git-protocol https --web --insecure-storage`. `--insecure-storage` guarda el token en `.tools/gh-config/hosts.yml` en lugar del Administrador de credenciales de Windows, para que todo quede dentro de la carpeta.
+- Si falta `.tools/gh/` en otra PC, bajar el zip `windows_amd64` de https://github.com/cli/cli/releases, verificar el SHA256 contra `checksums.txt` y descomprimirlo en `.tools/gh/`.

@@ -1,2 +1,3 @@
 # Los hooks de Claude Code corren con bash: deben quedar con LF también en Windows.
 *.sh text eol=lf
+scripts/gh text eol=lf
