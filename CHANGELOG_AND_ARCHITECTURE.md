@@ -247,6 +247,37 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.6.0] - 2026-10-21 (Ripperdoc estilo Cyberpunk 2077) [Claude Code · 2026-10-21]
+* **Category**: Diseño visual del Ripperdoc (plan 4: `docs/plans/plan4-ripperdoc-visual-2077.md`, aprobado por Giuliano). Solo visual: no cambia reglas ni datos salvo el fix de zonas.
+* **Files Modified**:
+  - `frontend/src/features/cyberware/CyberwareRipperdocView.tsx`
+  - `frontend/src/features/cyberware/ripperdocZones.tsx` (nuevo)
+  - `frontend/src/features/cyberware/HoloBody.tsx` (nuevo)
+  - `frontend/src/features/cyberware/ZoneCard.tsx` (nuevo)
+  - `frontend/src/features/cyberware/SlotBox.tsx` (nuevo)
+  - `frontend/src/features/cyberware/GoingMetalBanner.tsx` (nuevo)
+  - `frontend/src/features/cyberware/ZoneConnectors.tsx` (nuevo)
+  - `frontend/src/features/cyberware/ZoneDetailPanel.tsx` (nuevo)
+  - `frontend/src/features/cyberware/cyberwareCardArt.ts` (nuevo)
+  - `frontend/public/cemk/cyberware/` (6 cartas JPG nuevas)
+  - `frontend/src/index.css`
+  - `frontend/src/engine/__tests__/rules.test.ts`
+  - `.claude/launch.json` (nuevo)
+  - `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`
+  - `CHANGELOG_AND_ARCHITECTURE.md`
+  - `AI_CONTEXT_HANDOFF.md`
+  - `PROJECT_STATUS_AND_ROADMAP.md`
+  - `CONTENT_CHECKLIST.md`
+* **What Changed**:
+  1. Fase 1: `CyberwareRipperdocView.tsx` pasó de 2235 a ~1030 líneas. Componentes nuevos en `features/cyberware/`: `ripperdocZones.tsx` (zonas, colores, `ZONE_HOTSPOTS`, `itemMatchesZone`), `HoloBody.tsx`, `ZoneCard.tsx`, `SlotBox.tsx` y `GoingMetalBanner.tsx`. El HTML se verificó idéntico al original antes de cambiar el diseño.
+  2. Fase 2: figura holográfica (silueta anatómica en pose A, glow, rejilla hexagonal, columna, costillas y articulaciones, retícula y regla de altura). 9 zonas interactivas generadas desde datos (nueva: Fashionware en la muñeca), hover y selección con el color de la zona, badge de implantes, líneas guía, foco por teclado y animaciones `holo-scanline`, `holo-flicker` y `holo-pulse` con soporte de reduced motion.
+  3. Fase 3: slots biselados (`.chamfer-slot`, hover amarillo 2077 `#fcee0a`, compactos en desktop), tarjetas de zona con contador en segmentos y botón de catálogo 2077, `ZoneConnectors.tsx` (líneas medidas tarjeta a cuerpo en xl), `ZoneDetailPanel.tsx` (implantes de la zona, inspección y catálogo) y layout móvil con la figura primero y torres compactas.
+  4. Fase 4: 6 cartas oficiales de ciberware del Cyberpunk Edgerunners Mission Kit en `frontend/public/cemk/cyberware/` y `cyberwareCardArt.ts`. Son cartas de texto, así que se ven completas al inspeccionar el implante y los slots muestran un indicador ▣ (decisión de Giuliano).
+  5. Fix: `itemMatchesZone` no ubicaba 'Cyberarm Option' (Mantis Blade, Gorilla Arm, Monowire...), 'Neuralware Option' (Berserk...) ni 'Borgware x2' (Omega Internal), por lo que no aparecían en ningún catálogo ni slot. Test nuevo de cobertura de zonas (33 tests en total).
+  6. Fase 5: textos de Going Metal del banner y los chips corregidos (ya no dicen "Interface RED Vol. 3", "16 implantes", "-14 HL" ni "0 HL al intercambiar"). Las animaciones `animate-in`, `fade-in` y `zoom-in-95` se definieron en `index.css`: no había plugin y no hacían nada; ahora la entrada de modales y paneles se anima en toda la app.
+  7. Setup: `.claude/launch.json` para el dev server (`omni-deck-dev`, puerto 5173).
+  8. Pendiente: v4.5.1 Cyberfists of Fury (plan 2 fase 5), plan 3 (se perdió al reescribirse), modo Settings y GM Master Screen.
+
 ### [v4.5.0] - 2026-10-21 (Going Metal canon: Full Body Conversion) [Claude Code · 2026-10-21]
 * **Category**: Datos de expansión y reglas (plan 2, fase 4: `docs/plans/plan2-auditoria-expansiones.md`)
 * **Files Modified**:

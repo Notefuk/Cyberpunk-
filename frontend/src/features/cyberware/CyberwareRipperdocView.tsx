@@ -308,7 +308,7 @@ export function CyberwareRipperdocView() {
       </div>
 
       {/* ========================================================================= */}
-      {/* GOING METAL // FULL BODY CONVERSION (13 CHASIS FBC & 16 IMPLANTES) BANNER */}
+      {/* GOING METAL // FULL BODY CONVERSION (13 CUERPOS FBC & 20 IMPLANTES) BANNER */}
       {/* ========================================================================= */}
       <GoingMetalBanner
         activeChar={activeChar}
@@ -347,7 +347,7 @@ export function CyberwareRipperdocView() {
             { key: 'external', label: 'External Body (Armor)', icon: <Shield className="w-3 h-3 text-[#00f5d4]" />, color: 'border-[#00f5d4]/40 text-[#00f5d4]' },
             { key: 'cyberlimbs', label: 'Cyberlimbs (Arms/Legs)', icon: <Zap className="w-3 h-3 text-[#f59e0b]" />, color: 'border-[#f59e0b]/40 text-[#f59e0b]' },
             { key: 'borgware', label: 'Borgware (-4 Max HL)', icon: <AlertTriangle className="w-3 h-3 text-[#e11d48]" />, color: 'border-[#e11d48]/40 text-[#ff0055]' },
-            { key: 'fbc', label: 'FBC / Going Metal (-14 HL)', icon: <Binary className="w-3 h-3 text-[#e11d48]" />, color: 'border-[#e11d48]/40 text-[#ff0055]' }
+            { key: 'fbc', label: 'FBC / Going Metal (14 HL + paquete)', icon: <Binary className="w-3 h-3 text-[#e11d48]" />, color: 'border-[#e11d48]/40 text-[#ff0055]' }
           ].map((cat) => {
             const isHovered = hoveredCategoryTooltipKey === cat.key;
             return (

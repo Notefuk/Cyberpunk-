@@ -72,7 +72,7 @@ export function GoingMetalBanner({
           <Info className="w-3.5 h-3.5 text-[#64748b]" />
         </h2>
         <span className="text-[10px] font-mono-code bg-[#e11d48]/20 text-[#ff0055] border border-[#e11d48]/40 px-2 py-0.5 rounded-full font-bold">
-          INTERFACE RED VOL. 3
+          GOING METAL
         </span>
         {activeChar.fbcState?.isFullBodyConversion && (
           <span className="text-[10px] font-mono-code bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/40 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
@@ -81,7 +81,7 @@ export function GoingMetalBanner({
         )}
       </div>
       <p className="text-xs font-mono-code text-[#94a3b8] mt-0.5">
-        13 Cuerpos FBC Canónicos • 16 Implantes Cyborg • Regla Biopod (0 HL al intercambiar) • Manual de Campo
+        {FBC_13_BODIES.length} Cuerpos FBC Canónicos • {FBC_16_CYBERWARE.length} Implantes Cyborg • Cambiar de cuerpo cuesta el HL del paquete • Manual de Campo
       </p>
       {hoveredCategoryTooltipKey === 'fbc' && renderCategoryFloatingTooltip('fbc')}
     </div>
@@ -305,12 +305,12 @@ export function GoingMetalBanner({
       </div>
     )}
 
-    {/* TAB 2: 16 FBC CYBERWARE */}
+    {/* TAB 2: CYBERWARE DE GOING METAL */}
     {goingMetalTab === 'cyberware' && (
       <div className="space-y-3">
         <div className="bg-[#141724] border border-[#22283a] p-3 rounded-xs text-xs font-mono-code text-[#94a3b8] flex items-center justify-between">
           <span>
-            ⚡ Implantes canónicos de Going Metal (Going Metal) diseñados para chasis FBC y marcos mecánicos.
+            ⚡ Implantes canónicos de Going Metal diseñados para chasis FBC y marcos mecánicos.
           </span>
           <span className="text-[#00f5d4] font-bold">{FBC_16_CYBERWARE.length} piezas disponibles</span>
         </div>

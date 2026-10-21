@@ -143,3 +143,21 @@
 @keyframes holo-dash {
   to { stroke-dashoffset: -20; }
 }
+
+/* [Claude Code · 2026-10-21] Entrada animada para las clases `animate-in` / `fade-in` / `zoom-in-95`
+   que el JSX ya usa: no hay plugin tailwindcss-animate instalado, así que se definen acá. */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-in,
+  .fade-in {
+    animation: cpr-enter 180ms ease-out both;
+  }
+  .zoom-in-95 {
+    --cpr-enter-scale: 0.95;
+  }
+}
+@keyframes cpr-enter {
+  from {
+    opacity: 0;
+    transform: scale(var(--cpr-enter-scale, 1));
+  }
+}

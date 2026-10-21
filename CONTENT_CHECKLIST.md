@@ -220,6 +220,7 @@
 - [x] **Maniquí Anatómico de Ciberware & Menú Ripperdoc (`CyberwareRipperdocView.tsx`)**:
   - Silueta holográfica en A-Pose con flechas conectoras hacia las 8 zonas corporales + Fashionware.
   - Ranuras de opción visuales estilo 2077 con ilustraciones vectoriales, telemetría de Humanidad/SP e instalador Ripperdoc con tirada Xd6.
+  - [Claude Code · 2026-10-21] v4.6.0 (plan 4): figura holográfica con 9 zonas interactivas generadas desde datos, slots biselados, conectores tarjeta-cuerpo, panel de detalle y 6 cartas CEMK de ciberware al inspeccionar; fix de `itemMatchesZone` para Cyberarm/Neuralware Option y Borgware x2.
 - [x] **Simulador de Pisos de Red 2045 (`NetAndRolesDeckView.tsx` & `netAndRolesData.ts`)**:
   - Escalera virtual de pisos de red: Archivos, Nodos de Control, Contraseñas, Black ICE.
   - Contador de Acciones de Red (Net Actions) basado en el Rango de Interfaz.
