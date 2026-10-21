@@ -7,12 +7,12 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-22]
-**Versión de la app**: v4.8.0 lista en la rama `claude/v4.8.0-guardado` (sin PR). `main` = v4.7.0, publicada.
+**Versión de la app**: v4.8.0 (en `main`, squash bcaaddc, PR #21; publicada en gh-pages y verificada en vivo)
 **Plan activo**: plan 7 (`docs/plans/plan7-creador-personajes.md`, creador de personajes CEMK-first, persistente y con Modo Novato; v4.8.0-v4.8.3). En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2) y plan 5 (Black Chrome y vehículos, ahora v4.9.x). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.0 Guardado robusto terminada y verificada (tsc, 85 tests, build, navegador: migración v2→v3 con copia previa y limpieza de huérfanos) en la rama `claude/v4.8.0-guardado`. Falta: PR, merge y gh-pages. Después: v4.8.1 datos canon de creación (scouts por páginas del Core 73-119 y CEMK RB 19-25, 35-36, Folios). Antigravity: no tocar `useCharacterStore.ts`, `store/persistence.ts` ni `StreetLabView.tsx` hasta el merge.
+- [Claude Code · 2026-10-22] Nada en curso. Siguiente: v4.8.1 datos canon de creación (plan 7): scouts por páginas del Core 73-119 y CEMK RB 19-25, 35-36 y Folios, con verificación visual; rama `claude/v4.8.1-datos-creacion`.
 
 ## Traspaso
 
@@ -24,6 +24,7 @@
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-22] v4.8.0 Guardado robusto (plan 7, bloque 1), mergeada (PR #21, squash bcaaddc) y publicada: persist v3 con migraciones, copia previa, respaldo completo, importar por archivo, premades que no vuelven.
 - [Claude Code · 2026-10-22] v4.7.0 Enemigos canon + porte CEMK (plan 6, bloque 1), mergeada (PR #20, squash ea8268f) y publicada:
   - 40 fichas canon (Core 10, CEMK 14, Hardened 16) reemplazan a 36 inventadas.
   - `cemkPort.ts` aplica las reglas del Rule Book de CEMK citadas; panel GM con selector CEMK | RED.
