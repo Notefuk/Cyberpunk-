@@ -6,26 +6,25 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
-**Última actualización**: [Claude Code · 2026-10-21] (cierre de sesión)
-**Versión de la app**: `main` = v4.6.1 (publicada en gh-pages). v4.6.2 está terminada en la rama `claude/v4.6.2-farmacia-gunmas-errata`, sin PR ni merge.
+**Última actualización**: [Claude Code · 2026-10-22]
+**Versión de la app**: v4.6.2 (en `main`, squash e0de28c, PR #19; publicada en gh-pages y verificada en vivo)
 **Plan activo**: plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, página de origen en cada ítem y registro en `docs/canon-audit/`. Bloques 1 (v4.6.1) y 2 (v4.6.2) hechos. Planes 1, 2 y 4 terminados. El plan 3 se perdió y lo reemplaza v4.7.0.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-21] v4.6.2 en la rama `claude/v4.6.2-farmacia-gunmas-errata`: falta PR, merge y gh-pages (Giuliano lo deja para la próxima sesión). Antigravity: no tocar el pack, `extract_core_pack.py` ni `expansionRulesData.ts` hasta el merge.
+- Nada a medias. `main` libre para cualquiera de las dos herramientas.
 
 ## Traspaso
 
-- Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `claude/v4.6.2-farmacia-gunmas-errata` @ commit "CHECKPOINT: cierre de sesión" (pusheada: sí; e87c350 tiene el código de v4.6.2).
-- A medias: nada de código. tsc, 44 tests, build y navegador OK.
-- Siguiente paso exacto: abrir el PR de `claude/v4.6.2-farmacia-gunmas-errata` a `main`, mergear con squash, publicar en gh-pages (build de `frontend/dist` → force-push a `gh-pages`) y verificar en vivo.
-- Después: plan 5 v4.7.0 enemigos canon (Danger Gal, Hardened, Red Chrome Cargo, armas CEMK 2077 Tamayura/Achilles/Chao y la errata del Security Officer del Core p.415).
+- Cierra: [Claude Code · 2026-10-22]
+- Rama y último commit: `main` @ commit "CHECKPOINT: v4.6.2 mergeada..." (pusheada: sí). gh-pages publicada con el build de v4.6.2.
+- A medias: nada.
+- Siguiente paso exacto: plan 5 v4.7.0 enemigos canon (Danger Gal, Hardened, Red Chrome Cargo, las armas CEMK 2077 Tamayura/Achilles/Chao y la errata del Security Officer del Core p.415) en una rama nueva `claude/v4.7.0-enemigos`.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
 
 ## Último trabajo terminado
 
-- [Claude Code · 2026-10-21] v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 canon (plan 5, bloque 2):
+- [Claude Code · 2026-10-22] v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 canon (plan 5, bloque 2), mergeada (PR #19, squash e0de28c) y publicada:
   - Se borraron 6 ítems inventados (Hover, Red Glass, Detox, Erebus, Fox, Kolokol) y se agregaron 19 canon (8 de Hornet's, 11 de Gunmas).
   - Se corrigieron Berserker, Prime Time, Sixgun, Timewarp, el Cityhunter y 5 erratas.
   - `sourcePage` en 5 tipos, visible en el Compendium (`renderSourceBookBadge(sourceBook, sourcePage)`).
@@ -56,13 +55,12 @@
 
 ## Próximos pasos
 
-1. PR, merge y publicación de v4.6.2.
-2. Plan 5 v4.7.0: enemigos canon.
+1. Plan 5 v4.7.0: enemigos canon.
    - Danger Gal: 16 facciones y ~118 fichas de PNJ (pp. 10-143), más el New Gear (pp. 144-149).
    - Hardened: 4 Mooks, 6 Lieutenants, 6 Mini-Bosses y el Punknaught.
    - Red Chrome Cargo, las armas CEMK 2077 (verificarlas en el zip del Mission Kit) y la errata del Security Officer.
-3. Plan 5 v4.8.0: Black Chrome completo (~160 ítems, más Black Chrome+ de IR4) y catálogo de vehículos. Después, v4.8.1: totales reales en los docs.
-4. Después del plan 5: modo Settings, GM Master Screen (`FixerDeckView.tsx`) y libros nuevos (IR Vol. 1-3, Gang Guide, Woodchipper…).
+2. Plan 5 v4.8.0: Black Chrome completo (~160 ítems, más Black Chrome+ de IR4) y catálogo de vehículos. Después, v4.8.1: totales reales en los docs.
+3. Después del plan 5: modo Settings, GM Master Screen (`FixerDeckView.tsx`) y libros nuevos (IR Vol. 1-3, Gang Guide, Woodchipper…).
 
 ## Notas y bloqueos
 
