@@ -8,11 +8,11 @@
 
 **Última actualización**: [Claude Code · 2026-10-22]
 **Versión de la app**: v4.6.2 (en `main`, squash e0de28c, PR #19; publicada en gh-pages y verificada en vivo)
-**Plan activo**: plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, página de origen en cada ítem y registro en `docs/canon-audit/`. Bloques 1 (v4.6.1) y 2 (v4.6.2) hechos. Planes 1, 2 y 4 terminados. El plan 3 se perdió y lo reemplaza v4.7.0.
+**Plan activo**: plan 6 (`docs/plans/plan6-enemigos-canon-cemk.md`, enemigos canon porteados a CEMK; v4.7.0-v4.7.2) y plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, página de origen en cada ítem y registro en `docs/canon-audit/`. Bloques 1 (v4.6.1) y 2 (v4.6.2) hechos. Planes 1, 2 y 4 terminados. El plan 3 se perdió y lo reemplaza v4.7.0.
 
 ## En curso (a cargo)
 
-- Nada a medias. `main` libre para cualquiera de las dos herramientas.
+- [Claude Code · 2026-10-22] v4.7.0 (plan 6: motor de porte CEMK + Core + CEMK + Hardened + Red Chrome Cargo) en la rama `claude/v4.7.0-enemigos-cemk`. Fase: extracción de los PDFs. Antigravity: no tocar `enemiesCatalog.ts`, `redChromeCargoData.ts` ni `features/gm/` hasta el merge.
 
 ## Traspaso
 
