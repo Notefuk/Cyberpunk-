@@ -496,8 +496,14 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
   const handleLoadOfficialRoleLoadout = () => {
     if (!currentRoleInfo) return;
     const lo = currentRoleInfo.startingLoadout;
-    setInstalledCyberwareIds([...lo.cyberwareIds]);
-    const invItems: InventoryItem[] = lo.gearNames.map((name, idx) => ({
+    // [Claude Code · 2026-10-22] En 2077 el Neuroport (incluido) cubre Agent, Neural Link e Interface Plugs (CEMK RB pp. 35-36).
+    const is2077 = selectedEra === '2077';
+    const loGearNames = is2077 ? lo.gearNames.filter((name) => name !== 'Agent') : lo.gearNames;
+    const loCyberwareIds = is2077
+      ? lo.cyberwareIds.filter((id) => id !== 'neuralware-processor' && id !== 'interface-plugs')
+      : lo.cyberwareIds;
+    setInstalledCyberwareIds([...loCyberwareIds]);
+    const invItems: InventoryItem[] = loGearNames.map((name, idx) => ({
       id: `inv-${Date.now()}-${idx}`,
       catalogId: name.toLowerCase().replace(/\s+/g, '-'),
       name,
@@ -507,7 +513,10 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
       details: 'Equipo inicial reglamentario de rol'
     }));
     setInventory(invItems);
-    showToast(`📦 Paquete de equipo inicial de ${currentRoleInfo.name} cargado con éxito.`);
+    showToast(
+      `📦 Paquete de equipo inicial de ${currentRoleInfo.name} cargado con éxito.` +
+        (is2077 ? ' Se omitieron Agent, Neural Link e Interface Plugs: los cubre el Neuroport (CEMK RB pp. 35-36).' : '')
+    );
   };
 
   // Final confirmation: build CharacterSheet & send to store
@@ -716,11 +725,11 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({
                 <div className="flex items-center gap-2">
                   <Cpu className="w-5 h-5 text-[#00f5d4]" />
                   <h3 className="font-tech text-sm font-black text-[#00f5d4] tracking-wider uppercase">
-                    NEUROPORT UNIVERSAL // 7 SUBSISTEMAS GRATUITOS DE SERIE (0 €$ / 0 HL)
+                    NEUROPORT // PAQUETE ESTÁNDAR DE 7 PIEZAS, GRATIS AL CREAR (0 €$ / 0 HL)
                   </h3>
                 </div>
                 <p className="text-xs font-mono-code text-[#94a3b8] leading-relaxed">
-                  En 2077, todo Edgerunner comienza con este paquete cibernético ya integrado en su sistema nervioso. Esto ahorra más de <strong>2,500 €$</strong> y evita más de <strong>20 puntos de Pérdida de Humanidad</strong>:
+                  Al crear un personaje de 2077 el Neuroport se instala gratis, con 0 HL y sin bajar la Humanidad máxima (CEMK RB p.25). Fuera de la creación cuesta <strong>1,000 €$</strong> con <strong>HL 7 (2d6)</strong> (CEMK RB p.35). Incluye:
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                   {ERA_CATALOG[1].neuroportSubsystems?.map((sub, i) => (

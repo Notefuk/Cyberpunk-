@@ -19,7 +19,6 @@ import {
   Maximize2,
   X,
   FileText,
-  Sparkles,
   Award
 } from 'lucide-react';
 import { useCharacterStore, buildCemk2077Characters } from '../../store/useCharacterStore';
@@ -66,7 +65,6 @@ export const RedChromeCargoView: React.FC = () => {
     getActiveCharacter,
     setActiveCharacter,
     syncOrRestoreCemkFolioCharacters,
-    loadCemk2077PartyRoster,
     gmPayAllCharacters,
     addEurodollarTransaction,
     purchaseOrAcquireItem
@@ -570,15 +568,7 @@ export const RedChromeCargoView: React.FC = () => {
             </button>
 
             {/* Botón Cargar 7 PJs CEMK */}
-            <button
-              onClick={() => {
-                loadCemk2077PartyRoster();
-                showToast('👥 Los 7 Edgerunners de CEMK 2077 cargados con éxito.', 'success');
-              }}
-              className="px-2.5 py-1 bg-[#141b29] hover:bg-[#1f2a40] text-cyan-300 border border-cyan-800/80 rounded-xs font-mono-code text-xs font-bold transition-all cursor-pointer"
-            >
-              👥 Cargar 7 PJs CEMK
-            </button>
+            {/* [Claude Code · 2026-10-22] Botón "Cargar 7 PJs CEMK" quitado: cargaba la banda del anime, que no tiene fichas en los libros (v4.8.1). Los Folios se cargan con "Restaurar Folios". */}
 
             {/* Ver Screamsheet / Modo Jugadores */}
             <button
@@ -1891,17 +1881,7 @@ export const RedChromeCargoView: React.FC = () => {
                       <RotateCcw className="w-3 h-3 text-cyan-400" />
                       <span>Restaurar Folios</span>
                     </button>
-                    <button
-                      onClick={() => {
-                        loadCemk2077PartyRoster();
-                        showToast('🎬 Banda del Anime cargada en la memoria.', 'success');
-                      }}
-                      className="px-2 py-1 bg-[#121624] hover:bg-[#1a2236] border border-amber-800/80 text-amber-300 text-[10px] rounded transition-all cursor-pointer flex items-center gap-1"
-                      title="Carga los 7 PJs de la banda de David Martinez"
-                    >
-                      <Sparkles className="w-3 h-3 text-amber-400" />
-                      <span>Cargar Anime Crew</span>
-                    </button>
+                    {/* [Claude Code · 2026-10-22] Botón "Cargar Anime Crew" quitado (v4.8.1). */}
                   </div>
                 </div>
 
@@ -1917,16 +1897,7 @@ export const RedChromeCargoView: React.FC = () => {
                   >
                     <span>📋 ROSTER OFICIAL CEMK FOLIOS (7 PJs)</span>
                   </button>
-                  <button
-                    onClick={() => setEdgerunnerRosterTab('anime_crew')}
-                    className={`py-1.5 px-2 text-xs font-tech font-bold rounded transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                      edgerunnerRosterTab === 'anime_crew'
-                        ? 'bg-amber-950/80 border border-amber-500 text-amber-200 shadow-sm'
-                        : 'text-slate-400 hover:text-white hover:bg-[#141926]'
-                    }`}
-                  >
-                    <span>🎬 BANDA DEL ANIME (7 PJs)</span>
-                  </button>
+                  {/* [Claude Code · 2026-10-22] Pestaña "Banda del anime" quitada (v4.8.1). */}
                 </div>
 
                 <p className="text-[11px] text-[#94a3b8]">

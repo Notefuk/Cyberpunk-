@@ -1,3 +1,7 @@
+import { CEMK_CREATION, CORE_GEAR_SKILLS, CORE_ROLE_TABLES, CORE_ROLES } from './creation';
+import type { CoreRoleName, PackageGearItem } from './creation';
+import pack from './core-rules.cprpack.json';
+import { SKILL_METADATA } from '../types/cyberpunk';
 import type {
   CharacterDebt,
   CharacterEra,
@@ -61,48 +65,24 @@ export const ERA_CATALOG: EraInfo[] = [
     summary:
       'La era tecnológica plasmada en Cyberpunk: Edgerunners y el videojuego 2077. Arasaka y Militech dominan las alturas en una Night City hiperconectada, resplandeciente y despiadada. Todo ciudadano y edgerunner porta un Neuroport de serie desde su adolescencia, unificando comunicaciones, escaneo biológico y proyecciones de realidad aumentada en el sistema nervioso.',
     whatYouGet: [
-      'Neuroport Universal de serie preinstalado gratuitamente (ahorro de más de 2,500 €$ y 20+ HL).',
+      'Neuroport incluido gratis al crear: 0 HL y no baja la Humanidad máxima (CEMK RB p.25).',
       'Armas de tecnología 2077: Power (rebotes tácticos), Tech (disparo perforante de coberturas) y Smart (guiado balístico).',
       'Soporte para Quickhacking en combate táctico: 1 NET Action por Quickhack, sin RAM (CEMK p. 16).',
-      'Acceso a las plantillas pregeneradas y estilos de la tripulación de Maine y David Martinez.',
+      'Pregens canon: los 7 Folios de CEMK (Hardpoint, Wrench, Connect, Bluescreen, Insurance, Thorn, Maven).',
       'Mecánicas avanzadas de Estrés, Humanidad y Ciberpsicosis acelerada del Edgerunners Mission Kit.',
       'Catálogo de ciberware moderno: Sandevistan militar Militech, Monowire, Mantis Blades y Gorilla Arms.'
     ],
+    // [Claude Code · 2026-10-22] Derivado de los datos canon CEMK (RB pp. 35-36).
     neuroportSubsystems: [
+      ...CEMK_CREATION.neuroport.pieces.map((pieza) => ({
+        name: pieza.name,
+        benefit: pieza.descEs,
+        savedCost: 'Incluido en el Neuroport (CEMK RB pp. 35-36)'
+      })),
       {
-        name: 'Neural Link Integrado',
-        benefit: 'Procesador neural base con 5 ranuras de opción para ciberware de combate.',
-        savedCost: '500 €$ / 7 Humanidad'
-      },
-      {
-        name: 'Holocall + Agent Interno',
-        benefit: 'Comunicaciones de voz, videollamadas y base de datos con IA asistencial en el cerebro.',
-        savedCost: '100 €$ / 3 Humanidad'
-      },
-      {
-        name: 'HUD Ocular + Chyron',
-        benefit: 'Proyección holográfica retiniana de munición, retícula de puntería y estado de blindaje.',
-        savedCost: '100 €$ / 2 Humanidad'
-      },
-      {
-        name: 'Biomonitor Subdérmico',
-        benefit: 'Monitoreo de signos vitales, HP en tiempo real y alerta de toxinas en sangre.',
-        savedCost: '100 €$ / 2 Humanidad'
-      },
-      {
-        name: 'Virtuality Retiniana',
-        benefit: 'Visualización directa de interfaces virtuales y ciberespacio superpuesto al mundo real.',
-        savedCost: '100 €$ / 2 Humanidad'
-      },
-      {
-        name: 'Personal Link (Cable de 2m)',
-        benefit: 'Cable retráctil en muñeca para interactuar con vehículos, terminales y Smartguns.',
-        savedCost: '500 €$ / 7 Humanidad'
-      },
-      {
-        name: '2x Ranuras para Chipware',
-        benefit: 'Conexión plug-and-play instantánea de Skill Chips y fragmentos de datos en la nuca.',
-        savedCost: '500 €$ / 7 Humanidad'
+        name: 'Cyberdeck Port (opcional)',
+        benefit: CEMK_CREATION.cyberdeckPort.descEs,
+        savedCost: `${CEMK_CREATION.cyberdeckPort.cost} · HL ${CEMK_CREATION.cyberdeckPort.humanityLoss} · requiere Neuroport (CEMK RB p.36)`
       }
     ],
     tacticalWarnings: [
@@ -178,12 +158,11 @@ export const CREATION_METHODS_CATALOG: CreationMethodInfo[] = [
     subtitle: 'Salta directo a Night City encarnando leyendas de 2045 o 2077',
     difficultyBadge: 'Instant-Play / Canónico',
     summary:
-      'Fichas oficiales completas listas para la acción, extraídas directamente del Single-Shot Pack 2045 y del Cyberpunk Edgerunners Mission Kit 2077. Incluyen estadísticas canónicas, inventario, ciberware preinstalado, trasfondo e ilustraciones.',
+      'Fichas oficiales listas para jugar: las 5 del Easy Mode del Core (2045) y los 7 Folios de CEMK (2077), tal como las imprime cada libro.',
     whatYouGet: [
-      '7 Edgerunners oficiales de CEMK 2077: David Martinez, Lucy, Rebecca, Maine, Kiwi, Falco y Pilar.',
-      '6 Edgerunners oficiales de 2045 (Single-Shot Pack): Forty, Torch, Redtail, Hound, Bug y Doc.',
-      '4 Plantillas de Rivales/Enemigos jugables: Arasaka Agent, Maelstrom Psycho, Militech Trooper y Tyger Claws Ronin.',
-      'Ficha 100% armada con armas en mano, munición, SP y Lifepath canónico listo en 1 clic.'
+      '7 Folios de CEMK 2077: Hardpoint, Wrench, Connect, Bluescreen, Insurance, Thorn y Maven.',
+      '5 pregens del Easy Mode (2045): Forty, Mover, Torch, Redtail y 24/7.',
+      'Las pregens CEMK son fichas de CEMK: no siguen los límites del Core y las skills que no traen quedan en 0.'
     ]
   }
 ];
@@ -367,63 +346,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Blindaje Light Armorjack completo (Cabeza SP 11 + Cuerpo SP 11).',
       'Cybereye con módulo de puntería o Neural Link preinstalado.'
     ],
-    streetratStats: {
-      INT: 6,
-      REF: 8,
-      DEX: 7,
-      TECH: 3,
-      COOL: 7,
-      WILL: 7,
-      LUCK: 5,
-      MOVE: 6,
-      BODY: 8,
-      EMP: 5
-    },
-    edgerunnerStatTable: [
-      { INT: 6, REF: 8, DEX: 7, TECH: 4, COOL: 6, WILL: 7, LUCK: 6, MOVE: 6, BODY: 7, EMP: 5 },
-      { INT: 5, REF: 8, DEX: 8, TECH: 3, COOL: 7, WILL: 7, LUCK: 5, MOVE: 6, BODY: 8, EMP: 5 },
-      { INT: 7, REF: 8, DEX: 6, TECH: 3, COOL: 8, WILL: 6, LUCK: 6, MOVE: 6, BODY: 7, EMP: 5 },
-      { INT: 6, REF: 8, DEX: 7, TECH: 3, COOL: 7, WILL: 8, LUCK: 5, MOVE: 5, BODY: 8, EMP: 5 },
-      { INT: 5, REF: 8, DEX: 7, TECH: 4, COOL: 6, WILL: 7, LUCK: 7, MOVE: 7, BODY: 6, EMP: 5 },
-      { INT: 6, REF: 8, DEX: 8, TECH: 3, COOL: 6, WILL: 6, LUCK: 6, MOVE: 6, BODY: 8, EMP: 5 },
-      { INT: 7, REF: 8, DEX: 7, TECH: 3, COOL: 7, WILL: 7, LUCK: 5, MOVE: 6, BODY: 7, EMP: 5 },
-      { INT: 6, REF: 8, DEX: 6, TECH: 4, COOL: 8, WILL: 7, LUCK: 6, MOVE: 5, BODY: 8, EMP: 4 },
-      { INT: 5, REF: 8, DEX: 7, TECH: 4, COOL: 7, WILL: 8, LUCK: 5, MOVE: 6, BODY: 7, EMP: 5 },
-      { INT: 6, REF: 8, DEX: 8, TECH: 3, COOL: 7, WILL: 6, LUCK: 6, MOVE: 7, BODY: 6, EMP: 5 }
-    ],
-    templateCombatSkills: {
-      handgun: 6,
-      shoulderArms: 6,
-      autofire: 4,
-      heavyWeapons: 2,
-      meleeWeapon: 5,
-      brawling: 4,
-      evasion: 6,
-      athletics: 4,
-      perception: 5,
-      firstAid: 3,
-      concentration: 4,
-      resistTortureDrugs: 4
-    },
-    templateGeneralSkills: {
-      Stealth: 4,
-      Tactics: 4,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Assault Rifle', 'Heavy Pistol', 'Medium Melee Weapon'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['neuralware-processor', 'interface-plugs'],
-      gearNames: ['Agent', 'Airhypo', 'Flashlight', 'Pocket Amp'],
-      fashionSummary: 'Chaqueta de combate táctico reforzada, botas militares y gafas polarizadas.',
-      itemsBreakdown: [
-        'Fusil de asalto estándar (5d6, 25 balas, Autofire x4)',
-        'Pistola pesada (3d6, cargador de 8 balas)',
-        'Cuchillo de combate táctico (2d6)',
-        'Blindaje Light Armorjack Cabeza y Cuerpo (SP 11)',
-        '50x Balas de Rifle y 30x Balas de Pistola Pesada'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   },
   {
@@ -442,61 +376,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Armamento de defensa personal: Subfusil o Pistola Pesada compacta.',
       'Blindaje Light Armorjack completo (SP 11).'
     ],
-    streetratStats: {
-      INT: 8,
-      REF: 7,
-      DEX: 6,
-      TECH: 7,
-      COOL: 6,
-      WILL: 7,
-      LUCK: 6,
-      MOVE: 5,
-      BODY: 4,
-      EMP: 6
-    },
-    edgerunnerStatTable: [
-      { INT: 8, REF: 7, DEX: 6, TECH: 7, COOL: 5, WILL: 7, LUCK: 6, MOVE: 5, BODY: 5, EMP: 6 },
-      { INT: 8, REF: 6, DEX: 7, TECH: 8, COOL: 6, WILL: 6, LUCK: 6, MOVE: 5, BODY: 4, EMP: 6 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 7, COOL: 6, WILL: 8, LUCK: 5, MOVE: 6, BODY: 4, EMP: 6 },
-      { INT: 8, REF: 7, DEX: 5, TECH: 7, COOL: 6, WILL: 7, LUCK: 7, MOVE: 5, BODY: 4, EMP: 6 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 8, COOL: 5, WILL: 7, LUCK: 6, MOVE: 6, BODY: 4, EMP: 6 },
-      { INT: 7, REF: 7, DEX: 7, TECH: 7, COOL: 6, WILL: 6, LUCK: 6, MOVE: 5, BODY: 5, EMP: 6 },
-      { INT: 8, REF: 8, DEX: 5, TECH: 6, COOL: 6, WILL: 7, LUCK: 5, MOVE: 5, BODY: 5, EMP: 7 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 7, COOL: 7, WILL: 7, LUCK: 6, MOVE: 5, BODY: 4, EMP: 6 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 8, COOL: 5, WILL: 7, LUCK: 6, MOVE: 6, BODY: 4, EMP: 6 },
-      { INT: 8, REF: 7, DEX: 6, TECH: 6, COOL: 6, WILL: 8, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 }
-    ],
-    templateCombatSkills: {
-      handgun: 6,
-      autofire: 2,
-      evasion: 5,
-      athletics: 3,
-      cybertech: 6,
-      perception: 6,
-      firstAid: 2,
-      concentration: 6,
-      resistTortureDrugs: 3
-    },
-    templateGeneralSkills: {
-      'Electronics/Security Tech': 6,
-      'Library Search': 5,
-      Stealth: 4,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Heavy Pistol', 'Light Melee Weapon'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['neuralware-processor', 'interface-plugs', 'chyron'],
-      gearNames: ['Cyberdeck', 'Virtuality Goggles', 'Agent', 'Cables de Datos'],
-      fashionSummary: 'Sudadera holgada impermeable con capucha, zapatillas ligeras y visores cibernéticos.',
-      itemsBreakdown: [
-        'Pistola pesada (3d6, cargador de 8 balas)',
-        'Cyberdeck básico (7 ranuras)',
-        'Programas: Sword (Attacker), Armor (Defender), Eraser (Booster)',
-        'Blindaje Light Armorjack (Cabeza SP 11, Torso SP 11)',
-        'Neural Link e Interface Plugs instalados'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   },
   {
@@ -515,60 +406,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Blindaje Light Armorjack completo (SP 11).',
       'Capacidad de reparar armaduras dañadas de tus compañeros entre combates.'
     ],
-    streetratStats: {
-      INT: 7,
-      REF: 6,
-      DEX: 6,
-      TECH: 8,
-      COOL: 5,
-      WILL: 6,
-      LUCK: 6,
-      MOVE: 6,
-      BODY: 6,
-      EMP: 6
-    },
-    edgerunnerStatTable: [
-      { INT: 7, REF: 6, DEX: 6, TECH: 8, COOL: 5, WILL: 6, LUCK: 6, MOVE: 6, BODY: 6, EMP: 6 },
-      { INT: 6, REF: 7, DEX: 6, TECH: 8, COOL: 5, WILL: 7, LUCK: 5, MOVE: 6, BODY: 6, EMP: 6 },
-      { INT: 7, REF: 6, DEX: 7, TECH: 8, COOL: 4, WILL: 6, LUCK: 6, MOVE: 6, BODY: 6, EMP: 6 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 8, COOL: 5, WILL: 6, LUCK: 5, MOVE: 5, BODY: 7, EMP: 6 },
-      { INT: 7, REF: 7, DEX: 5, TECH: 8, COOL: 6, WILL: 6, LUCK: 6, MOVE: 6, BODY: 5, EMP: 6 },
-      { INT: 6, REF: 6, DEX: 7, TECH: 8, COOL: 5, WILL: 7, LUCK: 6, MOVE: 5, BODY: 6, EMP: 6 },
-      { INT: 7, REF: 6, DEX: 6, TECH: 8, COOL: 6, WILL: 6, LUCK: 5, MOVE: 7, BODY: 5, EMP: 6 },
-      { INT: 8, REF: 5, DEX: 6, TECH: 8, COOL: 5, WILL: 7, LUCK: 6, MOVE: 6, BODY: 5, EMP: 6 },
-      { INT: 6, REF: 7, DEX: 6, TECH: 8, COOL: 4, WILL: 6, LUCK: 7, MOVE: 6, BODY: 6, EMP: 6 },
-      { INT: 7, REF: 6, DEX: 6, TECH: 8, COOL: 5, WILL: 7, LUCK: 6, MOVE: 5, BODY: 6, EMP: 6 }
-    ],
-    templateCombatSkills: {
-      shoulderArms: 6,
-      handgun: 5,
-      evasion: 5,
-      athletics: 4,
-      cybertech: 6,
-      firstAid: 4,
-      perception: 5,
-      concentration: 4,
-      resistTortureDrugs: 3
-    },
-    templateGeneralSkills: {
-      'Electronics/Security Tech': 6,
-      'Weaponstech': 6,
-      'Drive Land Vehicle': 3,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Shotgun', 'Heavy Pistol'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['neuralware-processor'],
-      gearNames: ['Techtool', 'Agent', 'Duct Tape', 'Flashlight'],
-      fashionSummary: 'Mono de trabajo resistente a chispas y ácido, guantes aislantes y cinturón portaherramientas.',
-      itemsBreakdown: [
-        'Escopeta estándar (5d6 / área 6x6m con postas)',
-        'Pistola pesada (3d6)',
-        'Maletín de herramientas Techtool',
-        'Blindaje Light Armorjack (SP 11 Cabeza y Cuerpo)'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   },
   {
@@ -587,59 +436,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Blindaje Light Armorjack completo (SP 11).',
       'Acceso a drogas estimulantes de combate para potenciar a tus aliados.'
     ],
-    streetratStats: {
-      INT: 8,
-      REF: 6,
-      DEX: 6,
-      TECH: 8,
-      COOL: 5,
-      WILL: 7,
-      LUCK: 5,
-      MOVE: 5,
-      BODY: 6,
-      EMP: 6
-    },
-    edgerunnerStatTable: [
-      { INT: 8, REF: 6, DEX: 6, TECH: 8, COOL: 5, WILL: 7, LUCK: 5, MOVE: 5, BODY: 6, EMP: 6 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 8, COOL: 5, WILL: 6, LUCK: 6, MOVE: 5, BODY: 6, EMP: 6 },
-      { INT: 8, REF: 6, DEX: 7, TECH: 8, COOL: 4, WILL: 7, LUCK: 5, MOVE: 5, BODY: 6, EMP: 6 },
-      { INT: 7, REF: 6, DEX: 6, TECH: 8, COOL: 6, WILL: 7, LUCK: 5, MOVE: 6, BODY: 5, EMP: 6 },
-      { INT: 8, REF: 7, DEX: 5, TECH: 8, COOL: 5, WILL: 6, LUCK: 6, MOVE: 5, BODY: 6, EMP: 6 },
-      { INT: 7, REF: 6, DEX: 7, TECH: 8, COOL: 5, WILL: 6, LUCK: 6, MOVE: 6, BODY: 5, EMP: 6 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 8, COOL: 6, WILL: 6, LUCK: 5, MOVE: 5, BODY: 6, EMP: 6 },
-      { INT: 8, REF: 5, DEX: 7, TECH: 8, COOL: 4, WILL: 7, LUCK: 6, MOVE: 5, BODY: 6, EMP: 6 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 8, COOL: 5, WILL: 7, LUCK: 5, MOVE: 5, BODY: 6, EMP: 6 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 8, COOL: 5, WILL: 8, LUCK: 5, MOVE: 5, BODY: 5, EMP: 6 }
-    ],
-    templateCombatSkills: {
-      handgun: 6,
-      firstAid: 6,
-      paramedic: 6,
-      cybertech: 4,
-      evasion: 5,
-      athletics: 3,
-      perception: 5,
-      concentration: 5,
-      resistTortureDrugs: 4
-    },
-    templateGeneralSkills: {
-      'Basic Tech': 4,
-      Deduction: 4,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Heavy Pistol', 'Shotgun'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['neuralware-processor'],
-      gearNames: ['Medtech Bag', 'Airhypo', 'Agent', 'Flashlight'],
-      fashionSummary: 'Uniforme de paramédico Trauma Team modificado con cruces rojas y chaleco antibalas.',
-      itemsBreakdown: [
-        'Pistola pesada (3d6)',
-        'Bolsa Médica (Medtech Bag)',
-        'Inyector Airhypo con 2 dosis de Speedheal y 1 dosis de Stim',
-        'Blindaje Light Armorjack (SP 11 Cabeza y Cuerpo)'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   },
   {
@@ -658,61 +466,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Presupuesto de vestuario deslumbrante estilo Urban Flash.',
       'Red de fans y seguidores leales en los clubes nocturnos.'
     ],
-    streetratStats: {
-      INT: 6,
-      REF: 7,
-      DEX: 7,
-      TECH: 3,
-      COOL: 8,
-      WILL: 7,
-      LUCK: 6,
-      MOVE: 6,
-      BODY: 5,
-      EMP: 7
-    },
-    edgerunnerStatTable: [
-      { INT: 6, REF: 7, DEX: 7, TECH: 3, COOL: 8, WILL: 7, LUCK: 6, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 5, REF: 8, DEX: 6, TECH: 3, COOL: 8, WILL: 7, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 6, REF: 6, DEX: 8, TECH: 4, COOL: 8, WILL: 6, LUCK: 6, MOVE: 6, BODY: 6, EMP: 7 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 3, COOL: 8, WILL: 7, LUCK: 6, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 6, REF: 7, DEX: 7, TECH: 4, COOL: 8, WILL: 6, LUCK: 7, MOVE: 5, BODY: 5, EMP: 7 },
-      { INT: 5, REF: 7, DEX: 7, TECH: 3, COOL: 8, WILL: 8, LUCK: 6, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 6, DEX: 7, TECH: 3, COOL: 8, WILL: 7, LUCK: 6, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 6, REF: 8, DEX: 6, TECH: 3, COOL: 8, WILL: 6, LUCK: 6, MOVE: 7, BODY: 5, EMP: 7 },
-      { INT: 5, REF: 7, DEX: 8, TECH: 4, COOL: 8, WILL: 6, LUCK: 6, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 6, REF: 7, DEX: 7, TECH: 3, COOL: 8, WILL: 7, LUCK: 6, MOVE: 6, BODY: 6, EMP: 6 }
-    ],
-    templateCombatSkills: {
-      handgun: 6,
-      brawling: 5,
-      meleeWeapon: 4,
-      evasion: 6,
-      athletics: 4,
-      perception: 4,
-      firstAid: 3,
-      concentration: 4,
-      resistTortureDrugs: 4
-    },
-    templateGeneralSkills: {
-      Persuasion: 6,
-      'Play Instrument': 6,
-      Streetwise: 5,
-      'Wardrobe & Style': 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Very Heavy Pistol', 'Light Melee Weapon'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['neuralware-processor', 'techhair'],
-      gearNames: ['Pocket Amp', 'Electric Guitar', 'Agent', 'Audio Recorder'],
-      fashionSummary: 'Pantalones de cuero brillante, cadenas metálicas, parches de bandas y peinado con luces Techhair.',
-      itemsBreakdown: [
-        'Pistola muy pesada cromada (4d6)',
-        'Cuchillo de combate estilizado (1d6)',
-        'Amplificador de bolsillo y guitarra eléctrica',
-        'Blindaje Light Armorjack Urban Flash (SP 11)'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   },
   {
@@ -731,60 +496,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Doble comunicador Agent para gestionar negocios paralelos sin interrupciones.',
       'Contactos clave en las 5 principales pandillas de Night City.'
     ],
-    streetratStats: {
-      INT: 7,
-      REF: 6,
-      DEX: 6,
-      TECH: 4,
-      COOL: 8,
-      WILL: 6,
-      LUCK: 7,
-      MOVE: 6,
-      BODY: 5,
-      EMP: 7
-    },
-    edgerunnerStatTable: [
-      { INT: 7, REF: 6, DEX: 6, TECH: 4, COOL: 8, WILL: 6, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 3, COOL: 8, WILL: 6, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 4, COOL: 8, WILL: 5, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 6, REF: 6, DEX: 7, TECH: 4, COOL: 8, WILL: 6, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 6, DEX: 6, TECH: 4, COOL: 8, WILL: 7, LUCK: 6, MOVE: 5, BODY: 6, EMP: 7 },
-      { INT: 8, REF: 5, DEX: 7, TECH: 3, COOL: 8, WILL: 6, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 7, DEX: 5, TECH: 4, COOL: 8, WILL: 6, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 6, REF: 6, DEX: 6, TECH: 4, COOL: 8, WILL: 7, LUCK: 8, MOVE: 5, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 6, DEX: 7, TECH: 3, COOL: 8, WILL: 6, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 4, COOL: 8, WILL: 5, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 }
-    ],
-    templateCombatSkills: {
-      handgun: 6,
-      evasion: 5,
-      brawling: 4,
-      athletics: 3,
-      perception: 6,
-      firstAid: 3,
-      concentration: 4,
-      resistTortureDrugs: 3
-    },
-    templateGeneralSkills: {
-      Trading: 6,
-      Streetwise: 6,
-      Persuasion: 6,
-      Bribery: 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Heavy Pistol', 'Heavy SMG'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['neuralware-processor', 'internal-agent'],
-      gearNames: ['Agent', 'Bug Detector', 'Computer', 'Flashlight'],
-      fashionSummary: 'Traje de terciopelo o chaqueta sastre de corte fino con gafas de montura dorada.',
-      itemsBreakdown: [
-        'Pistola pesada estándar (3d6)',
-        'Subfusil pesado ocultable (3d6, Autofire x3)',
-        'Detector de escuchas (Bug Detector)',
-        'Blindaje Light Armorjack estilizado (SP 11)'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   },
   {
@@ -803,60 +526,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Kit de supervivencia y herramientas para reparaciones de vehículos en ruta.',
       'El respaldo incondicional del Clan Nómada en caso de persecución corporativa.'
     ],
-    streetratStats: {
-      INT: 6,
-      REF: 7,
-      DEX: 7,
-      TECH: 6,
-      COOL: 6,
-      WILL: 6,
-      LUCK: 6,
-      MOVE: 7,
-      BODY: 7,
-      EMP: 4
-    },
-    edgerunnerStatTable: [
-      { INT: 6, REF: 7, DEX: 7, TECH: 6, COOL: 6, WILL: 6, LUCK: 6, MOVE: 7, BODY: 7, EMP: 4 },
-      { INT: 5, REF: 8, DEX: 7, TECH: 6, COOL: 5, WILL: 6, LUCK: 6, MOVE: 7, BODY: 7, EMP: 5 },
-      { INT: 6, REF: 7, DEX: 6, TECH: 7, COOL: 6, WILL: 6, LUCK: 6, MOVE: 7, BODY: 7, EMP: 4 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 6, COOL: 6, WILL: 6, LUCK: 5, MOVE: 8, BODY: 7, EMP: 4 },
-      { INT: 6, REF: 8, DEX: 6, TECH: 6, COOL: 6, WILL: 5, LUCK: 7, MOVE: 7, BODY: 7, EMP: 4 },
-      { INT: 5, REF: 7, DEX: 8, TECH: 6, COOL: 5, WILL: 6, LUCK: 6, MOVE: 7, BODY: 8, EMP: 4 },
-      { INT: 6, REF: 7, DEX: 7, TECH: 7, COOL: 5, WILL: 6, LUCK: 6, MOVE: 6, BODY: 7, EMP: 5 },
-      { INT: 7, REF: 8, DEX: 6, TECH: 5, COOL: 6, WILL: 6, LUCK: 6, MOVE: 7, BODY: 7, EMP: 4 },
-      { INT: 6, REF: 7, DEX: 7, TECH: 6, COOL: 6, WILL: 7, LUCK: 5, MOVE: 7, BODY: 6, EMP: 5 },
-      { INT: 5, REF: 8, DEX: 7, TECH: 6, COOL: 6, WILL: 6, LUCK: 6, MOVE: 7, BODY: 7, EMP: 4 }
-    ],
-    templateCombatSkills: {
-      shoulderArms: 6,
-      handgun: 5,
-      evasion: 6,
-      athletics: 5,
-      meleeWeapon: 4,
-      firstAid: 3,
-      perception: 6,
-      concentration: 4,
-      resistTortureDrugs: 4
-    },
-    templateGeneralSkills: {
-      'Drive Land Vehicle': 6,
-      'Basic Tech': 5,
-      Tracking: 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Assault Rifle', 'Heavy Pistol'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['interface-plugs'],
-      gearNames: ['Techtool', 'Agent', 'Flashlight', 'Radio Communicator'],
-      fashionSummary: 'Chaleco de cuero desgastado con insignias del clan, botas camperas y gafas antipolvo.',
-      itemsBreakdown: [
-        'Fusil de asalto estándar (5d6)',
-        'Pistola pesada (3d6)',
-        'Vehículo Nómada otorgado por habilidad Moto',
-        'Blindaje Light Armorjack (SP 11 Cabeza y Cuerpo)'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   },
   {
@@ -875,60 +556,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Grilletes de alta seguridad, radio transceptora y linterna militar.',
       'Autoridad legal reconocida en distritos corporativos y céntricos.'
     ],
-    streetratStats: {
-      INT: 6,
-      REF: 7,
-      DEX: 7,
-      TECH: 4,
-      COOL: 6,
-      WILL: 7,
-      LUCK: 6,
-      MOVE: 6,
-      BODY: 7,
-      EMP: 6
-    },
-    edgerunnerStatTable: [
-      { INT: 6, REF: 7, DEX: 7, TECH: 4, COOL: 6, WILL: 7, LUCK: 6, MOVE: 6, BODY: 7, EMP: 6 },
-      { INT: 5, REF: 8, DEX: 6, TECH: 4, COOL: 7, WILL: 7, LUCK: 6, MOVE: 6, BODY: 7, EMP: 6 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 3, COOL: 6, WILL: 8, LUCK: 5, MOVE: 6, BODY: 7, EMP: 6 },
-      { INT: 6, REF: 7, DEX: 8, TECH: 3, COOL: 6, WILL: 7, LUCK: 6, MOVE: 6, BODY: 7, EMP: 5 },
-      { INT: 6, REF: 8, DEX: 6, TECH: 4, COOL: 6, WILL: 7, LUCK: 7, MOVE: 5, BODY: 7, EMP: 6 },
-      { INT: 7, REF: 7, DEX: 7, TECH: 4, COOL: 6, WILL: 6, LUCK: 6, MOVE: 6, BODY: 7, EMP: 5 },
-      { INT: 5, REF: 8, DEX: 7, TECH: 3, COOL: 7, WILL: 7, LUCK: 5, MOVE: 6, BODY: 8, EMP: 5 },
-      { INT: 6, REF: 6, DEX: 7, TECH: 4, COOL: 7, WILL: 7, LUCK: 6, MOVE: 6, BODY: 8, EMP: 5 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 4, COOL: 6, WILL: 7, LUCK: 6, MOVE: 6, BODY: 7, EMP: 6 },
-      { INT: 6, REF: 8, DEX: 7, TECH: 3, COOL: 6, WILL: 7, LUCK: 6, MOVE: 6, BODY: 7, EMP: 6 }
-    ],
-    templateCombatSkills: {
-      handgun: 6,
-      shoulderArms: 6,
-      brawling: 5,
-      evasion: 5,
-      athletics: 4,
-      firstAid: 3,
-      perception: 6,
-      concentration: 5,
-      resistTortureDrugs: 4
-    },
-    templateGeneralSkills: {
-      Interrogation: 6,
-      Deduction: 5,
-      Tactics: 4,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Shotgun', 'Heavy Pistol'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['neuralware-processor'],
-      gearNames: ['Handcuffs', 'Radio Communicator', 'Agent', 'Flashlight'],
-      fashionSummary: 'Uniforme táctico policial azul marino, placa de metal identificativa y botas de intervención.',
-      itemsBreakdown: [
-        'Escopeta policial (5d6)',
-        'Pistola pesada de servicio (3d6)',
-        'Esposas de seguridad y radio de banda segura',
-        'Blindaje Light Armorjack (SP 11 Cabeza y Cuerpo)'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   },
   {
@@ -947,60 +586,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Vivienda corporativa de lujo en zona segura subvencionada por la empresa.',
       'Suscripción médica Trauma Team Silver preinstalada.'
     ],
-    streetratStats: {
-      INT: 7,
-      REF: 6,
-      DEX: 6,
-      TECH: 4,
-      COOL: 8,
-      WILL: 6,
-      LUCK: 7,
-      MOVE: 5,
-      BODY: 5,
-      EMP: 8
-    },
-    edgerunnerStatTable: [
-      { INT: 7, REF: 6, DEX: 6, TECH: 4, COOL: 8, WILL: 6, LUCK: 7, MOVE: 5, BODY: 5, EMP: 8 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 3, COOL: 8, WILL: 6, LUCK: 7, MOVE: 5, BODY: 5, EMP: 8 },
-      { INT: 7, REF: 7, DEX: 5, TECH: 4, COOL: 8, WILL: 7, LUCK: 6, MOVE: 5, BODY: 5, EMP: 8 },
-      { INT: 7, REF: 6, DEX: 6, TECH: 4, COOL: 8, WILL: 7, LUCK: 6, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 8, REF: 6, DEX: 5, TECH: 4, COOL: 8, WILL: 6, LUCK: 7, MOVE: 5, BODY: 5, EMP: 8 },
-      { INT: 6, REF: 7, DEX: 6, TECH: 4, COOL: 8, WILL: 6, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 6, DEX: 7, TECH: 3, COOL: 8, WILL: 6, LUCK: 7, MOVE: 5, BODY: 5, EMP: 8 },
-      { INT: 8, REF: 5, DEX: 6, TECH: 4, COOL: 8, WILL: 7, LUCK: 6, MOVE: 5, BODY: 5, EMP: 8 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 3, COOL: 8, WILL: 6, LUCK: 7, MOVE: 5, BODY: 5, EMP: 8 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 4, COOL: 8, WILL: 6, LUCK: 6, MOVE: 5, BODY: 6, EMP: 7 }
-    ],
-    templateCombatSkills: {
-      handgun: 6,
-      evasion: 5,
-      brawling: 3,
-      athletics: 3,
-      perception: 5,
-      firstAid: 3,
-      concentration: 5,
-      resistTortureDrugs: 3
-    },
-    templateGeneralSkills: {
-      Persuasion: 6,
-      HumanPerception: 6,
-      Deduction: 5,
-      Education: 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Very Heavy Pistol'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['neuralware-processor', 'internal-agent'],
-      gearNames: ['Agent', 'Computer', 'Trauma Team Silver Card', 'Briefcase'],
-      fashionSummary: 'Traje de alta costura de negocios (Businesswear), reloj suizo de lujo y maletín ignífugo.',
-      itemsBreakdown: [
-        'Pistola muy pesada de lujo (4d6)',
-        'Traje ejecutivo blindado Light Armorjack (SP 11)',
-        'Subordinado corporativo otorgado por Teamwork',
-        'Tarjeta de afiliación Trauma Team Silver'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   },
   {
@@ -1019,60 +616,18 @@ export const ROLES_CATALOG: RoleInfo[] = [
       'Blindaje Light Armorjack con chaleco de prensa reforzado (SP 11).',
       'Acceso privilegiado a canales de noticias y foros del Data Pool.'
     ],
-    streetratStats: {
-      INT: 7,
-      REF: 6,
-      DEX: 6,
-      TECH: 4,
-      COOL: 7,
-      WILL: 7,
-      LUCK: 7,
-      MOVE: 6,
-      BODY: 5,
-      EMP: 7
-    },
-    edgerunnerStatTable: [
-      { INT: 7, REF: 6, DEX: 6, TECH: 4, COOL: 7, WILL: 7, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 3, COOL: 7, WILL: 7, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 4, COOL: 6, WILL: 7, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 6, DEX: 7, TECH: 4, COOL: 7, WILL: 6, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 8, REF: 6, DEX: 5, TECH: 4, COOL: 7, WILL: 8, LUCK: 6, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 6, REF: 7, DEX: 6, TECH: 4, COOL: 8, WILL: 7, LUCK: 7, MOVE: 5, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 6, DEX: 6, TECH: 4, COOL: 7, WILL: 7, LUCK: 8, MOVE: 6, BODY: 5, EMP: 6 },
-      { INT: 8, REF: 5, DEX: 7, TECH: 4, COOL: 6, WILL: 7, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 7, REF: 7, DEX: 6, TECH: 3, COOL: 7, WILL: 7, LUCK: 7, MOVE: 6, BODY: 5, EMP: 7 },
-      { INT: 8, REF: 6, DEX: 6, TECH: 4, COOL: 7, WILL: 6, LUCK: 7, MOVE: 6, BODY: 5, EMP: 8 }
-    ],
-    templateCombatSkills: {
-      handgun: 6,
-      evasion: 5,
-      athletics: 3,
-      brawling: 3,
-      perception: 6,
-      firstAid: 3,
-      concentration: 5,
-      resistTortureDrugs: 3
-    },
-    templateGeneralSkills: {
-      Deduction: 6,
-      'Library Search': 6,
-      Persuasion: 6,
-      Streetwise: 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Your Home)': 2
-    },
+    // Se completa con datos canon al final del archivo (Core pp. 74-77, 86-87, 98-99, 103, 117).
+    streetratStats: { INT: 0, REF: 0, DEX: 0, TECH: 0, COOL: 0, WILL: 0, LUCK: 0, MOVE: 0, BODY: 0, EMP: 0 },
+    edgerunnerStatTable: [],
+    templateCombatSkills: {},
+    templateGeneralSkills: {},
     startingLoadout: {
-      weaponNames: ['Heavy Pistol'],
-      armorNames: ['Light Armorjack (Head)', 'Light Armorjack (Body)'],
-      cyberwareIds: ['neuralware-processor', 'braindance-recorder'],
-      gearNames: ['Video Camera', 'Audio Recorder', 'Agent', 'Disguise Kit'],
-      fashionSummary: 'Gabardina de reportero con bolsillos ocultos, chaleco con parche de PRENSA y libreta digital.',
-      itemsBreakdown: [
-        'Pistola pesada (3d6)',
-        'Cámara de video profesional y grabadora',
-        'Blindaje Light Armorjack con parche de PRENSA (SP 11)',
-        'Grabador Braindance integrado en Neural Link'
-      ]
+      weaponNames: [],
+      armorNames: [],
+      cyberwareIds: [],
+      gearNames: [],
+      fashionSummary: '',
+      itemsBreakdown: []
     }
   }
 ];
@@ -1770,1380 +1325,7 @@ export interface PregenTemplate {
   lifepath: CharacterLifepath;
 }
 
-export const PREGEN_TEMPLATES: PregenTemplate[] = [
-  // --- CEMK 2077 EDGERUNNERS ---
-  {
-    id: 'pregen-david-2077',
-    handle: 'David Martinez',
-    role: 'Solo',
-    roleRank: 4,
-    era: '2077',
-    avatarIcon: 'zap',
-    sourceBadge: 'CEMK 2077',
-    bioSummary:
-      'El chico de Santo Domingo que desafió a las megacorporaciones. Equipado con la legendaria chaqueta de paramédico de su madre y un Sandevistan militar Militech de velocidad sobrenatural.',
-    whatYouGet: [
-      'Implante militar Militech Sandevistan Speedware (+3 a Iniciativa y esquiva acelerada).',
-      'Neuroport 2077 integrado de serie con Holocall, HUD y ranuras de chipware.',
-      'REF 8 y DEX 8 de inicio: Capacidad canónica de esquivar balas en pleno vuelo.',
-      'Pistola Tech/Power y Escopeta de combate.',
-      'Blindaje Light Armorjack con la chaqueta amarilla icónica (Cabeza SP 11, Cuerpo SP 11).'
-    ],
-    stats: {
-      INT: 5,
-      REF: 8,
-      DEX: 8,
-      TECH: 4,
-      COOL: 7,
-      WILL: 8,
-      LUCK: 7,
-      MOVE: 7,
-      BODY: 8,
-      EMP: 6
-    },
-    skills: {
-      handgun: 6,
-      shoulderArms: 5,
-      autofire: 4,
-      heavyWeapons: 2,
-      archery: 0,
-      meleeWeapon: 5,
-      brawling: 6,
-      martialArts: 2,
-      evasion: 8,
-      athletics: 6,
-      firstAid: 3,
-      paramedic: 1,
-      cybertech: 3,
-      perception: 6,
-      concentration: 5,
-      resistTortureDrugs: 5
-    },
-    generalSkills: {
-      Stealth: 4,
-      Streetwise: 5,
-      'Drive Land Vehicle': 4,
-      'Language (Streetslang)': 2,
-      'Local Expert (Santo Domingo)': 4
-    },
-    weapons: [
-      {
-        id: 'heavy-pistol',
-        instanceId: 'wep-david-hp',
-        name: 'Militech Lexington (Heavy Pistol)',
-        type: 'Ranged',
-        skill: 'Handgun',
-        damage: '3d6',
-        rof: 2,
-        hands: 1,
-        concealable: true,
-        cost: 100,
-        standardMag: 12,
-        currentMag: 12,
-        ammoType: 'Heavy Pistol',
-        loadedAmmoType: 'Heavy Pistol',
-        inHand: true,
-        reserveAmmo: 48
-      },
-      {
-        id: 'shotgun',
-        instanceId: 'wep-david-sg',
-        name: 'Budget Arms Carnage (Shotgun)',
-        type: 'Ranged',
-        skill: 'Shoulder Arms',
-        damage: '5d6',
-        rof: 1,
-        hands: 2,
-        concealable: false,
-        cost: 500,
-        standardMag: 8,
-        currentMag: 8,
-        ammoType: 'Slug',
-        loadedAmmoType: 'Slug',
-        inHand: false,
-        reserveAmmo: 24
-      }
-    ],
-    headArmor: { name: 'Kevlar Hood / Cap (Head)', maxSp: 7, currentSp: 7, penalty: 0 },
-    bodyArmor: { name: "Gloria's EMT Jacket (Light Armorjack)", maxSp: 11, currentSp: 11, penalty: 0 },
-    cyberwareIds: ['sandevistan', 'neuralware-processor', 'interface-plugs'],
-    eurodollars: 450,
-    lifepath: {
-      culturalRegion: 'América del Norte (Night City - Santo Domingo)',
-      personality: 'Impulsivo, salvaje y adicto a la adrenalina',
-      clothingStyle: 'Urban Flash (Chaqueta amarilla EMT, pantalones anchos y zapatillas deportivas)',
-      hairstyle: 'Cresta cyberpunk rapada en los laterales',
-      affectation: 'Tic nervioso en la mano cuando recuerda el dolor de su madre',
-      valueMost: 'La Familia y la Lealtad a su tripulación',
-      feelAboutPeople: 'Desconfía de las corporaciones; daría la vida por sus amigos',
-      valuedPerson: 'Lucy y su madre Gloria Martinez',
-      valuedPossession: 'La chaqueta amarilla de paramédico de su madre',
-      familyBackground: 'Familia de clase trabajadora rota por las deudas médicas',
-      childhoodEnvironment: 'En un apartamento de 2x2 en Arroyo oyendo sirenas policiales',
-      familyCrisis: 'Su madre murió tras un tiroteo en la autopista por falta de Trauma Team',
-      friends: ['Maine (Líder mentor)', 'Rebecca (Pistolera leal)', 'Falco (Piloto de fuga)'],
-      tragicLoveAffairs: ['Su amor por Lucy marcado por el peligro constante de Arasaka'],
-      enemies: [
-        {
-          id: 'en-david-1',
-          who: 'Faraday (Fixer traidor con implantes oculares triples)',
-          cause: 'Conspiró para entregar la tecnología del Sandevistan a Arasaka',
-          throwAtYou: 'Mercenarios Solos armados con fusiles de asalto',
-          reaction: 'Si se cruzan, disparar a quemarropa sin dudar'
-        }
-      ],
-      roleLifepath: {
-        solo_type: 'Líder callejero impulsado por el cromo y la lealtad',
-        solo_moral: 'Proteger a su tripulación a cualquier coste humano'
-      },
-      lifeGoal: 'Llevar a Lucy a la Luna y no dejar a nadie atrás'
-    }
-  },
-  {
-    id: 'pregen-lucy-2077',
-    handle: 'Lucy (Kushinada)',
-    role: 'Netrunner',
-    roleRank: 4,
-    era: '2077',
-    avatarIcon: 'wifi',
-    sourceBadge: 'CEMK 2077',
-    bioSummary:
-      'Netrunner misteriosa y letal de la Vieja Red. Entrenada de niña en instalaciones secretas de Arasaka, huyó para vivir como fantasma en Night City. Especialista en hackeo profundo y combate con cable Monowire.',
-    whatYouGet: [
-      'Cyberdeck militar 2077 para Quickhacking (sin RAM, CEMK p. 16).',
-      'Ciberarma Monowire integrada en el antebrazo (ataques a 2m que ignoran mitad de blindaje).',
-      'INT 8 y REF 8: Dominio total tanto en el ciberespacio como en el esquive acrobático.',
-      'Neuroport 2077 de serie con interfaz de Virtuality y cables Interface Plugs.',
-      'Programas de contra-hackeo y escudo defensivo de red.'
-    ],
-    stats: {
-      INT: 8,
-      REF: 8,
-      DEX: 7,
-      TECH: 6,
-      COOL: 7,
-      WILL: 7,
-      LUCK: 6,
-      MOVE: 6,
-      BODY: 4,
-      EMP: 6
-    },
-    skills: {
-      handgun: 6,
-      shoulderArms: 2,
-      autofire: 2,
-      heavyWeapons: 0,
-      archery: 0,
-      meleeWeapon: 7,
-      brawling: 4,
-      martialArts: 2,
-      evasion: 7,
-      athletics: 5,
-      firstAid: 3,
-      paramedic: 2,
-      cybertech: 6,
-      perception: 7,
-      concentration: 6,
-      resistTortureDrugs: 4
-    },
-    generalSkills: {
-      'Electronics/Security Tech': 7,
-      Stealth: 6,
-      'Library Search': 6,
-      'Language (Streetslang)': 2,
-      'Language (Japanese)': 4
-    },
-    weapons: [
-      {
-        id: 'light-melee',
-        instanceId: 'wep-lucy-monowire',
-        name: 'Monowire Implant (Cyberarm)',
-        type: 'Melee',
-        skill: 'Melee Weapon',
-        damage: '3d6',
-        rof: 2,
-        hands: 1,
-        concealable: true,
-        cost: 500,
-        standardMag: 0,
-        currentMag: 0,
-        ammoType: 'N/A',
-        loadedAmmoType: 'N/A',
-        inHand: true,
-        reserveAmmo: 0,
-        notes: 'Filamento molecular retráctil. Ignora el 50% del blindaje defensor.'
-      },
-      {
-        id: 'heavy-pistol',
-        instanceId: 'wep-lucy-unity',
-        name: 'Constitutional Arms Unity (Heavy Pistol)',
-        type: 'Ranged',
-        skill: 'Handgun',
-        damage: '3d6',
-        rof: 2,
-        hands: 1,
-        concealable: true,
-        cost: 100,
-        standardMag: 12,
-        currentMag: 12,
-        ammoType: 'Heavy Pistol',
-        loadedAmmoType: 'Heavy Pistol',
-        inHand: false,
-        reserveAmmo: 36
-      }
-    ],
-    headArmor: { name: 'None (Head)', maxSp: 0, currentSp: 0, penalty: 0 },
-    bodyArmor: { name: 'Kevlar Bodysuit (Body SP 7)', maxSp: 7, currentSp: 7, penalty: 0 },
-    cyberwareIds: ['neuralware-processor', 'interface-plugs', 'chyron'],
-    eurodollars: 1200,
-    lifepath: {
-      culturalRegion: 'Asia Oriental (Instalación secreta Arasaka)',
-      personality: 'Fría como el hielo, calculadora y reservada',
-      clothingStyle: 'High Fashion / Urban Chic (Mono blanco ceñido y chaqueta corta reflectante)',
-      hairstyle: 'Corte asimétrico con mechas arcoíris pastel',
-      affectation: 'Fuma cigarrillos delgados mientras contempla el cielo nocturno',
-      valueMost: 'La Libertad absoluta y no volver a ser una esclava corporativa',
-      feelAboutPeople: 'La mayoría son marionetas de Arasaka; solo confía en David',
-      valuedPerson: 'David Martinez',
-      valuedPossession: 'Su suite de Virtuality con simulaciones de la superficie lunar',
-      familyBackground: 'Niña huérfana secuestrada por Arasaka para bucear en la Vieja Red',
-      childhoodEnvironment: 'Laboratorio subterráneo frío conectado a servidores 14 horas al día',
-      familyCrisis: 'Sus compañeros niños murieron calcinados por Black ICE en el escape',
-      friends: ['David Martinez', 'Kiwi (Colega Netrunner veterana)', 'Maine'],
-      tragicLoveAffairs: ['Amor secreto y protector hacia David'],
-      enemies: [
-        {
-          id: 'en-lucy-1',
-          who: 'División de Contra-Inteligencia de Arasaka',
-          cause: 'Huyó de sus laboratorios de inmersión profunda con secretos clasificados',
-          throwAtYou: 'Netrunners de grado militar y escuadrones de asalto',
-          reaction: 'Caza sin tregua para borrarle el cerebro'
-        }
-      ],
-      roleLifepath: {
-        net_workspace: 'Bañera con hielo en su apartamento con vista a las estrellas',
-        net_specialty: 'Hackeo fantasma y corte letal con cable Monowire'
-      },
-      lifeGoal: 'Comprar un boleto de ida a la Luna y escapar de Night City para siempre'
-    }
-  },
-  {
-    id: 'pregen-rebecca-2077',
-    handle: 'Rebecca',
-    role: 'Solo',
-    roleRank: 4,
-    era: '2077',
-    avatarIcon: 'target',
-    sourceBadge: 'CEMK 2077',
-    bioSummary:
-      'Gatillera feroz, leal y de mecha corta. Amante de las armas de gran calibre y las explosiones. Cuando entra en combate, suelta una lluvia de plomo con una sonrisa salvaje.',
-    whatYouGet: [
-      'Brazos cibernéticos de alta resistencia pintados en verde y rosa neón.',
-      'Dominio de armas a dos manos y Akimbo (dos pistolas o escopetas pesadas).',
-      'REF 8 y COOL 7: Temple para aguantar tiroteos masivos a quemarropa.',
-      'Blindaje Light Armorjack con ropa deportiva ligera.',
-      'Arsenal devastador: Escopeta Carnage y Pistola muy pesada con munición expansiva.'
-    ],
-    stats: {
-      INT: 5,
-      REF: 8,
-      DEX: 7,
-      TECH: 5,
-      COOL: 7,
-      WILL: 7,
-      LUCK: 7,
-      MOVE: 6,
-      BODY: 6,
-      EMP: 6
-    },
-    skills: {
-      handgun: 7,
-      shoulderArms: 6,
-      autofire: 5,
-      heavyWeapons: 4,
-      archery: 0,
-      meleeWeapon: 4,
-      brawling: 5,
-      martialArts: 0,
-      evasion: 7,
-      athletics: 5,
-      firstAid: 3,
-      paramedic: 0,
-      cybertech: 3,
-      perception: 6,
-      concentration: 5,
-      resistTortureDrugs: 5
-    },
-    generalSkills: {
-      Streetwise: 6,
-      Stealth: 4,
-      'Language (Streetslang)': 2,
-      'Local Expert (Watson)': 4
-    },
-    weapons: [
-      {
-        id: 'shotgun',
-        instanceId: 'wep-rebecca-carnage',
-        name: 'Custom Pink Carnage (Shotgun)',
-        type: 'Ranged',
-        skill: 'Shoulder Arms',
-        damage: '5d6',
-        rof: 1,
-        hands: 2,
-        concealable: false,
-        cost: 500,
-        standardMag: 8,
-        currentMag: 8,
-        ammoType: 'Slug',
-        loadedAmmoType: 'Slug',
-        inHand: true,
-        reserveAmmo: 32
-      },
-      {
-        id: 'very-heavy-pistol',
-        instanceId: 'wep-rebecca-vhp',
-        name: 'Budget Arms Guts (Very Heavy Pistol)',
-        type: 'Ranged',
-        skill: 'Handgun',
-        damage: '4d6',
-        rof: 1,
-        hands: 1,
-        concealable: false,
-        cost: 100,
-        standardMag: 8,
-        currentMag: 8,
-        ammoType: 'Very Heavy Pistol',
-        loadedAmmoType: 'Very Heavy Pistol',
-        inHand: true,
-        reserveAmmo: 40
-      }
-    ],
-    headArmor: { name: 'None (Head)', maxSp: 0, currentSp: 0, penalty: 0 },
-    bodyArmor: { name: 'Urban Flash Bra & Shorts (Light Armorjack SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    cyberwareIds: ['cyberarm', 'neuralware-processor'],
-    eurodollars: 600,
-    lifepath: {
-      culturalRegion: 'América del Norte (Night City - Watson)',
-      personality: 'Impulsiva, ruidosa y ferozmente leal a sus amigos',
-      clothingStyle: 'Urban Flash (Sujetador negro, chaqueta gigante turquesa y tatuajes de color rosa)',
-      hairstyle: 'Dos coletas teñidas de verde menta brillante',
-      affectation: 'Gesticula exageradamente con sus ciberbrazos de gran tamaño',
-      valueMost: 'La Lealtad incondicional: jamás abandona a un amigo en combate',
-      feelAboutPeople: 'O estás con su grupo o eres una diana con patas',
-      valuedPerson: 'Su hermano Pilar y David Martinez',
-      valuedPossession: 'Su colección de armas modificadas con colores chillones',
-      familyBackground: 'Pandilleros huérfanos criados a los tiros en Northside',
-      childhoodEnvironment: 'En talleres clandestinos y callejones de Watson',
-      familyCrisis: 'Su hermano Pilar fue asesinado por un ciberpsicópata en la calle',
-      friends: ['David Martinez', 'Maine', 'Dorio', 'Falco'],
-      tragicLoveAffairs: ['Sentimientos no correspondidos hacia David, a quien cuida en silencio'],
-      enemies: [
-        {
-          id: 'en-reb-1',
-          who: 'Maelstrom Gang (Watson)',
-          cause: 'Les reventó un cargamento de ciberware y mató a su teniente',
-          throwAtYou: 'Matones cromados con implantes faciales y ametralladoras',
-          reaction: 'Tiroteo a quemarropa inmediato'
-        }
-      ],
-      roleLifepath: {
-        solo_type: 'Pistolera caótica de asalto con armas de gran calibre',
-        solo_moral: 'Si tocas a David o a mi tripulación, te vuelo la cabeza'
-      },
-      lifeGoal: 'Que la tripulación siga junta y llena de dinero'
-    }
-  },
-  {
-    id: 'pregen-maine-2077',
-    handle: 'Maine',
-    role: 'Solo',
-    roleRank: 5,
-    era: '2077',
-    avatarIcon: 'shield',
-    sourceBadge: 'CEMK 2077',
-    bioSummary:
-      'Líder veterano, ex-militar corpulento y figura paterna de la tripulación. Su cuerpo es un templo de cromo pesado con brazos Gorilla Arms y cañón de proyectiles integrado.',
-    whatYouGet: [
-      'Gorilla Arms cibernéticos con potencia de demolición (BODY 10 en fuerza de golpe).',
-      'Lanzagranadas o lanzaproyectiles integrado en Cyberarm (Popup Projectile Launcher).',
-      'Fusil de asalto militar y resistencia física titánica (BODY 10 / HP 55).',
-      'Blindaje Heavy Armorjack completo (SP 13).',
-      'Mecánicas de advertencia de Estrés y Ciberpsicosis por sobrecarga de cromo.'
-    ],
-    stats: {
-      INT: 6,
-      REF: 8,
-      DEX: 7,
-      TECH: 5,
-      COOL: 7,
-      WILL: 7,
-      LUCK: 5,
-      MOVE: 6,
-      BODY: 10,
-      EMP: 4
-    },
-    skills: {
-      handgun: 6,
-      shoulderArms: 7,
-      autofire: 6,
-      heavyWeapons: 6,
-      archery: 0,
-      meleeWeapon: 5,
-      brawling: 7,
-      martialArts: 4,
-      evasion: 6,
-      athletics: 6,
-      firstAid: 3,
-      paramedic: 0,
-      cybertech: 4,
-      perception: 6,
-      concentration: 5,
-      resistTortureDrugs: 6
-    },
-    generalSkills: {
-      Tactics: 6,
-      Leadership: 6,
-      Streetwise: 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Santo Domingo)': 4
-    },
-    weapons: [
-      {
-        id: 'assault-rifle',
-        instanceId: 'wep-maine-ar',
-        name: 'Militech M251s Ajax (Assault Rifle)',
-        type: 'Ranged',
-        skill: 'Shoulder Arms',
-        damage: '5d6',
-        rof: 1,
-        hands: 2,
-        concealable: false,
-        cost: 500,
-        standardMag: 30,
-        currentMag: 30,
-        ammoType: 'Rifle',
-        loadedAmmoType: 'Rifle',
-        altFireModes: 'Autofire (4)',
-        autofireMaxMult: 4,
-        inHand: true,
-        reserveAmmo: 60
-      },
-      {
-        id: 'heavy-melee',
-        instanceId: 'wep-maine-gorilla',
-        name: 'Gorilla Arms (Cyberarms)',
-        type: 'Melee',
-        skill: 'Brawling',
-        damage: '3d6',
-        rof: 2,
-        hands: 2,
-        concealable: false,
-        cost: 500,
-        standardMag: 0,
-        currentMag: 0,
-        ammoType: 'N/A',
-        loadedAmmoType: 'N/A',
-        inHand: false,
-        reserveAmmo: 0,
-        notes: 'Brazos mecánicos de demolición industrial.'
-      }
-    ],
-    headArmor: { name: 'Subdermal Plating (Head SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    bodyArmor: { name: 'Heavy Armorjack Tactical Vest (Body SP 13)', maxSp: 13, currentSp: 13, penalty: -2 },
-    cyberwareIds: ['cyberarm', 'subdermal-armor', 'neuralware-processor'],
-    eurodollars: 1500,
-    lifepath: {
-      culturalRegion: 'América del Norte (Veterano de guerra corporativa)',
-      personality: 'Solemne, paternal y orgulloso de su fuerza',
-      clothingStyle: 'Nomad Leathers / Military Wear (Chaleco táctico pesado sin mangas)',
-      hairstyle: 'Calvo con barba corta cuidada',
-      affectation: 'Crujido metálico constante de sus hombros hidráulicos',
-      valueMost: 'El Honor y la reputación de su equipo en el Afterlife',
-      feelAboutPeople: 'Protector nato con los suyos; despiadado con quien los amenace',
-      valuedPerson: 'Dorio (Su pareja y mano derecha) y David (Su protegido)',
-      valuedPossession: 'Sus brazos de cromo pesado y su reloj de combate',
-      familyBackground: 'Militar de carrera desmovilizado tras la guerra',
-      childhoodEnvironment: 'En barracones militares de la Guardia Nacional',
-      familyCrisis: 'Sus compañeros de pelotón murieron en una emboscada no oficial',
-      friends: ['Dorio', 'David Martinez', 'Kiwi', 'Pilar', 'Falco'],
-      tragicLoveAffairs: ['Amor profundo con Dorio, unidos en el combate y la gloria'],
-      enemies: [
-        {
-          id: 'en-maine-1',
-          who: 'Fixers traidores de Heywood',
-          cause: 'Disputa por el pago de un prototipo militar',
-          throwAtYou: 'Sicarios Solos con ametralladoras pesadas',
-          reaction: 'Aplastarlos con sus propias manos'
-        }
-      ],
-      roleLifepath: {
-        solo_type: 'Comandante de escuadrón de asalto pesado',
-        solo_moral: 'La tripulación siempre come primero'
-      },
-      lifeGoal: 'Llevar a la tripulación a la cima de Night City antes de que el cromo lo consuma'
-    }
-  },
-  {
-    id: 'pregen-kiwi-2077',
-    handle: 'Kiwi',
-    role: 'Netrunner',
-    roleRank: 4,
-    era: '2077',
-    avatarIcon: 'cpu',
-    sourceBadge: 'CEMK 2077',
-    bioSummary:
-      'Netrunner veterana, cínica y calculadora. Lleva una máscara de respiración cibernética que cubre la mitad de su rostro. Mentora de Lucy con una regla de oro: "Nunca confíes en nadie en Night City".',
-    whatYouGet: [
-      'Cyberdeck militar Arasaka con potentes programas ofensivos y defensivos.',
-      'Máscara de filtración cibernética y procesador neural avanzado.',
-      'Subfusil pesado y Pistola de apoyo.',
-      'INT 8 y TECH 7: Hacker maestra de arquitecturas corporativas complejas.',
-      'Blindaje Light Armorjack encubierto (SP 11).'
-    ],
-    stats: {
-      INT: 8,
-      REF: 7,
-      DEX: 6,
-      TECH: 7,
-      COOL: 6,
-      WILL: 7,
-      LUCK: 6,
-      MOVE: 5,
-      BODY: 5,
-      EMP: 5
-    },
-    skills: {
-      handgun: 6,
-      shoulderArms: 2,
-      autofire: 4,
-      heavyWeapons: 0,
-      archery: 0,
-      meleeWeapon: 2,
-      brawling: 3,
-      martialArts: 0,
-      evasion: 5,
-      athletics: 3,
-      firstAid: 3,
-      paramedic: 2,
-      cybertech: 6,
-      perception: 6,
-      concentration: 6,
-      resistTortureDrugs: 4
-    },
-    generalSkills: {
-      'Electronics/Security Tech': 7,
-      'Library Search': 6,
-      Stealth: 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Santo Domingo)': 3
-    },
-    weapons: [
-      {
-        id: 'heavy-smg',
-        instanceId: 'wep-kiwi-smg',
-        name: 'Saratoga Heavy SMG',
-        type: 'Ranged',
-        skill: 'Handgun',
-        damage: '3d6',
-        rof: 1,
-        hands: 1,
-        concealable: false,
-        cost: 100,
-        standardMag: 30,
-        currentMag: 30,
-        ammoType: 'Heavy Pistol',
-        loadedAmmoType: 'Heavy Pistol',
-        altFireModes: 'Autofire (3)',
-        autofireMaxMult: 3,
-        inHand: true,
-        reserveAmmo: 60
-      }
-    ],
-    headArmor: { name: 'Cybernetic Respirator Mask (Head SP 7)', maxSp: 7, currentSp: 7, penalty: 0 },
-    bodyArmor: { name: 'Trench Coat with Light Armorjack (Body SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    cyberwareIds: ['neuralware-processor', 'interface-plugs', 'nasal-filters'],
-    eurodollars: 1800,
-    lifepath: {
-      culturalRegion: 'Europa Occidental / Night City',
-      personality: 'Cínica, silenciosa y extremadamente desconfiada',
-      clothingStyle: 'Bag Lady Chic / Minimalist (Gabardina roja holgada y zapatillas gastadas)',
-      hairstyle: 'Corte bob rubio platino angular',
-      affectation: 'Máscara metálica de respiración que distorsiona ligeramente su voz',
-      valueMost: 'La Supervivencia personal por encima de cualquier lealtad ciega',
-      feelAboutPeople: 'Cualquiera te apuñalará si el precio es suficientemente alto',
-      valuedPerson: 'Ella misma (y en el fondo, un afecto reprimido por Lucy)',
-      valuedPossession: 'Su Cyberdeck militar con algoritmos de evasión de rastro',
-      familyBackground: 'Huérfana callejera que aprendió a hackear en terminales rotas',
-      childhoodEnvironment: 'En los distritos industriales en ruinas de Santo Domingo',
-      familyCrisis: 'Traicionada en su juventud por su primer equipo de Netrunning',
-      friends: ['Lucy (Su alumna más talentosa)', 'Maine', 'Dorio'],
-      tragicLoveAffairs: ['Una relación pasada que terminó en traición corporativa'],
-      enemies: [
-        {
-          id: 'en-kiwi-1',
-          who: 'NetWatch (División de Seguridad de Red)',
-          cause: 'Buceó en nodos clasificados con código ilegal',
-          throwAtYou: 'Agentes de campo NetWatch con inhibidores EMP',
-          reaction: 'Caza para confiscar su deck y enviarla a prisión'
-        }
-      ],
-      roleLifepath: {
-        net_workspace: 'Habitación acolchada en penumbra con humo de cigarrillo',
-        net_specialty: 'Desactivación de Black ICE y robo de datos limpios'
-      },
-      lifeGoal: 'Asegurar su retiro en una cuenta cifrada antes de que Night City la mate'
-    }
-  },
-  {
-    id: 'pregen-falco-2077',
-    handle: 'Falco',
-    role: 'Nomad',
-    roleRank: 4,
-    era: '2077',
-    avatarIcon: 'truck',
-    sourceBadge: 'CEMK 2077',
-    bioSummary:
-      'El chófer de fuga con más estilo de Night City. Nómada de origen con reflejos de piloto de carreras, mostacho icónico y puntería letal desde la ventanilla del vehículo.',
-    whatYouGet: [
-      'Vehículo de fuga Nómada tuneado con blindaje reforzado y alerones de persecución.',
-      'Interface Plugs para conexión mental directa con el volante y sistemas del coche.',
-      'Fusil de precisión o Escopeta para disparar a toda velocidad.',
-      'MOVE 7 y REF 8: Dominio absoluto en persecuciones a alta velocidad.',
-      'Blindaje Light Armorjack con chaqueta de aviador.'
-    ],
-    stats: {
-      INT: 6,
-      REF: 8,
-      DEX: 7,
-      TECH: 6,
-      COOL: 7,
-      WILL: 6,
-      LUCK: 6,
-      MOVE: 7,
-      BODY: 7,
-      EMP: 5
-    },
-    skills: {
-      handgun: 6,
-      shoulderArms: 6,
-      autofire: 4,
-      heavyWeapons: 2,
-      archery: 0,
-      meleeWeapon: 4,
-      brawling: 5,
-      martialArts: 0,
-      evasion: 6,
-      athletics: 5,
-      firstAid: 3,
-      paramedic: 0,
-      cybertech: 4,
-      perception: 6,
-      concentration: 4,
-      resistTortureDrugs: 4
-    },
-    generalSkills: {
-      'Drive Land Vehicle': 7,
-      'Basic Tech': 6,
-      Streetwise: 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Badlands)': 4
-    },
-    weapons: [
-      {
-        id: 'heavy-pistol',
-        instanceId: 'wep-falco-hp',
-        name: 'Nue Heavy Pistol',
-        type: 'Ranged',
-        skill: 'Handgun',
-        damage: '3d6',
-        rof: 2,
-        hands: 1,
-        concealable: true,
-        cost: 100,
-        standardMag: 8,
-        currentMag: 8,
-        ammoType: 'Heavy Pistol',
-        loadedAmmoType: 'Heavy Pistol',
-        inHand: true,
-        reserveAmmo: 40
-      },
-      {
-        id: 'sniper-rifle',
-        instanceId: 'wep-falco-sr',
-        name: 'Overwatch Sniper Rifle',
-        type: 'Ranged',
-        skill: 'Shoulder Arms',
-        damage: '5d6',
-        rof: 1,
-        hands: 2,
-        concealable: false,
-        cost: 500,
-        standardMag: 4,
-        currentMag: 4,
-        ammoType: 'Rifle',
-        loadedAmmoType: 'Rifle',
-        inHand: false,
-        reserveAmmo: 16
-      }
-    ],
-    headArmor: { name: 'Aviator Cap (Head SP 7)', maxSp: 7, currentSp: 7, penalty: 0 },
-    bodyArmor: { name: 'Nomad Aviator Jacket (Light Armorjack SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    cyberwareIds: ['interface-plugs', 'neuralware-processor'],
-    eurodollars: 1100,
-    lifepath: {
-      culturalRegion: 'América del Norte (Nómadas de los Badlands)',
-      personality: 'Tranquilo, bromista y con nervios de acero al volante',
-      clothingStyle: 'Nomad Leathers (Chaqueta de aviador marrón con cuello de borreguillo)',
-      hairstyle: 'Pelo castaño peinado hacia atrás con bigote espeso icónico',
-      affectation: 'Gafas de sol de gota de aviador siempre puestas al volante',
-      valueMost: 'La Familia y la palabra empeñada a un amigo',
-      feelAboutPeople: 'Trata a todo el mundo con respeto hasta que intentan tocar su coche',
-      valuedPerson: 'David Martinez y Lucy',
-      valuedPossession: 'Su furgoneta modificada con doble turbo y blindaje',
-      familyBackground: 'Clan Nómada Aldecaldos que opera en los alrededores de Night City',
-      childhoodEnvironment: 'En campamentos itinerantes alrededor de hogueras en el desierto',
-      familyCrisis: 'Dejó el clan temporalmente para ayudar a mercenarios de confianza en la ciudad',
-      friends: ['David Martinez', 'Lucy', 'Rebecca', 'Maine'],
-      tragicLoveAffairs: ['Una historia de carretera con una piloto que siguió su camino'],
-      enemies: [
-        {
-          id: 'en-falco-1',
-          who: 'Raffen Shiv (Nómadas exiliados bandidos)',
-          cause: 'Impidió que asaltaran una caravana familiar y abatió a su jefe',
-          throwAtYou: 'Camionetas armadas con ametralladoras pesadas en la autopista',
-          reaction: 'Persecución mortal en el desierto'
-        }
-      ],
-      roleLifepath: {
-        nomad_vehicle: 'Furgoneta táctica de asalto con blindaje SP 15 y motor nitro',
-        nomad_clan: 'Vínculos con la Nación Aldecaldos'
-      },
-      lifeGoal: 'Sacar a los que queden con vida de Night City cueste lo que cueste'
-    }
-  },
-  {
-    id: 'pregen-pilar-2077',
-    handle: 'Pilar',
-    role: 'Tech',
-    roleRank: 4,
-    era: '2077',
-    avatarIcon: 'tool',
-    sourceBadge: 'CEMK 2077',
-    bioSummary:
-      'Técnico excéntrico, bocazas y hermano mayor de Rebecca. Con ciberbrazos dorados hipertrofiados y una afición desmedida por las armas caseras modificadas y los chistes groseros.',
-    whatYouGet: [
-      'Brazos cibernéticos alargados personalizados con herramientas de precisión.',
-      'Escopeta pesada modificada y pistola ligera para tiroteos repentinos.',
-      'Kit completo Techtool y soldador térmico para reparaciones instantáneas.',
-      'TECH 8: Capacidad de reparar y modificar armaduras de combate.',
-      'Blindaje Light Armorjack con mono de trabajo reforzado.'
-    ],
-    stats: {
-      INT: 7,
-      REF: 6,
-      DEX: 6,
-      TECH: 8,
-      COOL: 6,
-      WILL: 6,
-      LUCK: 6,
-      MOVE: 6,
-      BODY: 6,
-      EMP: 5
-    },
-    skills: {
-      handgun: 6,
-      shoulderArms: 5,
-      autofire: 3,
-      heavyWeapons: 3,
-      archery: 0,
-      meleeWeapon: 4,
-      brawling: 5,
-      martialArts: 0,
-      evasion: 5,
-      athletics: 4,
-      firstAid: 4,
-      paramedic: 2,
-      cybertech: 7,
-      perception: 6,
-      concentration: 4,
-      resistTortureDrugs: 4
-    },
-    generalSkills: {
-      'Electronics/Security Tech': 6,
-      'Weaponstech': 7,
-      Streetwise: 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Watson)': 3
-    },
-    weapons: [
-      {
-        id: 'shotgun',
-        instanceId: 'wep-pilar-sg',
-        name: 'Crusher Shotgun (Custom Tech)',
-        type: 'Ranged',
-        skill: 'Shoulder Arms',
-        damage: '5d6',
-        rof: 1,
-        hands: 2,
-        concealable: false,
-        cost: 500,
-        standardMag: 12,
-        currentMag: 12,
-        ammoType: 'Slug',
-        loadedAmmoType: 'Slug',
-        inHand: true,
-        reserveAmmo: 24
-      }
-    ],
-    headArmor: { name: 'None (Head)', maxSp: 0, currentSp: 0, penalty: 0 },
-    bodyArmor: { name: 'Reinforced Tech Overalls (Light Armorjack SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    cyberwareIds: ['cyberarm', 'neuralware-processor'],
-    eurodollars: 850,
-    lifepath: {
-      culturalRegion: 'América del Norte (Night City - Watson)',
-      personality: 'Insolente, bocazas, amante de las bromas pesadas y leal',
-      clothingStyle: 'Bohemian / Gang Colors (Peto vaquero de trabajo abierto y tirantes)',
-      hairstyle: 'Pelo verde azulado alocado y despeinado',
-      affectation: 'Brazos cibernéticos dorados brillantes anormalmente largos',
-      valueMost: 'Su hermana pequeña Rebecca y el respeto callejero',
-      feelAboutPeople: 'Los tipos estirados merecen que les bajen los humos de un tiro',
-      valuedPerson: 'Rebecca',
-      valuedPossession: 'Sus brazos mecánicos dorados tuneados por él mismo',
-      familyBackground: 'Huérfanos de Northside criados entre pólvora y piezas rotas',
-      childhoodEnvironment: 'En talleres de desguace de vehículos de Watson',
-      familyCrisis: 'Perdieron a sus padres en un asalto de pandilleros Maelstrom',
-      friends: ['Rebecca', 'Maine', 'David Martinez', 'Dorio'],
-      tragicLoveAffairs: ['Ligoteos callejeros efímeros que siempre acaban en pelea de bar'],
-      enemies: [
-        {
-          id: 'en-pilar-1',
-          who: 'Pandilleros de Santo Domingo',
-          cause: 'Se burló de su líder en un bar y le robó una caja de ciberware',
-          throwAtYou: 'Matones con bates con púas y revólveres',
-          reaction: 'Pelea callejera instantánea'
-        }
-      ],
-      roleLifepath: {
-        tech_type: 'Armero y modificador de cromo callejero',
-        tech_philosophy: 'El cromo dorado luce mejor cuando dispara más rápido'
-      },
-      lifeGoal: 'Que a Rebecca nunca le falte nada y montar el mejor taller de Watson'
-    }
-  },
-
-  // --- 2045 EDGERUNNERS (SINGLE-SHOT PACK) ---
-  {
-    id: 'pregen-forty-2045',
-    handle: 'Forty',
-    role: 'Rockerboy',
-    roleRank: 4,
-    era: '2045',
-    avatarIcon: 'music',
-    sourceBadge: '2045 CORE',
-    bioSummary:
-      'Frontman de la banda callejera The Dissonance. Armado con una guitarra eléctrica que también sirve de maza contundente y un carisma que prende fuego a cualquier multitud.',
-    whatYouGet: [
-      'Habilidad Charismatic Impact a Rango 4.',
-      'Guitarra eléctrica reforzada con amplificador de bolsillo y Pistola Pesada.',
-      'Blindaje Light Armorjack con estilo Urban Flash.',
-      'COOL 8 y EMP 7: Dominio de la persuasión y la agitación social.',
-      'Presupuesto y seguidores en los clubes nocturnos del distrito de Watson.'
-    ],
-    stats: {
-      INT: 6,
-      REF: 7,
-      DEX: 7,
-      TECH: 3,
-      COOL: 8,
-      WILL: 7,
-      LUCK: 6,
-      MOVE: 6,
-      BODY: 5,
-      EMP: 7
-    },
-    skills: {
-      handgun: 6,
-      shoulderArms: 2,
-      autofire: 2,
-      heavyWeapons: 0,
-      archery: 0,
-      meleeWeapon: 5,
-      brawling: 5,
-      martialArts: 0,
-      evasion: 6,
-      athletics: 4,
-      firstAid: 3,
-      paramedic: 0,
-      cybertech: 2,
-      perception: 5,
-      concentration: 4,
-      resistTortureDrugs: 4
-    },
-    generalSkills: {
-      Persuasion: 6,
-      'Play Instrument': 6,
-      Streetwise: 5,
-      'Wardrobe & Style': 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Watson)': 3
-    },
-    weapons: [
-      {
-        id: 'heavy-pistol',
-        instanceId: 'wep-forty-hp',
-        name: 'Dai Lung Streetmaster (Heavy Pistol)',
-        type: 'Ranged',
-        skill: 'Handgun',
-        damage: '3d6',
-        rof: 2,
-        hands: 1,
-        concealable: true,
-        cost: 100,
-        standardMag: 8,
-        currentMag: 8,
-        ammoType: 'Heavy Pistol',
-        loadedAmmoType: 'Heavy Pistol',
-        inHand: true,
-        reserveAmmo: 32
-      },
-      {
-        id: 'medium-melee',
-        instanceId: 'wep-forty-guitar',
-        name: 'Heavy Electric Guitar (Medium Melee)',
-        type: 'Melee',
-        skill: 'Melee Weapon',
-        damage: '2d6',
-        rof: 2,
-        hands: 2,
-        concealable: false,
-        cost: 50,
-        standardMag: 0,
-        currentMag: 0,
-        ammoType: 'N/A',
-        loadedAmmoType: 'N/A',
-        inHand: false,
-        reserveAmmo: 0
-      }
-    ],
-    headArmor: { name: 'None (Head)', maxSp: 0, currentSp: 0, penalty: 0 },
-    bodyArmor: { name: 'Rockstar Studded Jacket (Light Armorjack SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    cyberwareIds: ['neuralware-processor', 'techhair'],
-    eurodollars: 500,
-    lifepath: {
-      culturalRegion: 'América del Norte (Night City)',
-      personality: 'Rebelde, visceral y magnético',
-      clothingStyle: 'Urban Flash (Cuero rojo, cadenas y luces Techhair)',
-      hairstyle: 'Cresta roja brillante con puntas teñidas',
-      affectation: 'Tatuaje del logo de su banda en la garganta',
-      valueMost: 'La Rebelión contra el control corporativo',
-      feelAboutPeople: 'Las masas necesitan una chispa para levantarse',
-      valuedPerson: 'Johnny Silverhand (Su ídolo inmortal)',
-      valuedPossession: 'Su guitarra eléctrica de antes de la 4ª Guerra',
-      familyBackground: 'Hijo de obreros fabriles que murieron en una huelga reprimida',
-      childhoodEnvironment: 'En los sótanos de ensayo de los clubes de Night City',
-      familyCrisis: 'Su hermano mayor fue secuestrado por una corp para experimentos',
-      friends: ['Torch (Técnico de su banda)', 'Bug (Netrunner que piratea las pantallas de sus conciertos)'],
-      tragicLoveAffairs: ['Una bajista que firmó un contrato corporativo exclusivo y lo abandonó'],
-      enemies: [
-        {
-          id: 'en-forty-1',
-          who: 'Directora de Seguridad de Petrochem',
-          cause: 'Provocó un motín en la puerta de su refinería con un concierto improvisado',
-          throwAtYou: 'Guardias corporativos armados con porras aturdidoras y gas lacrimógeno',
-          reaction: 'Arrestarlo e inhabilitarlo de por vida'
-        }
-      ],
-      roleLifepath: {
-        rocker_group: 'Líder de The Dissonance',
-        rocker_message: 'Hacer que la gente despierte del letargo corporativo'
-      },
-      lifeGoal: 'Organizar el mayor concierto clandestino en lo alto de una torre corporativa'
-    }
-  },
-  {
-    id: 'pregen-hound-2045',
-    handle: 'Hound',
-    role: 'Solo',
-    roleRank: 4,
-    era: '2045',
-    avatarIcon: 'shield',
-    sourceBadge: '2045 CORE',
-    bioSummary:
-      'Ex-soldado mercenario con años de barro y pólvora en la espalda. Especialista en reconocimiento urbano, asalto táctico y cobertura pesada.',
-    whatYouGet: [
-      'Combat Awareness a Rango 4.',
-      'Fusil de asalto militar y pistola pesada fiable.',
-      'Blindaje Light Armorjack completo (SP 11 Cabeza y Cuerpo).',
-      'REF 8 y BODY 8: Letal en puntería y muy resistente al daño.',
-      'Equipo de supervivencia y primeros auxilios de campaña.'
-    ],
-    stats: {
-      INT: 6,
-      REF: 8,
-      DEX: 7,
-      TECH: 3,
-      COOL: 7,
-      WILL: 7,
-      LUCK: 5,
-      MOVE: 6,
-      BODY: 8,
-      EMP: 5
-    },
-    skills: {
-      handgun: 6,
-      shoulderArms: 6,
-      autofire: 4,
-      heavyWeapons: 2,
-      archery: 0,
-      meleeWeapon: 5,
-      brawling: 4,
-      martialArts: 0,
-      evasion: 6,
-      athletics: 4,
-      firstAid: 4,
-      paramedic: 0,
-      cybertech: 2,
-      perception: 6,
-      concentration: 4,
-      resistTortureDrugs: 4
-    },
-    generalSkills: {
-      Tactics: 5,
-      Stealth: 4,
-      'Language (Streetslang)': 2,
-      'Local Expert (Heywood)': 3
-    },
-    weapons: [
-      {
-        id: 'assault-rifle',
-        instanceId: 'wep-hound-ar',
-        name: 'Militech Ronin (Assault Rifle)',
-        type: 'Ranged',
-        skill: 'Shoulder Arms',
-        damage: '5d6',
-        rof: 1,
-        hands: 2,
-        concealable: false,
-        cost: 500,
-        standardMag: 25,
-        currentMag: 25,
-        ammoType: 'Rifle',
-        loadedAmmoType: 'Rifle',
-        altFireModes: 'Autofire (4)',
-        autofireMaxMult: 4,
-        inHand: true,
-        reserveAmmo: 50
-      },
-      {
-        id: 'heavy-pistol',
-        instanceId: 'wep-hound-hp',
-        name: 'Militech Avenger (Heavy Pistol)',
-        type: 'Ranged',
-        skill: 'Handgun',
-        damage: '3d6',
-        rof: 2,
-        hands: 1,
-        concealable: true,
-        cost: 100,
-        standardMag: 8,
-        currentMag: 8,
-        ammoType: 'Heavy Pistol',
-        loadedAmmoType: 'Heavy Pistol',
-        inHand: true,
-        reserveAmmo: 32
-      }
-    ],
-    headArmor: { name: 'Kevlar Combat Helmet (Head SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    bodyArmor: { name: 'Militech Combat Vest (Light Armorjack SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    cyberwareIds: ['neuralware-processor', 'interface-plugs'],
-    eurodollars: 750,
-    lifepath: {
-      culturalRegion: 'América del Norte (Heywood)',
-      personality: 'Frío, disciplinado y calculador',
-      clothingStyle: 'Businesswear / Tactical (Pantalones cargo militares y chaleco negro)',
-      hairstyle: 'Corte militar estricto rapado a los lados',
-      affectation: 'Cicatriz de bayoneta en la mandíbula',
-      valueMost: 'Cumplir la misión y la lealtad militar',
-      feelAboutPeople: 'La disciplina lo es todo; los aficionados mueren primero',
-      valuedPerson: 'Su antiguo sargento que le salvó la vida',
-      valuedPossession: 'Su placa de identificación militar de acero',
-      familyBackground: 'Hijo de un sargento de la 3ª Guerra Corporativa',
-      childhoodEnvironment: 'En bases militares cerradas y campos de tiro',
-      familyCrisis: 'Su unidad fue sacrificada como cebo táctico por un general corrupto',
-      friends: ['Torch (Tech)', 'Doc (Medtech)'],
-      tragicLoveAffairs: ['Una enfermera militar que murió en un bombardeo aéreo'],
-      enemies: [
-        {
-          id: 'en-hound-1',
-          who: 'Comandante de Militech retirado',
-          cause: 'Hound se negó a disparar contra civiles en una evacuación',
-          throwAtYou: 'Escuadrones de cazarrecompensas',
-          reaction: 'Emboscada en callejones'
-        }
-      ],
-      roleLifepath: {
-        solo_type: 'Soldado profesional de asalto',
-        solo_moral: 'Cumplir la palabra dada al cliente'
-      },
-      lifeGoal: 'Vivir lo suficiente para comprar una granja en los Badlands'
-    }
-  },
-
-  // --- RIVAL / ENEMY PREGENS (PLAYABLE) ---
-  {
-    id: 'pregen-arasaka-specops',
-    handle: 'Arasaka Black Ops Agent',
-    role: 'Solo',
-    roleRank: 5,
-    era: '2077',
-    avatarIcon: 'eye',
-    sourceBadge: 'RIVAL 2077',
-    bioSummary:
-      'Operativo de élite de la división de Operaciones Negras de Arasaka. Ciberware cibernético militar, sigilo letal y obediencia absoluta a la corporación.',
-    whatYouGet: [
-      'Subdermal Armor SP 11 permanente en Cabeza y Cuerpo.',
-      'Pistola Smart Tsunami Arms con seguimiento de blanco guiado.',
-      'Katana de aleación de titanio monomolecular (ignora 50% SP).',
-      'REF 8, DEX 8 y COOL 8: Máquina de matar disciplinada.',
-      'Soporte corporativo y recursos de infiltración militar.'
-    ],
-    stats: {
-      INT: 7,
-      REF: 8,
-      DEX: 8,
-      TECH: 5,
-      COOL: 8,
-      WILL: 8,
-      LUCK: 5,
-      MOVE: 7,
-      BODY: 8,
-      EMP: 3
-    },
-    skills: {
-      handgun: 7,
-      shoulderArms: 6,
-      autofire: 5,
-      heavyWeapons: 3,
-      archery: 0,
-      meleeWeapon: 8,
-      brawling: 6,
-      martialArts: 6,
-      evasion: 8,
-      athletics: 6,
-      firstAid: 4,
-      paramedic: 0,
-      cybertech: 4,
-      perception: 7,
-      concentration: 6,
-      resistTortureDrugs: 6
-    },
-    generalSkills: {
-      Stealth: 7,
-      Tactics: 6,
-      'Language (Japanese)': 6,
-      'Language (Streetslang)': 2
-    },
-    weapons: [
-      {
-        id: 'heavy-melee',
-        instanceId: 'wep-arasaka-katana',
-        name: 'Arasaka Monomolecular Katana',
-        type: 'Melee',
-        skill: 'Melee Weapon',
-        damage: '3d6',
-        rof: 2,
-        hands: 2,
-        concealable: false,
-        cost: 500,
-        standardMag: 0,
-        currentMag: 0,
-        ammoType: 'N/A',
-        loadedAmmoType: 'N/A',
-        inHand: true,
-        reserveAmmo: 0,
-        notes: 'Katana de élite con borde monomolecular. Ignora 50% de armadura.'
-      },
-      {
-        id: 'heavy-pistol',
-        instanceId: 'wep-arasaka-smart-pistol',
-        name: 'Arasaka Kenshin Smart Pistol',
-        type: 'Ranged',
-        skill: 'Handgun',
-        damage: '3d6',
-        rof: 2,
-        hands: 1,
-        concealable: true,
-        cost: 500,
-        standardMag: 15,
-        currentMag: 15,
-        ammoType: 'Heavy Pistol',
-        loadedAmmoType: 'Heavy Pistol',
-        inHand: false,
-        reserveAmmo: 45
-      }
-    ],
-    headArmor: { name: 'Arasaka Tactical Mask (Head SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    bodyArmor: { name: 'Arasaka Monogear Bodysuit (Body SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    cyberwareIds: ['subdermal-armor', 'sandevistan', 'neuralware-processor', 'interface-plugs'],
-    eurodollars: 3000,
-    lifepath: {
-      culturalRegion: 'Asia Oriental (Tokio / Arasaka Waterfront)',
-      personality: 'Frío, calculador y obediente a la jerarquía corporativa',
-      clothingStyle: 'Businesswear / Tactical Black (Traje militar negro mate con máscara reflectante)',
-      hairstyle: 'Pelo corto negro engominado',
-      affectation: 'Máscara táctica con visor rojo monocular que oculta su rostro',
-      valueMost: 'El Honor y la obediencia al clan Arasaka',
-      feelAboutPeople: 'Los edgerunners son cucarachas que desafían el orden natural',
-      valuedPerson: 'Saburo Arasaka',
-      valuedPossession: 'Su katana monomolecular forjada en Tokio',
-      familyBackground: 'Dinastía militar al servicio de Arasaka por tres generaciones',
-      childhoodEnvironment: 'En instalaciones corporativas militares en Japón',
-      familyCrisis: 'Su familia ascendió tras eliminar a una facción traidora',
-      friends: ['Compañeros operativos del escuadrón Kerez'],
-      tragicLoveAffairs: ['Los lazos emocionales fueron extirpados por protocolo'],
-      enemies: [
-        {
-          id: 'en-ara-1',
-          who: 'Militech Special Forces',
-          cause: 'Guerra fría corporativa constante por tecnología robada',
-          throwAtYou: 'Escuadrones con lanzacohetes y blindaje Metalgear',
-          reaction: 'Eliminación total sin testigos'
-        }
-      ],
-      roleLifepath: {
-        solo_type: 'Asesino de contra-inteligencia corporativo',
-        solo_moral: 'La orden corporativa está por encima de la vida humana'
-      },
-      lifeGoal: 'Purgar a los edgerunners que amenazan los secretos de la Torre Arasaka'
-    }
-  },
-  {
-    id: 'pregen-maelstrom-psycho',
-    handle: 'Maelstrom Chrome Psycho',
-    role: 'Solo',
-    roleRank: 4,
-    era: '2045',
-    avatarIcon: 'skull',
-    sourceBadge: 'RIVAL CORE',
-    bioSummary:
-      'Gángster fanático de Maelstrom con el rostro completamente extirpado y sustituido por una óptica de cinco ojos rojos. Vive en el límite de la ciberpsicosis alimentado por drogas de combate.',
-    whatYouGet: [
-      'Óptica Cyberoptics pentagonal con Anti-Dazzle e infrarrojos de serie.',
-      'Ciberbrazo reforzado con garras retráctiles Big Knucks.',
-      'Escopeta pesada recortada y Subfusil pesado.',
-      'BODY 9 y REF 8: Fuerza bruta aterradora y velocidad de reacción inhumana.',
-      'Inmune al miedo con drogas callejeras Black Lace en el torrente sanguíneo.'
-    ],
-    stats: {
-      INT: 4,
-      REF: 8,
-      DEX: 7,
-      TECH: 6,
-      COOL: 5,
-      WILL: 8,
-      LUCK: 4,
-      MOVE: 6,
-      BODY: 9,
-      EMP: 2
-    },
-    skills: {
-      handgun: 6,
-      shoulderArms: 6,
-      autofire: 5,
-      heavyWeapons: 4,
-      archery: 0,
-      meleeWeapon: 6,
-      brawling: 6,
-      martialArts: 0,
-      evasion: 6,
-      athletics: 5,
-      firstAid: 2,
-      paramedic: 0,
-      cybertech: 5,
-      perception: 6,
-      concentration: 5,
-      resistTortureDrugs: 7
-    },
-    generalSkills: {
-      Streetwise: 6,
-      'Weaponstech': 5,
-      'Language (Streetslang)': 2,
-      'Local Expert (Watson - Northside)': 4
-    },
-    weapons: [
-      {
-        id: 'shotgun',
-        instanceId: 'wep-maelstrom-sg',
-        name: 'Maelstrom Sawed-Off Shotgun',
-        type: 'Ranged',
-        skill: 'Shoulder Arms',
-        damage: '5d6',
-        rof: 1,
-        hands: 2,
-        concealable: false,
-        cost: 500,
-        standardMag: 4,
-        currentMag: 4,
-        ammoType: 'Slug',
-        loadedAmmoType: 'Slug',
-        inHand: true,
-        reserveAmmo: 20
-      },
-      {
-        id: 'big-knucks',
-        instanceId: 'wep-maelstrom-knucks',
-        name: 'Armored Big Knucks (Cyberarm)',
-        type: 'Melee',
-        skill: 'Brawling',
-        damage: '2d6',
-        rof: 2,
-        hands: 1,
-        concealable: true,
-        cost: 100,
-        standardMag: 0,
-        currentMag: 0,
-        ammoType: 'N/A',
-        loadedAmmoType: 'N/A',
-        inHand: false,
-        reserveAmmo: 0
-      }
-    ],
-    headArmor: { name: 'Chrome Faceplate (Head SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    bodyArmor: { name: 'Spiked Leathers & Plates (Body SP 11)', maxSp: 11, currentSp: 11, penalty: 0 },
-    cyberwareIds: ['cybereye', 'cyberarm', 'big-knucks', 'neuralware-processor'],
-    eurodollars: 300,
-    lifepath: {
-      culturalRegion: 'América del Norte (Watson - Northside Industrial)',
-      personality: 'Violento, impulsivo y rozando el delirio homicida',
-      clothingStyle: 'Gang Colors (Cuero negro con pinchos, cables expuestos y manchas de óxido)',
-      hairstyle: 'Calvo con placas de circuito soldadas al cráneo',
-      affectation: 'Cinco ojos ópticos rojos parpadeando en la oscuridad',
-      valueMost: 'El Cromo y la destrucción de la carne débil',
-      feelAboutPeople: 'Cualquiera sin implantes es ganado esperando el matadero',
-      valuedPerson: 'El líder supremo de Maelstrom',
-      valuedPossession: 'Su procesador neural overclockeado',
-      familyBackground: 'Huérfano callejero capturado y modificado por Maelstrom',
-      childhoodEnvironment: 'En la planta cárnica clausurada de Totentanz',
-      familyCrisis: 'Su cuerpo biológico original fue casi completamente extirpado',
-      friends: ['Sus hermanos de banda de Maelstrom'],
-      tragicLoveAffairs: ['Incapaz de sentir empatía o amor biológico'],
-      enemies: [
-        {
-          id: 'en-mael-1',
-          who: 'MaxTac (División de Ciberpsicosis del NCPD)',
-          cause: 'Múltiples homicidios callejeros y acumulación ilegal de cromo',
-          throwAtYou: 'Operativos con rifles Gauss y drones de gas',
-          reaction: 'Tiroteo suicida hasta que lo abatan'
-        }
-      ],
-      roleLifepath: {
-        solo_type: 'Psicópata de choque frontal',
-        solo_moral: 'La masacre es la única plegaria válida'
-      },
-      lifeGoal: 'Alcanzar el 100% de conversión en cromo antes de que su mente se apague'
-    }
-  }
-];
+export const PREGEN_TEMPLATES: PregenTemplate[] = [];
 
 // ============================================================================
 // 9. HELPER FACTORY FUNCTIONS
@@ -3210,3 +1392,325 @@ export function createDefaultCombatSkills(): Record<CombatSkillKey, number> {
     resistTortureDrugs: 0
   };
 }
+
+// ============================================================================
+// 10. DATOS CANON DE CREACIÓN APLICADOS A ROLES Y PREGENS (al final para evitar TDZ)
+// [Claude Code · 2026-10-22] Fuente: data/creation/* (Core RED pp. 74-77, 81-87, 98-99, 103, 117; Easy Mode pp. 37-45).
+// ============================================================================
+
+export type CanonSkillRef =
+  | { kind: 'combat'; key: CombatSkillKey }
+  | { kind: 'general'; key: string };
+
+/** Nombres de habilidades del libro que no se pudieron resolver (el test exige que esté vacío). */
+export const UNRESOLVED_CANON_SKILL_NAMES: string[] = [];
+/** Ciberware canon sin id en el catálogo de la app: solo aparece en itemsBreakdown / whatYouGet. */
+export const UNMAPPED_CANON_CYBERWARE: string[] = [];
+
+const CANON_STAT_KEYS: StatKey[] = ['INT', 'REF', 'DEX', 'TECH', 'COOL', 'WILL', 'LUCK', 'MOVE', 'BODY', 'EMP'];
+
+const CANON_ROLE_BOOK_NAME: Record<string, CoreRoleName> = {
+  solo: 'Solo',
+  netrunner: 'Netrunner',
+  tech: 'Tech',
+  medtech: 'Medtech',
+  rockerboy: 'Rockerboy',
+  fixer: 'Fixer',
+  nomad: 'Nomad',
+  lawman: 'Lawman',
+  exec: 'Exec',
+  media: 'Media'
+};
+
+const normalizeCanonSkillName = (name: string): string =>
+  name
+    .toLowerCase()
+    // Core pp. 86-87: "Electronics/Security Tech (x2)" marca el doble de nivel; "(choose 1)" es la especialización a elegir.
+    .replace(/\s*\(x2\)\s*$/, '')
+    .replace(/\s*\(choose 1\)\s*$/, '')
+    .replace(/&/g, 'and')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+// Alias explícitos (nombre normalizado -> habilidad de la app).
+const CANON_SKILL_ALIASES: Record<string, CanonSkillRef> = {
+  // Easy Mode pp. 37-45 abrevia la especialización: "Local Expert" = "Local Expert (Your Home)".
+  'local expert': { kind: 'general', key: 'Local Expert (Your Home)' },
+  // Easy Mode p.43 (Redtail, Medtech): "Surgery" viene de la Habilidad de Rol Medicine; no está en la lista de 66 (Core pp. 81-85).
+  surgery: { kind: 'general', key: 'Surgery' }
+};
+
+/**
+ * Resuelve un nombre de habilidad del libro: combat si coincide con el label de SKILL_METADATA,
+ * general si coincide con key/label de GENERAL_SKILLS_CATALOG, alias explícito, o nombre canon de
+ * CORE_GEAR_SKILLS.skills (Core pp. 81-85) como habilidad general por nombre canon.
+ */
+export function resolveSkillKey(bookName: string): CanonSkillRef | null {
+  const n = normalizeCanonSkillName(bookName);
+  for (const [key, meta] of Object.entries(SKILL_METADATA) as Array<[CombatSkillKey, { label: string }]>) {
+    if (normalizeCanonSkillName(meta.label) === n) return { kind: 'combat', key };
+  }
+  const g = GENERAL_SKILLS_CATALOG.find(
+    (x) => normalizeCanonSkillName(x.key) === n || normalizeCanonSkillName(x.label) === n
+  );
+  if (g) return g.combatSkillKey ? { kind: 'combat', key: g.combatSkillKey } : { kind: 'general', key: g.key };
+  const alias = CANON_SKILL_ALIASES[n];
+  if (alias) return alias;
+  const canon = CORE_GEAR_SKILLS.skills.find((x) => normalizeCanonSkillName(x.name) === n);
+  if (canon) return { kind: 'general', key: canon.name };
+  return null;
+}
+
+function splitCanonSkills(entries: Array<{ name: string; level: number }>): {
+  combat: Partial<Record<CombatSkillKey, number>>;
+  general: Record<string, number>;
+} {
+  const combat: Partial<Record<CombatSkillKey, number>> = {};
+  const general: Record<string, number> = {};
+  for (const e of entries) {
+    const ref = resolveSkillKey(e.name);
+    if (!ref) {
+      if (!UNRESOLVED_CANON_SKILL_NAMES.includes(e.name)) UNRESOLVED_CANON_SKILL_NAMES.push(e.name);
+      continue;
+    }
+    if (ref.kind === 'combat') combat[ref.key] = Math.max(combat[ref.key] ?? 0, e.level);
+    else general[ref.key] = Math.max(general[ref.key] ?? 0, e.level);
+  }
+  return { combat, general };
+}
+
+// Nombre canon de ciberware -> id del catálogo de la app (data/core-rules.cprpack.json). Solo coincidencias exactas o alias obvios.
+const CANON_CYBERWARE_IDS: Record<string, string> = {
+  'Neural Link': 'neuralware-processor',
+  'Interface Plugs': 'interface-plugs',
+  Biomonitor: 'biomonitor',
+  Chemskin: 'chemskin',
+  Techhair: 'techhair',
+  'Shift Tacts': 'shift-tacts',
+  Skinwatch: 'skinwatch',
+  'Light Tattoo': 'light-tattoo',
+  'Cyberaudio Suite': 'cyberaudio-suite',
+  'Amplified Hearing': 'amplified-hearing',
+  'Audio Recorder': 'audio-recorder-audio',
+  'Internal Agent': 'internal-agent',
+  'Voice Stress Analyzer': 'voice-stress-analyzer',
+  'Subdermal Pocket': 'subdermal-pocket',
+  'Hidden Holster': 'hidden-holster',
+  'Nasal Filters': 'nasal-filters',
+  'Toxin Binders': 'toxin-binders',
+  Cybereye: 'cybereye',
+  MicroOptics: 'micro-optics',
+  TeleOptics: 'teleoptics',
+  'Teleoptic Cybereye': 'teleoptics',
+  'Image Enhance Cybereyes': 'image-enhance',
+  'Tool Hand': 'tool-hand',
+  'Sandevistan Speedware': 'sandevistan',
+  'Pain Editor (Chipware)': 'pain-editor'
+};
+
+function mapCanonCyberwareId(name: string): string | undefined {
+  const id = CANON_CYBERWARE_IDS[name];
+  if (!id && !UNMAPPED_CANON_CYBERWARE.includes(name)) UNMAPPED_CANON_CYBERWARE.push(name);
+  return id;
+}
+
+const canonQtySuffix = (qty: number): string => (qty > 1 ? ` x${qty}` : '');
+
+function formatCanonGearItem(item: PackageGearItem): string {
+  const opts = item.options && item.options.length > 0 ? ` o ${item.options.join(' o ')}` : '';
+  const notes = item.notes ? ` (${item.notes})` : '';
+  return `${item.name}${opts}${canonQtySuffix(item.qty)}${notes}`;
+}
+
+function buildCanonFashionSummary(pieces: Array<{ style: string; piece: string; qty: number }>, page: number | null): string {
+  const byStyle = new Map<string, string[]>();
+  for (const p of pieces) {
+    const list = byStyle.get(p.style) ?? [];
+    list.push(`${p.qty} ${p.piece}`);
+    byStyle.set(p.style, list);
+  }
+  const parts = Array.from(byStyle.entries()).map(([style, list]) => `${style}: ${list.join(', ')}`);
+  return `${parts.join('; ')} (Core p.${page ?? 103})`;
+}
+
+type CanonPackWeapon = {
+  id: string;
+  name: string;
+  type: string;
+  skill: string;
+  hands: number;
+  concealable: boolean;
+  cost: number;
+  ammoType?: string;
+};
+
+const canonSlug = (text: string): string =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+function buildCanonPregens(): PregenTemplate[] {
+  const packWeapons = (pack as unknown as { weapons: CanonPackWeapon[] }).weapons;
+  // Íconos reutilizados por rol (los que usaba el archivo antes de las pregens canon).
+  const iconByRole: Record<string, string> = {
+    Rockerboy: 'music',
+    Solo: 'shield',
+    Tech: 'tool',
+    Medtech: 'tool',
+    Media: 'eye'
+  };
+  return CORE_ROLES.easyModePregens.map((ep) => {
+    const stats = {} as Record<StatKey, number>;
+    for (const k of CANON_STAT_KEYS) stats[k] = ep.stats[k];
+
+    const split = splitCanonSkills(Object.entries(ep.skills).map(([name, level]) => ({ name, level })));
+    const skills: Record<CombatSkillKey, number> = {
+      handgun: 0,
+      shoulderArms: 0,
+      autofire: 0,
+      heavyWeapons: 0,
+      archery: 0,
+      meleeWeapon: 0,
+      brawling: 0,
+      martialArts: 0,
+      evasion: 0,
+      athletics: 0,
+      firstAid: 0,
+      paramedic: 0,
+      cybertech: 0,
+      perception: 0,
+      concentration: 0,
+      resistTortureDrugs: 0,
+      ...split.combat
+    };
+
+    const handleSlug = canonSlug(ep.handle);
+    const weapons: EquippedWeapon[] = ep.weapons.map((w, idx) => {
+      const cat = packWeapons.find((c) => c.name === w.name);
+      const extraMatch = w.notes.match(/(\d+)\s*rondas extra/);
+      const ammoType = cat?.ammoType && cat.ammoType !== 'N/A' ? cat.ammoType : undefined;
+      return {
+        id: cat?.id ?? canonSlug(w.name),
+        instanceId: `wep-${handleSlug}-${idx}`,
+        name: w.name,
+        type: cat?.type ?? (w.ammo === null ? 'Melee' : 'Ranged'),
+        skill: cat?.skill ?? (w.ammo === null ? 'Melee Weapon' : 'Handgun'),
+        damage: w.dmg,
+        rof: w.rof,
+        hands: cat?.hands ?? 1,
+        concealable: cat?.concealable ?? false,
+        cost: cat?.cost ?? 0,
+        standardMag: w.ammo ?? undefined,
+        currentMag: w.ammo ?? 0,
+        ammoType,
+        loadedAmmoType: ammoType ?? '',
+        inHand: idx === 0,
+        reserveAmmo: extraMatch ? Number(extraMatch[1]) : undefined,
+        notes: w.notes
+      };
+    });
+
+    const cyberwareIds: string[] = [];
+    for (const c of ep.cyberware) {
+      const id = mapCanonCyberwareId(c.name);
+      if (id) cyberwareIds.push(id);
+    }
+
+    return {
+      id: `pregen-easy-${handleSlug}`,
+      handle: ep.handle,
+      role: ep.role,
+      roleRank: 4,
+      era: '2045',
+      avatarIcon: iconByRole[ep.role] ?? 'shield',
+      sourceBadge: `Core RED · Easy Mode p.${ep.source.page}`,
+      bioSummary: '',
+      whatYouGet: [
+        `Habilidad de rol ${ep.roleAbility.name}: ${ep.roleAbility.notes}`,
+        `Armas: ${ep.weapons.map((w) => `${w.name} (${w.dmg})`).join(', ')}.`,
+        `Ciberware: ${ep.cyberware.map((c) => `${c.name} (${c.notes})`).join('; ')}.`
+      ],
+      stats,
+      skills,
+      generalSkills: split.general,
+      weapons,
+      headArmor: { name: `${ep.armor.name} (Head)`, maxSp: ep.armor.sp, currentSp: ep.armor.sp, penalty: 0 },
+      bodyArmor: { name: `${ep.armor.name} (Body)`, maxSp: ep.armor.sp, currentSp: ep.armor.sp, penalty: 0 },
+      cyberwareIds,
+      // El Easy Mode no imprime €$ para sus pregens.
+      eurodollars: 0,
+      lifepath: {
+        culturalRegion: '',
+        personality: '',
+        clothingStyle: '',
+        hairstyle: '',
+        affectation: '',
+        valueMost: '',
+        feelAboutPeople: '',
+        valuedPerson: '',
+        valuedPossession: '',
+        familyBackground: '',
+        childhoodEnvironment: '',
+        familyCrisis: '',
+        friends: [],
+        tragicLoveAffairs: [],
+        enemies: [],
+        roleLifepath: {},
+        lifeGoal: ''
+      }
+    };
+  });
+}
+
+function applyCanonRoleData(): void {
+  for (const role of ROLES_CATALOG) {
+    const bookName = CANON_ROLE_BOOK_NAME[role.id];
+    if (!bookName) continue;
+
+    // Tabla de stats Edgerunner en orden de tirada 1..10 (Core pp. 74-77).
+    role.edgerunnerStatTable = CORE_ROLE_TABLES.statTables[bookName].rows.map((row) => {
+      const out = {} as Record<StatKey, number>;
+      for (const k of CANON_STAT_KEYS) out[k] = row[k];
+      return out;
+    });
+    // Streetrat: fila 1 por defecto (el wizard deja elegir/tirar la fila).
+    role.streetratStats = { ...role.edgerunnerStatTable[0] };
+
+    // Habilidades Streetrat (Core pp. 86-87).
+    const split = splitCanonSkills(CORE_ROLE_TABLES.streetratSkills[bookName].skills);
+    role.templateCombatSkills = split.combat;
+    role.templateGeneralSkills = split.general;
+
+    // Paquete de equipo inicial (Core pp. 98-99, 103, 117).
+    const pkg = CORE_GEAR_SKILLS.rolePackages[bookName];
+    const isAmmoOrArmor = (name: string) => /ammunition|armorjack/i.test(name);
+    const weaponNames = pkg.weaponsArmor.items.filter((i) => !isAmmoOrArmor(i.name)).map((i) => i.name);
+    const hasLightArmorjack = pkg.weaponsArmor.items.some((i) => /light armorjack/i.test(i.name));
+    const cyberwareIds: string[] = [];
+    for (const c of pkg.cyberware.items) {
+      const id = mapCanonCyberwareId(c.name);
+      if (id) cyberwareIds.push(id);
+    }
+    role.startingLoadout = {
+      weaponNames,
+      armorNames: hasLightArmorjack ? ['Light Armorjack (Head)', 'Light Armorjack (Body)'] : [],
+      cyberwareIds,
+      gearNames: pkg.outfit.gear.map((g) => `${g.name}${canonQtySuffix(g.qty)}`),
+      fashionSummary: buildCanonFashionSummary(pkg.outfit.pieces, pkg.outfit.source.page),
+      itemsBreakdown: [
+        ...pkg.weaponsArmor.items.map(formatCanonGearItem),
+        ...pkg.outfit.gear.map(formatCanonGearItem),
+        ...pkg.cyberware.items.map(
+          (c) => `${c.name}${c.options ? ` ${c.options}` : ''} (HL ${c.humanityLoss})`
+        ),
+        '(Core pp. 98-99, 103, 117)'
+      ]
+    };
+  }
+
+  // Pregens canon del Easy Mode (reemplazan a las inventadas).
+  PREGEN_TEMPLATES.push(...buildCanonPregens());
+}
+
+applyCanonRoleData();

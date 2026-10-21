@@ -371,8 +371,7 @@ export function buildCemk2077Characters(): CharacterSheet[] {
 
 export const DEFAULT_CHARACTERS: CharacterSheet[] = [
   ...CEMK_FOLIO_PREMADE_CHARACTERS,
-  INITIAL_CHARACTER_V,
-  ...buildCemk2077Characters()
+  INITIAL_CHARACTER_V
 ];
 
 export function loadInitialCharacters(): { characters: CharacterSheet[]; activeCharacterId: string } {

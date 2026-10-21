@@ -247,6 +247,19 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.8.1] - 2026-10-22 (Datos canon del creador) [Claude Code · 2026-10-22]
+* **Category**: Canon / creador (plan 7, bloque 2). Registro: `docs/canon-audit/v4.8.1-creador.md`. Discrepancias: `docs/canon-audit/discrepancias-cemk-core.md`.
+* **Datos**: `data/creation-src/*.json` (5 archivos con página por dato y lista `doubts`) → `scripts/gen_creation.py` → `frontend/src/data/creation/*.ts` (generados) + `types.ts`.
+* **`characterCreationData.ts`**:
+  - `ROLES_CATALOG`: los campos `streetratStats`, `edgerunnerStatTable`, `templateCombatSkills`, `templateGeneralSkills` y `startingLoadout` quedan vacíos en el literal y los completa `applyCanonRoleData()` al final del módulo desde los datos canon (Core pp. 74-77, 86-87, 98-99, 103, 117).
+  - `resolveSkillKey` resuelve los nombres del libro a claves de la app; `UNRESOLVED_CANON_SKILL_NAMES` y `UNMAPPED_CANON_CYBERWARE` están vacíos y el test lo exige.
+  - Era 2077: `neuroportSubsystems` sale de `CEMK_CREATION.neuroport.pieces` más el Cyberdeck Port opcional.
+  - `PREGEN_TEMPLATES`: se borran 11 pregens sin ficha en los libros y entran las 5 de Easy Mode.
+* **Store**: `DEFAULT_CHARACTERS` ya no inyecta la banda del anime (`buildCemk2077Characters` devuelve []).
+* **Wizard**: en 2077, el paquete de rol omite Agent, Neural Link e Interface Plugs; el texto del Neuroport sale del RB (pp. 25, 35).
+* **Red Chrome Cargo**: se quitan los botones y la pestaña que cargaban la banda del anime.
+* **Verificación**: pdf.js contra el JSON (STATs p.74, paquetes p.98, Easy Mode y Folio de Hardpoint; MOVE/LUCK de Easy Mode corregido). 95 tests. Navegador: tabla de STATs del Solo, Neuroport en 2077 y pregens de Easy Mode.
+
 ### [v4.8.0] - 2026-10-22 (Guardado robusto) [Claude Code · 2026-10-22]
 * **Category**: Persistencia (plan 7, bloque 1: `docs/plans/plan7-creador-personajes.md`).
 * **Persist v3**: `frontend/src/store/persistence.ts`. La clave `cpr-omni-deck-characters-v2` no cambia; `CHARACTERS_SCHEMA_VERSION = 3`, `APP_VERSION` se actualiza a mano.

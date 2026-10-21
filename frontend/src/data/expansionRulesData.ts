@@ -104,7 +104,7 @@ export const SOURCEBOOKS_CATALOG: SourceBookMeta[] = [
       'Neuroport (1,000 €$, HL 7): gratis y sin pérdida de Humanidad al crear un personaje de 2077 (CEMK p. 25).',
       '11 Quickhacks oficiales sin RAM: 1 NET Action cada uno, 1 por objetivo por turno (CEMK pp. 16-17).',
       '13 armas 2077 de CEMK pp. 31-34 (Yukimura, Masamune, Shingen, Carnage, Unity, Zhuo, Crusher, Lexington, Omaha, Satara, Burya, Grad y Nekomata).',
-      'Fichas de la tripulación de David Martinez, Lucy, Rebecca, Maine y Kiwi.'
+      'Biografías de la tripulación del anime (Handbook pp. 35-41); el libro no trae fichas de juego de ellos.'
     ],
     mechanicsIntroduced: [
       'Armas Power (rebotes tácticos y +5 crítico)',
