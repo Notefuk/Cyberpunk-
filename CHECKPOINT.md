@@ -8,11 +8,11 @@
 
 **Última actualización**: [Claude Code · 2026-10-21]
 **Versión de la app**: v4.6.0 (en `main`, squash 458cc3c, PR #17; publicada en gh-pages)
-**Plan activo**: ninguno en ejecución. Plan 4 terminado en v4.6.0. Plan 2: fases 1-4 hechas, falta la fase 5 (v4.5.1 Cyberfists of Fury). Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
+**Plan activo**: plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, `source` libro+página en cada ítem y registro en `docs/canon-audit/`. En curso: v4.5.1 Cyberfists (absorbe la fase 5 del plan 2). Plan 4 terminado en v4.6.0. Plan 1 terminado en v4.2.1. Plan 3 perdido (ver Próximos pasos).
 
 ## En curso (a cargo)
 
-- Nada a medias. `main` libre para cualquiera de las dos herramientas.
+- [Claude Code · 2026-10-21] v4.5.1 Cyberfists (plan 5, bloque 1) en la rama `claude/v4.5.1-cyberfists`. Fase: extracción del PDF (IR4 pp. 74-84). Antigravity: no tocar `cyberfistsMartialArtsData.ts`.
 
 ## Traspaso
 
