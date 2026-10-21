@@ -7,24 +7,24 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-22]
-**Versión de la app**: v4.7.0 lista en la rama `claude/v4.7.0-enemigos-cemk` (sin PR). `main` = v4.6.2, publicada.
+**Versión de la app**: v4.7.0 (en `main`, squash ea8268f, PR #20; publicada en gh-pages y verificada en vivo)
 **Plan activo**: plan 6 (`docs/plans/plan6-enemigos-canon-cemk.md`, enemigos canon porteados a CEMK; v4.7.0-v4.7.2) y plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, página de origen en cada ítem y registro en `docs/canon-audit/`. Bloques 1 (v4.6.1) y 2 (v4.6.2) hechos. Planes 1, 2 y 4 terminados. El plan 3 se perdió y lo reemplaza v4.7.0.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.7.0 terminada y verificada en la rama `claude/v4.7.0-enemigos-cemk`. Falta: PR, merge y gh-pages. Antigravity: no tocar `enemiesCatalog.ts`, `frontend/src/data/enemies/` (generado), `redChromeCargoData.ts` ni `features/gm/` hasta el merge.
+- Nada a medias. `main` libre para cualquiera de las dos herramientas.
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-22]
-- Rama y último commit: `claude/v4.7.0-enemigos-cemk` @ "v4.7.0 Enemigos canon..." (pusheada: sí).
-- A medias: PR de v4.7.0, merge y publicación.
-- Siguiente paso exacto: mergear v4.7.0; después, plan 6 v4.7.1 Danger Gal: 118 fichas y 15 facciones. Extraer por tandas de facciones con `data/enemies-src/SCHEMA.md`, agregar el libro a `scripts/gen_enemies.py` para generar `frontend/src/data/enemies/dangerGal.ts` y borrar las 95 fichas danger_gal inventadas de `enemiesCatalog.ts`.
+- Rama y último commit: `main` @ commit "CHECKPOINT: v4.7.0 mergeada..." (pusheada: sí). gh-pages publicada con el build de v4.7.0.
+- A medias: nada.
+- Siguiente paso exacto: 
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
 
 ## Último trabajo terminado
 
-- [Claude Code · 2026-10-22] v4.7.0 Enemigos canon + porte CEMK (plan 6, bloque 1):
+- [Claude Code · 2026-10-22] v4.7.0 Enemigos canon + porte CEMK (plan 6, bloque 1), mergeada (PR #20, squash ea8268f) y publicada:
   - 40 fichas canon (Core 10, CEMK 14, Hardened 16) reemplazan a 36 inventadas.
   - `cemkPort.ts` aplica las reglas del Rule Book de CEMK citadas; panel GM con selector CEMK | RED.
   - Red Chrome Cargo reescrito con canon.
