@@ -12,7 +12,7 @@
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.2 wizard funcional (plan 7) en la rama `claude/v4.8.2-wizard`. Hecho: personaje demo "V" quitado (fallback = Folio de Hardpoint) y discrepancias 10-15 decididas por Giuliano (ver `docs/canon-audit/discrepancias-cemk-core.md`; nota de daño 3d6/4d6 en la Zhuo de Wrench). Siguiente: motor `engine/characterCreation.ts` con tests, pasos del libro, lifepath CEMK/Core, habilidad de rol Core/CEMK (`roleAbilityVariant`), 66 skills con etiqueta, Surgery solo Medtech por habilidad de rol, "Running Out of Cash?", dinero por método y borrador `cpr_creator_draft_v1`. Antigravity: no tocar el wizard, `characterCreationData.ts` ni el store hasta el merge.
+- [Claude Code · 2026-10-22] v4.8.2 wizard funcional (plan 7) en la rama `claude/v4.8.2-wizard`. Hecho: personaje demo "V" quitado (fallback = Folio de Hardpoint) y discrepancias 10-15 decididas por Giuliano (ver `docs/canon-audit/discrepancias-cemk-core.md`; nota de daño 3d6/4d6 en la Zhuo de Wrench). Siguiente: motor `engine/characterCreation.ts` con tests, pasos del libro, lifepath CEMK/Core, habilidad de rol Core/CEMK (`roleAbilityVariant`), 66 skills con etiqueta, Surgery solo Medtech por habilidad de rol, "Running Out of Cash?", dinero por método y borrador `cpr_creator_draft_v1`. Decisiones de diseño de Giuliano (2026-10-22): "Rocker" en 2077 y "Rockerboy" en 2045; tienda de Complete Package en 2077 = Core + CEMK etiquetados; lifepath con tirar o elegir; Media/Exec/Lawman solo con la habilidad del Core. Antigravity: no tocar el wizard, `characterCreationData.ts` ni el store hasta el merge.
 
 ## Traspaso
 
