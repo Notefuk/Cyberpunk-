@@ -32,15 +32,15 @@
   - Hecho (rehecho desde el PDF): `goingMetalFbcData.ts` canon (13 cuerpos `gm-*`, 20 ciberwares con `gm-biosystem`, 6 de equipo, `ABOUT_FBCS_GUIDE`, `FBC_IMMUNE_CRITICAL_INJURIES`, `FBC_IMMUNITIES`, `BIOSYSTEM_HL_AVERAGE` = 14, `LINEAR_FRAME_OMEGA_HP_CHART`).
   - Hecho: ítems 1-6 del checkpoint anterior (Ripperdoc con HL real, `ActiveFbcState.statFloor/armorPenalty`, store, motor, StreetLab, HUD, pack sin 29 `fbc-*` + 4 inventados, `fbc-rules` reescrito) y 4 tests FBC. Desvíos: en el pack había 29 `fbc-*`, no 33; el +5 del crítico vive en `combatEngine.ts` (~l. 237), así que el HUD devuelve hasta 5 HP con `adjustHp` cuando un FBC es inmune.
   - Hecho: docs firmados (CHANGELOG, HANDOFF, STATUS, CONTENT_CHECKLIST), changelog in-app v4.5.0, `npm run build` OK, commit local `v4.5.0 Going Metal canon: Full Body Conversion`.
-  - Falta: push de la rama y PR a `main` (esperando OK de Giuliano).
+  - [Claude Code · 2026-10-21] Rama pusheada y web publicada en gh-pages (https://notefuk.github.io/Cyberpunk-/) con el build de v4.5.0. Falta: abrir y mergear el PR a `main` (no hay `gh` CLI en la PC; se abre desde el link de GitHub).
 - Dudas del libro (anotadas en docs): `packageHlAverage` impreso no siempre cuadra con su fórmula (Enforcer 53 vs 55 en el ejemplo de p. 95); BODY de Sigma/Beta y SP de Skin Weave/Subdermal salen del Core; el filtro por zona del Ripperdoc ahora usa `Internal`/`External`/`Cyberlimb`.
 - Fuera de alcance de v4.5.0: marcos Black Chrome (Vermilion, Fūma Kotarō); el HL de cada pieza del paquete no se instala como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad.
-- Decisiones del usuario: todo canon, borrar lo inventado (no homebrew), NET Actions según CEMK (hasta 3), subagentes todos en Sonnet. Pendiente de respuesta: ¿publicar en gh-pages?
+- Decisiones del usuario: todo canon, borrar lo inventado (no homebrew), NET Actions según CEMK (hasta 3), subagentes todos en Sonnet. Publicar en gh-pages: sí (2026-10-21).
 - PDFs locales: Going Metal = `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\ilide.info-going-metal-pr_f86aec80bbb3b8b8c08ede7e5181f832.pdf` (21 págs.; impresa = PDF + 90). Interface RED Vol. 1-4 en `Sourcebooks\Interface-RED\`.
 
 ## Próximos pasos
 
-1. Cerrar v4.5.0 (docs, commit, push, PR).
+1. Mergear el PR de v4.5.0 a `main`.
 2. v4.5.1 Cyberfists of Fury (IR4 pp. 73-83: 23 formas y 46 movimientos, `isOpposed` donde aplique) en `cyberfistsMartialArtsData.ts`. Cierra el plan 2.
 3. Plan 3 (enemigos y Red Chrome Cargo): **se perdió**; hay que reescribirlo y volver a hacerle a Giuliano sus preguntas antes de ejecutarlo.
 4. Fase 4 del roadmap: modo Settings para activar o desactivar módulos. Ver `AI_CONTEXT_HANDOFF.md` §4.
