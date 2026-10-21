@@ -1,0 +1,78 @@
+{
+  "book": "Hardened: The Dreaded Punknaught (Boss Vehicle) v1.0, June 2023, R. Talsorian Games",
+  "pdf": "C:/Users/TeseoHeracles/Documents/CP RED TEST ANTIGRAVITY/DLC-Supplements/Hardened-Enemies/Hardened-The-Dreaded-Punknaught-Boss-Vehicle_2023-06-28.pdf",
+  "pageConvention": "Pagina impresa = indice de pagina del PDF (7 paginas, portada en p.1).",
+  "vehicle": {
+    "id": "hardened-punknaught",
+    "name": "The Dreaded Punknaught",
+    "type": "Vehiculo jefe improvisado (hover, hecho de chatarra y motores AV-4)",
+    "sourcePages": [2, 3, 4, 5, 6, 7],
+    "basic": {
+      "sdp": 60,
+      "seats": 20,
+      "speedCombatMove": 15,
+      "speedNarrativeMph": 60,
+      "speedNarrativeKph": 97,
+      "parts": ["Punknaught Core"],
+      "note": "Stats de un Punknaught con solo el Core (p.6). Se construye anadiendo partes. Flota a ~1 m/yd del suelo (inmune a Spike Strips). No admite mejoras normales de vehiculo."
+    },
+    "construction": {
+      "page": 2,
+      "team": "Equipo de 10: un Tech como Construction Boss y un miembro (no necesariamente Tech) como Salvage Boss.",
+      "steps": [
+        "Paso 1 (p.3): el Salvage Boss hace un Basic Tech Check por parte contra el Salvage DV; fallar gasta el tiempo completo sin hallarla.",
+        "Paso 2 (p.3): el Construction Boss ensambla; el tiempo total es la suma de los tiempos de todas las partes, incluyendo fallos.",
+        "Paso 3 (p.3): Land Vehicle Tech Check del Construction Boss contra DV base 13 + el Construction Modifier de cada parte; aplica Field Expertise. Si falla, todas las partes quedan Destroyed Beyond Repair.",
+        "Operatividad (p.3): el Punknaught funciona un numero de horas igual al margen por el que se supero el DV; cuenta tiempo total, se use o no."
+      ],
+      "npcRule": "Para un Punknaught de PNJ no hace falta tirar; el GM puede tirar 1d6 para las horas operativas antes de las Death Saves, sugerido contra TECH 6 (p.3)."
+    },
+    "parts": [
+      {"name": "Punknaught Core", "constructionTimeDays": 7, "salvageDv": 15, "constructionModifier": 0, "page": 4, "requires": null, "stackable": false,
+       "effect": "Autobus, camion de plataforma o vehiculo grande similar mas cuatro motores AV; alberga energia, controles y combustible y da hover y propulsion. Sin Core no hay Punknaught."},
+      {"name": "Armor", "constructionTimeDays": 1, "salvageDv": 13, "constructionModifier": 1, "page": 4, "requires": "Punknaught Core", "stackable": true,
+       "effect": "Blindaje SP13 con huecos: un ataque exitoso con un 10 natural en la tirada de ataque ignora el blindaje y daña directamente el SDP. Si se anade dos veces se cierran los huecos y el 10 natural ya no lo ignora."},
+      {"name": "Buzzsaw Arm", "constructionTimeDays": 1, "salvageDv": 9, "constructionModifier": 1, "page": 4, "requires": "Punknaught Core", "stackable": false,
+       "effect": "Actua como Very Heavy Melee Weapon; montaje frontal, lateral o trasero. Extender/retraer es una Accion de un pasajero, que luego ataca con reglas de melee. No funciona separado del vehiculo."},
+      {"name": "Catapult", "constructionTimeDays": 1, "salvageDv": 13, "constructionModifier": 1, "page": 4, "requires": "Punknaught Core", "stackable": false,
+       "effect": "Palanca giratoria en el techo; lanza carga hasta tamano de una persona con la habilidad Heavy Weapons contra una casilla (2 m/yd) usando la tabla de alcance de Grenade Launcher, maximo 25 m/yds. Una persona lanzada cae automaticamente en la casilla si el Check tiene exito; salvo que tenga dos Cyberlegs debe superar Athletics DV15 al aterrizar o sufre 2d6 directo a HP."},
+      {"name": "Cockpit Glass", "constructionTimeDays": 3, "salvageDv": 15, "constructionModifier": 1, "page": 5, "requires": "Punknaught Core", "stackable": false,
+       "effect": "Capa de Thick Bulletproof Glass (30 HP) sobre la cabina."},
+      {"name": "Combat Spikes", "constructionTimeDays": 3, "salvageDv": 13, "constructionModifier": 1, "page": 5, "requires": "Punknaught Core", "stackable": true,
+       "effect": "Pinchos frontales. Si el Punknaught uso NOS ese Turno y embiste con ellos, el dano del embiste sube 2d6. Si se anade dos veces, sube 3d6 en su lugar."},
+      {"name": "Extra AV-4 Engine", "constructionTimeDays": 2, "salvageDv": 15, "constructionModifier": 2, "page": 5, "requires": "Punknaught Core y Extra Chassis", "stackable": true,
+       "effect": "Motor AV-4 adicional: +5 MOVE de velocidad de combate y +20 MPH (32 KPH) de velocidad narrativa. Uno por cada Extra Chassis."},
+      {"name": "Extra Chassis", "constructionTimeDays": 3, "salvageDv": 13, "constructionModifier": 2, "page": 5, "requires": "Punknaught Core", "stackable": true,
+       "effect": "Chasis adicional soldado al core: +20 SDP y +10 asientos; +1d6 al dano de embestida contra peatones, cobertura u otros vehiculos. Hasta tres por Punknaught."},
+      {"name": "NOS", "constructionTimeDays": 1, "salvageDv": 13, "constructionModifier": 2, "page": 5, "requires": "Punknaught Core", "stackable": true,
+       "effect": "Da una Accion de Movimiento adicional en un solo Turno. Cada tanque se usa una vez; cada instalacion agrega un tanque."},
+      {"name": "Spike Strip Launcher", "constructionTimeDays": 1, "salvageDv": 9, "constructionModifier": 1, "page": 5, "requires": "Punknaught Core", "stackable": false,
+       "effect": "Mecanismo trasero; como Accion un pasajero lanza una tira de pinchos con Heavy Weapons contra una casilla (2 m/yd) con la tabla de Grenade Launcher, max 25 m/yds. Un conductor de vehiculo con neumaticos que la cruce debe superar Drive Land Vehicle DV17; si falla, el vehiculo recibe 4d6 al punto debil (dano que penetra el SP se duplica). Hasta 3 tiras, no recargable."},
+      {"name": "Turret", "constructionTimeDays": 1, "salvageDv": 13, "constructionModifier": 1, "page": 5, "requires": "Punknaught Core", "stackable": true,
+       "effect": "Torreta giratoria que admite cualquier arma ranged de dos manos (no incluida, se aporta aparte) disparada por un pasajero con su Accion; puede recargarse en movimiento. Quitar el arma requiere dos Acciones (dos Turns); con BODY 8+ se puede arrancar como Accion con Athletics DV15. Hasta tres Turrets por Chasis (el Core cuenta como Chasis)."}
+    ],
+    "operation": {
+      "page": 6,
+      "basicDriving": "Para conducir sin Maneuver Check por Round se necesita Drive Land Vehicle Base mayor que 10 y BODY mayor que 5 (en vez de >9 normal). Ambos requisitos suben 1 por cada Extra Chassis.",
+      "ramming": "Al embestir cobertura, otro vehiculo o un peaton con el frente, el Punknaught no recibe dano y nadie dentro sufre Whiplash.",
+      "maneuvers": "Reglas normales de maniobras (CP:R p.192) con -1 al Drive Land Vehicle Check del conductor por cada Extra Chassis."
+    },
+    "death": {
+      "page": 6,
+      "trigger": "Cuando se agota su tiempo o llega a 0 SDP debe hacer Death Saves, como un personaje pero contra el TECH del Construction Boss. Una Tech no puede usar jury-rig de Field Expertise para mantenerlo operativo.",
+      "table": [
+        {"roll": 1, "result": "Deja de funcionar y se detiene. Punknaught y partes quedan Destroyed Beyond Repair."},
+        {"roll": 2, "result": "Los motores rugen; avanza a toda velocidad (MOVE completo) en la direccion que el GM decida y se detiene; si choca cuenta como embestida. Destroyed Beyond Repair."},
+        {"roll": 3, "result": "El combustible se enciende; quien este dentro o encima queda On Fire (Strong) (CP:R p.180). Destroyed Beyond Repair."},
+        {"roll": 4, "result": "Se aplican 2 y 3; ademas lo que embista se incendia y todo en 20 m/yds queda On Fire (Mild). Destroyed Beyond Repair."},
+        {"roll": 5, "result": "Se sacude y falla: quien este dentro o encima sufre dano como un Very Heavy Melee Weapon, sin poder evadir. Destroyed Beyond Repair."},
+        {"roll": 6, "result": "Explota: todo objetivo a 6 m/yds (3 casillas), incluido quien va dentro o encima, recibe dano como un Armor Piercing Grenade y no puede evadir. Destroyed Beyond Repair."}
+      ]
+    },
+    "doubts": [
+      "El libro no define un valor de SP del cuerpo base ni tipo de vehiculo del catalogo de CP:R; el unico SP indicado es 13 con la parte Armor.",
+      "Dano de embestida base no impreso (solo bonos +1d6 por Extra Chassis y +2d6/+3d6 de Combat Spikes).",
+      "Narrativa de apertura (p.2) omitida; solo se extrajeron reglas."
+    ]
+  }
+}

@@ -106,7 +106,7 @@ export function getWeaponClassAndRebuildInfo(weapon: any): WeaponClassAndRebuild
   } else if (damage === '4d6' && rof === 1) {
     weaponClass = 'Very Heavy Pistol';
     weaponClassTooltip =
-      'Pistola Muy Pesada (Handgun, 1 mano, 4d6 de daño, ROF 1). No ocultable. El poder de frenada máximo en armas cortas (ej. Malorian 3516, Desert Eagle, Tamayura).';
+      'Pistola Muy Pesada (Handgun, 1 mano, 4d6 de daño, ROF 1). No ocultable. El poder de frenada máximo en armas cortas (ej. Malorian 3516, Desert Eagle).';
   } else if (damage === '3d6') {
     weaponClass = 'Heavy Pistol';
     weaponClassTooltip =

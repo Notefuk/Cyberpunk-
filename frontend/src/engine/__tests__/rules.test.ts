@@ -20,7 +20,11 @@ import { beatsDv, calculateIncomingImpact, createDamageRoll, rollCheckD10 } from
 import { BLACK_ICE_STATS, NET_ACTIONS_PER_TURN, QUICKHACKS_2077_CATALOG } from '../../data/netAndRolesData';
 import { BODY_CRITICAL_INJURIES, HEAD_CRITICAL_INJURIES, rollCriticalInjury } from '../../data/criticalInjuries';
 import { CEMK_WEAPON_REBUILD_SYSTEM_GUIDE } from '../../data/weaponAndCyberwareTooltips';
-import { ENEMIES_CATALOG } from '../../data/enemiesCatalog';
+import { ENEMIES_CATALOG, convertEnemyToCharacterSheet, type EnemySheet } from '../../data/enemiesCatalog';
+import { CORE_ENEMIES } from '../../data/enemies/core';
+import { CEMK_ENEMIES } from '../../data/enemies/cemk';
+import { HARDENED_ENEMIES } from '../../data/enemies/hardened';
+import { portEnemyToCemk } from '../cemkPort';
 import pack from '../../data/core-rules.cprpack.json';
 import type { CharacterSheet } from '../../types/cyberpunk';
 
@@ -409,5 +413,144 @@ describe('Plan 5 v4.6.2 canon', () => {
 
   it('Errata v1.25 p.2 (Core p.114): Grafted Muscle and Bone Lace cambia el Wound Threshold', () => {
     expect(byId('grafted-muscle-bone-lace')?.description).toContain('Wound Threshold');
+  });
+});
+
+describe('Porte CEMK de PNJ (plan 6)', () => {
+  const mk = (o: Record<string, unknown> = {}): EnemySheet =>
+    ({
+      id: 't', name: 'T', role: 'Solo', hp: 35, deathSave: 5, headSp: 11, bodySp: 11,
+      stats: { INT: 5, REF: 5, DEX: 5, TECH: 5, COOL: 5, WILL: 6, LUCK: 5, MOVE: 5, BODY: 6, EMP: 5 },
+      weapons: [{ name: 'Unity Handgun', skillBase: 10, damage: '3d6', rof: 2, mag: 12 }],
+      ...o
+    }) as unknown as EnemySheet;
+
+  it('RB pp.15, 35-36: todo PNJ portado tiene Neuroport y es hackeable', () => {
+    const p = portEnemyToCemk(mk());
+    expect(p.hasNeuroport).toBe(true);
+    expect(p.hackable).toBe(true);
+  });
+
+  it('RB p.16-17, 25: netrunner Interface 4 = 3 Net Actions, 50 m, DV max 12', () => {
+    const p = portEnemyToCemk(mk({ role: 'Netrunner', roleAbility: { name: 'Interface', rank: 4 } }));
+    expect(p.netActionsPerTurn).toBe(3);
+    expect(p.cyberdeckPortRangeM).toBe(50);
+    expect(p.maxQuickhackDv).toBe(12);
+    expect(p.availableQuickhacks.length).toBeGreaterThan(0);
+    const dvByName = Object.fromEntries(QUICKHACKS_2077_CATALOG.map(q => [q.name, q.dv]));
+    expect(p.availableQuickhacks.every(n => dvByName[n] <= 12)).toBe(true);
+  });
+
+  it('RB p.25: Interface 3 limita a DV 10', () => {
+    const p = portEnemyToCemk(mk({ isNetrunner: true, interfaceRank: 3 }));
+    expect(p.maxQuickhackDv).toBe(10);
+    expect(p.availableQuickhacks.every(n => QUICKHACKS_2077_CATALOG.find(q => q.name === n)!.dv <= 10)).toBe(true);
+  });
+
+  it('No netrunner: sin DV máximo de Quickhack', () => {
+    const p = portEnemyToCemk(mk());
+    expect(p.maxQuickhackDv).toBeNull();
+    expect(p.availableQuickhacks).toEqual([]);
+  });
+
+  it('RB p.10: SP contra melee a la mitad redondeando hacia arriba (igual que combatEngine)', () => {
+    const p = portEnemyToCemk(mk({ headSp: 11, bodySp: 7 }));
+    expect(p.headSpVsMelee).toBe(6);
+    expect(p.bodySpVsMelee).toBe(4);
+  });
+
+  it('RB p.8: Smart Pistol es Smart, el resto Power', () => {
+    const p = portEnemyToCemk(mk({
+      weapons: [
+        { name: 'Smart Pistol', skillBase: 10, damage: '2d6', rof: 1, mag: 10 },
+        { name: 'Unity Handgun', skillBase: 10, damage: '3d6', rof: 2, mag: 12 }
+      ]
+    }));
+    expect(p.weapons.map(w => w.weaponType2077)).toEqual(['Smart', 'Power']);
+  });
+
+  it('RB p.36: Self-ICE 2 = Passwalls DV 6 y 8; sin selfIce = ninguno', () => {
+    expect(portEnemyToCemk(mk({ selfIce: 2 })).selfIcePasswalls).toEqual([{ dv: 6 }, { dv: 8 }]);
+    expect(portEnemyToCemk(mk()).selfIcePasswalls).toEqual([]);
+  });
+
+  it('Fórmula de HP CEMK: discrepancia con el libro genera nota', () => {
+    const p = portEnemyToCemk(mk({ hp: 40 }));
+    expect(p.hpFormula).toBe(40);
+    expect(p.hpMatchesFormula).toBe(true);
+    const q = portEnemyToCemk(mk({ hp: 30 }));
+    expect(q.hpMatchesFormula).toBe(false);
+    expect(q.notes.some(n => n.includes('HP del libro (30)'))).toBe(true);
+  });
+});
+
+describe('Enemigos canon v4.7.0', () => {
+  const isCoreOrHardened = (e: { sourceBook: string }) => e.sourceBook === 'core' || e.sourceBook === 'dlc';
+
+  it('Conteos por libro: Core 10, CEMK 14, Hardened 16', () => {
+    expect(CORE_ENEMIES).toHaveLength(10);
+    expect(CEMK_ENEMIES).toHaveLength(14);
+    expect(HARDENED_ENEMIES).toHaveLength(16);
+  });
+
+  it('Todos los PNJ canon tienen sourcePage', () => {
+    for (const e of [...CORE_ENEMIES, ...CEMK_ENEMIES, ...HARDENED_ENEMIES]) {
+      expect(typeof e.sourcePage, e.id).toBe('number');
+    }
+  });
+
+  it('ids únicos en ENEMIES_CATALOG y sin entradas interface_red', () => {
+    const ids = ENEMIES_CATALOG.map((e) => e.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ENEMIES_CATALOG.some((e) => e.sourceBook === 'interface_red')).toBe(false);
+  });
+
+  it('Boosterganger Core: BODY 2 y Death Save 2 (Errata v1.25 p. 412)', () => {
+    const e = ENEMIES_CATALOG.find((x) => x.id === 'core-boosterganger');
+    expect(e?.stats.BODY).toBe(2);
+    expect(e?.deathSave).toBe(2);
+  });
+
+  it('Security Officer Core: SP de cabeza 12 (Errata v1.25 p. 415)', () => {
+    const e = ENEMIES_CATALOG.find((x) => x.id === 'core-security-officer');
+    expect(e?.headSp).toBe(12);
+  });
+
+  it('Todos los PNJ CEMK tienen format cemk', () => {
+    for (const e of CEMK_ENEMIES) expect(e.format, e.id).toBe('cemk');
+  });
+
+  it('HP de Core y Hardened = 10 + 5 * ceil((BODY + WILL) / 2) (Core p. 187)', () => {
+    const mismatches = ENEMIES_CATALOG.filter(isCoreOrHardened)
+      .filter((e) => e.hp !== 10 + 5 * Math.ceil((e.stats.BODY + e.stats.WILL) / 2))
+      .map((e) => e.id);
+    expect(mismatches).toEqual([]);
+  });
+});
+
+describe('Porte en UI/conversión v4.7.0', () => {
+  it('convertEnemyToCharacterSheet(core-netrunner): Neuroport e Interface 4', () => {
+    const e = ENEMIES_CATALOG.find((x) => x.id === 'core-netrunner');
+    expect(e).toBeDefined();
+    const sheet = convertEnemyToCharacterSheet(e!);
+    expect(sheet.hasNeuroport).toBe(true);
+    expect(sheet.roleRank).toBe(4);
+  });
+
+  it('todo el catálogo porta sin lanzar y tiene Neuroport', () => {
+    for (const e of ENEMIES_CATALOG) {
+      expect(() => portEnemyToCemk(e)).not.toThrow();
+      expect(convertEnemyToCharacterSheet(e).hasNeuroport).toBe(true);
+    }
+  });
+
+  it('armas Brawling/Martial Arts/ciberware melee con ROF del Core (pp.114-115, 176, 178)', () => {
+    const find = (n: string) => ENEMIES_CATALOG.flatMap((e) => e.weapons).filter((w) => w.name === n);
+    for (const n of ['Brawling', 'Martial Arts Strike', 'Rippers', 'Wolvers']) {
+      const ws = find(n);
+      expect(ws.length).toBeGreaterThan(0);
+      ws.forEach((w) => expect(w.rof).toBe(2));
+    }
+    find('Cybersnake').forEach((w) => expect(w.rof).toBe(1));
   });
 });

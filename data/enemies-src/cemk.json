@@ -1,0 +1,1495 @@
+{
+ "book": "Cyberpunk Edgerunners Mission Kit (The Jacket + DLC 1 Karaoke Night)",
+ "pdf": "Adventures\\CEMK-The-Jacket-Mission-Adventure_2024-05-22.pdf ; Adventures\\CEMK-DLC-01-Karaoke-Night-Mission_2024-07-15.pdf",
+ "pageConvention": "Pagina IMPRESA. The Jacket: pagina impresa N = pagina PDF N+1. Karaoke Night: impresa = PDF. Cada NPC lleva 'book' (Jacket/Karaoke).",
+ "npcs": [
+  {
+   "subtitle": "Aliado nomad, conductor de huida - The Jacket p.33",
+   "faction": "",
+   "roleAbility": {
+    "name": "Nomad (+6 Drive Land Vehicle, ya incluido)",
+    "rank": 6
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Nomad 6: +6 a Drive Land Vehicle, ya sumado en su base de 20."
+   ],
+   "cyberware": [
+    "Neuroport",
+    "EMP Threading",
+    "Arasaka Cyberarm"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "tier lieutenant = NPC nombrado con ficha completa (aliado, no enemigo)."
+   ],
+   "id": "cemk-falco",
+   "name": "Falco",
+   "sourcePage": 33,
+   "tier": "lieutenant",
+   "role": "Nomad",
+   "rep": 7,
+   "stats": {
+    "INT": 6,
+    "REF": 8,
+    "DEX": 6,
+    "TECH": 5,
+    "COOL": 4,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 5,
+    "BODY": 6,
+    "EMP": 4
+   },
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 6,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": 6,
+    "bodySpVsMelee": 6,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Brawling Attack",
+     "skill": "Brawling",
+     "skillBase": 12,
+     "damage": "2d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Ataque desarmado"
+    },
+    {
+     "name": "Techtronika RT-46 Burya",
+     "skill": "Handgun",
+     "skillBase": 14,
+     "damage": "4d6",
+     "rof": 1,
+     "mag": 4,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Tech",
+     "notes": "Tira DV por rango (m/yd) del Burya: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no. Su Arasaka Cyberarm le deja dispararla sin romperse el brazo."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 8,
+    "Brawling": 12,
+    "Concentration": 6,
+    "Conversation": 10,
+    "Deduction": 10,
+    "Drive Land Vehicle": 20,
+    "Education": 6,
+    "Endurance": 10,
+    "Evasion": 12,
+    "First Aid": 11,
+    "Handgun": 14,
+    "Human Perception": 12,
+    "Local Expert": 12,
+    "Perception": 12,
+    "Persuasion": 8,
+    "Resist Torture/Drugs": 10,
+    "Stealth": 10,
+    "Streetwise": 8,
+    "Tracking": 12,
+    "Wardrobe & Style": 8
+   },
+   "lore": "Conductor superviviente del equipo de David; cliente de la mision, busca recuperar la chaqueta perdida y es buscado por Arasaka y el NCPD.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Valentino de bajo rango, ladron de la chaqueta - The Jacket p.34",
+   "faction": "Valentinos",
+   "roleAbility": {
+    "name": "Tech (+4 Electronics/Security Tech, ya incluido)",
+    "rank": 4
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Tech 4: +4 a Electronics/Security Tech, ya sumado en la base de 17."
+   ],
+   "cyberware": [
+    "Neuroport",
+    "Tech Hair (pelo artificial programable)",
+    "Dynalar Tool Cyberarm"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "Faccion Valentinos tomada del texto de la aventura, no del bloque."
+   ],
+   "id": "cemk-dalton-estevan-luis",
+   "name": "Dalton Estevan-Luis",
+   "sourcePage": 34,
+   "tier": "lieutenant",
+   "role": "Tech",
+   "rep": 1,
+   "stats": {
+    "INT": 5,
+    "REF": 6,
+    "DEX": 6,
+    "TECH": 7,
+    "COOL": 4,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 5,
+    "BODY": 4,
+    "EMP": 4
+   },
+   "hp": 35,
+   "seriouslyWounded": 18,
+   "deathSave": 4,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": 6,
+    "bodySpVsMelee": 6,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Brawling Attack",
+     "skill": "Brawling",
+     "skillBase": 8,
+     "damage": "1d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Ataque desarmado"
+    },
+    {
+     "name": "Constitutional Arms Unity",
+     "skill": "Handgun",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": 12,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Tira DV por rango (m/yd) del Unity: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 8,
+    "Brawling": 8,
+    "Concentration": 8,
+    "Conversation": 6,
+    "Drive Land Vehicle": 10,
+    "Education": 7,
+    "Electronics/Security Tech": 17,
+    "Evasion": 12,
+    "First Aid": 13,
+    "Handgun": 12,
+    "Human Perception": 16,
+    "Local Expert": 7,
+    "Perception": 7,
+    "Persuasion": 6,
+    "Resist Torture/Drugs": 10,
+    "Stealth": 10,
+    "Streetwise": 8
+   },
+   "lore": "Joven Valentino de bajo rango que robo la chaqueta de un almacen; solo buscaba su lugar en la vida.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Policia sin nombre - The Jacket p.35",
+   "faction": "NCPD",
+   "roleAbility": null,
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Rol: ninguno (None)."
+   ],
+   "cyberware": [
+    "Neuroport"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "Skill bases son 'Essential' (lista reducida de PNJ sin nombre).",
+    "Faccion NCPD inferida del nombre."
+   ],
+   "id": "cemk-ncpd-officer",
+   "name": "NCPD Officer",
+   "sourcePage": 35,
+   "tier": "mook",
+   "role": "",
+   "rep": 1,
+   "stats": {
+    "INT": 3,
+    "REF": 4,
+    "DEX": 5,
+    "TECH": 4,
+    "COOL": 4,
+    "WILL": 4,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 5,
+    "EMP": 3
+   },
+   "hp": 35,
+   "seriouslyWounded": 18,
+   "deathSave": 5,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": 6,
+    "bodySpVsMelee": 6,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Militech M-10AF Lexington",
+     "skill": "Handgun",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": 21,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Tira DV por rango (m/yd) del Lexington: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 10,
+    "Brawling": 8,
+    "Evasion": 10,
+    "Human Perception": 8,
+    "Perception": 12
+   },
+   "lore": "Agente generico del NCPD; aparece como guardia en escenas de la aventura.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Empleado de REO Meatwagon - The Jacket p.35",
+   "faction": "REO Meatwagon",
+   "roleAbility": {
+    "name": "Medtech (gana Surgery)",
+    "rank": 2
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Medtech 2: gana la habilidad Surgery.",
+    "A 0 HP el escenario lo da por muerto (PNJ sin nombre)."
+   ],
+   "cyberware": [
+    "Neuroport"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "Faccion tomada del texto de la aventura, no del bloque."
+   ],
+   "id": "cemk-reo-meatwagon-gonk",
+   "name": "REO Meatwagon Gonk",
+   "sourcePage": 35,
+   "tier": "mook",
+   "role": "Medtech",
+   "rep": 0,
+   "stats": {
+    "INT": 5,
+    "REF": 4,
+    "DEX": 5,
+    "TECH": 7,
+    "COOL": 3,
+    "WILL": 4,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 4,
+    "EMP": 3
+   },
+   "hp": 30,
+   "seriouslyWounded": 15,
+   "deathSave": 4,
+   "armor": {
+    "name": "Kevlar",
+    "headSp": 7,
+    "bodySp": 7,
+    "headSpVsMelee": 4,
+    "bodySpVsMelee": 4,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Constitutional Arms Unity",
+     "skill": "Handgun",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": 12,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Tira DV por rango (m/yd) del Unity: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 7,
+    "Brawling": 7,
+    "Evasion": 8,
+    "Human Perception": 6,
+    "Paramedic": 12,
+    "Perception": 8
+   },
+   "lore": "Empleado corporativo de REO Meatwagon que ataca al equipo por unos eddies extra.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Netrunner sin nombre - The Jacket p.36",
+   "faction": "",
+   "roleAbility": {
+    "name": "Netrunner (Interface)",
+    "rank": 3
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": true,
+   "interfaceRank": 3,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Netrunner 3: Interface 3 y 2 Net Actions por turno.",
+    "Huye con 5 HP o menos (Jacket p.21).",
+    "Con Interface 3 accede a Quickhacks Simple (DV6), Standard (DV8) y Difficult (DV10); no Advanced (DV12) (Rule Book p.25)."
+   ],
+   "cyberware": [
+    "Neuroport w/ Cyberdeck (cyberdeck cargado en el Neuroport, puede hacer Quickhacks)"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "El bloque no lista Quickhacks; la lista es inferida de Interface 3 + Rule Book p.16 (todo netrunner NPC usa la lista del kit)."
+   ],
+   "id": "cemk-enemy-netrunner",
+   "name": "Enemy Netrunner",
+   "sourcePage": 36,
+   "tier": "mook",
+   "role": "Netrunner",
+   "rep": 1,
+   "stats": {
+    "INT": 5,
+    "REF": 4,
+    "DEX": 4,
+    "TECH": 6,
+    "COOL": 3,
+    "WILL": 4,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 4,
+    "EMP": 2
+   },
+   "hp": 30,
+   "seriouslyWounded": 15,
+   "deathSave": 4,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": 6,
+    "bodySpVsMelee": 6,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Constitutional Arms Unity",
+     "skill": "Handgun",
+     "skillBase": 10,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": 12,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Tira DV por rango (m/yd) del Unity: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 6,
+    "Brawling": 6,
+    "Evasion": 8,
+    "Human Perception": 8,
+    "Perception": 8,
+    "Stealth": 10
+   },
+   "lore": "Netrunner enemigo del grupo de Arasaka en la mision; hackea con un cyberdeck alojado en el Neuroport.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Mercenario sin nombre - The Jacket p.36",
+   "faction": "",
+   "roleAbility": {
+    "name": "Solo (+2 iniciativa)",
+    "rank": 2
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Solo 2: +2 a iniciativa.",
+    "Pelea hasta caer (Jacket p.21)."
+   ],
+   "cyberware": [
+    "Neuroport"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "El PDF imprime 'Rostovic' con acento (Rostovic con caron); normalizado."
+   ],
+   "id": "cemk-edgerunner-gonk",
+   "name": "Edgerunner Gonk",
+   "sourcePage": 36,
+   "tier": "mook",
+   "role": "Solo",
+   "rep": 1,
+   "stats": {
+    "INT": 4,
+    "REF": 4,
+    "DEX": 6,
+    "TECH": 4,
+    "COOL": 3,
+    "WILL": 4,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 5,
+    "EMP": 2
+   },
+   "hp": 35,
+   "seriouslyWounded": 18,
+   "deathSave": 5,
+   "armor": {
+    "name": "Kevlar",
+    "headSp": 7,
+    "bodySp": 7,
+    "headSpVsMelee": 4,
+    "bodySpVsMelee": 4,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Long Blade",
+     "skill": "Melee Weapon",
+     "skillBase": 13,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Arma cuerpo a cuerpo (en CEMK toda arma melee reduce a la mitad el SP del objetivo, Rule Book p.10)"
+    },
+    {
+     "name": "Rostovic DB-2 Satara Shotgun",
+     "skill": "Shoulder Arms",
+     "skillBase": 11,
+     "damage": "5d6",
+     "rof": 1,
+     "mag": 2,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Tech",
+     "notes": "Tira DV por rango (m/yd) del Satara: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 35, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 8,
+    "Brawling": 8,
+    "Evasion": 10,
+    "Human Perception": 6,
+    "Perception": 7,
+    "Stealth": 10
+   },
+   "lore": "Edgerunner contratado que se enfrenta al equipo junto a un agente corpo y un netrunner.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Soldado Arasaka; tambien se usa como 'Corpo Agent' - The Jacket p.37",
+   "faction": "Arasaka",
+   "roleAbility": {
+    "name": "Solo (+2 iniciativa)",
+    "rank": 2
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": 2,
+   "quickhacks": [],
+   "specialRules": [
+    "Solo 2: +2 a iniciativa.",
+    "Self-ICE x2: para Quickhackearlo un netrunner debe primero Breach 2 Passwalls (DV8).",
+    "Se usa tambien como 'Corpo Agent' (Jacket p.20-21: 'use the Arasaka Soldier stat block'); ese agente huye con 5 HP o menos."
+   ],
+   "cyberware": [
+    "Neuroport",
+    "Self-ICE x2 (2 Passwalls, DV8)"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "Atribucion 'Corpo Agent' = Arasaka Soldier confirmada en el texto del escenario (no es un bloque distinto)."
+   ],
+   "id": "cemk-arasaka-soldier",
+   "name": "Arasaka Soldier",
+   "sourcePage": 37,
+   "tier": "mook",
+   "role": "Solo",
+   "rep": 2,
+   "stats": {
+    "INT": 4,
+    "REF": 7,
+    "DEX": 5,
+    "TECH": 3,
+    "COOL": 5,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 5,
+    "BODY": 6,
+    "EMP": 3
+   },
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 6,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": 6,
+    "bodySpVsMelee": 6,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Arasaka HJSH-18 Masamune",
+     "skill": "Shoulder Arms",
+     "skillBase": 13,
+     "damage": "5d6",
+     "rof": 1,
+     "mag": 24,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Sirve para disparo simple y Autofire con la misma base 13. Tira DV por rango (m/yd) del Masamune (valor simple / valor autofire): 0-6: 17/22, 7-12: 16/20, 13-25: 15/17, 26-50: 13/20, 51-100: 15/25, 101-200: 20/-, 201-400: 25/-, 401-800: 30/-."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 10,
+    "Brawling": 10,
+    "Evasion": 11,
+    "Human Perception": 9,
+    "Perception": 10,
+    "Tactics": 10
+   },
+   "lore": "Soldado de seguridad de Arasaka; el mismo bloque sirve para el agente corpo del encuentro con edgerunners.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Pandillero Valentino - The Jacket p.37",
+   "faction": "Valentinos",
+   "roleAbility": {
+    "name": "Solo (+2 iniciativa)",
+    "rank": 2
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Solo 2: +2 a iniciativa.",
+    "Los Gonks actuan como grupo: una sola tirada de iniciativa para todos."
+   ],
+   "cyberware": [
+    "Neuroport"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2)."
+   ],
+   "id": "cemk-valentino-gonk",
+   "name": "Valentino Gonk",
+   "sourcePage": 37,
+   "tier": "mook",
+   "role": "Solo",
+   "rep": 1,
+   "stats": {
+    "INT": 4,
+    "REF": 6,
+    "DEX": 6,
+    "TECH": 4,
+    "COOL": 3,
+    "WILL": 4,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 5,
+    "EMP": 3
+   },
+   "hp": 35,
+   "seriouslyWounded": 18,
+   "deathSave": 5,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": 6,
+    "bodySpVsMelee": 6,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Spiked Baseball Bat",
+     "skill": "Melee Weapon",
+     "skillBase": 10,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Arma cuerpo a cuerpo (en CEMK toda arma melee reduce a la mitad el SP del objetivo, Rule Book p.10)"
+    },
+    {
+     "name": "Militech M-76e Omaha",
+     "skill": "Handgun",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": 9,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Tech",
+     "notes": "Tira DV por rango (m/yd) del Omaha: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 8,
+    "Brawling": 10,
+    "Evasion": 12,
+    "Human Perception": 8,
+    "Perception": 8
+   },
+   "lore": "Pandillero de los Valentinos; acompana a Maria Torres en el combate final.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Borg de Arasaka - The Jacket pp.38-39",
+   "faction": "Arasaka",
+   "roleAbility": {
+    "name": "Solo (+9 iniciativa; siempre va primero)",
+    "rank": 9
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": 3,
+   "quickhacks": [],
+   "specialRules": [
+    "Solo 9: +9 a iniciativa, pero siempre actua primero.",
+    "Self-ICE x3: Breach 3 Passwalls (DV10). Self-ICE Regenerator: al inicio de su turno expulsa a cualquier netrunner conectado y regenera los Passwalls.",
+    "Communications Receiver: Accion, Check DV13 Electronics/Security Tech; si pasa, escucha comunicaciones holo/radio a 50 m.",
+    "Armor Regeneration Matrix: la primera vez que sus HP bajan a 40 o menos, su armadura vuelve a SP 18.",
+    "FBC Body: ignora Choke y Critical Injuries (incluido el dano adicional); no respira, come ni bebe.",
+    "Berserk Implant: sin penalizadores por Seriously/Mortally Wounded; aun hace Death Saves a 0 HP.",
+    "Sandevistan: siempre activo en combate; un Move o Attack extra en su turno, sin perdida de Humanity ni HP.",
+    "Jumpboosters: ignora penalizadores de movimiento por saltos.",
+    "Nota p.39 para RED: agregar Low Light/Infrared/UV x2, Anti-Dazzle x2, Hardened Shielding en todo el cyberware, un Level Damper y lo que el GM quiera."
+   ],
+   "cyberware": [
+    "Neuroport",
+    "Self-ICE x3 (3 Passwalls, DV10)",
+    "Self-ICE Regenerator",
+    "Communications Receiver w/ Descrambler",
+    "Armor Regeneration Matrix",
+    "FBC Body",
+    "Berserk Implant",
+    "Adam Smasher's Sandevistan (experimental)",
+    "Jumpboosters"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2). EMP impreso '-' (null) y Seriously Wounded '-' (null).",
+    "Bloque impreso en pp.38-39 (armas/skills p.38, cyberware p.39); sourcePage=38.",
+    "Armadura 18/18: head y body iguales, sin reduccion vs melee."
+   ],
+   "id": "cemk-adam-smasher",
+   "name": "Adam Smasher",
+   "sourcePage": 38,
+   "tier": "boss",
+   "role": "Solo",
+   "rep": 10,
+   "stats": {
+    "INT": 6,
+    "REF": 8,
+    "DEX": 8,
+    "TECH": 6,
+    "COOL": 5,
+    "WILL": 8,
+    "LUCK": null,
+    "MOVE": 8,
+    "BODY": 17,
+    "EMP": null
+   },
+   "hp": 75,
+   "seriouslyWounded": null,
+   "deathSave": 17,
+   "armor": {
+    "name": "Adam Smasher's Plating",
+    "headSp": 18,
+    "bodySp": 18,
+    "headSpVsMelee": 18,
+    "bodySpVsMelee": 18,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Adam Smasher's Fists",
+     "skill": "Brawling",
+     "skillBase": 18,
+     "damage": "5d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Tipo impreso: 'Halves SP' (reduce a la mitad el SP). Sin tira de DV propia."
+    },
+    {
+     "name": "Shoulder-Mounted Rocket Launcher",
+     "skill": "Heavy Weapons",
+     "skillBase": 18,
+     "damage": "9d6",
+     "rof": 1,
+     "mag": 4,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Smart",
+     "notes": "Tira DV por rango (m/yd) del Rocket Launcher: 0-6: 17, 7-12: 16, 13-25: 15, 26-50: 15, 51-100: 20, 101-200: 20, 201-400: 25, 401-800: 30. Arma Explosive Smart."
+    },
+    {
+     "name": "Pop-Up Autoshotgun",
+     "skill": "Shoulder Arms",
+     "skillBase": 18,
+     "damage": "6d6",
+     "rof": 2,
+     "mag": 16,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Tira DV por rango (m/yd) del Autoshotgun: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 35, 201+: no."
+    },
+    {
+     "name": "Adam Smasher's Chain Gun",
+     "skill": "Heavy Weapons",
+     "skillBase": 18,
+     "damage": "Autofire x5 (solo Autofire; el libro imprime 'See Type')",
+     "rof": 1,
+     "mag": 80,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Tira DV por rango (m/yd) del Chain Gun (DV autofire): 0-6: 22, 7-12: 20, 13-25: 17, 26-50: 20, 51-100: 25, 101+: no. Toda su municion es perforante: ablata la armadura 2 en vez de 1."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 14,
+    "Autofire": 18,
+    "Brawling": 18,
+    "Bureaucracy": 10,
+    "Conceal/Reveal Object": 12,
+    "Concentration": 16,
+    "Conversation": 2,
+    "Cybertech": 16,
+    "Drive Land Vehicle": 12,
+    "Education": 10,
+    "Electronics/Security Tech": 10,
+    "Endurance": 18,
+    "Evasion": 18,
+    "First Aid": 10,
+    "Handgun": 18,
+    "Heavy Weapons": 18,
+    "Human Perception": 3,
+    "Interrogation": 15,
+    "Local Expert": 8,
+    "Melee Weapon": 18,
+    "Paramedic": 10,
+    "Perception": 16,
+    "Persuasion": 8,
+    "Resist Torture/Drugs": 18,
+    "Shoulder Arms": 18,
+    "Stealth": 12,
+    "Streetwise": 10,
+    "Tactics": 13,
+    "Wardrobe & Style": 12
+   },
+   "lore": "Borg legendario de Arasaka, el enemigo definitivo; su cuerpo FBC y su equipo unico lo vuelven casi imparable.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Lider de Valentinos leales a Gustavo Orta - The Jacket p.40",
+   "faction": "Valentinos",
+   "roleAbility": {
+    "name": "Solo (+6 iniciativa)",
+    "rank": 6
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Solo 6: +6 a iniciativa.",
+    "Berserk Implant (si se activa): sin penalizadores por Seriously/Mortally Wounded, aun hace Death Saves a 0 HP."
+   ],
+   "cyberware": [
+    "Neuroport",
+    "EMP Threading",
+    "Arasaka Mantis Blade Cyberarm x2",
+    "Berserk Implant"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "Seriously Wounded 23 (45/2 redondeado hacia arriba) tal cual el libro."
+   ],
+   "id": "cemk-maria-torres",
+   "name": "Maria Torres",
+   "sourcePage": 40,
+   "tier": "lieutenant",
+   "role": "Solo",
+   "rep": 5,
+   "stats": {
+    "INT": 6,
+    "REF": 8,
+    "DEX": 8,
+    "TECH": 6,
+    "COOL": 6,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 6,
+    "BODY": 7,
+    "EMP": 5
+   },
+   "hp": 45,
+   "seriouslyWounded": 23,
+   "deathSave": 7,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": 6,
+    "bodySpVsMelee": 6,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Mantis Blade x2",
+     "skill": "Melee Weapon",
+     "skillBase": 16,
+     "damage": "3d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Arma cuerpo a cuerpo (en CEMK toda arma melee reduce a la mitad el SP del objetivo, Rule Book p.10). ROF impreso 1."
+    },
+    {
+     "name": "Techtronika RT-46 Burya",
+     "skill": "Handgun",
+     "skillBase": 16,
+     "damage": "4d6",
+     "rof": 1,
+     "mag": 4,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Tech",
+     "notes": "Tira DV por rango (m/yd) del Burya: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 16,
+    "Brawling": 14,
+    "Bribery": 10,
+    "Concentration": 8,
+    "Conversation": 7,
+    "Drive Land Vehicle": 10,
+    "Education": 8,
+    "Endurance": 10,
+    "Evasion": 16,
+    "First Aid": 8,
+    "Handgun": 16,
+    "Human Perception": 9,
+    "Interrogation": 12,
+    "Local Expert": 10,
+    "Melee Weapon": 16,
+    "Perception": 12,
+    "Persuasion": 10,
+    "Resist Torture/Drugs": 12,
+    "Stealth": 10,
+    "Streetwise": 12,
+    "Tactics": 10,
+    "Wardrobe & Style": 8
+   },
+   "lore": "Lider del equipo de Valentinos fieles a Gustavo Orta en el combate final; ambos brazos son cyberarms con cuchillas mantis.",
+   "book": "Cyberpunk Edgerunners Mission Kit - The Jacket"
+  },
+  {
+   "subtitle": "Lider Maelstrom - Karaoke Night p.8",
+   "faction": "Maelstrom",
+   "roleAbility": {
+    "name": "Solo (+4 iniciativa)",
+    "rank": 4
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": 1,
+   "quickhacks": [],
+   "specialRules": [
+    "Solo 4: +4 a iniciativa.",
+    "Maelstrom Multi-Optic Mount: +2 a Checks de Perception basados en vista; ve en poca luz/oscuridad sin penalizador.",
+    "Self-ICE: para Quickhackearla un netrunner debe Breach 1 Passwall (DV6)."
+   ],
+   "cyberware": [
+    "Neuroport",
+    "Maelstrom Multi-Optic Mount",
+    "Salvaged Monowire Cyberarm",
+    "Self-ICE x1 (1 Passwall, DV6)"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "Skill 'Handguns' (plural) tal cual en la lista del libro; la tabla de ataques dice 'Handgun'.",
+    "Crusher: el libro solo imprime DV 13 en 0-6; el resto de la tira esta vacio.",
+    "tier lieutenant (lider nombrado de la banda); podria ser mini_boss en la practica del DLC."
+   ],
+   "id": "cemk-nitro",
+   "name": "Nitro",
+   "sourcePage": 8,
+   "tier": "lieutenant",
+   "role": "Solo",
+   "rep": 3,
+   "stats": {
+    "INT": 4,
+    "REF": 7,
+    "DEX": 5,
+    "TECH": 3,
+    "COOL": 5,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 5,
+    "BODY": 6,
+    "EMP": 3
+   },
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 6,
+   "armor": {
+    "name": "Subdermal Armor",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": 6,
+    "bodySpVsMelee": 6,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Monowire",
+     "skill": "Melee Weapon",
+     "skillBase": 13,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Arma cuerpo a cuerpo (en CEMK toda arma melee reduce a la mitad el SP del objetivo, Rule Book p.10)"
+    },
+    {
+     "name": "Militech Crusher",
+     "skill": "Handgun",
+     "skillBase": 14,
+     "damage": "3d6",
+     "rof": 1,
+     "mag": 12,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Tipo impreso: Power Weapon, Shell Ammo (municion de perdigones). Tira DV por rango (m/yd) del Crusher: 0-6: 13, resto: sin dato."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 13,
+    "Brawling": 11,
+    "Concentration": 6,
+    "Conversation": 6,
+    "Drive Land Vehicle": 8,
+    "Education": 6,
+    "Endurance": 9,
+    "Evasion": 13,
+    "First Aid": 6,
+    "Handguns": 14,
+    "Human Perception": 6,
+    "Interrogation": 10,
+    "Local Expert": 8,
+    "Melee Weapon": 13,
+    "Perception": 10,
+    "Persuasion": 8,
+    "Resist Torture/Drugs": 12,
+    "Stealth": 8,
+    "Streetwise": 10,
+    "Tactics": 6
+   },
+   "lore": "Pandillera de Maelstrom que celebra su cumpleanos con sus chooms en un bar tomado.",
+   "book": "Cyberpunk Edgerunners Mission Kit - DLC 1 Karaoke Night"
+  },
+  {
+   "subtitle": "Pandillero Maelstrom (Stingball, el portero) - Karaoke Night p.9",
+   "faction": "Maelstrom",
+   "roleAbility": {
+    "name": "Solo (+1 iniciativa)",
+    "rank": 1
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Solo 1: +1 a iniciativa.",
+    "Maelstrom Multi-Optic Mount: +2 a Perception basada en vista; ve en poca luz sin penalizador."
+   ],
+   "cyberware": [
+    "Neuroport",
+    "Maelstrom Multi-Optic Mount",
+    "Gorilla Arm"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "Fila de stats extraida con columnas desordenadas; consistente con HP40 por la formula."
+   ],
+   "id": "cemk-maelstrom-gonk-stingball",
+   "name": "Maelstrom Gonk/Stingball",
+   "sourcePage": 9,
+   "tier": "mook",
+   "role": "Solo",
+   "rep": 1,
+   "stats": {
+    "INT": 4,
+    "REF": 7,
+    "DEX": 5,
+    "TECH": 3,
+    "COOL": 5,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 5,
+    "BODY": 6,
+    "EMP": 3
+   },
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 6,
+   "armor": {
+    "name": "Skinweave",
+    "headSp": 7,
+    "bodySp": 7,
+    "headSpVsMelee": 4,
+    "bodySpVsMelee": 4,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Gorilla Arm",
+     "skill": "Melee Weapon",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Arma cuerpo a cuerpo (en CEMK toda arma melee reduce a la mitad el SP del objetivo, Rule Book p.10)"
+    },
+    {
+     "name": "Constitutional Arms Unity",
+     "skill": "Handgun",
+     "skillBase": 11,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": 12,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Tira DV por rango (m/yd) del Unity: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 10,
+    "Brawling": 10,
+    "Evasion": 11,
+    "Human Perception": 9,
+    "Perception": 10,
+    "Tactics": 10
+   },
+   "lore": "Pandillero generico de Maelstrom; el mismo bloque describe a Stingball, el portero novato que cuida la puerta.",
+   "book": "Cyberpunk Edgerunners Mission Kit - DLC 1 Karaoke Night"
+  },
+  {
+   "subtitle": "Netrunner, contacto de Roger Kynard - Karaoke Night p.10",
+   "faction": "",
+   "roleAbility": {
+    "name": "Netrunner (Interface)",
+    "rank": 3
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": true,
+   "interfaceRank": 3,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Netrunner 3: Interface 3 y 2 Net Actions por turno.",
+    "Sin armadura de cabeza (solo cuerpo, Kevlar Suit SP 7 / 4).",
+    "Comportamiento: busca cobertura y luego Quickhackea; huye al quedar Seriously Wounded (Karaoke p.6)."
+   ],
+   "cyberware": [
+    "Neuroport w/ Cyberdeck (cyberdeck en el Neuroport, puede hacer Quickhacks)"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "Quickhacks inferidos de Interface 3 (el bloque no los lista).",
+    "Tier lieutenant por ser nombrado; sus numeros son de mook (HP30)."
+   ],
+   "id": "cemk-rocky-erikson",
+   "name": "Rocky Erikson",
+   "sourcePage": 10,
+   "tier": "lieutenant",
+   "role": "Netrunner",
+   "rep": 2,
+   "stats": {
+    "INT": 5,
+    "REF": 4,
+    "DEX": 4,
+    "TECH": 6,
+    "COOL": 3,
+    "WILL": 4,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 4,
+    "EMP": 4
+   },
+   "hp": 30,
+   "seriouslyWounded": 15,
+   "deathSave": 4,
+   "armor": {
+    "name": "Kevlar Suit",
+    "headSp": null,
+    "bodySp": 7,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": 4,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Constitutional Arms Unity",
+     "skill": "Handgun",
+     "skillBase": 10,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": 12,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Power",
+     "notes": "Tira DV por rango (m/yd) del Unity: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 6,
+    "Brawling": 6,
+    "Evasion": 8,
+    "Human Perception": 10,
+    "Perception": 10,
+    "Stealth": 10
+   },
+   "lore": "Netrunner que a veces trabaja para Roger Kynard; manda a su hustle contra el equipo.",
+   "book": "Cyberpunk Edgerunners Mission Kit - DLC 1 Karaoke Night"
+  },
+  {
+   "subtitle": "Matones de Rocky - Karaoke Night p.10",
+   "faction": "",
+   "roleAbility": {
+    "name": "Solo (+2 iniciativa)",
+    "rank": 2
+   },
+   "level": null,
+   "statsArmorModified": null,
+   "gear": [],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": true,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Solo 2: +2 a iniciativa.",
+    "Uno por cada Edgerunner presente; huyen con 5 HP o menos."
+   ],
+   "cyberware": [
+    "Neuroport"
+   ],
+   "doubts": [
+    "HP/Seriously Wounded/Death Save tal como los imprime el libro; HP verificado con 10+5*ceil((BODY+WILL)/2).",
+    "Armadura solo en Body (sin Head)."
+   ],
+   "id": "cemk-rockys-hustle",
+   "name": "Rocky's Hustle",
+   "sourcePage": 10,
+   "tier": "mook",
+   "role": "Solo",
+   "rep": 1,
+   "stats": {
+    "INT": 4,
+    "REF": 4,
+    "DEX": 6,
+    "TECH": 4,
+    "COOL": 3,
+    "WILL": 4,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 5,
+    "EMP": 2
+   },
+   "hp": 35,
+   "seriouslyWounded": 18,
+   "deathSave": 5,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": null,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": 6,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Long Blade",
+     "skill": "Melee Weapon",
+     "skillBase": 11,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Arma cuerpo a cuerpo (en CEMK toda arma melee reduce a la mitad el SP del objetivo, Rule Book p.10)"
+    },
+    {
+     "name": "Militech M-76e Omaha",
+     "skill": "Handgun",
+     "skillBase": 13,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": 9,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": "Tech",
+     "notes": "Tira DV por rango (m/yd) del Omaha: 0-6: 13, 7-12: 15, 13-25: 20, 26-50: 25, 51-100: 30, 101-200: 30, 201+: no."
+    }
+   ],
+   "skillBases": {
+    "Athletics": 8,
+    "Brawling": 8,
+    "Evasion": 12,
+    "Human Perception": 6,
+    "Perception": 10,
+    "Stealth": 8
+   },
+   "lore": "Matones contratados por Rocky Erikson para eliminar al equipo y tomar el objetivo.",
+   "book": "Cyberpunk Edgerunners Mission Kit - DLC 1 Karaoke Night"
+  }
+ ],
+ "quickhacksTable": [
+  {
+   "name": "Impair Movement",
+   "dv": 6,
+   "tier": "Simple",
+   "effect": "MOVE -1 durante 60 s (20 rounds); a 0 no puede hacer Move Action.",
+   "page": 16,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "Sonic Shock",
+   "dv": 6,
+   "tier": "Simple",
+   "effect": "Sufre el Damaged Ear (sin dano extra) durante 20 rounds.",
+   "page": 16,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "Overheat",
+   "dv": 8,
+   "tier": "Standard",
+   "effect": "Objetivo en llamas: 4 de dano directo a HP al final de su turno hasta apagarlo (Accion ROF1 en su turno); ignora armadura sin ablatarla.",
+   "page": 16,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "Short Circuit",
+   "dv": 8,
+   "tier": "Standard",
+   "effect": "El GM elige 3 piezas de cyberware (no Cyberarm/Cyberleg/Cybereye/Cyberaudio Suite/Neuroport/Cyberdeck Expansion; si opciones adheridas) que dejan de funcionar 20 rounds.",
+   "page": 16,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "Cyberware Malfunction",
+   "dv": 10,
+   "tier": "Difficult",
+   "effect": "El jugador elige una pieza de cyberware (no Neuroport ni Cyberdeck Port) inoperable 20 rounds; una cyberlimb actua como Broken Arm/Leg; opciones adheridas tambien se apagan.",
+   "page": 16,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "Lure",
+   "dv": 10,
+   "tier": "Difficult",
+   "effect": "Al inicio del siguiente turno del objetivo, este hace un Move controlado por el netrunner; solo si no sabe del Jack In; no avisa del hackeo; no puede llevarlo a peligro evidente.",
+   "page": 17,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "Slow",
+   "dv": 10,
+   "tier": "Difficult",
+   "effect": "MOVE -1d6 durante 20 rounds; a 0 no puede mover.",
+   "page": 17,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "Synapse Burnout",
+   "dv": 10,
+   "tier": "Difficult",
+   "effect": "3d6 de dano directo a HP; ignora armadura sin ablatarla.",
+   "page": 17,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "Puppet",
+   "dv": 12,
+   "tier": "Advanced",
+   "effect": "Controlas la Accion y el Move del objetivo en su siguiente turno; los Checks usan los STATs y skills del objetivo.",
+   "page": 17,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "Shard Ejection",
+   "dv": 12,
+   "tier": "Advanced",
+   "effect": "Expulsa un chip instalado (a eleccion) a una casilla adyacente; no funciona con cubierta de shard slot.",
+   "page": 17,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  },
+  {
+   "name": "System Reset",
+   "dv": 12,
+   "tier": "Advanced",
+   "effect": "Inconsciente 20 rounds o hasta recibir dano, y cae Prone.",
+   "page": 17,
+   "book": "CEMK Rule Book (lista repetida en la tarjeta de referencia pp.38-39)"
+  }
+ ],
+ "interfaceRankUnlock": {
+  "source": "CEMK Rule Book p.25",
+  "table": [
+   {
+    "rank": 1,
+    "maxDv": 6,
+    "unlocks": "Simple"
+   },
+   {
+    "rank": 2,
+    "maxDv": 8,
+    "unlocks": "Standard"
+   },
+   {
+    "rank": 3,
+    "maxDv": 10,
+    "unlocks": "Difficult; ademas supera automaticamente el firewall base del Neuroport"
+   },
+   {
+    "rank": 4,
+    "maxDv": 12,
+    "unlocks": "Advanced"
+   }
+  ],
+  "note": "Rank 1-2 necesitan un Check Interface DV6 para pasar el firewall base del Neuroport (Rule Book p.26)."
+ }
+}

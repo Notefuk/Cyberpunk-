@@ -7,23 +7,30 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-22]
-**Versión de la app**: v4.6.2 (en `main`, squash e0de28c, PR #19; publicada en gh-pages y verificada en vivo)
-**Plan activo**: plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, página de origen en cada ítem y registro en `docs/canon-audit/`. Bloques 1 (v4.6.1) y 2 (v4.6.2) hechos. Planes 1, 2 y 4 terminados. El plan 3 se perdió y lo reemplaza v4.7.0.
+**Versión de la app**: v4.7.0 lista en la rama `claude/v4.7.0-enemigos-cemk` (sin PR). `main` = v4.6.2, publicada.
+**Plan activo**: plan 6 (`docs/plans/plan6-enemigos-canon-cemk.md`, enemigos canon porteados a CEMK; v4.7.0-v4.7.2) y plan 5 (`docs/plans/plan5-canon-audit.md`): canonizar lo cargado, borrar lo inventado, completar, página de origen en cada ítem y registro en `docs/canon-audit/`. Bloques 1 (v4.6.1) y 2 (v4.6.2) hechos. Planes 1, 2 y 4 terminados. El plan 3 se perdió y lo reemplaza v4.7.0.
 
 ## En curso (a cargo)
 
-- Nada a medias. `main` libre para cualquiera de las dos herramientas.
+- [Claude Code · 2026-10-22] v4.7.0 terminada y verificada en la rama `claude/v4.7.0-enemigos-cemk`. Falta: PR, merge y gh-pages. Antigravity: no tocar `enemiesCatalog.ts`, `frontend/src/data/enemies/` (generado), `redChromeCargoData.ts` ni `features/gm/` hasta el merge.
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-22]
-- Rama y último commit: `main` @ commit "CHECKPOINT: v4.6.2 mergeada..." (pusheada: sí). gh-pages publicada con el build de v4.6.2.
-- A medias: nada.
-- Siguiente paso exacto: plan 5 v4.7.0 enemigos canon (Danger Gal, Hardened, Red Chrome Cargo, las armas CEMK 2077 Tamayura/Achilles/Chao y la errata del Security Officer del Core p.415) en una rama nueva `claude/v4.7.0-enemigos`.
+- Rama y último commit: `claude/v4.7.0-enemigos-cemk` @ "v4.7.0 Enemigos canon..." (pusheada: sí).
+- A medias: PR de v4.7.0, merge y publicación.
+- Siguiente paso exacto: mergear v4.7.0; después, plan 6 v4.7.1 Danger Gal: 118 fichas y 15 facciones. Extraer por tandas de facciones con `data/enemies-src/SCHEMA.md`, agregar el libro a `scripts/gen_enemies.py` para generar `frontend/src/data/enemies/dangerGal.ts` y borrar las 95 fichas danger_gal inventadas de `enemiesCatalog.ts`.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-22] v4.7.0 Enemigos canon + porte CEMK (plan 6, bloque 1):
+  - 40 fichas canon (Core 10, CEMK 14, Hardened 16) reemplazan a 36 inventadas.
+  - `cemkPort.ts` aplica las reglas del Rule Book de CEMK citadas; panel GM con selector CEMK | RED.
+  - Red Chrome Cargo reescrito con canon.
+  - Fuentes en `data/enemies-src/` + generador `scripts/gen_enemies.py`.
+  - Verificación visual con pdf.js en el navegador: `scratchpad/pages/view.html` servido con `python -m http.server` (el visor de PDF del navegador no deja hacer clic).
+  - Registro: `docs/canon-audit/v4.7.0-*.md`.
 - [Claude Code · 2026-10-22] v4.6.2 Hornet's Pharmacy + 12 Days of Gunmas + Errata v1.25 canon (plan 5, bloque 2), mergeada (PR #19, squash e0de28c) y publicada:
   - Se borraron 6 ítems inventados (Hover, Red Glass, Detox, Erebus, Fox, Kolokol) y se agregaron 19 canon (8 de Hornet's, 11 de Gunmas).
   - Se corrigieron Berserker, Prime Time, Sixgun, Timewarp, el Cityhunter y 5 erratas.

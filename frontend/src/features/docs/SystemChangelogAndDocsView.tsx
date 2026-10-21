@@ -26,6 +26,46 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.7.0',
+    date: '2026-10-22',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Canon / Enemigos',
+    title: 'Enemigos canon (Core, CEMK, Hardened) porteados a reglas CEMK',
+    summary: 'Plan 6, bloque 1: 40 fichas del libro (10 del Core, 14 de CEMK y 16 de Hardened) reemplazan a 36 inventadas. Un motor de porte calcula la versión CEMK de cada PNJ con reglas fijas citadas del Rule Book de CEMK. Registro: docs/canon-audit/v4.7.0-enemigos-core-cemk-hardened.md.',
+    highlights: [
+      'Se perdió: 36 fichas que no existen en los libros (11 "core", 14 "CEMK", 10 "Hardened" y 1 FBC), además de Tamayura, Achilles, Chao y el Ballistic Coprocessor.',
+      'Se ganó: 10 PNJ del Core (pp. 412-416, con errata v1.25), los 14 de CEMK (Jacket pp. 33-40, Karaoke Night pp. 8-10) y los 16 de Hardened. Cada uno tiene su página.',
+      'Motor de porte (cemkPort.ts):',
+      '  · Todos llevan Neuroport y son hackeables.',
+      '  · Netrunner: Cyberdeck Port de 50 m, hasta 3 NET Actions (gana lo impreso en las fichas CEMK) y Quickhacks según el rango de Interface (RB p.25).',
+      '  · Self-ICE solo si el libro lo trae.',
+      '  · Armas Power/Smart/Tech/Melee y SP a la mitad contra melee.',
+      'Panel GM: selector CEMK | RED en cada enemigo. CEMK muestra el porte; RED, la ficha original del libro (LUCK, skill bases y programas).',
+      'Red Chrome Cargo canon: los guardias son el Boosterganger del Core más una Shotgun, el oficial es el Security Operative y hay una Automated Turret. Mainframe de 5 pisos (DV 6/8/8, Hellhound, DV 8) y 5 checks con su DV. Se borraron 30 objetos de loot y los Quickhacks inventados.',
+      'Datos fuente en data/enemies-src/*.json y generador scripts/gen_enemies.py. ROF y cargador salen de las tablas del Core. 62 tests.',
+      'Pendiente: Danger Gal (118 fichas) en v4.7.1 y su New Gear en v4.7.2.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/cemkPort.ts',
+      'frontend/src/data/enemies/core.ts',
+      'frontend/src/data/enemies/cemk.ts',
+      'frontend/src/data/enemies/hardened.ts',
+      'frontend/src/data/enemiesCatalog.ts',
+      'frontend/src/data/redChromeCargoData.ts',
+      'frontend/src/features/gm/EnemiesCompendiumPanel.tsx',
+      'frontend/src/features/oneshot/RedChromeCargoView.tsx',
+      'frontend/src/data/weaponAndCyberwareTooltips.ts',
+      'frontend/src/engine/__tests__/rules.test.ts',
+      'scripts/gen_enemies.py',
+      'data/enemies-src/',
+      'docs/plans/plan6-enemigos-canon-cemk.md',
+      'docs/canon-audit/v4.7.0-enemigos-core-cemk-hardened.md',
+      'docs/canon-audit/v4.7.0-rcc-notes.md'
+    ],
+    metricsBadge: 'v4.7.0 • Enemigos canon + porte CEMK • Plan 6'
+  },
+  {
     version: 'v4.6.2',
     date: '2026-10-21',
     author: 'Claude Code',
@@ -674,6 +714,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.7.0': true,
     'v4.6.2': true,
     'v4.6.1': true,
     'v4.6.0': true,
