@@ -7193,7 +7193,7 @@ export const CombatHudView: React.FC = () => {
                                     >
                                       <div className="flex items-center justify-between font-bold">
                                         <span className="text-white">{m.name}</span>
-                                        <span className="text-amber-400">{m.isOpposed ? 'vs DEX + Evasion' : `DV ${m.resolutionDv}`}</span>
+                                        <span className="text-amber-400">{m.isOpposed ? `vs ${m.opposedBy ?? 'DEX + Evasion'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
                                       </div>
                                       <div className="text-[9px] text-slate-400 font-sans leading-tight">
                                         <strong>Req:</strong> {m.requirements}
@@ -7420,7 +7420,7 @@ export const CombatHudView: React.FC = () => {
                                 )}
                               </div>
                               <div className="text-[10px] font-mono-code font-bold text-[#38bdf8] bg-[#0c121e] px-1.5 py-0.5 rounded border border-[#1b2b40]">
-                                {move.isOpposed ? 'vs DEX + Evasion' : `DV ${move.resolutionDv}`}
+                                {move.isOpposed ? `vs ${move.opposedBy ?? 'DEX + Evasion'}` : `DV ${move.resolutionDv}`}{move.sourcePage && <span className="text-[#64748b] ml-1">p.{move.sourcePage}</span>}
                               </div>
                             </div>
 
@@ -7443,7 +7443,7 @@ export const CombatHudView: React.FC = () => {
                                 onClick={() => handleExecuteMartialMove(activeForm, move)}
                                 className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#10b981] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d] cursor-pointer"
                               >
-                                <Target className="w-3 h-3" /> EJECUTAR COMBO (1d10 + DEX + {activeRank} vs {move.isOpposed ? 'DEX + Evasion + 1d10' : `DV ${move.resolutionDv}`})
+                                <Target className="w-3 h-3" /> EJECUTAR COMBO (1d10 + DEX + {activeRank} vs {move.isOpposed ? (move.opposedBy ?? 'DEX + Evasion + 1d10') : `DV ${move.resolutionDv}`})
                               </button>
                               {move.damageBonusOrFormula && move.damageBonusOrFormula.includes('d') && (
                                 <button

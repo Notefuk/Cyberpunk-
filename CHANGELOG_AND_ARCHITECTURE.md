@@ -247,6 +247,16 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.6.1] - 2026-10-21 (Cyberfists of Fury canon) [Claude Code · 2026-10-21]
+* **Category**: Canon / reglas (plan 5, bloque 1: `docs/plans/plan5-canon-audit.md`). Fuente: Interface RED Vol. 4 pp. 74-84. Registro detallado (qué se perdió, qué se ganó y qué se corrigió, con páginas): `docs/canon-audit/v4.5.1-cyberfists.md`.
+* **Se perdió** (inventado, no existe en IR4): 10 formas (Animal Kung Fu, Chornobog's Kommando, Cyber-Wrestling, Hapkido, Jeet Kune Do, Jiu-Jitsu, Lethwei, Ninjutsu, Savate y Systema) y sus 20 movimientos.
+* **Se ganó**: 10 formas canon (Arnis, Choy Li Fut, Jujutsu, Kendo, Kung Fu, Kyudo, Multiarm Melee, Sov-System, Tai Chi y Thamoc) con sus 20 movimientos.
+* **Se corrigió**: los 26 movimientos de las 13 formas que ya estaban (sus ids se mantienen).
+* **Modelo**: `MartialArtMove.sourcePage`, `MartialArtMove.opposedBy` y `MartialArtForm.sourcePage`. La UI (Combat HUD, Street Lab y NET/Roles) muestra la página y contra qué se enfrenta cada movimiento.
+* **Migración**: persist `version` 2. Quita de los personajes guardados los rangos y chips de las formas borradas.
+* **Tests**: 5 nuevos (23 formas IR4 con nombres canon, 27/54, páginas entre 74 y 84, sin ids inventados, DV > 0 si no es enfrentado). 38 tests en total.
+* **Desvío**: se publica como v4.6.1 y no como v4.5.1 (numeración de los planes 2 y 5) porque `main` ya está en v4.6.0. Los nombres de la rama y del registro conservan "v4.5.1".
+
 ### [v4.6.0] - 2026-10-21 (Ripperdoc estilo Cyberpunk 2077) [Claude Code · 2026-10-21]
 * **Category**: Diseño visual del Ripperdoc (plan 4: `docs/plans/plan4-ripperdoc-visual-2077.md`, aprobado por Giuliano). Solo visual: no cambia reglas ni datos salvo el fix de zonas.
 * **Files Modified**:

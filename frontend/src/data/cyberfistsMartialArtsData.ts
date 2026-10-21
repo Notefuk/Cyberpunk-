@@ -14,6 +14,8 @@ export interface MartialArtMove {
   resolutionDv: number;
   /** true: se resuelve contra DEX + Evasion + 1d10 del defensor en vez de un DV fijo (Core p. 178). */
   isOpposed?: boolean;
+  opposedBy?: string; // Contra qué se enfrenta si isOpposed (por defecto DEX + Evasion)
+  sourcePage?: number;
   damageBonusOrFormula?: string;
   effectDescription: string;
   criticalInjuryApplied?: string;
@@ -24,6 +26,7 @@ export interface MartialArtForm {
   name: string;
   sourceBook: 'core' | 'interface_red';
   badge: string;
+  sourcePage?: number;
   originAndFlavor: string;
   keyStats: string[];
   tacticalRole: string;
@@ -185,68 +188,71 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
   // Interface RED Vol. 4
   // ==========================================================================
   {
-    id: 'animal-kung-fu',
-    name: 'Animal Kung Fu',
+    id: 'arasakate',
+    name: 'Arasaka-te',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Estilo tradicional mimético de los cinco animales (Tigre, Grulla, Leopardo, Serpiente, Dragón) adaptado con garras cibernéticas y reflejos potenciados.',
-    keyStats: ['DEX', 'REF'],
-    tacticalRole: 'Ataques lacerantes continuos y cambios impredecibles de postura.',
+    sourcePage: 76,
+    originAndFlavor: 'Arte marcial corporativa creada por Arasaka antes de la Cuarta Guerra Corporativa; fácil de enseñar y franquiciada en dojos de centros comerciales.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Un movimiento de contraataque que rebaja la penalización de Aimed Shot y otro para escapar de un agarre.',
     moves: [
       {
-        id: 'akf-tiger-claw-shred',
-        name: 'Tiger Claw Shred',
-        formId: 'animal-kung-fu',
-        formName: 'Animal Kung Fu',
+        id: 'arasakate-counter-strike',
+        name: 'Counter Strike',
+        formId: 'arasakate',
+        formName: 'Arasaka-te',
         isNewCyberfists: true,
-        requirements: 'Impactar 2 ataques con garras, cuchillas o manos desnudas en el mismo turno.',
+        requirements: 'Tu turno; recibiste daño de un ataque de Brawling, Martial Arts o Melee Weapon desde tu último turno.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño cortante lacerante',
-        effectDescription: 'Zarpazo profundo que desgarra tejidos blandos y conexiones cibernéticas. Provoca que el enemigo comience a sangrar profusamente (-2 HP por asalto hasta recibir Primeros Auxilios).',
-        criticalInjuryApplied: 'Torn Muscle'
+        sourcePage: 76,
+        effectDescription: 'Una vez por turno. Si tienes éxito, la penalización de Aimed Shot de los ataques de Martial Arts/Melee Weapon baja de -8 a -5 durante el resto de tu turno, contra un personaje que te haya dañado con ese tipo de ataque desde tu último turno.'
       },
       {
-        id: 'akf-crane-peck-counter',
-        name: 'Crane Peck Counter',
-        formId: 'animal-kung-fu',
-        formName: 'Animal Kung Fu',
+        id: 'arasakate-escape-hold',
+        name: 'Escape Hold',
+        formId: 'arasakate',
+        formName: 'Arasaka-te',
         isNewCyberfists: true,
-        requirements: 'Esquivar exitosamente un ataque cuerpo a cuerpo de un enemigo en este asalto.',
-        resolutionDv: 16,
-        damageBonusOrFormula: 'Daño base + impacto directo a ojos/sensores',
-        effectDescription: 'Picotazo fulgurante con los dedos agrupados dirigido a las cuencas oculares u ópticas del agresor. El objetivo queda cegado temporalmente (-4 a todas las acciones durante 1 asalto).'
+        requirements: 'Tu turno; eres el defensor en un agarre (grapple).',
+        resolutionDv: 15,
+        sourcePage: 76,
+        effectDescription: 'Una vez por turno. Si tienes éxito, dejas de estar agarrado.'
       }
     ]
   },
   {
-    id: 'arasakate',
-    name: 'ArasakaTe',
+    id: 'arnis',
+    name: 'Arnis',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Doctrina de combate marcial ultracorporativo diseñada por Arasaka Security para sus guardaespaldas de élite y fuerzas especiales.',
-    keyStats: ['REF', 'WILL'],
-    tacticalRole: 'Ejecuciones quirúrgicas, contra-netrunning físico y protección de VIPS.',
+    sourcePage: 76,
+    originAndFlavor: 'Arte filipino centrado en las armas, considerado uno de los más letales.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Un combo de dos golpes que causa Torn Muscle y un desarme tras esquivar ataques con arma cuerpo a cuerpo.',
     moves: [
       {
-        id: 'arasakate-corporate-execution',
-        name: 'Corporate Execution Strike',
-        formId: 'arasakate',
-        formName: 'ArasakaTe',
+        id: 'arnis-coordinated-combination',
+        name: 'Coordinated Combination',
+        formId: 'arnis',
+        formName: 'Arnis',
         isNewCyberfists: true,
-        requirements: 'Objetivo sorprendido o sufriendo una condición negativa.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+3d6 daño perforante a puntos vitales',
-        effectDescription: 'Golpe seco con la base de la palma reforzada dirigido a la base del cráneo o caja torácica. Duplica el daño que supere la armadura SP.'
+        requirements: 'Impactaste al mismo objetivo con dos ataques de Martial Arts (Arnis) o dos ataques de Melee Weapon hechos con armas cuerpo a cuerpo Light/Medium (o cualquier Melee Weapon instalada como cyberware, dentro de cyberware o en un Battleglove) en este turno.',
+        resolutionDv: 15,
+        sourcePage: 76,
+        effectDescription: 'Una vez por turno. Si tienes éxito, el objetivo sufre la Critical Injury Torn Muscle sin su Bonus Damage.',
+        criticalInjuryApplied: 'Torn Muscle'
       },
       {
-        id: 'arasakate-neural-disruption',
-        name: 'Neural Disruption Jab',
-        formId: 'arasakate',
-        formName: 'ArasakaTe',
+        id: 'arnis-disarming-technique',
+        name: 'Disarming Technique',
+        formId: 'arnis',
+        formName: 'Arnis',
         isNewCyberfists: true,
-        requirements: 'El objetivo debe poseer Neuralware o Cyberware en cabeza/torso.',
+        requirements: 'Tu turno; esquivaste al menos un ataque de Melee Weapon desde tu último turno y todos los ataques de Melee Weapon dirigidos contra ti desde entonces; empuñas una Melee Weapon.',
         resolutionDv: 15,
-        effectDescription: 'Impacto electro-cinético en el plexo solar que genera interferencia nerviosa. Si impacta, el objetivo pierde 2 puntos de Interfaz/RAM o sufre -2 REF durante 2 asaltos.'
+        sourcePage: 76,
+        effectDescription: 'Una vez por turno. Si tienes éxito, una Melee Weapon sostenida por un objetivo en rango Melee que te haya atacado con un ataque de Melee Weapon desde tu último turno queda en tu poder o en el suelo.'
       }
     ]
   },
@@ -255,32 +261,34 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Boxing',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'El noble arte de las doce cuerdas destilado en los bajos fondos: jab cortante, ganchos pesados al hígado y directos implacables.',
-    keyStats: ['BODY', 'DEX'],
-    tacticalRole: 'Castigo implacable al cuerpo, noqueos y control de distancia corta.',
+    sourcePage: 76,
+    originAndFlavor: 'Arte directo de golpes y paradas; puede desgastar al rival o terminar rápido con ráfagas de golpes.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Un golpe único a la cabeza que causa Broken Jaw y un ataque extra de Brawling tras dos golpes de Brawling.',
     moves: [
       {
-        id: 'boxing-liver-hook',
-        name: 'Liver Hook (Gancho al Hígado)',
+        id: 'boxing-knockout-punch',
+        name: 'Knockout Punch',
         formId: 'boxing',
         formName: 'Boxing',
         isNewCyberfists: true,
-        requirements: 'Impactar un ataque de puño al torso en rango cuerpo a cuerpo.',
-        resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño contundente interno',
-        effectDescription: 'Impacto devastador que comprime los órganos internos. El defensor debe superar un chequeo de Resist Torture/Drugs DV 15 o quedar aturdido (Stunned) perdiendo su siguiente acción.',
-        criticalInjuryApplied: 'Collapsed Lung'
+        requirements: 'BODY 8 o más.',
+        resolutionDv: 0,
+        isOpposed: true,
+        sourcePage: 76,
+        effectDescription: 'En lugar de hacer 2 ataques con tu Acción de Martial Arts Attack, usas tu Acción para la resolución de Special Move contra un único objetivo en rango Melee con una penalización de -5 a la tirada. Si impacta, apunta a la cabeza como un Aimed Shot y el objetivo sufre la Critical Injury Broken Jaw además del daño del Martial Arts Attack (no sufre una segunda Critical Injury si ya tiene Broken Jaw).',
+        criticalInjuryApplied: 'Broken Jaw'
       },
       {
-        id: 'boxing-counter-cross',
-        name: 'Counter Cross (Directo de Contra)',
+        id: 'boxing-punch-combination',
+        name: 'Punch Combination',
         formId: 'boxing',
         formName: 'Boxing',
         isNewCyberfists: true,
-        requirements: 'Esquivar un ataque entrante por 3 o más puntos de margen.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+3d6 daño a la cabeza',
-        effectDescription: 'Aprovechas el desbalanceo del atacante para clavar un derechazo en la mandíbula. Si supera el SP, fuerza tirada de salvación de muerte inmediata o noqueo inmediato.'
+        requirements: 'Impactaste al mismo objetivo con dos ataques de Brawling en este turno.',
+        resolutionDv: 15,
+        sourcePage: 77,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes hacer un único ataque de Brawling contra el objetivo.'
       }
     ]
   },
@@ -289,129 +297,100 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Capoeira',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Danza y combate afrobrasileño con movimientos acrobáticos en ginga, patadas invertidas y constante movilidad de suelo.',
-    keyStats: ['DEX', 'MOVE'],
-    tacticalRole: 'Evasión constante mientras se inflige daño periférico.',
+    sourcePage: 77,
+    originAndFlavor: 'Arte fluida y parecida a una danza, posiblemente desarrollada por esclavos brasileños; de extrema fluidez.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Dos encadenados: un ataque de Brawling tras fallar y un ataque de Martial Arts tras una Critical Injury con arma o gasto de Luck.',
     moves: [
       {
-        id: 'capoeira-meia-lua-de-compasso',
-        name: 'Meia Lua de Compasso',
+        id: 'capoeira-rhythmic-recovery',
+        name: 'Rhythmic Recovery',
         formId: 'capoeira',
         formName: 'Capoeira',
         isNewCyberfists: true,
-        requirements: 'MOVE 6+ y realizar una finta previa.',
+        requirements: 'Fallaste a un objetivo con un ataque de Martial Arts (Capoeira) en este turno.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño de talón giratorio',
-        effectDescription: 'Apoyas una o ambas manos en el suelo y lanzas un talón curvo a la cabeza del oponente. Otorga +2 a tu tirada de Evasión hasta el final de la ronda.'
+        sourcePage: 77,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes hacer un único ataque de Brawling contra un objetivo en rango Melee.'
       },
       {
-        id: 'capoeira-ginga-sweep',
-        name: 'Rasteira Ginga Sweep',
+        id: 'capoeira-slash-dance',
+        name: 'Slash Dance',
         formId: 'capoeira',
         formName: 'Capoeira',
         isNewCyberfists: true,
-        requirements: 'Estar adyacente a uno o dos enemigos.',
+        requirements: 'En este turno infligiste una Critical Injury con una Melee Weapon Light/Medium (o Melee Weapon instalada como cyberware, dentro de cyberware o en Gear como un Battleglove), o gastaste más de 3 puntos de Luck en un ataque con esas armas o en Rhythmic Recovery (la tirada de resolución o el ataque de Brawling resultante).',
         resolutionDv: 15,
-        effectDescription: 'Barrido bajo en semicírculo que engancha los tobillos del adversario. Todos los enemigos adyacentes caen al suelo derribados (Prone) si no superan DEX + Athletics vs tu tirada.'
+        sourcePage: 77,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes hacer un único ataque de Martial Arts (Capoeira) contra un objetivo en rango Melee.'
       }
     ]
   },
   {
-    id: 'chornobogs-kommando',
-    name: 'Chornobog’s Kommando',
+    id: 'choy-li-fut',
+    name: 'Choy Li Fut',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Estilo brutal desarrollado por tropas especiales sov-oil en la Zona de Exclusión: combate salvaje con bayonetas, culatazos y cuchillos pesados.',
-    keyStats: ['BODY', 'WILL'],
-    tacticalRole: 'Supervivencia extrema, combate con armas improvisadas y aplastamiento.',
+    sourcePage: 77,
+    originAndFlavor: 'Arte chino de gran velocidad y versatilidad; sus ataques de barrido sirven para pelear contra varios oponentes.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Una Acción Run gratuita tras esquivar y un ataque de Brawling extra contra otro objetivo.',
     moves: [
       {
-        id: 'chornobog-trench-cleaver',
-        name: 'Trench Cleaver Bash',
-        formId: 'chornobogs-kommando',
-        formName: 'Chornobog’s Kommando',
+        id: 'choy-li-fut-shaolin-step',
+        name: 'Shaolin Step',
+        formId: 'choy-li-fut',
+        formName: 'Choy Li Fut',
         isNewCyberfists: true,
-        requirements: 'Empuñar un arma cuerpo a cuerpo pesada o culata de fusil.',
+        requirements: 'MOVE 6 o más; tu turno; esquivaste al menos un ataque desde tu último turno y todos los ataques dirigidos contra ti desde entonces; aún no has realizado la Acción Run en este turno.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+3d6 daño de fractura ósea',
-        effectDescription: 'Golpe seco descendente a la clavícula o esternón. Rompe armaduras ligeras (ablaciona 3 SP de golpe) y deja al enemigo sin respiración.'
+        sourcePage: 77,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes realizar la Acción Run sin que cueste una Acción; no puedes volver a usar Run en este turno.'
       },
       {
-        id: 'chornobog-radiation-gut-rip',
-        name: 'Reactor Gut Rip',
-        formId: 'chornobogs-kommando',
-        formName: 'Chornobog’s Kommando',
+        id: 'choy-li-fut-sweeping-fist',
+        name: 'Sweeping Fist',
+        formId: 'choy-li-fut',
+        formName: 'Choy Li Fut',
         isNewCyberfists: true,
-        requirements: 'Tener al enemigo en presa (Grapple).',
-        resolutionDv: 16,
-        damageBonusOrFormula: 'Daño de arma cuerpo a cuerpo + 2d6 directo a HP',
-        effectDescription: 'Apuñalas repetidamente en el abdomen o desgarres con filo serrado mientras mantienes al objetivo como escudo humano frente a otros disparos.'
-      }
-    ]
-  },
-  {
-    id: 'cyber-wrestling',
-    name: 'Cyber-Wrestling',
-    sourceBook: 'interface_red',
-    badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Lucha libre hipertecnológica con implantes hidráulicos, marcos lineales y acrobacias de alto impacto desde el ring subterráneo.',
-    keyStats: ['BODY', 'DEX'],
-    tacticalRole: 'Lanzamientos de alto impacto, suplex contra vehículos y aplastamientos.',
-    moves: [
-      {
-        id: 'cyberwrestling-hydraulic-suplex',
-        name: 'Hydraulic German Suplex',
-        formId: 'cyber-wrestling',
-        formName: 'Cyber-Wrestling',
-        isNewCyberfists: true,
-        requirements: 'BODY 8+ (o Linear Frame) y agarrar por la espalda.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '4d6 daño por impacto contra el asfalto',
-        effectDescription: 'Levantas al rival por la cintura y te arqueas hacia atrás estrellando su cuello y hombros contra el suelo. Aplica Herida Crítica inmediata en la cabeza/cuello.',
-        criticalInjuryApplied: 'Spinal Injury'
-      },
-      {
-        id: 'cyberwrestling-meat-piledriver',
-        name: 'Piledriver Destructor',
-        formId: 'cyber-wrestling',
-        formName: 'Cyber-Wrestling',
-        isNewCyberfists: true,
-        requirements: 'Presa activa en el turno anterior.',
-        resolutionDv: 17,
-        damageBonusOrFormula: '5d6 daño contundente vertical',
-        effectDescription: 'Inviertes verticalmente al oponente y caes de rodillas incrustando su cabeza en el suelo. Ignora el 50% del SP del blindaje corporal del defensor.'
+        requirements: 'MOVE 6 o más; impactaste al mismo objetivo con dos ataques de Martial Arts (Choy Li Fut) en este turno.',
+        resolutionDv: 15,
+        sourcePage: 77,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes hacer un único ataque de Brawling contra un objetivo en rango Melee al que no hayas impactado en este turno.'
       }
     ]
   },
   {
     id: 'drunken-fist',
-    name: 'Drunken Fist (Zui Quan)',
+    name: 'Drunken Fist',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'El mítico boxeo del borracho adaptado al ciberespacio: tambaleos intencionados, quiebres de cintura imposibles y golpes desde ángulos ciegos.',
-    keyStats: ['REF', 'DEX'],
-    tacticalRole: 'Engaño constante, evasión errática y ataques desde posturas falsas.',
+    sourcePage: 77,
+    originAndFlavor: 'Arte chino que imita a una persona ebria para golpear y defenderse de forma inesperada enroscando el cuerpo.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Mejora tus ataques de Brawling con el entorno y permite esquivar ataques que no ves; los requisitos de LUCK se refieren al STAT.',
     moves: [
       {
-        id: 'drunken-stagger-feint',
-        name: 'Staggering Sway Feint',
+        id: 'drunken-fist-environmental-improvisation',
+        name: 'Environmental Improvisation',
         formId: 'drunken-fist',
         formName: 'Drunken Fist',
         isNewCyberfists: true,
-        requirements: 'Tirada exitosa de Streetwise o Deceit vs Concentración del enemigo.',
-        resolutionDv: 14,
-        effectDescription: 'Te tambaleas fingiendo perder el equilibrio. El próximo ataque que realices este turno ignora la habilidad de Evasión del enemigo (su DV es pasivo 10).'
+        requirements: 'LUCK 4 o más (el STAT LUCK, no la reserva actual de Luck).',
+        resolutionDv: 13,
+        sourcePage: 77,
+        effectDescription: 'Una vez por turno. Si tienes éxito, eliges un objeto o cobertura en rango Melee; si el GM acepta que resultaría doloroso como arma o al ser estrellado contra él, mientras estés en rango Melee de ello tus ataques de Brawling de este turno ignoran la mitad de la armadura del defensor. Para un objeto o superficie especialmente dolorosa, el GM puede mejorar tu daño en la tabla de Brawling hasta un máximo de 4d6.'
       },
       {
-        id: 'drunken-wine-pot-strike',
-        name: 'Wine Pot Jaw Cracker',
+        id: 'drunken-fist-lucky-stumble',
+        name: 'Lucky Stumble',
         formId: 'drunken-fist',
         formName: 'Drunken Fist',
         isNewCyberfists: true,
-        requirements: 'Moverse en zigzag durante el asalto.',
+        requirements: 'LUCK 4 o más (STAT); te están atacando con un Attack del que tu personaje no es consciente. Se cumple siempre que se dé la condición (incluso inconsciente o incapacitado).',
         resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño contundente imprevisto',
-        effectDescription: 'Un revés ascendente con nudillos semicerrados que impacta por debajo de la guardia. Provoca desorientación sensorial (-2 a las tiradas de REF durante 2 asaltos).'
+        sourcePage: 77,
+        effectDescription: 'Si tienes éxito, puedes intentar esquivar el Attack normalmente, como si pudieras esquivar balas, incluso si de otro modo no podrías. Primer éxito de la sesión de juego: puedes recuperar 2 puntos de Luck gastados de inmediato o al inicio de tu siguiente turno; el Luck no puede superar tu LUCK.'
       }
     ]
   },
@@ -420,130 +399,102 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Gun Fu',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'La letal síntesis de artes marciales cuerpo a cuerpo con pistolas semiautomáticas a quemarropa popularizada en el cine de acción de Hong Kong y Night City.',
-    keyStats: ['REF', 'DEX'],
-    tacticalRole: 'Transición fluida entre disparos a quemarropa y bloqueos de cañón.',
+    sourcePage: 78,
+    originAndFlavor: 'Mitad combate cuerpo a cuerpo y mitad manejo de pistola de combate; letal en espacios cerrados; trata la pistola como una extensión del cuerpo.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Una recarga gratuita tras impactar y la Woo Technique, que extiende los ataques de Gun Fu hasta 25 m/yds.',
     moves: [
       {
-        id: 'gunfu-point-blank-clearing',
-        name: 'Point Blank Execution',
+        id: 'gun-fu-combat-reload',
+        name: 'Combat Reload',
         formId: 'gun-fu',
         formName: 'Gun Fu',
         isNewCyberfists: true,
-        requirements: 'Empuñar una pistola o revólver en rango cuerpo a cuerpo (0-2m).',
+        requirements: 'Impactaste a un objetivo con un ataque de Martial Arts (Gun Fu); aún no has realizado la Acción Reload en este turno.',
         resolutionDv: 15,
-        damageBonusOrFormula: 'Daño de pistola estándar + 1d6 daño de Artes Marciales',
-        effectDescription: 'Desvías el arma del rival con tu antebrazo y disparas tu pistola directamente contra su abdomen a quemarropa ignorando el penalizador de disparo en melé.'
+        sourcePage: 78,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes realizar la Acción Reload sobre un arma que empuñes sin que cueste una Acción.'
       },
       {
-        id: 'gunfu-barrel-strike-disarm',
-        name: 'Pistol-Whip Disarm',
+        id: 'gun-fu-woo-technique',
+        name: 'Woo Technique',
         formId: 'gun-fu',
         formName: 'Gun Fu',
         isNewCyberfists: true,
-        requirements: 'Estar adyacente a un enemigo que empuñe un arma de fuego.',
-        resolutionDv: 16,
-        effectDescription: 'Golpeas la mano del enemigo con la culata o cañón de tu arma y arrebatas su arma con un giro de muñeca. El arma cae al suelo o queda en tu mano libre.'
-      }
-    ]
-  },
-  {
-    id: 'hapkido',
-    name: 'Hapkido',
-    sourceBook: 'interface_red',
-    badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Arte marcial coreano centrado en manipular articulaciones pequeñas (muñecas, dedos), patadas circulares y control de agresores armados.',
-    keyStats: ['DEX', 'WILL'],
-    tacticalRole: 'Neutralización sin letalidad obligatoria y desarticulación de extremidades.',
-    moves: [
-      {
-        id: 'hapkido-wrist-lock-snap',
-        name: 'Wrist Lock Fracture',
-        formId: 'hapkido',
-        formName: 'Hapkido',
-        isNewCyberfists: true,
-        requirements: 'Haber bloqueado o esquivado un ataque de puño o cuchillo.',
+        requirements: 'Handgun Skill Nivel 4+ o Combat Awareness Rango 1; tu turno; sostienes un arma a distancia de una mano ROF2 disparada con Handgun Skill.',
         resolutionDv: 15,
-        damageBonusOrFormula: 'Daño base de Brawling directo a HP',
-        effectDescription: 'Torsión hiperbólica de muñeca. El enemigo suelta cualquier arma sostenida en esa mano y no puede usar dicha extremidad hasta ser tratada.',
-        criticalInjuryApplied: 'Broken Arm'
-      },
-      {
-        id: 'hapkido-circular-redirection',
-        name: 'Circular Redirection Strike',
-        formId: 'hapkido',
-        formName: 'Hapkido',
-        isNewCyberfists: true,
-        requirements: 'Atacado por múltiples enemigos adyacentes.',
-        resolutionDv: 16,
-        effectDescription: 'Atrapas el brazo del primer atacante y usas su cuerpo para bloquear la línea de fuego o ataque de un segundo agresor adyacente.'
+        sourcePage: 78,
+        effectDescription: 'Una vez por turno. Si tienes éxito, todo lo siguiente: (1) el alcance de los ataques de Martial Arts (Gun Fu) de este turno aumenta de Melee hasta 25 m/yds; son Melee Attacks, ignoran la mitad de la armadura y cualquiera puede esquivarlos aunque normalmente no pueda esquivar balas; (2) su daño aumenta al del arma usada para cumplir el requisito si es mayor; (3) tu Gun Fu Skill se reduce a tu nivel de Handgun Skill si este es menor; (4) cada ataque de Gun Fu gasta munición como si se disparara normalmente y se aplican los efectos de la munición; si no se puede gastar munición, el ataque falla. (Recuadro: también conocida como Blackhand/Wick/Gibbs Technique.)'
       }
     ]
   },
   {
-    id: 'jeet-kune-do',
-    name: 'Jeet Kune Do',
+    id: 'jujutsu',
+    name: 'Jujutsu',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'El camino del puño interceptor de Bruce Lee: economía de movimiento, golpe directo sin telegrafiar y ataque simultáneo a la defensa.',
-    keyStats: ['REF', 'DEX'],
-    tacticalRole: 'Intercepción en carrera, ataques simultáneos y velocidad reactiva.',
+    sourcePage: 78,
+    originAndFlavor: 'Arte japonés que cede ante la fuerza del oponente y la redirige.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Usa el BODY del rival para calcular el daño y permite un lanzamiento (Throw) tras dos golpes.',
     moves: [
       {
-        id: 'jkd-intercepting-fist',
-        name: 'Stop-Hit (Puño Interceptor)',
-        formId: 'jeet-kune-do',
-        formName: 'Jeet Kune Do',
+        id: 'jujutsu-aiki',
+        name: 'Aiki',
+        formId: 'jujutsu',
+        formName: 'Jujutsu',
         isNewCyberfists: true,
-        requirements: 'Declarado en respuesta al ataque de un oponente.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+2d6 daño de impacto directo',
-        effectDescription: 'Golpeas al oponente en el mismo instante en que inicia su golpe, conectando milésimas de segundo antes gracias a la línea central recta. Si impactas, cancelas su ataque.'
-      },
-      {
-        id: 'jkd-one-inch-punch',
-        name: 'One-Inch Kinetic Punch',
-        formId: 'jeet-kune-do',
-        formName: 'Jeet Kune Do',
-        isNewCyberfists: true,
-        requirements: 'Contacto físico cuerpo a cuerpo sin espacio de retroceso.',
-        resolutionDv: 17,
-        damageBonusOrFormula: '+3d6 daño cinético concentrado',
-        effectDescription: 'Descarga instantánea de energía explosiva desde la cadera con apenas 2.5 cm de recorrido. El enemigo sale despedido 3 metros hacia atrás y cae derribado (Prone).'
-      }
-    ]
-  },
-  {
-    id: 'jiu-jitsu',
-    name: 'Jiu-Jitsu (BJJ)',
-    sourceBook: 'interface_red',
-    badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Combate en el suelo revolucionario basado en palancas mecánicas, estrangulaciones sanguíneas y pasajes de guardia técnica.',
-    keyStats: ['DEX', 'BODY'],
-    tacticalRole: 'Sumisión de enemigos superiores en peso y neutralización por estrangulamiento.',
-    moves: [
-      {
-        id: 'bjj-triangle-choke',
-        name: 'Triangle Choke (Sankaku-Jime)',
-        formId: 'jiu-jitsu',
-        formName: 'Jiu-Jitsu',
-        isNewCyberfists: true,
-        requirements: 'Enemigo en rango cuerpo a cuerpo o en el suelo.',
+        requirements: 'Impactaste a un objetivo con un ataque de Martial Arts que no sea de Gun Fu y estás a punto de dañarlo.',
         resolutionDv: 15,
-        damageBonusOrFormula: 'Daño igual a tu BODY * 2 directo a HP (ignora armadura SP)',
-        effectDescription: 'Cierras tus piernas alrededor de su cuello y un brazo atrapando la arteria carótida. El oponente se desmaya en 2 asaltos a menos que escape con una tirada de Brawling.'
+        sourcePage: 78,
+        effectDescription: 'Una vez por turno. Si tienes éxito, durante el resto del turno puedes usar el BODY del objetivo en lugar del tuyo al calcular el daño de los ataques de Brawling y Martial Arts contra él.'
       },
       {
-        id: 'bjj-armbar-hyper-extension',
-        name: 'Kimura / Armbar Destruction',
-        formId: 'jiu-jitsu',
-        formName: 'Jiu-Jitsu',
+        id: 'jujutsu-throwing-technique',
+        name: 'Throwing Technique',
+        formId: 'jujutsu',
+        formName: 'Jujutsu',
         isNewCyberfists: true,
-        requirements: 'Presa exitosa en asalto anterior.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+3d6 daño directo a la extremidad',
-        effectDescription: 'Palanca sobre el codo o articulación del hombro. Si penetra armadura, destruye el brazo biológico o desarticula los servos del cyberbrazo.',
-        criticalInjuryApplied: 'Dismembered Arm'
+        requirements: 'WILL 6 o más; impactaste al mismo objetivo con dos ataques de Martial Arts (Jujutsu) en este turno.',
+        resolutionDv: 15,
+        sourcePage: 78,
+        effectDescription: 'Una vez por turno. Si tienes éxito, usas la Acción Throw sobre un objetivo en rango Melee al que hayas atacado en este turno, aunque no lo estés agarrando; puedes usar el STAT BODY del objetivo en lugar del tuyo para el daño del lanzamiento.'
+      }
+    ]
+  },
+  {
+    id: 'kendo',
+    name: 'Kendo',
+    sourceBook: 'interface_red',
+    badge: 'CYBERFISTS // IR4',
+    sourcePage: 79,
+    originAndFlavor: 'Moderno Camino de la Espada japonés, con linaje que viene de los samuráis.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Permite cortar una bala con un arma cuerpo a cuerpo y rebaja la penalización de Aimed Shot del primer ataque del siguiente turno.',
+    moves: [
+      {
+        id: 'kendo-cut-the-bullet',
+        name: 'Cut the Bullet',
+        formId: 'kendo',
+        formName: 'Kendo',
+        isNewCyberfists: true,
+        requirements: 'WILL 8+; Melee Weapons Skill Nivel 6+; eres consciente del atacante; empuñas un arma cuerpo a cuerpo mientras te disparan con un arma a distancia en modo estándar de Single Shot, o estás dentro del radio de explosión de un explosivo a distancia. Se cumple siempre que se dé la condición.',
+        resolutionDv: 0,
+        isOpposed: true,
+        opposedBy: 'tirada de ataque',
+        sourcePage: 79,
+        effectDescription: 'Haces la resolución contra la tirada de ataque (Attack Check) del oponente. Si tienes éxito, el ataque no causa daño. Si fallas, te impacta, y un explosivo queda centrado en ti. Puedes desenfundar una Melee Weapon de fácil acceso (vaina, cyberware Popup Weapon) como parte de cumplir el requisito y guardarla inmediatamente después sin gastar una Acción.'
+      },
+      {
+        id: 'kendo-ki-ken-tai-no-ichi',
+        name: 'Ki Ken Tai No Ichi',
+        formId: 'kendo',
+        formName: 'Kendo',
+        isNewCyberfists: true,
+        requirements: 'Estás en combate.',
+        resolutionDv: 15,
+        sourcePage: 79,
+        effectDescription: 'Una vez por turno, como Acción. Si tienes éxito, la penalización de Aimed Shot de tu primer ataque con una Melee Weapon en tu siguiente turno se reduce a -2.'
       }
     ]
   },
@@ -552,100 +503,137 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Krav Maga',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Sistema de defensa militar táctica: agresión simultánea, ataques a ojos, garganta e ingle, y eliminación fulgurante de amenazas armadas.',
-    keyStats: ['REF', 'BODY'],
-    tacticalRole: 'Violencia táctica brutal sin reglas deportivas y desarme rápido de cuchillos/pistolas.',
+    sourcePage: 79,
+    originAndFlavor: 'Arte israelí que combina Aikido, Boxing, Judo, Karate y Wrestling para una defensa personal real.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Dos ataques de Brawling extra: uno tras causar una Critical Injury y otro tras esquivar ataques cuerpo a cuerpo.',
     moves: [
       {
-        id: 'kravmaga-throat-crush',
-        name: 'Trachea Strike (Aplastamiento Traqueal)',
+        id: 'krav-maga-contact-combat',
+        name: 'Contact Combat',
         formId: 'krav-maga',
         formName: 'Krav Maga',
         isNewCyberfists: true,
-        requirements: 'Ataque apuntado a la cabeza sin penalizador.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+2d6 daño directo a HP',
-        effectDescription: 'Impacto con el borde de la mano o pulgar en la tráquea. El objetivo queda sin aire (Suffocating), sufriendo daño continuo por asfixia si no es asistido.',
-        criticalInjuryApplied: 'Crushed Windpipe'
+        requirements: 'Infligiste una Critical Injury con un ataque de Martial Arts o una resolución de Special Move de Aikido, Boxing, Judo, Karate, Krav Maga o Wrestling en este turno.',
+        resolutionDv: 15,
+        sourcePage: 79,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes hacer un único ataque de Brawling contra un objetivo al que hayas causado una Critical Injury en este turno.'
       },
       {
-        id: 'kravmaga-groin-kick-disarm',
-        name: 'Groin Shatter & Weapon Strip',
+        id: 'krav-maga-punishing-blow',
+        name: 'Punishing Blow',
         formId: 'krav-maga',
         formName: 'Krav Maga',
         isNewCyberfists: true,
-        requirements: 'Rango cuerpo a cuerpo inmediato.',
+        requirements: 'Esquivaste al menos un Melee Attack desde tu último turno y todos los Attacks dirigidos contra ti desde entonces.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño contundente',
-        effectDescription: 'Patada fulminante a la ingle seguida de palanca desarmadora. El oponente queda de rodillas doblado por el dolor y suelta cualquier arma que sostenga.'
+        sourcePage: 79,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes hacer un único ataque de Brawling contra un objetivo que te haya atacado con un Melee Attack desde tu último turno.'
       }
     ]
   },
   {
-    id: 'lethwei',
-    name: 'Lethwei',
+    id: 'kung-fu',
+    name: 'Kung Fu',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'El arte birmano de las nueve extremidades: puños, codos, rodillas, pies y el temible cabezazo sin guantes.',
-    keyStats: ['BODY', 'WILL'],
-    tacticalRole: 'Cabezazos demoledores, combate en clinch salvaje y tenacidad extrema.',
+    sourcePage: 79,
+    originAndFlavor: 'El arte marcial chino original y ancestro de muchos estilos; casi invencible cuando se usa bien.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Un ataque Five Forms con efectos de animales y un movimiento que te sube al primer puesto de la Iniciativa.',
     moves: [
       {
-        id: 'lethwei-skull-ram-headbutt',
-        name: 'Burmese Skull Ram (Cabezazo Letal)',
-        formId: 'lethwei',
-        formName: 'Lethwei',
+        id: 'kung-fu-five-forms',
+        name: 'Five Forms',
+        formId: 'kung-fu',
+        formName: 'Kung Fu',
         isNewCyberfists: true,
-        requirements: 'Estar trabado en clinch o a menos de 1 metro.',
-        resolutionDv: 15,
-        damageBonusOrFormula: '+3d6 daño contundente a la cabeza',
-        effectDescription: 'Cabezazo frontal con la zona más gruesa de la frente al tabique nasal del rival. Si tienes cráneo reforzado o Subdermal Armor, causa conmoción cerebral instantánea.',
-        criticalInjuryApplied: 'Concussion'
+        requirements: 'Kung Fu Skill Nivel 4+.',
+        resolutionDv: 0,
+        isOpposed: true,
+        sourcePage: 79,
+        effectDescription: 'En lugar de 2 ataques, haces un ataque Five Forms: eliges dos opciones distintas entre Crane, Dragon, Leopard, Snake, Tiger. Usas tu Acción para la resolución de Special Move contra un único objetivo en rango Melee. Si impacta, además del daño de Martial Arts, el ataque gana el efecto del primer animal; tu siguiente Melee Attack en un turno futuro de este combate gana el efecto del segundo animal si impacta. Crane: el objetivo sufre la Critical Injury Damaged Eye sin su Bonus Damage. Dragon: +1 a la siguiente tirada de ataque contra el objetivo en este combate. Leopard: tu MOVE +2 hasta el final de tu turno. Snake: recuperas 1 punto de Luck gastado. Tiger: toda la armadura que lleve el objetivo se ablanda 1 SP adicional.'
       },
       {
-        id: 'lethwei-clinch-knee-barrage',
-        name: 'Clinch Rib-Cracker Knee',
-        formId: 'lethwei',
-        formName: 'Lethwei',
+        id: 'kung-fu-superior-stance',
+        name: 'Superior Stance',
+        formId: 'kung-fu',
+        formName: 'Kung Fu',
         isNewCyberfists: true,
-        requirements: 'Control del cuello del rival con dos manos.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+3d6 daño a las costillas',
-        effectDescription: 'Rodillazo ascendente al costado del torso. Quiebra costillas y ablaciona 2 puntos de armadura corporal SP.',
-        criticalInjuryApplied: 'Broken Ribs'
+        requirements: 'Tu turno; impactaste a un objetivo con un ataque de Martial Arts en este turno.',
+        resolutionDv: 17,
+        sourcePage: 79,
+        effectDescription: 'Una vez por turno. Si tienes éxito, pasas al primer puesto de la cola de Iniciativa.'
+      }
+    ]
+  },
+  {
+    id: 'kyudo',
+    name: 'Kyudo',
+    sourceBook: 'interface_red',
+    badge: 'CYBERFISTS // IR4',
+    sourcePage: 80,
+    originAndFlavor: 'Arte japonés del tiro con arco, con movimientos de mano a mano que complementan al arco.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Una postura que da +2d6 al primer ataque con arma de Archery ROF1 y recuperación de Luck tras un Aimed Shot con arco.',
+    moves: [
+      {
+        id: 'kyudo-hassetsu',
+        name: 'Hassetsu',
+        formId: 'kyudo',
+        formName: 'Kyudo',
+        isNewCyberfists: true,
+        requirements: 'No estás derribado (prone) ni en un agarre; empuñas un arma disparada con Archery Skill (puedes desenfundar una de fácil acceso como parte del requisito).',
+        resolutionDv: 15,
+        sourcePage: 80,
+        effectDescription: 'Una vez por turno, como Acción. Si tienes éxito, estableces una postura Kyudo: el daño de tu primer Attack en tu turno con un arma de Archery ROF1 es +2d6. Sales de la postura si te mueves más de 6 m/yds (3 casillas) en tu turno, recibes daño de un Melee Attack, quedas agarrado, quedas derribado, te desarman de tu última arma de Archery o termina el combate. Ir en un vehículo en movimiento no la rompe salvo que seas el conductor. Establecer la postura es una acción agresiva equivalente a desenfundar un arma de fuego.'
+      },
+      {
+        id: 'kyudo-zaiteki',
+        name: 'Zaiteki',
+        formId: 'kyudo',
+        formName: 'Kyudo',
+        isNewCyberfists: true,
+        requirements: 'Impactaste a un objetivo en este turno con un Aimed Shot hecho con un arma disparada con Archery Skill.',
+        resolutionDv: 15,
+        sourcePage: 80,
+        effectDescription: 'Una vez por turno. Si tienes éxito, recuperas hasta 2 puntos de Luck gastados.'
       }
     ]
   },
   {
     id: 'militech-cqc',
-    name: 'Militech CQC',
+    name: 'Militech Commando Training',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Protocolo de combate cerrado estándar de los contratistas militares de Militech para limpiar habitaciones y neutralizar insurgentes.',
-    keyStats: ['REF', 'BODY'],
-    tacticalRole: 'Uso de escudos balísticos, derribos de choque y remates tácticos.',
+    sourcePage: 80,
+    originAndFlavor: 'Sistema de Militech que enseña a los soldados a usar cuchillos de combate.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Convierte un arma cuerpo a cuerpo ligera/media en 4d6 con ROF 1 y permite arrebatar un arma al rival.',
     moves: [
       {
-        id: 'militechcqc-shield-bash-stagger',
-        name: 'Tactical Shield Ram',
+        id: 'militech-cqc-combat-knife-training',
+        name: 'Combat Knife Training',
         formId: 'militech-cqc',
-        formName: 'Militech CQC',
+        formName: 'Militech Commando Training',
         isNewCyberfists: true,
-        requirements: 'Empuñar un Escudo Antibalas o Cyberarm reforzado.',
-        resolutionDv: 14,
-        damageBonusOrFormula: '2d6 daño contundente + derribo',
-        effectDescription: 'Embestida con el escudo antibalas. El objetivo retrocede 3 metros y queda desbalanceado perdiendo su turno de iniciativa en la ronda.'
+        requirements: 'Atacas con una Melee Weapon Light o Medium como tu primer ataque de este turno. Se cumple siempre que se dé la condición.',
+        resolutionDv: 15,
+        sourcePage: 80,
+        effectDescription: 'Si tienes éxito, hasta el final del turno el daño del arma pasa a ser 4d6 pero su ROF pasa a ser 1.'
       },
       {
-        id: 'militechcqc-room-clearing-takedown',
-        name: 'Door-Breaker Takedown',
+        id: 'militech-cqc-commando-disarm',
+        name: 'Commando Disarm',
         formId: 'militech-cqc',
-        formName: 'Militech CQC',
+        formName: 'Militech Commando Training',
         isNewCyberfists: true,
-        requirements: 'Objetivo adyacente a una pared, puerta o cobertura.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+3d6 daño por impacto contra la superficie',
-        effectDescription: 'Estrellas la cabeza o espalda del sospechoso contra la pared o marco de la puerta. Destruye la cobertura ligera y noquea al defensor si supera su SP.'
+        requirements: 'Tienes dos o más manos libres.',
+        resolutionDv: 0,
+        isOpposed: true,
+        opposedBy: 'Brawling del objetivo',
+        sourcePage: 80,
+        effectDescription: 'Como Acción, usas la resolución de Special Move contra la tirada de Brawling (Brawling Check) de un único objetivo en rango Melee que empuñe al menos un arma en las manos. Si tienes éxito, pasas una de sus armas empuñadas a tus manos; después puedes atacar al mismo objetivo con ella como si aún no hubieras gastado una Acción.'
       }
     ]
   },
@@ -654,65 +642,66 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Muay Thai',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'El arte de las ocho extremidades tailandés: temibles patadas de tibia al nervio ciático, codazos cortantes y rodillazos en salto.',
-    keyStats: ['BODY', 'DEX'],
-    tacticalRole: 'Destrucción de movilidad enemiga con patadas bajas y cortes de codo.',
+    sourcePage: 80,
+    originAndFlavor: 'Arte de golpeo tailandés; implica un acondicionamiento corporal extremo y a menudo cyberware extremo.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Dos bonos de daño encadenados entre ataques de Martial Arts y de Brawling.',
     moves: [
       {
-        id: 'muaythai-spinning-elbow-slash',
-        name: 'Spinning Horizontal Elbow',
+        id: 'muay-thai-conditioned-ferocity',
+        name: 'Conditioned Ferocity',
         formId: 'muay-thai',
         formName: 'Muay Thai',
         isNewCyberfists: true,
-        requirements: 'Rango cuerpo a cuerpo (0-1m).',
+        requirements: 'Tu turno; dañaste a un objetivo con un ataque de Martial Arts desde el inicio de tu último turno.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño cortante a la cabeza',
-        effectDescription: 'Codo giratorio que abre una brecha en la frente o ceja del rival. La sangre nubla su visión provocando un penalizador de -2 a sus tiradas de ataque.',
-        criticalInjuryApplied: 'Damaged Eye'
+        sourcePage: 80,
+        effectDescription: 'Una vez por turno. Si tienes éxito, hasta el final del turno el daño de los ataques de Brawling es +1d6 (máximo 4d6) y todos los ataques de Brawling reciben +1.'
       },
       {
-        id: 'muaythai-low-shin-chop',
-        name: 'Low Leg-Kick Destruction',
+        id: 'muay-thai-conditioned-power',
+        name: 'Conditioned Power',
         formId: 'muay-thai',
         formName: 'Muay Thai',
         isNewCyberfists: true,
-        requirements: 'Impactar 2 patadas bajas continuas.',
+        requirements: 'Tu turno; dañaste a un objetivo con un ataque de Brawling desde el inicio de tu último turno.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño a las piernas',
-        effectDescription: 'Machete de tibia contra el muslo o nervio ciático. El objetivo sufre una reducción permanente de -2 a su estadística MOVE durante todo el combate.',
-        criticalInjuryApplied: 'Broken Leg'
+        sourcePage: 80,
+        effectDescription: 'Una vez por turno. Si tienes éxito, el daño de tu siguiente ataque de Martial Arts de este turno es +1d6.'
       }
     ]
   },
   {
-    id: 'ninjutsu',
-    name: 'Ninjutsu',
+    id: 'multiarm-melee',
+    name: 'Multiarm Melee',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Método histórico de sigilo, engaño sensorial, estrangulación silenciosa y asesinato encubierto de los shinobi.',
-    keyStats: ['DEX', 'COOL'],
-    tacticalRole: 'Eliminaciones silenciosas desde las sombras y bombas de humo/distracción.',
+    sourcePage: 81,
+    originAndFlavor: 'Arte de los habitantes del Yukon Valley del Alaska estado libre, creada para combatir a los osos aumentados de Biotechnica.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Ventajas en ataques de Brawling si tienes más brazos que el objetivo y daño directo a quienes sujetas en agarres.',
     moves: [
       {
-        id: 'ninjutsu-shadow-choke',
-        name: 'Silent Garrote Takedown',
-        formId: 'ninjutsu',
-        formName: 'Ninjutsu',
+        id: 'multiarm-melee-armed-dangerous',
+        name: 'Armed & Dangerous',
+        formId: 'multiarm-melee',
+        formName: 'Multiarm Melee',
         isNewCyberfists: true,
-        requirements: 'Atacar desde Sigilo (Stealth) sin ser detectado.',
-        resolutionDv: 16,
-        damageBonusOrFormula: 'Daño triple de Brawling ignorando armadura SP',
-        effectDescription: 'Ataque por la espalda atrapando las cuerdas vocales. El objetivo no puede gritar ni alertar a sus aliados y queda neutralizado silenciosamente.'
+        requirements: 'Tu turno; tienes más brazos que un objetivo al que atacas con un ataque de Brawling.',
+        resolutionDv: 15,
+        sourcePage: 81,
+        effectDescription: 'Una vez por ataque de Brawling, antes de tirar para atacar. Si tienes éxito, eliges una opción: tirar el d10 dos veces y tomar el resultado favorable; bajar la penalización de Aimed Shot de tu ataque de Brawling de -8 a -5; o, si eres Solo, reasignar puntos de Combat Awareness sin gastar una Acción. El DV es 17 si ya usaste este movimiento en este turno.'
       },
       {
-        id: 'ninjutsu-smoke-vanish-strike',
-        name: 'Smoke Vanish Feint',
-        formId: 'ninjutsu',
-        formName: 'Ninjutsu',
+        id: 'multiarm-melee-smack-together',
+        name: 'Smack Together',
+        formId: 'multiarm-melee',
+        formName: 'Multiarm Melee',
         isNewCyberfists: true,
-        requirements: 'Tener una granada de humo o distractora disponible.',
-        resolutionDv: 14,
-        effectDescription: 'Detonas una pequeña cápsula de humo y cambias de ángulo al instante. Realizas un ataque con bonificación de +3 y puedes reingresar a Sigilo inmediatamente.'
+        requirements: 'BODY 6+; eres el atacante en dos o más agarres (grapples).',
+        resolutionDv: 15,
+        sourcePage: 81,
+        effectDescription: 'Una vez por turno, como Acción. Si tienes éxito, infliges tu STAT BODY directamente a los Hit Points de todos los que estén defendiéndose de un agarre hecho por ti.'
       }
     ]
   },
@@ -721,96 +710,103 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'PanzerFaust',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Estilo de combate para cyborgs y supersoldados con implantes de cromo pesado: golpes de pistón neumático y aplastamiento de armaduras pesadas.',
-    keyStats: ['BODY', 'TECH'],
-    tacticalRole: 'Aplastamiento de chasis blindados, daño a vehículos y shock destructivo.',
+    sourcePage: 81,
+    originAndFlavor: 'Arte desarrollada por la FBC que libera el poder de un cuerpo metálico contra los cuerpos blandos.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Un golpe de 5d6/6d6 contra objetivos de menor BODY y un movimiento que repara y protege tu cyberware.',
     moves: [
       {
-        id: 'panzerfaust-piston-strike',
-        name: 'Pneumatic Hammer Strike',
+        id: 'panzerfaust-borg-fist',
+        name: 'Borg Fist',
         formId: 'panzerfaust',
         formName: 'PanzerFaust',
         isNewCyberfists: true,
-        requirements: 'BODY 11+ o ciberbrazo con actuador hidráulico.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+4d6 daño contundente puro',
-        effectDescription: 'Descarga un puñetazo con fuerza de prensa industrial. Destruye 4 puntos de SP de cualquier blindaje o reduce el SDP de un vehículo en 10 puntos.'
+        requirements: 'BODY 10+.',
+        resolutionDv: 0,
+        isOpposed: true,
+        sourcePage: 81,
+        damageBonusOrFormula: '5d6 (6d6 con Humanidad menor que 0)',
+        effectDescription: 'En lugar de 2 ataques, usas tu Acción para la resolución de Special Move contra un único objetivo en rango Melee con BODY menor que el tuyo. Si tienes éxito, haces un ataque de Martial Arts (PanzerFaust) que inflige 5d6 en lugar del daño normal, o 6d6 si tienes Humanidad menor que 0.'
       },
       {
-        id: 'panzerfaust-kinetic-ground-slam',
-        name: 'Seismic Shockwave Slam',
+        id: 'panzerfaust-inner-chrome',
+        name: 'Inner Chrome',
         formId: 'panzerfaust',
         formName: 'PanzerFaust',
         isNewCyberfists: true,
-        requirements: 'Dos ciberbrazos instalados o Linear Frame activo.',
-        resolutionDv: 17,
-        effectDescription: 'Golpeas el suelo con ambos puños canalizando fuerza hidráulica masiva. Todas las criaturas a 3 metros deben superar DEX + Athletics DV 16 o caer derribadas.'
-      }
-    ]
-  },
-  {
-    id: 'savate',
-    name: 'Savate',
-    sourceBook: 'interface_red',
-    badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'El boxeo francés con botas de punta dura desarrollado por marineros y pandilleros de Marsella y París: patadas de filo y estocadas de talón.',
-    keyStats: ['DEX', 'REF'],
-    tacticalRole: 'Golpes de filo de bota a distancia segura y ataques a las articulaciones bajas.',
-    moves: [
-      {
-        id: 'savate-chasse-talon-thrust',
-        name: 'Chassé Frontal Thrust',
-        formId: 'savate',
-        formName: 'Savate',
-        isNewCyberfists: true,
-        requirements: 'Rango de 2 metros con calzado reforzado o Cyberleg.',
-        resolutionDv: 14,
-        damageBonusOrFormula: '+2d6 daño perforante',
-        effectDescription: 'Estocada de talón en pistón al esternón o cadera. Empuja al rival 2 metros hacia atrás manteniéndolo fuera de distancia de armas de corto alcance.'
-      },
-      {
-        id: 'savate-fouette-shin-snap',
-        name: 'Fouetté Knee Buckle',
-        formId: 'savate',
-        formName: 'Savate',
-        isNewCyberfists: true,
-        requirements: 'Haber realizado una finta con las manos.',
-        resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño a la rodilla',
-        effectDescription: 'Patada de látigo con la punta de la bota impactando en la rótula. Deja la rodilla hiperextendida reduciendo a la mitad el movimiento del enemigo.'
+        requirements: 'Eres una Full Body Conversion o tienes Humanidad menor que 0; estás en combate; al menos una pieza de cyberware está dañada, deshabilitada o inoperativa (por ejemplo por un EMP).',
+        resolutionDv: 11,
+        sourcePage: 81,
+        effectDescription: 'Una vez por turno. El DV es 11, +2 por cada pieza de cyberware afectada. Si tienes éxito, el cyberware afectado vuelve a funcionar hasta el final del combate. Hasta tu siguiente turno tu cyberware es inmune a ser dañado, deshabilitado o dejado inoperativo. Si tu Humanidad es menor que 0 y el DV superado era 15 o más, las inmunidades duran hasta el final del combate y se extienden a que el cyberware sea destruido o destruido sin reparación posible.'
       }
     ]
   },
   {
     id: 'silat',
-    name: 'Silat (Pencak Silat)',
+    name: 'Silat',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Arte marcial indonesio con movimientos fluidos, uso magistral del cuchillo Karambit curvo y desmembramiento rápido de articulaciones.',
-    keyStats: ['DEX', 'REF'],
-    tacticalRole: 'Laceraciones con hojas curvas, derribos enmarañados y lucha en corta distancia.',
+    sourcePage: 81,
+    originAndFlavor: 'Fusión de muchas artes indígenas del Sudeste Asiático; cientos de estilos variables.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Dos movimientos que encadenan un ataque de Brawling o de Melee Weapon tras golpear o iniciar un agarre.',
     moves: [
       {
-        id: 'silat-karambit-tendon-hook',
-        name: 'Karambit Tendon Hook',
+        id: 'silat-internal-power',
+        name: 'Internal Power',
         formId: 'silat',
         formName: 'Silat',
         isNewCyberfists: true,
-        requirements: 'Empuñar un cuchillo curvo o cuchillas retráctiles.',
+        requirements: 'WILL 6+; impactaste al mismo objetivo con dos ataques de Martial Arts (Silat) o dos ataques de Melee Weapon con Melee Weapons Light/Medium.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño cortante',
-        effectDescription: 'Enganchas la hoja curva detrás del tendón de Aquiles o bíceps y tiras con violencia. Inutiliza la extremidad impactada provocando sangrado continuo.',
-        criticalInjuryApplied: 'Torn Muscle'
+        sourcePage: 81,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes hacer un único ataque de Brawling contra un objetivo en rango Melee.'
       },
       {
-        id: 'silat-low-sweeping-harimau',
-        name: 'Harimau Tiger Takedown',
+        id: 'silat-violent-leverage',
+        name: 'Violent Leverage',
         formId: 'silat',
         formName: 'Silat',
         isNewCyberfists: true,
-        requirements: 'Atacar agachado o desde el suelo.',
-        resolutionDv: 16,
-        effectDescription: 'Enroscas tus piernas alrededor de los tobillos del enemigo y giras tu tronco como un tornillo. El objetivo es proyectado violentamente contra el suelo.'
+        requirements: 'Tu turno; en este turno iniciaste un agarre con un objetivo al que no habías agarrado antes en este combate.',
+        resolutionDv: 15,
+        sourcePage: 82,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes hacer un único ataque de Melee Weapon contra un objetivo en rango Melee.'
+      }
+    ]
+  },
+  {
+    id: 'sov-system',
+    name: 'Sov-System',
+    sourceBook: 'interface_red',
+    badge: 'CYBERFISTS // IR4',
+    sourcePage: 82,
+    originAndFlavor: 'Sucesor de Command Sambo creado por SovOil, pensado como arte comercial más popular que Arasaka-te.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Un golpe que causa una Critical Injury de Cuerpo aleatoria y un contraataque tras sufrir una Critical Injury.',
+    moves: [
+      {
+        id: 'sov-system-dirty-blow',
+        name: 'Dirty Blow',
+        formId: 'sov-system',
+        formName: 'Sov-System',
+        isNewCyberfists: true,
+        requirements: 'BODY 4+.',
+        resolutionDv: 0,
+        isOpposed: true,
+        sourcePage: 82,
+        effectDescription: 'En lugar de 2 ataques, usas tu Acción para la resolución de Special Move contra un único objetivo en rango Melee. Si impacta, el objetivo sufre una Critical Injury de Cuerpo tirada al azar además del daño de Martial Arts; si sale Foreign Object, vuelves a tirar en la tabla de Cuerpo y se aplica ese nuevo resultado.'
+      },
+      {
+        id: 'sov-system-revenge-strike',
+        name: 'Revenge Strike',
+        formId: 'sov-system',
+        formName: 'Sov-System',
+        isNewCyberfists: true,
+        requirements: 'BODY 4+; tu turno; recibiste una Critical Injury de un Melee Attack o de un Special Move de Martial Arts desde tu último turno.',
+        resolutionDv: 15,
+        sourcePage: 82,
+        effectDescription: 'Una vez por turno. Si tienes éxito, haces un único ataque de Martial Arts (Sov-System) contra un objetivo que cumpla la segunda frase del requisito; si causa una Critical Injury, recuperas hasta 2 puntos de Luck gastados.'
       }
     ]
   },
@@ -819,62 +815,102 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Sumo',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'La ancestral lucha de peso pesada japonesa: empujes explosivos con las palmas abiertas (harite), anclaje inamovible al suelo y embestidas.',
-    keyStats: ['BODY', 'WILL'],
-    tacticalRole: 'Inmunidad al derribo, control de esquinas y desalojo de coberturas.',
+    sourcePage: 82,
+    originAndFlavor: 'Lucha japonesa que mueve al oponente con toda la fuerza del cuerpo.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Evita un agarre o lanzamiento moviendo a ambos, y mejora tu Facedown.',
     moves: [
       {
-        id: 'sumo-harite-palm-blast',
-        name: 'Harite Palm Slap Barrage',
+        id: 'sumo-deashi',
+        name: 'Deashi',
         formId: 'sumo',
         formName: 'Sumo',
         isNewCyberfists: true,
-        requirements: 'BODY 8+ y embestida frontal.',
+        requirements: 'BODY 7+; estás a punto de ser agarrado o lanzado. Se cumple siempre que se dé la condición.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+3d6 daño contundente a la cabeza/pecho',
-        effectDescription: 'Bofetada abierta de palma masiva en la mandíbula del oponente. El objetivo queda desorientado con pérdida de equilibrio (-3 a la Evasión durante 1 asalto).'
+        sourcePage: 82,
+        effectDescription: 'Si tienes éxito, no eres agarrado ni lanzado y puedes moverte a ti y al agarrador/lanzador hasta 6 m/yds (3 casillas) en la dirección que elijas.'
       },
       {
-        id: 'sumo-ring-out-charge',
-        name: 'Tsuppari Ring-Out Charge',
+        id: 'sumo-niramiai',
+        name: 'Niramiai',
         formId: 'sumo',
         formName: 'Sumo',
         isNewCyberfists: true,
-        requirements: 'Moverse al menos 3 metros hacia el enemigo.',
-        resolutionDv: 16,
-        effectDescription: 'Cargas con todo el peso de tu chasis contra el oponente. Lo desplazas 4 metros en línea recta y lo expulsas de su cobertura o a través de barandillas y ventanas.'
+        requirements: 'COOL 4+; estás en un Facedown. Se cumple siempre que se dé la condición.',
+        resolutionDv: 15,
+        sourcePage: 82,
+        effectDescription: 'Si tienes éxito, tu Facedown se hace con un +2.'
       }
     ]
   },
   {
-    id: 'systema',
-    name: 'Systema',
+    id: 'tai-chi',
+    name: 'Tai Chi',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Arte marcial ruso basado en la relajación muscular continua, absorción de energía de impactos y golpes bio-mecánicos de onda interna.',
-    keyStats: ['WILL', 'DEX'],
-    tacticalRole: 'Absorción de daño cinético y disipación de golpes contundentes.',
+    sourcePage: 82,
+    originAndFlavor: 'Arte chino que redirige y frustra los ataques manteniendo el equilibrio interior.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Inutiliza una mano del atacante que falla y puede anular el Special Move de un rival.',
     moves: [
       {
-        id: 'systema-kinetic-wave-strike',
-        name: 'Heavy Kinetic Wave Punch',
-        formId: 'systema',
-        formName: 'Systema',
+        id: 'tai-chi-joint-manipulation',
+        name: 'Joint Manipulation',
+        formId: 'tai-chi',
+        formName: 'Tai Chi',
         isNewCyberfists: true,
-        requirements: 'Permanecer relajado sin haber corrido este turno.',
+        requirements: 'Alguien en rango Melee falló contra ti con un Melee Attack. Se cumple siempre que se dé la condición.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+2d6 daño interno ignorando 50% de SP',
-        effectDescription: 'Golpe de puño con respiración controlada que transmite una onda expansiva a los órganos internos del objetivo sin necesidad de fuerza bruta externa.'
+        sourcePage: 82,
+        effectDescription: 'Si tienes éxito, eliges una de las manos del atacante; no podrá usarla hasta el final de su siguiente turno (no suelta lo que sostiene).'
       },
       {
-        id: 'systema-fluid-impact-absorption',
-        name: 'Fluid Shock Absorption',
-        formId: 'systema',
-        formName: 'Systema',
+        id: 'tai-chi-lu',
+        name: 'Lu',
+        formId: 'tai-chi',
+        formName: 'Tai Chi',
         isNewCyberfists: true,
-        requirements: 'Recibir un impacto cuerpo a cuerpo en este asalto.',
-        resolutionDv: 14,
-        effectDescription: 'Disipas la inercia del golpe girando con el impacto. Reduces el daño recibido a la mitad y rediriges la energía en un contraataque inmediato gratuito.'
+        requirements: 'WILL 8+; alguien en rango Melee acaba de tener éxito en una resolución de Special Move de Martial Arts.',
+        resolutionDv: 0,
+        isOpposed: true,
+        opposedBy: 'la tirada de Special Move que lo provocó',
+        sourcePage: 82,
+        effectDescription: 'Una vez por turno. Haces tu resolución contra un DV igual a la tirada (Check) del rival. Si tienes éxito, su Special Move falla, salvo que responda de inmediato con Lu él mismo y supere el DV fijado por tu tirada de Lu.'
+      }
+    ]
+  },
+  {
+    id: 'thamoc',
+    name: 'Thamoc',
+    sourceBook: 'interface_red',
+    badge: 'CYBERFISTS // IR4',
+    sourcePage: 83,
+    originAndFlavor: 'Arte moderno (Arte de la Confrontación Moderna) que entrena a policías en retención de armas y agarres.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Rebaja la penalización de Aimed Shot contra un agarrado y evita que te desarmen.',
+    moves: [
+      {
+        id: 'thamoc-advantaged-position',
+        name: 'Advantaged Position',
+        formId: 'thamoc',
+        formName: 'Thamoc',
+        isNewCyberfists: true,
+        requirements: 'Tu turno; eres el atacante en un agarre.',
+        resolutionDv: 15,
+        sourcePage: 83,
+        effectDescription: 'Una vez por turno. Si tienes éxito, la penalización de Aimed Shot contra un objetivo que estés agarrando, con un ataque de Martial Arts o Melee Weapon, baja de -8 a -5 durante el resto de tu turno.'
+      },
+      {
+        id: 'thamoc-weapon-retention',
+        name: 'Weapon Retention',
+        formId: 'thamoc',
+        formName: 'Thamoc',
+        isNewCyberfists: true,
+        requirements: 'Estás a punto de ser desarmado de un arma por cualquier medio. Se cumple siempre que se dé la condición.',
+        resolutionDv: 15,
+        sourcePage: 83,
+        effectDescription: 'Si tienes éxito, tu arma no es retirada de tus manos.'
       }
     ]
   },
@@ -883,66 +919,66 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Thrash Sambo',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'Evolución salvaje del Sambo militar soviético mezclada con la anarquía del rock pesado callejero: llaves destructivas de talón, derribos y rodillazos.',
-    keyStats: ['BODY', 'REF'],
-    tacticalRole: 'Destrucción de articulaciones inferiores y agresividad caótica.',
+    sourcePage: 83,
+    originAndFlavor: 'Fusión reciente de Command Sambo y Thrash Boxing, un estilo de inspiración bailable de los clubes nocturnos de Europa del Este de los años 2020.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Aguante: anula el Bonus Damage de una Critical Injury y reduce el daño de ataques cuerpo a cuerpo.',
     moves: [
       {
-        id: 'thrashsambo-heel-hook-shred',
-        name: 'Combat Heel Hook (Llave de Talón Rusa)',
+        id: 'thrash-sambo-grit',
+        name: 'Grit',
         formId: 'thrash-sambo',
         formName: 'Thrash Sambo',
         isNewCyberfists: true,
-        requirements: 'Enemigo en el suelo o adyacente a tus piernas.',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+3d6 daño directo a la rodilla/tobillo',
-        effectDescription: 'Torsión hiperbólica del talón y ligamentos cruzados. Si penetra SP, destroza la rodilla del oponente dejándolo incapacitado para caminar.',
-        criticalInjuryApplied: 'Broken Leg'
+        requirements: 'Estás a punto de sufrir una Critical Injury. Se cumple siempre que se dé la condición.',
+        resolutionDv: 15,
+        sourcePage: 83,
+        effectDescription: 'Si tienes éxito, no recibes el Bonus Damage de la Critical Injury, aunque sigues sufriendo su efecto.'
       },
       {
-        id: 'thrashsambo-head-spike-throw',
-        name: 'Fireman’s Head Spike',
+        id: 'thrash-sambo-thick-skin',
+        name: 'Thick Skin',
         formId: 'thrash-sambo',
         formName: 'Thrash Sambo',
         isNewCyberfists: true,
-        requirements: 'Presa activa en el tren superior.',
+        requirements: 'Estás recibiendo daño de un Melee Attack. Se cumple siempre que se dé la condición.',
         resolutionDv: 15,
-        damageBonusOrFormula: '+3d6 daño de impacto de cráneo',
-        effectDescription: 'Levantas al rival sobre tus hombros en un agarre de bombero y lo clavas de cabeza contra el suelo o una superficie sólida. Aplica Concussion inmediata.',
-        criticalInjuryApplied: 'Concussion'
+        sourcePage: 83,
+        effectDescription: 'Si tienes éxito, el daño se reduce en 2, o en 4 si fue un ataque de Martial Arts.'
       }
     ]
   },
   {
     id: 'wrestling',
-    name: 'Wrestling (Lucha Grecorromana / Libre)',
+    name: 'Wrestling',
     sourceBook: 'interface_red',
     badge: 'CYBERFISTS // IR4',
-    originAndFlavor: 'El deporte de combate más antiguo de la humanidad: control del centro de masa, derribos de doble pierna y sujeción inquebrantable.',
-    keyStats: ['BODY', 'DEX'],
-    tacticalRole: 'Derribos de doble pierna garantizados y control absoluto de masa corporal.',
+    sourcePage: 83,
+    originAndFlavor: 'Una de las artes marciales más antiguas, centrada en agarrar e inmovilizar al oponente; muy practicada.',
+    keyStats: ['DEX'],
+    tacticalRole: 'Permite usar la Acción Choke durante un agarre y invertir un agarre para pasar a ser el atacante.',
     moves: [
       {
-        id: 'wrestling-double-leg-blast',
-        name: 'Blast Double Leg Takedown',
+        id: 'wrestling-chokehold',
+        name: 'Chokehold',
         formId: 'wrestling',
         formName: 'Wrestling',
         isNewCyberfists: true,
-        requirements: 'Cargar hacia el oponente desde al menos 2 metros.',
+        requirements: 'Tu turno; eres el atacante en un agarre y no has usado la Acción Choke en este turno.',
         resolutionDv: 15,
-        damageBonusOrFormula: 'Daño de Brawling + derribo forzado',
-        effectDescription: 'Penetras por debajo de la cadera del oponente, atrapas ambas piernas por detrás de las rodillas y embistes con tu hombro en su estómago proyectándolo contra el suelo.'
+        sourcePage: 83,
+        effectDescription: 'Una vez por turno. Si tienes éxito, puedes usar la Acción Choke; no contra el mismo objetivo otra vez en este turno.'
       },
       {
-        id: 'wrestling-gut-wrench-turn',
-        name: 'Gut Wrench Slam',
+        id: 'wrestling-reversal',
+        name: 'Reversal',
         formId: 'wrestling',
         formName: 'Wrestling',
         isNewCyberfists: true,
-        requirements: 'El objetivo debe estar en el suelo (Prone).',
-        resolutionDv: 16,
-        damageBonusOrFormula: '+3d6 daño lumbar directo',
-        effectDescription: 'Abrazas la cintura del rival caído, lo levantas horizontalmente y lo azotas contra el suelo. El rival queda sin aire y no puede levantarse durante 1 asalto.'
+        requirements: 'Tu turno; eres el defensor en un agarre.',
+        resolutionDv: 15,
+        sourcePage: 83,
+        effectDescription: 'Una vez por turno. Si tienes éxito, pasas a ser el atacante en el agarre.'
       }
     ]
   }
@@ -987,7 +1023,7 @@ export interface MartialArtsOfficialManualText {
 
 export const MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT: MartialArtsOfficialManualText = {
   title: 'Reglamento Oficial Canónico de Artes Marciales // Cyberpunk RED & Cyberfists',
-  sourceReferences: 'Cyberpunk RED Core Rulebook pp. 112, 178-181, 360, 411 • Interface RED Vol. 4 (Cyberfists of Fury)',
+  sourceReferences: 'Cyberpunk RED Core Rulebook pp. 112, 178-181, 360, 411 • Interface RED Vol. 4 pp. 74-84 (Cyberfists of Fury)',
   overview: {
     title: 'Naturaleza de las Artes Marciales (Habilidad Difícil x2)',
     definition: 'Martial Arts es la habilidad de combate cuerpo a cuerpo más mortífera y técnica de Night City. A diferencia del Brawling (pelea callejera basada en puñetazos desordenados y forcejeos), las Artes Marciales representan entrenamiento formal, biomecánica precisa y acondicionamiento muscular extremo.',

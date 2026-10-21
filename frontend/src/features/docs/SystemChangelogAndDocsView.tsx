@@ -26,6 +26,35 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.6.1',
+    date: '2026-10-21',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Canon / Reglas',
+    title: 'Cyberfists of Fury canon (IR4 pp. 74-84)',
+    summary: 'Plan 5, bloque 1: las 23 formas de Interface RED Vol. 4 ahora son las del libro, con página en cada movimiento. Se borraron 10 formas inventadas, entraron 10 que faltaban y se corrigieron los movimientos de las 13 que ya estaban. Registro completo en docs/canon-audit/v4.5.1-cyberfists.md.',
+    highlights: [
+      'Se perdió (no existen en IR4): Animal Kung Fu, Chornobog’s Kommando, Cyber-Wrestling, Hapkido, Jeet Kune Do, Jiu-Jitsu, Lethwei, Ninjutsu, Savate y Systema, con sus 20 movimientos.',
+      'Se ganó: Arnis, Choy Li Fut, Jujutsu, Kendo, Kung Fu, Kyudo, Multiarm Melee, Sov-System, Tai Chi y Thamoc, con sus 20 movimientos canon.',
+      'Se corrigió: las 13 formas que ya estaban (Arasaka-te, Boxing, Capoeira, Drunken Fist, Gun Fu, Krav Maga, Militech Commando Training, Muay Thai, PanzerFaust, Silat, Sumo, Thrash Sambo, Wrestling) tenían movimientos y DV inventados; ahora usan los del libro.',
+      'Procedencia: cada forma y movimiento de IR4 tiene sourcePage, y la UI muestra la página junto al DV. Los movimientos enfrentados muestran contra qué tiran (opposedBy), p. ej. Commando Disarm contra el Brawling del objetivo.',
+      'Personajes guardados: el store pasa a versión 2 y la migración quita los rangos y chips de las formas borradas.',
+      'Las 4 formas del Core y Recovery no cambian (auditadas en v4.4.0). Total: 27 formas y 54 movimientos. 38 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/data/cyberfistsMartialArtsData.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'frontend/src/engine/__tests__/rules.test.ts',
+      'docs/canon-audit/v4.5.1-cyberfists.md',
+      'docs/canon-audit/README.md',
+      'docs/plans/plan5-canon-audit.md'
+    ],
+    metricsBadge: 'v4.6.1 • Cyberfists canon • Plan 5'
+  },
+  {
     version: 'v4.6.0',
     date: '2026-10-21',
     author: 'Claude Code',
@@ -613,6 +642,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.6.1': true,
     'v4.6.0': true,
     'v4.5.0': true,
     'v4.4.0': true,

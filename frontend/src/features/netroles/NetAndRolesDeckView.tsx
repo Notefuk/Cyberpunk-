@@ -1831,7 +1831,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                             <div key={m.id} className="bg-[#0b0e15] p-2 rounded-xs border border-[#1a2133] space-y-0.5 text-[10px] font-mono-code">
                               <div className="flex items-center justify-between font-bold">
                                 <span className="text-white">{m.name}</span>
-                                <span className="text-amber-400">{m.isOpposed ? 'vs DEX + Evasion' : `DV ${m.resolutionDv}`}</span>
+                                <span className="text-amber-400">{m.isOpposed ? `vs ${m.opposedBy ?? 'DEX + Evasion'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
                               </div>
                               <div className="text-[9px] text-slate-400 font-sans leading-tight">
                                 <strong>Req:</strong> {m.requirements}
