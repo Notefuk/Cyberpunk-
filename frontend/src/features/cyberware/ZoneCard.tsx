@@ -6,6 +6,7 @@ import {
   type CyberwareItemData
 } from './ripperdocZones';
 import { SlotBox } from './SlotBox';
+import { getCyberwareArt } from './cyberwareCardArt';
 
 export interface ZoneCardProps {
   zoneKey: AnatomicalZoneKey;
@@ -110,6 +111,7 @@ export function ZoneCard({
             zoneKey={zoneKey}
             onInspect={onInspect}
             onInstall={onInstall}
+            artUrl={item ? getCyberwareArt(item.id) : undefined}
           />
         ))}
       </div>

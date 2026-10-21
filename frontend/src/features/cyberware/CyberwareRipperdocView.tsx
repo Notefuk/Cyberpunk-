@@ -45,6 +45,7 @@ import { SlotBox } from './SlotBox';
 import { ZoneConnectors } from './ZoneConnectors';
 import { ZoneDetailPanel } from './ZoneDetailPanel';
 import { GoingMetalBanner } from './GoingMetalBanner';
+import { getCyberwareArt } from './cyberwareCardArt';
 
 export type { CyberwareItemData };
 
@@ -692,6 +693,7 @@ export function CyberwareRipperdocView() {
                   zoneKey="fashionware"
                   onInspect={setSelectedInstalledCyber}
                   onInstall={openInstallModal}
+                  artUrl={item ? getCyberwareArt(item.id) : undefined}
                 />
               );
             });
@@ -702,7 +704,26 @@ export function CyberwareRipperdocView() {
       {/* --- MODAL 1: INSPECTION & UNINSTALL IMPLANT DRAWER --- */}
       {selectedInstalledCyber && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#10121a] border-2 border-[#f59e0b] rounded-xs max-w-xl w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+          <div className={`bg-[#10121a] border-2 border-[#f59e0b] rounded-xs ${getCyberwareArt(selectedInstalledCyber.id) ? 'max-w-3xl' : 'max-w-xl'} w-full p-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150`}>
+            <div className={getCyberwareArt(selectedInstalledCyber.id) ? 'flex flex-col sm:flex-row gap-5' : undefined}>
+              {getCyberwareArt(selectedInstalledCyber.id) && (
+                <figure className="shrink-0 self-center sm:self-start m-0">
+                  <img
+                    src={getCyberwareArt(selectedInstalledCyber.id)}
+                    alt={selectedInstalledCyber.name}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                    className="w-full max-w-[220px] object-contain"
+                    style={{ aspectRatio: '338 / 488' }}
+                  />
+                  <figcaption className="text-[9px] font-mono-code text-[#64748b] mt-1 max-w-[220px]">
+                    Carta oficial · Cyberpunk Edgerunners Mission Kit
+                  </figcaption>
+                </figure>
+              )}
+              <div className="flex-1 min-w-0">
             {/* Header */}
             <div className="flex items-start justify-between border-b border-[#202538] pb-4 mb-4">
               <div className="flex items-center gap-3">
@@ -778,6 +799,8 @@ export function CyberwareRipperdocView() {
                 <Trash2 className="w-4 h-4" />
                 <span>DESINSTALAR IMPLANTE (+Recuperar Humanidad)</span>
               </button>
+            </div>
+              </div>
             </div>
           </div>
         </div>

@@ -16,15 +16,17 @@
   - Fase 1 hecha: `CyberwareRipperdocView.tsx` 2235 → 1022 líneas; nuevos `ripperdocZones.tsx` (zonas, `ZoneConfig.color`, `itemMatchesZone`, `parseHumanityLoss`, `renderCategoryFloatingTooltip`), `HoloBody.tsx` (SVG tal cual), `ZoneCard.tsx`, `SlotBox.tsx`, `GoingMetalBanner.tsx`. Verificado: HTML de la vista idéntico al original (102204 caracteres, hash 1959140848, 1440x900, Hardpoint), catálogo/instalar/inspeccionar/desinstalar y banner FBC funcionan, tsc, 32 tests y build OK.
   - [Claude Code · 2026-10-21] Fase 2 hecha: `HoloBody.tsx` reescrito (~330 líneas) con silueta anatómica en pose A, rejilla hex con clipPath, glow, columna/costillas/articulaciones, retícula y regla de altura; `ZONE_HOTSPOTS` en `ripperdocZones.tsx` (9 zonas, fashionware en la muñeca izquierda) renderizados con `.map`; hover/selección con el color de cada zona, badge de implantes, líneas guía 2077 a cada lado; foco por teclado; `.holo-scanline`/`.holo-flicker`/`.holo-pulse` en `index.css` (solo sin reduced motion). La vista pasa `selectedZone` e `installedCountByZone`. Revisado en el navegador (brazos y Operating System); tsc, 32 tests y build OK.
   - [Claude Code · 2026-10-21] Fase 3 hecha: `SlotBox` biselado (`.chamfer-slot`, hover amarillo `#fcee0a`, prop `artUrl` lista para la fase 4; en xl 56px solo ícono + badge HL), `ZoneCard` con barra de color, contador en segmentos y botón "+ CATÁLOGO" amarillo, `data-zone-card`; nuevos `ZoneConnectors.tsx` (polilíneas medidas tarjeta↔`data-zone-marker`, solo xl, `.holo-dash`) y `ZoneDetailPanel.tsx` (implantes de la zona, abre inspección y catálogo). Layout: xl igual a 5 columnas (zonas ~560px vs figura 756px con panel); <xl figura primero, zonas en `md:grid-cols-2`, torres al final sin `min-h-[640px]`. Revisado en el navegador a 1440x900 y 375x812; catálogo e inspección desde el panel OK; tsc, 32 tests y build OK.
-  - Siguiente: fase 4 (cartas del Mission Kit como miniaturas, `cyberwareCardArt.ts`). Fase 5 pendiente.
+  - [Claude Code · 2026-10-21] Fase 4 hecha: 6 cartas de ciberware del Mission Kit en `frontend/public/cemk/cyberware/` (Berserk, Cyberarm, Gorilla Arm, Mantis Blade, Monowire, Self-ICE; 338x488, sin redimensionar) y `cyberwareCardArt.ts` (id → carta). Desvío decidido por Giuliano: las cartas son de texto (sin ilustración), así que la carta completa solo se ve en el modal de inspección; slots y panel muestran el ícono con un indicador ▣.
+  - [Claude Code · 2026-10-21] Bug arreglado de paso: `itemMatchesZone` no ubicaba los tipos 'Cyberarm Option' (4), 'Neuralware Option' (2) ni 'Borgware x2' (Omega Internal), que no aparecían en ningún catálogo ni slot (Hardpoint tenía Mantis Blade instalado e invisible). Test nuevo: todo el ciberware del pack y de Going Metal tiene zona (33 tests).
+  - Siguiente: fase 5 (textos viejos de Going Metal en el banner y chips, revisar `animate-in`, capturas desktop/móvil, docs firmados, changelog in-app con `author`, PR y gh-pages).
   - Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-21]
-- Rama y último commit: `claude/v4.6.0-ripperdoc-2077` @ commit "v4.6.0 fase 3..." (pusheada: sí). `main` @ 606c15e; web gh-pages del 606c15e.
-- A medias: v4.6.0 Ripperdoc 2077 (plan 4), fases 1-3 de 5 hechas (ver "En curso").
-- Siguiente paso exacto: fase 4 del plan 4 (arte del Mission Kit). Después, v4.5.1 Cyberfists of Fury.
+- Rama y último commit: `claude/v4.6.0-ripperdoc-2077` @ commit "v4.6.0 fase 4..." (pusheada: sí). `main` @ 606c15e; web gh-pages del 606c15e.
+- A medias: v4.6.0 Ripperdoc 2077 (plan 4), fases 1-4 de 5 hechas (ver "En curso").
+- Siguiente paso exacto: fase 5 del plan 4 (limpieza y cierre de v4.6.0). Después, v4.5.1 Cyberfists of Fury.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
 - Nuevo para Antigravity: leer `docs/COWORK.md` y `.agent/AGENTS.md` §8; el changelog in-app ahora tiene campo `author` (poner `'Antigravity'` en sus versiones); skill `.agent/skills/cierre-sesion/`.
 

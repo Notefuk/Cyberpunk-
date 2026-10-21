@@ -4,6 +4,7 @@ import {
   type AnatomicalZoneKey,
   type CyberwareItemData
 } from './ripperdocZones';
+import { getCyberwareArt } from './cyberwareCardArt';
 
 export interface ZoneDetailPanelProps {
   selectedZone: AnatomicalZoneKey | null;
@@ -52,6 +53,7 @@ export function ZoneDetailPanel({ selectedZone, installed, onInspect, onInstall 
         <ul className="space-y-1.5">
           {installed.map((item) => {
             const hl = parseHumanityLoss(item.humanityLoss, 'average').amount;
+            const art = getCyberwareArt(item.id);
             return (
               <li key={`detail-${selectedZone}-${item.id}`}>
                 <button
@@ -59,8 +61,16 @@ export function ZoneDetailPanel({ selectedZone, installed, onInspect, onInstall 
                   onClick={() => onInspect(item)}
                   className="w-full text-left p-2 bg-[#12141c] hover:bg-[#1a1e2a] border border-[#1e2230] hover:border-[#fcee0a] transition-colors cursor-pointer"
                 >
+                  <div>
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-tech text-xs font-bold text-white truncate">{item.name}</span>
+                    <span className="font-tech text-xs font-bold text-white truncate">
+                      {item.name}
+                      {art && (
+                        <span className="ml-1.5 align-middle text-[8px] font-mono-code font-black px-1 border border-[#fcee0a]/60 text-[#fcee0a]">
+                          ▣ CARTA
+                        </span>
+                      )}
+                    </span>
                     <span className="text-[10px] font-mono-code text-[#ef4444] font-black shrink-0">-{hl} HL</span>
                   </div>
                   <div className="flex items-center gap-2 text-[9px] font-mono-code uppercase mt-0.5">
@@ -69,6 +79,7 @@ export function ZoneDetailPanel({ selectedZone, installed, onInspect, onInstall 
                     <span className="text-[#94a3b8] ml-auto">{item.cost} €$</span>
                   </div>
                   <p className="text-[10px] text-[#94a3b8] mt-1 line-clamp-2">{item.description}</p>
+                  </div>
                 </button>
               </li>
             );

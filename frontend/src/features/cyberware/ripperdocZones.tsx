@@ -227,17 +227,19 @@ export const COVERING_CYBER_IDS = new Set([
 ]);
 
 export function itemMatchesZone(item: CyberwareItemData, zoneKey: AnatomicalZoneKey): boolean {
-  if (zoneKey === 'neuralware') return item.type === 'Neuralware';
+  // Las opciones (CEMK) van en la zona de su implante base: 'Neuralware Option' → Frontal Cortex, 'Cyberarm Option' → Arms & Hands.
+  if (zoneKey === 'neuralware') return item.type === 'Neuralware' || item.type === 'Neuralware Option';
   if (zoneKey === 'cyberoptics') return item.type === 'Cyberoptics';
   if (zoneKey === 'cyberaudio') return item.type === 'Cyberaudio';
   if (zoneKey === 'internal') return item.type === 'Internal';
   if (zoneKey === 'external') return item.type === 'External';
-  if (zoneKey === 'borgware') return item.type === 'Borgware';
+  if (zoneKey === 'borgware') return item.type === 'Borgware' || item.type === 'Borgware x2';
   if (zoneKey === 'fashionware') return item.type === 'Fashionware';
   if (zoneKey === 'cyberlegs') {
     return item.type === 'Cyberlimb' && (LEG_CYBER_IDS.has(item.id) || COVERING_CYBER_IDS.has(item.id));
   }
   if (zoneKey === 'cyberarms') {
+    if (item.type === 'Cyberarm Option') return true;
     return item.type === 'Cyberlimb' && (!LEG_CYBER_IDS.has(item.id) || COVERING_CYBER_IDS.has(item.id));
   }
   return false;

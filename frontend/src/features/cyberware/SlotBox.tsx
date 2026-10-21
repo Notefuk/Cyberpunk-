@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react';
-import type { CSSProperties } from 'react';
+import { type CSSProperties } from 'react';
 import {
   ZONE_CONFIGS,
   parseHumanityLoss,
@@ -12,7 +12,7 @@ export interface SlotBoxProps {
   zoneKey: AnatomicalZoneKey;
   onInspect: (item: CyberwareItemData) => void;
   onInstall: (zoneKey: AnatomicalZoneKey) => void;
-  /** Miniatura opcional (fase 4: arte del Mission Kit). Si existe reemplaza al ícono de la zona. */
+  /** Carta oficial del Mission Kit (fase 4). Las cartas son de texto, así que el slot solo muestra un indicador; la carta se ve al inspeccionar. */
   artUrl?: string;
 }
 
@@ -21,6 +21,7 @@ const SIZE = 'w-20 h-20 sm:w-24 sm:h-24 xl:w-14 xl:h-14';
 export function SlotBox({ item, zoneKey, onInspect, onInstall, artUrl }: SlotBoxProps) {
   const zoneCfg = ZONE_CONFIGS[zoneKey];
   const color = zoneCfg.color ?? '#00f5d4';
+  const hasCard = Boolean(artUrl);
 
   if (item) {
     const avgLoss = parseHumanityLoss(item.humanityLoss, 'average').amount;
@@ -35,10 +36,18 @@ export function SlotBox({ item, zoneKey, onInspect, onInstall, artUrl }: SlotBox
           className={`group chamfer-slot ${SIZE} block p-px bg-[var(--slot-c)] hover:bg-[#fcee0a] transition-colors cursor-pointer`}
         >
           <div
-            className="chamfer-slot-inner w-full h-full p-1.5 xl:p-0.5 flex flex-col justify-between"
+            className="chamfer-slot-inner relative overflow-hidden w-full h-full p-1.5 xl:p-0.5 flex flex-col justify-between"
             style={{ background: `linear-gradient(160deg, ${color}26 0%, #0c0d12 75%)` }}
           >
-            <div className="flex items-start justify-between xl:justify-end w-full gap-1">
+            {hasCard && (
+              <span
+                title="Carta oficial del Mission Kit: inspeccioná el implante para verla"
+                className="absolute bottom-0.5 left-0.5 z-10 text-[7px] font-mono-code font-black leading-none px-0.5 border border-[#fcee0a]/60 text-[#fcee0a] bg-[#0c0d12]/80"
+              >
+                ▣
+              </span>
+            )}
+            <div className="relative flex items-start justify-between xl:justify-end w-full gap-1">
               <span
                 className="xl:hidden text-[8px] font-mono-code font-bold uppercase tracking-tighter leading-none truncate"
                 style={{ color }}
@@ -51,17 +60,13 @@ export function SlotBox({ item, zoneKey, onInspect, onInstall, artUrl }: SlotBox
             </div>
 
             <div
-              className="flex-1 min-h-0 flex items-center justify-center overflow-hidden [&>svg]:w-7 [&>svg]:h-7 group-hover:scale-110 transition-transform"
+              className="relative flex-1 min-h-0 flex items-center justify-center overflow-hidden [&>svg]:w-7 [&>svg]:h-7 group-hover:scale-110 transition-transform"
               style={{ color }}
             >
-              {artUrl ? (
-                <img src={artUrl} alt="" className="w-full h-full object-cover" />
-              ) : (
-                zoneCfg.icon
-              )}
+              {zoneCfg.icon}
             </div>
 
-            <div className="w-full text-center xl:hidden">
+            <div className="relative w-full text-center xl:hidden">
               <span className="text-[9px] font-tech font-bold text-white leading-tight line-clamp-2 block">
                 {item.name}
               </span>
