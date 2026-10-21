@@ -476,12 +476,8 @@
         "WILL": 8,
         "EMP": 6,
         "BODY": 3,
-        "MOVE": null,
-        "LUCK": null,
-        "moveOrLuckRaw": [
-          7,
-          5
-        ],
+        "MOVE": 7,
+        "LUCK": 5,
         "HP": 40,
         "seriouslyWounded": 20,
         "deathSave": 3
@@ -576,12 +572,8 @@
         "WILL": 6,
         "EMP": 3,
         "BODY": 7,
-        "MOVE": null,
-        "LUCK": null,
-        "moveOrLuckRaw": [
-          7,
-          6
-        ],
+        "MOVE": 7,
+        "LUCK": 6,
         "HP": 45,
         "seriouslyWounded": 23,
         "deathSave": 7
@@ -664,12 +656,8 @@
         "WILL": 3,
         "EMP": 5,
         "BODY": 6,
-        "MOVE": null,
-        "LUCK": null,
-        "moveOrLuckRaw": [
-          6,
-          7
-        ],
+        "MOVE": 6,
+        "LUCK": 7,
         "HP": 35,
         "seriouslyWounded": 18,
         "deathSave": 6
@@ -760,12 +748,8 @@
         "WILL": 5,
         "EMP": 4,
         "BODY": 5,
-        "MOVE": null,
-        "LUCK": null,
-        "moveOrLuckRaw": [
-          6,
-          6
-        ],
+        "MOVE": 6,
+        "LUCK": 6,
         "HP": 35,
         "seriouslyWounded": 18,
         "deathSave": 5
@@ -860,12 +844,8 @@
         "WILL": 7,
         "EMP": 7,
         "BODY": 5,
-        "MOVE": null,
-        "LUCK": null,
-        "moveOrLuckRaw": [
-          7,
-          6
-        ],
+        "MOVE": 7,
+        "LUCK": 6,
         "HP": 40,
         "seriouslyWounded": 20,
         "deathSave": 5
@@ -942,7 +922,6 @@
     }
   ],
   "doubts": [
-    "Easy Mode: en el texto del PDF, MOVE y LUCK de cada pregen salen mezclados (la hoja los pone en columnas verticales); no se pudo determinar cual de los dos valores es MOVE y cual LUCK. Quedaron MOVE y LUCK en null y los dos valores crudos en 'moveOrLuckRaw' [posicion 2, posicion 5 del renglon WILL/..../EMP]. El resto de STATs se verifico contra los totales de Habilidades y HP/Death Save.",
     "Easy Mode: las hojas de las pregens no muestran eurodolares ni dinero inicial en la capa de texto; eurodollars = null. El 'Habilidad: nivel' de skills es el LVL de la hoja (el total = STAT + LVL).",
     "Easy Mode: pagina impresa: las hojas de personaje (PDF 37, 39, 41, 43, 45) no tienen numero impreso fiable (la pagina 22 muestra la hoja de Forty como ejemplo de lectura, con los mismos datos). Las paginas 'source' son las del PDF.",
     "Maker (Core pg. 147): el texto dice que cada subida de Rango da 1 Rango en dos especialidades distintas, pero no aclara si el Rango 1 inicial ya otorga esos 2; el total de 8 Rangos de especialidad a Rango 4 asume que si. Tampoco se lee un tope de Rangos por especialidad.",
@@ -951,6 +930,7 @@
     "Combat Awareness: el ejemplo del libro usa Damage Deflection 1 = 2 puntos; el texto de la lista dice 'decrease first damage by 1' por 2 puntos, consistente. El texto no limita cuantos puntos totales ni si Fumble Recovery se puede combinar con otras (se asume que si).",
     "Rockerboy, Media, Fixer, Lawman: las descripciones breves de rol (descEs) son resumen propio de la introduccion del rol en pgs. 30-38; no se tradujeron literalmente. Pagina de inicio de rol = pagina impresa (PDF - 1); Nomad empieza en pg. 39 (PDF 40).",
     "Exec Teamwork: el libro dice que el miembro de equipo 'Rolls on special chart' con tablas de 1d6 para STATs; las tablas completas de los 5 tipos (pgs. 155-157) no se volcaron aqui, solo sus nombres.",
-    "Lawman Backup: la descripcion dice 'roll equal or lower than your Backup Rank on a d10'; no se aclara si un Lawman de Rango 4 puede elegir pedir solo de un grupo de rango inferior (el texto dice 'de un grupo de tu Rango de Backup o inferior', se interpreta que si)."
+    "Lawman Backup: la descripcion dice 'roll equal or lower than your Backup Rank on a d10'; no se aclara si un Lawman de Rango 4 puede elegir pedir solo de un grupo de rango inferior (el texto dice 'de un grupo de tu Rango de Backup o inferior', se interpreta que si).",
+    "[Claude Code · 2026-10-22] MOVE/LUCK de las pregens Easy Mode resueltos por imagen (Forty MOVE 7, Mover MOVE 7): el orden crudo era [MOVE, LUCK]."
   ]
 }
