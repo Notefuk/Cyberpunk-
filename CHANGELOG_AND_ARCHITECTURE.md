@@ -247,6 +247,17 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.8.0] - 2026-10-22 (Guardado robusto) [Claude Code · 2026-10-22]
+* **Category**: Persistencia (plan 7, bloque 1: `docs/plans/plan7-creador-personajes.md`).
+* **Persist v3**: `frontend/src/store/persistence.ts`. La clave `cpr-omni-deck-characters-v2` no cambia; `CHARACTERS_SCHEMA_VERSION = 3`, `APP_VERSION` se actualiza a mano.
+  - `MIGRATIONS` 0→1 (nada), 1→2 (limpieza de artes marciales), 2→3 (sanitizado legacy + ciberware huérfano quitado y anotado en `notes`). `runMigrations(state, from)` → `{state, warnings}`.
+  - `backupRawBeforeMigration` guarda `cpr-omni-deck-backup-v<N>` antes de migrar.
+  - `safeCharacterStorage`: JSON corrupto → copia `cpr-omni-deck-corrupt-<ts>` + aviso; error de cuota → aviso. Canal `onPersistenceWarning` → `PersistenceBanner.tsx`.
+  - `merge` solo inyecta premades (salteando `dismissedPremadeIds`) y corrige el id activo.
+* **Respaldo completo**: `buildFullBackup` / `parseFullBackup` (fichas + `cpr_custom_npcs_v1`, `cpr_active_encounter_v1`, `cpr_gm_secret_notes_v1`, `cpr_custom_net_arch_v1`, `cpr-omni-deck-combat-v2`, `cpr_enemy_sheet_mode_v1`). La importación pasa por las mismas migraciones. Store: `exportFullBackup`, `importFullBackup(text, 'replace' | 'merge')`, `restorePremades`.
+* **UI**: botones en `StreetLabView.tsx`; se quita "OFFLINE PWA READY" de `TopHudBar.tsx`; favicon `./favicon.svg`.
+* **Verificación**: 85 tests (28 de persistencia). En el navegador, un guardado v2 con un implante inexistente migra a v3, deja la copia previa y anota lo quitado.
+
 ### [v4.7.0] - 2026-10-22 (Enemigos canon Core/CEMK/Hardened + porte CEMK) [Claude Code · 2026-10-22]
 * **Category**: Canon / enemigos (plan 6, bloque 1: `docs/plans/plan6-enemigos-canon-cemk.md`). Registro: `docs/canon-audit/v4.7.0-enemigos-core-cemk-hardened.md` y `docs/canon-audit/v4.7.0-rcc-notes.md`.
 * **Se perdió**: 36 fichas inventadas (sourceBook core 11, cemk_2077 14, dlc 10, interface_red 1) y Tamayura, Achilles, Chao y el Ballistic Coprocessor.

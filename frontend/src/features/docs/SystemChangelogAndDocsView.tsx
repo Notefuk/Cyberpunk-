@@ -26,6 +26,36 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.8.0',
+    date: '2026-10-22',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Guardado / Persistencia',
+    title: 'Guardado robusto: migraciones, respaldo completo y premades que no vuelven',
+    summary: 'Plan 7, bloque 1: los personajes sobreviven a updates y a guardados rotos. El guardado pasa a la versión 3 con migraciones encadenadas, copia previa a cada migración y respaldo completo exportable a archivo.',
+    highlights: [
+      'Migraciones versionadas (v1 → v2 → v3): se limpian los parches viejos y el ciberware que ya no existe en el catálogo; lo quitado queda anotado en las notas de la ficha.',
+      'Antes de migrar se guarda una copia (cpr-omni-deck-backup-v<N>). Si el guardado está corrupto se copia aparte y se avisa, nunca se pisa en silencio.',
+      'Aviso en pantalla si el navegador se queda sin espacio.',
+      'Street Lab: RESPALDO COMPLETO (todas las fichas + PNJ custom, encuentro, notas del GM y NetArch), RESTAURAR RESPALDO (reemplazar o combinar), IMPORTAR FICHA desde archivo y RESTAURAR PREMADES.',
+      'Los premades que borrás ya no reaparecen al recargar.',
+      'Se quitó el cartel "OFFLINE PWA READY", que no era cierto, y se arregló el favicon.',
+      'La clave de guardado no cambia: las fichas existentes se migran solas. 85 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/store/persistence.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/components/PersistenceBanner.tsx',
+      'frontend/src/App.tsx',
+      'frontend/src/features/layout/TopHudBar.tsx',
+      'frontend/index.html',
+      'frontend/src/engine/__tests__/persistence.test.ts',
+      'docs/plans/plan7-creador-personajes.md'
+    ],
+    metricsBadge: 'v4.8.0 • Guardado robusto • Plan 7'
+  },
+  {
     version: 'v4.7.0',
     date: '2026-10-22',
     author: 'Claude Code',
@@ -714,6 +744,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.8.0': true,
     'v4.7.0': true,
     'v4.6.2': true,
     'v4.6.1': true,

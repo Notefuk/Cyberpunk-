@@ -7,12 +7,12 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
 **Última actualización**: [Claude Code · 2026-10-22]
-**Versión de la app**: v4.7.0 (en `main`, squash ea8268f, PR #20; publicada en gh-pages y verificada en vivo)
+**Versión de la app**: v4.8.0 lista en la rama `claude/v4.8.0-guardado` (sin PR). `main` = v4.7.0, publicada.
 **Plan activo**: plan 7 (`docs/plans/plan7-creador-personajes.md`, creador de personajes CEMK-first, persistente y con Modo Novato; v4.8.0-v4.8.3). En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2) y plan 5 (Black Chrome y vehículos, ahora v4.9.x). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] v4.8.0 Guardado robusto (plan 7) en la rama `claude/v4.8.0-guardado`. Paso actual: el worker TERMINÓ (tsc OK, 85 tests); falta auditar ids de ciberware de las premades contra el catálogo, el navegador, el changelog y el commit. Cambios hechos: `store/persistence.ts` nuevo (migraciones 0→3, limpieza de ciberware huérfano, `safeCharacterStorage` con copia si el JSON está corrupto y aviso si falta espacio, copia `cpr-omni-deck-backup-v<N>` antes de migrar, `buildFullBackup`/`parseFullBackup`); en el store, `dismissedPremadeIds`, `restorePremades`, `exportFullBackup` e `importFullBackup`; botones de respaldo e importación por archivo en StreetLab; `PersistenceBanner`; se quita "OFFLINE PWA READY"; favicon con ruta relativa; `persistence.test.ts`. Si la sesión se corta: revisar `git status` en la rama y correr tsc y los tests antes de seguir. La clave `cpr-omni-deck-characters-v2` NO cambia. Antigravity: no tocar `useCharacterStore.ts` ni `StreetLabView.tsx` hasta el merge.
+- [Claude Code · 2026-10-22] v4.8.0 Guardado robusto terminada y verificada (tsc, 85 tests, build, navegador: migración v2→v3 con copia previa y limpieza de huérfanos) en la rama `claude/v4.8.0-guardado`. Falta: PR, merge y gh-pages. Después: v4.8.1 datos canon de creación (scouts por páginas del Core 73-119 y CEMK RB 19-25, 35-36, Folios). Antigravity: no tocar `useCharacterStore.ts`, `store/persistence.ts` ni `StreetLabView.tsx` hasta el merge.
 
 ## Traspaso
 
