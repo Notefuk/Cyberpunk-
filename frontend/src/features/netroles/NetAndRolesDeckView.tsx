@@ -63,6 +63,13 @@ import type { CoreVehicleEntry } from '../../data/creation/types';
 import { resolveSkillKey, normalizeCanonSkillName } from '../../data/characterCreationData';
 import { GameClockBar } from '../combat/GameClockBar';
 import { MedtechTreatmentPanel } from './MedtechTreatmentPanel';
+import { RockerboyPanel } from '../roles/RockerboyPanel';
+import { FixerPanel } from '../roles/FixerPanel';
+import { MediaPanel } from '../roles/MediaPanel';
+import { ExecPanel } from '../roles/ExecPanel';
+import { LawmanPanel } from '../roles/LawmanPanel';
+import { MakerPanel } from '../roles/MakerPanel';
+import { materialCost, priceCategoryForEb, rollMakerCheck, specialtyRank } from '../../engine/makerRules';
 
 type ActiveTab = 'netrunning' | 'quickhacks' | 'martial' | 'roles' | 'vehicles';
 
@@ -409,10 +416,7 @@ export const NetAndRolesDeckView: React.FC = () => {
   };
 
   // Tech Maker state
-  const techProjects = character.techProjects || [
-    { id: 'proj-1', name: 'Modificación Cañón Silenciador', specialty: 'upgrade' as const, dv: 13, hoursRequired: 6, hoursCompleted: 3, cost: 50, isCompleted: false },
-    { id: 'proj-2', name: 'Fabricación Granada Flashbang', specialty: 'fabrication' as const, dv: 17, hoursRequired: 24, hoursCompleted: 24, cost: 100, isCompleted: true }
-  ];
+  const techProjects = character.techProjects || [];
 
   const handleAdvanceProjectHours = (projId: string) => {
     const updated = techProjects.map(p => {
@@ -441,25 +445,31 @@ export const NetAndRolesDeckView: React.FC = () => {
     text: string;
   } | null>(null);
 
-  const handleRollMakerCheck = (actionName: string, dv: number) => {
-    // Core p. 148: TECH + Skill TECH de reparar el ítem + Rango de la especialidad + 1d10, hay que superar el DV.
-    // La app no guarda el rango por especialidad: se usa el rango de Maker como tope.
-    const techStat = character.stats.TECH || 6;
-    const makerRank = character.role.toLowerCase() === 'tech' ? (character.roleRank || 4) : 0;
-    const basicTech = character.generalSkills?.['Basic Tech'] || character.skills?.cybertech || 4;
-    const totalRoll = rollCheckD10().value + techStat + basicTech + makerRank;
-    const success = beatsDv(totalRoll, dv);
+  const handleRollMakerCheck = (actionName: string, dv: number, skillName: string) => {
+    // Core p. 148: TECH + Skill TECH de reparar el ítem + Rango de Upgrade Expertise (makerAllocation) + 1d10, hay que superar el DV.
+    const techStat = character.stats.TECH || 0;
+    const ref = resolveSkillKey(skillName);
+    const compactName = (x: string) => normalizeCanonSkillName(x).replace(/[^a-z0-9]/g, '');
+    let skillLevel = 0;
+    if (ref?.kind === 'combat') skillLevel = Math.max(skillLevel, (character.skills as Record<string, number> | undefined)?.[ref.key] ?? 0);
+    for (const [gk, gv] of Object.entries(character.generalSkills ?? {})) {
+      if (typeof gv === 'number' && (compactName(gk) === compactName(skillName) || (ref && compactName(gk) === compactName(ref.key)))) {
+        skillLevel = Math.max(skillLevel, gv);
+      }
+    }
+    const upgradeRank = character.role.toLowerCase() === 'tech' ? specialtyRank(character.makerAllocation, 'upgrade') : 0;
+    const result = rollMakerCheck({ tech: techStat, skillLevel, specialtyRank: upgradeRank, dv });
 
     setTechMakerLog({
       action: actionName,
-      roll: totalRoll,
+      roll: result.total,
       dv,
-      success,
-      text: success
-        ? `¡ÉXITO DE TALLER! Tirada: ${totalRoll} vs DV ${dv}. Mejora completada según especificaciones.`
-        : `FALLO DE TALLER. Tirada: ${totalRoll} vs DV ${dv}. La calibración no superó la prueba de banco.`
+      success: result.success,
+      text: result.success
+        ? `¡ÉXITO DE TALLER! ${result.breakdown}. Mejora completada según especificaciones.`
+        : `FALLO DE TALLER. ${result.breakdown}. Se reinicia con los materiales intactos (Core p.148).`
     });
-    return success;
+    return result.success;
   };
 
   // ==========================================================================
@@ -2175,6 +2185,7 @@ export const NetAndRolesDeckView: React.FC = () => {
           {/* ESTACIÓN ESPECIALIZADA: TECH MAKER */}
           {selectedRoleView === 'tech' && (
             <div className="space-y-4">
+              <MakerPanel />
               {/* FEEDBACK DEL BANCO DE TRABAJO */}
               {techMakerLog && (
                 <div
@@ -2295,7 +2306,10 @@ export const NetAndRolesDeckView: React.FC = () => {
                     const upgradeOption = TECH_MAKER_UPGRADE_OPTIONS.find((u) => u.id === selectedUpgradeType);
                     const dvEntry = MAKER_DV_AND_TIME_BY_COST.find((d) => (selectedWeapon.cost || 500) <= d.itemPriceMax) || MAKER_DV_AND_TIME_BY_COST[3];
                     const upgradeDv = dvEntry.upgradeDv;
-                    const upgradeMaterialCost = Math.round((selectedWeapon.cost || 500) / 2);
+                    // Core p.148: Upgrade Expertise usa materiales de la misma categoría de precio que el objeto.
+                    const upgradeMaterialCost = Math.ceil(
+                      materialCost('upgrade', priceCategoryForEb(selectedWeapon.cost || 500), selectedWeapon.cost || 500).eb ?? 0
+                    );
                     const canAffordUpgrade = (character.eurodollars ?? 0) >= upgradeMaterialCost;
 
                     return (
@@ -2426,7 +2440,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                             <div className="md:col-span-6 flex items-center gap-2">
                               <button
                                 type="button"
-                                onClick={() => handleRollMakerCheck(`Mejora Maker: ${selectedUpgradeType}`, upgradeDv)}
+                                onClick={() => handleRollMakerCheck(`Mejora Maker: ${selectedUpgradeType}`, upgradeDv, 'Weaponstech')}
                                 className="flex-1 py-2 bg-[#171d2b] hover:bg-[#252f44] text-slate-200 border border-[#2d3954] rounded font-tech text-xs font-bold uppercase transition-colors cursor-pointer flex items-center justify-center gap-1"
                               >
                                 <Dices className="w-3.5 h-3.5 text-amber-400" />
@@ -2493,7 +2507,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                       <div className="flex flex-wrap items-center gap-3 pt-1">
                         <button
                           type="button"
-                          onClick={() => handleRollMakerCheck(`Mejora Blindaje (+1 SP ${locationName})`, 17)}
+                          onClick={() => handleRollMakerCheck(`Mejora Blindaje (+1 SP ${locationName})`, 17, 'Basic Tech')}
                           className="py-2 px-4 bg-[#171d2b] hover:bg-[#252f44] text-slate-200 border border-[#2d3954] rounded font-tech text-xs font-bold uppercase transition-colors cursor-pointer flex items-center gap-1.5"
                         >
                           <Dices className="w-4 h-4 text-amber-400" />
@@ -2674,6 +2688,13 @@ export const NetAndRolesDeckView: React.FC = () => {
               </div>
             </div>
           )}
+
+          {/* HERRAMIENTAS DE ROL SOCIALES (plan 11, v4.9.3) */}
+          {selectedRoleView === 'rockerboy' && <RockerboyPanel />}
+          {selectedRoleView === 'fixer' && <FixerPanel />}
+          {selectedRoleView === 'media' && <MediaPanel />}
+          {selectedRoleView === 'exec' && <ExecPanel />}
+          {selectedRoleView === 'lawman' && <LawmanPanel />}
 
           {/* GUÍA GENERAL DE LOS DEMÁS ROLES */}
           {selectedRoleView !== 'solo' && selectedRoleView !== 'medtech' && selectedRoleView !== 'tech' && (

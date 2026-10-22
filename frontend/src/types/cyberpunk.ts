@@ -1,3 +1,15 @@
+import type { ExecTeamMember } from '../engine/socialRoleRules';
+
+// v4.9.3 [Claude Code · 2026-10-23] Grupo de fans del Rockerboy (Core pp.144-145).
+export interface RockerboyFanGroup {
+  id: string;
+  name: string;
+  size: 'single' | 'small' | 'huge';
+  note?: string;
+  favorBlockedUntilDay?: number;
+  createdAt: string;
+}
+
 export type StatKey =
   | 'INT'
   | 'REF'
@@ -610,6 +622,10 @@ export interface CharacterSheet {
   equippedMartialArtChips?: string[]; // IDs de Skill Chips de Artes Marciales actualmente insertados en Chipware Socket / Neuroport
   // v4.9.1 [Claude Code · 2026-10-22]
   makerAllocation?: { field: number; upgrade: number; fabrication: number; invention: number };
+  // v4.9.3 [Claude Code · 2026-10-23]
+  execTeam?: ExecTeamMember[];
+  // v4.9.3 [Claude Code · 2026-10-23]
+  rockerboyFans?: RockerboyFanGroup[];
   // v4.9.1 [Claude Code · 2026-10-22]
   medicineAllocation?: { surgery: number; pharmaceuticals: number; cryosystem: number; knownPharmaceuticals?: string[] };
   // v4.9.1 [Claude Code · 2026-10-22]

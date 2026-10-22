@@ -32,6 +32,9 @@ import { getInterfaceRank, netActionsForInterface, maxQuickhackDv, neuroportFire
 import { GameClockBar } from './GameClockBar';
 import { CritTableSelector } from './CritTableSelector';
 import { MedtechTreatmentPanel } from '../netroles/MedtechTreatmentPanel';
+import { BackupCard } from './BackupCard';
+import { LawmanPanel } from '../roles/LawmanPanel';
+import { useGmModeStore } from '../../store/gmModeStore';
 import type { WeaponItem, RollEntry, InventoryItem, AimedShotTarget, TechWeaponUpgradeType } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
@@ -866,6 +869,7 @@ export const CombatHudView: React.FC = () => {
   const clearRollHistory = useCombatStore((state) => state.clearRollHistory);
   // v4.9.2 [Claude Code · 2026-10-22]: Round, era y NET Actions (plan 10).
   const era = useCombatStore((state) => state.era);
+  const gmFreeEditHud = useGmModeStore((state) => state.gmFreeEdit);
   const round = useCombatStore((state) => state.round);
   const firstDamageTakenThisRound = useCombatStore((state) => state.firstDamageTakenThisRound);
   const firstHitLandedThisRound = useCombatStore((state) => state.firstHitLandedThisRound);
@@ -7823,6 +7827,15 @@ export const CombatHudView: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              {(activeChar?.role === 'Lawman' || gmFreeEditHud) && (
+                <details className="bg-[#0e1017] p-3 rounded border border-[#22283a]">
+                  <summary className="cursor-pointer font-tech text-xs font-bold text-white uppercase">Backup (Lawman)</summary>
+                  <div className="mt-2">
+                    <LawmanPanel />
+                  </div>
+                </details>
+              )}
             </div>
           </CollapsibleHudCard>
         );
@@ -8433,6 +8446,8 @@ export const CombatHudView: React.FC = () => {
           <span className="w-full text-[11px] font-mono-code text-cyan-200 break-words">{roundToolFeedback}</span>
         )}
       </div>
+
+      <BackupCard />
 
       {/* Barra Superior Táctica de Combate: Bestiario GM */}
       <div className="chamfer-card p-2.5 bg-[#12141f] border border-[#242b3d] flex flex-wrap items-center justify-between gap-3 shadow-md">

@@ -56,6 +56,7 @@ Decididas por Giuliano al aprobar el plan 8: rangos del Core 1-10 más los ajust
 | 35 | Biomonitor de los paquetes | Es una de las 7 piezas del Neuroport (RB p.35) y varios paquetes lo traen (Core p.117) | **Decidida**: en 2077 se quita; si el libro da una alternativa "o" (Techhair del Exec) se puede elegir. Lo mismo vale para Interface Plugs o Wolvers del Nomad |
 | 36 | Nota del Folio en la pestaña de rol | Se mostraba en cualquier personaje del rol | **Decidida**: solo en la ficha del Folio (incluidas las copias del creador); en la guía de roles queda como referencia |
 | 37 | Munición Incendiary Shotgun Shell del Medtech | El paquete (Core p.98) la nombra así y no se encontraba en el catálogo | **Decidida**: es la Incendiary Ammunition del Core (p.345, disponible para Shotgun Shells); el paquete apunta a esa entrada |
+| 38 | Backup del Lawman en Rango 10 con un 6 | Core p.158: "unless you are Rank 10, in which case two separate backup groups will arrive", sin decir cuáles | **Decidida** (Giuliano, 2026-10-23): llegan dos grupos independientes de Rango 10 (National Law Enforcement). Aplicada en v4.9.3. [Claude Code · 2026-10-23] |
 
 ## Combate (van a un plan aparte, después del plan 7)
 

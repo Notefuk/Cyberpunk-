@@ -1,5 +1,5 @@
 // Reloj de partida: Día / Beat (plan 10, v4.9.2). [Claude Code · 2026-10-22]
-import React from 'react';
+import React, { useState } from 'react';
 import { Clock } from 'lucide-react';
 import { useGameClockStore } from '../../store/gameClockStore';
 
@@ -8,10 +8,22 @@ export const GameClockBar: React.FC<{ compact?: boolean }> = ({ compact = false 
   const beat = useGameClockStore((s) => s.beat);
   const newBeat = useGameClockStore((s) => s.newBeat);
   const newDay = useGameClockStore((s) => s.newDay);
+  // v4.9.3 [Claude Code · 2026-10-23]
+  const session = useGameClockStore((s) => s.session);
+  const endSession = useGameClockStore((s) => s.endSession);
+  const [sessionSummary, setSessionSummary] = useState<string | null>(null);
 
   const handleNewDay = () => {
     if (window.confirm('Pasar al día siguiente: los Quick Fix vencen (Core p.223 / CEMK RB p.14). ¿Continuar?')) {
       newDay();
+    }
+  };
+
+  const handleEndSession = () => {
+    if (window.confirm('Tope de Loyalty 10 y renuncias de Team Members con Loyalty < 0 (Core p.154)')) {
+      const summary = endSession();
+      const parts = summary.filter((r) => r.resigned.length > 0).map((r) => `${r.handle}: ${r.resigned.length} renuncia(s)`);
+      setSessionSummary(parts.length > 0 ? `Renunciaron: ${parts.join('; ')}` : 'Sin renuncias.');
     }
   };
 
@@ -22,7 +34,7 @@ export const GameClockBar: React.FC<{ compact?: boolean }> = ({ compact = false 
     >
       <Clock className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
       <span className="font-tech text-[11px] uppercase tracking-wider text-cyan-300 min-w-0">
-        Día {day} · Beat {beat}
+        Sesión {session} · Día {day} · Beat {beat}
       </span>
       <div className="flex flex-wrap gap-1.5 min-w-0">
         <button
@@ -39,7 +51,17 @@ export const GameClockBar: React.FC<{ compact?: boolean }> = ({ compact = false 
         >
           Nuevo día
         </button>
+        <button
+          type="button"
+          onClick={handleEndSession}
+          className="font-tech text-[11px] uppercase px-2 py-1 border border-fuchsia-500/50 text-fuchsia-300 hover:bg-fuchsia-500/10"
+        >
+          Fin de sesión
+        </button>
       </div>
+      {sessionSummary && (
+        <span className="text-[11px] text-fuchsia-300 min-w-0 basis-full">{sessionSummary}</span>
+      )}
       {!compact && (
         <span className="text-[11px] text-slate-400 min-w-0 basis-full">
           Speedheal: 1 por Beat por Medtech y 1 por día por paciente.

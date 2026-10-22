@@ -247,6 +247,29 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.3] - 2026-10-23 (Roles sociales y de oficio) [Claude Code · 2026-10-23]
+* **Category**: Roles (plan 11 = v4.9.3 del plan 8, con las decisiones de Giuliano del 2026-10-23).
+* **Motor puro**:
+  * `engine/socialRoleRules.ts`: Rockerboy (fans y favores, Core pp. 144-145), Fixer (Haggle opuesto con empate a favor de quien se defiende, Core pp. 129 y 159-161), Media (rumores y Believability, pp. 151-153), Exec (Team Members, Loyalty, fin de sesión, reemplazo, pp. 153-157) y Lawman (llamada, llegada, grupos, CN, pp. 158-159).
+  * `engine/makerRules.ts`: categoría de precio por monto (Core pp. 338-339), DV y tiempo (p.149), materiales por especialidad, skill sugerida por tipo de objeto, tirada y Field Expertise (pp. 147-148).
+* **Datos**: `role-ranks-social.json` gana `Exec.tables.loyalty.numeric` (tope 10, Loyalty 1 del reemplazo y 200 €$, Core p.154).
+* **Ficha y stores**: `CharacterSheet.execTeam` y `rockerboyFans` (opcionales, sin migración); acciones de Team Members y fans; `backupCalls` en `useCombatStore` (bajan con `nextRound`); `session` y `endSession()` en `gameClockStore`; botón "Fin de sesión" en `GameClockBar`.
+* **UI**: `features/roles/` con los paneles de Rockerboy, Fixer, Media, Exec, Lawman y Maker, montados en la vista de roles; `BackupCard` en el HUD. La tirada de mejora de armas ahora usa Weaponstech y Upgrade Expertise, y los materiales siguen la regla de la misma categoría. Se quitaron los proyectos de Tech inventados.
+* **Decisiones de Giuliano**: las 8 del plan 11, más la discrepancia 38: en R10, con un 6 de llegada, vienen dos grupos de R10.
+* **Corregido al probar**: el bloqueo de un favor fallido del Rockerboy duraba 8 días; ahora dura 7 contando el día del fallo.
+* **Verificación**: tsc, 270 tests y build. Navegador:
+  * Thorn: favor de rango 7 con falla automática, y bloqueo de una semana tras fallar;
+  * Connect: Haggle contra Thorn, con los tratos de R4 y el Reach de 2077;
+  * Exec en modo GM con R5: 2 Team Members (HP 45 con BODY 6 y WILL 8), "Fin de sesión" recorta 12 a 10 y marca la renuncia de quien tenía −1, y el reemplazo cobra 200 €$;
+  * Lawman con R4: tarjeta de Backup con cuenta regresiva, 4 agentes y tirada CN + 1d10;
+  * Maven: Fabrication de 500 €$ con DV 21 y materiales de 100 €$;
+  * Media: rumor pasivo y Believability con +3;
+  * a 375 px, los paneles entran.
+* **Pendientes encontrados (no de esta versión)**:
+  * en la ficha guardada de Maven, Electronics/Security Tech vale 0, cuando el Folio le da 6 (+4);
+  * la mejora de armadura usa siempre 100 €$ y DV 17, porque la ficha no guarda el precio de la armadura;
+  * el bestiario no trae Trading.
+
 ### [v4.9.2] - 2026-10-23 (Roles de combate) [Claude Code · 2026-10-23]
 * **Category**: Roles (plan 10 = v4.9.2 del plan 8, con las decisiones de Giuliano del 2026-10-22).
 * **Datos**: `data/creation-src/cemk-critical-injuries.json` (RB p.13, 1d6, Quick Fix y Treatment estructurados) y `core-vehicles.json` (14 vehículos genéricos, Core pp. 189-191, con rango de Family Motorpool p.162, y 19 mejoras de Nomad pp. 163-165), generados a `data/creation/`.

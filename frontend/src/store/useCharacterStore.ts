@@ -16,6 +16,7 @@ import type {
   IpLogKind,
   MedtechCryoAndPharma,
   OwnedVehicle,
+  RockerboyFanGroup,
   SoloCombatAwarenessAllocation,
   StatKey,
   TechMakerProject,
@@ -36,6 +37,8 @@ import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
 import { SKILL_METADATA } from '../types/cyberpunk';
 import { checkRoleRankRaise, checkSkillRaise } from '../engine/roleRules';
 import type { MakerAllocation, MedicineAllocation } from '../engine/roleRules';
+import { REPLACEMENT_FEE_EB, endOfSession, replacementMember } from '../engine/socialRoleRules';
+import type { ExecTeamMember } from '../engine/socialRoleRules';
 import coreRulesPack from '../data/core-rules.cprpack.json';
 import {
   WEAPON_ATTACHMENTS_CATALOG,
@@ -454,6 +457,17 @@ export interface CharacterStoreState {
   setGeneralSkill: (key: string, level: number) => void;
   gmSetRoleRank: (rank: number) => void;
   setMakerAllocation: (alloc: MakerAllocation) => void;
+  // v4.9.3 [Claude Code · 2026-10-23] Roles sociales: Team del Exec (Core p.154) y fans del Rockerboy (Core pp.144-145).
+  addExecTeamMember: (member: ExecTeamMember) => void;
+  updateExecTeamMember: (memberId: string, patch: Partial<ExecTeamMember>) => void;
+  removeExecTeamMember: (memberId: string) => void;
+  adjustExecMemberLoyalty: (memberId: string, delta: number) => void;
+  adjustExecMemberHp: (memberId: string, delta: number) => void;
+  replaceExecTeamMember: (memberId: string) => { success: boolean; message: string };
+  applyEndOfSessionToAll: () => { characterId: string; handle: string; resigned: string[] }[];
+  addRockerboyFanGroup: (group: Omit<RockerboyFanGroup, 'id' | 'createdAt'>) => void;
+  updateRockerboyFanGroup: (id: string, patch: Partial<RockerboyFanGroup>) => void;
+  removeRockerboyFanGroup: (id: string) => void;
   setMedicineAllocation: (alloc: MedicineAllocation) => void;
   setInterfaceRankOverride: (rank: number) => void;
 
@@ -2510,6 +2524,127 @@ export const useCharacterStore = create<CharacterStoreState>()(
       setMakerAllocation: (alloc: MakerAllocation) => {
         set((state) => ({
           characters: state.characters.map((c) => (c.id !== state.activeCharacterId ? c : { ...c, makerAllocation: alloc }))
+        }));
+      },
+
+      // v4.9.3 [Claude Code · 2026-10-23] Team del Exec (Core p.154).
+      addExecTeamMember: (member) => {
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id !== state.activeCharacterId ? c : { ...c, execTeam: [...(c.execTeam ?? []), member] }))
+        }));
+      },
+
+      updateExecTeamMember: (memberId, patch) => {
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id !== state.activeCharacterId ? c : { ...c, execTeam: (c.execTeam ?? []).map((m) => (m.id === memberId ? { ...m, ...patch } : m)) }
+          )
+        }));
+      },
+
+      removeExecTeamMember: (memberId) => {
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id !== state.activeCharacterId ? c : { ...c, execTeam: (c.execTeam ?? []).filter((m) => m.id !== memberId) }
+          )
+        }));
+      },
+
+      // Core p.154: la Loyalty no tiene tope durante la sesión (el tope de 10 se aplica al fin de sesión).
+      adjustExecMemberLoyalty: (memberId, delta) => {
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id !== state.activeCharacterId ? c : { ...c, execTeam: (c.execTeam ?? []).map((m) => (m.id === memberId ? { ...m, loyalty: m.loyalty + delta } : m)) }
+          )
+        }));
+      },
+
+      adjustExecMemberHp: (memberId, delta) => {
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id !== state.activeCharacterId
+              ? c
+              : {
+                  ...c,
+                  execTeam: (c.execTeam ?? []).map((m) =>
+                    m.id === memberId ? { ...m, hpCurrent: Math.max(0, Math.min(m.hpMax, m.hpCurrent + delta)) } : m
+                  )
+                }
+          )
+        }));
+      },
+
+      // Core p.154: reemplazo del mismo puesto con STATs nuevas y Loyalty 1, a cambio de honorarios extra.
+      replaceExecTeamMember: (memberId) => {
+        const char = get().characters.find((c) => c.id === get().activeCharacterId);
+        const old = char?.execTeam?.find((m) => m.id === memberId);
+        if (!char || !old) return { success: false, message: 'Team Member no encontrado.' };
+        if ((char.eurodollars || 0) < REPLACEMENT_FEE_EB) {
+          return { success: false, message: `Fondos insuficientes: el reemplazo cuesta ${REPLACEMENT_FEE_EB} eb.` };
+        }
+        const fresh = replacementMember(old);
+        const newBalance = (char.eurodollars || 0) - REPLACEMENT_FEE_EB;
+        const newTx: EurodollarTransaction = {
+          id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+          timestamp: new Date().toISOString(),
+          concept: `Reemplazo de Team Member (${old.position})`,
+          amount: -REPLACEMENT_FEE_EB,
+          balanceAfter: newBalance
+        };
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id !== char.id
+              ? c
+              : {
+                  ...c,
+                  eurodollars: newBalance,
+                  transactions: [newTx, ...(c.transactions || [])].slice(0, 50),
+                  execTeam: (c.execTeam ?? []).map((m) => (m.id === memberId ? fresh : m))
+                }
+          )
+        }));
+        return { success: true, message: `Reemplazo contratado por ${REPLACEMENT_FEE_EB} eb (Loyalty ${fresh.loyalty}).` };
+      },
+
+      // Core p.154: al terminar la sesión, tope de Loyalty 10 y renuncia de quien quedó con Loyalty < 0.
+      applyEndOfSessionToAll: () => {
+        const summary: { characterId: string; handle: string; resigned: string[] }[] = [];
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (!c.execTeam || c.execTeam.length === 0) return c;
+            const res = endOfSession(c.execTeam);
+            summary.push({ characterId: c.id, handle: c.handle, resigned: res.resigned });
+            return { ...c, execTeam: res.team };
+          })
+        }));
+        return summary;
+      },
+
+      // Core pp.144-145: grupos de fans del Rockerboy.
+      addRockerboyFanGroup: (group) => {
+        const entry: RockerboyFanGroup = {
+          ...group,
+          id: `fan-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 7)}`,
+          createdAt: new Date().toISOString()
+        };
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id !== state.activeCharacterId ? c : { ...c, rockerboyFans: [...(c.rockerboyFans ?? []), entry] }))
+        }));
+      },
+
+      updateRockerboyFanGroup: (id, patch) => {
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id !== state.activeCharacterId ? c : { ...c, rockerboyFans: (c.rockerboyFans ?? []).map((g) => (g.id === id ? { ...g, ...patch } : g)) }
+          )
+        }));
+      },
+
+      removeRockerboyFanGroup: (id) => {
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id !== state.activeCharacterId ? c : { ...c, rockerboyFans: (c.rockerboyFans ?? []).filter((g) => g.id !== id) }
+          )
         }));
       },
 
