@@ -438,14 +438,25 @@ export interface BackupArrival {
   rounds: number;
   groupIndex: number;
   upgraded: boolean;
+  /** Grupos que llegan (índices de backupGroups). Normalmente uno; en Rango 10 con un 6, dos. */
+  groupIndices: number[];
 }
 
-/** Core p.158: 1d6 = Rondas hasta que llega; con un 6 llega el grupo del siguiente nivel (si existe), aunque supere el Rango. */
-export function rollBackupArrival(calledGroupIndex: number, rng: Rng = Math.random): BackupArrival {
+/**
+ * Core p.158: 1d6 = Rondas hasta que llega; con un 6 llega el grupo del siguiente nivel (si existe), aunque supere el Rango.
+ * "unless you are Rank 10, in which case two separate backup groups will arrive": decisión de Giuliano (2026-10-23):
+ * en Rango 10 con un 6 llegan dos grupos independientes de Rango 10.
+ */
+export function rollBackupArrival(calledGroupIndex: number, rng: Rng = Math.random, lawmanRank = 0): BackupArrival {
   const rounds = rollDie(6, rng);
+  const lastIndex = backupTable().length - 1;
+  if (rounds === 6 && lawmanRank >= 10) {
+    return { rounds, groupIndex: lastIndex, upgraded: true, groupIndices: [lastIndex, lastIndex] };
+  }
   const hasNext = calledGroupIndex + 1 < backupTable().length;
   const upgraded = rounds === 6 && hasNext;
-  return { rounds, groupIndex: upgraded ? calledGroupIndex + 1 : calledGroupIndex, upgraded };
+  const groupIndex = upgraded ? calledGroupIndex + 1 : calledGroupIndex;
+  return { rounds, groupIndex, upgraded, groupIndices: [groupIndex] };
 }
 
 /** Core p.158: un agente por miembro del grupo, cada uno con el HP de la tabla. */

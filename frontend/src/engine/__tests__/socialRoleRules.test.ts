@@ -234,8 +234,12 @@ describe('Lawman', () => {
   });
 
   it('Core p.158: la llegada es 1d6 Rondas; con un 6 llega el grupo siguiente', () => {
-    expect(rollBackupArrival(1, dice(6, 3))).toEqual({ rounds: 3, groupIndex: 1, upgraded: false });
-    expect(rollBackupArrival(1, dice(6, 6))).toEqual({ rounds: 6, groupIndex: 2, upgraded: true });
+    expect(rollBackupArrival(1, dice(6, 3))).toEqual({ rounds: 3, groupIndex: 1, upgraded: false, groupIndices: [1] });
+    expect(rollBackupArrival(1, dice(6, 6))).toEqual({ rounds: 6, groupIndex: 2, upgraded: true, groupIndices: [2] });
+  });
+  it('Core p.158 + decisión de Giuliano: Rango 10 con un 6 recibe dos grupos de Rango 10', () => {
+    expect(rollBackupArrival(2, dice(6, 6), 10)).toEqual({ rounds: 6, groupIndex: 5, upgraded: true, groupIndices: [5, 5] });
+    expect(rollBackupArrival(5, dice(6, 4), 10)).toEqual({ rounds: 4, groupIndex: 5, upgraded: false, groupIndices: [5] });
   });
 
   it('Core p.158: Local Beat Cops son 4 agentes de 25 HP', () => {
