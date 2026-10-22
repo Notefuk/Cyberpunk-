@@ -6,8 +6,8 @@ import { useCombatStore } from '../../store/useCombatStore';
 import { getRoleRankInfo } from '../../engine/roleRules';
 import type { MakerSpecialty } from '../../engine/roleRules';
 import { getSkillCatalog } from '../../engine/characterCreation';
-import { resolveSkillKey, normalizeCanonSkillName } from '../../data/characterCreationData';
 import type { CharacterSheet } from '../../types/cyberpunk';
+import { sheetSkillLevel } from '../../engine/skillLookup';
 import {
   priceCategoryForEb,
   makerDvAndTime,
@@ -43,19 +43,10 @@ const SPECIALTY_LABELS: Record<MakerSpecialty, string> = {
 const SPECIALTIES: MakerSpecialty[] = ['upgrade', 'fabrication', 'invention', 'field'];
 const PRICE_ORDER: MakerPriceCategory[] = ['Cheap', 'Everyday', 'Costly', 'Premium', 'Expensive', 'Very Expensive', 'Luxury', 'Super Luxury'];
 
-const compact = (x: string) => normalizeCanonSkillName(x).replace(/[^a-z0-9]/g, '');
-
 // Nivel de una skill en la ficha: combat (skills) o general (generalSkills con claves compactas posibles).
+// v4.9.3: también reconoce claves abreviadas de los Folios ('electronicssecurity'), ver engine/skillLookup.ts.
 function skillLevelOf(char: CharacterSheet | undefined, skill: string): number {
-  if (!char) return 0;
-  const ref = resolveSkillKey(skill);
-  let level = 0;
-  if (ref?.kind === 'combat') level = Math.max(level, (char.skills as Record<string, number> | undefined)?.[ref.key] ?? 0);
-  const k = compact(skill);
-  for (const [gk, gv] of Object.entries(char.generalSkills ?? {})) {
-    if (typeof gv === 'number' && (compact(gk) === k || (ref && compact(gk) === compact(ref.key)))) level = Math.max(level, gv);
-  }
-  return level;
+  return sheetSkillLevel(char, skill);
 }
 
 const panelCls = 'chamfer-card bg-slate-900/70 border border-slate-700 p-2 flex flex-col gap-2 min-w-0';

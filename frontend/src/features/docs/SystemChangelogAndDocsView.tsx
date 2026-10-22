@@ -26,6 +26,26 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.3.1',
+    date: '2026-10-23',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Roles',
+    title: 'Arreglo: Maven lee su Electronics/Security Tech en el Maker',
+    summary: 'El panel de Maker mostraba Electronics/Security Tech 0 para Maven porque su ficha guarda la skill con la clave abreviada del Folio. Ahora una búsqueda común reconoce esas claves.',
+    highlights: [
+      'Nuevo engine/skillLookup.ts (sheetSkillLevel): encuentra el nivel de una skill guardada como clave de combate, con el nombre del libro o con la clave compacta o abreviada de los Folios (por ejemplo, electronicssecurity).',
+      'Maven ya tira el Maker con Electronics/Security Tech 6 (CEMK Folios p.25). El panel de Media usa la misma búsqueda.',
+      '274 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/skillLookup.ts',
+      'frontend/src/features/roles/MakerPanel.tsx',
+      'frontend/src/features/roles/MediaPanel.tsx'
+    ],
+    metricsBadge: 'v4.9.3.1 • Arreglo de skills'
+  },
+  {
     version: 'v4.9.3',
     date: '2026-10-23',
     author: 'Claude Code',
@@ -953,6 +973,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.3.1': true,
     'v4.9.3': true,
     'v4.9.2': true,
     'v4.9.1': true,

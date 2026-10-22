@@ -247,6 +247,11 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.3.1] - 2026-10-23 (Arreglo de skills) [Claude Code · 2026-10-23]
+* **Problema**: en el panel de Maker, Maven mostraba Electronics/Security Tech 0. El dato estaba bien (`electronicssecurity: 6`, CEMK Folios p.25), pero la búsqueda no reconocía la clave abreviada.
+* **Arreglo**: `engine/skillLookup.ts` (`sheetSkillLevel`) busca la skill en `skills` y `generalSkills`. Acepta la clave de combate, el nombre del libro, la clave compacta y el prefijo abreviado (mínimo 6 letras, sin especialidad), con la misma regla que el panel "Otras skills". La usan `MakerPanel` y `MediaPanel`.
+* **Verificación**: tsc, 274 tests (4 nuevos en `skillLookup.test.ts`) y build. En el navegador, Maven: Electronics/Security Tech 6 y Cybertech 5.
+
 ### [v4.9.3] - 2026-10-23 (Roles sociales y de oficio) [Claude Code · 2026-10-23]
 * **Category**: Roles (plan 11 = v4.9.3 del plan 8, con las decisiones de Giuliano del 2026-10-23).
 * **Motor puro**:
