@@ -392,6 +392,50 @@ export function getSingleLifepathTables(source: LifepathSource): LifepathTable[]
   return getLifepathTables(source, null).general.filter((t) => !skip.has(t.id));
 }
 
+// Core pp. 54-68: tablas de rol que solo aplican según una elección previa (el libro dice "If You Have a Partner…",
+// "If on Land…", "Why Did You Leave?" para el solista que estuvo en un grupo). Clave = id de la tabla condicionada;
+// cada condición pide que la tabla `table` tenga elegido un resultado cuyo `roll` esté en `rolls`. [Claude Code · 2026-10-22]
+interface RoleLifepathCondition {
+  table: string;
+  rolls: string[];
+}
+const PARTNER_CONDITION: Record<string, RoleLifepathCondition[]> = { partner: [{ table: 'partner_choice', rolls: ['1'] }] };
+export const ROLE_LIFEPATH_CONDITIONS: Partial<Record<CoreRoleName, Record<string, RoleLifepathCondition[]>>> = {
+  Rockerboy: {
+    once_in_group: [{ table: 'group_or_solo', rolls: ['2'] }],
+    why_left: [
+      { table: 'group_or_solo', rolls: ['2'] },
+      { table: 'once_in_group', rolls: ['1'] }
+    ]
+  },
+  Netrunner: PARTNER_CONDITION,
+  Tech: PARTNER_CONDITION,
+  Medtech: PARTNER_CONDITION,
+  Fixer: PARTNER_CONDITION,
+  Nomad: {
+    land: [{ table: 'base', rolls: ['1'] }],
+    air: [{ table: 'base', rolls: ['2'] }],
+    sea: [{ table: 'base', rolls: ['3'] }]
+  }
+};
+
+/** Tablas de lifepath de rol (Core) que aplican con las elecciones actuales; las condicionadas sin su elección no aparecen. */
+export function getApplicableRoleLifepathTables(role: CoreRoleName | null, roleLifepath: Record<string, LifepathPick>, source: LifepathSource = 'core'): LifepathTable[] {
+  const all = getLifepathTables(source, role).role;
+  const conditions = role ? ROLE_LIFEPATH_CONDITIONS[role] ?? {} : {};
+  const rollOf = (tableId: string): string | undefined => {
+    const pick = roleLifepath[tableId];
+    const t = all.find((x) => x.id === tableId);
+    return pick && t ? t.results.find((r) => r.es === pick.value)?.roll : undefined;
+  };
+  return all.filter((t) =>
+    (conditions[t.id] ?? []).every((c) => {
+      const r = rollOf(c.table);
+      return r !== undefined && c.rolls.includes(r);
+    })
+  );
+}
+
 function rollMatches(roll: string, n: number): boolean {
   return roll.split(',').some((part) => {
     const bounds = part.trim().split(/[-–]/).map((x) => parseInt(x, 10));
@@ -523,7 +567,7 @@ export function buildCharacterLifepath(draft: CreatorDraft): CharacterLifepath {
   }
 
   const roleLifepath: Record<string, string> = {};
-  for (const t of tables.role) {
+  for (const t of getApplicableRoleLifepathTables(draft.role, draft.roleLifepath, source)) {
     const pick = draft.roleLifepath[t.id];
     if (pick && pick.value.trim()) roleLifepath[t.name] = pick.value;
   }
@@ -889,8 +933,8 @@ function validateLifepath(d: CreatorDraft): string[] {
     }
   }
   if (d.role) {
-    for (const t of getLifepathTables(d.lifepathSource, d.role).role) {
-      if (!d.roleLifepath[t.id]?.value.trim()) errs.push(`Lifepath de rol: falta "${t.name}".`);
+    for (const t of getApplicableRoleLifepathTables(d.role, d.roleLifepath, d.lifepathSource)) {
+      if (!d.roleLifepath[t.id]?.value.trim()) errs.push(`Lifepath de rol: falta "${t.name}"${t.die === 'choose' ? ' (se elige a mano)' : ''}.`);
     }
   }
   return errs;

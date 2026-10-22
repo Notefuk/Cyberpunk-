@@ -1363,7 +1363,7 @@
     },
     {
      "id": "group_or_solo",
-     "name": "Are You in a Group or a Solo Act? (Were You Once in a Group?)",
+     "name": "Are You in a Group or a Solo Act?",
      "die": "choose",
      "source": {
       "book": "Core RED",
@@ -1382,6 +1382,28 @@
       }
      ],
      "note": "Se elige, sin tirada."
+    },
+    {
+     "id": "once_in_group",
+     "name": "Were You Once in a Group?",
+     "die": "choose",
+     "source": {
+      "book": "Core RED",
+      "page": 54
+     },
+     "results": [
+      {
+       "roll": "1",
+       "en": "Once part of a group",
+       "es": "Estuve en un grupo"
+      },
+      {
+       "roll": "2",
+       "en": "Always been a solo act",
+       "es": "Siempre fui solista"
+      }
+     ],
+     "note": "Se elige, sin tirada. Solo si sos solista."
     },
     {
      "id": "venue",
@@ -3769,7 +3791,7 @@
   "Friends/Enemies/Tragic Love: la cantidad se determina con 1d10-7 (mínimo 0); anotado en 'note', no es tabla aparte.",
   "Enemies: la columna 'Who's been Wronged?' es de elección, sin resultados; no se extrajo como tabla.",
   "Family Background: en el PDF, las filas 3 y 8 tienen nombre y descripción en la misma línea; la separación nombre/descripción es inferida.",
-  "Rockerboy: el libro tiene 'Were You Once in a Group?' (elección) y 'Why Did You Leave?' (1d6, solo aplica si estuvo en grupo); se extrajeron como group_or_solo y why_left.",
+  "Rockerboy: el libro tiene 'Were You Once in a Group?' (elección) y 'Why Did You Leave?' (1d6, solo aplica si estuvo en grupo); se extrajeron como group_or_solo y why_left. [Claude Code · 2026-10-22] Corregido: 'Were You Once in a Group?' es su propia tabla (once_in_group, solo para solistas) y why_left aplica solo si fue solista que estuvo en un grupo (Core p.54).",
   "Cultural Origins: idiomas copiados literal del libro (p.ej. 'Chinese' en Norteamérica, 'Arabic'/'Hindi' en Sudeste Asiático); el jugador puede elegir idiomas no listados.",
   "Páginas: Rockerboy 54, Solo 55, Netrunner 56-57, Tech 58-59, Medtech 60-61, Media 62, Exec 63-64, Lawman 65, Fixer 66-67, Nomad 68-69; 'source.page' por tabla es la página impresa real. La página impresa 70 (PDF 71) no tiene tablas.",
   "Traducciones 'es' propias (voseo); términos del juego (Fixer, Solo, Night Market, Data Pool, etc.) quedan en inglés.",

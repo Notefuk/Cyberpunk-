@@ -253,8 +253,9 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 * **Generador**: `scripts/gen_creation.py` produce `frontend/src/data/creation/roleRanks.ts` (`ROLE_RANKS`, tipos `RoleRanksSrc` en `types.ts`).
 * **Fuente única**: `frontend/src/data/roleProgression.ts` deriva `ROLE_ABILITIES_COMPLETE_PROGRESSION` y `ROLES_INTERACTIVE_GUIDES`; se borraron los literales a mano (Netrunner solo CEMK, escalera de NET Actions equivocada, cita duplicada). En la ficha, "Estadística Asociada" pasa a "Fuente".
 * **Self-ICE** (`engine/cemkPort.ts`): N Passwalls, todos con el DV del total (RB pp. 16, 36).
+* **Lifepath de rol condicional** (bug de v4.8.2 hallado al probar PJs): `ROLE_LIFEPATH_CONDITIONS` y `getApplicableRoleLifepathTables` en `engine/characterCreation.ts`; validación, ficha, "Tirar todo" y `LifepathStep.tsx` usan solo las tablas que aplican (Core pp. 54-68). Nueva tabla `once_in_group` del Rockerboy en `core-lifepath.json` (Core p.54). 4 tests.
 * **Docs**: `docs/canon-audit/v4.9.0-roles.md` y discrepancias 24-33. Thorn: "Solo Core" (decisión de Giuliano).
-* **Verificación**: tsc, 146 tests (8 nuevos en `roleRanks.test.ts`) y build; navegador: guía del Netrunner con la progresión del Core, sin errores de consola.
+* **Verificación**: tsc, 150 tests (8 nuevos en `roleRanks.test.ts` y 4 de lifepath) y build; navegador: guía del Netrunner con la progresión del Core, sin errores de consola.
 
 ### [v4.8.2] - 2026-10-22 (Wizard funcional) [Claude Code · 2026-10-22]
 * **Category**: Creador de personajes (plan 7, bloque 3).

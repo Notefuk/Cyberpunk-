@@ -11,6 +11,7 @@ import {
   computeDerived,
   createEmptyDraft,
   getCyberwareList,
+  getApplicableRoleLifepathTables,
   getEdgerunnerSkillNames,
   getLifepathTables,
   getMissingChecklist,
@@ -398,5 +399,38 @@ describe('Construcción de la ficha', () => {
     const both = buildCharacterSheetFromDraft(buy(), 'c').sheet;
     expect(both.headArmor.maxSp).toBe(13);
     expect(both.bodyArmor.maxSp).toBe(13);
+  });
+});
+
+describe('Lifepath de rol condicional (Core pp. 54-68)', () => {
+  const pick = (value: string) => ({ roll: null, value });
+  const ids = (role: Parameters<typeof getApplicableRoleLifepathTables>[0], lp: Record<string, { roll: null; value: string }>) =>
+    getApplicableRoleLifepathTables(role, lp).map((t) => t.id);
+
+  it('Netrunner: el compañero solo aplica con "Con compañero" (Core p.56)', () => {
+    expect(ids('Netrunner', {})).not.toContain('partner');
+    expect(ids('Netrunner', { partner_choice: pick('Trabajás solo') })).not.toContain('partner');
+    expect(ids('Netrunner', { partner_choice: pick('Con compañero') })).toContain('partner');
+  });
+
+  it('Nomad: solo la tabla de la base elegida (Core p.68)', () => {
+    const r = ids('Nomad', { base: pick('Mar') });
+    expect(r).toContain('sea');
+    expect(r).not.toContain('land');
+    expect(r).not.toContain('air');
+  });
+
+  it('Rockerboy: "Why Did You Leave?" solo para el solista que estuvo en un grupo (Core p.54)', () => {
+    expect(ids('Rockerboy', { group_or_solo: pick('En un grupo') })).not.toContain('once_in_group');
+    expect(ids('Rockerboy', { group_or_solo: pick('Solista') })).toContain('once_in_group');
+    expect(ids('Rockerboy', { group_or_solo: pick('Solista'), once_in_group: pick('Siempre fui solista') })).not.toContain('why_left');
+    expect(ids('Rockerboy', { group_or_solo: pick('Solista'), once_in_group: pick('Estuve en un grupo') })).toContain('why_left');
+  });
+
+  it('Trabajás solo: no se exige el compañero y la ficha no lo guarda (Core p.56)', () => {
+    let d: CreatorDraft = { ...createEmptyDraft(), method: 'streetrat', role: 'Netrunner', lifepathSource: 'core' };
+    d = { ...d, roleLifepath: { partner_choice: pick('Trabajás solo'), partner: pick('Familiar') } };
+    expect(validateStep(d, 'lifepath').some((m) => m.includes('Partner'))).toBe(false);
+    expect(Object.values(buildCharacterLifepath(d).roleLifepath)).not.toContain('Familiar');
   });
 });
