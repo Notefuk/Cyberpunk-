@@ -1743,7 +1743,7 @@ export const CombatHudView: React.FC = () => {
       ? applyDamageDeflection(incomingHpLoss, soloAlloc, !firstDamageTakenThisRound)
       : { damage: incomingHpLoss, reduced: 0 };
     const appliedHpLoss = deflection.damage;
-    if (isSoloActive && incomingHpLoss > 0) {
+    if (incomingHpLoss > 0) {
       markDamageTaken();
     }
     const critLocation: 'head' | 'body' = calcLocation === 'head' ? 'head' : 'body';

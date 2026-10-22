@@ -67,7 +67,7 @@ No se tocan en el plan 7. Se deciden una por una con Giuliano en el plan de comb
 | 17 | Aimed Shot |
 | 18 | Umbral de Seriously Wounded |
 | 19 | Mortally Wounded |
-| 20 | Tabla de Críticos 1d6 (RB p.13) o 2d6 (Core) |
+| 20 | Tabla de Críticos 1d6 (RB p.13) o 2d6 (Core). **Decidida** (Giuliano, 2026-10-22, plan 10): selector propio, independiente del modo 2045/2077, "Core 2d6 con amputaciones" (pp. 187-188) o "CEMK 1d6" (RB p.13); en CEMK los Quickhacks no generan Críticas (RB p.12). Aplicada en v4.9.2. [Claude Code · 2026-10-22] |
 | 21 | Voice Stress Analyzer |
 | 22 | Costo y HL del ciberware que está en los dos libros |
 | 23 | Si las armas del Core usan Power, Smart y Tech (RB p.8) |

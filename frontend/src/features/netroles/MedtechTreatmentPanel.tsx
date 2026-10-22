@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useGameClockStore, currentDayKey, currentBeatId } from '../../store/gameClockStore';
 import { useRulesSettingsStore } from '../../store/rulesSettingsStore';
+import { useCombatStore } from '../../store/useCombatStore';
 import {
   getTreatmentOptions,
   stabilizationDv,
@@ -89,6 +90,7 @@ export const MedtechTreatmentPanel: React.FC<{ defaultPatientId?: string }> = ({
 
   const tech = medic?.stats?.TECH ?? 0;
   const medicRole = medic?.role ?? '';
+  const era = useCombatStore((s) => s.era);
   const isSelf = !!medic && !!patient && medic.id === patient.id;
 
   const levels = useMemo(() => {
@@ -100,9 +102,14 @@ export const MedtechTreatmentPanel: React.FC<{ defaultPatientId?: string }> = ({
   const pushLog = (line: string) => setLog((l) => [line, ...l].slice(0, 20));
 
   const roll = (skill: string, dv: number) => {
+    // Core p.223; CEMK RB pp. 13-14: Surgery solo la usa un Medtech, en cualquier modo de tirada.
+    const can = canMedicUseSkill(skill, medicRole);
+    if (!can.ok) {
+      return { r: { natural: 0, total: 0, success: false, breakdown: '' }, text: can.reason ?? 'Skill no permitida.', blocked: true };
+    }
     const level = skillLevelOf(medic, skill) ?? 0;
     const r = rollMedicalCheck({ tech, skillLevel: level, dv });
-    return { r, text: `${skill}: 1d10 + TECH + skill → ${r.breakdown} · ${r.success ? 'ÉXITO' : 'FALLO'}` };
+    return { r, text: `${skill}: 1d10 + TECH + skill → ${r.breakdown} · ${r.success ? 'ÉXITO' : 'FALLO'}`, blocked: false };
   };
 
   if (!medic) {
@@ -136,7 +143,7 @@ export const MedtechTreatmentPanel: React.FC<{ defaultPatientId?: string }> = ({
     const { r, text } = roll(stabSkill, stabDv);
     if (r.success) {
       stabilizeCharacter(patient.id, { wasMortallyWounded: stabState === 'mortal' });
-      const extra = stabState === 'mortal' && patient.era === '2045' ? ' Queda inconsciente 1 minuto (Core p.223).' : '';
+      const extra = stabState === 'mortal' && era === '2045' ? ' Queda inconsciente 1 minuto (Core p.223).' : '';
       pushLog(`Estabilizar a ${patient.handle} — ${text}. Aplicado: estabilizado.${extra}`);
     } else {
       pushLog(`Estabilizar a ${patient.handle} — ${text}. No se aplicó nada.`);

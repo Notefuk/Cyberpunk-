@@ -26,6 +26,7 @@ import {
   Plus
 } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { useCombatStore } from '../../store/useCombatStore';
 import { beatsDv, rollCheckD10 } from '../../engine/combatEngine';
 import { isValidSoloAllocation, soloAwarenessPointCost } from '../../engine/characterEngine';
 import { 
@@ -155,11 +156,12 @@ export const NetAndRolesDeckView: React.FC = () => {
   const activeArch = allPresets.find(p => p.id === selectedPresetId) || NET_ARCHITECTURE_PRESETS[0];
 
   // Interface (Core p.147/197): rango según rol u override; NET Actions por rango (Core p.197).
+  const era = useCombatStore((state) => state.era);
   const activeInterfaceRank = getInterfaceRank(character);
   const netActionsPerTurn = netActionsForInterface(activeInterfaceRank);
   // Quickhacks: en 2045 solo con Neuroport; en 2077 se asume salvo que sea false (CEMK RB p.26).
   const hasNeuroportEquipped = (character.hasNeuroport || (character.installedCyberwareIds ?? []).includes('cw-cemk-neuroport')) ? true : character.hasNeuroport;
-  const quickhacksBlocked = !canUseQuickhacks(character.era ?? '2045', hasNeuroportEquipped);
+  const quickhacksBlocked = !canUseQuickhacks(era, hasNeuroportEquipped);
 
   const handleRollNetAction = (action: NetAction) => {
     const d10 = Math.floor(Math.random() * 10) + 1;
@@ -507,7 +509,7 @@ export const NetAndRolesDeckView: React.FC = () => {
   // Vehículos genéricos del Core (pp. 189-191) y Family Motorpool (Core p.162).
   const [coreVehicleMsg, setCoreVehicleMsg] = useState<string | null>(null);
   const nomadMotoRank = character.role === 'Nomad' ? (character.roleRank || 0) : 0;
-  const nomadTweaks2077 = character.role === 'Nomad' && (character.era ?? '2045') === '2077'
+  const nomadTweaks2077 = character.role === 'Nomad' && era === '2077'
     ? getRoleRankInfo('Nomad', nomadMotoRank, '2077').tweaks2077
     : [];
 
