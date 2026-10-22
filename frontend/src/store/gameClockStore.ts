@@ -9,9 +9,11 @@ import { useCharacterStore } from './useCharacterStore';
 interface GameClockState {
   day: number;
   beat: number;
+  session: number; // v4.9.3 [Claude Code · 2026-10-23]: número de sesión (Core p.154)
   speedhealLog: SpeedhealUse[];
   newBeat: () => void;
   newDay: () => void;
+  endSession: () => { characterId: string; handle: string; resigned: string[] }[];
   recordSpeedheal: (u: SpeedhealUse) => void;
   resetClock: () => void;
 }
@@ -21,6 +23,7 @@ export const useGameClockStore = create<GameClockState>()(
     (set, get) => ({
       day: 1,
       beat: 1,
+      session: 1,
       speedhealLog: [],
 
       newBeat: () => set((s) => ({ beat: s.beat + 1 })),
@@ -31,9 +34,16 @@ export const useGameClockStore = create<GameClockState>()(
         useCharacterStore.getState().expireQuickFixes(nextDay);
       },
 
+      // Core p.154: fin de sesión = tope de Loyalty 10 y renuncias de Team Members con Loyalty < 0.
+      endSession: () => {
+        const summary = useCharacterStore.getState().applyEndOfSessionToAll();
+        set((s) => ({ session: s.session + 1 }));
+        return summary;
+      },
+
       recordSpeedheal: (u) => set((s) => ({ speedhealLog: [...s.speedhealLog, u] })),
 
-      resetClock: () => set({ day: 1, beat: 1, speedhealLog: [] })
+      resetClock: () => set({ day: 1, beat: 1, session: 1, speedhealLog: [] })
     }),
     { name: 'cpr_game_clock_v1' }
   )

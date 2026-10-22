@@ -3,6 +3,17 @@ import { persist } from 'zustand/middleware';
 import type { RollEntry, AimedShotTarget } from '../types/cyberpunk';
 import { resolveExplosionSecondDie } from '../engine/combatEngine';
 
+// v4.9.3 [Claude Code · 2026-10-23] Backup del Lawman (Core p.158): llega tras 1d6 Rondas; un agente por miembro del grupo.
+export interface BackupCall {
+  id: string;
+  lawmanId: string;
+  groupIndices: number[];
+  roundsLeft: number;
+  arrived: boolean;
+  agents: { groupIndex: number; hpMax: number; hpCurrent: number }[];
+  calledAtRound: number;
+}
+
 export interface CombatStoreState {
   era: '2045' | '2077';
   selectedDistance: string;
@@ -15,6 +26,10 @@ export interface CombatStoreState {
   firstDamageTakenThisRound: boolean;
   firstHitLandedThisRound: boolean;
   netActionsSpent: number;
+  backupCalls: BackupCall[];
+  addBackupCall: (call: Omit<BackupCall, 'id' | 'arrived' | 'calledAtRound'>) => void;
+  damageBackupAgent: (callId: string, agentIndex: number, delta: number) => void;
+  dismissBackupCall: (callId: string) => void;
   nextRound: () => void;
   markDamageTaken: () => void;
   markHitLanded: () => void;
@@ -34,7 +49,7 @@ export interface CombatStoreState {
 
 export const useCombatStore = create<CombatStoreState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       era: '2045',
       selectedDistance: '7-12m',
       autofireByWeapon: {},
@@ -45,13 +60,49 @@ export const useCombatStore = create<CombatStoreState>()(
       firstDamageTakenThisRound: false,
       firstHitLandedThisRound: false,
       netActionsSpent: 0,
+      backupCalls: [],
+
+      // Core p.158: cada llamada de Backup lleva su cuenta regresiva de Rondas.
+      addBackupCall: (call) =>
+        set((state) => ({
+          backupCalls: [
+            ...state.backupCalls,
+            {
+              ...call,
+              id: `backup-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 7)}`,
+              arrived: call.roundsLeft <= 0,
+              calledAtRound: get().round
+            }
+          ]
+        })),
+
+      damageBackupAgent: (callId, agentIndex, delta) =>
+        set((state) => ({
+          backupCalls: state.backupCalls.map((bc) =>
+            bc.id !== callId
+              ? bc
+              : {
+                  ...bc,
+                  agents: bc.agents.map((a, i) =>
+                    i === agentIndex ? { ...a, hpCurrent: Math.max(0, Math.min(a.hpMax, a.hpCurrent + delta)) } : a
+                  )
+                }
+          )
+        })),
+
+      dismissBackupCall: (callId) =>
+        set((state) => ({ backupCalls: state.backupCalls.filter((bc) => bc.id !== callId) })),
 
       nextRound: () =>
         set((state) => ({
           round: state.round + 1,
           firstDamageTakenThisRound: false,
           firstHitLandedThisRound: false,
-          netActionsSpent: 0
+          netActionsSpent: 0,
+          backupCalls: state.backupCalls.map((bc) => {
+            const roundsLeft = Math.max(0, bc.roundsLeft - 1);
+            return { ...bc, roundsLeft, arrived: bc.arrived || roundsLeft === 0 };
+          })
         })),
 
       markDamageTaken: () => set({ firstDamageTakenThisRound: true }),
@@ -65,7 +116,8 @@ export const useCombatStore = create<CombatStoreState>()(
           round: 1,
           firstDamageTakenThisRound: false,
           firstHitLandedThisRound: false,
-          netActionsSpent: 0
+          netActionsSpent: 0,
+          backupCalls: []
         }),
 
       setEra: (era) => set({ era }),
