@@ -1,0 +1,2208 @@
+{
+ "book": "Core RED v1.24 + CEMK (RB, Folios)",
+ "pageConvention": "Core y RB página impresa; Folios página del PDF",
+ "general": {
+  "expandedAvailability": {
+   "textEs": "Regla 2070s (aplica a todos los roles): hacia los 2070s la escasez 'terminó' para todos, aún más para los ricos y poderosos. Si necesitás algo y tu Reach no alcanza, podés saltarte al Fixer o al Night Market comprándolo directo a un fabricante o distribuidor autorizado, pagando el doble de su costo (sobreprecio corporativo), salvo que sea hecho a medida, único, o el GM prohíba esa compra directa. Nadie le comprará ese objeto a tu Edgerunner a ese precio, ni siquiera un Fixer o un Exec: ese sobreprecio es para desesperados y gente con dinero de sobra.",
+   "source": {
+    "book": "CEMK RB",
+    "page": 26
+   }
+  },
+  "roleTweaksNoteEs": "El RB p.25 también da ajustes de Nomad (puede conseguir cualquier Vehicle y Vehicle Upgrade pieza por pieza desde Moto Rango 1) y Netrunner (Quickhacks); esos roles no están en este archivo."
+ },
+ "roles": {
+  "Rockerboy": {
+   "ability": "Charismatic Impact",
+   "source": {
+    "book": "Core RED",
+    "page": 144
+   },
+   "rulesEs": "Rol Ability del Rockerboy: influir en otros por pura presencia (música, poesía, arte, baile o simple presencia física; podría ser un líder de culto). Solo se puede usar sobre Fans. Fuera de combate se puede convertir en fan a quien aún no lo es (salvo que te deteste activamente) tirando Charismatic Impact + 1d10 contra DV8 (una persona), DV10 (grupo pequeño de hasta 6) o DV12 (grupo enorme). El GM decide quién ya es fan. Para pedir un favor a un fan o grupo de fans, el GM usa la tabla de Rangos: si el favor está fuera de lo que permite tu Rango, fallás automáticamente; si está dentro, tirás Charismatic Impact + 1d10 contra el DV del tamaño del grupo. Éxito: los fans ponen su mejor esfuerzo en el favor. Falla: no podés pedir el mismo favor a esos fans durante una semana. En el ejemplo del libro (Rico, Rango 4) se gasta LUCK en la tirada.",
+   "ranks": [
+    {
+     "rank": 1,
+     "tierFromRank": 1,
+     "tierToRank": 2,
+     "unlocksEs": [
+      "Venues: Clubes locales pequeños",
+      "Un fan (DV8): Convencer a un fan de hacerte un favor pequeño: invitarte un trago o una comida, llevarte a algún lado.",
+      "Grupo pequeño de hasta 6 (DV10): Un grupo de hasta 6 fans te pide autógrafos y otros tótems personales; los fans te frenan en la calle para hacerse amigos tuyos.",
+      "Grupo enorme (DV12): Todavía no tenés grupos enormes de fans (el libro lo dice en tono de burla: no aplica)."
+     ]
+    },
+    {
+     "rank": 2,
+     "tierFromRank": 1,
+     "tierToRank": 2,
+     "unlocksEs": [
+      "Venues: Clubes locales pequeños",
+      "Un fan (DV8): Convencer a un fan de hacerte un favor pequeño: invitarte un trago o una comida, llevarte a algún lado.",
+      "Grupo pequeño de hasta 6 (DV10): Un grupo de hasta 6 fans te pide autógrafos y otros tótems personales; los fans te frenan en la calle para hacerse amigos tuyos.",
+      "Grupo enorme (DV12): Todavía no tenés grupos enormes de fans (el libro lo dice en tono de burla: no aplica)."
+     ]
+    },
+    {
+     "rank": 3,
+     "tierFromRank": 3,
+     "tierToRank": 4,
+     "unlocksEs": [
+      "Venues: Clubes conocidos",
+      "Un fan (DV8): Convencer a un fan de hacerte un favor grande: acostarse con vos, hablar bien de vos, etc.",
+      "Grupo pequeño de hasta 6 (DV10): Convencer a un grupo de hasta 6 fans de juntarse regularmente con vos y de proveerte alcohol, drogas u otros extras de fiesta.",
+      "Grupo enorme (DV12): Tenés un seguimiento local fuerte: los fans compran tus grabaciones y merchandising."
+     ]
+    },
+    {
+     "rank": 4,
+     "tierFromRank": 3,
+     "tierToRank": 4,
+     "unlocksEs": [
+      "Venues: Clubes conocidos",
+      "Un fan (DV8): Convencer a un fan de hacerte un favor grande: acostarse con vos, hablar bien de vos, etc.",
+      "Grupo pequeño de hasta 6 (DV10): Convencer a un grupo de hasta 6 fans de juntarse regularmente con vos y de proveerte alcohol, drogas u otros extras de fiesta.",
+      "Grupo enorme (DV12): Tenés un seguimiento local fuerte: los fans compran tus grabaciones y merchandising."
+     ]
+    },
+    {
+     "rank": 5,
+     "tierFromRank": 5,
+     "tierToRank": 6,
+     "unlocksEs": [
+      "Venues: Clubes grandes e importantes",
+      "Un fan (DV8): Convencer a un fan de cometer un delito menor por vos: robar en una tienda, ayudar en una pelea.",
+      "Grupo pequeño de hasta 6 (DV10): Convencer a un grupo de hasta 6 fans de actuar como tu 'posse' personal: andan siempre con vos, te hacen favores y te proveen lo que necesitás.",
+      "Grupo enorme (DV12): Tus fans están por toda la ciudad y a menudo en ciudades cercanas; son muy leales y suelen hacerte favores mayores a cambio de atención."
+     ]
+    },
+    {
+     "rank": 6,
+     "tierFromRank": 5,
+     "tierToRank": 6,
+     "unlocksEs": [
+      "Venues: Clubes grandes e importantes",
+      "Un fan (DV8): Convencer a un fan de cometer un delito menor por vos: robar en una tienda, ayudar en una pelea.",
+      "Grupo pequeño de hasta 6 (DV10): Convencer a un grupo de hasta 6 fans de actuar como tu 'posse' personal: andan siempre con vos, te hacen favores y te proveen lo que necesitás.",
+      "Grupo enorme (DV12): Tus fans están por toda la ciudad y a menudo en ciudades cercanas; son muy leales y suelen hacerte favores mayores a cambio de atención."
+     ]
+    },
+    {
+     "rank": 7,
+     "tierFromRank": 7,
+     "tierToRank": 8,
+     "unlocksEs": [
+      "Venues: Salas de conciertos pequeñas; transmisión de video local",
+      "Un fan (DV8): El fan está dispuesto a arriesgar su vida por vos sin cuestionarlo.",
+      "Grupo pequeño de hasta 6 (DV10): Convencer a un grupo de hasta 6 fans de cometer un delito menor por vos: robar en una tienda, ayudar en una pelea.",
+      "Grupo enorme (DV12): Tus fans son rabiosamente leales: pelean con grupos de fans rivales, sostienen redes fuertes de información de fans y se unen para ayudarte."
+     ]
+    },
+    {
+     "rank": 8,
+     "tierFromRank": 7,
+     "tierToRank": 8,
+     "unlocksEs": [
+      "Venues: Salas de conciertos pequeñas; transmisión de video local",
+      "Un fan (DV8): El fan está dispuesto a arriesgar su vida por vos sin cuestionarlo.",
+      "Grupo pequeño de hasta 6 (DV10): Convencer a un grupo de hasta 6 fans de cometer un delito menor por vos: robar en una tienda, ayudar en una pelea.",
+      "Grupo enorme (DV12): Tus fans son rabiosamente leales: pelean con grupos de fans rivales, sostienen redes fuertes de información de fans y se unen para ayudarte."
+     ]
+    },
+    {
+     "rank": 9,
+     "tierFromRank": 9,
+     "tierToRank": 9,
+     "unlocksEs": [
+      "Venues: Salas de conciertos grandes; transmisión de video nacional",
+      "Un fan (DV8): Convencer a un fan de cometer un delito mayor por vos: robar un objeto caro, golpear a alguien.",
+      "Grupo pequeño de hasta 6 (DV10): Convencer a un grupo de hasta 6 fans de cometer un delito mayor por vos: robar un objeto caro, golpear a alguien.",
+      "Grupo enorme (DV12): Tus fans son básicamente un culto con el cerebro lavado: harán disturbios, destruirán propiedad e incluso matarán por vos."
+     ]
+    },
+    {
+     "rank": 10,
+     "tierFromRank": 10,
+     "tierToRank": 10,
+     "unlocksEs": [
+      "Venues: Estadios enormes o video internacional",
+      "Un fan (DV8): El fan está dispuesto a sacrificarse por vos sin cuestionarlo.",
+      "Grupo pequeño de hasta 6 (DV10): Convencer a un grupo de hasta 6 fans de arriesgar sus vidas por vos, p. ej. como protección personal.",
+      "Grupo enorme (DV12): Tus fans son un seguimiento mundial con fuertes rasgos de culto: harán casi cualquier cosa que les pidas; son un ejército privado basado en tu carisma."
+     ]
+    }
+   ],
+   "options": [],
+   "tables": {
+    "fanDv": [
+     {
+      "target": "una persona (Single Fan / Single Person)",
+      "dv": 8
+     },
+     {
+      "target": "grupo pequeño de hasta 6",
+      "dv": 10
+     },
+     {
+      "target": "grupo enorme (Huge Group)",
+      "dv": 12
+     }
+    ],
+    "rollEs": "Charismatic Impact (Rango) + 1d10 contra el DV según el tamaño del grupo; sirve tanto para convertir gente en fans como para pedirles favores.",
+    "failureEs": [
+     "Si el favor excede lo que permite tu Rango en la tabla: falla automática, sin tirada.",
+     "Si tirás y fallás: no podés pedir el mismo favor a esos mismos fans durante una semana.",
+     "No se puede convertir en fan en combate ni a quien te detesta activamente."
+    ],
+    "rankTable": [
+     {
+      "fromRank": 1,
+      "toRank": 2,
+      "venue": "Clubes locales pequeños",
+      "singleFan": "Convencer a un fan de hacerte un favor pequeño: invitarte un trago o una comida, llevarte a algún lado.",
+      "smallGroup": "Un grupo de hasta 6 fans te pide autógrafos y otros tótems personales; los fans te frenan en la calle para hacerse amigos tuyos.",
+      "hugeGroup": "Todavía no tenés grupos enormes de fans (el libro lo dice en tono de burla: no aplica)."
+     },
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "venue": "Clubes conocidos",
+      "singleFan": "Convencer a un fan de hacerte un favor grande: acostarse con vos, hablar bien de vos, etc.",
+      "smallGroup": "Convencer a un grupo de hasta 6 fans de juntarse regularmente con vos y de proveerte alcohol, drogas u otros extras de fiesta.",
+      "hugeGroup": "Tenés un seguimiento local fuerte: los fans compran tus grabaciones y merchandising."
+     },
+     {
+      "fromRank": 5,
+      "toRank": 6,
+      "venue": "Clubes grandes e importantes",
+      "singleFan": "Convencer a un fan de cometer un delito menor por vos: robar en una tienda, ayudar en una pelea.",
+      "smallGroup": "Convencer a un grupo de hasta 6 fans de actuar como tu 'posse' personal: andan siempre con vos, te hacen favores y te proveen lo que necesitás.",
+      "hugeGroup": "Tus fans están por toda la ciudad y a menudo en ciudades cercanas; son muy leales y suelen hacerte favores mayores a cambio de atención."
+     },
+     {
+      "fromRank": 7,
+      "toRank": 8,
+      "venue": "Salas de conciertos pequeñas; transmisión de video local",
+      "singleFan": "El fan está dispuesto a arriesgar su vida por vos sin cuestionarlo.",
+      "smallGroup": "Convencer a un grupo de hasta 6 fans de cometer un delito menor por vos: robar en una tienda, ayudar en una pelea.",
+      "hugeGroup": "Tus fans son rabiosamente leales: pelean con grupos de fans rivales, sostienen redes fuertes de información de fans y se unen para ayudarte."
+     },
+     {
+      "fromRank": 9,
+      "toRank": 9,
+      "venue": "Salas de conciertos grandes; transmisión de video nacional",
+      "singleFan": "Convencer a un fan de cometer un delito mayor por vos: robar un objeto caro, golpear a alguien.",
+      "smallGroup": "Convencer a un grupo de hasta 6 fans de cometer un delito mayor por vos: robar un objeto caro, golpear a alguien.",
+      "hugeGroup": "Tus fans son básicamente un culto con el cerebro lavado: harán disturbios, destruirán propiedad e incluso matarán por vos."
+     },
+     {
+      "fromRank": 10,
+      "toRank": 10,
+      "venue": "Estadios enormes o video internacional",
+      "singleFan": "El fan está dispuesto a sacrificarse por vos sin cuestionarlo.",
+      "smallGroup": "Convencer a un grupo de hasta 6 fans de arriesgar sus vidas por vos, p. ej. como protección personal.",
+      "hugeGroup": "Tus fans son un seguimiento mundial con fuertes rasgos de culto: harán casi cualquier cosa que les pidas; son un ejército privado basado en tu carisma."
+     }
+    ],
+    "source": {
+     "book": "Core RED",
+     "page": 145
+    }
+   },
+   "tweak2077": [
+    {
+     "fromRank": 4,
+     "textEs": "En los 2070s los Rockerboys pueden conseguir objetos Expensive pieza por pieza (piece-by-piece), aunque estén de otro modo no disponibles, a partir del Rango 4 de Charismatic Impact. En el Core RED no tienen Reach propio.",
+     "source": {
+      "book": "CEMK RB",
+      "page": 25
+     }
+    }
+   ],
+   "folio": {
+    "pregen": "Thorn",
+    "folioTextEs": "'Todavía no sos famoso mundial, pero trabajás en ello.' Si el GM determina que un PNJ es fan tuyo, ganás +4 a todas las Skill Checks sociales (Acting, Bribery, Conversation, Interrogation y Persuasion) hechas contra él. Ese +4 NO está incluido en las bases de la ficha (Persuasion 13 = 7+6; Acting 15 = 7+6+2 de la AudioVox).",
+    "source": {
+     "book": "CEMK Folios",
+     "page": 21,
+     "pageType": "pdf",
+     "pages": [
+      21,
+      22,
+      23
+     ]
+    },
+    "convertsToEs": "Thorn pasa a Charismatic Impact 4. Correspondencia parcial: el número coincide (+4), pero la mecánica difiere. En el Core el Rango 4 se suma SOLO a la tirada de Charismatic Impact (Rango + 1d10 vs DV8/10/12) para hacer fans y pedirles favores, y no da bono a Acting/Bribery/Conversation/Interrogation/Persuasion. El +4 del Folio es un bono plano a esas 5 skills sociales contra fans, que el Core no otorga. Con Rango 4 (escalón 3-4): clubes conocidos; un fan: favor grande; grupo pequeño: frecuentarlo y proveer extras de fiesta; grupo enorme: seguimiento local, compran grabaciones/merch.",
+    "startingAllocation": {
+     "stats": {
+      "INT": 4,
+      "REF": 6,
+      "DEX": 7,
+      "TECH": 5,
+      "COOL": 7,
+      "WILL": 8,
+      "MOVE": 7,
+      "BODY": 10,
+      "EMP": 6
+     },
+     "luck": 4,
+     "hp": 55,
+     "seriouslyWoundedThreshold": 28,
+     "deathSave": 10,
+     "skills": {
+      "Acting": 6,
+      "Athletics": 5,
+      "Brawling": 6,
+      "Composition": 6,
+      "Concentration": 5,
+      "Conversation": 6,
+      "Dance": 4,
+      "Drive Land Vehicle": 4,
+      "Education": 4,
+      "Evasion": 6,
+      "First Aid": 6,
+      "Handgun": 2,
+      "Human Perception": 6,
+      "Library Search": 4,
+      "Perception": 4,
+      "Persuasion": 6,
+      "Play Instrument": 6,
+      "Shoulder Arms": 6,
+      "Stealth": 6,
+      "Streetwise": 6,
+      "Wardrobe & Style": 6
+     },
+     "skillBonuses": {
+      "Acting": 2,
+      "Play Instrument": 2,
+      "Wardrobe & Style": 2
+     },
+     "skillBases": {
+      "Acting": 15,
+      "Athletics": 12,
+      "Autofire": 6,
+      "Brawling": 13,
+      "Bribery": 7,
+      "Business": 4,
+      "Composition": 10,
+      "Conceal/Reveal Object": 4,
+      "Concentration": 13,
+      "Conversation": 12,
+      "Cybertech": 5,
+      "Dance": 11,
+      "Deduction": 4,
+      "Drive Land Vehicle": 10,
+      "Education": 8,
+      "Electronics/Security Tech": 5,
+      "Evasion": 13,
+      "First Aid": 11,
+      "Handgun": 8,
+      "Heavy Weapons": 6,
+      "Human Perception": 12,
+      "Interrogation": 7,
+      "Library Search": 8,
+      "Melee Weapon": 7,
+      "Paramedic": 5,
+      "Perception": 8,
+      "Persuasion": 13,
+      "Pick Lock": 5,
+      "Pick Pocket": 5,
+      "Play Instrument": 13,
+      "Resist Torture/Drugs": 8,
+      "Shoulder Arms": 12,
+      "Stealth": 13,
+      "Streetwise": 13,
+      "Trading": 7,
+      "Wardrobe & Style": 15
+     },
+     "weapons": [
+      {
+       "name": "Brawling Attack",
+       "skill": "Brawling",
+       "baseCalc": "7 + 6 = 13",
+       "damage": "3d6",
+       "type2077": null,
+       "rof": 2,
+       "mag": null,
+       "notes": "Ataque desarmado."
+      },
+      {
+       "name": "Budget Arms Carnage",
+       "skill": "Shoulder Arms",
+       "baseCalc": "6 + 6 = 12",
+       "damage": "5d6",
+       "type2077": "Power",
+       "rof": 1,
+       "mag": 5,
+       "notes": "Shotgun, dos manos, no ocultable, empieza cargada con Basic Shotgun Slugs. Poor Quality: se encasquilla con un 1 (dispara pero hay que desencasquillar con una Acción). Power Weapon: +5 al daño adicional de Lesión Crítica; rebote a -4. Slug: Shoulder Arms, 5d6. Shell: Shoulder Arms vs DV13, 3d6 a todos en área de 6 m/yds (3 casillas) frente a ti.",
+       "dvByRange_0-6_7-12_13-25_26-50_51-100_101-200_201-400_401-800": {
+        "0-6": "13",
+        "7-12": "15",
+        "13-25": "20",
+        "26-50": "25",
+        "51-100": "30",
+        "101-200": "35",
+        "201-400": "—",
+        "401-800": "—"
+       }
+      }
+     ],
+     "armor": {
+      "name": "L Armorjack (abreviado en la ficha; probablemente Light Armorjack)",
+      "sp": 11,
+      "spHead": 11,
+      "spVsMeleeChargedTech": 6,
+      "spHeadVsMeleeChargedTech": 6
+     },
+     "cyberware": [
+      "Neuroport",
+      "Fashion Upgrades (+2 Wardrobe & Style)",
+      "Grafted Muscle and Bone Lace (BODY subido a 10)",
+      "Dynalar AudioVox (+2 Acting y Play Instrument al cantar)"
+     ],
+     "gear": [
+      "Electric Guitar (con amplificador de bolsillo)",
+      "Audio Recorder (graba a una memory shard)",
+      "Memory Shards en blanco x2",
+      "Shotgun Slugs extra x10"
+     ],
+     "eurodollars": 100
+    }
+   }
+  },
+  "Fixer": {
+   "ability": "Operator",
+   "source": {
+    "book": "Core RED",
+    "page": 159
+   },
+   "rulesEs": "Rol Ability del Fixer: sabe conseguir cosas en el mercado negro y moverse por las costumbres sociales de la Calle. Cuatro componentes. Contacts & Clients: a quién puede acudir para conseguir bienes, favores o información (siempre hay que pagarles). Reach: la categoría de precio más alta que siempre puede conseguir, pieza por pieza, aunque no esté disponible, y la capacidad de reunir a otros Fixers para un Night Market, que hace disponibles todas las categorías de precio por un tiempo corto. Haggle: tirada opuesta, tu COOL + Trading + tu Rango de Operator + 1d10 contra COOL + Trading + (su Rango de Operator, si el otro es Fixer) + 1d10 de la contraparte; si ganás, podés hacer 1 trato de tu Rango de Operator o inferior; solo se puede hacer 1 trato de Fixer por transacción. Grease: capacidad de mezclarse con las culturas dentro y fuera de la Calle, conociendo idioma, códigos sociales y marcas de estatus de cada grupo.",
+   "ranks": [
+    {
+     "rank": 1,
+     "tierFromRank": 1,
+     "tierToRank": 2,
+     "unlocksEs": [
+      "Contacts & Clients: Local honcho, gang lord, liderazgo del barrio inmediato.",
+      "Reach: Siempre podés encontrar dónde conseguir objetos Cheap y Everyday para tus clientes, pieza por pieza, aunque no estén disponibles.",
+      "Haggle: Si ganás: conseguís 10% más o menos que el precio de mercado al comprar o vender.",
+      "Grease: Conocés los entresijos culturales de tu barrio inmediato, incluidas todas las pandillas locales."
+     ]
+    },
+    {
+     "rank": 2,
+     "tierFromRank": 1,
+     "tierToRank": 2,
+     "unlocksEs": [
+      "Contacts & Clients: Local honcho, gang lord, liderazgo del barrio inmediato.",
+      "Reach: Siempre podés encontrar dónde conseguir objetos Cheap y Everyday para tus clientes, pieza por pieza, aunque no estén disponibles.",
+      "Haggle: Si ganás: conseguís 10% más o menos que el precio de mercado al comprar o vender.",
+      "Grease: Conocés los entresijos culturales de tu barrio inmediato, incluidas todas las pandillas locales."
+     ]
+    },
+    {
+     "rank": 3,
+     "tierFromRank": 3,
+     "tierToRank": 4,
+     "unlocksEs": [
+      "Contacts & Clients: Honcho de pandilla de la ciudad, político menor, ejecutivo corporativo, persona muy conocida del barrio.",
+      "Reach: Siempre podés conseguir hasta objetos Expensive para tus clientes, pieza por pieza, aunque no estén disponibles.",
+      "Haggle: Si ganás: al comprar 5 o más del mismo objeto, recibís uno más de ese objeto gratis.",
+      "Grease: Te llevás bien con al menos 1 otra cultura de tu zona y ganás un idioma que no conocías, asociado a esa cultura, en Skill Level 4."
+     ]
+    },
+    {
+     "rank": 4,
+     "tierFromRank": 3,
+     "tierToRank": 4,
+     "unlocksEs": [
+      "Contacts & Clients: Honcho de pandilla de la ciudad, político menor, ejecutivo corporativo, persona muy conocida del barrio.",
+      "Reach: Siempre podés conseguir hasta objetos Expensive para tus clientes, pieza por pieza, aunque no estén disponibles.",
+      "Haggle: Si ganás: al comprar 5 o más del mismo objeto, recibís uno más de ese objeto gratis.",
+      "Grease: Te llevás bien con al menos 1 otra cultura de tu zona y ganás un idioma que no conocías, asociado a esa cultura, en Skill Level 4."
+     ]
+    },
+    {
+     "rank": 5,
+     "tierFromRank": 5,
+     "tierToRank": 6,
+     "unlocksEs": [
+      "Contacts & Clients: Pez gordo de la ciudad, político de la ciudad, celebridad del barrio.",
+      "Reach: Una vez por mes, junto con otros Fixers de tu Rango, podés montar un Night Market. En un Night Market que ayudaste a organizar siempre podés conseguir hasta objetos Super Luxury (reglas de Night Market en Core pág. 338).",
+      "Haggle: Si ganás: podés negociar el pago por persona de un Job un 20% más alto.",
+      "Grease: Te llevás perfecto con 2 culturas adicionales (3 en total) de tu zona y ganás un idioma nuevo por cada una (asociado a cada cultura) en Skill Level 4."
+     ]
+    },
+    {
+     "rank": 6,
+     "tierFromRank": 5,
+     "tierToRank": 6,
+     "unlocksEs": [
+      "Contacts & Clients: Pez gordo de la ciudad, político de la ciudad, celebridad del barrio.",
+      "Reach: Una vez por mes, junto con otros Fixers de tu Rango, podés montar un Night Market. En un Night Market que ayudaste a organizar siempre podés conseguir hasta objetos Super Luxury (reglas de Night Market en Core pág. 338).",
+      "Haggle: Si ganás: podés negociar el pago por persona de un Job un 20% más alto.",
+      "Grease: Te llevás perfecto con 2 culturas adicionales (3 en total) de tu zona y ganás un idioma nuevo por cada una (asociado a cada cultura) en Skill Level 4."
+     ]
+    },
+    {
+     "rank": 7,
+     "tierFromRank": 7,
+     "tierToRank": 8,
+     "unlocksEs": [
+      "Contacts & Clients: Presidente de una corporación local, alcalde o administrador de la ciudad, celebridad local.",
+      "Reach: Siempre podés conseguir hasta objetos Very Expensive para tus clientes, pieza por pieza, aunque no estén disponibles.",
+      "Haggle: Si ganás: al comprar un objeto Luxury o Super Luxury, podés pagar la mitad ahora y la mitad en un mes. Si no pagás la segunda mitad a tiempo, nadie volverá a hacer ese trato con vos.",
+      "Grease: Te mezclás perfecto con 3 culturas adicionales (6 en total) de tu zona y ganás un idioma nuevo por cada una en Skill Level 4."
+     ]
+    },
+    {
+     "rank": 8,
+     "tierFromRank": 7,
+     "tierToRank": 8,
+     "unlocksEs": [
+      "Contacts & Clients: Presidente de una corporación local, alcalde o administrador de la ciudad, celebridad local.",
+      "Reach: Siempre podés conseguir hasta objetos Very Expensive para tus clientes, pieza por pieza, aunque no estén disponibles.",
+      "Haggle: Si ganás: al comprar un objeto Luxury o Super Luxury, podés pagar la mitad ahora y la mitad en un mes. Si no pagás la segunda mitad a tiempo, nadie volverá a hacer ese trato con vos.",
+      "Grease: Te mezclás perfecto con 3 culturas adicionales (6 en total) de tu zona y ganás un idioma nuevo por cada una en Skill Level 4."
+     ]
+    },
+    {
+     "rank": 9,
+     "tierFromRank": 9,
+     "tierToRank": 9,
+     "unlocksEs": [
+      "Contacts & Clients: Jefe de división corporativa, político estatal o de zona de la ciudad, celebridad muy conocida.",
+      "Reach: Siempre podés conseguir hasta objetos Luxury, pieza por pieza, aunque no estén disponibles. Al montar un Night Market podés además montar dentro un Midnight Market, que reúne a la cúpula del hampa.",
+      "Haggle: Si ganás: conseguís 20% más o menos que el precio de mercado al comprar o vender.",
+      "Grease: Te mezclás perfecto no solo con muchas culturas de tu zona, sino también con agencias corporativas y gubernamentales."
+     ]
+    },
+    {
+     "rank": 10,
+     "tierFromRank": 10,
+     "tierToRank": 10,
+     "unlocksEs": [
+      "Contacts & Clients: Líder mundial importante, jefe de una gran corporación, celebridad de fama mundial.",
+      "Reach: Siempre podés conseguir hasta objetos Super Luxury para tus clientes, pieza por pieza, aunque no estén disponibles.",
+      "Haggle: Si ganás: podés negociar el doble de pago por persona en un Dangerous Job.",
+      "Grease: Te mezclás sin costuras con casi cualquier grupo, incluso muy especializados o cerrados: sociedades secretas, cultos o grupos de membresía exclusiva."
+     ]
+    }
+   ],
+   "options": [],
+   "tables": {
+    "haggle": {
+     "rollEs": "Tu COOL + Trading + tu Rango de Operator + 1d10 contra COOL + Trading + Rango de Operator de la contraparte (solo si es Fixer) + 1d10.",
+     "dealRuleEs": "Si ganás, podés hacer 1 trato de tu Rango de Operator o inferior (se interpreta como: elegir un beneficio de Haggle desbloqueado en tu Rango o uno menor). Solo 1 trato de Fixer por transacción.",
+     "byRank": [
+      {
+       "fromRank": 1,
+       "toRank": 2,
+       "textEs": "Si ganás: conseguís 10% más o menos que el precio de mercado al comprar o vender."
+      },
+      {
+       "fromRank": 3,
+       "toRank": 4,
+       "textEs": "Si ganás: al comprar 5 o más del mismo objeto, recibís uno más de ese objeto gratis."
+      },
+      {
+       "fromRank": 5,
+       "toRank": 6,
+       "textEs": "Si ganás: podés negociar el pago por persona de un Job un 20% más alto."
+      },
+      {
+       "fromRank": 7,
+       "toRank": 8,
+       "textEs": "Si ganás: al comprar un objeto Luxury o Super Luxury, podés pagar la mitad ahora y la mitad en un mes. Si no pagás la segunda mitad a tiempo, nadie volverá a hacer ese trato con vos."
+      },
+      {
+       "fromRank": 9,
+       "toRank": 9,
+       "textEs": "Si ganás: conseguís 20% más o menos que el precio de mercado al comprar o vender."
+      },
+      {
+       "fromRank": 10,
+       "toRank": 10,
+       "textEs": "Si ganás: podés negociar el doble de pago por persona en un Dangerous Job."
+      }
+     ]
+    },
+    "reach": [
+     {
+      "fromRank": 1,
+      "toRank": 2,
+      "textEs": "Siempre podés encontrar dónde conseguir objetos Cheap y Everyday para tus clientes, pieza por pieza, aunque no estén disponibles."
+     },
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "textEs": "Siempre podés conseguir hasta objetos Expensive para tus clientes, pieza por pieza, aunque no estén disponibles."
+     },
+     {
+      "fromRank": 5,
+      "toRank": 6,
+      "textEs": "Una vez por mes, junto con otros Fixers de tu Rango, podés montar un Night Market. En un Night Market que ayudaste a organizar siempre podés conseguir hasta objetos Super Luxury (reglas de Night Market en Core pág. 338)."
+     },
+     {
+      "fromRank": 7,
+      "toRank": 8,
+      "textEs": "Siempre podés conseguir hasta objetos Very Expensive para tus clientes, pieza por pieza, aunque no estén disponibles."
+     },
+     {
+      "fromRank": 9,
+      "toRank": 9,
+      "textEs": "Siempre podés conseguir hasta objetos Luxury, pieza por pieza, aunque no estén disponibles. Al montar un Night Market podés además montar dentro un Midnight Market, que reúne a la cúpula del hampa."
+     },
+     {
+      "fromRank": 10,
+      "toRank": 10,
+      "textEs": "Siempre podés conseguir hasta objetos Super Luxury para tus clientes, pieza por pieza, aunque no estén disponibles."
+     }
+    ],
+    "reachPriceCategoriesEs": "Categorías citadas en el texto: Cheap, Everyday, Expensive, Very Expensive, Luxury, Super Luxury.",
+    "contactsAndClients": [
+     {
+      "fromRank": 1,
+      "toRank": 2,
+      "textEs": "Local honcho, gang lord, liderazgo del barrio inmediato."
+     },
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "textEs": "Honcho de pandilla de la ciudad, político menor, ejecutivo corporativo, persona muy conocida del barrio."
+     },
+     {
+      "fromRank": 5,
+      "toRank": 6,
+      "textEs": "Pez gordo de la ciudad, político de la ciudad, celebridad del barrio."
+     },
+     {
+      "fromRank": 7,
+      "toRank": 8,
+      "textEs": "Presidente de una corporación local, alcalde o administrador de la ciudad, celebridad local."
+     },
+     {
+      "fromRank": 9,
+      "toRank": 9,
+      "textEs": "Jefe de división corporativa, político estatal o de zona de la ciudad, celebridad muy conocida."
+     },
+     {
+      "fromRank": 10,
+      "toRank": 10,
+      "textEs": "Líder mundial importante, jefe de una gran corporación, celebridad de fama mundial."
+     }
+    ],
+    "grease": [
+     {
+      "fromRank": 1,
+      "toRank": 2,
+      "textEs": "Conocés los entresijos culturales de tu barrio inmediato, incluidas todas las pandillas locales."
+     },
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "textEs": "Te llevás bien con al menos 1 otra cultura de tu zona y ganás un idioma que no conocías, asociado a esa cultura, en Skill Level 4."
+     },
+     {
+      "fromRank": 5,
+      "toRank": 6,
+      "textEs": "Te llevás perfecto con 2 culturas adicionales (3 en total) de tu zona y ganás un idioma nuevo por cada una (asociado a cada cultura) en Skill Level 4."
+     },
+     {
+      "fromRank": 7,
+      "toRank": 8,
+      "textEs": "Te mezclás perfecto con 3 culturas adicionales (6 en total) de tu zona y ganás un idioma nuevo por cada una en Skill Level 4."
+     },
+     {
+      "fromRank": 9,
+      "toRank": 9,
+      "textEs": "Te mezclás perfecto no solo con muchas culturas de tu zona, sino también con agencias corporativas y gubernamentales."
+     },
+     {
+      "fromRank": 10,
+      "toRank": 10,
+      "textEs": "Te mezclás sin costuras con casi cualquier grupo, incluso muy especializados o cerrados: sociedades secretas, cultos o grupos de membresía exclusiva."
+     }
+    ],
+    "source": {
+     "book": "Core RED",
+     "page": 160
+    }
+   },
+   "tweak2077": [
+    {
+     "fromRank": 1,
+     "textEs": "En los 2070s el Fixer puede conseguir objetos Expensive pieza por pieza, aunque no estén disponibles, desde Operator Rango 1.",
+     "source": {
+      "book": "CEMK RB",
+      "page": 25
+     }
+    },
+    {
+     "fromRank": 4,
+     "textEs": "Desde Rango 4 ese alcance se extiende a objetos Very Expensive.",
+     "source": {
+      "book": "CEMK RB",
+      "page": 25
+     }
+    },
+    {
+     "fromRank": 7,
+     "textEs": "Desde Rango 7 se extiende a objetos Luxury.",
+     "source": {
+      "book": "CEMK RB",
+      "page": 25
+     }
+    },
+    {
+     "fromRank": 9,
+     "textEs": "Desde Rango 9 se extiende a objetos Super Luxury.",
+     "source": {
+      "book": "CEMK RB",
+      "page": 25
+     }
+    }
+   ],
+   "folio": {
+    "pregen": "Connect",
+    "folioTextEs": "'Siempre estás listo para cerrar un trato.' +4 a Trading (ya incluido en las bases de la ficha: Trading = COOL 8 + nivel 6 + 4 = 18).",
+    "source": {
+     "book": "CEMK Folios",
+     "page": 9,
+     "pageType": "pdf",
+     "pages": [
+      9,
+      10,
+      11
+     ]
+    },
+    "convertsToEs": "Connect pasa a Operator 4. Verificado: el +4 del Folio corresponde exactamente al Haggle del Core. La tirada de Haggle es COOL 8 + Trading 6 + Operator 4 + 1d10 = base 18 + 1d10, igual a la base de Trading del Folio (8+6+4 = 18). Diferencia: en el Core el +4 se suma SOLO a las tiradas de Haggle, no a toda Trading Check; por eso, al convertir, Trading queda en nivel 6 (sin el +4 incluido) y el Rango 4 se suma en Haggle. Con Rango 4 (escalón 3-4): Contacts & Clients de honcho de pandilla de ciudad / político menor / ejecutivo corporativo; Reach hasta Expensive (Core) o hasta Very Expensive con el ajuste 2070s; Haggle: al comprar 5 o más del mismo objeto, uno gratis; Grease: 1 cultura adicional más un idioma nuevo en nivel 4.",
+    "startingAllocation": {
+     "stats": {
+      "INT": 8,
+      "REF": 6,
+      "DEX": 6,
+      "TECH": 5,
+      "COOL": 8,
+      "WILL": 7,
+      "MOVE": 6,
+      "BODY": 4,
+      "EMP": 7
+     },
+     "luck": 5,
+     "hp": 40,
+     "seriouslyWoundedThreshold": 20,
+     "deathSave": 4,
+     "skills": {
+      "Acting": 6,
+      "Athletics": 4,
+      "Brawling": 2,
+      "Bribery": 6,
+      "Concentration": 6,
+      "Conversation": 6,
+      "Cybertech": 5,
+      "Dance": 5,
+      "Education": 7,
+      "Evasion": 5,
+      "First Aid": 6,
+      "Handgun": 6,
+      "Human Perception": 6,
+      "Melee Weapon": 5,
+      "Perception": 6,
+      "Persuasion": 5,
+      "Resist Torture/Drugs": 4,
+      "Stealth": 5,
+      "Streetwise": 7,
+      "Trading": 6,
+      "Wardrobe & Style": 6
+     },
+     "skillBonuses": {
+      "Human Perception": 2,
+      "Trading": 4,
+      "Wardrobe & Style": 2
+     },
+     "skillBases": {
+      "Acting": 14,
+      "Athletics": 10,
+      "Autofire": 6,
+      "Brawling": 8,
+      "Bribery": 14,
+      "Business": 8,
+      "Composition": 8,
+      "Conceal/Reveal Object": 8,
+      "Concentration": 13,
+      "Conversation": 13,
+      "Cybertech": 10,
+      "Dance": 11,
+      "Deduction": 8,
+      "Drive Land Vehicle": 6,
+      "Education": 15,
+      "Electronics/Security Tech": 5,
+      "Evasion": 11,
+      "First Aid": 11,
+      "Handgun": 12,
+      "Heavy Weapons": 6,
+      "Human Perception": 15,
+      "Interrogation": 8,
+      "Library Search": 8,
+      "Melee Weapon": 11,
+      "Paramedic": 5,
+      "Perception": 14,
+      "Persuasion": 13,
+      "Pick Lock": 5,
+      "Pick Pocket": 5,
+      "Play Instrument": 5,
+      "Resist Torture/Drugs": 11,
+      "Shoulder Arms": 6,
+      "Stealth": 11,
+      "Streetwise": 15,
+      "Trading": 18,
+      "Wardrobe & Style": 16
+     },
+     "weapons": [
+      {
+       "name": "Large Knife",
+       "skill": "Melee Weapon",
+       "baseCalc": "6 + 5 = 11",
+       "damage": "2d6",
+       "type2077": null,
+       "rof": 2,
+       "mag": null,
+       "notes": "Medium Melee Weapon, ocultable."
+      },
+      {
+       "name": "Militech M-76e Omaha x2",
+       "skill": "Handgun",
+       "baseCalc": "6 + 6 = 12",
+       "damage": "3d6",
+       "type2077": "Tech",
+       "rof": 2,
+       "mag": 9,
+       "notes": "Heavy Pistol, una mano, ocultable; ambas empiezan cargadas con Basic Heavy Pistol Ammunition. Tech Weapon: mira que ve siluetas simples a través de Thin Cover; sacrificando la Move Action se carga hasta el final de un Turno en que se dispare. Charged Shot: sigue ROF2 y gasta 3 balas por Check (si hay menos, vacía el cargador); atraviesa Thin Cover e ignora la mitad del SP del objetivo (redondeo arriba).",
+       "dvByRange_0-6_7-12_13-25_26-50_51-100_101-200_201-400_401-800": {
+        "0-6": "13",
+        "7-12": "15",
+        "13-25": "20",
+        "26-50": "25",
+        "51-100": "30",
+        "101-200": "30",
+        "201-400": "—",
+        "401-800": "—"
+       }
+      }
+     ],
+     "armor": {
+      "name": "L Armorjack (abreviado en la ficha; probablemente Light Armorjack)",
+      "sp": 11,
+      "spHead": 11,
+      "spVsMeleeChargedTech": 6,
+      "spHeadVsMeleeChargedTech": 6
+     },
+     "cyberware": [
+      "Neuroport",
+      "Fashion Upgrades (+2 Wardrobe & Style)",
+      "Dynalar Voice Stress Analyzer (+2 Human Perception)",
+      "Kiroshi Starlight Eyes (ignora penalizadores por poca luz)"
+     ],
+     "gear": [
+      "Burner Phone (holophone externo descartable)",
+      "Heavy Pistol Ammunition extra x18 (9 por arma)"
+     ],
+     "eurodollars": 250
+    }
+   }
+  },
+  "Media": {
+   "ability": "Credibility",
+   "source": {
+    "book": "Core RED",
+    "page": 151
+   },
+   "rulesEs": "Rol Ability del Media: puede convencer a una audiencia de lo que publica, y cuanto más creíble es, mayor audiencia tiene; además tiene más acceso a fuentes e información y capta rumores de forma pasiva. Rumores pasivos: al menos dos veces por semana (si no estás totalmente fuera de la red) el GM tira en secreto tu Rango de Credibility + 1d10; si supera alguno de los DV de la columna Pasiva, te informa del rumor de mayor DV superado. Rumores activos (buscar en la Calle con Library Search, Conversation, Interrogation u otras skills de información): tirás la STAT + Skill relevante + 1d10 contra el DV de la columna Activa que fije el GM según el detalle del rumor. Publicar historias/scoops: Access/Sources = a quién podés contactar o entrevistar; Audience = cuánta gente alcanzan tus historias; Believability = qué tan bien cae la historia (se tira 1d10 según tu Believability al publicar y cada vez que quieras saber si un individuo o grupo se la cree); Impact = cuánto cambio genera la historia (lo maneja el GM). Bonos de Believability: +1 si la historia tiene al menos una pieza de evidencia verificable y fácil de entender para las masas; +2 si tiene más de 4 piezas distintas de evidencia dura; los dos bonos se acumulan. LUCK nunca se puede gastar en una Believability Check. Una vez publicada una historia no podés publicar otra sobre exactamente el mismo tema salvo que aportes información nueva.",
+   "ranks": [
+    {
+     "rank": 1,
+     "tierFromRank": 1,
+     "tierToRank": 2,
+     "unlocksEs": [
+      "Access/Sources: Líder local, jefe de pandilla, liderazgo del barrio.",
+      "Audience: Tu vecindario inmediato.",
+      "Believability: 2 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: El cambio generado por una historia es pequeño, incremental. Los malos de poca monta se asustan y pueden cambiar un poco su conducta."
+     ]
+    },
+    {
+     "rank": 2,
+     "tierFromRank": 1,
+     "tierToRank": 2,
+     "unlocksEs": [
+      "Access/Sources: Líder local, jefe de pandilla, liderazgo del barrio.",
+      "Audience: Tu vecindario inmediato.",
+      "Believability: 2 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: El cambio generado por una historia es pequeño, incremental. Los malos de poca monta se asustan y pueden cambiar un poco su conducta."
+     ]
+    },
+    {
+     "rank": 3,
+     "tierFromRank": 3,
+     "tierToRank": 4,
+     "unlocksEs": [
+      "Access/Sources: Honcho de pandilla de la ciudad, político menor, ejecutivo corporativo, persona muy conocida del barrio.",
+      "Audience: Sos conocido como colaborador del screamsheet o Data Pool local.",
+      "Believability: 3 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: El cambio tiene un efecto directo: los malos locales de poca monta son arrestados o expulsados del poder; se hace justicia."
+     ]
+    },
+    {
+     "rank": 4,
+     "tierFromRank": 3,
+     "tierToRank": 4,
+     "unlocksEs": [
+      "Access/Sources: Honcho de pandilla de la ciudad, político menor, ejecutivo corporativo, persona muy conocida del barrio.",
+      "Audience: Sos conocido como colaborador del screamsheet o Data Pool local.",
+      "Believability: 3 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: El cambio tiene un efecto directo: los malos locales de poca monta son arrestados o expulsados del poder; se hace justicia."
+     ]
+    },
+    {
+     "rank": 5,
+     "tierFromRank": 5,
+     "tierToRank": 6,
+     "unlocksEs": [
+      "Access/Sources: Pez gordo de la ciudad, político de la ciudad, celebridad local.",
+      "Audience: Tus notas llegan a toda la ciudad: columnista o colaborador regular de screamsheets o TV locales.",
+      "Believability: 4 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: La historia cambia cosas por toda la ciudad. Malos de mayor nivel pueden ser encarcelados o expulsados del poder; pueden aprobarse leyes locales."
+     ]
+    },
+    {
+     "rank": 6,
+     "tierFromRank": 5,
+     "tierToRank": 6,
+     "unlocksEs": [
+      "Access/Sources: Pez gordo de la ciudad, político de la ciudad, celebridad local.",
+      "Audience: Tus notas llegan a toda la ciudad: columnista o colaborador regular de screamsheets o TV locales.",
+      "Believability: 4 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: La historia cambia cosas por toda la ciudad. Malos de mayor nivel pueden ser encarcelados o expulsados del poder; pueden aprobarse leyes locales."
+     ]
+    },
+    {
+     "rank": 7,
+     "tierFromRank": 7,
+     "tierToRank": 8,
+     "unlocksEs": [
+      "Access/Sources: Presidente de una corporación local, alcalde o administrador de la ciudad, celebridad de la ciudad.",
+      "Audience: Tus notas llegan a todo el estado; sos una celebridad menor por derecho propio.",
+      "Believability: 5 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: El cambio afecta a varias ciudades. Corporaciones o gobiernos de nivel medio pueden caer; pueden aprobarse leyes que afecten a varias ciudades."
+     ]
+    },
+    {
+     "rank": 8,
+     "tierFromRank": 7,
+     "tierToRank": 8,
+     "unlocksEs": [
+      "Access/Sources: Presidente de una corporación local, alcalde o administrador de la ciudad, celebridad de la ciudad.",
+      "Audience: Tus notas llegan a todo el estado; sos una celebridad menor por derecho propio.",
+      "Believability: 5 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: El cambio afecta a varias ciudades. Corporaciones o gobiernos de nivel medio pueden caer; pueden aprobarse leyes que afecten a varias ciudades."
+     ]
+    },
+    {
+     "rank": 9,
+     "tierFromRank": 9,
+     "tierToRank": 9,
+     "unlocksEs": [
+      "Access/Sources: Jefe de división corporativa, político estatal, celebridad muy conocida.",
+      "Audience: Te conoce mucha gente en el país, aunque no todos; si te vieron, probablemente fue en un noticiero nacional.",
+      "Believability: 6 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: El cambio afecta a un área grande, como una nación entera. Grandes corporaciones o gobiernos locales pueden ser derribados; pueden aprobarse leyes de alcance nacional."
+     ]
+    },
+    {
+     "rank": 10,
+     "tierFromRank": 10,
+     "tierToRank": 10,
+     "unlocksEs": [
+      "Access/Sources: Líder mundial importante, jefe de una gran corporación, celebridad de fama mundial.",
+      "Audience: Te conocen en todo el mundo: te piden autógrafos y gente en puestos altos te usa para filtrar información importante.",
+      "Believability: 7 de 10 de probabilidad de que la audiencia lo crea",
+      "Impact: El cambio afecta al mundo entero. Megacorporaciones y gobiernos poderosos pueden caer o ser derrocados; pueden establecerse leyes internacionales. El cambio puede afectar a millones."
+     ]
+    }
+   ],
+   "options": [],
+   "tables": {
+    "rumorDv": [
+     {
+      "rumor": "Vague Rumor",
+      "descEs": "Rumor borroso; contiene lo mínimo para empezar a buscar la supuesta verdad de fondo.",
+      "passiveDv": 7,
+      "activeDv": 13
+     },
+     {
+      "rumor": "Typical Rumor",
+      "descEs": "Suficiente para saber a dónde ir después en una investigación; da un vistazo de pasada a la supuesta verdad de fondo.",
+      "passiveDv": 9,
+      "activeDv": 15
+     },
+     {
+      "rumor": "Substantial Rumor",
+      "descEs": "Como Typical, pero además incluye información concreta útil para una investigación: nombres, lugares, horas.",
+      "passiveDv": 11,
+      "activeDv": 17
+     },
+     {
+      "rumor": "Detailed Rumor",
+      "descEs": "Como Substantial, pero además incluye información que, verificada, podría ser evidencia para una historia sobre la supuesta verdad de fondo.",
+      "passiveDv": 13,
+      "activeDv": 21
+     }
+    ],
+    "passiveRollEs": "El GM tira en secreto Rango de Credibility + 1d10, al menos 2 veces por semana; informa el rumor de mayor DV pasivo que la tirada supere.",
+    "activeRollEs": "STAT + Skill relevante (Library Search, Conversation, Interrogation, etc.) + 1d10 contra el DV activo del rumor.",
+    "believability": [
+     {
+      "fromRank": 1,
+      "toRank": 2,
+      "chanceOutOf10": 2
+     },
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "chanceOutOf10": 3
+     },
+     {
+      "fromRank": 5,
+      "toRank": 6,
+      "chanceOutOf10": 4
+     },
+     {
+      "fromRank": 7,
+      "toRank": 8,
+      "chanceOutOf10": 5
+     },
+     {
+      "fromRank": 9,
+      "toRank": 9,
+      "chanceOutOf10": 6
+     },
+     {
+      "fromRank": 10,
+      "toRank": 10,
+      "chanceOutOf10": 7
+     }
+    ],
+    "believabilityBonuses": [
+     {
+      "conditionEs": "al menos 1 pieza de evidencia verificable y fácil de entender para las masas",
+      "bonus": 1
+     },
+     {
+      "conditionEs": "más de 4 piezas distintas de evidencia dura verificable",
+      "bonus": 2
+     }
+    ],
+    "believabilityNotesEs": "Ambos bonos se acumulan (hasta +3). LUCK no se puede gastar en esta tirada.",
+    "accessSources": [
+     {
+      "fromRank": 1,
+      "toRank": 2,
+      "textEs": "Líder local, jefe de pandilla, liderazgo del barrio."
+     },
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "textEs": "Honcho de pandilla de la ciudad, político menor, ejecutivo corporativo, persona muy conocida del barrio."
+     },
+     {
+      "fromRank": 5,
+      "toRank": 6,
+      "textEs": "Pez gordo de la ciudad, político de la ciudad, celebridad local."
+     },
+     {
+      "fromRank": 7,
+      "toRank": 8,
+      "textEs": "Presidente de una corporación local, alcalde o administrador de la ciudad, celebridad de la ciudad."
+     },
+     {
+      "fromRank": 9,
+      "toRank": 9,
+      "textEs": "Jefe de división corporativa, político estatal, celebridad muy conocida."
+     },
+     {
+      "fromRank": 10,
+      "toRank": 10,
+      "textEs": "Líder mundial importante, jefe de una gran corporación, celebridad de fama mundial."
+     }
+    ],
+    "audience": [
+     {
+      "fromRank": 1,
+      "toRank": 2,
+      "textEs": "Tu vecindario inmediato."
+     },
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "textEs": "Sos conocido como colaborador del screamsheet o Data Pool local."
+     },
+     {
+      "fromRank": 5,
+      "toRank": 6,
+      "textEs": "Tus notas llegan a toda la ciudad: columnista o colaborador regular de screamsheets o TV locales."
+     },
+     {
+      "fromRank": 7,
+      "toRank": 8,
+      "textEs": "Tus notas llegan a todo el estado; sos una celebridad menor por derecho propio."
+     },
+     {
+      "fromRank": 9,
+      "toRank": 9,
+      "textEs": "Te conoce mucha gente en el país, aunque no todos; si te vieron, probablemente fue en un noticiero nacional."
+     },
+     {
+      "fromRank": 10,
+      "toRank": 10,
+      "textEs": "Te conocen en todo el mundo: te piden autógrafos y gente en puestos altos te usa para filtrar información importante."
+     }
+    ],
+    "impact": [
+     {
+      "fromRank": 1,
+      "toRank": 2,
+      "textEs": "El cambio generado por una historia es pequeño, incremental. Los malos de poca monta se asustan y pueden cambiar un poco su conducta."
+     },
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "textEs": "El cambio tiene un efecto directo: los malos locales de poca monta son arrestados o expulsados del poder; se hace justicia."
+     },
+     {
+      "fromRank": 5,
+      "toRank": 6,
+      "textEs": "La historia cambia cosas por toda la ciudad. Malos de mayor nivel pueden ser encarcelados o expulsados del poder; pueden aprobarse leyes locales."
+     },
+     {
+      "fromRank": 7,
+      "toRank": 8,
+      "textEs": "El cambio afecta a varias ciudades. Corporaciones o gobiernos de nivel medio pueden caer; pueden aprobarse leyes que afecten a varias ciudades."
+     },
+     {
+      "fromRank": 9,
+      "toRank": 9,
+      "textEs": "El cambio afecta a un área grande, como una nación entera. Grandes corporaciones o gobiernos locales pueden ser derribados; pueden aprobarse leyes de alcance nacional."
+     },
+     {
+      "fromRank": 10,
+      "toRank": 10,
+      "textEs": "El cambio afecta al mundo entero. Megacorporaciones y gobiernos poderosos pueden caer o ser derrocados; pueden establecerse leyes internacionales. El cambio puede afectar a millones."
+     }
+    ],
+    "source": {
+     "book": "Core RED",
+     "page": 151
+    }
+   },
+   "tweak2077": [
+    {
+     "fromRank": 4,
+     "textEs": "En los 2070s los Medias pueden conseguir objetos Expensive pieza por pieza, aunque estén de otro modo no disponibles, a partir del Rango 4 de Credibility. El Core no les da Reach propio.",
+     "source": {
+      "book": "CEMK RB",
+      "page": 25
+     }
+    }
+   ],
+   "folio": null
+  },
+  "Exec": {
+   "ability": "Teamwork",
+   "source": {
+    "book": "Core RED",
+    "page": 153
+   },
+   "rulesEs": "Rol Ability del Exec: construye un equipo cuyos miembros lo ayudan a lograr sus metas, legales o no, 'si la moral lo permite'. Los beneficios (traje, vivienda, seguro de salud y Team Members) se obtienen por Rango. Si te despiden, la Rol Ability no cambia: un Exec o Lawman con skills siempre está en demanda y consigue otro empleo en menos de una semana. Los Team Members se obtienen desde el Rango 3; el Rango 5 y el Rango 9 dan uno más cada uno, con un máximo de 3. Se tiran en una tabla especial por trabajo: el Exec elige la clase, pero la tirada determina las STATs que RRHH contrata. Se construyen como Personajes Jugadores con diferencias: no mejoran sus Skills, determinan y curan HP como un PJ, los controla el GM (su obediencia depende de Loyalty y de su Loyalty Save) y no pueden usar armadura distinta de Light Armorjack ('política de la compañía'). Pérdida: si un Team Member se pierde, RRHH recupera su equipo y lo reemplaza en la siguiente sesión de juego; el nuevo tiene STATs nuevas, Loyalty inicial reducida a 1 y cuesta al Exec 200eb adicionales en 'honorarios de contratación' (sobornos a RRHH).",
+   "ranks": [
+    {
+     "rank": 1,
+     "unlocksEs": [
+      "Signing Bonus: un traje de Businesswear (Jacket, Top, Bottom y Footwear) que te identifica como miembro de la élite empresarial; no se puede revender sin levantar sospechas."
+     ]
+    },
+    {
+     "rank": 2,
+     "unlocksEs": [
+      "Corporate Housing: acceso a un Corporate Conapt de tu Compañía sin pagar Rent ni otras tarifas mientras seas miembro de la Corporación (el Lifestyle mensual se paga aparte). Si cambiás de Corporación, la nueva te ofrece lo mismo y paga la mudanza."
+     ]
+    },
+    {
+     "rank": 3,
+     "unlocksEs": [
+      "Team Member: obtenés 1 Team Member (total 1)."
+     ]
+    },
+    {
+     "rank": 4,
+     "unlocksEs": [
+      "Sin beneficio propio nuevo en el Core RED para el Rango 4."
+     ]
+    },
+    {
+     "rank": 5,
+     "unlocksEs": [
+      "Team Member adicional (total 2)."
+     ]
+    },
+    {
+     "rank": 6,
+     "unlocksEs": [
+      "Corporate Health Insurance: cobertura Trauma Team Silver, pagada mensualmente por tu Corporación (si cambiás de Corporación, te ofrecen lo mismo)."
+     ]
+    },
+    {
+     "rank": 7,
+     "unlocksEs": [
+      "Corporate Housing mejorado: una Beaverville House en la Executive Zone."
+     ]
+    },
+    {
+     "rank": 8,
+     "unlocksEs": [
+      "Corporate Health Insurance mejorada a Trauma Team Executive."
+     ]
+    },
+    {
+     "rank": 9,
+     "unlocksEs": [
+      "Team Member adicional (total 3, el máximo)."
+     ]
+    },
+    {
+     "rank": 10,
+     "unlocksEs": [
+      "Corporate Housing mejorado de forma dramática: una Beaverville McMansion en la Executive Zone o un Luxury Penthouse en la Corporate Zone."
+     ]
+    }
+   ],
+   "options": [],
+   "tables": {
+    "benefitsByRank": [
+     {
+      "rank": 1,
+      "textEs": "Signing Bonus: un traje de Businesswear (Jacket, Top, Bottom y Footwear) que te identifica como miembro de la élite empresarial; no se puede revender sin levantar sospechas."
+     },
+     {
+      "rank": 2,
+      "textEs": "Corporate Housing: acceso a un Corporate Conapt de tu Compañía sin pagar Rent ni otras tarifas mientras seas miembro de la Corporación (el Lifestyle mensual se paga aparte). Si cambiás de Corporación, la nueva te ofrece lo mismo y paga la mudanza."
+     },
+     {
+      "rank": 3,
+      "textEs": "Team Member: obtenés 1 Team Member (total 1)."
+     },
+     {
+      "rank": 4,
+      "textEs": "Sin beneficio propio nuevo en el Core RED para el Rango 4."
+     },
+     {
+      "rank": 5,
+      "textEs": "Team Member adicional (total 2)."
+     },
+     {
+      "rank": 6,
+      "textEs": "Corporate Health Insurance: cobertura Trauma Team Silver, pagada mensualmente por tu Corporación (si cambiás de Corporación, te ofrecen lo mismo)."
+     },
+     {
+      "rank": 7,
+      "textEs": "Corporate Housing mejorado: una Beaverville House en la Executive Zone."
+     },
+     {
+      "rank": 8,
+      "textEs": "Corporate Health Insurance mejorada a Trauma Team Executive."
+     },
+     {
+      "rank": 9,
+      "textEs": "Team Member adicional (total 3, el máximo)."
+     },
+     {
+      "rank": 10,
+      "textEs": "Corporate Housing mejorado de forma dramática: una Beaverville McMansion en la Executive Zone o un Luxury Penthouse en la Corporate Zone."
+     }
+    ],
+    "teamMemberCountByRank": [
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "members": 1
+     },
+     {
+      "fromRank": 5,
+      "toRank": 8,
+      "members": 2
+     },
+     {
+      "fromRank": 9,
+      "toRank": 10,
+      "members": 3
+     }
+    ],
+    "teamMemberCreationEs": [
+     "Job: elegir el trabajo (se puede elegir un cover job; ver cada tabla).",
+     "STATs: tirar 1d6 y leer la fila; registrar también HP, Mortally Wounded y Death Save. No hace falta bajar EMP por Humanity Loss de cyberware (ya está contemplado).",
+     "Skills, Cyberware y Gear: paquetes estándar de la compañía (ver cada tabla).",
+     "Starting Loyalty: tirar 1d6 y sumar 1."
+    ],
+    "teamMemberStatColumns": [
+     "INT",
+     "REF",
+     "DEX",
+     "TECH",
+     "COOL",
+     "WILL",
+     "MOVE",
+     "BODY",
+     "EMP"
+    ],
+    "teamMemberTables": {
+     "Company Bodyguard": {
+      "coverJobs": [
+       "Escort",
+       "Personal Trainer"
+      ],
+      "trueJobEs": "Proteger al Exec en situaciones peligrosas.",
+      "roll1d6": [
+       {
+        "roll": 1,
+        "INT": 3,
+        "REF": 7,
+        "DEX": 7,
+        "TECH": 4,
+        "COOL": 7,
+        "WILL": 6,
+        "MOVE": 4,
+        "BODY": 8,
+        "EMP": 4
+       },
+       {
+        "roll": 2,
+        "INT": 5,
+        "REF": 8,
+        "DEX": 6,
+        "TECH": 2,
+        "COOL": 7,
+        "WILL": 8,
+        "MOVE": 4,
+        "BODY": 8,
+        "EMP": 2
+       },
+       {
+        "roll": 3,
+        "INT": 4,
+        "REF": 8,
+        "DEX": 5,
+        "TECH": 3,
+        "COOL": 7,
+        "WILL": 8,
+        "MOVE": 6,
+        "BODY": 6,
+        "EMP": 3
+       },
+       {
+        "roll": 4,
+        "INT": 4,
+        "REF": 7,
+        "DEX": 8,
+        "TECH": 4,
+        "COOL": 7,
+        "WILL": 7,
+        "MOVE": 4,
+        "BODY": 7,
+        "EMP": 2
+       },
+       {
+        "roll": 5,
+        "INT": 3,
+        "REF": 8,
+        "DEX": 5,
+        "TECH": 2,
+        "COOL": 8,
+        "WILL": 7,
+        "MOVE": 4,
+        "BODY": 6,
+        "EMP": 7
+       },
+       {
+        "roll": 6,
+        "INT": 5,
+        "REF": 7,
+        "DEX": 7,
+        "TECH": 2,
+        "COOL": 7,
+        "WILL": 6,
+        "MOVE": 5,
+        "BODY": 7,
+        "EMP": 4
+       }
+      ],
+      "skills": {
+       "+2": [
+        "Concentration",
+        "Conversation",
+        "Education",
+        "First Aid",
+        "Human Perception",
+        "Language (Streetslang)",
+        "Local Expert (Your Home)",
+        "Persuasion",
+        "Stealth"
+       ],
+       "+4": [
+        "Athletics",
+        "Evasion",
+        "Interrogation",
+        "Perception",
+        "Resist Torture/Drugs",
+        "Tactics"
+       ],
+       "+6": [
+        "Handgun",
+        "Brawling"
+       ],
+       "levelNoteEs": "Los +2/+4/+6 son niveles de Skill del miembro; no mejoran con el tiempo."
+      },
+      "cyberware": [
+       "Enhanced Antibodies",
+       "Subdermal Armor (SP 11)",
+       "Cyberaudio Suite",
+       "Internal Agent",
+       "Homing Tracer"
+      ],
+      "gear": [
+       "Agent",
+       "Light Armorjack (SP 11)",
+       "Very Heavy Pistol",
+       "Basic VH Pistol Ammo x50"
+      ],
+      "source": {
+       "book": "Core RED",
+       "page": 155
+      }
+     },
+     "Company Covert Operative": {
+      "coverJobs": [
+       "Personal Assistant",
+       "Stylist"
+      ],
+      "trueJobEs": "Evitar que el Exec se ensucie las manos.",
+      "roll1d6": [
+       {
+        "roll": 1,
+        "INT": 4,
+        "REF": 8,
+        "DEX": 5,
+        "TECH": 4,
+        "COOL": 6,
+        "WILL": 8,
+        "MOVE": 5,
+        "BODY": 7,
+        "EMP": 3
+       },
+       {
+        "roll": 2,
+        "INT": 3,
+        "REF": 8,
+        "DEX": 6,
+        "TECH": 2,
+        "COOL": 8,
+        "WILL": 6,
+        "MOVE": 6,
+        "BODY": 6,
+        "EMP": 5
+       },
+       {
+        "roll": 3,
+        "INT": 6,
+        "REF": 7,
+        "DEX": 5,
+        "TECH": 5,
+        "COOL": 7,
+        "WILL": 6,
+        "MOVE": 3,
+        "BODY": 7,
+        "EMP": 4
+       },
+       {
+        "roll": 4,
+        "INT": 5,
+        "REF": 6,
+        "DEX": 5,
+        "TECH": 3,
+        "COOL": 6,
+        "WILL": 8,
+        "MOVE": 7,
+        "BODY": 6,
+        "EMP": 4
+       },
+       {
+        "roll": 5,
+        "INT": 3,
+        "REF": 8,
+        "DEX": 4,
+        "TECH": 4,
+        "COOL": 8,
+        "WILL": 7,
+        "MOVE": 4,
+        "BODY": 8,
+        "EMP": 4
+       },
+       {
+        "roll": 6,
+        "INT": 5,
+        "REF": 8,
+        "DEX": 3,
+        "TECH": 7,
+        "COOL": 7,
+        "WILL": 8,
+        "MOVE": 3,
+        "BODY": 6,
+        "EMP": 3
+       }
+      ],
+      "skills": {
+       "+2": [
+        "Athletics",
+        "Brawling",
+        "Concentration",
+        "Conversation",
+        "Education",
+        "First Aid",
+        "Language (Streetslang)",
+        "Local Expert (Your Home)",
+        "Perception",
+        "Persuasion"
+       ],
+       "+4": [
+        "Bribery",
+        "Bureaucracy",
+        "Business",
+        "Evasion",
+        "Human Perception",
+        "Pick Lock",
+        "Streetwise",
+        "Trading",
+        "Wardrobe & Style"
+       ],
+       "+6": [
+        "Handgun",
+        "Stealth"
+       ],
+       "levelNoteEs": "Los +2/+4/+6 son niveles de Skill del miembro; no mejoran con el tiempo."
+      },
+      "cyberware": [
+       "Cybereyes con Low Light/Infrared/UV pareados",
+       "Color Shift",
+       "Cyberarm con Grapple Hand",
+       "Popup Ranged Weapon (Very Heavy Pistol)",
+       "Realskinn Covering"
+      ],
+      "gear": [
+       "Agent",
+       "Light Armorjack (SP 11)",
+       "Very Heavy Pistol",
+       "Basic VH Pistol Ammo x50"
+      ],
+      "source": {
+       "book": "Core RED",
+       "page": 155
+      }
+     },
+     "Company Driver": {
+      "coverJobs": [
+       "Valet",
+       "Personal Driver"
+      ],
+      "trueJobEs": "Conducir, pilotar y mantener los vehículos del equipo.",
+      "roll1d6": [
+       {
+        "roll": 1,
+        "INT": 5,
+        "REF": 8,
+        "DEX": 6,
+        "TECH": 4,
+        "COOL": 6,
+        "WILL": 5,
+        "MOVE": 6,
+        "BODY": 5,
+        "EMP": 5
+       },
+       {
+        "roll": 2,
+        "INT": 5,
+        "REF": 7,
+        "DEX": 7,
+        "TECH": 5,
+        "COOL": 5,
+        "WILL": 7,
+        "MOVE": 4,
+        "BODY": 7,
+        "EMP": 3
+       },
+       {
+        "roll": 3,
+        "INT": 6,
+        "REF": 8,
+        "DEX": 8,
+        "TECH": 4,
+        "COOL": 7,
+        "WILL": 4,
+        "MOVE": 5,
+        "BODY": 6,
+        "EMP": 2
+       },
+       {
+        "roll": 4,
+        "INT": 8,
+        "REF": 7,
+        "DEX": 4,
+        "TECH": 5,
+        "COOL": 4,
+        "WILL": 7,
+        "MOVE": 5,
+        "BODY": 6,
+        "EMP": 4
+       },
+       {
+        "roll": 5,
+        "INT": 7,
+        "REF": 8,
+        "DEX": 3,
+        "TECH": 5,
+        "COOL": 7,
+        "WILL": 6,
+        "MOVE": 4,
+        "BODY": 6,
+        "EMP": 4
+       },
+       {
+        "roll": 6,
+        "INT": 6,
+        "REF": 8,
+        "DEX": 6,
+        "TECH": 6,
+        "COOL": 8,
+        "WILL": 5,
+        "MOVE": 3,
+        "BODY": 5,
+        "EMP": 3
+       }
+      ],
+      "skills": {
+       "+2": [
+        "Athletics",
+        "Concentration",
+        "Conversation",
+        "Education",
+        "First Aid",
+        "Human Perception",
+        "Language (Streetslang)",
+        "Local Expert (Your Home)",
+        "Perception",
+        "Persuasion"
+       ],
+       "+4": [
+        "Brawling",
+        "Endurance",
+        "Evasion",
+        "Land Vehicle Tech",
+        "Pilot Air Vehicle",
+        "Pilot Sea Vehicle",
+        "Sea Vehicle Tech",
+        "Stealth",
+        "Tracking"
+       ],
+       "+6": [
+        "Drive Land Vehicle",
+        "Handgun"
+       ],
+       "levelNoteEs": "Los +2/+4/+6 son niveles de Skill del miembro; no mejoran con el tiempo."
+      },
+      "cyberware": [
+       "Radar/Sonar Implant",
+       "Cyberaudio Suite",
+       "Internal Agent",
+       "Homing Tracer",
+       "Radar Detector"
+      ],
+      "gear": [
+       "Light Armorjack (SP 11)",
+       "Very Heavy Pistol",
+       "Compact Groundcar con Seating Upgrade",
+       "Basic VH Pistol Ammo x50"
+      ],
+      "source": {
+       "book": "Core RED",
+       "page": 156
+      }
+     },
+     "Company Netrunner": {
+      "coverJobs": [
+       "I.T. Engineer",
+       "Research Specialist"
+      ],
+      "trueJobEs": "Netrunning y recolección de información.",
+      "roll1d6": [
+       {
+        "roll": 1,
+        "INT": 6,
+        "REF": 7,
+        "DEX": 8,
+        "TECH": 7,
+        "COOL": 5,
+        "WILL": 4,
+        "MOVE": 5,
+        "BODY": 5,
+        "EMP": 3
+       },
+       {
+        "roll": 2,
+        "INT": 7,
+        "REF": 8,
+        "DEX": 4,
+        "TECH": 6,
+        "COOL": 8,
+        "WILL": 3,
+        "MOVE": 4,
+        "BODY": 6,
+        "EMP": 4
+       },
+       {
+        "roll": 3,
+        "INT": 5,
+        "REF": 6,
+        "DEX": 8,
+        "TECH": 8,
+        "COOL": 6,
+        "WILL": 6,
+        "MOVE": 4,
+        "BODY": 4,
+        "EMP": 3
+       },
+       {
+        "roll": 4,
+        "INT": 7,
+        "REF": 8,
+        "DEX": 5,
+        "TECH": 6,
+        "COOL": 4,
+        "WILL": 4,
+        "MOVE": 6,
+        "BODY": 5,
+        "EMP": 5
+       },
+       {
+        "roll": 5,
+        "INT": 5,
+        "REF": 8,
+        "DEX": 8,
+        "TECH": 5,
+        "COOL": 5,
+        "WILL": 3,
+        "MOVE": 6,
+        "BODY": 4,
+        "EMP": 6
+       },
+       {
+        "roll": 6,
+        "INT": 8,
+        "REF": 7,
+        "DEX": 6,
+        "TECH": 6,
+        "COOL": 4,
+        "WILL": 7,
+        "MOVE": 4,
+        "BODY": 4,
+        "EMP": 4
+       }
+      ],
+      "skills": {
+       "+2": [
+        "Interface (Rol Ability del Netrunner)",
+        "Athletics",
+        "Brawling",
+        "Concentration",
+        "Conversation",
+        "Evasion",
+        "First Aid",
+        "Human Perception",
+        "Language (Streetslang)",
+        "Local Expert (Your Home)",
+        "Perception",
+        "Persuasion"
+       ],
+       "+4": [
+        "Basic Tech",
+        "Cryptography",
+        "Cybertech",
+        "Education",
+        "Electronics/Security Tech (x2)",
+        "Forgery",
+        "Library Search",
+        "Handgun",
+        "Stealth"
+       ],
+       "levelNoteEs": "Los +2/+4/+6 son niveles de Skill del miembro; no mejoran con el tiempo."
+      },
+      "cyberware": [
+       "Neural Link",
+       "Chipware Socket",
+       "Pain Editor",
+       "Interface Plugs",
+       "Cybereyes con Virtuality"
+      ],
+      "gear": [
+       "Agent",
+       "Light Armorjack (SP 11)",
+       "Cyberdeck (7 slots: Sword, Sword, Killer, Worm, Worm, Armor)",
+       "Very Heavy Pistol",
+       "Basic VH Pistol Ammo x50"
+      ],
+      "source": {
+       "book": "Core RED",
+       "page": 156
+      }
+     },
+     "Company Technician": {
+      "coverJobs": [
+       "I.T. Engineer",
+       "Intern"
+      ],
+      "trueJobEs": "Reparar el equipo y las armas del equipo.",
+      "roll1d6": [
+       {
+        "roll": 1,
+        "INT": 8,
+        "REF": 8,
+        "DEX": 5,
+        "TECH": 7,
+        "COOL": 3,
+        "WILL": 4,
+        "MOVE": 4,
+        "BODY": 5,
+        "EMP": 6
+       },
+       {
+        "roll": 2,
+        "INT": 8,
+        "REF": 7,
+        "DEX": 6,
+        "TECH": 8,
+        "COOL": 3,
+        "WILL": 5,
+        "MOVE": 5,
+        "BODY": 4,
+        "EMP": 4
+       },
+       {
+        "roll": 3,
+        "INT": 8,
+        "REF": 6,
+        "DEX": 5,
+        "TECH": 8,
+        "COOL": 4,
+        "WILL": 3,
+        "MOVE": 3,
+        "BODY": 7,
+        "EMP": 6
+       },
+       {
+        "roll": 4,
+        "INT": 8,
+        "REF": 8,
+        "DEX": 5,
+        "TECH": 7,
+        "COOL": 4,
+        "WILL": 4,
+        "MOVE": 4,
+        "BODY": 5,
+        "EMP": 5
+       },
+       {
+        "roll": 5,
+        "INT": 7,
+        "REF": 7,
+        "DEX": 3,
+        "TECH": 7,
+        "COOL": 5,
+        "WILL": 3,
+        "MOVE": 6,
+        "BODY": 6,
+        "EMP": 3
+       },
+       {
+        "roll": 6,
+        "INT": 7,
+        "REF": 8,
+        "DEX": 5,
+        "TECH": 8,
+        "COOL": 6,
+        "WILL": 3,
+        "MOVE": 3,
+        "BODY": 5,
+        "EMP": 5
+       }
+      ],
+      "skills": {
+       "+2": [
+        "Athletics",
+        "Brawling",
+        "Concentration",
+        "Conversation",
+        "Evasion",
+        "First Aid",
+        "Human Perception",
+        "Language (Streetslang)",
+        "Local Expert (Your Home)",
+        "Perception",
+        "Persuasion",
+        "Stealth"
+       ],
+       "+4": [
+        "Education",
+        "Handgun",
+        "Weaponstech (x2)"
+       ],
+       "+6": [
+        "Basic Tech",
+        "Cybertech",
+        "Electronics/Security Tech (x2)"
+       ],
+       "levelNoteEs": "Los +2/+4/+6 son niveles de Skill del miembro; no mejoran con el tiempo."
+      },
+      "cyberware": [
+       "Tool Hand",
+       "Cyberaudio Suite",
+       "Internal Agent",
+       "Bug Detector",
+       "Audio Recorder"
+      ],
+      "gear": [
+       "Light Armorjack (SP 11)",
+       "Very Heavy Pistol",
+       "Basic VH Pistol Ammo x50"
+      ],
+      "source": {
+       "book": "Core RED",
+       "page": 157
+      }
+     }
+    },
+    "loyalty": {
+     "startingEs": "1d6 + 1.",
+     "capEs": "Máximo 10 entre sesiones de juego; durante una sesión no tiene límite. El Exec debe promover Loyalty en cada sesión para no perderla.",
+     "loyaltySaveEs": "Cada vez que el Exec da una tarea a un Team Member, el GM tira 1d6 por debajo de la Loyalty actual del miembro. Si falla, el miembro puede negarse, arruinar la tarea o traicionar al Exec.",
+     "betrayalEs": "Con Loyalty 0 o menor, el Team Member intenta activamente traicionar al Exec ante sus enemigos. Si al final de una sesión tiene menos de 0, se queja a RRHH y recibe un traslado o renuncia si se lo niegan; en ambos casos se va (ver reemplazo).",
+     "replacementEs": "RRHH recupera el equipo y lo reemplaza la siguiente sesión: STATs nuevas, Loyalty inicial 1 y 200eb de honorarios de contratación extra.",
+     "gain": [
+      {
+       "actionEs": "Elogiar el trabajo del miembro (si se abusa en una semana deja de dar Loyalty)",
+       "value": 1
+      },
+      {
+       "actionEs": "Darle un bono o beneficio de al menos 200eb de valor",
+       "value": 4
+      },
+      {
+       "actionEs": "Apoyarlo contra la Gerencia",
+       "value": 4
+      },
+      {
+       "actionEs": "Darle un 20% de tus ganancias por un trabajo",
+       "value": 6
+      },
+      {
+       "actionEs": "Darle tiempo libre pago (una sesión de juego entera)",
+       "value": 6
+      },
+      {
+       "actionEs": "Arriesgar tu integridad física por el miembro",
+       "value": 8
+      }
+     ],
+     "loss": [
+      {
+       "actionEs": "No ganar nada de Loyalty con el miembro durante una sesión de juego entera",
+       "value": -1
+      },
+      {
+       "actionEs": "Reprender o criticar al miembro o su trabajo",
+       "value": -2
+      },
+      {
+       "actionEs": "Ignorar su aporte a un trabajo / olvidar su cumpleaños",
+       "value": -4
+      },
+      {
+       "actionEs": "No cumplir con el bono o beneficio prometido",
+       "value": -6
+      },
+      {
+       "actionEs": "Echarle la culpa ante la Gerencia",
+       "value": -6
+      },
+      {
+       "actionEs": "Abandonarlo bajo fuego",
+       "value": -8
+      }
+     ],
+     "source": {
+      "book": "Core RED",
+      "page": 154
+     }
+    },
+    "firedEs": "Si te despiden, la Rol Ability no cambia; conseguís otro empleo en menos de una semana.",
+    "source": {
+     "book": "Core RED",
+     "page": 154
+    }
+   },
+   "tweak2077": [
+    {
+     "fromRank": 4,
+     "textEs": "En los 2070s los Execs pueden conseguir objetos Expensive pieza por pieza, aunque estén de otro modo no disponibles, a partir del Rango 4 de Teamwork.",
+     "source": {
+      "book": "CEMK RB",
+      "page": 25
+     }
+    }
+   ],
+   "folio": null
+  },
+  "Lawman": {
+   "ability": "Backup",
+   "source": {
+    "book": "Core RED",
+    "page": 158
+   },
+   "rulesEs": "Rol Ability del Lawman: puede pedir ayuda a un grupo de colegas de las fuerzas del orden según su Rango de Backup y las condiciones de la llamada. El Backup es controlado por el GM, armado y blindado según la tabla. A mayor Rango, el Lawman probablemente asciende en su organización o es reclutado por agencias a las que ya puede llamar. En peligro, podés llamar a Backup de un grupo de tu Rango o inferior: como Acción, tirás 1d10 y necesitás sacar igual o menos que tu Rango de Backup para que alguien responda. Si respondió, tirás 1d6 para saber en cuántas Rondas llega. Si el d6 es 6, en lugar del Backup típico llega el del siguiente nivel superior; en Rango 10, en cambio, llegan dos grupos de Backup distintos. Si nadie responde, podés reintentar el Turno siguiente. Si abusás, tu Jefe te echa del cuerpo o te multa. Combat Number: base de Skill para ofensiva y defensa (combina STAT y Skill); se le suma 1d10 al atacar con sus armas o al defender; el Backup no puede esquivar balas. SP: armadura en Cuerpo y Cabeza. HP: Hit Points de cada miembro. MOVE & BODY: STATs de MOVE y BODY (para movimiento y efectos que los referencian, como Death Saves).",
+   "ranks": [
+    {
+     "rank": 1,
+     "tierFromRank": 1,
+     "tierToRank": 2,
+     "unlocksEs": [
+      "Backup disponible: Corporate Security (Combat Number 8, SP 7, HP 20, MOVE y BODY 4). Cuatro renta-cops locales que llegan a pie. Llevan Heavy Pistols y visten Kevlar."
+     ]
+    },
+    {
+     "rank": 2,
+     "tierFromRank": 1,
+     "tierToRank": 2,
+     "unlocksEs": [
+      "Backup disponible: Corporate Security (Combat Number 8, SP 7, HP 20, MOVE y BODY 4). Cuatro renta-cops locales que llegan a pie. Llevan Heavy Pistols y visten Kevlar."
+     ]
+    },
+    {
+     "rank": 3,
+     "tierFromRank": 3,
+     "tierToRank": 4,
+     "unlocksEs": [
+      "Backup disponible: Local Beat Cops (Combat Number 10, SP 7, HP 25, MOVE y BODY 5). Cuatro policías locales de ronda. Llegan en dos Compact Groundcars. Llevan Heavy Pistols y visten Kevlar."
+     ]
+    },
+    {
+     "rank": 4,
+     "tierFromRank": 3,
+     "tierToRank": 4,
+     "unlocksEs": [
+      "Backup disponible: Local Beat Cops (Combat Number 10, SP 7, HP 25, MOVE y BODY 5). Cuatro policías locales de ronda. Llegan en dos Compact Groundcars. Llevan Heavy Pistols y visten Kevlar."
+     ]
+    },
+    {
+     "rank": 5,
+     "tierFromRank": 5,
+     "tierToRank": 7,
+     "unlocksEs": [
+      "Backup disponible: Sheriff's Department (Combat Number 14, SP 13, HP 35, MOVE y BODY 4). Dos 'County Mounties' que patrullan los suburbios y carreteras alrededor de la ciudad. Llegan en un High Performance Groundcar, armados con Heavy Pistols y Assault Rifles, con Heavy Armorjack."
+     ]
+    },
+    {
+     "rank": 6,
+     "tierFromRank": 5,
+     "tierToRank": 7,
+     "unlocksEs": [
+      "Backup disponible: Sheriff's Department (Combat Number 14, SP 13, HP 35, MOVE y BODY 4). Dos 'County Mounties' que patrullan los suburbios y carreteras alrededor de la ciudad. Llegan en un High Performance Groundcar, armados con Heavy Pistols y Assault Rifles, con Heavy Armorjack."
+     ]
+    },
+    {
+     "rank": 7,
+     "tierFromRank": 5,
+     "tierToRank": 7,
+     "unlocksEs": [
+      "Backup disponible: Sheriff's Department (Combat Number 14, SP 13, HP 35, MOVE y BODY 4). Dos 'County Mounties' que patrullan los suburbios y carreteras alrededor de la ciudad. Llegan en un High Performance Groundcar, armados con Heavy Pistols y Assault Rifles, con Heavy Armorjack."
+     ]
+    },
+    {
+     "rank": 8,
+     "tierFromRank": 8,
+     "tierToRank": 8,
+     "unlocksEs": [
+      "Backup disponible: Recovery Zone Marshal (Combat Number 16, SP 15, HP 50, MOVE y BODY 6). Un solo Lawman que patrulla las Recovery Zones y ciudades nuevas, como los marshals del Viejo Oeste. Llega en una Superbike con Very Heavy Pistol, Assault Rifle y Grenade Launcher, con Flak Armor."
+     ]
+    },
+    {
+     "rank": 9,
+     "tierFromRank": 9,
+     "tierToRank": 9,
+     "unlocksEs": [
+      "Backup disponible: C-SWAT (Combat Number 15, SP 18, HP 35, MOVE y BODY 4). Dos pesos pesados del Psycho Squad con Assault Rifles y Rocket Launchers, con Metalgear. Llegan por aire en un AV-4."
+     ]
+    },
+    {
+     "rank": 10,
+     "tierFromRank": 10,
+     "tierToRank": 10,
+     "unlocksEs": [
+      "Backup disponible: National Law Enforcement / Interpol / FBI / Netwatch (Combat Number 14, SP 11, HP 35, MOVE y BODY 6). Dos agentes serios bajo control de gobiernos nacionales o agencias internacionales. Llegan en pareja en un AV-4, con Very Heavy Pistols y Assault Rifles, en Light Armorjack. A diferencia del resto, se quedan tras el conflicto y ayudan a investigar la escena; los mismos 2 responden siempre a llamadas de Backup conectadas a la inicial hasta que el 'caso' se cierre o caigan en servicio. Pueden usar su Combat Number en las skills: Accounting, Acting, Conceal/Reveal Object, Criminology, Cryptography, Deduction, Education, Forgery, Interrogation, Paramedic, Perception, Personal Grooming, Resist Torture/Drugs, Stealth y Tracking."
+     ]
+    }
+   ],
+   "options": [],
+   "tables": {
+    "callProcedure": {
+     "action": "Acción",
+     "callRollEs": "1d10 igual o menor que el Rango de Backup; si lo logra, alguien responde",
+     "arrivalRollEs": "1d6 = Rondas hasta que llega el Backup",
+     "arrivalSixEs": "Si el d6 da 6: llega el Backup del siguiente nivel superior (en Rango 10: llegan dos grupos de Backup distintos)",
+     "retryEs": "Si nadie responde, se puede reintentar el Turno siguiente",
+     "abuseEs": "Si se abusa, el Jefe del Lawman lo echa o lo multa",
+     "groupChoiceEs": "Se puede llamar a Backup de un grupo de tu Rango o inferior"
+    },
+    "backupGroups": [
+     {
+      "fromRank": 1,
+      "toRank": 2,
+      "name": "Corporate Security",
+      "members": 4,
+      "combatNumber": 8,
+      "sp": 7,
+      "hp": 20,
+      "move": 4,
+      "body": 4,
+      "weapons": "Heavy Pistol",
+      "armor": "Kevlar",
+      "vehicle": "a pie",
+      "descEs": "Cuatro renta-cops locales que llegan a pie. Llevan Heavy Pistols y visten Kevlar."
+     },
+     {
+      "fromRank": 3,
+      "toRank": 4,
+      "name": "Local Beat Cops",
+      "members": 4,
+      "combatNumber": 10,
+      "sp": 7,
+      "hp": 25,
+      "move": 5,
+      "body": 5,
+      "weapons": "Heavy Pistol",
+      "armor": "Kevlar",
+      "vehicle": "2 Compact Groundcars",
+      "descEs": "Cuatro policías locales de ronda. Llegan en dos Compact Groundcars. Llevan Heavy Pistols y visten Kevlar."
+     },
+     {
+      "fromRank": 5,
+      "toRank": 7,
+      "name": "Sheriff's Department",
+      "members": 2,
+      "combatNumber": 14,
+      "sp": 13,
+      "hp": 35,
+      "move": 4,
+      "body": 4,
+      "weapons": "Heavy Pistol, Assault Rifle",
+      "armor": "Heavy Armorjack",
+      "vehicle": "1 High Performance Groundcar",
+      "descEs": "Dos 'County Mounties' que patrullan los suburbios y carreteras alrededor de la ciudad. Llegan en un High Performance Groundcar, armados con Heavy Pistols y Assault Rifles, con Heavy Armorjack."
+     },
+     {
+      "fromRank": 8,
+      "toRank": 8,
+      "name": "Recovery Zone Marshal",
+      "members": 1,
+      "combatNumber": 16,
+      "sp": 15,
+      "hp": 50,
+      "move": 6,
+      "body": 6,
+      "weapons": "Very Heavy Pistol, Assault Rifle, Grenade Launcher",
+      "armor": "Flak Armor",
+      "vehicle": "Superbike",
+      "descEs": "Un solo Lawman que patrulla las Recovery Zones y ciudades nuevas, como los marshals del Viejo Oeste. Llega en una Superbike con Very Heavy Pistol, Assault Rifle y Grenade Launcher, con Flak Armor."
+     },
+     {
+      "fromRank": 9,
+      "toRank": 9,
+      "name": "C-SWAT",
+      "members": 2,
+      "combatNumber": 15,
+      "sp": 18,
+      "hp": 35,
+      "move": 4,
+      "body": 4,
+      "weapons": "Assault Rifle, Rocket Launcher",
+      "armor": "Metalgear",
+      "vehicle": "AV-4",
+      "descEs": "Dos pesos pesados del Psycho Squad con Assault Rifles y Rocket Launchers, con Metalgear. Llegan por aire en un AV-4."
+     },
+     {
+      "fromRank": 10,
+      "toRank": 10,
+      "name": "National Law Enforcement / Interpol / FBI / Netwatch",
+      "members": 2,
+      "combatNumber": 14,
+      "sp": 11,
+      "hp": 35,
+      "move": 6,
+      "body": 6,
+      "weapons": "Very Heavy Pistol, Assault Rifle",
+      "armor": "Light Armorjack",
+      "vehicle": "AV-4",
+      "descEs": "Dos agentes serios bajo control de gobiernos nacionales o agencias internacionales. Llegan en pareja en un AV-4, con Very Heavy Pistols y Assault Rifles, en Light Armorjack. A diferencia del resto, se quedan tras el conflicto y ayudan a investigar la escena; los mismos 2 responden siempre a llamadas de Backup conectadas a la inicial hasta que el 'caso' se cierre o caigan en servicio. Pueden usar su Combat Number en las skills: Accounting, Acting, Conceal/Reveal Object, Criminology, Cryptography, Deduction, Education, Forgery, Interrogation, Paramedic, Perception, Personal Grooming, Resist Torture/Drugs, Stealth y Tracking."
+     }
+    ],
+    "backupFieldsEs": "Combat Number = Skill Base ofensiva y defensiva (+1d10; el Backup no esquiva balas); SP aplica a Cuerpo y Cabeza; HP por miembro; MOVE y BODY tienen el mismo valor.",
+    "source": {
+     "book": "Core RED",
+     "page": 158
+    }
+   },
+   "tweak2077": [
+    {
+     "fromRank": 4,
+     "textEs": "En los 2070s los Lawmen pueden conseguir objetos Expensive relacionados con su trabajo (armas, armadura y otro equipo según determine el GM) pieza por pieza, aunque no estén disponibles, a partir del Rango 4.",
+     "source": {
+      "book": "CEMK RB",
+      "page": 25
+     }
+    }
+   ],
+   "folio": null
+  }
+ },
+ "doubts": [
+  "Media/Believability: el libro dice 'X de 10 de probabilidad' y 'se tira 1d10 según tu Believability' pero no explicita la comparación; se asume éxito con tirada <= Believability (+bonos), sin confirmar en texto.",
+  "Exec/Loyalty Save: el texto dice 'tirar 1d6 por debajo de la Loyalty actual'; no aclara si empatar cuenta como éxito (se registró literal 'por debajo').",
+  "Exec/Team Members: la extracción del PDF parte 'SP 11' como 'SP1 1' en Light Armorjack y Subdermal Armor; se interpretó SP 11 (coincide con Light Armorjack del Core). Lo mismo con HP 25/35 en Backup ('2 5', '3 5'): se leyeron 25 y 35.",
+  "Exec/Company Netrunner: el Cyberdeck dice '7 slots' pero lista solo 6 programas (Sword, Sword, Killer, Worm, Worm, Armor); se transcribió tal cual sin completar el séptimo.",
+  "Exec/Company Netrunner: la lista de skills no trae nivel +6 (las demás tablas sí); se dejó sin +6.",
+  "Exec: el Rango 4 no tiene beneficio en el Core RED (solo el ajuste 2070s de Expensive).",
+  "Fixer/Haggle: 'puede hacer 1 trato de tu Rango de Operator o inferior' se interpretó como elegir un beneficio de Haggle desbloqueado en tu Rango o uno inferior; el libro no lo detalla más.",
+  "Fixer/Reach: la progresión impresa no es monótona (R5-6 Night Market hasta Super Luxury una vez al mes; R7-8 Very Expensive; R9 Luxury; R10 Super Luxury pieza por pieza); se transcribió tal como figura. Las reglas del Night Market están en Core pág. 338 (fuera de este encargo).",
+  "Fixer/Contacts & Clients R5-6: el libro dice 'neighborhood celebrity' (celebridad del barrio), mientras que Media usa 'local celebrity'; se conservó cada uno.",
+  "Rockerboy: el libro no indica penalización por fallar la tirada de convertir gente en fans; solo la restricción de pedir el mismo favor durante una semana tras fallar un favor.",
+  "Lawman: el Core no detalla el equipo individual de cada miembro más allá del resumen por grupo (armas, armadura, vehículo); no se inventó nada más. Rango 9 (C-SWAT) tiene SP 18 y Combat Number 15, y Rango 10 SP 11 y Combat Number 14, tal como figura.",
+  "Folios: la hoja no imprime el Rango de Role Ability; la conversión Thorn -> Charismatic Impact 4 y Connect -> Operator 4 es decisión de Giuliano, no del libro. Las stats (Luck/HP/Death Save/umbral) del Folio se leyeron por orden de extracción y ya fueron validadas por fórmula en cemk-creation.json; Luck no tiene fórmula de comprobación.",
+  "Folios: la armadura aparece abreviada como 'L Armorjack'; la capa oculta 'Kevlar 7/7 + Poor Shotgun + VH Pistol' se ignoró según indicación; el Carnage de Thorn (Poor Quality) viene tal cual de cemk-creation.json (startingAllocation se copia de ese archivo).",
+  "Folios: Thorn tiene +2 en Acting, Play Instrument y Wardrobe & Style (cyberware/gear), distinto del +4 de Role Ability; el +4 social de Thorn NO está incluido en las bases de la ficha, el +4 de Trading de Connect SÍ.",
+  "Páginas verificadas: RB p.25 (ajustes de rol) = PDF 26; RB p.26 (Expanded Availability) = PDF 27; Core pp.144-161 = PDF 145-162; Folios Thorn p.21 y Connect p.9 (páginas PDF)."
+ ]
+}
