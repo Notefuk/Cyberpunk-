@@ -6,27 +6,26 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
-**Última actualización**: [Claude Code · 2026-10-22] v4.9.2 a medias, ver Traspaso.
-**Versión de la app**: v4.9.1 (en `main`, squash 839d76e, PR #25; publicada en gh-pages y verificada en vivo)
+**Última actualización**: [Claude Code · 2026-10-23] v4.9.2 terminada en su rama.
+**Versión de la app**: v4.9.2 lista en la rama `claude/v4.9.2-roles-combate`. `main` = v4.9.1, publicada.
 **Plan activo**: plan 8 (`docs/plans/plan8-roles-core-cemk.md`, roles y rangos Core + CEMK combinados; v4.9.0-v4.9.3). Después: v4.9.4 Modo Novato (ex v4.8.3 del plan 7) y luego vehículos/Black Chrome. En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
 - [Claude Code · 2026-10-22] v4.9.0 Datos de roles por rango (plan 8) MERGEADA (PR #24) y PUBLICADA. Siguiente: v4.9.1 motor de roles (`engine/roleRules.ts`: NET Actions por rango, DV de Quickhack, mejor Reach, costos de IP), avance con IP (IP nuevos en 0, modo GM), quitar el selector +4 del creador, reparto inicial de los Folios aplicado a la ficha y migración de persistencia v4, en rama `claude/v4.9.1-*`. Datos en `ROLE_RANKS.roles.<Rol>`; reglas ya decididas en discrepancias 24-37.
 - [Claude Code · 2026-10-22] v4.9.1 (plan 9) MERGEADA (PR #25) y PUBLICADA. Siguiente: v4.9.2 herramientas de rol de combate (Solo en el HUD, Netrunner con `engine/roleRules.ts`, Medtech con Speedheal híbrido, Nomad con Moto). Pendiente previo: desborde horizontal de Street Lab en celular (ya estaba en v4.9.0).
-- [Claude Code · 2026-10-22] v4.9.2 EN CURSO en la rama `claude/v4.9.2-roles-combate`, plan `docs/plans/plan10-v492-roles-combate.md` (decisiones de Giuliano: Round, Iniciativa/Perception, reloj de partida, vehículos genéricos del Core, síntesis al Core, tabla de Críticos elegible Core 2d6/CEMK 1d6 = discrepancia 20, tratamiento completo con Medtech tirando por otros, estabilización). Hecho: datos (JSON + generados), motores puros `engine/medicalRules.ts` y `engine/combatAwareness.ts`, `getInterfaceRank`/`medicalTechLevel` en roleRules, stores `gameClockStore`, `rulesSettingsStore`, Round en `useCombatStore` y acciones sobre otra ficha (219 tests). Corregido: Medical Tech = Pharmaceuticals + Cryosystem (Core p.150); Seriously Wounded = menos de la mitad (Core p.220); el d10 de Iniciativa no explota (Core pp. 126, 168). Siguiente: UI (HUD, MedtechTreatmentPanel, NetAndRolesDeck, StreetLab Speedheal, RedChromeCargo).
+- [Claude Code · 2026-10-23] v4.9.2 (plan 10) TERMINADA y verificada (tsc, 222 tests, build, navegador) en la rama `claude/v4.9.2-roles-combate`. Falta: confirmar con Giuliano Damage Deflection después de armadura; PR, merge y gh-pages. Siguiente: v4.9.3 herramientas de rol sociales.
 - [Claude Code · 2026-10-22] Prueba de creación de PJs (sonda del motor: 10 roles × 2 eras × Streetrat/Edgerunner × 2 lifepaths, 7 Folios y 5 Easy Mode; y un Nomad 2077 en el wizard del navegador). HP, SW, Death Save, Humanidad y dinero dan bien. Encontrado: (1) [ARREGLADO en v4.9.0, verificado en navegador con Nomad y Rockerboy] BUG lifepath Core de rol: las tablas condicionales se exigen y se tiran todas aunque no apliquen (compañero de Netrunner/Tech/Medtech/Fixer con "Trabajás solo"; Nomad tierra, aire y mar a la vez; "Why Did You Leave?" del Rockerboy); "Tirar todo" no llena las tablas "a elección" y no avisa (`engine/characterCreation.ts` validateLifepath ~L871 y `LifepathStep.tsx`). (2) DUDA para Giuliano: en 2077 el Fixer y el Exec conservan el Internal Agent (ciberware, Core p.117) aunque el Neuroport trae el Agent (RB pp. 35-36). (3) Menor: la nota del Folio (p. ej. Wrench) se muestra en la pestaña de rol de cualquier Nomad, no solo del Folio. (4) Menor: munición "Incendiary Shotgun Shell" del Medtech sin ID en el catálogo.
 - [Claude Code · 2026-10-22] Cierre de v4.9.0 (plan de cierre aprobado, en `~/.claude/plans/cryptic-juggling-stonebraker.md`): Giuliano decidió las dudas 24-33 y 4 nuevas (Internal Agent y Biomonitor fuera en 2077; nota del Folio solo en su ficha; agregar Incendiary Shotgun Shell). TODO HECHO y verificado (tsc, 156 tests, build, sonda y navegador): Neuroport cubre Internal Agent y Biomonitor (alternativas "o" elegibles), munición incendiaria mapeada, nota del Folio solo en su ficha, discrepancias 24-37 y `doubts` anotadas. Falta: PR, merge y gh-pages.
 
 ## Traspaso
 
-- Cierra: [Claude Code · 2026-10-22] (Giuliano sin cuota, sigue mañana).
-- Rama: `claude/v4.9.2-roles-combate`, último commit "v4.9.2 WIP: UI a medias" (pusheada). `main` = v4.9.1 publicada.
-- Hecho y verificado: datos (Críticas CEMK, vehículos Core), `engine/medicalRules.ts`, `engine/combatAwareness.ts`, `getInterfaceRank`/`medicalTechLevel`, stores (`gameClockStore`, `rulesSettingsStore`, Round en `useCombatStore`, acciones sobre otra ficha), componentes nuevos `features/combat/GameClockBar.tsx`, `features/combat/CritTableSelector.tsx`, `features/netroles/MedtechTreatmentPanel.tsx`. tsc pasa.
-- A medias (workers cortados a mitad, SIN auditar): `CombatHudView.tsx` (Round, Iniciativa/Perception, Damage Deflection, Spot Weakness, Fumble Recovery + `combatEngine.ts` opts y `combatEngineFumble.test.ts`, Netrunner, montar CritTableSelector y MedtechTreatmentPanel en heridas) y `NetAndRolesDeckView.tsx` (Netrunner, síntesis al Core, Moto, motorpool, catálogo de vehículos Core) + `StreetLabView.tsx` Speedheal con reloj + `RedChromeCargoView.tsx` getInterfaceRank. Siguiente paso exacto: revisar `git diff` de esos 5 archivos contra los ítems a-g (HUD) y 1-7 (NetAndRoles) de las specs, completar lo que falte, `npm test` y `npm run build`.
-- Arreglos pendientes en MedtechTreatmentPanel: bloquear Surgery a no-Medtech también en las pestañas "Genérica" y "De la tabla"; la nota "inconsciente 1 minuto" usa `patient.era`, usar `useCombatStore.era`.
-- Después: verificación en navegador (lista del plan 10 + 375 px), registrar discrepancia 20 como decidida, changelogs (md + in-app con author), PR, merge, gh-pages.
-- Preguntas abiertas para Giuliano: Damage Deflection (Core p.146 "decrease the first damage you take this Round") implementado DESPUÉS de armadura (daño al HP); confirmar. Revocar el token de GitHub del remote `origin`.
+- Cierra: [Claude Code · 2026-10-23].
+- Rama: `claude/v4.9.2-roles-combate` (pusheada). `main` = v4.9.1 publicada.
+- A medias: nada. v4.9.2 terminada; falta PR, merge y gh-pages.
+- Siguiente paso exacto: PR de v4.9.2, merge, publicar; después v4.9.3 (roles sociales).
+- Pendientes previos: desborde horizontal en celular (Street Lab, vista de roles, barra del centro del HUD con módulos). Range Upgrade del cyberdeck (Core p.208) no existe en el modelo de ficha: el alcance por defecto es 6 m o 50 m con Cyberdeck Port.
+- Preguntas abiertas para Giuliano: Damage Deflection después de armadura (Core p.146), confirmar. Revocar el token de GitHub del remote `origin`.
 
 ## Último trabajo terminado
 

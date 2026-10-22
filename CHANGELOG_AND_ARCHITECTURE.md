@@ -247,6 +247,17 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.2] - 2026-10-23 (Roles de combate) [Claude Code · 2026-10-23]
+* **Category**: Roles (plan 10 = v4.9.2 del plan 8, con las decisiones de Giuliano del 2026-10-22).
+* **Datos**: `data/creation-src/cemk-critical-injuries.json` (RB p.13, 1d6, Quick Fix y Treatment estructurados) y `core-vehicles.json` (14 vehículos genéricos, Core pp. 189-191, con rango de Family Motorpool p.162, y 19 mejoras de Nomad pp. 163-165), generados a `data/creation/`.
+* **Motor puro**: `engine/medicalRules.ts` (opciones de tratamiento por herida, estabilización Core p.222, Surgery solo Medtech, Treatment no a uno mismo, síntesis Core pp. 149-150, tirada CEMK 1d6), `engine/combatAwareness.ts` (Core p.146), `getInterfaceRank` y `medicalTechLevel` en `roleRules.ts`, `createInitialAttackRoll(..., { ignoreCriticalFailure })` para Fumble Recovery.
+* **Stores**: `gameClockStore` (`cpr_game_clock_v1`: día, Beat, registro de Speedheal; "Nuevo día" vence los Quick Fix), `rulesSettingsStore` (`cpr_rules_settings_v1`: tabla de Críticas), Round en `useCombatStore`, acciones sobre cualquier ficha (`inflictSpecificInjury`, `applyQuickFix`, `applyTreatment`, `expireQuickFixes`, `stabilizeCharacter`, `adjustHpFor`, `spendEurodollarsFor`).
+* **UI**: barra de Round, Iniciativa, Perception y reloj en el HUD; efectos del Solo; NET Actions y Quickhacks por rango y era; `CritTableSelector`; `MedtechTreatmentPanel` (en el HUD y en la sección Medtech); síntesis al Core; Speedheal con reloj; maniobra con Moto; Motorpool familiar y catálogo de vehículos del Core; Interface real en Red Chrome Cargo.
+* **Correcciones canon**: Medical Tech = Pharmaceuticals + Cryosystem (Core p.150); Seriously Wounded = menos de la mitad (Core p.220); el d10 de Iniciativa no explota (Core pp. 126, 168). Discrepancia 20 decidida.
+* **Lectura a confirmar con Giuliano**: Damage Deflection ("decrease the first damage you take this Round", Core p.146) se aplica después de la armadura, sobre el daño al HP.
+* **Verificación**: tsc, 222 tests y build. Navegador: Iniciativa de Hardpoint +4; Damage Deflection 1 en el primer daño del Round y no en el segundo, y de nuevo tras "Siguiente Round"; Crítica CEMK; Insurance trata con Surgery una herida de Hardpoint; Speedheal bloqueado en el mismo Beat; Bluescreen con 3 NET Actions y DV 12; Wrench con Drive + Moto 4 y motorpool limitado a Moto 4.
+* **Pendientes previos (no de esta versión)**: en celular, desborde horizontal en Street Lab, en la vista de roles y en la barra del centro del HUD cuando tiene módulos.
+
 ### [v4.9.1] - 2026-10-22 (Avance con IP) [Claude Code · 2026-10-22]
 * **Category**: Roles (plan 9 = v4.9.1 del plan 8, más el contador de IP y el panel de skills pedidos por Giuliano).
 * **Motor puro** `engine/roleRules.ts`: `ipCostSkillLevel`, `ipCostRoleRank`, `checkSkillRaise`, `checkRoleRankRaise` (Core p.410), `netActionsForInterface` (Core p.197), `maxQuickhackDv`, `neuroportFirewallDv`, `canUseQuickhacks` (RB pp. 25-26), `jackInRangeM` (Core p.208, RB pp. 16, 36), `fixerReach` (Core pp. 159-161 contra RB p.25), `getRoleRankInfo`, `canApplySpeedheal` (Core p.150, Folios p.17), Maker y Medicine (Core pp. 147-150). `engine/ipLedger.ts`: `summarizeIpLog`.

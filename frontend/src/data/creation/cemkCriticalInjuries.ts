@@ -40,7 +40,7 @@ export const CEMK_CRITICAL_INJURIES: CemkCriticalInjuriesSrc = {
     {
       "roll": 2,
       "name": "Broken Arm",
-      "effectEs": "El brazo roto no se puede usar. Soltas de inmediato cualquier objeto que tengas en la mano de ese brazo.",
+      "effectEs": "El brazo roto no se puede usar. Soltás de inmediato cualquier objeto que tengas en la mano de ese brazo.",
       "quickFix": [
         {
           "skill": "Paramedic",
@@ -194,7 +194,7 @@ export const CEMK_CRITICAL_INJURIES: CemkCriticalInjuriesSrc = {
     {
       "roll": 4,
       "name": "Damaged Ear",
-      "effectEs": "Cada vez que te movas mas de 4 m/yds a pie en un Turno, no podes realizar una Accion de Movimiento en tu proximo Turno. Ademas, -2 a los Chequeos de Percepcion que involucren el oido.",
+      "effectEs": "Cada vez que te movas mas de 4 m/yds a pie en un Turno, no podés realizar una Accion de Movimiento en tu proximo Turno. Ademas, -2 a los Chequeos de Percepcion que involucren el oido.",
       "quickFix": [
         {
           "skill": "Paramedic",
@@ -213,7 +213,7 @@ export const CEMK_CRITICAL_INJURIES: CemkCriticalInjuriesSrc = {
     {
       "roll": 5,
       "name": "Crushed Windpipe",
-      "effectEs": "No podes hablar. La Penalizacion de Death Save aumenta en 1.",
+      "effectEs": "No podés hablar. La Penalizacion de Death Save aumenta en 1.",
       "quickFix": [],
       "treatment": [
         {

@@ -60,7 +60,7 @@ import { getInterfaceRank, netActionsForInterface, canUseQuickhacks, medicalTech
 import { SYNTHESIS_DV, SYNTHESIS_MATERIALS_EB, synthesisDoses, canSynthesize, rollMedicalCheck } from '../../engine/medicalRules';
 import { CORE_VEHICLES } from '../../data/creation';
 import type { CoreVehicleEntry } from '../../data/creation/types';
-import { resolveSkillKey } from '../../data/characterCreationData';
+import { resolveSkillKey, normalizeCanonSkillName } from '../../data/characterCreationData';
 import { GameClockBar } from '../combat/GameClockBar';
 import { MedtechTreatmentPanel } from './MedtechTreatmentPanel';
 
@@ -493,9 +493,17 @@ export const NetAndRolesDeckView: React.FC = () => {
     const refStat = character.stats.REF || 6;
     const skillName = veh.category === 'land' ? 'Drive Land Vehicle' : veh.category === 'sea' ? 'Pilot Sea Vehicle' : 'Pilot Air Vehicle';
     const skillRef = resolveSkillKey(skillName);
+    // Las fichas guardan claves de varias formas ('Drive Land Vehicle', 'drivelandvehicle'): se comparan compactas.
+    const compactSkill = (x: string) => normalizeCanonSkillName(x).replace(/[^a-z0-9]/g, '');
+    const wanted = compactSkill(skillName);
+    const byCompact = (rec: Record<string, number> | undefined) =>
+      Object.entries(rec ?? {}).find(([k]) => compactSkill(k) === wanted)?.[1];
     const skillLevel = (skillRef
       ? (skillRef.kind === 'combat' ? character.skills?.[skillRef.key] : character.generalSkills?.[skillRef.key])
-      : character.generalSkills?.[skillName]) ?? 0;
+      : character.generalSkills?.[skillName])
+      ?? byCompact(character.generalSkills)
+      ?? byCompact(character.skills as unknown as Record<string, number>)
+      ?? 0;
     const motoRank = character.role === 'Nomad' ? (character.roleRank || 0) : 0;
     const total = d.value + refStat + skillLevel + motoRank;
     const extra = d.extra ? (d.natural === 10 ? ` +${d.extra}` : ` -${d.extra}`) : '';
