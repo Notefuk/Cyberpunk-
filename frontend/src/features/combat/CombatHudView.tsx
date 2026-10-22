@@ -6968,7 +6968,7 @@ export const CombatHudView: React.FC = () => {
                         <span className="text-white font-bold">{activeChar?.eurodollars ?? 0} €$</span>
                         <span className="text-slate-500">|</span>
                         <Award className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-300 font-bold">{activeChar?.improvementPoints ?? 120} IP</span>
+                        <span className="text-emerald-300 font-bold">{activeChar?.improvementPoints ?? 0} IP</span>
                       </div>
 
                       {/* Botones de ajuste de IP */}

@@ -1422,7 +1422,7 @@ const CANON_ROLE_BOOK_NAME: Record<string, CoreRoleName> = {
   media: 'Media'
 };
 
-const normalizeCanonSkillName = (name: string): string =>
+export const normalizeCanonSkillName = (name: string): string =>
   name
     .toLowerCase()
     // Core pp. 86-87: "Electronics/Security Tech (x2)" marca el doble de nivel; "(choose 1)" es la especialización a elegir.
