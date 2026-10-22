@@ -31,6 +31,23 @@ Páginas: Core = Core Rulebook v1.24, página impresa. RB = CEMK Rule Book, pág
 | 14 | Lifepath CEMK, tablas de relación | Las dos tablas "The relationship" (RB p.23) no tienen rótulo. El ejemplo de RB p.24 dice que un 6 da "enemigo vuelto amigo", pero en la tabla ese resultado es el 5 | **Decidida**: gana la tabla impresa (5 = enemigo vuelto amigo, 6 = afición compartida); el ejemplo de p.24 queda anotado como error del libro. La asignación Amigos/Enemigos por contenido se mantiene |
 | 15 | Arma de Wrench | La Kang Tao L-69 Zhuo imprime 3d6 en el bloque del arma y 4d6 en la tabla de ataques (Folios) | **Decidida**: se muestran ambos (3d6 del bloque y 4d6 de la tabla de ataques y el modo Shell), con nota en la ficha |
 
+## Roles y rangos (plan 8, v4.9.0) [Claude Code · 2026-10-22]
+
+Decididas por Giuliano al aprobar el plan 8: rangos del Core 1-10 más los ajustes de 2070s (RB p.25); sin versión CEMK +4; NET Actions del Core (p.197); Fixer con el mejor Reach; Speedheal híbrido; Thorn "Solo Core". Lo que sigue son lecturas que el libro no deja claras. Se toma la indicada y queda anotada; si Giuliano decide otra cosa, se cambia.
+
+| # | Tema | Detalle | Lectura tomada |
+|---|---|---|---|
+| 24 | Tope por especialidad de Maker | El Core (pp. 147-149) dice que cada subida da 1 rango en 2 especialidades distintas; no imprime un tope | Ninguna especialidad supera el rango de Maker (se deduce de la regla) |
+| 25 | Field Expertise contra el Folio de Maven | Field Expertise 4 suma a Basic Tech, Weaponstech y las Tech de vehículos, además de Cybertech y Electronics/Security Tech (Folios p.25) | La conversión da más que el Folio; se acepta porque es la regla del Core |
+| 26 | Pharmaceuticals da Medical Tech | En el Core, 1 punto en Pharmaceuticals da también 1 nivel de Medical Tech (pp. 149-150); el Folio de Insurance no lo lista | Insurance convertida tiene Medical Tech 1 |
+| 27 | Puntos de Medicine al rango 1 | El Core no dice si el rango 1 ya trae su punto | 1 punto por rango (N puntos en rango N) |
+| 28 | Reach del Fixer no es monótono | Core p.160: R5-6 Night Market hasta Super Luxury una vez al mes, R7-8 Very Expensive, R9 Luxury, R10 Super Luxury | Se transcribe tal cual; con el mejor Reach en 2077 (RB p.25) el problema desaparece desde R7 |
+| 29 | Believability de Media | Core pp. 151-153: "X de 10" con 1d10, sin decir la comparación | Éxito con 1d10 ≤ Believability más bonos |
+| 30 | Empate en el Loyalty Save del Exec | Core pp. 153-157: "tirar 1d6 por debajo de la Loyalty" | Literal: el empate falla |
+| 31 | Company Netrunner del Exec | Core pp. 153-157: el Cyberdeck dice 7 slots y lista 6 programas | Se transcribe tal cual, sin inventar el séptimo |
+| 32 | Exec rango 4 | El Core no da beneficio en R4 (pp. 153-157) | En 2045 no hay nada; en 2077 queda el ajuste Expensive (RB p.25) |
+| 33 | Alcance de Jack In en 2077 | RB p.16 dice 50 m sin condición; RB p.26 da 6 m, 8 m "con el hardware adecuado" (sin nombrarlo) o 50 m con Cyberdeck Port | 6 m sin hardware, 50 m con Cyberdeck Port; los 8 m quedan como texto, porque no se sabe qué hardware los da |
+
 ## Combate (van a un plan aparte, después del plan 7)
 
 No se tocan en el plan 7. Se deciden una por una con Giuliano en el plan de combate.
