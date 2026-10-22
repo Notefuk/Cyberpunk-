@@ -8,7 +8,7 @@
 
 **Última actualización**: [Claude Code · 2026-10-23] v4.9.3.1 mergeada y publicada.
 **Versión de la app**: v4.9.3.1 (en `main`, squash 5edf3c6, PR #28; publicada en gh-pages y verificada en vivo)
-**Plan activo**: plan 8 (`docs/plans/plan8-roles-core-cemk.md`, roles y rangos Core + CEMK combinados; v4.9.0-v4.9.3). Después: v4.9.4 Modo Novato (ex v4.8.3 del plan 7) y luego vehículos/Black Chrome. En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
+**Plan activo**: plan 7, Modo Novato (v4.9.4, por planificar como plan 12). Estado de todos los planes y pendientes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0 [Claude Code · 2026-10-23]. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
@@ -72,12 +72,11 @@
 
 ## Próximos pasos
 
-1. Plan 5 v4.7.0: enemigos canon.
-   - Danger Gal: 16 facciones y ~118 fichas de PNJ (pp. 10-143), más el New Gear (pp. 144-149).
-   - Hardened: 4 Mooks, 6 Lieutenants, 6 Mini-Bosses y el Punknaught.
-   - Red Chrome Cargo, las armas CEMK 2077 (verificarlas en el zip del Mission Kit) y la errata del Security Officer.
-2. Plan 5 v4.8.0: Black Chrome completo (~160 ítems, más Black Chrome+ de IR4) y catálogo de vehículos. Después, v4.8.1: totales reales en los docs.
-3. Después del plan 5: modo Settings, GM Master Screen (`FixerDeckView.tsx`) y libros nuevos (IR Vol. 1-3, Gang Guide, Woodchipper…).
+[Claude Code · 2026-10-23] Orden acordado; el detalle está en `PROJECT_STATUS_AND_ROADMAP.md`, sección 0.
+1. v4.9.4 Modo Novato (plan 7): plan 12, lo siguiente.
+2. Black Chrome completo + catálogo de vehículos, y docs con totales reales (plan 5).
+3. v4.7.1 Danger Gal y v4.7.2 New Gear (plan 6, en pausa).
+4. Sin plan: combate (discrepancias 16-19 y 21-23), fichas entre dispositivos, modo Settings y GM Master Screen, libros nuevos.
 
 ## Notas y bloqueos
 

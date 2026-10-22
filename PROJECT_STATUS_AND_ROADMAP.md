@@ -1,10 +1,52 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v4.6.0 OPERATIVO`**  
-> **FECHA DE CORTE**: [Claude Code · 2026-10-21]  
-> **PLAN ACTIVO**: Plan 4 (`docs/plans/plan4-ripperdoc-visual-2077.md`, Ripperdoc visual 2077) cerrado en v4.6.0. Plan 2: `docs/plans/plan2-auditoria-expansiones.md` (contenido canon de expansiones; fases 1 a 4 hechas, v4.3.0 a v4.5.0; siguiente v4.5.1 Cyberfists of Fury). Plan 1 terminado en v4.2.1.  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v4.9.3.1 OPERATIVO`**  
+> **FECHA DE CORTE**: [Claude Code · 2026-10-23]  
+> **PLAN ACTIVO**: plan 7, Modo Novato (v4.9.4). Estado de todos los planes en la sección 0.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
+
+---
+
+## 🧭 0. Planes y estado vivo [Claude Code · 2026-10-23]
+
+> Esta sección es la vista general actualizada. Las secciones de abajo son históricas (hasta v4.0.x). El detalle de cada plan está en `docs/plans/` y el avance paso a paso en `CHECKPOINT.md`.
+
+| Plan | Qué es | Versiones | Estado |
+|---|---|---|---|
+| 1. `plan1-auditoria-core.md` | Arreglos de la auditoría del Core | v4.0.3 a v4.2.1 | ✅ Terminado |
+| 2. `plan2-auditoria-expansiones.md` | Contenido canon de CEMK, Interface RED y Going Metal | v4.3.0 a v4.5.0 | ✅ Terminado |
+| 3. (perdido) | Enemigos | — | Lo reemplazó el plan 6 |
+| 4. `plan4-ripperdoc-visual-2077.md` | Ripperdoc visual estilo 2077 | v4.6.0 | ✅ Terminado |
+| 5. `plan5-canon-audit.md` | Canonizar el contenido inventado | v4.6.1, v4.6.2 y v4.7.0 hechas | ⏳ Faltan Black Chrome con el catálogo de vehículos y los docs con totales reales |
+| 6. `plan6-enemigos-canon-cemk.md` | Enemigos canon porteados a CEMK | v4.7.0 hecha | ⏸️ En pausa: v4.7.1 Danger Gal y v4.7.2 New Gear |
+| 7. `plan7-creador-personajes.md` | Creador de personajes | v4.8.0 a v4.8.2 hechas | ⏳ Falta el Modo Novato (ex v4.8.3, ahora v4.9.4) |
+| 8. `plan8-roles-core-cemk.md` | Roles y rangos Core + CEMK | v4.9.0 a v4.9.3 | ✅ Terminado (detallado en los planes 9, 10 y 11) |
+| 9. `plan9-v491-motor-roles-ip.md` | Motor de roles, avance con IP y modo GM | v4.9.1 | ✅ Terminado |
+| 10. `plan10-v492-roles-combate.md` | Herramientas de rol de combate | v4.9.2 | ✅ Terminado |
+| 11. `plan11-v493-roles-sociales.md` | Herramientas de rol sociales y de oficio | v4.9.3 + arreglo v4.9.3.1 | ✅ Terminado |
+
+**Pendiente de planes aprobados (5 versiones):**
+1. **v4.9.4 Modo Novato** (plan 7): guía por paso, checklist de lo que falta y resumen final antes de crear. Es lo siguiente.
+2. **Black Chrome completo + catálogo de vehículos** (plan 5): hay 31 de unos 160 ítems, más el Black Chrome+ de IR4. Los vehículos tienen que ir al pack y al Compendium. Los 14 genéricos del Core ya están en la vista de roles desde v4.9.2.
+3. **Docs con totales reales** (plan 5): CONTENT_CHECKLIST, README y STATUS.
+4. **v4.7.1 Danger Gal** (plan 6, en pausa): 118 fichas canon; se borran las 95 inventadas.
+5. **v4.7.2 New Gear de Danger Gal** (plan 6, en pausa), pp. 144-149.
+
+**Sin plan todavía (unos 4 planes):**
+- **Combate**: discrepancias 16-19 y 21-23 (Evasion contra disparos, Aimed Shot, umbral de Seriously Wounded, Mortally Wounded, Voice Stress Analyzer, costo y HL del ciberware que está en los dos libros, y si las armas del Core usan Power/Smart/Tech).
+- **Fichas entre dispositivos**: sincronización (ver la sección de abajo).
+- **Modo Settings y GM Master Screen** (`FixerDeckView.tsx`).
+- **Libros nuevos**: Interface RED Vol. 1-3 (el 3 necesita OCR), Gang Guide, Woodchipper, Must-Have Cyberware y Midnight with the Upload. Probablemente un plan por libro.
+
+**Arreglos chicos anotados:**
+- La mejora de armadura del Maker usa siempre 100 €$ y DV 17 (la ficha no guarda el precio de la armadura).
+- El bestiario no trae Trading (el Haggle contra un enemigo usa 0).
+- Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y barra del centro del HUD.
+- El Range Upgrade del cyberdeck (Core p.208) no está en el modelo de ficha.
+- Grafted Muscle no aplica su +2 a BODY (es solo texto).
+- Los docs mencionan `characterLifepathData.ts` / `ROLE_SPECIFIC_LIFEPATHS`, que no existen.
+- Seguridad: revocar el token de GitHub de la URL del remote `origin` (lo hace Giuliano).
 
 ---
 
