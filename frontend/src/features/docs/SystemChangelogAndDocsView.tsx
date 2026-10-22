@@ -26,6 +26,36 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.0',
+    date: '2026-10-22',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Roles',
+    title: 'Roles por rango: una sola fuente con el Core y los ajustes de CEMK',
+    summary: 'Plan 8, bloque 1: los 10 roles tienen sus 10 rangos del Core con página, los ajustes de 2070s de CEMK por rango y la conversión de los 7 Folios. La ficha y la guía de roles leen ahora de los mismos datos.',
+    highlights: [
+      'Los 10 roles con sus rangos 1 a 10 del Core, las opciones de cada habilidad y sus tablas, todo con libro y página.',
+      'Ajustes de 2070s por rango (CEMK RB p.25): Quickhacks del Netrunner por rango, Reach del Fixer, vehículos del Nomad y objetos Expensive desde rango 4.',
+      'Cada Folio de CEMK dice qué trae y en qué se convierte en la habilidad completa del Core (por ejemplo, Hardpoint: +4 a Iniciativa pasa a Combat Awareness 4 en Initiative Reaction).',
+      'Netrunner: la progresión ya es la del Core y las NET Actions siguen la tabla 2/3/4/5 (Core p.197). Se quitó la escalera equivocada.',
+      'Self-ICE de los PNJ corregido: todos los Passwalls usan el DV del total instalado (2 Self-ICE = dos Passwalls DV8, CEMK RB p.36).',
+      '10 dudas del libro anotadas en el registro de discrepancias (24 a 33). 146 tests.'
+    ],
+    filesTouched: [
+      'data/creation-src/role-ranks-combat.json',
+      'data/creation-src/role-ranks-social.json',
+      'scripts/gen_creation.py',
+      'frontend/src/data/creation/roleRanks.ts',
+      'frontend/src/data/roleProgression.ts',
+      'frontend/src/data/weaponAndCyberwareTooltips.ts',
+      'frontend/src/data/netAndRolesData.ts',
+      'frontend/src/engine/cemkPort.ts',
+      'frontend/src/engine/__tests__/roleRanks.test.ts',
+      'docs/canon-audit/v4.9.0-roles.md'
+    ],
+    metricsBadge: 'v4.9.0 • Roles por rango • Plan 8'
+  },
+  {
     version: 'v4.8.2',
     date: '2026-10-22',
     author: 'Claude Code',
@@ -806,6 +836,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.0': true,
     'v4.8.2': true,
     'v4.8.1': true,
     'v4.8.0': true,

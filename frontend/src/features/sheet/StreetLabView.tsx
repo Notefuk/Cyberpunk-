@@ -3470,7 +3470,7 @@ export const StreetLabView: React.FC = () => {
                 {/* Resumen & Mecánicas de la Habilidad */}
                 <div className="p-2.5 bg-[#171924] rounded border border-[#222738] space-y-1.5 text-xs">
                   <div className="flex items-center justify-between text-[11px] font-mono-code text-slate-300">
-                    <span className="text-purple-300 font-bold">Estadística Asociada: {roleData.statUsed}</span>
+                    <span className="text-purple-300 font-bold">Fuente: {roleData.statUsed}</span>
                     <span className="text-slate-400">{roleData.summary}</span>
                   </div>
                   <p className="text-[11px] text-slate-300 leading-relaxed font-sans border-t border-[#222738] pt-1.5">

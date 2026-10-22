@@ -247,6 +247,15 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.0] - 2026-10-22 (Roles por rango) [Claude Code · 2026-10-22]
+* **Category**: Roles (plan 8, bloque 1).
+* **Datos**: `data/creation-src/role-ranks-combat.json` (Solo, Netrunner, Tech, Medtech, Nomad) y `role-ranks-social.json` (Rockerboy, Fixer, Media, Exec, Lawman y Expanded Availability). Por rol: habilidad, 10 rangos, opciones, tablas, ajustes 2070s (RB p.25) y conversión del Folio con su reparto inicial.
+* **Generador**: `scripts/gen_creation.py` produce `frontend/src/data/creation/roleRanks.ts` (`ROLE_RANKS`, tipos `RoleRanksSrc` en `types.ts`).
+* **Fuente única**: `frontend/src/data/roleProgression.ts` deriva `ROLE_ABILITIES_COMPLETE_PROGRESSION` y `ROLES_INTERACTIVE_GUIDES`; se borraron los literales a mano (Netrunner solo CEMK, escalera de NET Actions equivocada, cita duplicada). En la ficha, "Estadística Asociada" pasa a "Fuente".
+* **Self-ICE** (`engine/cemkPort.ts`): N Passwalls, todos con el DV del total (RB pp. 16, 36).
+* **Docs**: `docs/canon-audit/v4.9.0-roles.md` y discrepancias 24-33. Thorn: "Solo Core" (decisión de Giuliano).
+* **Verificación**: tsc, 146 tests (8 nuevos en `roleRanks.test.ts`) y build; navegador: guía del Netrunner con la progresión del Core, sin errores de consola.
+
 ### [v4.8.2] - 2026-10-22 (Wizard funcional) [Claude Code · 2026-10-22]
 * **Category**: Creador de personajes (plan 7, bloque 3).
 * **Motor puro** `frontend/src/engine/characterCreation.ts` (sin React ni storage): `CreatorDraft` v1, métodos (`applyStreetratRow`, `applyEdgerunnerRoll`), puntos (62 STAT, 86 skills, ×2), lifepath CEMK/Core (`getLifepathTables`, `rollLifepathTable`, `buildCharacterLifepath` con `LIFEPATH_FIELD_MAP`), paquete de rol (`getRolePackage`), dinero (`getStartingMoney`, Running Out of Cash), Humanidad (`getCyberwareList`, `computeDerived`), validación (`validateStep`, `getMissingChecklist`) y `buildCharacterSheetFromDraft`. 36 tests.

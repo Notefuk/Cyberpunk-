@@ -491,3 +491,29 @@ export interface CemkCreationSrc {
   doubts: string[];
   pageNote: string;
 }
+
+// Rangos de rol 1-10 (plan 8, v4.9.0). [Claude Code · 2026-10-22]
+export interface RoleRankSource { book: string; page: number | string; pageType?: string; pages?: number[] }
+export interface RoleRankStep { rank: number; unlocksEs: string[]; tierFromRank?: number; tierToRank?: number }
+export interface RoleOptionCost { points: number; effectEs: string }
+export interface RoleOption { id: string; name: string; costs: RoleOptionCost[]; effectEs: string; dvEs?: string; netActionCost?: string; minMotoRank?: number; appliesTo?: string }
+export interface RoleTweak2077 { fromRank: number | null; textEs: string; source: RoleRankSource }
+export interface RoleFolioConversion { pregen: string; folioTextEs: string; source: RoleRankSource; convertsToEs: string; startingAllocation: Record<string, unknown> }
+export interface RoleRankData {
+  ability: string;
+  source: RoleRankSource;
+  rulesEs: string;
+  ranks: RoleRankStep[];
+  options: RoleOption[];
+  tables: Record<string, unknown>;
+  tweak2077: RoleTweak2077[];
+  cemk?: { textEs: string; source: unknown; data: unknown } | null;
+  folio: RoleFolioConversion | null;
+}
+export type RoleRankRoleName = 'Solo' | 'Netrunner' | 'Tech' | 'Medtech' | 'Nomad' | 'Rockerboy' | 'Fixer' | 'Media' | 'Exec' | 'Lawman';
+export interface RoleRanksSrc {
+  pageConvention: unknown;
+  general: { expandedAvailability: { textEs: string; source: RoleRankSource }; roleTweaksNoteEs: string };
+  roles: Record<RoleRankRoleName, RoleRankData>;
+  doubts: string[];
+}
