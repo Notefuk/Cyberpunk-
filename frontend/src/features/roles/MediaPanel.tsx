@@ -14,12 +14,11 @@ import {
 } from '../../engine/socialRoleRules';
 import type { RumorRow, PassiveRumorResult, ActiveRumorResult, BelievabilityResult } from '../../engine/socialRoleRules';
 import type { CharacterSheet, StatKey } from '../../types/cyberpunk';
+import { sheetSkillLevel } from '../../engine/skillLookup';
 
 const ROLE = 'Media';
 const STATS: StatKey[] = ['INT', 'REF', 'DEX', 'TECH', 'COOL', 'WILL', 'LUCK', 'MOVE', 'BODY', 'EMP'];
 const SKILL_PRESETS = ['Library Search', 'Conversation', 'Interrogation', 'Human Perception'];
-
-const compact = (x: string) => x.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 const panelCls = 'chamfer-card bg-slate-900/70 border border-slate-700 p-2 flex flex-col gap-2 min-w-0';
 const titleCls = 'font-tech text-[11px] uppercase tracking-wider text-cyan-300';
@@ -36,16 +35,9 @@ const bandText = (table: BandText[], rank: number): string => {
 };
 
 // Nivel de una skill: skills de ficha (claves compactas) y generalSkills.
+// v4.9.3: también reconoce claves abreviadas de los Folios ('concealreveal'), ver engine/skillLookup.ts.
 function skillLevelOf(char: CharacterSheet, skill: string): number {
-  const k = compact(skill);
-  let level = 0;
-  for (const [sk, sv] of Object.entries((char.skills as unknown as Record<string, number> | undefined) ?? {})) {
-    if (compact(sk) === k && typeof sv === 'number') level = Math.max(level, sv);
-  }
-  for (const [gk, gv] of Object.entries(char.generalSkills ?? {})) {
-    if (compact(gk) === k && typeof gv === 'number') level = Math.max(level, gv);
-  }
-  return level;
+  return sheetSkillLevel(char, skill);
 }
 
 export const MediaPanel: React.FC = () => {

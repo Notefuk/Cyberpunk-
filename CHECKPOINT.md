@@ -6,7 +6,7 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
-**Última actualización**: [Claude Code · 2026-10-23] v4.9.3 mergeada y publicada.
+**Última actualización**: [Claude Code · 2026-10-23] v4.9.3.1 (arreglo de skills de Maven) lista en su rama.
 **Versión de la app**: v4.9.3 (en `main`, squash 0a617c8, PR #27; publicada en gh-pages y verificada en vivo)
 **Plan activo**: plan 8 (`docs/plans/plan8-roles-core-cemk.md`, roles y rangos Core + CEMK combinados; v4.9.0-v4.9.3). Después: v4.9.4 Modo Novato (ex v4.8.3 del plan 7) y luego vehículos/Black Chrome. En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
@@ -25,7 +25,7 @@
 - Rama: `main` @ 0a617c8 + este checkpoint (pusheada). v4.9.3 publicada en gh-pages.
 - A medias: nada.
 - Siguiente paso exacto: planificar v4.9.4 Modo Novato (plan 12), preguntando el alcance a Giuliano antes de codear.
-- Pendientes encontrados: (1) en la ficha guardada de Maven, Electronics/Security Tech vale 0 (el Folio da 6 +4; dato de los premades). (2) La mejora de armadura usa siempre 100 €$ y DV 17. (3) El bestiario no trae Trading. (4) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y barra del centro del HUD. (5) El Range Upgrade del cyberdeck no está en el modelo.
+- Pendientes encontrados: (1) [ARREGLADO en v4.9.3.1, rama `claude/v4.9.3.1-skill-lookup`] Maven mostraba Electronics/Security Tech 0 en el Maker: no era el dato, era la búsqueda de claves abreviadas. (2) La mejora de armadura usa siempre 100 €$ y DV 17. (3) El bestiario no trae Trading. (4) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y barra del centro del HUD. (5) El Range Upgrade del cyberdeck no está en el modelo.
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub del remote `origin`.
 
