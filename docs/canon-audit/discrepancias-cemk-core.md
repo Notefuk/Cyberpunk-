@@ -33,20 +33,29 @@ Páginas: Core = Core Rulebook v1.24, página impresa. RB = CEMK Rule Book, pág
 
 ## Roles y rangos (plan 8, v4.9.0) [Claude Code · 2026-10-22]
 
-Decididas por Giuliano al aprobar el plan 8: rangos del Core 1-10 más los ajustes de 2070s (RB p.25); sin versión CEMK +4; NET Actions del Core (p.197); Fixer con el mejor Reach; Speedheal híbrido; Thorn "Solo Core". Lo que sigue son lecturas que el libro no deja claras. Se toma la indicada y queda anotada; si Giuliano decide otra cosa, se cambia.
+Decididas por Giuliano al aprobar el plan 8: rangos del Core 1-10 más los ajustes de 2070s (RB p.25); sin versión CEMK +4; NET Actions del Core (p.197); Fixer con el mejor Reach; Speedheal híbrido; Thorn "Solo Core". Las de abajo son lecturas que el libro no deja claras; todas las decidió Giuliano el 2026-10-22.
 
-| # | Tema | Detalle | Lectura tomada |
+| # | Tema | Detalle | Decisión |
 |---|---|---|---|
-| 24 | Tope por especialidad de Maker | El Core (pp. 147-149) dice que cada subida da 1 rango en 2 especialidades distintas; no imprime un tope | Ninguna especialidad supera el rango de Maker (se deduce de la regla) |
-| 25 | Field Expertise contra el Folio de Maven | Field Expertise 4 suma a Basic Tech, Weaponstech y las Tech de vehículos, además de Cybertech y Electronics/Security Tech (Folios p.25) | La conversión da más que el Folio; se acepta porque es la regla del Core |
-| 26 | Pharmaceuticals da Medical Tech | En el Core, 1 punto en Pharmaceuticals da también 1 nivel de Medical Tech (pp. 149-150); el Folio de Insurance no lo lista | Insurance convertida tiene Medical Tech 1 |
-| 27 | Puntos de Medicine al rango 1 | El Core no dice si el rango 1 ya trae su punto | 1 punto por rango (N puntos en rango N) |
-| 28 | Reach del Fixer no es monótono | Core p.160: R5-6 Night Market hasta Super Luxury una vez al mes, R7-8 Very Expensive, R9 Luxury, R10 Super Luxury | Se transcribe tal cual; con el mejor Reach en 2077 (RB p.25) el problema desaparece desde R7 |
-| 29 | Believability de Media | Core pp. 151-153: "X de 10" con 1d10, sin decir la comparación | Éxito con 1d10 ≤ Believability más bonos |
-| 30 | Empate en el Loyalty Save del Exec | Core pp. 153-157: "tirar 1d6 por debajo de la Loyalty" | Literal: el empate falla |
-| 31 | Company Netrunner del Exec | Core pp. 153-157: el Cyberdeck dice 7 slots y lista 6 programas | Se transcribe tal cual, sin inventar el séptimo |
-| 32 | Exec rango 4 | El Core no da beneficio en R4 (pp. 153-157) | En 2045 no hay nada; en 2077 queda el ajuste Expensive (RB p.25) |
-| 33 | Alcance de Jack In en 2077 | RB p.16 dice 50 m sin condición; RB p.26 da 6 m, 8 m "con el hardware adecuado" (sin nombrarlo) o 50 m con Cyberdeck Port | 6 m sin hardware, 50 m con Cyberdeck Port; los 8 m quedan como texto, porque no se sabe qué hardware los da |
+| 24 | Tope por especialidad de Maker | El Core (pp. 147-149) dice que cada subida da 1 rango en 2 especialidades distintas; no imprime un tope | **Decidida**: ninguna especialidad supera el rango de Maker |
+| 25 | Field Expertise contra el Folio de Maven | Field Expertise 4 suma a Basic Tech, Cybertech, Electronics/Security Tech, Weaponstech y las 3 Tech de vehículos; el Folio (p.25) resume solo dos | **Decidida**: se aplica completa (el Folio es una versión simplificada) |
+| 26 | Pharmaceuticals da Medical Tech | En el Core, cada punto en Pharmaceuticals da 1 nivel de Medical Tech (pp. 149-150); el Folio de Insurance no lo lista | **Decidida**: Insurance convertida tiene Medical Tech 1 (su Speedheal exige el punto en Pharmaceuticals) |
+| 27 | Puntos de Medicine al rango 1 | El Core no dice si el rango 1 ya trae su punto | **Decidida**: 1 punto por rango (N puntos en rango N) |
+| 28 | Reach del Fixer no es monótono | Core p.160: R5-6 Night Market hasta Super Luxury una vez al mes, R7-8 Very Expensive, R9 Luxury, R10 Super Luxury | Se transcribe tal cual; en 2077 rige el mejor Reach (decisión del plan 8) |
+| 29 | Believability de Media | Core pp. 151-153: "X de 10" con 1d10, sin decir la comparación | **Decidida**: se cree con 1d10 ≤ Believability más bonos; con más, no se cree |
+| 30 | Empate en el Loyalty Save del Exec | Core pp. 153-157: "tirar 1d6 por debajo de la Loyalty" | **Decidida**: el empate falla |
+| 31 | Company Netrunner del Exec | Core pp. 153-157: Cyberdeck de 7 slots con 6 programas | **Decidida, no es error**: Killer es Black ICE y la Black ICE propia ocupa 2 slots (Core p.204), así que los 6 programas llenan los 7 |
+| 32 | Exec rango 4 | El Core no da beneficio en R4 | Se transcribe tal cual: en 2045 no hay nada; en 2077 queda el ajuste Expensive (RB p.25) |
+| 33 | Alcance de Jack In en 2077 | RB p.16 dice 50 m; RB p.26 da 6 m, 8 m "con el hardware adecuado" o 50 m con Cyberdeck Port | **Decidida**: 6 m con cyberdeck común, 8 m con el Range Upgrade del cyberdeck (Core p.208, 100 €$) y 50 m con el Cyberdeck Port del Neuroport (RB pp. 16, 36). RB p.16 resume asumiendo el Cyberdeck Port |
+
+## Creador en 2077 (halladas al probar PJs, decididas por Giuliano el 2026-10-22)
+
+| # | Tema | Detalle | Decisión |
+|---|---|---|---|
+| 34 | Internal Agent del Fixer y del Exec | Viene en su paquete (Core p.117); el Neuroport trae Holophone (RB pp. 35-36) | **Decidida**: en 2077 se quita del paquete, con la nota "Lo cubre el Neuroport". En 2045 queda |
+| 35 | Biomonitor de los paquetes | Es una de las 7 piezas del Neuroport (RB p.35) y varios paquetes lo traen (Core p.117) | **Decidida**: en 2077 se quita; si el libro da una alternativa "o" (Techhair del Exec) se puede elegir. Lo mismo vale para Interface Plugs o Wolvers del Nomad |
+| 36 | Nota del Folio en la pestaña de rol | Se mostraba en cualquier personaje del rol | **Decidida**: solo en la ficha del Folio (incluidas las copias del creador); en la guía de roles queda como referencia |
+| 37 | Munición Incendiary Shotgun Shell del Medtech | El paquete (Core p.98) la nombra así y no se encontraba en el catálogo | **Decidida**: es la Incendiary Ammunition del Core (p.345, disponible para Shotgun Shells); el paquete apunta a esa entrada |
 
 ## Combate (van a un plan aparte, después del plan 7)
 

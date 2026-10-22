@@ -466,3 +466,12 @@ describe('Lifepath de rol condicional (Core pp. 54-68)', () => {
     expect(Object.values(buildCharacterLifepath(d).roleLifepath)).not.toContain('Familiar');
   });
 });
+
+describe('Munición del paquete (Core pp. 98, 345)', () => {
+  it('Medtech: la Incendiary Shotgun Shell va a Incendiary Ammo del catálogo, sin aviso "sin ID"', () => {
+    const d = applyStreetratRow({ ...createEmptyDraft(), era: '2077', method: 'streetrat', role: 'Medtech', handle: 'M', culturalLanguage: 'English' }, 1);
+    const { sheet, warnings } = buildCharacterSheetFromDraft(d, 't');
+    expect(warnings.some((w) => w.includes('Incendiary'))).toBe(false);
+    expect((sheet.inventory ?? []).find((i) => i.name === 'Incendiary Shotgun Shell Ammunition')?.catalogId).toBe('incendiary-ammo');
+  });
+});

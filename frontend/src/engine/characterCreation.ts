@@ -1184,8 +1184,10 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
       if (a) addInventory('armor', a.id, a.name, a.cost, e.qty, 'Paquete de rol');
       else if (am) addInventory('ammunition', am.id, am.name, am.cost, e.qty, 'Paquete de rol');
       else {
-        // Munición "Basic ... Ammunition" del libro: se guarda como Basic Ammo del pack, con el tipo en el nombre.
-        const basic = /^Basic .*Ammunition$/i.test(e.name) ? ammoDb.find((x) => x.id === 'basic-ammo') : undefined;
+        // Munición "<Tipo> ... Ammunition" del libro (Basic, Incendiary...): se guarda como "<Tipo> Ammo" del pack, con el tipo
+        // de arma en el nombre. Core p.345: la Incendiary existe para Shotgun Shells.
+        const ammoKind = /^(\S+) .*Ammunition$/i.exec(e.name)?.[1];
+        const basic = ammoKind ? ammoDb.find((x) => x.name.toLowerCase() === `${ammoKind.toLowerCase()} ammo`) : undefined;
         addInventory(basic ? 'ammunition' : 'weapons', basic?.id ?? '', e.name, basic?.cost ?? 0, e.qty, 'Paquete de rol');
         if (!basic) warnings.push(`"${e.name}" no está en el catálogo del pack: queda en el inventario sin ID.`);
       }

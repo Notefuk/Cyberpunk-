@@ -2189,10 +2189,10 @@
   }
  },
  "doubts": [
-  "Media/Believability: el libro dice 'X de 10 de probabilidad' y 'se tira 1d10 según tu Believability' pero no explicita la comparación; se asume éxito con tirada <= Believability (+bonos), sin confirmar en texto.",
-  "Exec/Loyalty Save: el texto dice 'tirar 1d6 por debajo de la Loyalty actual'; no aclara si empatar cuenta como éxito (se registró literal 'por debajo').",
+  "Media/Believability: el libro dice 'X de 10 de probabilidad' y 'se tira 1d10 según tu Believability' pero no explicita la comparación; se asume éxito con tirada <= Believability (+bonos), sin confirmar en texto. [Decidido por Giuliano, 2026-10-22: se cree con 1d10 <= Believability más bonos]",
+  "Exec/Loyalty Save: el texto dice 'tirar 1d6 por debajo de la Loyalty actual'; no aclara si empatar cuenta como éxito (se registró literal 'por debajo'). [Decidido por Giuliano, 2026-10-22: el empate falla]",
   "Exec/Team Members: la extracción del PDF parte 'SP 11' como 'SP1 1' en Light Armorjack y Subdermal Armor; se interpretó SP 11 (coincide con Light Armorjack del Core). Lo mismo con HP 25/35 en Backup ('2 5', '3 5'): se leyeron 25 y 35.",
-  "Exec/Company Netrunner: el Cyberdeck dice '7 slots' pero lista solo 6 programas (Sword, Sword, Killer, Worm, Worm, Armor); se transcribió tal cual sin completar el séptimo.",
+  "Exec/Company Netrunner: el Cyberdeck dice '7 slots' pero lista solo 6 programas (Sword, Sword, Killer, Worm, Worm, Armor); se transcribió tal cual sin completar el séptimo. [Decidido por Giuliano, 2026-10-22: no falta nada: Killer es Black ICE y ocupa 2 slots (Core p.204), así que los 6 programas llenan los 7]",
   "Exec/Company Netrunner: la lista de skills no trae nivel +6 (las demás tablas sí); se dejó sin +6.",
   "Exec: el Rango 4 no tiene beneficio en el Core RED (solo el ajuste 2070s de Expensive).",
   "Fixer/Haggle: 'puede hacer 1 trato de tu Rango de Operator o inferior' se interpretó como elegir un beneficio de Haggle desbloqueado en tu Rango o uno inferior; el libro no lo detalla más.",
