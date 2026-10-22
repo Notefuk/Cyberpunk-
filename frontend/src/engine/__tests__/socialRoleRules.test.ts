@@ -71,18 +71,19 @@ describe('Rockerboy', () => {
     expect(r.blockUntilDay).toBeUndefined();
   });
 
-  it('Core p.145: tras un favor fallido hay bloqueo de 1 semana (blockUntilDay = día + 7)', () => {
+  it('Core p.145: tras un favor fallido hay bloqueo de 1 semana (días 10 a 16; se vuelve a pedir el 17)', () => {
     const r = rollFavor({ rank: 4, size: 'small', requiredRank: 4, currentDay: 10, rng: dice(10, 2) });
     expect(r.status).toBe('rolled');
     expect(r.total).toBe(6);
     expect(r.success).toBe(false);
-    expect(r.blockUntilDay).toBe(17);
+    expect(r.blockUntilDay).toBe(16);
   });
 
   it('Core p.145: mientras dura el bloqueo no se tira (blockedUntilDay >= día actual)', () => {
-    const r = rollFavor({ rank: 4, size: 'small', requiredRank: 4, blockedUntilDay: 17, currentDay: 17, rng: mustNotRoll });
+    const r = rollFavor({ rank: 4, size: 'small', requiredRank: 4, blockedUntilDay: 16, currentDay: 16, rng: mustNotRoll });
     expect(r.status).toBe('blocked-week');
-    expect(r.blockUntilDay).toBe(17);
+    expect(r.blockUntilDay).toBe(16);
+    expect(rollFavor({ rank: 4, size: 'small', requiredRank: 4, blockedUntilDay: 16, currentDay: 17, rng: dice(10, 8) }).status).toBe('rolled');
   });
 
   it('Core p.145: rango 4 + 8 contra DV10 del grupo pequeño es éxito sin bloqueo', () => {

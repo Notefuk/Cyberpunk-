@@ -26,6 +26,46 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.3',
+    date: '2026-10-23',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Roles',
+    title: 'Roles sociales y de oficio: Rockerboy, Fixer, Media, Exec, Lawman y Maker del Tech',
+    summary: 'Plan 11 (v4.9.3 del plan 8): cada rol social tiene su herramienta en la vista de roles, con las tablas del Core y su página, y el Maker del Tech se tira como dice el libro.',
+    highlights: [
+      'Rockerboy (Core pp. 144-145): registro de fans, tirada para convertir en fans (DV 8/10/12) y favores con el rango que decide el GM; si falla, ese grupo queda bloqueado una semana.',
+      'Fixer (Core pp. 159-161): Reach (el mejor entre Core y 2077), Grease y Haggle contra una ficha, el bestiario o números a mano; el empate gana quien se defiende (Core p.129) y se elige 1 trato del rango.',
+      'Media (Core pp. 151-153): rumor pasivo (el DV más alto superado), rumor activo con STAT + skill y Believability con bonos de evidencia (tope +3, sin LUCK).',
+      'Exec (Core pp. 153-157): beneficios por rango, Team Members guardados en la ficha (1d6 por puesto, HP y Death Save como un PJ, Loyalty 1d6+1), Loyalty Save (el empate falla) y reemplazo con Loyalty 1 y 200 €$.',
+      'Botón "Fin de sesión" en el reloj: recorta la Loyalty a 10 y marca las renuncias de los Team Members con Loyalty menor que 0 (Core p.154).',
+      'Lawman (Core pp. 158-159): llamada 1d10 ≤ rango y llegada en 1d6 Rondas (con un 6 llega el grupo siguiente; en R10, dos grupos de R10). En el HUD, una tarjeta con cuenta regresiva, HP por agente y tirada CN + 1d10.',
+      'Maker (Core pp. 147-149): TECH + skill sugerida y editable + rango de la especialidad + 1d10, DV y tiempo por categoría de precio, materiales según la especialidad y jury-rig de 10 minutos por rango. Se quitaron los proyectos de ejemplo inventados.',
+      'Arreglo: la tirada de mejora de armas usaba Basic Tech y el rango de Maker; ahora usa Weaponstech y el rango de Upgrade Expertise. 270 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/socialRoleRules.ts',
+      'frontend/src/engine/makerRules.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/store/useCombatStore.ts',
+      'frontend/src/store/gameClockStore.ts',
+      'frontend/src/types/cyberpunk.ts',
+      'frontend/src/features/roles/RockerboyPanel.tsx',
+      'frontend/src/features/roles/FixerPanel.tsx',
+      'frontend/src/features/roles/MediaPanel.tsx',
+      'frontend/src/features/roles/ExecPanel.tsx',
+      'frontend/src/features/roles/LawmanPanel.tsx',
+      'frontend/src/features/roles/MakerPanel.tsx',
+      'frontend/src/features/combat/BackupCard.tsx',
+      'frontend/src/features/combat/GameClockBar.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'data/creation-src/role-ranks-social.json',
+      'docs/plans/plan11-v493-roles-sociales.md'
+    ],
+    metricsBadge: 'v4.9.3 • Roles sociales • Plan 11'
+  },
+  {
     version: 'v4.9.2',
     date: '2026-10-23',
     author: 'Claude Code',
@@ -913,6 +953,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.3': true,
     'v4.9.2': true,
     'v4.9.1': true,
     'v4.9.0': true,

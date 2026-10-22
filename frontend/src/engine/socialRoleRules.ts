@@ -101,7 +101,8 @@ export function rollFavor(opts: {
     dv,
     breakdown: roll.breakdown
   };
-  if (!roll.success) result.blockUntilDay = opts.currentDay + 7;
+  // 1 semana = 7 días contando el del fallo: blockUntilDay es el último día bloqueado (inclusive).
+  if (!roll.success) result.blockUntilDay = opts.currentDay + 6;
   return result;
 }
 
