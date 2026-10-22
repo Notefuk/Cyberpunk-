@@ -1898,6 +1898,15 @@
     },
     "loyalty": {
      "startingEs": "1d6 + 1.",
+     "numeric": {
+      "capMax": 10,
+      "replacementLoyalty": 1,
+      "replacementFeeEb": 200,
+      "source": {
+       "book": "Core RED",
+       "page": 154
+      }
+     },
      "capEs": "Máximo 10 entre sesiones de juego; durante una sesión no tiene límite. El Exec debe promover Loyalty en cada sesión para no perderla.",
      "loyaltySaveEs": "Cada vez que el Exec da una tarea a un Team Member, el GM tira 1d6 por debajo de la Loyalty actual del miembro. Si falla, el miembro puede negarse, arruinar la tarea o traicionar al Exec.",
      "betrayalEs": "Con Loyalty 0 o menor, el Team Member intenta activamente traicionar al Exec ante sus enemigos. Si al final de una sesión tiene menos de 0, se queja a RRHH y recibe un traslado o renuncia si se lo niegan; en ambos casos se va (ver reemplazo).",
