@@ -1,0 +1,255 @@
+{
+  "book": "CEMK RB",
+  "page": 13,
+  "die": "1d6",
+  "notes": [
+    "Se aplica cuando el atacante saca dos o mas 6 en los dados de dano de un ataque Melee, Ranged, Brawling o Thrown. Los Quickhacks NO cuentan (CEMK RB p.12).",
+    "El defensor sufre 5 de dano adicional directo a sus HP, aun si el dano normal no penetraria el blindaje (en ese caso no se ablanda la armadura).",
+    "Ademas sufre una Lesion Critica: tira 1d6 en la tabla de Cuerpo.",
+    "Solo se usa la tabla de Cabeza si el ataque fue un Disparo Apuntado (Aimed Shot) a la cabeza.",
+    "Quick Fix: quita el efecto hasta el amanecer del dia siguiente (CEMK RB p.14). Tratamiento: quita el efecto de forma permanente (4 horas, no sobre uno mismo).",
+    "quickFixRemovesPermanently = true: segun la tabla, el Quick Fix quita el efecto de forma permanente (no hay Tratamiento aparte)."
+  ],
+  "body": [
+    {
+      "roll": 1,
+      "name": "Broken Ribs",
+      "effectEs": "Al final de cada Turno en el que te movas mas de 4 m/yds a pie, volves a sufrir el dano adicional de esta Lesion Critica directo a tus Puntos de Golpe.",
+      "quickFix": [
+        {
+          "skill": "Paramedic",
+          "dv": 13
+        }
+      ],
+      "treatment": [
+        {
+          "skill": "Paramedic",
+          "dv": 15
+        },
+        {
+          "skill": "Surgery",
+          "dv": 13
+        }
+      ],
+      "quickFixRemovesPermanently": false,
+      "deathSavePenalty": 0
+    },
+    {
+      "roll": 2,
+      "name": "Broken Arm",
+      "effectEs": "El brazo roto no se puede usar. Soltas de inmediato cualquier objeto que tengas en la mano de ese brazo.",
+      "quickFix": [
+        {
+          "skill": "Paramedic",
+          "dv": 13
+        }
+      ],
+      "treatment": [
+        {
+          "skill": "Paramedic",
+          "dv": 15
+        },
+        {
+          "skill": "Surgery",
+          "dv": 13
+        }
+      ],
+      "quickFixRemovesPermanently": false,
+      "deathSavePenalty": 0
+    },
+    {
+      "roll": 3,
+      "name": "Foreign Object",
+      "effectEs": "Al final de cada Turno en el que te movas mas de 4 m/yds a pie, volves a sufrir el dano adicional de esta Lesion Critica directo a tus Puntos de Golpe.",
+      "quickFix": [
+        {
+          "skill": "First Aid",
+          "dv": 13
+        },
+        {
+          "skill": "Paramedic",
+          "dv": 13
+        }
+      ],
+      "treatment": [],
+      "quickFixRemovesPermanently": true,
+      "deathSavePenalty": 0
+    },
+    {
+      "roll": 4,
+      "name": "Broken Leg",
+      "effectEs": "-4 a MOVE (minimo 1).",
+      "quickFix": [
+        {
+          "skill": "Paramedic",
+          "dv": 13
+        }
+      ],
+      "treatment": [
+        {
+          "skill": "Paramedic",
+          "dv": 15
+        },
+        {
+          "skill": "Surgery",
+          "dv": 13
+        }
+      ],
+      "quickFixRemovesPermanently": false,
+      "deathSavePenalty": 0
+    },
+    {
+      "roll": 5,
+      "name": "Torn Muscle",
+      "effectEs": "-2 a los Ataques Melee.",
+      "quickFix": [
+        {
+          "skill": "First Aid",
+          "dv": 13
+        },
+        {
+          "skill": "Paramedic",
+          "dv": 13
+        }
+      ],
+      "treatment": [],
+      "quickFixRemovesPermanently": true,
+      "deathSavePenalty": 0
+    },
+    {
+      "roll": 6,
+      "name": "Crushed Fingers",
+      "effectEs": "-4 a todas las Acciones que involucren esa mano.",
+      "quickFix": [
+        {
+          "skill": "Paramedic",
+          "dv": 13
+        }
+      ],
+      "treatment": [
+        {
+          "skill": "Surgery",
+          "dv": 15
+        }
+      ],
+      "quickFixRemovesPermanently": false,
+      "deathSavePenalty": 0
+    }
+  ],
+  "head": [
+    {
+      "roll": 1,
+      "name": "Brain Injury",
+      "effectEs": "-2 a todas las Acciones. La Penalizacion de Death Save aumenta en 1.",
+      "quickFix": [],
+      "treatment": [
+        {
+          "skill": "Surgery",
+          "dv": 17
+        }
+      ],
+      "quickFixRemovesPermanently": false,
+      "deathSavePenalty": 1
+    },
+    {
+      "roll": 2,
+      "name": "Damaged Eye",
+      "effectEs": "-2 a Ataques a Distancia (Ranged) y a Chequeos de Percepcion que involucren la vista.",
+      "quickFix": [
+        {
+          "skill": "Paramedic",
+          "dv": 15
+        }
+      ],
+      "treatment": [
+        {
+          "skill": "Surgery",
+          "dv": 13
+        }
+      ],
+      "quickFixRemovesPermanently": false,
+      "deathSavePenalty": 0
+    },
+    {
+      "roll": 3,
+      "name": "Concussion",
+      "effectEs": "-2 a todas las Acciones.",
+      "quickFix": [
+        {
+          "skill": "First Aid",
+          "dv": 13
+        },
+        {
+          "skill": "Paramedic",
+          "dv": 13
+        }
+      ],
+      "treatment": [],
+      "quickFixRemovesPermanently": true,
+      "deathSavePenalty": 0
+    },
+    {
+      "roll": 4,
+      "name": "Damaged Ear",
+      "effectEs": "Cada vez que te movas mas de 4 m/yds a pie en un Turno, no podes realizar una Accion de Movimiento en tu proximo Turno. Ademas, -2 a los Chequeos de Percepcion que involucren el oido.",
+      "quickFix": [
+        {
+          "skill": "Paramedic",
+          "dv": 13
+        }
+      ],
+      "treatment": [
+        {
+          "skill": "Surgery",
+          "dv": 13
+        }
+      ],
+      "quickFixRemovesPermanently": false,
+      "deathSavePenalty": 0
+    },
+    {
+      "roll": 5,
+      "name": "Crushed Windpipe",
+      "effectEs": "No podes hablar. La Penalizacion de Death Save aumenta en 1.",
+      "quickFix": [],
+      "treatment": [
+        {
+          "skill": "Surgery",
+          "dv": 15
+        }
+      ],
+      "quickFixRemovesPermanently": false,
+      "deathSavePenalty": 1
+    },
+    {
+      "roll": 6,
+      "name": "Cracked Skull",
+      "effectEs": "Multiplica por 3 (en vez de 2) el dano de los Disparos Apuntados a tu cabeza, despues de restar el SP del blindaje. La Penalizacion de Death Save aumenta en 1.",
+      "quickFix": [
+        {
+          "skill": "Paramedic",
+          "dv": 15
+        }
+      ],
+      "treatment": [
+        {
+          "skill": "Paramedic",
+          "dv": 15
+        },
+        {
+          "skill": "Surgery",
+          "dv": 15
+        }
+      ],
+      "quickFixRemovesPermanently": false,
+      "deathSavePenalty": 1
+    }
+  ],
+  "doubts": [
+    "Brain Injury/Crushed Windpipe: Quick Fix figura como '—' en el libro (no hay Quick Fix): quickFix = [].",
+    "Cracked Skull Treatment: el libro dice 'Paramedic or Surgery DV15' (ambos DV15), cargado como dos opciones.",
+    "Las filas con 'Quick Fix removes Injury Effect permanently' estan en la columna Treatment; se modelaron con treatment=[] y quickFixRemovesPermanently=true.",
+    "Core usa 2d6 y CEMK 1d6 (tabla de 6 entradas por zona).",
+    "El texto 'bonus damage' (5) y la regla del amanecer estan en CEMK p.12 y p.14, no en p.13 (la tabla esta en p.13)."
+  ]
+}

@@ -1,0 +1,334 @@
+{
+  "book": "Core RED v1.24",
+  "pageNote": "Pagina impresa = PDF - 1. Intro p.189; tabla de vehiculos pp.190-191; mejoras de Nomad pp.163-165.",
+  "vehicles": [
+    {
+      "name": "Roadbike",
+      "category": "land",
+      "description": "Common CHOOH2 powered bike.",
+      "sdp": 35,
+      "seats": "2",
+      "combatSpeed": "20 MOVE",
+      "narrativeSpeed": "100 MPH/161 KPH",
+      "costEb": 20000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "1-4",
+      "page": 190
+    },
+    {
+      "name": "Superbike",
+      "category": "land",
+      "description": "Exotic CHOOH2 streetbike, capable of extreme speeds.",
+      "sdp": 35,
+      "seats": "2",
+      "combatSpeed": "60 MOVE",
+      "narrativeSpeed": "300 MPH/483 KPH",
+      "costEb": 100000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "7-8",
+      "page": 190
+    },
+    {
+      "name": "Compact Groundcar",
+      "category": "land",
+      "description": "Common CHOOH2 powered car.",
+      "sdp": 50,
+      "seats": "4",
+      "combatSpeed": "20 MOVE",
+      "narrativeSpeed": "100 MPH/161 KPH",
+      "costEb": 30000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "1-4",
+      "page": 190
+    },
+    {
+      "name": "High Performance Groundcar",
+      "category": "land",
+      "description": "CHOOH2 powered sportscar.",
+      "sdp": 50,
+      "seats": "4",
+      "combatSpeed": "40 MOVE",
+      "narrativeSpeed": "200 MPH/322 KPH",
+      "costEb": 50000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "5-6",
+      "page": 190
+    },
+    {
+      "name": "Super Groundcar",
+      "category": "land",
+      "description": "Exotic CHOOH2 sportscar, capable of extreme speeds.",
+      "sdp": 50,
+      "seats": "2",
+      "combatSpeed": "60 MOVE",
+      "narrativeSpeed": "300 MPH/483 KPH",
+      "costEb": 100000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "9-10",
+      "page": 190
+    },
+    {
+      "name": "Jetski",
+      "category": "sea",
+      "description": "Common CHOOH2 powered personal watercraft.",
+      "sdp": 35,
+      "seats": "2",
+      "combatSpeed": "20 MOVE",
+      "narrativeSpeed": "60 MPH/97 KPH",
+      "costEb": 20000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "1-4",
+      "page": 190
+    },
+    {
+      "name": "Speedboat",
+      "category": "sea",
+      "description": "CHOOH2 powered speedboat.",
+      "sdp": 50,
+      "seats": "4",
+      "combatSpeed": "20 MOVE",
+      "narrativeSpeed": "60 MPH/97 KPH",
+      "costEb": 30000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "5-6",
+      "page": 190
+    },
+    {
+      "name": "Cabin Cruiser",
+      "category": "sea",
+      "description": "Luxury CHOOH2 powerboat with room to provide accommodations for a small, privileged few. Cabin Cruisers have customized rooms.",
+      "sdp": 60,
+      "seats": "2 per Room",
+      "combatSpeed": "10 MOVE",
+      "narrativeSpeed": "15 MPH/24 KPH",
+      "costEb": 30000,
+      "costTier": "Super Luxury",
+      "costNote": "30,000eb per room below deck (minimum two rooms)",
+      "familyMotorpoolRank": "7-8",
+      "page": 190
+    },
+    {
+      "name": "Yacht",
+      "category": "sea",
+      "description": "Luxury CHOOH2 pleasurecraft with ample room to provide accommodations and entertainment for a host and their distinguished guests. Yachts have customized rooms.",
+      "sdp": 100,
+      "seats": "4 per Room",
+      "combatSpeed": "10 MOVE",
+      "narrativeSpeed": "15 MPH/24 KPH",
+      "costEb": 50000,
+      "costTier": "Super Luxury",
+      "costNote": "50,000eb per room below or above deck (minimum four rooms)",
+      "familyMotorpoolRank": "9-10",
+      "page": 190
+    },
+    {
+      "name": "Gyrocopter",
+      "category": "air",
+      "description": "A tiny CHOOH2 powered rotorcraft favored by flying enthusiasts.",
+      "sdp": 35,
+      "seats": "2",
+      "combatSpeed": "20 MOVE",
+      "narrativeSpeed": "100 MPH/161 KPH",
+      "costEb": 20000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "1-4",
+      "page": 191
+    },
+    {
+      "name": "Helicopter",
+      "category": "air",
+      "description": "Full featured CHOOH2 powered helicopter capable of sustained flight.",
+      "sdp": 60,
+      "seats": "4",
+      "combatSpeed": "40 MOVE",
+      "narrativeSpeed": "200 MPH/322 KPH",
+      "costEb": 40000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "5-6",
+      "page": 191
+    },
+    {
+      "name": "AV-4 Multipurpose Aerodyne",
+      "category": "air",
+      "description": "Highly advanced CHOOH2 vertical thrust engine powered flying vehicle.",
+      "sdp": 100,
+      "seats": "6",
+      "combatSpeed": "40 MOVE",
+      "narrativeSpeed": "200 MPH/322 KPH",
+      "costEb": 50000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "7-8",
+      "page": 191
+    },
+    {
+      "name": "AV-9 Super Aerodyne",
+      "category": "air",
+      "description": "Exotic CHOOH2 vertical thrust engine flying vehicle, capable of extreme speeds.",
+      "sdp": 60,
+      "seats": "2",
+      "combatSpeed": "60 MOVE",
+      "narrativeSpeed": "300 MPH/483 KPH",
+      "costEb": 100000,
+      "costTier": "Super Luxury",
+      "familyMotorpoolRank": "9-10",
+      "page": 191
+    },
+    {
+      "name": "Aerozep",
+      "category": "air",
+      "description": "Modern cargo blimps that range wildly in size depending on their function. Aerozeps have customized rooms.",
+      "sdp": 100,
+      "seats": "2 per Room",
+      "combatSpeed": "20 MOVE",
+      "narrativeSpeed": "100 MPH/161 KPH",
+      "costEb": 30000,
+      "costTier": "Super Luxury",
+      "costNote": "30,000eb per room below deck (minimum two rooms)",
+      "familyMotorpoolRank": "9-10",
+      "page": 191
+    }
+  ],
+  "upgrades": [
+    {
+      "name": "Armored Chassis",
+      "appliesTo": "All vehicles",
+      "minMotoRank": 5,
+      "effectEs": "Blinda el vehiculo a SP13. No afecta el vidrio.",
+      "page": 163
+    },
+    {
+      "name": "Bulletproof Glass",
+      "appliesTo": "All vehicles",
+      "minMotoRank": 1,
+      "effectEs": "El vidrio pasa a ser cobertura: Bulletproof Glass fino (15 HP); con una segunda mejora, grueso (30 HP). Cada ventana recibe dano por separado.",
+      "page": 163
+    },
+    {
+      "name": "Communications Center",
+      "appliesTo": "All vehicles",
+      "minMotoRank": 1,
+      "effectEs": "Consola tactil con Agent y almacenamiento: 6 Radio Communicators, 6 Scrambler/Descramblers, Radio Scanner/Music Player, Homing Tracer con 6 trazadores y Audio Recorder.",
+      "page": 163
+    },
+    {
+      "name": "NOS",
+      "appliesTo": "All vehicles",
+      "minMotoRank": 1,
+      "effectEs": "Permite usar la Accion para una Accion de Movimiento adicional al conducir. Cada tanque se usa una vez por dia; cada mejora extra suma un tanque.",
+      "page": 163
+    },
+    {
+      "name": "Onboard Flamethrower",
+      "appliesTo": "All vehicles",
+      "minMotoRank": 1,
+      "effectEs": "Lanzallamas montado al frente, costado o atras; el conductor dispara con su Accion. No se recarga en marcha. Se puede instalar varias veces.",
+      "page": 163
+    },
+    {
+      "name": "Onboard Machine gun",
+      "appliesTo": "All vehicles",
+      "minMotoRank": 1,
+      "effectEs": "Fusil de Asalto con 30 balas, solo Autofire, montado al frente; el conductor dispara con su Accion. No se recarga en marcha. Se puede instalar varias veces.",
+      "page": 163
+    },
+    {
+      "name": "Seating Upgrade",
+      "appliesTo": "All vehicles",
+      "minMotoRank": 1,
+      "effectEs": "Suma dos asientos (puede ser sidecar). Los asientos pueden ser eyectables. Se puede repetir en todos salvo Bikes, Jetskis y Gyrocopters.",
+      "page": 163
+    },
+    {
+      "name": "Security Upgrade",
+      "appliesTo": "All vehicles",
+      "minMotoRank": 5,
+      "effectEs": "Cerraduras de ADN (DV17 Electronics/Security Tech sin la clave; descarga tipo Stun Baton a 2 m/yds) y camuflaje: solo se detecta con Percepcion DV17 si esta quieto.",
+      "page": 163
+    },
+    {
+      "name": "Smuggling Upgrade",
+      "appliesTo": "All vehicles",
+      "minMotoRank": 1,
+      "effectEs": "Dos Hidden Holsters (conductor y un pasajero) y un espacio grande oculto (se descubre con Conceal/Reveal Object DV17). Se puede repetir salvo Bikes, Jetskis y Gyrocopters.",
+      "page": 163
+    },
+    {
+      "name": "Heavy Chassis",
+      "appliesTo": "All vehicles except Bikes, Jetskis, Gyrocopters",
+      "minMotoRank": 1,
+      "effectEs": "+20 SDP, remolca hasta 10 toneladas. Requisito de mejoras pesadas.",
+      "page": 164
+    },
+    {
+      "name": "Onboard Rocket Pod",
+      "appliesTo": "All vehicles except Bikes, Jetskis, Gyrocopters",
+      "minMotoRank": 5,
+      "effectEs": "Lanzacohetes con tambor de 3 cohetes montado al frente; el conductor dispara con su Accion. No se recarga en marcha. Requiere Heavy Chassis.",
+      "page": 164
+    },
+    {
+      "name": "Vehicle Heavy Weapon Mount",
+      "appliesTo": "All vehicles except Bikes, Jetskis, Gyrocopters",
+      "minMotoRank": 5,
+      "effectEs": "Un asiento pasa a ser montura giratoria para un arma a dos manos que dispara un pasajero con su Accion (puede recargar en marcha). Primera vez: la Familia regala Tsunami Arms Helix, Rhinemetall EMG-86 Railgun o Militech Cowboy U-56. Requiere Heavy Chassis.",
+      "page": 164
+    },
+    {
+      "name": "Onboard Melee Weapon",
+      "appliesTo": "All land and sea vehicles",
+      "minMotoRank": 1,
+      "effectEs": "Arma Melee Muy Pesada montada en el exterior; el conductor ataca con su Accion. No se puede quitar. Se puede repetir.",
+      "page": 164
+    },
+    {
+      "name": "Hover Upgrade",
+      "appliesTo": "All land vehicles",
+      "minMotoRank": 5,
+      "effectEs": "Ventiladores que permiten viajar sobre el agua a la velocidad de un Cabin Cruiser.",
+      "page": 164
+    },
+    {
+      "name": "AV-4 Engine Upgrade",
+      "appliesTo": "All land vehicles",
+      "minMotoRank": 7,
+      "effectEs": "Turbofan de empuje vectorial: vuela como un AV-4 y se pilota con Pilot Air Vehicle en el aire.",
+      "page": 164
+    },
+    {
+      "name": "Combat Plow",
+      "appliesTo": "All land and sea vehicles except Bikes and Jetskis",
+      "minMotoRank": 1,
+      "effectEs": "Al embestir cobertura, vehiculo o peaton el vehiculo no recibe dano y nadie sufre Whiplash. Con NOS en ese Turno, el dano de la embestida sube 2d6.",
+      "page": 164
+    },
+    {
+      "name": "Enhanced Interface Plug Integration",
+      "appliesTo": "All bikes",
+      "minMotoRank": 5,
+      "effectEs": "Con Interface Plugs y REF 8+, podes esquivar con Evasion los ataques dirigidos a vos, tu pasajero o la moto, como a pie.",
+      "page": 165
+    },
+    {
+      "name": "Deployable Spike Strip",
+      "appliesTo": "All groundcars",
+      "minMotoRank": 1,
+      "effectEs": "El conductor la despliega como Accion; vehiculos con ruedas que lo sigan de cerca tiran Drive Land Vehicle DV17 o reciben 4d6 al punto debil. Repuesto 10eb (Cheap).",
+      "page": 165
+    },
+    {
+      "name": "Housing Capacity",
+      "appliesTo": "Aerozep, AV-4, Cabin Cruiser, Groundcars, Yacht",
+      "minMotoRank": 1,
+      "effectEs": "En Groundcar o AV-4: cama, bano, ducha y cocina chica (Kombi). En Cabin Cruiser, Yacht o Aerozep: suma una habitacion. Requiere Heavy Chassis en Compact y High Performance Groundcar.",
+      "page": 165
+    }
+  ],
+  "upgradeCostNote": "p.163: salvo indicacion, cada opcion se toma una vez por vehiculo. Se venden poco en el mercado abierto: Very Expensive las de Moto Rank 1, Luxury las de rangos mayores. Para Upgrade Expertise del Tech (p.148) cuentan como 1,000eb (Very Expensive) y solo se permiten las de Moto Rank 1. Nomad Rank 10: mejoras futuras a 1,000eb cada una (p.162).",
+  "doubts": [
+    "Seats de Cabin Cruiser/Yacht/Aerozep son texto (2 per Room, 4 per Room).",
+    "Costo de Cabin Cruiser/Yacht/Aerozep es POR HABITACION (minimo 2, 4 y 2 habitaciones); costEb = precio por habitacion.",
+    "AV-4/AV-9: nombre de la tabla es AV-4 Multipurpose Aerodyne / AV-9 Super Aerodyne; Motorpool y mejoras usan AV-4/AV-9.",
+    "familyMotorpoolRank viene de la tabla Family Motorpool (Core p.162-163), no de la tabla de vehiculos.",
+    "Las mejoras no tienen precio individual en eb; solo la nota de mercado. Housing Capacity: el libro agrupa Groundcars pero exige Heavy Chassis solo en Compact y High Performance."
+  ]
+}
