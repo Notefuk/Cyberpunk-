@@ -247,6 +247,29 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.4] - 2026-10-23 (Modo Novato del creador) [Claude Code · 2026-10-23]
+* **Category**: Creador (plan 12, ex v4.8.3 del plan 7, con las decisiones de Giuliano del 2026-10-23: solo texto del libro, solo el creador, ⓘ desplegables y resumen como confirmación con avisos).
+* **Datos**: `data/creation-src/creator-guide.json`, generado a `data/creation/creatorGuide.ts` (`CREATOR_GUIDE`): texto de cada paso con su página del Core, `recommendsStreetrat` (Core p.40) y las reglas de los avisos.
+* **Motor**: `getSummaryWarnings(draft, built)` en `engine/characterCreation.ts`. Avisos que no bloquean:
+  * dinero sin gastar (Core p.98 en Streetrat y Edgerunner, p.104 en Paquete Completo);
+  * moda sin gastar en Paquete Completo, que se pierde (p.105);
+  * Humanidad que baja la EMP (p.80);
+  * skills básicas por debajo de 2 en Edgerunner y Paquete Completo (p.90), solo si la validación no lo bloquea ya;
+  * sin armas y sin armadura.
+* **Store**: `store/creatorNoviceStore.ts` (`cpr_creator_novice_v1`, prendido por defecto), sumado a `BACKUP_EXTRA_KEYS`.
+* **UI**:
+  * interruptor "Modo Novato" en la cabecera del creador;
+  * `NoviceGuide` ("Qué es esto" con página) en los pasos;
+  * "Recomendado por el libro" en Streetrat;
+  * `InfoToggle` (ⓘ desplegable con `aria-expanded`) en skills y STATs;
+  * resumen en tarjetas con "Revisá y confirmá". La checklist que bloquea "Crear" no cambia.
+* **Verificación**: tsc, 280 tests y build. En el navegador:
+  * el modo sale prendido por defecto, se guarda al recargar y "Descartar borrador" no lo cambia;
+  * la guía y la página aparecen en método, rol, Lifepath, STATs, skills y equipo;
+  * los ⓘ de STAT y de skill se despliegan, también a 375 px sin desborde;
+  * en el resumen de un Solo Streetrat salen los avisos de 500eb sin gastar (p.98) y Humanidad 33 que baja la EMP de 4 a 3 (p.80);
+  * la checklist bloqueó "Crear" hasta poner el handle, y el personaje se creó (después se borró).
+
 ### [v4.9.3.1] - 2026-10-23 (Arreglo de skills) [Claude Code · 2026-10-23]
 * **Problema**: en el panel de Maker, Maven mostraba Electronics/Security Tech 0. El dato estaba bien (`electronicssecurity: 6`, CEMK Folios p.25), pero la búsqueda no reconocía la clave abreviada.
 * **Arreglo**: `engine/skillLookup.ts` (`sheetSkillLevel`) busca la skill en `skills` y `generalSkills`. Acepta la clave de combate, el nombre del libro, la clave compacta y el prefijo abreviado (mínimo 6 letras, sin especialidad), con la misma regla que el panel "Otras skills". La usan `MakerPanel` y `MediaPanel`.

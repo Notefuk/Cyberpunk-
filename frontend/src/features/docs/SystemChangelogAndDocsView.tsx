@@ -26,6 +26,36 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.4',
+    date: '2026-10-23',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Creador',
+    title: 'Modo Novato del creador de personajes',
+    summary: 'Plan 12 (ex v4.8.3 del plan 7): el creador explica cada paso con el texto del libro y su página, tiene ⓘ desplegables que funcionan en celular y cierra con un resumen de confirmación con avisos.',
+    highlights: [
+      'Interruptor "Modo Novato" en la cabecera del creador, prendido por defecto. Se guarda en el dispositivo y "Descartar borrador" no lo cambia.',
+      'Recuadro "Qué es esto" en cada paso, con el texto del Core y su página (método p.40, rol p.29, Lifepath p.44, STATs p.72, skills p.81, equipo p.104).',
+      'Streetrat lleva la etiqueta "Recomendado por el libro", con la cita y la página (Core p.40).',
+      'Los ⓘ de cada skill y cada STAT despliegan el texto completo con su página al tocarlos; reemplazan los tooltips que no andaban en celular.',
+      'Resumen ordenado en tarjetas como la ficha, con un encabezado "Revisá y confirmá". La checklist sigue bloqueando "Crear".',
+      'Avisos que no bloquean: dinero sin gastar (Core p.98 en Streetrat y Edgerunner, p.104 en Paquete Completo), moda que se pierde (p.105), Humanidad que baja la EMP (p.80), skills básicas por debajo de 2 (p.90), sin armas y sin armadura. 280 tests.'
+    ],
+    filesTouched: [
+      'data/creation-src/creator-guide.json',
+      'frontend/src/data/creation/creatorGuide.ts',
+      'frontend/src/engine/characterCreation.ts',
+      'frontend/src/store/creatorNoviceStore.ts',
+      'frontend/src/features/creator/CharacterCreatorWizard.tsx',
+      'frontend/src/features/creator/steps/CreatorUi.tsx',
+      'frontend/src/features/creator/steps/SummaryStep.tsx',
+      'frontend/src/features/creator/steps/SkillsStep.tsx',
+      'frontend/src/features/creator/steps/StatsStep.tsx',
+      'docs/plans/plan12-v494-modo-novato.md'
+    ],
+    metricsBadge: 'v4.9.4 • Modo Novato • Plan 12'
+  },
+  {
     version: 'v4.9.3.1',
     date: '2026-10-23',
     author: 'Claude Code',
@@ -973,6 +1003,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.4': true,
     'v4.9.3.1': true,
     'v4.9.3': true,
     'v4.9.2': true,
