@@ -26,6 +26,39 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.0',
+    date: '2026-10-22',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Roles',
+    title: 'Roles por rango: una sola fuente con el Core y los ajustes de CEMK',
+    summary: 'Plan 8, bloque 1: los 10 roles tienen sus 10 rangos del Core con página, los ajustes de 2070s de CEMK por rango y la conversión de los 7 Folios. La ficha y la guía de roles leen ahora de los mismos datos.',
+    highlights: [
+      'Los 10 roles con sus rangos 1 a 10 del Core, las opciones de cada habilidad y sus tablas, todo con libro y página.',
+      'Ajustes de 2070s por rango (CEMK RB p.25): Quickhacks del Netrunner por rango, Reach del Fixer, vehículos del Nomad y objetos Expensive desde rango 4.',
+      'Cada Folio de CEMK dice qué trae y en qué se convierte en la habilidad completa del Core (por ejemplo, Hardpoint: +4 a Iniciativa pasa a Combat Awareness 4 en Initiative Reaction).',
+      'Netrunner: la progresión ya es la del Core y las NET Actions siguen la tabla 2/3/4/5 (Core p.197). Se quitó la escalera equivocada.',
+      'Self-ICE de los PNJ corregido: todos los Passwalls usan el DV del total instalado (2 Self-ICE = dos Passwalls DV8, CEMK RB p.36).',
+      'Creador, lifepath completo del Core: las tablas que dependen de una elección solo aparecen y se piden si aplican (compañero solo si no trabajás solo; la tabla de tierra, aire o mar según la base del Nomad; "Why Did You Leave?" solo para el Rockerboy solista que estuvo en un grupo, con su tabla "Were You Once in a Group?" que faltaba, Core p.54). Se avisa qué tablas se eligen a mano.',
+      'En 2077 el Neuroport también cubre el Internal Agent (Fixer, Exec) y el Biomonitor: no se instalan ni descuentan Humanidad. Si el libro da una alternativa (Techhair del Exec, Wolvers del Nomad), se puede elegir.',
+      'La munición incendiaria del Medtech ya se encuentra en el catálogo (Core p.345). La nota del Folio sale solo en la ficha de ese Folio.',
+      'Giuliano decidió las 14 dudas de roles y creador (discrepancias 24 a 37). 156 tests.'
+    ],
+    filesTouched: [
+      'data/creation-src/role-ranks-combat.json',
+      'data/creation-src/role-ranks-social.json',
+      'scripts/gen_creation.py',
+      'frontend/src/data/creation/roleRanks.ts',
+      'frontend/src/data/roleProgression.ts',
+      'frontend/src/data/weaponAndCyberwareTooltips.ts',
+      'frontend/src/data/netAndRolesData.ts',
+      'frontend/src/engine/cemkPort.ts',
+      'frontend/src/engine/__tests__/roleRanks.test.ts',
+      'docs/canon-audit/v4.9.0-roles.md'
+    ],
+    metricsBadge: 'v4.9.0 • Roles por rango • Plan 8'
+  },
+  {
     version: 'v4.8.2',
     date: '2026-10-22',
     author: 'Claude Code',
@@ -806,6 +839,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.0': true,
     'v4.8.2': true,
     'v4.8.1': true,
     'v4.8.0': true,

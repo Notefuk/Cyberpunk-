@@ -45,5 +45,36 @@ def main():
         print('%s: %d claves' % (module, len(data)))
 
 
+ROLE_ORDER = ['Solo', 'Netrunner', 'Tech', 'Medtech', 'Nomad', 'Rockerboy', 'Fixer', 'Media', 'Exec', 'Lawman']
+
+
+def gen_role_ranks():
+    combat = json.loads((SRC / 'role-ranks-combat.json').read_text(encoding='utf-8'))
+    social = json.loads((SRC / 'role-ranks-social.json').read_text(encoding='utf-8'))
+    combat.pop('pdf', None)
+    social.pop('pdf', None)
+    dup = set(combat['roles']) & set(social['roles'])
+    if dup:
+        raise SystemExit('roleRanks: roles repetidos: %s' % sorted(dup))
+    merged = dict(combat['roles'])
+    merged.update(social['roles'])
+    roles = {name: merged[name] for name in ROLE_ORDER}
+    data = {
+        'pageConvention': combat['pageConvention'],
+        'general': social['general'],
+        'roles': roles,
+        'doubts': list(combat.get('doubts', [])) + list(social.get('doubts', [])),
+    }
+    body = json.dumps(data, ensure_ascii=False, indent=2)
+    text = (
+        HEADER
+        + "import type { RoleRanksSrc } from './types';\n\n"
+        + 'export const ROLE_RANKS: RoleRanksSrc = %s;\n' % body
+    )
+    (OUT / 'roleRanks.ts').write_text(text, encoding='utf-8', newline='\n')
+    print('roleRanks: %d roles' % len(roles))
+
+
 if __name__ == '__main__':
-    sys.exit(main())
+    main()
+    gen_role_ranks()

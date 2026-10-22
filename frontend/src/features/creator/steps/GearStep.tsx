@@ -223,7 +223,12 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
               <ul className="space-y-2">
                 {pkg.cyberware.map((c) => {
                   const baseC = basePkg.cyberware.find((b) => b.key === c.key);
-                  const options = [{ name: baseC?.name ?? c.name, humanityLoss: baseC?.humanityLoss ?? c.humanityLoss }, ...c.alternatives];
+                  const options = [
+                    c.coveredByNeuroport || baseC?.coveredByNeuroport
+                      ? { name: `${baseC?.name ?? c.name} (lo cubre el Neuroport)`, humanityLoss: 0 }
+                      : { name: baseC?.name ?? c.name, humanityLoss: baseC?.humanityLoss ?? c.humanityLoss },
+                    ...c.alternatives
+                  ];
                   return (
                     <li key={c.key} className="bg-[#0a0b0e] border border-[#1e2334] rounded-xs p-2 text-xs">
                       {c.alternatives.length === 0 ? (

@@ -11,6 +11,7 @@ import {
   computeDerived,
   createEmptyDraft,
   getCyberwareList,
+  getApplicableRoleLifepathTables,
   getEdgerunnerSkillNames,
   getLifepathTables,
   getMissingChecklist,
@@ -171,6 +172,38 @@ describe('Paquete de rol (Core pp. 98-99, 103, 117; CEMK RB pp. 35-36)', () => {
     expect(net.cyberware.map((c) => c.name)).not.toContain('Neural Link');
     expect(net.cyberware.map((c) => c.name)).not.toContain('Interface Plugs');
     expect(net.notes.some((n) => n.includes('Lo cubre el Neuroport (CEMK RB pp. 35-36)'))).toBe(true);
+  });
+
+  it('2077 quita Internal Agent y Biomonitor (discrepancias 34-35, CEMK RB pp. 35-36); 2045 los conserva (Core p.117)', () => {
+    const names = (role: 'Fixer' | 'Exec' | 'Solo' | 'Medtech', era: '2045' | '2077') =>
+      getRolePackage(role, era, {}).cyberware.filter((c) => !c.coveredByNeuroport).map((c) => c.name);
+    expect(names('Fixer', '2077')).not.toContain('Internal Agent');
+    expect(names('Exec', '2077')).not.toContain('Internal Agent');
+    expect(names('Exec', '2077')).not.toContain('Biomonitor');
+    expect(names('Solo', '2077')).not.toContain('Biomonitor');
+    expect(names('Medtech', '2077')).not.toContain('Biomonitor');
+    expect(names('Fixer', '2045')).toContain('Internal Agent');
+    expect(names('Exec', '2045')).toEqual(expect.arrayContaining(['Biomonitor', 'Internal Agent']));
+  });
+
+  it('Fixer 2077: sin el Internal Agent la Humanidad sube 3 (Core p.117)', () => {
+    const fixer = (era: '2045' | '2077') => applyStreetratRow({ ...createEmptyDraft(), era, method: 'streetrat', role: 'Fixer', culturalLanguage: 'English' }, 1);
+    expect(computeDerived(fixer('2045')).humanityLoss - computeDerived(fixer('2077')).humanityLoss).toBe(3);
+  });
+
+  it('Exec 2077: el Biomonitor cubierto deja elegir Techhair; Nomad 2077 deja elegir Wolvers (Core p.117)', () => {
+    const exec = getRolePackage('Exec', '2077', {});
+    const bio = exec.cyberware.find((c) => c.name === 'Biomonitor')!;
+    expect(bio.coveredByNeuroport).toBe(true);
+    const withTechhair = getRolePackage('Exec', '2077', { [bio.key]: 1 });
+    expect(withTechhair.cyberware.find((c) => c.key === bio.key)?.name).toBe('Techhair');
+    const execDraft = { ...applyStreetratRow({ ...createEmptyDraft(), era: '2077' as const, method: 'streetrat' as const, role: 'Exec' as const, culturalLanguage: 'English' }, 1) };
+    expect(getCyberwareList(execDraft).some((c) => c.name === 'Biomonitor')).toBe(false);
+    expect(getCyberwareList({ ...execDraft, packageChoices: { [bio.key]: 1 } }).some((c) => c.name === 'Techhair')).toBe(true);
+    const nomad = getRolePackage('Nomad', '2077', {});
+    const plugs = nomad.cyberware.find((c) => c.name === 'Interface Plugs')!;
+    expect(plugs.coveredByNeuroport).toBe(true);
+    expect(getRolePackage('Nomad', '2077', { [plugs.key]: 1 }).cyberware.find((c) => c.key === plugs.key)?.name).toBe('Wolvers');
   });
 
   it('aplica las opciones "o" y lista la munición (Core pp. 98-99)', () => {
@@ -398,5 +431,47 @@ describe('Construcción de la ficha', () => {
     const both = buildCharacterSheetFromDraft(buy(), 'c').sheet;
     expect(both.headArmor.maxSp).toBe(13);
     expect(both.bodyArmor.maxSp).toBe(13);
+  });
+});
+
+describe('Lifepath de rol condicional (Core pp. 54-68)', () => {
+  const pick = (value: string) => ({ roll: null, value });
+  const ids = (role: Parameters<typeof getApplicableRoleLifepathTables>[0], lp: Record<string, { roll: null; value: string }>) =>
+    getApplicableRoleLifepathTables(role, lp).map((t) => t.id);
+
+  it('Netrunner: el compañero solo aplica con "Con compañero" (Core p.56)', () => {
+    expect(ids('Netrunner', {})).not.toContain('partner');
+    expect(ids('Netrunner', { partner_choice: pick('Trabajás solo') })).not.toContain('partner');
+    expect(ids('Netrunner', { partner_choice: pick('Con compañero') })).toContain('partner');
+  });
+
+  it('Nomad: solo la tabla de la base elegida (Core p.68)', () => {
+    const r = ids('Nomad', { base: pick('Mar') });
+    expect(r).toContain('sea');
+    expect(r).not.toContain('land');
+    expect(r).not.toContain('air');
+  });
+
+  it('Rockerboy: "Why Did You Leave?" solo para el solista que estuvo en un grupo (Core p.54)', () => {
+    expect(ids('Rockerboy', { group_or_solo: pick('En un grupo') })).not.toContain('once_in_group');
+    expect(ids('Rockerboy', { group_or_solo: pick('Solista') })).toContain('once_in_group');
+    expect(ids('Rockerboy', { group_or_solo: pick('Solista'), once_in_group: pick('Siempre fui solista') })).not.toContain('why_left');
+    expect(ids('Rockerboy', { group_or_solo: pick('Solista'), once_in_group: pick('Estuve en un grupo') })).toContain('why_left');
+  });
+
+  it('Trabajás solo: no se exige el compañero y la ficha no lo guarda (Core p.56)', () => {
+    let d: CreatorDraft = { ...createEmptyDraft(), method: 'streetrat', role: 'Netrunner', lifepathSource: 'core' };
+    d = { ...d, roleLifepath: { partner_choice: pick('Trabajás solo'), partner: pick('Familiar') } };
+    expect(validateStep(d, 'lifepath').some((m) => m.includes('Partner'))).toBe(false);
+    expect(Object.values(buildCharacterLifepath(d).roleLifepath)).not.toContain('Familiar');
+  });
+});
+
+describe('Munición del paquete (Core pp. 98, 345)', () => {
+  it('Medtech: la Incendiary Shotgun Shell va a Incendiary Ammo del catálogo, sin aviso "sin ID"', () => {
+    const d = applyStreetratRow({ ...createEmptyDraft(), era: '2077', method: 'streetrat', role: 'Medtech', handle: 'M', culturalLanguage: 'English' }, 1);
+    const { sheet, warnings } = buildCharacterSheetFromDraft(d, 't');
+    expect(warnings.some((w) => w.includes('Incendiary'))).toBe(false);
+    expect((sheet.inventory ?? []).find((i) => i.name === 'Incendiary Shotgun Shell Ammunition')?.catalogId).toBe('incendiary-ammo');
   });
 });

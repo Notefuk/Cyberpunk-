@@ -469,8 +469,11 @@ describe('Porte CEMK de PNJ (plan 6)', () => {
     expect(p.weapons.map(w => w.weaponType2077)).toEqual(['Smart', 'Power']);
   });
 
-  it('RB p.36: Self-ICE 2 = Passwalls DV 6 y 8; sin selfIce = ninguno', () => {
-    expect(portEnemyToCemk(mk({ selfIce: 2 })).selfIcePasswalls).toEqual([{ dv: 6 }, { dv: 8 }]);
+  it('RB p.36: Self-ICE = N Passwalls con el DV del total (1=DV6, 2=DV8, 3=DV10); sin selfIce = ninguno', () => {
+    expect(portEnemyToCemk(mk({ selfIce: 1 })).selfIcePasswalls).toEqual([{ dv: 6 }]);
+    expect(portEnemyToCemk(mk({ selfIce: 2 })).selfIcePasswalls).toEqual([{ dv: 8 }, { dv: 8 }]);
+    expect(portEnemyToCemk(mk({ selfIce: 3 })).selfIcePasswalls).toEqual([{ dv: 10 }, { dv: 10 }, { dv: 10 }]);
+    expect(portEnemyToCemk(mk({ selfIce: 5 })).selfIcePasswalls).toHaveLength(3);
     expect(portEnemyToCemk(mk()).selfIcePasswalls).toEqual([]);
   });
 

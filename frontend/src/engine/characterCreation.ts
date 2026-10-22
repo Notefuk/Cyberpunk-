@@ -392,6 +392,50 @@ export function getSingleLifepathTables(source: LifepathSource): LifepathTable[]
   return getLifepathTables(source, null).general.filter((t) => !skip.has(t.id));
 }
 
+// Core pp. 54-68: tablas de rol que solo aplican según una elección previa (el libro dice "If You Have a Partner…",
+// "If on Land…", "Why Did You Leave?" para el solista que estuvo en un grupo). Clave = id de la tabla condicionada;
+// cada condición pide que la tabla `table` tenga elegido un resultado cuyo `roll` esté en `rolls`. [Claude Code · 2026-10-22]
+interface RoleLifepathCondition {
+  table: string;
+  rolls: string[];
+}
+const PARTNER_CONDITION: Record<string, RoleLifepathCondition[]> = { partner: [{ table: 'partner_choice', rolls: ['1'] }] };
+export const ROLE_LIFEPATH_CONDITIONS: Partial<Record<CoreRoleName, Record<string, RoleLifepathCondition[]>>> = {
+  Rockerboy: {
+    once_in_group: [{ table: 'group_or_solo', rolls: ['2'] }],
+    why_left: [
+      { table: 'group_or_solo', rolls: ['2'] },
+      { table: 'once_in_group', rolls: ['1'] }
+    ]
+  },
+  Netrunner: PARTNER_CONDITION,
+  Tech: PARTNER_CONDITION,
+  Medtech: PARTNER_CONDITION,
+  Fixer: PARTNER_CONDITION,
+  Nomad: {
+    land: [{ table: 'base', rolls: ['1'] }],
+    air: [{ table: 'base', rolls: ['2'] }],
+    sea: [{ table: 'base', rolls: ['3'] }]
+  }
+};
+
+/** Tablas de lifepath de rol (Core) que aplican con las elecciones actuales; las condicionadas sin su elección no aparecen. */
+export function getApplicableRoleLifepathTables(role: CoreRoleName | null, roleLifepath: Record<string, LifepathPick>, source: LifepathSource = 'core'): LifepathTable[] {
+  const all = getLifepathTables(source, role).role;
+  const conditions = role ? ROLE_LIFEPATH_CONDITIONS[role] ?? {} : {};
+  const rollOf = (tableId: string): string | undefined => {
+    const pick = roleLifepath[tableId];
+    const t = all.find((x) => x.id === tableId);
+    return pick && t ? t.results.find((r) => r.es === pick.value)?.roll : undefined;
+  };
+  return all.filter((t) =>
+    (conditions[t.id] ?? []).every((c) => {
+      const r = rollOf(c.table);
+      return r !== undefined && c.rolls.includes(r);
+    })
+  );
+}
+
 function rollMatches(roll: string, n: number): boolean {
   return roll.split(',').some((part) => {
     const bounds = part.trim().split(/[-–]/).map((x) => parseInt(x, 10));
@@ -523,7 +567,7 @@ export function buildCharacterLifepath(draft: CreatorDraft): CharacterLifepath {
   }
 
   const roleLifepath: Record<string, string> = {};
-  for (const t of tables.role) {
+  for (const t of getApplicableRoleLifepathTables(draft.role, draft.roleLifepath, source)) {
     const pick = draft.roleLifepath[t.id];
     if (pick && pick.value.trim()) roleLifepath[t.name] = pick.value;
   }
@@ -576,6 +620,8 @@ export interface RolePackageCyberware {
   humanityLoss: number;
   chosen: number;
   alternatives: Array<{ name: string; humanityLoss: number }>;
+  /** En 2077 la opción principal la cubre el Neuroport: no se instala ni descuenta HL, pero se puede elegir la alternativa "o". */
+  coveredByNeuroport?: boolean;
 }
 
 export interface RolePackageResult {
@@ -621,6 +667,7 @@ function resolvePackageItem(
 }
 
 const CYBERWARE_ALT = /^o\s+(.+?)\s*\(HL\s*(\d+)\)\s*$/i;
+const NEUROPORT_COVERED_CYBERWARE = ['Neural Link', 'Interface Plugs', 'Internal Agent', 'Biomonitor'];
 
 export function getRolePackage(role: CoreRoleName, era: CharacterEra, choices: Record<string, number>): RolePackageResult {
   const pkg = CORE_GEAR_SKILLS.rolePackages[role];
@@ -661,8 +708,11 @@ export function getRolePackage(role: CoreRoleName, era: CharacterEra, choices: R
     if (chosen < 0 || chosen > alternatives.length) chosen = 0;
     const picked = chosen === 0 ? { name: item.name, humanityLoss: item.humanityLoss } : alternatives[chosen - 1];
     // CEMK RB pp. 35-36: el Neuroport reemplaza Neural Link e Interface Plugs (si se elige la alternativa, se conserva).
-    if (era === '2077' && chosen === 0 && (item.name === 'Neural Link' || item.name === 'Interface Plugs')) {
+    // Discrepancias 34-35 (decididas por Giuliano, 2026-10-22): también el Internal Agent (lo cubre el Holophone) y el Biomonitor (pieza del Neuroport).
+    if (era === '2077' && chosen === 0 && NEUROPORT_COVERED_CYBERWARE.includes(item.name)) {
       notes.push(`${item.name}: ${NEUROPORT_NOTE}`);
+      // Con alternativa "o" queda en la lista para poder elegirla (p. ej. Techhair del Exec, Wolvers del Nomad).
+      if (alternatives.length > 0) cyberware.push({ key, name: item.name, humanityLoss: 0, chosen, alternatives, coveredByNeuroport: true });
       return;
     }
     cyberware.push({ key, name: picked.name, humanityLoss: picked.humanityLoss, chosen, alternatives });
@@ -781,6 +831,7 @@ export function getCyberwareList(draft: CreatorDraft): CreatorCyberware[] {
   const list: CreatorCyberware[] = [];
   if (draft.role && (draft.method === 'streetrat' || draft.method === 'edgerunner')) {
     for (const c of getRolePackage(draft.role, draft.era, draft.packageChoices).cyberware) {
+      if (c.coveredByNeuroport) continue;
       list.push({ name: c.name, humanityLoss: c.humanityLoss, qty: 1, cost: 0, source: 'package' });
     }
   }
@@ -889,8 +940,8 @@ function validateLifepath(d: CreatorDraft): string[] {
     }
   }
   if (d.role) {
-    for (const t of getLifepathTables(d.lifepathSource, d.role).role) {
-      if (!d.roleLifepath[t.id]?.value.trim()) errs.push(`Lifepath de rol: falta "${t.name}".`);
+    for (const t of getApplicableRoleLifepathTables(d.role, d.roleLifepath, d.lifepathSource)) {
+      if (!d.roleLifepath[t.id]?.value.trim()) errs.push(`Lifepath de rol: falta "${t.name}"${t.die === 'choose' ? ' (se elige a mano)' : ''}.`);
     }
   }
   return errs;
@@ -1062,6 +1113,7 @@ function buildPregenSheet(draft: CreatorDraft, nowId: string | undefined, warnin
     }, 0);
     sheet.currentHumanity = Math.max(0, sheet.stats.EMP * 10 - loss);
     sheet.creationMethod = 'pregen';
+    sheet.sourceFolioId = folio.id;
     sheet.era = '2077';
     warnings.push('Ficha de CEMK: no sigue los límites del Core; las skills que no trae quedan en 0.');
     return sheet;
@@ -1132,8 +1184,10 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
       if (a) addInventory('armor', a.id, a.name, a.cost, e.qty, 'Paquete de rol');
       else if (am) addInventory('ammunition', am.id, am.name, am.cost, e.qty, 'Paquete de rol');
       else {
-        // Munición "Basic ... Ammunition" del libro: se guarda como Basic Ammo del pack, con el tipo en el nombre.
-        const basic = /^Basic .*Ammunition$/i.test(e.name) ? ammoDb.find((x) => x.id === 'basic-ammo') : undefined;
+        // Munición "<Tipo> ... Ammunition" del libro (Basic, Incendiary...): se guarda como "<Tipo> Ammo" del pack, con el tipo
+        // de arma en el nombre. Core p.345: la Incendiary existe para Shotgun Shells.
+        const ammoKind = /^(\S+) .*Ammunition$/i.exec(e.name)?.[1];
+        const basic = ammoKind ? ammoDb.find((x) => x.name.toLowerCase() === `${ammoKind.toLowerCase()} ammo`) : undefined;
         addInventory(basic ? 'ammunition' : 'weapons', basic?.id ?? '', e.name, basic?.cost ?? 0, e.qty, 'Paquete de rol');
         if (!basic) warnings.push(`"${e.name}" no está en el catálogo del pack: queda en el inventario sin ID.`);
       }

@@ -247,6 +247,19 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.0] - 2026-10-22 (Roles por rango) [Claude Code · 2026-10-22]
+* **Category**: Roles (plan 8, bloque 1).
+* **Datos**: `data/creation-src/role-ranks-combat.json` (Solo, Netrunner, Tech, Medtech, Nomad) y `role-ranks-social.json` (Rockerboy, Fixer, Media, Exec, Lawman y Expanded Availability). Por rol: habilidad, 10 rangos, opciones, tablas, ajustes 2070s (RB p.25) y conversión del Folio con su reparto inicial.
+* **Generador**: `scripts/gen_creation.py` produce `frontend/src/data/creation/roleRanks.ts` (`ROLE_RANKS`, tipos `RoleRanksSrc` en `types.ts`).
+* **Fuente única**: `frontend/src/data/roleProgression.ts` deriva `ROLE_ABILITIES_COMPLETE_PROGRESSION` y `ROLES_INTERACTIVE_GUIDES`; se borraron los literales a mano (Netrunner solo CEMK, escalera de NET Actions equivocada, cita duplicada). En la ficha, "Estadística Asociada" pasa a "Fuente".
+* **Self-ICE** (`engine/cemkPort.ts`): N Passwalls, todos con el DV del total (RB pp. 16, 36).
+* **Lifepath de rol condicional** (bug de v4.8.2 hallado al probar PJs): `ROLE_LIFEPATH_CONDITIONS` y `getApplicableRoleLifepathTables` en `engine/characterCreation.ts`; validación, ficha, "Tirar todo" y `LifepathStep.tsx` usan solo las tablas que aplican (Core pp. 54-68). Nueva tabla `once_in_group` del Rockerboy en `core-lifepath.json` (Core p.54). 4 tests.
+* **Neuroport en 2077** (discrepancias 34-35): `NEUROPORT_COVERED_CYBERWARE` suma Internal Agent y Biomonitor; las piezas cubiertas con alternativa "o" quedan en el paquete con `coveredByNeuroport` para poder elegir la alternativa (Techhair, Wolvers) y `getCyberwareList` las salta. `GearStep.tsx` las muestra como "(lo cubre el Neuroport)".
+* **Munición del paquete** (37): "<Tipo> ... Ammunition" apunta a "<Tipo> Ammo" del pack (Incendiary, Core p.345).
+* **Nota del Folio** (36): `folioNote`/`folioId` en `RoleAbilityProgression`; `StreetLabView` la muestra solo si la ficha es el Folio o una copia (`CharacterSheet.sourceFolioId`, lo pone el creador).
+* **Docs**: `docs/canon-audit/v4.9.0-roles.md` y discrepancias 24-37, todas decididas por Giuliano; `doubts` de `role-ranks-*.json` anotadas con lo decidido. Thorn: "Solo Core" (decisión de Giuliano).
+* **Verificación**: tsc, 156 tests (10 en `roleRanks.test.ts`, 4 de lifepath, 3 de Neuroport y 1 de munición); sonda de los 10 roles en 2 eras sin ciberware duplicado ni avisos; navegador: Exec 2077 con Biomonitor cubierto y Techhair elegible, nota del Folio en Wrench y Hardpoint y no en un Nomad propio y build; navegador: guía del Netrunner con la progresión del Core, sin errores de consola.
+
 ### [v4.8.2] - 2026-10-22 (Wizard funcional) [Claude Code · 2026-10-22]
 * **Category**: Creador de personajes (plan 7, bloque 3).
 * **Motor puro** `frontend/src/engine/characterCreation.ts` (sin React ni storage): `CreatorDraft` v1, métodos (`applyStreetratRow`, `applyEdgerunnerRoll`), puntos (62 STAT, 86 skills, ×2), lifepath CEMK/Core (`getLifepathTables`, `rollLifepathTable`, `buildCharacterLifepath` con `LIFEPATH_FIELD_MAP`), paquete de rol (`getRolePackage`), dinero (`getStartingMoney`, Running Out of Cash), Humanidad (`getCyberwareList`, `computeDerived`), validación (`validateStep`, `getMissingChecklist`) y `buildCharacterSheetFromDraft`. 36 tests.

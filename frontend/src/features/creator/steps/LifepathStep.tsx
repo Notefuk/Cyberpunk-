@@ -2,6 +2,7 @@
 import React from 'react';
 import type { LifepathTable } from '../../../data/creation';
 import {
+  getApplicableRoleLifepathTables,
   getLifepathGroups,
   getLifepathTables,
   getSingleLifepathTables,
@@ -95,6 +96,8 @@ export const LifepathStep: React.FC<StepProps> = ({ draft, update }) => {
   const groups = getLifepathGroups(source);
   const singles = getSingleLifepathTables(source);
   const tableById = (id: string): LifepathTable | undefined => tables.general.find((t) => t.id === id);
+  const roleTables = getApplicableRoleLifepathTables(draft.role, draft.roleLifepath, source);
+  const pendingChoices = roleTables.filter((t) => t.die === 'choose' && !draft.roleLifepath[t.id]);
 
   const setSource = (s: LifepathSource): void => {
     if (s === source) return;
@@ -147,7 +150,9 @@ export const LifepathStep: React.FC<StepProps> = ({ draft, update }) => {
           }
         }
       });
-      for (const table of t.role) {
+      // Solo las tablas que aplican con lo elegido; las "a elección" no se tiran (Core pp. 54-68).
+      for (const table of getApplicableRoleLifepathTables(d.role, roleLifepath, d.lifepathSource)) {
+        if (roleLifepath[table.id]) continue;
         const p = rollLifepathTable(table);
         if (p) roleLifepath[table.id] = p;
       }
@@ -234,7 +239,12 @@ export const LifepathStep: React.FC<StepProps> = ({ draft, update }) => {
       {source === 'core' && (
         <Panel title="Lifepath de rol">
           {!draft.role && <p className="text-xs text-[#f59e0b]">Elegí un rol en el paso anterior para ver sus tablas.</p>}
-          {tables.role.map((t) => (
+          {pendingChoices.length > 0 && (
+            <p className="text-xs text-[#f59e0b] mb-1" role="status">
+              Elegí a mano: {pendingChoices.map((t) => t.name).join(' · ')}. "Tirar todo" no tira las tablas a elección; las que dependen de ellas aparecen al elegir.
+            </p>
+          )}
+          {roleTables.map((t) => (
             <TableRow key={t.id} table={t} prefix="r" pick={draft.roleLifepath[t.id]} onChange={(p) => setRoleLife(t.id, p)} />
           ))}
         </Panel>

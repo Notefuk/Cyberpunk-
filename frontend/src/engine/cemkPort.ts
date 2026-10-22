@@ -16,8 +16,8 @@ export const CEMK_NET_ACTIONS_PER_TURN = NET_ACTIONS_PER_TURN;
 // RB p.16: el Cyberdeck Port del Neuroport alcanza Neuroports a 50 m.
 export const CYBERDECK_PORT_RANGE_M = 50;
 
-// RB p.36: Self-ICE = Passwalls DV 6, 8, 10 (máximo 3).
-const SELF_ICE_PASSWALL_DVS = [6, 8, 10];
+// RB p.36 (y p.16): cada Self-ICE agrega un Passwall; TODOS los Passwalls usan el DV del total instalado (máximo 3): 1 = DV6, 2 = DV8, 3 = DV10.
+const SELF_ICE_DV_BY_TOTAL: Record<number, number> = { 1: 6, 2: 8, 3: 10 };
 
 export interface CemkEnemyPort {
   hasNeuroport: true;
@@ -81,8 +81,8 @@ export function portEnemyToCemk(enemy: EnemySheet): CemkEnemyPort {
   }
 
   const passwallCount = Math.min(3, Math.max(0, enemy.selfIce ?? 0));
-  const selfIcePasswalls = SELF_ICE_PASSWALL_DVS.slice(0, passwallCount).map(dv => ({ dv }));
-  if (passwallCount > 0) notes.push('Self-ICE como Passwalls DV 6/8/10 (RB p.36)');
+  const selfIcePasswalls = Array.from({ length: passwallCount }, () => ({ dv: SELF_ICE_DV_BY_TOTAL[passwallCount] }));
+  if (passwallCount > 0) notes.push(`Self-ICE: ${passwallCount} Passwall(s), todos DV ${SELF_ICE_DV_BY_TOTAL[passwallCount]} (RB p.36)`);
 
   // Misma regla que combatEngine (L294): melee/artes marciales = Math.ceil(SP / 2). RB p.10.
   const headSpVsMelee = enemy.headSpVsMelee ?? Math.ceil(enemy.headSp / 2);

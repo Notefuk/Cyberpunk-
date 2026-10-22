@@ -582,6 +582,8 @@ export interface CharacterSheet {
   roleAbilityName?: string;
   /** Variante de la Habilidad de Rol elegida en la creación: texto del Core o ajuste CEMK (plan 7, v4.8.2). [Claude Code · 2026-10-22] */
   roleAbilityVariant?: 'core' | 'cemk';
+  /** Id del Folio de CEMK del que se copió la ficha (creador, método pregen). [Claude Code · 2026-10-22] */
+  sourceFolioId?: string;
   generalSkills?: Record<string, number>;
   fashionBudgetRemaining?: number;
   hasNeuroport?: boolean;
