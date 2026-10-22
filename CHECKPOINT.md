@@ -8,11 +8,11 @@
 
 **Última actualización**: [Claude Code · 2026-10-22]
 **Versión de la app**: v4.8.2 (en `main`, squash 0143f1a, PR #23; publicada en gh-pages y verificada en vivo, también a 375 px)
-**Plan activo**: plan 7 (`docs/plans/plan7-creador-personajes.md`, creador de personajes CEMK-first, persistente y con Modo Novato; v4.8.0-v4.8.3). En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2) y plan 5 (Black Chrome y vehículos, ahora v4.9.x). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
+**Plan activo**: plan 8 (`docs/plans/plan8-roles-core-cemk.md`, roles y rangos Core + CEMK combinados; v4.9.0-v4.9.3). Después: v4.9.4 Modo Novato (ex v4.8.3 del plan 7) y luego vehículos/Black Chrome. En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-22] Nada en curso. Giuliano está probando v4.8.2 desde el celular. Siguiente: v4.8.3 Modo Novato (interruptor `cpr_creator_novice_v1`, "qué es esto / qué te conviene" por paso, checklist y tooltips de skills completos) más lo que salga de su prueba. Visto a 375 px: sin scroll horizontal; el stepper ocupa mucha altura y la pestaña lateral "Reglas & Machete" tapa el borde derecho. Pendientes chicos: "Ninguno" de más en amigos del lifepath CEMK; tienda sin paginación. Para planificar (sin código): fichas de jugadores accesibles desde cualquier dispositivo, ver `PROJECT_STATUS_AND_ROADMAP.md`.
+- [Claude Code · 2026-10-22] v4.9.0 Datos de roles por rango (plan 8) en la rama `claude/v4.9.0-roles`. Paso actual: scouts extraen `data/creation-src/role-ranks.json` (tabla Core 1-10 por rol, tweak 2070s RB p.25, texto del Folio y su conversión a Core rango 4). Si se corta: ver si el JSON existe y está completo. Pendientes de v4.8.2: "Ninguno" de más en amigos del lifepath CEMK; tienda sin paginación; stepper alto y pestaña "Reglas & Machete" en celular. Para planificar (sin código): fichas accesibles desde cualquier dispositivo (`PROJECT_STATUS_AND_ROADMAP.md`). Antigravity: no tocar `data/weaponAndCyberwareTooltips.ts`, `data/netAndRolesData.ts` ni `engine/cemkPort.ts` hasta el merge.
 
 ## Traspaso
 
