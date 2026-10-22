@@ -22,6 +22,7 @@ import {
   Award
 } from 'lucide-react';
 import { useCharacterStore, buildCemk2077Characters } from '../../store/useCharacterStore';
+import { getInterfaceRank } from '../../engine/roleRules';
 import {
   CEMK_FOLIO_PREMADE_CHARACTERS,
   CEMK_FOLIO_METADATA_MAP
@@ -341,7 +342,7 @@ export const RedChromeCargoView: React.FC = () => {
 
   const handleNetAction = (floorNumber: number, actionType: 'backdoor' | 'eye_dee' | 'zap' | 'hellhound_atk' | 'control') => {
     const d10 = rollD10();
-    const interfaceRank = activeChar.roleRank || 4;
+    const interfaceRank = getInterfaceRank(activeChar);
     const totalRoll = d10 + interfaceRank;
 
     if (actionType === 'backdoor') {
@@ -2466,7 +2467,7 @@ export const RedChromeCargoView: React.FC = () => {
                   key={qh.id}
                   onClick={() => {
                     const d10 = Math.floor(Math.random() * 10) + 1;
-                    const interfaceRank = activeChar.roleRank || 4;
+                    const interfaceRank = getInterfaceRank(activeChar);
                     const rollTotal = d10 + interfaceRank;
                     const success = rollTotal > qh.dv; // superar el DV, no igualarlo (CEMK p. 5)
                     const targetEnemy = activeEnemies.find(e => e.instanceId === activeQuickhackModal) || activeEnemies[0];

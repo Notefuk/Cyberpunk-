@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
 import { 
@@ -27,6 +27,11 @@ import {
   beatsDv,
   AIMED_SHOT_OPTIONS
 } from '../../engine/combatEngine';
+import { applyDamageDeflection, spotWeaknessBonus, rollInitiative, rollPerception } from '../../engine/combatAwareness';
+import { getInterfaceRank, netActionsForInterface, maxQuickhackDv, neuroportFirewallDv, canUseQuickhacks, jackInRangeM } from '../../engine/roleRules';
+import { GameClockBar } from './GameClockBar';
+import { CritTableSelector } from './CritTableSelector';
+import { MedtechTreatmentPanel } from '../netroles/MedtechTreatmentPanel';
 import type { WeaponItem, RollEntry, InventoryItem, AimedShotTarget, TechWeaponUpgradeType } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
@@ -859,6 +864,17 @@ export const CombatHudView: React.FC = () => {
   const triggerExplosionClick = useCombatStore((state) => state.triggerExplosionClick);
   const markAttackDamageRolled = useCombatStore((state) => state.markAttackDamageRolled);
   const clearRollHistory = useCombatStore((state) => state.clearRollHistory);
+  // v4.9.2 [Claude Code · 2026-10-22]: Round, era y NET Actions (plan 10).
+  const era = useCombatStore((state) => state.era);
+  const round = useCombatStore((state) => state.round);
+  const firstDamageTakenThisRound = useCombatStore((state) => state.firstDamageTakenThisRound);
+  const firstHitLandedThisRound = useCombatStore((state) => state.firstHitLandedThisRound);
+  const netActionsSpent = useCombatStore((state) => state.netActionsSpent);
+  const nextRound = useCombatStore((state) => state.nextRound);
+  const markDamageTaken = useCombatStore((state) => state.markDamageTaken);
+  const markHitLanded = useCombatStore((state) => state.markHitLanded);
+  const spendNetAction = useCombatStore((state) => state.spendNetAction);
+  const resetCombatRound = useCombatStore((state) => state.resetCombatRound);
 
   // Local state: Reordenamiento, colapso y docking
   const [leftColumnOrder, setLeftColumnOrder] = useState<LeftPanelId[]>(() => {
@@ -1456,6 +1472,15 @@ export const CombatHudView: React.FC = () => {
   // CEMK p. 26: alcance según el hardware. CEMK p. 16: 1 Quickhack por objetivo por turno.
   const [quickhackConnection, setQuickhackConnection] = useState<'external' | 'external_plus' | 'neuroport_port'>('neuroport_port');
   const [quickhackUsedThisTurn, setQuickhackUsedThisTurn] = useState<boolean>(false);
+  const [roundToolFeedback, setRoundToolFeedback] = useState<string | null>(null);
+  // Alcance por defecto según el hardware (CEMK RB p.26; Core p.208): el Range Upgrade del cyberdeck no se guarda en el modelo de la ficha, así que se asume false.
+  const defaultQuickhackRangeM = jackInRangeM({
+    cyberdeckPort: (activeChar?.installedCyberwareIds ?? []).includes('cw-cemk-cyberdeck-port'),
+    rangeUpgrade: false
+  });
+  useEffect(() => {
+    setQuickhackConnection(defaultQuickhackRangeM === 50 ? 'neuroport_port' : defaultQuickhackRangeM === 8 ? 'external_plus' : 'external');
+  }, [activeChar?.id, defaultQuickhackRangeM]);
   const [calcPassExcess, setCalcPassExcess] = useState<boolean>(true);
   const [showArmorRulesGuide, setShowArmorRulesGuide] = useState<boolean>(false);
   const [rackFilter, setRackFilter] = useState<'all' | 'weapons' | 'unarmed' | 'throwables' | 'drugs'>('all');
@@ -1600,7 +1625,19 @@ export const CombatHudView: React.FC = () => {
   );
 
   // Calculations for Active Character
-  const activeInterfaceRank = activeChar?.interfaceRankOverride ?? (activeChar?.role === 'Netrunner' ? (activeChar.roleRank || 4) : 0);
+  const activeInterfaceRank = activeChar ? getInterfaceRank(activeChar) : 0;
+  // Combat Awareness solo cuenta si el rol es Solo (Core p.146).
+  const isSoloActive = activeChar?.role === 'Solo';
+  const soloAlloc = isSoloActive ? activeChar?.soloAllocation : undefined;
+  // Core p.146: Fumble Recovery ignora los 1 al atacar (siguen valiendo 1).
+  const fumbleOpts = soloAlloc?.fumbleRecovery ? { ignoreCriticalFailure: true } : undefined;
+  // Core p.197: NET Actions por rango de Interface.
+  const netActionsMax = netActionsForInterface(activeInterfaceRank);
+  const hasNeuroportActive = !!activeChar?.hasNeuroport || (activeChar?.installedCyberwareIds ?? []).includes('cw-cemk-neuroport');
+  // CEMK RB p.26: en 2045 los Quickhacks solo con Neuroport.
+  const quickhacksAllowed = canUseQuickhacks(era, hasNeuroportActive);
+  const quickhackMaxDv = maxQuickhackDv(activeInterfaceRank);
+  const quickhackFirewallDv = neuroportFirewallDv(activeInterfaceRank);
   const effectiveBody = getEffectiveBody(activeChar);
   const maxHp = calculateMaxHp(effectiveBody, activeChar?.stats?.WILL ?? 6);
   const seriousWoundThresh = calculateSeriouslyWoundedThreshold(maxHp);
@@ -1700,7 +1737,15 @@ export const CombatHudView: React.FC = () => {
   const handleApplyCalculatedDamage = () => {
     ensureTelemetryExpanded();
     const wasMortallyWounded = (activeChar?.currentHp ?? 0) < 1;
-    const appliedHpLoss = calcLocation === 'shield' ? (calcPassExcess ? calcExcessHpLoss : 0) : calcHpLoss;
+    const incomingHpLoss = calcLocation === 'shield' ? (calcPassExcess ? calcExcessHpLoss : 0) : calcHpLoss;
+    // Core p.146: Damage Deflection reduce el primer daño que recibe el Solo en el Round (después de armadura y ablación).
+    const deflection = isSoloActive
+      ? applyDamageDeflection(incomingHpLoss, soloAlloc, !firstDamageTakenThisRound)
+      : { damage: incomingHpLoss, reduced: 0 };
+    const appliedHpLoss = deflection.damage;
+    if (isSoloActive && incomingHpLoss > 0) {
+      markDamageTaken();
+    }
     const critLocation: 'head' | 'body' = calcLocation === 'head' ? 'head' : 'body';
     if (calcLocation === 'shield') {
       if (calcShieldLoss > 0) {
@@ -1710,16 +1755,16 @@ export const CombatHudView: React.FC = () => {
         if (calcExcessSpAblation > 0) {
           ablateArmor('body', calcExcessSpAblation);
         }
-        if (calcExcessHpLoss > 0) {
-          adjustHp(-calcExcessHpLoss);
+        if (appliedHpLoss > 0) {
+          adjustHp(-appliedHpLoss);
         }
       }
     } else {
       if (calcSpAblation > 0) {
         ablateArmor(calcLocation, calcSpAblation);
       }
-      if (calcHpLoss > 0) {
-        adjustHp(-calcHpLoss);
+      if (appliedHpLoss > 0) {
+        adjustHp(-appliedHpLoss);
       }
     }
 
@@ -1742,20 +1787,108 @@ export const CombatHudView: React.FC = () => {
       timestamp: new Date().toISOString(),
       type: 'damage',
       weaponName: `Impacto Recibido: ${calcAttackType.toUpperCase()}`,
-      damageFormula: `${incomingDamageInput} Dmg -> ${calcLocation === 'shield' ? 'Escudo/Cobertura' : calcLocation === 'head' ? 'Cabeza' : 'Torso'}`,
+      damageFormula: `${incomingDamageInput} Dmg -> ${calcLocation === 'shield' ? 'Escudo/Cobertura' : calcLocation === 'head' ? 'Cabeza' : 'Torso'}${deflection.reduced > 0 ? ` · Damage Deflection −${deflection.reduced} (Core p.146)` : ''}`,
       distanceLabel: calcLocation === 'shield' ? `SDP -${calcShieldLoss}` : `SP -${calcSpAblation}`,
       diceResults: [],
       baseDamageTotal: incomingDamageInput,
-      finalDamageTotal: calcLocation === 'shield' ? calcExcessHpLoss : calcHpLoss,
+      finalDamageTotal: appliedHpLoss,
       damageRolled: true
     };
     addRollEntry(entry);
 
     const feedbackText = calcLocation === 'shield'
-      ? `💥 Escudo: -${calcShieldLoss} SDP${calcExcessHpLoss > 0 ? `, Torso: -${calcExcessSpAblation} SP, -${calcExcessHpLoss} HP` : ''}`
-      : `💥 ${calcLocation === 'head' ? 'Cabeza' : 'Torso'}: -${calcSpAblation} SP, -${calcHpLoss} HP`;
+      ? `💥 Escudo: -${calcShieldLoss} SDP${calcExcessHpLoss > 0 ? `, Torso: -${calcExcessSpAblation} SP, -${appliedHpLoss} HP` : ''}${deflection.reduced > 0 ? ` · Damage Deflection −${deflection.reduced} (Core p.146)` : ''}`
+      : `💥 ${calcLocation === 'head' ? 'Cabeza' : 'Torso'}: -${calcSpAblation} SP, -${appliedHpLoss} HP${deflection.reduced > 0 ? ` · Damage Deflection −${deflection.reduced} (Core p.146)` : ''}`;
     setDamageFeedback(feedbackText);
     setTimeout(() => setDamageFeedback(null), 5000);
+  };
+
+  // Core p.146: Spot Weakness suma al daño (antes de armadura) del primer Ataque exitoso del Round; todo daño de Ataque exitoso marca el primer acierto.
+  const addOutgoingDamageEntry = (dmgEntry: RollEntry) => {
+    const bonus = isSoloActive ? spotWeaknessBonus(soloAlloc, !firstHitLandedThisRound) : 0;
+    if (bonus > 0 && dmgEntry.finalDamageTotal !== undefined) {
+      dmgEntry.finalDamageTotal += bonus;
+      dmgEntry.damageFormula = `${dmgEntry.damageFormula} + ${bonus} (Spot Weakness, Core p.146)`;
+    }
+    markHitLanded();
+    addRollEntry(dmgEntry);
+  };
+
+  // Round (decisión 1 del plan 10): pasa de Round y reinicia el Quickhack por objetivo.
+  const handleNextRound = () => {
+    nextRound();
+    setQuickhackUsedThisTurn(false);
+  };
+
+  const handleResetCombat = () => {
+    resetCombatRound();
+    setQuickhackUsedThisTurn(false);
+  };
+
+  // Core pp.126/168: Iniciativa = REF + 1d10 (+ Initiative Reaction, p.146).
+  const handleRollInitiative = () => {
+    ensureTelemetryExpanded();
+    let ref = activeChar?.stats?.REF ?? 0;
+    if (activeChar?.fbcState?.isFullBodyConversion) {
+      ref = Math.max(ref, activeChar.fbcState.statFloor ?? 0);
+    }
+    const armorPenalty = Math.max(Math.abs(activeChar?.headArmor?.penalty ?? 0), Math.abs(activeChar?.bodyArmor?.penalty ?? 0));
+    ref = Math.max(0, ref - armorPenalty);
+    const r = rollInitiative(ref, soloAlloc);
+    addRollEntry({
+      id: `roll-init-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
+      timestamp: new Date().toISOString(),
+      type: 'skill',
+      weaponName: '⏱️ Iniciativa (Core pp. 126, 168)',
+      statName: 'REF',
+      statVal: ref,
+      skillName: 'Iniciativa',
+      d10: r.natural,
+      totalAttack: r.total,
+      critDie: null,
+      needsExplosionClick: false,
+      explosionType: null,
+      penaltyBreakdown: [r.breakdown]
+    });
+    setRoundToolFeedback(`⏱️ Iniciativa: ${r.breakdown}`);
+    setTimeout(() => setRoundToolFeedback(null), 6000);
+  };
+
+  // Core p.82 y p.146: Perception = INT + Perception + 1d10 (+ Threat Detection).
+  const handleRollPerception = () => {
+    ensureTelemetryExpanded();
+    const int = activeChar?.stats?.INT ?? 0;
+    const perceptionLevel = activeChar?.skills?.perception ?? 0;
+    const r = rollPerception(int, perceptionLevel, soloAlloc);
+    addRollEntry({
+      id: `roll-perc-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
+      timestamp: new Date().toISOString(),
+      type: 'skill',
+      weaponName: '👁️ Perception (Core p.82)',
+      statName: 'INT',
+      statVal: int,
+      skillName: 'Perception',
+      skillVal: perceptionLevel,
+      d10: r.natural,
+      totalAttack: r.total,
+      critDie: null,
+      needsExplosionClick: false,
+      explosionType: null,
+      penaltyBreakdown: [r.breakdown]
+    });
+    setRoundToolFeedback(`👁️ Perception: ${r.breakdown}`);
+    setTimeout(() => setRoundToolFeedback(null), 6000);
+  };
+
+  // Core p.197: cada Jack In / Breach / Quickhack gasta 1 NET Action del Round.
+  const trySpendNetAction = (): boolean => {
+    if (netActionsMax > 0 && netActionsSpent >= netActionsMax) {
+      setQuickhackFeedback(`⛔ Sin NET Actions este Round (${netActionsSpent}/${netActionsMax}, Core p.197). Pulsa "Siguiente Round" para recuperarlas.`);
+      setTimeout(() => setQuickhackFeedback(null), 5000);
+      return false;
+    }
+    spendNetAction();
+    return true;
   };
 
   // Handle Step 1: Weapon Attack Check (1d10)
@@ -1795,7 +1928,7 @@ export const CombatHudView: React.FC = () => {
       isAutofire: isAuto,
       weaponInstanceId: instanceId,
       aimedShotTarget
-    });
+    }, aimedShotTarget, fumbleOpts);
 
     addRollEntry(entry);
   };
@@ -1822,9 +1955,10 @@ export const CombatHudView: React.FC = () => {
 
     if (recentHit) {
       markAttackDamageRolled(recentHit.id);
+      addOutgoingDamageEntry(dmgEntry);
+    } else {
+      addRollEntry(dmgEntry);
     }
-
-    addRollEntry(dmgEntry);
   };
 
   // Unarmed: Brawling attack
@@ -1853,7 +1987,7 @@ export const CombatHudView: React.FC = () => {
       luckSpent,
       weaponInstanceId: 'unarmed-brawling',
       aimedShotTarget
-    });
+    }, aimedShotTarget, fumbleOpts);
     addRollEntry(entry);
   };
 
@@ -1861,7 +1995,7 @@ export const CombatHudView: React.FC = () => {
   const handleBrawlingDamage = () => {
     ensureTelemetryExpanded();
     const dmgEntry = createDamageRoll('Puños (Brawling)', unarmedDmg, false, 1, 'unarmed-brawling', aimedShotTarget);
-    addRollEntry(dmgEntry);
+    addOutgoingDamageEntry(dmgEntry);
   };
 
   // Unarmed: Grapple maneuver
@@ -1936,7 +2070,7 @@ export const CombatHudView: React.FC = () => {
       luckSpent,
       weaponInstanceId: 'unarmed-martial-arts',
       aimedShotTarget
-    });
+    }, aimedShotTarget, fumbleOpts);
     addRollEntry(entry);
   };
 
@@ -1944,7 +2078,7 @@ export const CombatHudView: React.FC = () => {
   const handleMartialArtsDamage = () => {
     ensureTelemetryExpanded();
     const dmgEntry = createDamageRoll('Artes Marciales (Ignora 50% SP)', unarmedDmg, false, 1, 'unarmed-martial-arts', aimedShotTarget);
-    addRollEntry(dmgEntry);
+    addOutgoingDamageEntry(dmgEntry);
   };
 
   // Attachment Secondary Attacks (Bayonet, Underbarrel Shotgun, Underbarrel Grenade Launcher)
@@ -1971,7 +2105,7 @@ export const CombatHudView: React.FC = () => {
       luckSpent,
       weaponInstanceId: `bayonet-${parentWeapon.id}`,
       aimedShotTarget
-    });
+    }, aimedShotTarget, fumbleOpts);
     addRollEntry(entry);
   };
 
@@ -1985,7 +2119,7 @@ export const CombatHudView: React.FC = () => {
       `bayonet-${parentWeapon.id}`,
       aimedShotTarget
     );
-    addRollEntry(dmgEntry);
+    addOutgoingDamageEntry(dmgEntry);
   };
 
   const handleAttachmentUnderbarrelSgAttack = (parentWeapon: WeaponItem) => {
@@ -2019,7 +2153,7 @@ export const CombatHudView: React.FC = () => {
       luckSpent,
       weaponInstanceId: `ubsg-${parentWeapon.id}`,
       aimedShotTarget
-    });
+    }, aimedShotTarget, fumbleOpts);
     addRollEntry(entry);
   };
 
@@ -2033,7 +2167,7 @@ export const CombatHudView: React.FC = () => {
       `ubsg-${parentWeapon.id}`,
       aimedShotTarget
     );
-    addRollEntry(dmgEntry);
+    addOutgoingDamageEntry(dmgEntry);
   };
 
   const handleAttachmentUnderbarrelGlAttack = (parentWeapon: WeaponItem) => {
@@ -2067,7 +2201,7 @@ export const CombatHudView: React.FC = () => {
       luckSpent,
       weaponInstanceId: `ubgl-${parentWeapon.id}`,
       aimedShotTarget
-    });
+    }, aimedShotTarget, fumbleOpts);
     addRollEntry(entry);
   };
 
@@ -2081,7 +2215,7 @@ export const CombatHudView: React.FC = () => {
       `ubgl-${parentWeapon.id}`,
       aimedShotTarget
     );
-    addRollEntry(dmgEntry);
+    addOutgoingDamageEntry(dmgEntry);
   };
 
   // Cyberfists of Fury: Form Attack
@@ -2100,7 +2234,7 @@ export const CombatHudView: React.FC = () => {
 
     const d10 = Math.floor(Math.random() * 10) + 1;
     const isCritSuccess = d10 === 10;
-    const isCritFail = d10 === 1;
+    const isCritFail = d10 === 1 && !fumbleOpts;
     const targetDv = rollMeleeDefenseDv().dv;
     const totalBase = dex + rank + soloPrecision + luckSpent;
     const totalAttack = totalBase + d10;
@@ -2143,8 +2277,6 @@ export const CombatHudView: React.FC = () => {
   // Cyberfists of Fury: Form Damage
   const handleCyberfistsFormDamage = (form: typeof MARTIAL_ARTS_FORMS[number]) => {
     ensureTelemetryExpanded();
-    const spotBonus = activeChar?.soloAllocation?.spotWeakness ?? 0;
-    const formulaLabel = spotBonus > 0 ? `${unarmedDmg} + ${spotBonus} (Spot Weakness)` : unarmedDmg;
     const dmgEntry = createDamageRoll(
       `${form.name} (Ignora 50% SP)`,
       unarmedDmg,
@@ -2153,11 +2285,7 @@ export const CombatHudView: React.FC = () => {
       `ma-${form.id}`,
       aimedShotTarget
     );
-    if (spotBonus > 0 && dmgEntry.finalDamageTotal !== undefined) {
-      dmgEntry.finalDamageTotal += spotBonus;
-      dmgEntry.damageFormula = formulaLabel;
-    }
-    addRollEntry(dmgEntry);
+    addOutgoingDamageEntry(dmgEntry);
   };
 
   // Cyberfists of Fury: Special Move execution
@@ -2176,7 +2304,7 @@ export const CombatHudView: React.FC = () => {
 
     const d10 = Math.floor(Math.random() * 10) + 1;
     const isCritSuccess = d10 === 10;
-    const isCritFail = d10 === 1;
+    const isCritFail = d10 === 1 && !fumbleOpts;
     // Core p. 178: los movimientos sin DV se resuelven contra DEX + Evasion + 1d10 del defensor.
     const opposedDefense = move.isOpposed ? rollMeleeDefenseDv() : null;
     const targetDv = opposedDefense ? opposedDefense.dv : move.resolutionDv;
@@ -2231,7 +2359,7 @@ export const CombatHudView: React.FC = () => {
       `move-${move.id}`,
       aimedShotTarget
     );
-    addRollEntry(dmgEntry);
+    addOutgoingDamageEntry(dmgEntry);
   };
 
   // Solo: Update field
@@ -2259,6 +2387,7 @@ export const CombatHudView: React.FC = () => {
   // Paso 1: Jack In (1 NET Action) vs Target WILL
   const handleJackInRoll = () => {
     ensureTelemetryExpanded();
+    if (!trySpendNetAction()) return;
     const d10Hacker = Math.floor(Math.random() * 10) + 1;
     const hackerTotal = activeInterfaceRank + d10Hacker;
     const d10Target = Math.floor(Math.random() * 10) + 1;
@@ -2302,6 +2431,7 @@ export const CombatHudView: React.FC = () => {
       setTimeout(() => setQuickhackFeedback(null), 5000);
       return;
     }
+    if (!trySpendNetAction()) return;
     const d10 = Math.floor(Math.random() * 10) + 1;
     const total = activeInterfaceRank + d10;
     const isSuccess = beatsDv(total, dv);
@@ -2334,11 +2464,17 @@ export const CombatHudView: React.FC = () => {
   // Paso 3: Netrunner: Launch Quickhack 2077 (1 NET Action)
   const handleLaunchQuickhack = (qh: Quickhack2077) => {
     ensureTelemetryExpanded();
+    if (!quickhacksAllowed) {
+      setQuickhackFeedback('⛔ En 2045 los Quickhacks solo funcionan con Neuroport (CEMK RB p.26).');
+      setTimeout(() => setQuickhackFeedback(null), 5000);
+      return;
+    }
     if (quickhackUsedThisTurn) {
       setQuickhackFeedback('⛔ Solo 1 Quickhack por objetivo por turno, aunque te queden NET Actions (CEMK p. 16). Pulsa "Nuevo turno" para seguir.');
       setTimeout(() => setQuickhackFeedback(null), 5000);
       return;
     }
+    if (!trySpendNetAction()) return;
     setQuickhackUsedThisTurn(true);
     const roleRank = activeInterfaceRank;
     const luckSpent = luckToSpendOnNextRoll;
@@ -2399,6 +2535,13 @@ export const CombatHudView: React.FC = () => {
       `qh-${qh.id}`,
       aimedShotTarget
     );
+    // CEMK RB p.12: los Quickhacks nunca generan Heridas Críticas (tampoco el +5 de daño).
+    if (dmgEntry.isCriticalInjuryTrigger) {
+      dmgEntry.isCriticalInjuryTrigger = false;
+      dmgEntry.critBonusDamage = 0;
+      dmgEntry.finalDamageTotal = dmgEntry.baseDamageTotal;
+      dmgEntry.damageFormula = `${dmgEntry.damageFormula} · sin Herida Crítica (CEMK RB p.12)`;
+    }
     addRollEntry(dmgEntry);
   };
 
@@ -4000,10 +4143,22 @@ export const CombatHudView: React.FC = () => {
                       <p className="text-[10px] text-[#cbd5e1] leading-tight font-sans">
                         {inj.effect}
                       </p>
+                      {inj.quickFixed && inj.quickFixUntilDay !== undefined && (
+                        <p className="text-[9px] font-mono-code text-amber-300 mt-0.5">Quick Fix hasta el día {inj.quickFixUntilDay}</p>
+                      )}
                     </div>
                   ))}
                 </div>
               )}
+              <div className="mt-2 space-y-2">
+                <CritTableSelector />
+                <details className="bg-[#171923] border border-[#222636] rounded-xs p-1.5">
+                  <summary className="font-tech text-[11px] font-bold text-slate-200 cursor-pointer">Tratamiento y estabilización</summary>
+                  <div className="mt-2">
+                    <MedtechTreatmentPanel defaultPatientId={activeChar?.id} />
+                  </div>
+                </details>
+              </div>
             </div>
             {renderLeftPanelResizeHandle('injuries')}
 
@@ -4632,6 +4787,7 @@ export const CombatHudView: React.FC = () => {
                           <div className="font-tech text-[11px] font-bold text-[#dc2626] flex items-center gap-1 mb-1">
                             <Skull className="w-3 h-3" /> ¡CRÍTICO EN DAÑO! (DOBLE 6+) → +5 DAÑO DIRECTO
                           </div>
+                          <div className="mb-1"><CritTableSelector /></div>
                           <div className="grid grid-cols-2 gap-1">
                             <button
                               onClick={() => inflictRandomInjury('head')}
@@ -7916,10 +8072,20 @@ export const CombatHudView: React.FC = () => {
                   <span className={quickhackUsedThisTurn ? 'text-rose-300' : 'text-emerald-300'}>
                     {quickhackUsedThisTurn ? 'Quickhack de este turno ya usado' : 'Quickhack de este turno disponible'}
                   </span>
-                  <button type="button" onClick={() => setQuickhackUsedThisTurn(false)}
+                  <button type="button" onClick={handleNextRound}
                     className="px-1.5 py-0.5 bg-[#172238] hover:bg-cyan-500 hover:text-black text-cyan-300 rounded-xs cursor-pointer">
                     Nuevo turno
                   </button>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 text-[9px] font-mono-code text-slate-300">
+                  <span className={netActionsMax > 0 && netActionsSpent >= netActionsMax ? 'text-rose-300 font-bold' : 'text-cyan-300 font-bold'}>
+                    NET Actions {netActionsSpent} / {netActionsMax} (Core p.197)
+                  </span>
+                  <span>DV de Quickhack: {quickhackMaxDv} (CEMK RB p.25)</span>
+                  {quickhackFirewallDv !== null && <span>Firewall base DV {quickhackFirewallDv} (RB p.25)</span>}
+                  {!quickhacksAllowed && (
+                    <span className="text-rose-300 font-bold">Quickhacks deshabilitados: en 2045 requieren Neuroport (CEMK RB p.26)</span>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
@@ -8104,7 +8270,8 @@ export const CombatHudView: React.FC = () => {
                       <div className="flex gap-1.5 pt-1">
                         <button
                           onClick={() => handleLaunchQuickhack(qh)}
-                          disabled={!isUnlocked}
+                          disabled={!isUnlocked || !quickhacksAllowed}
+                          title={!quickhacksAllowed ? 'En 2045 los Quickhacks requieren Neuroport (CEMK RB p.26)' : undefined}
                           className={`flex-1 py-1 px-2 font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border ${
                             isUnlocked
                               ? 'bg-[#1b253b] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] border-[#293b5d] cursor-pointer'
@@ -8226,6 +8393,47 @@ export const CombatHudView: React.FC = () => {
 
   return (
     <div className="space-y-4">
+      {/* Barra de Round, Iniciativa y Perception (plan 10, v4.9.2) */}
+      <div className="chamfer-card p-2 bg-[#12141f] border border-[#242b3d] flex flex-wrap items-center gap-2 min-w-0">
+        <span className="font-tech text-xs font-bold text-white uppercase tracking-wider">Round {round}</span>
+        <button
+          type="button"
+          onClick={handleNextRound}
+          className="px-2.5 py-1 rounded-xs font-tech font-bold text-[11px] uppercase tracking-wider bg-[#172238] hover:bg-cyan-500 hover:text-black text-cyan-300 border border-[#293b5d] cursor-pointer"
+          title="Reinicia primer daño recibido, primer Ataque exitoso, Quickhack por objetivo y NET Actions"
+        >
+          Siguiente Round
+        </button>
+        <button
+          type="button"
+          onClick={handleResetCombat}
+          className="px-2 py-1 rounded-xs font-mono-code text-[10px] bg-[#171924] hover:bg-red-900/60 text-slate-400 hover:text-white border border-[#2b334a] cursor-pointer"
+          title="Vuelve al Round 1 y reinicia los contadores del Round"
+        >
+          Reiniciar combate
+        </button>
+        <button
+          type="button"
+          onClick={handleRollInitiative}
+          className="px-2.5 py-1 rounded-xs font-tech font-bold text-[11px] uppercase tracking-wider bg-[#1b253b] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] border border-[#293b5d] cursor-pointer"
+          title="REF + 1d10 (Core pp. 126, 168); suma Initiative Reaction del Solo (Core p.146)"
+        >
+          Iniciativa
+        </button>
+        <button
+          type="button"
+          onClick={handleRollPerception}
+          className="px-2.5 py-1 rounded-xs font-tech font-bold text-[11px] uppercase tracking-wider bg-[#1b253b] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] border border-[#293b5d] cursor-pointer"
+          title="INT + Perception + 1d10 (Core p.82); suma Threat Detection del Solo (Core p.146)"
+        >
+          Perception
+        </button>
+        <GameClockBar compact />
+        {roundToolFeedback && (
+          <span className="w-full text-[11px] font-mono-code text-cyan-200 break-words">{roundToolFeedback}</span>
+        )}
+      </div>
+
       {/* Barra Superior Táctica de Combate: Bestiario GM */}
       <div className="chamfer-card p-2.5 bg-[#12141f] border border-[#242b3d] flex flex-wrap items-center justify-between gap-3 shadow-md">
         <div className="flex items-center gap-2">

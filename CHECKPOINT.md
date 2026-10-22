@@ -6,7 +6,7 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
-**Última actualización**: [Claude Code · 2026-10-22]
+**Última actualización**: [Claude Code · 2026-10-22] v4.9.2 a medias, ver Traspaso.
 **Versión de la app**: v4.9.1 (en `main`, squash 839d76e, PR #25; publicada en gh-pages y verificada en vivo)
 **Plan activo**: plan 8 (`docs/plans/plan8-roles-core-cemk.md`, roles y rangos Core + CEMK combinados; v4.9.0-v4.9.3). Después: v4.9.4 Modo Novato (ex v4.8.3 del plan 7) y luego vehículos/Black Chrome. En pausa: plan 6 (v4.7.1 Danger Gal y v4.7.2). Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
@@ -20,11 +20,13 @@
 
 ## Traspaso
 
-- Cierra: [Claude Code · 2026-10-22]
-- Rama y último commit: `main` @ commit "CHECKPOINT: v4.7.0 mergeada..." (pusheada: sí). gh-pages publicada con el build de v4.7.0.
-- A medias: nada.
-- Siguiente paso exacto: plan 6 v4.7.1 Danger Gal: 118 fichas y 15 facciones. Extraer por tandas de facciones con `data/enemies-src/SCHEMA.md`, agregar el libro a `scripts/gen_enemies.py` para generar `frontend/src/data/enemies/dangerGal.ts` y borrar las 95 fichas danger_gal inventadas de `enemiesCatalog.ts`.
-- Preguntas abiertas para Giuliano: revocar el token de GitHub que está en la URL del remote `origin`.
+- Cierra: [Claude Code · 2026-10-22] (Giuliano sin cuota, sigue mañana).
+- Rama: `claude/v4.9.2-roles-combate`, último commit "v4.9.2 WIP: UI a medias" (pusheada). `main` = v4.9.1 publicada.
+- Hecho y verificado: datos (Críticas CEMK, vehículos Core), `engine/medicalRules.ts`, `engine/combatAwareness.ts`, `getInterfaceRank`/`medicalTechLevel`, stores (`gameClockStore`, `rulesSettingsStore`, Round en `useCombatStore`, acciones sobre otra ficha), componentes nuevos `features/combat/GameClockBar.tsx`, `features/combat/CritTableSelector.tsx`, `features/netroles/MedtechTreatmentPanel.tsx`. tsc pasa.
+- A medias (workers cortados a mitad, SIN auditar): `CombatHudView.tsx` (Round, Iniciativa/Perception, Damage Deflection, Spot Weakness, Fumble Recovery + `combatEngine.ts` opts y `combatEngineFumble.test.ts`, Netrunner, montar CritTableSelector y MedtechTreatmentPanel en heridas) y `NetAndRolesDeckView.tsx` (Netrunner, síntesis al Core, Moto, motorpool, catálogo de vehículos Core) + `StreetLabView.tsx` Speedheal con reloj + `RedChromeCargoView.tsx` getInterfaceRank. Siguiente paso exacto: revisar `git diff` de esos 5 archivos contra los ítems a-g (HUD) y 1-7 (NetAndRoles) de las specs, completar lo que falte, `npm test` y `npm run build`.
+- Arreglos pendientes en MedtechTreatmentPanel: bloquear Surgery a no-Medtech también en las pestañas "Genérica" y "De la tabla"; la nota "inconsciente 1 minuto" usa `patient.era`, usar `useCombatStore.era`.
+- Después: verificación en navegador (lista del plan 10 + 375 px), registrar discrepancia 20 como decidida, changelogs (md + in-app con author), PR, merge, gh-pages.
+- Preguntas abiertas para Giuliano: Damage Deflection (Core p.146 "decrease the first damage you take this Round") implementado DESPUÉS de armadura (daño al HP); confirmar. Revocar el token de GitHub del remote `origin`.
 
 ## Último trabajo terminado
 
