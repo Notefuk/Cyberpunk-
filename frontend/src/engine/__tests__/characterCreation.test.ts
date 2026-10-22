@@ -388,12 +388,12 @@ describe('Construcción de la ficha', () => {
     expect(sheet.hasNeuroport).toBe(false);
   });
 
-  it('2077 marca el Neuroport y guarda la variante de habilidad de rol (CEMK RB p.25)', () => {
+  it('2077 marca el Neuroport y siempre usa la habilidad de rol Core (plan 8; CEMK RB p.25)', () => {
     const d = { ...streetratSolo('2077'), handle: 'Tester', roleAbilityVariant: 'cemk' as const };
     const { sheet } = buildCharacterSheetFromDraft(d, 'test-2');
     expect(sheet.hasNeuroport).toBe(true);
     expect(sheet.installedCyberwareIds).toContain('cw-cemk-neuroport');
-    expect(sheet.roleAbilityVariant).toBe('cemk');
+    expect(sheet.roleAbilityVariant).toBe('core');
   });
 
   it('un Folio de CEMK sale con roleRank 4 y Humanidad EMP x 10 - HL (discrepancia 12; Core p.80)', () => {

@@ -9,8 +9,7 @@ import {
   getRoleDisplayName,
   getRoleOrder,
   roleSupportsCemkVariant,
-  type RoleAbilityInfo,
-  type RoleAbilityVariant
+  type RoleAbilityInfo
 } from '../../../engine/characterCreation';
 import { Panel, SourceBadge, StepHeader, type StepProps } from './CreatorUi';
 
@@ -54,13 +53,10 @@ export const RoleStep: React.FC<StepProps> = ({ draft, update }) => {
       };
     });
   };
-  const setVariant = (roleAbilityVariant: RoleAbilityVariant): void => update((d) => ({ ...d, roleAbilityVariant }));
 
   const role = draft.role;
   const roleInfo = role ? CORE_ROLES.roles.find((r) => r.role === role) : undefined;
-  const supportsCemk = role ? roleSupportsCemkVariant(role) : false;
   const coreInfo = role ? getRoleAbilityInfo(role, 'core', draft.era) : null;
-  const cemkInfo = role && supportsCemk ? getRoleAbilityInfo(role, 'cemk', draft.era) : null;
 
   return (
     <div>
@@ -102,35 +98,8 @@ export const RoleStep: React.FC<StepProps> = ({ draft, update }) => {
           </Panel>
 
           <Panel title="Versión de la habilidad de rol">
-            {supportsCemk && cemkInfo ? (
-              <>
-                <div className="flex flex-wrap gap-2 mb-3" role="radiogroup" aria-label="Variante de habilidad de rol">
-                  {(['core', 'cemk'] as RoleAbilityVariant[]).map((v) => (
-                    <button
-                      key={v}
-                      type="button"
-                      role="radio"
-                      aria-checked={draft.roleAbilityVariant === v}
-                      onClick={() => setVariant(v)}
-                      className={`px-3 py-1.5 border rounded-xs text-xs font-mono-code font-bold uppercase cursor-pointer ${
-                        draft.roleAbilityVariant === v ? 'bg-[#dc2626]/20 border-[#dc2626] text-white' : 'bg-[#151926] border-[#2a3148] text-[#cbd5e1]'
-                      }`}
-                    >
-                      {v === 'core' ? 'Core completa (rango 4)' : 'CEMK simple (+4)'}
-                    </button>
-                  ))}
-                </div>
-                <div className="grid md:grid-cols-2 gap-3">
-                  <AbilityCard title="Core completa (rango 4)" info={coreInfo} selected={draft.roleAbilityVariant === 'core'} onPick={() => setVariant('core')} />
-                  <AbilityCard title="CEMK simple (+4)" info={cemkInfo} selected={draft.roleAbilityVariant === 'cemk'} onPick={() => setVariant('cemk')} />
-                </div>
-              </>
-            ) : (
-              <>
-                <p className="text-xs text-[#94a3b8] mb-2">Este rol solo tiene la versión del Core.</p>
-                <AbilityCard title="Core completa (rango 4)" info={coreInfo} selected />
-              </>
-            )}
+            <p className="text-xs text-[#94a3b8] mb-2">Todos los personajes usan la habilidad de rol completa del Core RED, rango 4 (decisión del plan 8).</p>
+            {coreInfo && <AbilityCard title="Core completa (rango 4)" info={coreInfo} selected />}
           </Panel>
         </div>
       )}

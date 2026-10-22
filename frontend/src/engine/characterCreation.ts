@@ -18,6 +18,7 @@ import {
   resolveSkillKey
 } from '../data/characterCreationData';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
+import { applyFolioAllocation } from '../data/folioRoleAllocations';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, calculateMaxHumanity, parseHumanityLossAverage } from './characterEngine';
 import type {
   CharacterEra,
@@ -1100,7 +1101,7 @@ function buildPregenSheet(draft: CreatorDraft, nowId: string | undefined, warnin
   if (draft.method === 'cemk_pregen') {
     const folio = getFolioSheet(draft.pregenId);
     if (!folio) throw new Error(`Folio inexistente: ${draft.pregenId}`);
-    const sheet = JSON.parse(JSON.stringify(folio)) as CharacterSheet;
+    let sheet = JSON.parse(JSON.stringify(folio)) as CharacterSheet;
     sheet.id = id;
     if (draft.handle.trim()) sheet.handle = draft.handle.trim();
     sheet.roleRank = 4; // Discrepancia 12 (decidida): rango inicial 4.
@@ -1115,6 +1116,10 @@ function buildPregenSheet(draft: CreatorDraft, nowId: string | undefined, warnin
     sheet.creationMethod = 'pregen';
     sheet.sourceFolioId = folio.id;
     sheet.era = '2077';
+    sheet.roleAbilityVariant = 'core';
+    sheet.improvementPoints = 0;
+    sheet.ipLog = [];
+    sheet = applyFolioAllocation(sheet, folio.id);
     warnings.push('Ficha de CEMK: no sigue los límites del Core; las skills que no trae quedan en 0.');
     return sheet;
   }
@@ -1266,7 +1271,7 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
   if (cyberNotes.length > 0) notes.push(`Ciberware sin ID: ${cyberNotes.join(', ')}.`);
   if (rolePkg) notes.push(...rolePkg.notes);
 
-  const ability = getRoleAbilityInfo(role, draft.roleAbilityVariant, draft.era);
+  const ability = getRoleAbilityInfo(role, 'core', draft.era);
   const sheet: CharacterSheet = {
     id: newCharacterId(nowId),
     handle: draft.handle.trim(),
@@ -1289,7 +1294,9 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
     era: draft.era,
     creationMethod: method,
     roleAbilityName: ability.name,
-    roleAbilityVariant: draft.roleAbilityVariant,
+    roleAbilityVariant: 'core',
+    improvementPoints: 0,
+    ipLog: [],
     generalSkills,
     fashionBudgetRemaining: 0,
     hasNeuroport: draft.era === '2077' && draft.installNeuroport,

@@ -6,11 +6,12 @@ import type { CharacterSheet } from '../types/cyberpunk';
 import coreRulesPack from '../data/core-rules.cprpack.json';
 import { FBC_16_CYBERWARE } from '../data/goingMetalFbcData';
 import { MARTIAL_ARTS_FORMS } from '../data/cyberfistsMartialArtsData';
+import { applyFolioAllocation } from '../data/folioRoleAllocations';
 
 export const CHARACTERS_STORAGE_KEY = 'cpr-omni-deck-characters-v2';
-export const CHARACTERS_SCHEMA_VERSION = 3;
+export const CHARACTERS_SCHEMA_VERSION = 4;
 // No existe una constante de versión en la app; la última entrada del changelog in-app es v4.7.0 y este trabajo es v4.8.0.
-export const APP_VERSION = 'v4.8.0';
+export const APP_VERSION = 'v4.9.1';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -130,6 +131,28 @@ export const MIGRATIONS: Record<number, (state: any) => any> = {
         const lines = removed.map((id) => `[v4.8.0] Ciberware que ya no existe en el catálogo, quitado: ${id}`);
         const prev = typeof updated.notes === 'string' && updated.notes.length > 0 ? `${updated.notes}\n` : '';
         updated.notes = prev + lines.join('\n');
+      }
+      return updated;
+    });
+    return state;
+  },
+  // v3 -> v4 (v4.9.1 [Claude Code · 2026-10-22]): variante CEMK -> Core, reparto de los Folios e historial de IP.
+  3: (state) => {
+    if (!state || typeof state !== 'object' || !Array.isArray(state.characters)) return state;
+    state.characters = state.characters.map((c: any) => {
+      if (!c || typeof c !== 'object') return c;
+      let updated = { ...c };
+      if (updated.roleAbilityVariant === 'cemk') {
+        updated.roleAbilityVariant = 'core';
+      }
+      if ((typeof updated.id === 'string' && updated.id.startsWith('cemk-folio-')) || updated.sourceFolioId) {
+        updated = applyFolioAllocation(updated as CharacterSheet, updated.sourceFolioId ?? updated.id);
+      }
+      if (!updated.ipLog) {
+        const ip = typeof updated.improvementPoints === 'number' ? updated.improvementPoints : 0;
+        updated.ipLog = ip > 0
+          ? [{ id: 'ip-initial', at: new Date().toISOString(), kind: 'initial', delta: ip, reason: 'Saldo previo a v4.9.1', balanceAfter: ip }]
+          : [];
       }
       return updated;
     });
