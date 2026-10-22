@@ -118,7 +118,7 @@ export const SummaryStep: React.FC<SummaryProps> = ({ draft, update, onGoTo, onC
         )}
         {!pregen && draft.role && (
           <Line label="Rol">
-            {getRoleDisplayName(draft.role, draft.era)} · habilidad {draft.roleAbilityVariant === 'cemk' ? 'CEMK simple (+4)' : 'Core completa (rango 4)'}
+            {getRoleDisplayName(draft.role, draft.era)} · habilidad Core completa (rango 4)
           </Line>
         )}
         {!pregen && derived && (

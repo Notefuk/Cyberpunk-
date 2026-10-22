@@ -26,6 +26,40 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.1',
+    date: '2026-10-22',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Roles',
+    title: 'Avance con IP, modo GM, contador de IP y todas las skills en la ficha',
+    summary: 'Plan 9 (v4.9.1 del plan 8): subir rango y skills ahora cuesta IP como en el Core (p.410), con un contador general de IP y su historial. Hay un modo GM para editar libre, la ficha muestra las 66 skills y los Folios traen su reparto de rol.',
+    highlights: [
+      'Costos del Core p.410: skill 20 × nivel nuevo, skill x2 40 × nivel nuevo, rango de rol 60 × rango nuevo, sin saltear niveles. Si faltan IP, la ficha dice cuántos.',
+      'Contador de IP: disponibles, ganados, ajustes, gastado en rango, skills y artes marciales, ediciones en modo GM e historial. Cualquiera puede sumar o restar, con motivo.',
+      'Modo GM: un interruptor que permite subir y bajar rango y skills sin costo. Fuera del modo GM no se puede bajar nada.',
+      'Panel "Otras skills": las skills del Core que no son de combate (Persuasion, Trading, Medical Tech…), con su STAT, base, x2 y subida con IP.',
+      'Reparto de rol en la pestaña de rol: Maker por especialidad (tope = rango) y Medicine (Surgery, Pharmaceuticals, Cryosystem y fármacos conocidos).',
+      'Folios: Maven arranca con Field Expertise 4 y 4 rangos libres; Insurance con Surgery 2, Pharmaceuticals 1 (Speedheal), Medical Tech 1 y 1 punto libre.',
+      'El creador ya no ofrece "CEMK simple (+4)": todos usan la habilidad completa del Core. Los PJ nuevos arrancan con 0 IP; las fichas guardadas conservan sus IP.',
+      'Motor de reglas de rol listo para las herramientas de v4.9.2: NET Actions por rango, DV de Quickhack, firewall, alcance de Jack In, mejor Reach del Fixer y Speedheal híbrido. 188 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/roleRules.ts',
+      'frontend/src/engine/ipLedger.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/store/persistence.ts',
+      'frontend/src/store/gmModeStore.ts',
+      'frontend/src/data/folioRoleAllocations.ts',
+      'frontend/src/features/sheet/IpLedgerPanel.tsx',
+      'frontend/src/features/sheet/OtherSkillsPanel.tsx',
+      'frontend/src/features/sheet/RoleAllocationPanel.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/creator/steps/RoleStep.tsx',
+      'docs/plans/plan9-v491-motor-roles-ip.md'
+    ],
+    metricsBadge: 'v4.9.1 • Avance con IP • Plan 9'
+  },
+  {
     version: 'v4.9.0',
     date: '2026-10-22',
     author: 'Claude Code',
@@ -839,6 +873,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.1': true,
     'v4.9.0': true,
     'v4.8.2': true,
     'v4.8.1': true,

@@ -13,6 +13,7 @@ import type {
   EquippedWeapon,
   EurodollarTransaction,
   InventoryItem,
+  IpLogKind,
   MedtechCryoAndPharma,
   OwnedVehicle,
   SoloCombatAwarenessAllocation,
@@ -29,6 +30,9 @@ import {
   buildCharacterSheetFromPregen as instantiatePregenCharacter
 } from '../data/characterCreationData';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
+import { SKILL_METADATA } from '../types/cyberpunk';
+import { checkRoleRankRaise, checkSkillRaise } from '../engine/roleRules';
+import type { MakerAllocation, MedicineAllocation } from '../engine/roleRules';
 import coreRulesPack from '../data/core-rules.cprpack.json';
 import {
   WEAPON_ATTACHMENTS_CATALOG,
@@ -48,6 +52,26 @@ import {
   runMigrations,
   safeCharacterStorage
 } from './persistence';
+
+// v4.9.1 [Claude Code · 2026-10-22] Aplica un movimiento de IP a la ficha y lo registra en ipLog.
+function appendIpLog(c: CharacterSheet, kind: IpLogKind, delta: number, reason: string): CharacterSheet {
+  const balanceAfter = Math.max(0, (c.improvementPoints ?? 0) + delta);
+  return {
+    ...c,
+    improvementPoints: balanceAfter,
+    ipLog: [
+      ...(c.ipLog ?? []),
+      {
+        id: `ip-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        at: new Date().toISOString(),
+        kind,
+        delta,
+        reason,
+        balanceAfter
+      }
+    ]
+  };
+}
 
 const PACK_CYBERWARE_BY_ID = new Map(
   [
@@ -362,7 +386,15 @@ export interface CharacterStoreState {
   updateSoloAllocation: (allocation: SoloCombatAwarenessAllocation) => void;
 
   // Improvement Points (IP) & Interface Override
-  adjustImprovementPoints: (deltaIp: number) => void;
+  adjustImprovementPoints: (deltaIp: number, reason?: string) => void;
+  // v4.9.1 [Claude Code · 2026-10-22] Avance con IP (Core p. 410) y edición libre (modo GM).
+  raiseRoleRankWithIp: () => { success: boolean; message: string };
+  raiseSkillWithIp: (skill: CombatSkillKey) => { success: boolean; message: string };
+  raiseGeneralSkillWithIp: (key: string, x2: boolean, label: string) => { success: boolean; message: string };
+  setGeneralSkill: (key: string, level: number) => void;
+  gmSetRoleRank: (rank: number) => void;
+  setMakerAllocation: (alloc: MakerAllocation) => void;
+  setMedicineAllocation: (alloc: MedicineAllocation) => void;
   setInterfaceRankOverride: (rank: number) => void;
 
   // Martial Arts Training & Skill Chips
@@ -2213,16 +2245,114 @@ export const useCharacterStore = create<CharacterStoreState>()(
         }));
       },
 
-      adjustImprovementPoints: (deltaIp: number) => {
+      adjustImprovementPoints: (deltaIp: number, reason?: string) => {
         set((state) => ({
           characters: state.characters.map((c) => {
             if (c.id !== state.activeCharacterId) return c;
-            const currentIp = c.improvementPoints !== undefined ? c.improvementPoints : 120;
+            return appendIpLog(
+              c,
+              deltaIp >= 0 ? 'award' : 'adjust',
+              deltaIp,
+              reason ?? (deltaIp >= 0 ? 'IP otorgados' : 'Ajuste manual')
+            );
+          })
+        }));
+      },
+
+      raiseRoleRankWithIp: () => {
+        const state = get();
+        const character = state.characters.find((c) => c.id === state.activeCharacterId);
+        if (!character) return { success: false, message: 'Personaje no encontrado.' };
+        const check = checkRoleRankRaise(character.roleRank, character.improvementPoints ?? 0);
+        if (!check.ok) return { success: false, message: check.reason ?? 'No se puede subir el rango de rol.' };
+        const newRank = character.roleRank + 1;
+        set((s) => ({
+          characters: s.characters.map((c) => {
+            if (c.id !== s.activeCharacterId) return c;
             return {
-              ...c,
-              improvementPoints: Math.max(0, currentIp + deltaIp)
+              ...appendIpLog(c, 'spend_role', -check.cost, `Rango de rol ${newRank} (${check.cost} IP, Core p.410)`),
+              roleRank: newRank
             };
           })
+        }));
+        return { success: true, message: `Rango de rol ${newRank} (-${check.cost} IP).` };
+      },
+
+      raiseSkillWithIp: (skill: CombatSkillKey) => {
+        const state = get();
+        const character = state.characters.find((c) => c.id === state.activeCharacterId);
+        if (!character) return { success: false, message: 'Personaje no encontrado.' };
+        const meta = SKILL_METADATA[skill];
+        const current = character.skills?.[skill] ?? 0;
+        const check = checkSkillRaise(current, !!meta.isDoubleCost, character.improvementPoints ?? 0);
+        if (!check.ok) return { success: false, message: check.reason ?? 'No se puede subir la skill.' };
+        const newLevel = current + 1;
+        set((s) => ({
+          characters: s.characters.map((c) => {
+            if (c.id !== s.activeCharacterId) return c;
+            return {
+              ...appendIpLog(c, 'spend_skill', -check.cost, `${meta.label} nivel ${newLevel} (${check.cost} IP, Core p.410)`),
+              skills: { ...c.skills, [skill]: newLevel }
+            };
+          })
+        }));
+        return { success: true, message: `${meta.label} nivel ${newLevel} (-${check.cost} IP).` };
+      },
+
+      raiseGeneralSkillWithIp: (key: string, x2: boolean, label: string) => {
+        const state = get();
+        const character = state.characters.find((c) => c.id === state.activeCharacterId);
+        if (!character) return { success: false, message: 'Personaje no encontrado.' };
+        const current = character.generalSkills?.[key] ?? 0;
+        const check = checkSkillRaise(current, x2, character.improvementPoints ?? 0);
+        if (!check.ok) return { success: false, message: check.reason ?? 'No se puede subir la skill.' };
+        const newLevel = current + 1;
+        set((s) => ({
+          characters: s.characters.map((c) => {
+            if (c.id !== s.activeCharacterId) return c;
+            return {
+              ...appendIpLog(c, 'spend_skill', -check.cost, `${label} nivel ${newLevel} (${check.cost} IP, Core p.410)`),
+              generalSkills: { ...(c.generalSkills ?? {}), [key]: newLevel }
+            };
+          })
+        }));
+        return { success: true, message: `${label} nivel ${newLevel} (-${check.cost} IP).` };
+      },
+
+      setGeneralSkill: (key: string, level: number) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...c,
+              generalSkills: { ...(c.generalSkills ?? {}), [key]: Math.max(0, Math.min(10, level)) }
+            };
+          })
+        }));
+      },
+
+      gmSetRoleRank: (rank: number) => {
+        const clamped = Math.max(1, Math.min(10, rank));
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            return {
+              ...appendIpLog(c, 'gm', 0, `Modo GM: rango de rol ${clamped}`),
+              roleRank: clamped
+            };
+          })
+        }));
+      },
+
+      setMakerAllocation: (alloc: MakerAllocation) => {
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id !== state.activeCharacterId ? c : { ...c, makerAllocation: alloc }))
+        }));
+      },
+
+      setMedicineAllocation: (alloc: MedicineAllocation) => {
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id !== state.activeCharacterId ? c : { ...c, medicineAllocation: alloc }))
         }));
       },
 
@@ -2271,7 +2401,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
         }
         const nextRank = currentRank + 1;
         const ipCost = nextRank * 40; // Core Rulebook p. 411 (Coste doble x2)
-        const currentIp = character.improvementPoints !== undefined ? character.improvementPoints : 120;
+        const currentIp = character.improvementPoints !== undefined ? character.improvementPoints : 0;
 
         if (currentIp < ipCost) {
           return {
@@ -2290,8 +2420,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
           characters: s.characters.map((c) => {
             if (c.id !== s.activeCharacterId) return c;
             return {
-              ...c,
-              improvementPoints: currentIp - ipCost,
+              ...appendIpLog(c, 'spend_martial', -ipCost, `${formName} rango ${nextRank} (${ipCost} IP, Core p.410)`),
               knownMartialArts: newForms,
               skills: {
                 ...c.skills,

@@ -247,6 +247,21 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.1] - 2026-10-22 (Avance con IP) [Claude Code · 2026-10-22]
+* **Category**: Roles (plan 9 = v4.9.1 del plan 8, más el contador de IP y el panel de skills pedidos por Giuliano).
+* **Motor puro** `engine/roleRules.ts`: `ipCostSkillLevel`, `ipCostRoleRank`, `checkSkillRaise`, `checkRoleRankRaise` (Core p.410), `netActionsForInterface` (Core p.197), `maxQuickhackDv`, `neuroportFirewallDv`, `canUseQuickhacks` (RB pp. 25-26), `jackInRangeM` (Core p.208, RB pp. 16, 36), `fixerReach` (Core pp. 159-161 contra RB p.25), `getRoleRankInfo`, `canApplySpeedheal` (Core p.150, Folios p.17), Maker y Medicine (Core pp. 147-150). `engine/ipLedger.ts`: `summarizeIpLog`.
+* **Store**: `raiseRoleRankWithIp`, `raiseSkillWithIp`, `raiseGeneralSkillWithIp`, `setGeneralSkill`, `gmSetRoleRank`, `setMakerAllocation`, `setMedicineAllocation`; `adjustImprovementPoints(delta, reason?)` y `trainMartialArtWithIp` registran en `CharacterSheet.ipLog`. El default de IP pasa de 120 (inventado) a 0. Modo GM en `store/gmModeStore.ts` (`cpr_gm_free_edit_v1`).
+* **Persistencia**: schema 4 con copia previa. La migración 3→4 pasa `cemk` a `core`, da a los Folios guardados su reparto (`data/folioRoleAllocations.ts`) y deja el saldo previo de IP como entrada "initial" del historial.
+* **Ficha**: `IpLedgerPanel`, `OtherSkillsPanel` (también reconoce las claves compactas de los Folios, como 'medicaltech' y 'concealreveal'; Medical Tech y Surgery figuran como skills de Medicine) y `RoleAllocationPanel`. El + cobra IP, y el − y el selector de rango solo funcionan en modo GM.
+* **Creador**: sin el selector "CEMK simple (+4)"; los PJ salen con `roleAbilityVariant: 'core'`, 0 IP e historial vacío.
+* **Verificación**: tsc, 188 tests y build. Navegador:
+  * migración de v3 a v4 con copia;
+  * Maven: subida a R5 bloqueada sin IP, y con 300 IP sube y deja el historial;
+  * Insurance: Medicine 1 punto libre, Surgery 4 y Medical Tech 1;
+  * el modo GM;
+  * el creador sin el selector.
+* **Pendiente anterior a v4.9.1**: en celular, Street Lab tiene un desborde horizontal que ya estaba en v4.9.0.
+
 ### [v4.9.0] - 2026-10-22 (Roles por rango) [Claude Code · 2026-10-22]
 * **Category**: Roles (plan 8, bloque 1).
 * **Datos**: `data/creation-src/role-ranks-combat.json` (Solo, Netrunner, Tech, Medtech, Nomad) y `role-ranks-social.json` (Rockerboy, Fixer, Media, Exec, Lawman y Expanded Availability). Por rol: habilidad, 10 rangos, opciones, tablas, ajustes 2070s (RB p.25) y conversión del Folio con su reparto inicial.

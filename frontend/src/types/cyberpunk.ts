@@ -539,6 +539,10 @@ export interface MedtechCryoAndPharma {
   activeCryotanks: Array<{ id: string; patientName: string; condition: string }>;
 }
 
+// v4.9.1 [Claude Code · 2026-10-22]
+export type IpLogKind = 'initial' | 'award' | 'adjust' | 'spend_role' | 'spend_skill' | 'spend_martial' | 'gm';
+export interface IpLogEntry { id: string; at: string; kind: IpLogKind; delta: number; reason: string; balanceAfter: number }
+
 export interface CharacterSheet {
   id: string;
   handle: string;
@@ -600,6 +604,12 @@ export interface CharacterSheet {
   interfaceRankOverride?: number; // Permite fijar/ajustar el rango de Interface (0-10) para desbloquear Quickhacks
   ownedMartialArtChips?: string[]; // IDs de estilos cuyos Skill Chips (Nivel 3) fueron comprados/adquiridos
   equippedMartialArtChips?: string[]; // IDs de Skill Chips de Artes Marciales actualmente insertados en Chipware Socket / Neuroport
+  // v4.9.1 [Claude Code · 2026-10-22]
+  makerAllocation?: { field: number; upgrade: number; fabrication: number; invention: number };
+  // v4.9.1 [Claude Code · 2026-10-22]
+  medicineAllocation?: { surgery: number; pharmaceuticals: number; cryosystem: number; knownPharmaceuticals?: string[] };
+  // v4.9.1 [Claude Code · 2026-10-22]
+  ipLog?: IpLogEntry[];
 }
 
 export interface RollEntry {

@@ -21,6 +21,11 @@ import { CharacterCreatorWizard } from '../creator/CharacterCreatorWizard';
 import { CHARACTER_PORTRAITS_CATALOG } from '../../data/netAndRolesData';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
 import { CEMK_FOLIO_METADATA_MAP } from '../../data/cemkFolioPremadesData';
+import { useGmModeStore } from '../../store/gmModeStore';
+import { ipCostRoleRank, ipCostSkillLevel } from '../../engine/roleRules';
+import { IpLedgerPanel } from './IpLedgerPanel';
+import { OtherSkillsPanel } from './OtherSkillsPanel';
+import { RoleAllocationPanel } from './RoleAllocationPanel';
 import {
   getWeaponClassAndRebuildInfo,
   getAmmoTypeTooltip as getAmmoTooltipInfo,
@@ -271,7 +276,11 @@ export const StreetLabView: React.FC = () => {
   const updateCharacterDebt = useCharacterStore((state) => state.updateCharacterDebt);
   const payOffCharacterDebt = useCharacterStore((state) => state.payOffCharacterDebt);
   const setCharacterPortrait = useCharacterStore((state) => state.setCharacterPortrait);
-  const adjustImprovementPoints = useCharacterStore((state) => state.adjustImprovementPoints);
+  const raiseRoleRankWithIp = useCharacterStore((state) => state.raiseRoleRankWithIp);
+  const raiseSkillWithIp = useCharacterStore((state) => state.raiseSkillWithIp);
+  const gmSetRoleRank = useCharacterStore((state) => state.gmSetRoleRank);
+  const gmFreeEdit = useGmModeStore((s) => s.gmFreeEdit);
+  const setGmFreeEdit = useGmModeStore((s) => s.setGmFreeEdit);
   const trainMartialArtWithIp = useCharacterStore((state) => state.trainMartialArtWithIp);
   const buyAndEquipMartialArtChip = useCharacterStore((state) => state.buyAndEquipMartialArtChip);
   const toggleEquipMartialArtChip = useCharacterStore((state) => state.toggleEquipMartialArtChip);
@@ -327,6 +336,16 @@ export const StreetLabView: React.FC = () => {
   const [repairFeedback, setRepairFeedback] = useState<string | null>(null);
 
   // Dojo state
+  const [roleMsg, setRoleMsg] = useState<{ success: boolean; text: string } | null>(null);
+  const [skillMsg, setSkillMsg] = useState<{ success: boolean; text: string } | null>(null);
+  const showRoleMsg = (success: boolean, text: string) => {
+    setRoleMsg({ success, text });
+    setTimeout(() => setRoleMsg(null), 4000);
+  };
+  const showSkillMsg = (success: boolean, text: string) => {
+    setSkillMsg({ success, text });
+    setTimeout(() => setSkillMsg(null), 4000);
+  };
   const [showMartialArtsGuide, setShowMartialArtsGuide] = useState(false);
   const [martialArtSearch, setMartialArtSearch] = useState('');
   const [martialArtCategoryFilter, setMartialArtCategoryFilter] = useState<'all' | 'core' | 'interface_red'>('all');
@@ -648,10 +667,19 @@ export const StreetLabView: React.FC = () => {
                 min="1"
                 max="10"
                 value={activeChar?.roleRank ?? 4}
-                onChange={(e) => updateCharacterMeta({ roleRank: Math.max(1, Math.min(10, parseInt(e.target.value) || 1)) })}
+                disabled={!gmFreeEdit}
+                onChange={(e) => gmSetRoleRank(Math.max(1, Math.min(10, parseInt(e.target.value) || 1)))}
                 className="w-8 bg-transparent text-center text-white font-bold focus:outline-none"
               />
             </div>
+
+            <label className="flex items-center gap-1.5 bg-[#171924] border border-[#2c3246] px-1.5 py-0.5 rounded cursor-pointer" title="Modo GM: edición libre de rango y skills, sin gastar IP">
+              <input type="checkbox" checked={gmFreeEdit} onChange={(e) => setGmFreeEdit(e.target.checked)} />
+              <span className="text-[10px] font-mono-code text-[#94a3b8] font-bold">MODO GM (edición libre, sin IP)</span>
+            </label>
+            {gmFreeEdit && (
+              <span className="text-[10px] font-mono-code text-amber-400">Modo GM activo: los cambios no cobran IP.</span>
+            )}
 
             <div className="flex items-center gap-1 bg-[#171924] border border-[#2c3246] px-2 py-0.5 rounded" title="Eurodólares disponibles">
               <Coins className="w-3 h-3 text-[#10b981]" />
@@ -1381,9 +1409,10 @@ export const StreetLabView: React.FC = () => {
                       <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center gap-1 bg-[#10121a] px-1 py-0.5 rounded border border-[#202538]">
                           <button
+                            disabled={!gmFreeEdit || lvl <= 0}
                             onClick={() => updateSkill(key, Math.max(0, lvl - 1))}
-                            className="w-4 h-4 bg-[#1f2434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px]"
-                            title={`Reducir ${meta.label}`}
+                            className="w-4 h-4 bg-[#1f2434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px] disabled:opacity-30"
+                            title={gmFreeEdit ? `Reducir ${meta.label}` : 'Solo en modo GM'}
                           >
                             <Minus className="w-2.5 h-2.5" />
                           </button>
@@ -1391,9 +1420,13 @@ export const StreetLabView: React.FC = () => {
                             {lvl}
                           </span>
                           <button
-                            onClick={() => updateSkill(key, lvl + 1)}
+                            onClick={() => {
+                              if (gmFreeEdit) { updateSkill(key, lvl + 1); return; }
+                              const res = raiseSkillWithIp(key);
+                              showSkillMsg(res.success, res.message);
+                            }}
                             className="w-4 h-4 bg-[#1f2434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
-                            title={`Aumentar ${meta.label}`}
+                            title={gmFreeEdit ? `Aumentar ${meta.label} (modo GM)` : `Subir a ${lvl + 1}: ${ipCostSkillLevel(lvl + 1, !!meta.isDoubleCost)} IP`}
                           >
                             <Plus className="w-2.5 h-2.5" />
                           </button>
@@ -1428,6 +1461,10 @@ export const StreetLabView: React.FC = () => {
                 );
               })}
             </div>
+              {skillMsg && (
+                <div className={`mt-1 text-[11px] font-mono-code ${skillMsg.success ? 'text-emerald-300' : 'text-red-400'}`}>{skillMsg.text}</div>
+              )}
+              <OtherSkillsPanel />
               </>
             )}
 
@@ -2878,6 +2915,7 @@ export const StreetLabView: React.FC = () => {
           {/* TAB 5: DOJO DE ARTES MARCIALES, ENTRENAMIENTO IP & SKILL CHIPS (REGLAS OFICIALES) */}
           {rightColTab === 'dojo' && (
             <div className="space-y-3 animate-fade-in">
+              <IpLedgerPanel />
               {/* Encabezado Principal y Gestión de IP / Eurodólares */}
               <div className="chamfer-card p-3.5 bg-[#0e111a] border-2 border-emerald-500/50 shadow-2xl space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#232d44]">
@@ -2894,49 +2932,10 @@ export const StreetLabView: React.FC = () => {
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2">
-                    {/* Billetera y Puntos de Mejora */}
+                    {/* Billetera */}
                     <div className="flex items-center gap-2 bg-[#141824] border border-[#23293c] px-2.5 py-1 rounded text-xs font-mono-code">
                       <Coins className="w-3.5 h-3.5 text-amber-400" />
                       <span className="text-white font-bold">{activeChar?.eurodollars ?? 0} €$</span>
-                      <span className="text-slate-500">|</span>
-                      <Award className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-300 font-bold">{activeChar?.improvementPoints ?? 120} IP</span>
-                    </div>
-
-                    {/* Botones de ajuste de IP */}
-                    <div className="flex items-center gap-0.5 bg-[#141824] border border-[#23293c] p-0.5 rounded text-[10px] font-mono-code">
-                      <button
-                        type="button"
-                        onClick={() => adjustImprovementPoints(-10)}
-                        className="px-1.5 py-0.5 bg-[#1a2030] hover:bg-red-600/40 text-slate-300 rounded cursor-pointer transition-colors"
-                        title="Restar 10 IP"
-                      >
-                        -10
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => adjustImprovementPoints(10)}
-                        className="px-1.5 py-0.5 bg-[#1a2030] hover:bg-emerald-600/40 text-emerald-300 rounded cursor-pointer transition-colors"
-                        title="Añadir 10 IP"
-                      >
-                        +10
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => adjustImprovementPoints(50)}
-                        className="px-1.5 py-0.5 bg-[#1a2030] hover:bg-emerald-600/40 text-emerald-300 font-bold rounded cursor-pointer transition-colors"
-                        title="Añadir 50 IP"
-                      >
-                        +50
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => adjustImprovementPoints(100)}
-                        className="px-1.5 py-0.5 bg-[#1a2030] hover:bg-cyan-600/40 text-cyan-300 font-bold rounded cursor-pointer transition-colors"
-                        title="Añadir 100 IP"
-                      >
-                        +100
-                      </button>
                     </div>
 
                     <button
@@ -3435,8 +3434,9 @@ export const StreetLabView: React.FC = () => {
                     </span>
                     <button
                       type="button"
-                      disabled={currentRoleRank <= 1}
-                      onClick={() => updateCharacterMeta({ roleRank: Math.max(1, currentRoleRank - 1) })}
+                      disabled={!gmFreeEdit || currentRoleRank <= 1}
+                      title={gmFreeEdit ? 'Bajar rango (modo GM)' : 'Solo en modo GM'}
+                      onClick={() => gmSetRoleRank(currentRoleRank - 1)}
                       className="w-5 h-5 flex items-center justify-center bg-[#20273a] hover:bg-purple-600 text-white rounded text-xs font-bold transition-colors disabled:opacity-30 cursor-pointer"
                     >
                       -
@@ -3447,16 +3447,23 @@ export const StreetLabView: React.FC = () => {
                     <button
                       type="button"
                       disabled={currentRoleRank >= 10}
-                      onClick={() => updateCharacterMeta({ roleRank: Math.min(10, currentRoleRank + 1) })}
-                      className="w-5 h-5 flex items-center justify-center bg-[#20273a] hover:bg-purple-600 text-white rounded text-xs font-bold transition-colors disabled:opacity-30 cursor-pointer"
+                      title={gmFreeEdit ? 'Subir rango (modo GM)' : `Subir a R${currentRoleRank + 1}: ${ipCostRoleRank(currentRoleRank + 1)} IP`}
+                      onClick={() => {
+                        if (gmFreeEdit) { gmSetRoleRank(currentRoleRank + 1); return; }
+                        const res = raiseRoleRankWithIp();
+                        showRoleMsg(res.success, res.message);
+                      }}
+                      className="px-1.5 h-5 flex items-center justify-center bg-[#20273a] hover:bg-purple-600 text-white rounded text-xs font-bold transition-colors disabled:opacity-30 cursor-pointer"
                     >
-                      +
+                      {gmFreeEdit ? '+' : `+ (${ipCostRoleRank(currentRoleRank + 1)} IP)`}
                     </button>
                     <select
                       value={currentRoleRank}
-                      onChange={(e) => updateCharacterMeta({ roleRank: Number(e.target.value) })}
+                      disabled={!gmFreeEdit}
+                      title={gmFreeEdit ? undefined : 'Solo en modo GM'}
+                      onChange={(e) => gmSetRoleRank(Number(e.target.value))}
                       aria-label="Seleccionar rango de rol del personaje"
-                      className="ml-1 bg-[#0f1118] text-purple-300 font-mono-code text-[10px] px-1 py-0.5 rounded border border-[#2b334d]"
+                      className="ml-1 bg-[#0f1118] text-purple-300 font-mono-code text-[10px] px-1 py-0.5 rounded border border-[#2b334d] disabled:opacity-50"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((r) => (
                         <option key={r} value={r}>
@@ -3466,6 +3473,10 @@ export const StreetLabView: React.FC = () => {
                     </select>
                   </div>
                 </div>
+
+                {roleMsg && (
+                  <div className={`text-[11px] font-mono-code ${roleMsg.success ? 'text-emerald-300' : 'text-red-400'}`}>{roleMsg.text}</div>
+                )}
 
                 {/* Resumen & Mecánicas de la Habilidad */}
                 <div className="p-2.5 bg-[#171924] rounded border border-[#222738] space-y-1.5 text-xs">
@@ -3483,6 +3494,8 @@ export const StreetLabView: React.FC = () => {
                     </p>
                   )}
                 </div>
+
+                <RoleAllocationPanel />
 
                 {/* Lista de Progresión Rango 1 al 10 */}
                 <div className="space-y-1.5">
