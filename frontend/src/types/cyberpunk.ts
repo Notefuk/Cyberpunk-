@@ -408,6 +408,10 @@ export interface ActiveCriticalInjury {
   iconType: 'skull' | 'brain' | 'eye' | 'bone' | 'limb' | 'organ' | 'ear';
   modifiers: InjuryModifier;
   isTreated: boolean;
+  // v4.9.2 [Claude Code · 2026-10-22]: tabla de origen y estado de Quick Fix (vence al pasar de día; Core p.223 / CEMK RB p.14).
+  table?: 'core' | 'cemk';
+  quickFixUntilDay?: number;
+  quickFixed?: boolean;
 }
 
 export interface ActiveDrugEffect {

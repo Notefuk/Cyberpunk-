@@ -24,7 +24,10 @@ import type {
 } from '../types/cyberpunk';
 import { calculateMaxHp, calculateTherapyMaxHumanity, getEffectiveBody, naturalHealingPerDay, parseHumanityLossAverage, rollDeathSave as rollDeathSaveEngine } from '../engine/characterEngine';
 import type { DeathSaveResult } from '../engine/characterEngine';
-import { rollCriticalInjury } from '../data/criticalInjuries';
+import { rollCriticalInjury, HEAD_CRITICAL_INJURIES, BODY_CRITICAL_INJURIES } from '../data/criticalInjuries';
+import { rollCemkCriticalInjury, findCemkCriticalInjury } from '../engine/medicalRules';
+import type { CritTable } from '../engine/medicalRules';
+import { useRulesSettingsStore } from './rulesSettingsStore';
 import {
   PREGEN_TEMPLATES,
   buildCharacterSheetFromPregen as instantiatePregenCharacter
@@ -98,6 +101,55 @@ function mapInjuryIcon(icon: string): ActiveCriticalInjury['iconType'] {
     return icon as ActiveCriticalInjury['iconType'];
   }
   return 'skull';
+}
+
+// v4.9.2 [Claude Code · 2026-10-22] Construcción de heridas críticas desde la tabla CEMK (RB p.13).
+type CemkRolled = ReturnType<typeof rollCemkCriticalInjury>;
+
+function cemkOptionsText(opts: { skill: string; dv: number }[]): string {
+  return opts.length === 0 ? 'N/A' : opts.map(o => `${o.skill} DV ${o.dv}`).join(' o ');
+}
+
+function buildCemkInjury(location: 'head' | 'body', r: CemkRolled): ActiveCriticalInjury {
+  const coreTable = location === 'head' ? HEAD_CRITICAL_INJURIES : BODY_CRITICAL_INJURIES;
+  const coreMatch = coreTable.find(i => i.name === r.name) ?? coreTable[0];
+  const sameName = coreTable.find(i => i.name === r.name);
+  const baseMods = sameName ? { ...sameName.modifiers } : {};
+  // deathSavePenalty de la entrada CEMK reemplaza el bonus base (se aplica como bonusDeathSavePenalty).
+  const modifiers = { ...baseMods, bonusDeathSavePenalty: r.deathSavePenalty };
+  if (!r.deathSavePenalty) delete (modifiers as { bonusDeathSavePenalty?: number }).bonusDeathSavePenalty;
+  return {
+    id: `injury-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+    name: r.name,
+    location,
+    effect: r.effectEs,
+    quickFixDv: cemkOptionsText(r.quickFix),
+    treatmentDv: r.quickFixRemovesPermanently ? 'El Quick Fix la quita para siempre' : cemkOptionsText(r.treatment),
+    iconType: mapInjuryIcon(coreMatch.iconType),
+    modifiers,
+    isTreated: false,
+    table: 'cemk'
+  };
+}
+
+function findCemkInjuryByName(location: 'head' | 'body', name: string): ActiveCriticalInjury | null {
+  const entry = findCemkCriticalInjury(location, name);
+  return entry ? buildCemkInjury(location, entry) : null;
+}
+
+function buildCoreInjury(rolled: ReturnType<typeof rollCriticalInjury>): ActiveCriticalInjury {
+  return {
+    id: `injury-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+    name: rolled.name,
+    location: rolled.location,
+    effect: rolled.effect,
+    quickFixDv: rolled.quickFix,
+    treatmentDv: rolled.treatment,
+    iconType: mapInjuryIcon(rolled.iconType),
+    modifiers: rolled.modifiers,
+    isTreated: false,
+    table: 'core'
+  };
 }
 
 // [Claude Code · 2026-10-22] Se quitó el personaje demo "V" (videojuego, no está en los libros; v4.8.2).
@@ -319,6 +371,14 @@ export interface CharacterStoreState {
   uninstallCyberware: (cyberwareId: string, humanityRefundAmount?: number) => void;
   adjustHumanity: (delta: number) => void;
   inflictRandomInjury: (location: 'head' | 'body') => ActiveCriticalInjury | null;
+  // v4.9.2 [Claude Code · 2026-10-22] Acciones sobre cualquier ficha (no solo la activa).
+  inflictSpecificInjury: (characterId: string, location: 'head' | 'body', name: string, table: CritTable) => ActiveCriticalInjury | null;
+  applyQuickFix: (characterId: string, injuryId: string, untilDay: number) => void;
+  applyTreatment: (characterId: string, injuryId: string) => void;
+  expireQuickFixes: (day: number) => void;
+  stabilizeCharacter: (characterId: string, opts: { wasMortallyWounded: boolean }) => void;
+  adjustHpFor: (characterId: string, delta: number) => void;
+  spendEurodollarsFor: (characterId: string, amount: number, reason: string) => boolean;
   toggleTreatInjury: (injuryId: string) => void;
   removeInjury: (injuryId: string) => void;
   exportActiveCharacterJson: () => string;
@@ -1584,26 +1644,18 @@ export const useCharacterStore = create<CharacterStoreState>()(
       inflictRandomInjury: (location: 'head' | 'body') => {
         const active = get().characters.find(c => c.id === get().activeCharacterId);
         const currentNames = (active?.activeInjuries ?? []).filter(i => !i.isTreated).map(i => i.name);
-        const rolled = rollCriticalInjury(location, currentNames);
+        const useCemk = useRulesSettingsStore.getState().criticalTable === 'cemk';
+        const newInjury: ActiveCriticalInjury = useCemk
+          ? buildCemkInjury(location, rollCemkCriticalInjury(location, currentNames))
+          : buildCoreInjury(rollCriticalInjury(location, currentNames));
         // Going Metal p. 94: un FBC es inmune a ciertas heridas críticas.
         if (active?.fbcState?.isFullBodyConversion) {
-          const paren = rolled.name.match(/\(([^)]+)\)/);
-          const enName = (paren ? paren[1] : rolled.name).trim().toLowerCase();
+          const paren = newInjury.name.match(/\(([^)]+)\)/);
+          const enName = (paren ? paren[1] : newInjury.name).trim().toLowerCase();
           if ((FBC_IMMUNE_CRITICAL_INJURIES as readonly string[]).some((n) => n.toLowerCase() === enName)) {
             return null;
           }
         }
-        const newInjury: ActiveCriticalInjury = {
-          id: `injury-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-          name: rolled.name,
-          location: rolled.location,
-          effect: rolled.effect,
-          quickFixDv: rolled.quickFix,
-          treatmentDv: rolled.treatment,
-          iconType: mapInjuryIcon(rolled.iconType),
-          modifiers: rolled.modifiers,
-          isTreated: false
-        };
 
         set(state => ({
           characters: state.characters.map(c =>
@@ -1617,6 +1669,117 @@ export const useCharacterStore = create<CharacterStoreState>()(
         }));
 
         return newInjury;
+      },
+
+      inflictSpecificInjury: (characterId, location, name, table) => {
+        const target = get().characters.find(c => c.id === characterId);
+        if (!target) return null;
+        let newInjury: ActiveCriticalInjury | null;
+        if (table === 'cemk') {
+          newInjury = findCemkInjuryByName(location, name);
+        } else {
+          const entry = (location === 'head' ? HEAD_CRITICAL_INJURIES : BODY_CRITICAL_INJURIES).find(i => i.name === name);
+          newInjury = entry ? buildCoreInjury(entry) : null;
+        }
+        if (!newInjury) return null;
+        const injury = newInjury;
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === characterId ? { ...c, activeInjuries: [...c.activeInjuries, injury] } : c
+          )
+        }));
+        return injury;
+      },
+
+      applyQuickFix: (characterId, injuryId, untilDay) => {
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === characterId
+              ? {
+                  ...c,
+                  activeInjuries: c.activeInjuries.map(inj =>
+                    inj.id === injuryId ? { ...inj, isTreated: true, quickFixed: true, quickFixUntilDay: untilDay } : inj
+                  )
+                }
+              : c
+          )
+        }));
+      },
+
+      // Core p. 223: el Treatment elimina la herida.
+      applyTreatment: (characterId, injuryId) => {
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === characterId
+              ? { ...c, activeInjuries: c.activeInjuries.filter(inj => inj.id !== injuryId) }
+              : c
+          )
+        }));
+      },
+
+      // Core p. 223 / CEMK RB p. 14: el Quick Fix vence al pasar de día.
+      expireQuickFixes: (day) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (!c.activeInjuries.some(inj => inj.quickFixed && (inj.quickFixUntilDay ?? 0) < day)) return c;
+            return {
+              ...c,
+              activeInjuries: c.activeInjuries.map(inj =>
+                inj.quickFixed && (inj.quickFixUntilDay ?? 0) < day
+                  ? { ...inj, isTreated: false, quickFixed: false }
+                  : inj
+              )
+            };
+          })
+        }));
+      },
+
+      // Core p. 222-223: la base del Death Save Penalty se calcula de las heridas activas
+      // (getBaseDeathSavePenalty); lo acumulado en deathSavePenalty se reinicia a 0.
+      stabilizeCharacter: (characterId, opts) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== characterId) return c;
+            const nextHp = opts.wasMortallyWounded && c.currentHp < 1 ? 1 : c.currentHp;
+            return { ...c, currentHp: nextHp, deathSavePenalty: 0 };
+          })
+        }));
+      },
+
+      adjustHpFor: (characterId, delta) => {
+        if (!Number.isFinite(delta)) return;
+        set(state => ({
+          characters: state.characters.map(char => {
+            if (char.id !== characterId) return char;
+            const maxHp = calculateMaxHp(getEffectiveBody(char), char.stats.WILL);
+            const nextHp = Math.max(0, Math.min(maxHp, char.currentHp + delta));
+            return { ...char, currentHp: nextHp, deathSavePenalty: nextHp >= 1 ? 0 : char.deathSavePenalty };
+          })
+        }));
+      },
+
+      spendEurodollarsFor: (characterId, amount, reason) => {
+        const target = get().characters.find(c => c.id === characterId);
+        if (!target || !Number.isFinite(amount) || amount < 0 || (target.eurodollars || 0) < amount) return false;
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== characterId) return c;
+            const newBalance = (c.eurodollars || 0) - amount;
+            const newTx: EurodollarTransaction = {
+              id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+              timestamp: new Date().toISOString(),
+              concept: reason,
+              amount: -amount,
+              balanceAfter: newBalance
+            };
+            return {
+              ...c,
+              eurodollars: newBalance,
+              transactions: [newTx, ...(c.transactions || [])].slice(0, 50)
+            };
+          })
+        }));
+        return true;
       },
 
       toggleTreatInjury: (injuryId: string) => {

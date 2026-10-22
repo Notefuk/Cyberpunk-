@@ -27,6 +27,8 @@ FILES = [
     ('core-lifepath', 'coreLifepath', 'CORE_LIFEPATH', 'CoreLifepathSrc'),
     ('core-roles', 'coreRoles', 'CORE_ROLES', 'CoreRolesSrc'),
     ('cemk-creation', 'cemkCreation', 'CEMK_CREATION', 'CemkCreationSrc'),
+    ('cemk-critical-injuries', 'cemkCriticalInjuries', 'CEMK_CRITICAL_INJURIES', 'CemkCriticalInjuriesSrc'),
+    ('core-vehicles', 'coreVehicles', 'CORE_VEHICLES', 'CoreVehiclesSrc'),
 ]
 
 
