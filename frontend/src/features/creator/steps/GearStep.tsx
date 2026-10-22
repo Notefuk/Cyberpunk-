@@ -14,7 +14,7 @@ import {
   type CreatorPurchaseCategory,
   type RolePackageEntry
 } from '../../../engine/characterCreation';
-import { Btn, INPUT_CLS, Panel, SELECT_CLS, SourceBadge, StepHeader, eb, type StepProps } from './CreatorUi';
+import { Btn, INPUT_CLS, Panel, SELECT_CLS, SourceBadge, NoviceGuide, StepHeader, eb, type StepProps } from './CreatorUi';
 
 interface PackItem {
   id: string;
@@ -175,6 +175,7 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
   return (
     <div>
       <StepHeader title="Equipo, dinero y ciberware" subtitle={`Rol: ${getRoleDisplayName(role, era)}`} page="Core pp. 97-119" />
+      <NoviceGuide step="gear" />
 
       <Panel className="mb-4">
         <div className="flex flex-wrap gap-4 items-center">

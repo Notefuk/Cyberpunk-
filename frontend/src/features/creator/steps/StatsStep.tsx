@@ -16,16 +16,14 @@ import {
   type CreatorDraft
 } from '../../../engine/characterCreation';
 import type { StatKey } from '../../../types/cyberpunk';
-import { Btn, Panel, StepHeader, type StepProps } from './CreatorUi';
+import { Btn, InfoToggle, NoviceGuide, Panel, StepHeader, type StepProps } from './CreatorUi';
 
 const StatLabel: React.FC<{ stat: StatKey }> = ({ stat }) => {
   const t = STAT_TOOLTIPS[stat];
   return (
-    <span
-      className="font-tech font-bold text-white cursor-help underline decoration-dotted decoration-[#64748b]"
-      title={`${t.name} · ${t.spanishName}\n${t.shortSummary}\n\n${t.beginnerExplanation}`}
-    >
-      {stat}
+    <span className="inline-flex flex-wrap items-center gap-1 max-w-full">
+      <span className="font-tech font-bold text-white">{stat}</span>
+      <InfoToggle text={`${t.name} · ${t.spanishName}\n${t.shortSummary}\n\n${t.beginnerExplanation}`} />
     </span>
   );
 };
@@ -88,6 +86,7 @@ export const StatsStep: React.FC<StepProps> = ({ draft, update }) => {
         subtitle={role ? `Rol: ${getRoleDisplayName(role, draft.era)}` : undefined}
         page={method === 'streetrat' ? 'Core p.73-74' : method === 'edgerunner' ? 'Core p.77' : 'Core p.78'}
       />
+      <NoviceGuide step="stats" />
 
       {method === 'streetrat' && table && (
         <Panel title="Streetrat: tabla del rol (1d10)" className="mb-4">

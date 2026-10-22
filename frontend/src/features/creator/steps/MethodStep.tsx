@@ -1,12 +1,13 @@
 // Paso 1 del creador: era y método de creación (Core pp. 40-42, 73-78; CEMK RB p.25). [Claude Code · 2026-10-22]
 import React from 'react';
-import { CEMK_CREATION } from '../../../data/creation';
+import { CEMK_CREATION, CREATOR_GUIDE } from '../../../data/creation';
+import { useCreatorNoviceStore } from '../../../store/creatorNoviceStore';
 import { CEMK_FOLIO_METADATA_MAP, CEMK_FOLIO_PREMADE_CHARACTERS } from '../../../data/cemkFolioPremadesData';
 import { PREGEN_TEMPLATES } from '../../../data/characterCreationData';
 import { createEmptyDraft, getRoleDisplayName, type CreationMethodId, type CreatorDraft } from '../../../engine/characterCreation';
 import type { CoreRoleName } from '../../../data/creation';
 import type { CharacterEra } from '../../../types/cyberpunk';
-import { Btn, Panel, SourceBadge, StepHeader, type StepProps } from './CreatorUi';
+import { Btn, Panel, SourceBadge, NoviceGuide, StepHeader, type StepProps } from './CreatorUi';
 
 interface MethodInfo {
   id: CreationMethodId;
@@ -92,10 +93,13 @@ export const MethodStep: React.FC<StepProps> = ({ draft, update }) => {
   const setPregen = (pregenId: string): void => update((d) => ({ ...d, pregenId }));
 
   const neuroport = CEMK_CREATION.neuroport;
+  const novice = useCreatorNoviceStore((s) => s.novice);
+  const rec = CREATOR_GUIDE.recommendsStreetrat;
 
   return (
     <div>
       <StepHeader title="Era y método de creación" subtitle="Elegí la era de la campaña y cómo vas a armar el personaje." page="Core pp. 41-42" />
+      <NoviceGuide step="method" />
 
       <Panel title="Era" className="mb-4">
         <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Era">
@@ -151,6 +155,13 @@ export const MethodStep: React.FC<StepProps> = ({ draft, update }) => {
                   <span className="text-[10px] font-mono-code text-[#64748b]">{m.page}</span>
                 </div>
                 <p className="text-xs text-[#94a3b8] mt-1">{m.text}</p>
+                {m.id === 'streetrat' && novice && rec.value && (
+                  <div className="mt-1 text-xs text-[#10b981] break-words">
+                    <span className="font-mono-code font-bold uppercase">Recomendado por el libro</span>
+                    {rec.quote && <span className="italic"> «{rec.quote}»</span>}
+                    {rec.source && <span className="font-mono-code text-[#64748b]"> ({rec.source.book} p.{rec.source.page})</span>}
+                  </div>
+                )}
                 {!available && <p className="text-[10px] font-mono-code text-[#f59e0b] mt-1">Solo en {m.eras.join(' / ')}.</p>}
               </button>
             );

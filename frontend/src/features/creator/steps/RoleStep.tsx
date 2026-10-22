@@ -11,7 +11,7 @@ import {
   roleSupportsCemkVariant,
   type RoleAbilityInfo
 } from '../../../engine/characterCreation';
-import { Panel, SourceBadge, StepHeader, type StepProps } from './CreatorUi';
+import { Panel, SourceBadge, NoviceGuide, StepHeader, type StepProps } from './CreatorUi';
 
 const AbilityCard: React.FC<{ title: string; info: RoleAbilityInfo; selected: boolean; onPick?: () => void }> = ({ title, info, selected, onPick }) => (
   <div className={`p-3 border rounded-xs ${selected ? 'border-[#dc2626] bg-[#dc2626]/10' : 'border-[#1e2334] bg-[#0a0b0e]'}`}>
@@ -61,6 +61,7 @@ export const RoleStep: React.FC<StepProps> = ({ draft, update }) => {
   return (
     <div>
       <StepHeader title="Rol y habilidad de rol" subtitle="Tu rol define tu habilidad especial; empieza en rango 4." page="Core pp. 40-41 · CEMK RB p.25" />
+      <NoviceGuide step="role" />
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-4">
         {getRoleOrder().map((r) => {

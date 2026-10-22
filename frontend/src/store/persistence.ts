@@ -286,7 +286,8 @@ export const BACKUP_EXTRA_KEYS = [
   'cpr_gm_secret_notes_v1',
   'cpr_custom_net_arch_v1',
   'cpr-omni-deck-combat-v2',
-  'cpr_enemy_sheet_mode_v1'
+  'cpr_enemy_sheet_mode_v1',
+  'cpr_creator_novice_v1'
 ];
 
 export interface BackupFile {

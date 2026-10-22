@@ -22,6 +22,7 @@ import {
   getRolePackage,
   getSkillCatalog,
   getSkillPointsSpent,
+  getSummaryWarnings,
   getStartingMoney,
   getStatPointsSpent,
   lifepathKey,
@@ -33,7 +34,7 @@ import {
   validateStep,
   type CreatorDraft
 } from '../characterCreation';
-import { CORE_GEAR_SKILLS, CORE_ROLE_TABLES } from '../../data/creation';
+import { CORE_GEAR_SKILLS, CORE_ROLE_TABLES, CREATOR_GUIDE } from '../../data/creation';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../../data/cemkFolioPremadesData';
 import { PREGEN_TEMPLATES } from '../../data/characterCreationData';
 
@@ -473,5 +474,54 @@ describe('Munición del paquete (Core pp. 98, 345)', () => {
     const { sheet, warnings } = buildCharacterSheetFromDraft(d, 't');
     expect(warnings.some((w) => w.includes('Incendiary'))).toBe(false);
     expect((sheet.inventory ?? []).find((i) => i.name === 'Incendiary Shotgun Shell Ammunition')?.catalogId).toBe('incendiary-ammo');
+  });
+});
+
+describe('Guía del creador y avisos del resumen (plan 12; Core pp. 40, 80, 98, 104-105)', () => {
+  it('CREATOR_GUIDE tiene los 7 pasos y todo paso con texto trae libro y página (Core pp. 29-105)', () => {
+    expect(CREATOR_GUIDE.steps.map((s) => s.step)).toEqual(['method', 'role', 'lifepath', 'stats', 'skills', 'gear', 'summary']);
+    for (const s of CREATOR_GUIDE.steps) {
+      if (!s.whatEs) continue;
+      expect(s.source, s.step).not.toBeNull();
+      expect(s.source!.page, s.step).toBeGreaterThan(0);
+    }
+  });
+
+  it('el libro recomienda Streetrat (plantillas, Core p.40)', () => {
+    expect(CREATOR_GUIDE.recommendsStreetrat.value).toBe(true);
+    expect(CREATOR_GUIDE.recommendsStreetrat.source).toMatchObject({ book: 'Core RED', page: 40 });
+  });
+
+  it('borrador vacío o pregen no dan avisos ni crashean', () => {
+    expect(getSummaryWarnings(createEmptyDraft(), { sheet: null })).toEqual([]);
+    const pregen: CreatorDraft = { ...createEmptyDraft(), method: 'easy_pregen', pregenId: PREGEN_TEMPLATES[0].id };
+    expect(getSummaryWarnings(pregen, { sheet: null })).toEqual([]);
+  });
+
+  it('Streetrat sin gastar el dinero avisa unspent-money con 500eb (Core p.98)', () => {
+    const d = { ...streetratSolo('2045'), handle: 'Tester' };
+    const w = getSummaryWarnings(d, buildCharacterSheetFromDraft(d, 'w1'));
+    const m = w.find((x) => x.id === 'unspent-money');
+    expect(m?.message).toContain('500eb');
+    expect(m?.source).toMatchObject({ page: 98 });
+  });
+
+  it('ciberware que baja la EMP efectiva avisa humanity-emp (Core p.80)', () => {
+    const cw = { category: 'cyberware' as const, catalogId: 'cybereye', name: 'Cybereye', cost: 0, qty: 1, humanityLoss: 30 };
+    const d: CreatorDraft = { ...streetratSolo('2045'), handle: 'Tester', purchases: [cw] };
+    const derived = computeDerived(d);
+    expect(derived.effectiveEmp).toBeLessThan(d.stats.EMP);
+    const w = getSummaryWarnings(d, { sheet: null }).find((x) => x.id === 'humanity-emp');
+    expect(w?.message).toContain(`de ${d.stats.EMP} a ${derived.effectiveEmp}`);
+    expect(w?.source).toMatchObject({ page: 80 });
+  });
+
+  it('sin armas en la ficha avisa no-weapon, sin página', () => {
+    const d = { ...streetratSolo('2045'), handle: 'Tester' };
+    const { sheet } = buildCharacterSheetFromDraft(d, 'w2');
+    const w = getSummaryWarnings(d, { sheet: { ...sheet, equippedWeapons: [] } }).find((x) => x.id === 'no-weapon');
+    expect(w?.message).toBe('El personaje no tiene armas.');
+    expect(w?.source).toBeUndefined();
+    expect(getSummaryWarnings(d, { sheet }).some((x) => x.id === 'no-weapon')).toBe(false);
   });
 });
