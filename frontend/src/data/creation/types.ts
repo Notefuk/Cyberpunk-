@@ -517,3 +517,11 @@ export interface RoleRanksSrc {
   roles: Record<RoleRankRoleName, RoleRankData>;
   doubts: string[];
 }
+
+// Heridas Criticas CEMK y vehiculos del Core (plan 10, v4.9.2). [Claude Code · 2026-10-22]
+export interface CritTreatmentOption { skill: string; dv: number }
+export interface CemkCritEntry { roll: number; name: string; effectEs: string; quickFix: CritTreatmentOption[]; treatment: CritTreatmentOption[]; quickFixRemovesPermanently: boolean; deathSavePenalty: number }
+export interface CemkCriticalInjuriesSrc { book: string; page: number; die: string; notes: string[]; body: CemkCritEntry[]; head: CemkCritEntry[]; doubts: string[] }
+export interface CoreVehicleEntry { name: string; category: string; description: string; sdp: number; seats: string; combatSpeed: string; narrativeSpeed: string; costEb: number; costNote?: string; costTier: string; familyMotorpoolRank: string; page: number }
+export interface CoreVehicleUpgrade { name: string; appliesTo: string; minMotoRank: number; effectEs: string; page: number }
+export interface CoreVehiclesSrc { book: string; pageNote: string; vehicles: CoreVehicleEntry[]; upgrades: CoreVehicleUpgrade[]; upgradeCostNote: string; doubts: string[] }

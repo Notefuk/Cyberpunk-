@@ -10,6 +10,16 @@ export interface CombatStoreState {
   luckToSpendOnNextRoll: number;
   aimedShotTarget: AimedShotTarget;
   rollHistory: RollEntry[];
+  // v4.9.2 [Claude Code · 2026-10-22]: estado de Round (Core p.146: primer daño / primer Ataque exitoso del Round).
+  round: number;
+  firstDamageTakenThisRound: boolean;
+  firstHitLandedThisRound: boolean;
+  netActionsSpent: number;
+  nextRound: () => void;
+  markDamageTaken: () => void;
+  markHitLanded: () => void;
+  spendNetAction: () => void;
+  resetCombatRound: () => void;
 
   setEra: (era: '2045' | '2077') => void;
   setSelectedDistance: (dist: string) => void;
@@ -31,6 +41,32 @@ export const useCombatStore = create<CombatStoreState>()(
       luckToSpendOnNextRoll: 0,
       aimedShotTarget: 'none',
       rollHistory: [],
+      round: 1,
+      firstDamageTakenThisRound: false,
+      firstHitLandedThisRound: false,
+      netActionsSpent: 0,
+
+      nextRound: () =>
+        set((state) => ({
+          round: state.round + 1,
+          firstDamageTakenThisRound: false,
+          firstHitLandedThisRound: false,
+          netActionsSpent: 0
+        })),
+
+      markDamageTaken: () => set({ firstDamageTakenThisRound: true }),
+
+      markHitLanded: () => set({ firstHitLandedThisRound: true }),
+
+      spendNetAction: () => set((state) => ({ netActionsSpent: state.netActionsSpent + 1 })),
+
+      resetCombatRound: () =>
+        set({
+          round: 1,
+          firstDamageTakenThisRound: false,
+          firstHitLandedThisRound: false,
+          netActionsSpent: 0
+        }),
 
       setEra: (era) => set({ era }),
 

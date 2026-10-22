@@ -26,6 +26,7 @@ import {
   Plus
 } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { useCombatStore } from '../../store/useCombatStore';
 import { beatsDv, rollCheckD10 } from '../../engine/combatEngine';
 import { isValidSoloAllocation, soloAwarenessPointCost } from '../../engine/characterEngine';
 import { 
@@ -36,7 +37,6 @@ import {
   ROLES_INTERACTIVE_GUIDES, 
   VEHICLES_CATALOG, 
   generateRandomNetFloor,
-  NET_ACTIONS_PER_TURN,
   type NetFloor,
   type NetArchitecturePreset,
   type NetAction,
@@ -56,7 +56,48 @@ import {
   TECH_LIFEPATH_TABLES
 } from '../../data/weaponAttachmentsAndTechData';
 
+import { getInterfaceRank, netActionsForInterface, canUseQuickhacks, medicalTechLevel, getRoleRankInfo } from '../../engine/roleRules';
+import { SYNTHESIS_DV, SYNTHESIS_MATERIALS_EB, synthesisDoses, canSynthesize, rollMedicalCheck } from '../../engine/medicalRules';
+import { CORE_VEHICLES } from '../../data/creation';
+import type { CoreVehicleEntry } from '../../data/creation/types';
+import { resolveSkillKey, normalizeCanonSkillName } from '../../data/characterCreationData';
+import { GameClockBar } from '../combat/GameClockBar';
+import { MedtechTreatmentPanel } from './MedtechTreatmentPanel';
+
 type ActiveTab = 'netrunning' | 'quickhacks' | 'martial' | 'roles' | 'vehicles';
+
+// Plan 10 (v4.9.2): habitaciones mínimas de los vehículos del Core con precio por habitación (Core p.190); null si el dato no permite calcularlas.
+const ROOM_WORDS: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6 };
+function coreVehicleMinRooms(v: CoreVehicleEntry): number | null {
+  if (!v.costNote) return 1;
+  const m = v.costNote.match(/minimum\s+(\w+)\s+rooms?/i);
+  if (!m) return null;
+  return ROOM_WORDS[m[1].toLowerCase()] ?? (Number.isFinite(parseInt(m[1], 10)) ? parseInt(m[1], 10) : null);
+}
+// Core pp. 162-163: la tabla Family Motorpool da bandas de rango ("1-4"); se usa el rango mínimo de la banda.
+function coreMotorpoolMinRank(v: CoreVehicleEntry): number {
+  const n = parseInt(v.familyMotorpoolRank, 10);
+  return Number.isFinite(n) ? n : 1;
+}
+function coreVehicleToOwned(v: CoreVehicleEntry, rooms: number, origin: string): OwnedVehicle {
+  const seatsPer = parseInt(v.seats, 10) || 1;
+  const perRoom = /per\s+room/i.test(v.seats);
+  return {
+    instanceId: `veh-inst-core-${v.name.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}`,
+    catalogId: `core-${v.name.replace(/\s+/g, '-').toLowerCase()}`,
+    name: v.name,
+    category: v.category === 'sea' ? 'sea' : v.category === 'air' ? 'air' : 'land',
+    maxSdp: v.sdp,
+    currentSdp: v.sdp,
+    armorSp: 0,
+    seats: perRoom ? seatsPer * rooms : seatsPer,
+    combatSpeed: v.combatSpeed,
+    narrativeSpeed: v.narrativeSpeed,
+    upgrades: [],
+    mountedWeapons: [],
+    notes: `Origen: CORE p.${v.page} (${origin})`
+  };
+}
 
 export const NetAndRolesDeckView: React.FC = () => {
   const { 
@@ -68,6 +109,7 @@ export const NetAndRolesDeckView: React.FC = () => {
     updateVehicleArmorSp, 
     removeVehicleFromCharacter,
     updateMedtechLab,
+    spendEurodollarsFor,
     updateTechProjects,
     adjustImprovementPoints,
     setInterfaceRankOverride,
@@ -113,11 +155,13 @@ export const NetAndRolesDeckView: React.FC = () => {
   const allPresets = [...NET_ARCHITECTURE_PRESETS, ...customPresets];
   const activeArch = allPresets.find(p => p.id === selectedPresetId) || NET_ARCHITECTURE_PRESETS[0];
 
-  // NET Actions por turno: hasta 3 en cualquier rango (CEMK p. 15)
-  const activeInterfaceRank = character.interfaceRankOverride !== undefined
-    ? character.interfaceRankOverride
-    : (character.role === 'Netrunner' ? (character.roleRank || 4) : 0);
-  const netActionsPerTurn = NET_ACTIONS_PER_TURN;
+  // Interface (Core p.147/197): rango según rol u override; NET Actions por rango (Core p.197).
+  const era = useCombatStore((state) => state.era);
+  const activeInterfaceRank = getInterfaceRank(character);
+  const netActionsPerTurn = netActionsForInterface(activeInterfaceRank);
+  // Quickhacks: en 2045 solo con Neuroport; en 2077 se asume salvo que sea false (CEMK RB p.26).
+  const hasNeuroportEquipped = (character.hasNeuroport || (character.installedCyberwareIds ?? []).includes('cw-cemk-neuroport')) ? true : character.hasNeuroport;
+  const quickhacksBlocked = !canUseQuickhacks(era, hasNeuroportEquipped);
 
   const handleRollNetAction = (action: NetAction) => {
     const d10 = Math.floor(Math.random() * 10) + 1;
@@ -234,14 +278,14 @@ export const NetAndRolesDeckView: React.FC = () => {
   };
 
   const handleExecuteQuickhack = (qh: Quickhack2077) => {
-    const isLocked = !unlockAllQuickhacks && activeInterfaceRank < qh.requiredInterfaceRank;
+    const isLocked = quickhacksBlocked || (!unlockAllQuickhacks && activeInterfaceRank < qh.requiredInterfaceRank);
     if (isLocked) {
       setQuickhackRollLog({
         qhName: qh.name,
         roll: 0,
         dv: qh.dv,
         success: false,
-        stepInfo: `🔒 Bloqueado: Requiere Interface ${qh.requiredInterfaceRank}+`
+        stepInfo: quickhacksBlocked ? '🔒 Bloqueado: en 2045 los Quickhacks requieren Neuroport (CEMK RB p.26)' : `🔒 Bloqueado: Requiere Interface ${qh.requiredInterfaceRank}+`
       });
       return;
     }
@@ -333,25 +377,34 @@ export const NetAndRolesDeckView: React.FC = () => {
   const [medtechCraftLog, setMedtechCraftLog] = useState<string | null>(null);
 
   const handleCraftDrug = (drugName: string) => {
-    // Core p. 149: TECH + Medical Tech (puntos en Pharmaceuticals + Cryosystem Operation) + 1d10, hay que superar DV 13.
+    // Core pp. 149-150: TECH + Medical Tech (= Pharmaceuticals + Cryosystem) + 1d10 vs DV 13; 200 €$ de materiales por tanda de 1 hora; solo fármacos conocidos.
+    const allowed = canSynthesize({ role: character.role, knownPharmaceuticals: character.medicineAllocation?.knownPharmaceuticals, drug: drugName });
+    if (!allowed.ok) {
+      setMedtechCraftLog(allowed.reason ?? 'No se puede sintetizar este fármaco.');
+      return;
+    }
+    if (!spendEurodollarsFor(character.id, SYNTHESIS_MATERIALS_EB, `Materiales de síntesis: ${drugName} (Core p.150)`)) {
+      setMedtechCraftLog(`No alcanzan los €$: la síntesis cuesta ${SYNTHESIS_MATERIALS_EB} €$ de materiales (Core p.150).`);
+      return;
+    }
     const techStat = character.stats.TECH || 6;
-    const medSkill = (medtechData.pharmaceuticalsRank || 0) + (medtechData.cryoSystemRank || 0);
-    const total = rollCheckD10().value + techStat + medSkill;
-    const success = beatsDv(total, 13);
+    const medTechLvl = medicalTechLevel(character.medicineAllocation);
+    const result = rollMedicalCheck({ tech: techStat, skillLevel: medTechLvl, dv: SYNTHESIS_DV });
 
-    if (success) {
+    if (result.success) {
+      const doses = synthesisDoses(medTechLvl);
       const currentDoses = medtechData.synthesizedDoses || {};
       const updated = {
         ...medtechData,
         synthesizedDoses: {
           ...currentDoses,
-          [drugName]: (currentDoses[drugName] || 0) + 1
+          [drugName]: (currentDoses[drugName] || 0) + doses
         }
       };
       updateMedtechLab(updated);
-      setMedtechCraftLog(`¡ÉXITO! Tirada: ${total} vs DV 13. Sintetizaste +1 dosis de ${drugName}.`);
+      setMedtechCraftLog(`¡ÉXITO! ${result.breakdown}. Sintetizaste +${doses} dosis de ${drugName} (1 hora, ${SYNTHESIS_MATERIALS_EB} €$ de materiales).`);
     } else {
-      setMedtechCraftLog(`FALLO. Tirada: ${total} vs DV 13. Se perdieron los reactivos.`);
+      setMedtechCraftLog(`FALLO. ${result.breakdown}. Se perdieron los materiales (${SYNTHESIS_MATERIALS_EB} €$) tras 1 hora de trabajo.`);
     }
   };
 
@@ -435,15 +488,55 @@ export const NetAndRolesDeckView: React.FC = () => {
   };
 
   const handleVehicleManeuverRoll = (veh: OwnedVehicle) => {
-    const d10 = Math.floor(Math.random() * 10) + 1;
+    // Core p.161: el Nomad suma su rango de Moto a Drive Land / Pilot Air / Pilot Sea Vehicle (y a las Vehicle Tech).
+    const d = rollCheckD10();
     const refStat = character.stats.REF || 6;
-    const driveSkill = 4;
-    const total = d10 + refStat + driveSkill;
+    const skillName = veh.category === 'land' ? 'Drive Land Vehicle' : veh.category === 'sea' ? 'Pilot Sea Vehicle' : 'Pilot Air Vehicle';
+    const skillRef = resolveSkillKey(skillName);
+    // Las fichas guardan claves de varias formas ('Drive Land Vehicle', 'drivelandvehicle'): se comparan compactas.
+    const compactSkill = (x: string) => normalizeCanonSkillName(x).replace(/[^a-z0-9]/g, '');
+    const wanted = compactSkill(skillName);
+    const byCompact = (rec: Record<string, number> | undefined) =>
+      Object.entries(rec ?? {}).find(([k]) => compactSkill(k) === wanted)?.[1];
+    const skillLevel = (skillRef
+      ? (skillRef.kind === 'combat' ? character.skills?.[skillRef.key] : character.generalSkills?.[skillRef.key])
+      : character.generalSkills?.[skillName])
+      ?? byCompact(character.generalSkills)
+      ?? byCompact(character.skills as unknown as Record<string, number>)
+      ?? 0;
+    const motoRank = character.role === 'Nomad' ? (character.roleRank || 0) : 0;
+    const total = d.value + refStat + skillLevel + motoRank;
+    const extra = d.extra ? (d.natural === 10 ? ` +${d.extra}` : ` -${d.extra}`) : '';
     setVehicleManeuverLog({
       action: `Maniobra Evasiva en ${veh.name}`,
       roll: total,
-      text: `1d10 (${d10}) + REF (${refStat}) + Drive (${driveSkill}) = ${total} vs DV de persecución`
+      text: `1d10 (${d.natural}${extra}) + REF (${refStat}) + ${skillName} (${skillLevel})${character.role === 'Nomad' ? ` + Moto (${motoRank})` : ''} = ${total} vs DV de persecución`
     });
+  };
+
+  // Vehículos genéricos del Core (pp. 189-191) y Family Motorpool (Core p.162).
+  const [coreVehicleMsg, setCoreVehicleMsg] = useState<string | null>(null);
+  const nomadMotoRank = character.role === 'Nomad' ? (character.roleRank || 0) : 0;
+  const nomadTweaks2077 = character.role === 'Nomad' && era === '2077'
+    ? getRoleRankInfo('Nomad', nomadMotoRank, '2077').tweaks2077
+    : [];
+
+  const handleTakeFromMotorpool = (v: CoreVehicleEntry) => {
+    if (coreVehicleMinRooms(v) === null) return;
+    addVehicleToCharacter(coreVehicleToOwned(v, 1, 'Family Motorpool, Core p.162'));
+    setCoreVehicleMsg(`${v.name} tomado del motorpool familiar sin costo (Core p.162).`);
+  };
+
+  const handleBuyCoreVehicle = (v: CoreVehicleEntry) => {
+    const rooms = coreVehicleMinRooms(v);
+    if (rooms === null) return;
+    const cost = v.costEb * rooms;
+    if (!spendEurodollarsFor(character.id, cost, `Compra de vehículo: ${v.name} (Core p.${v.page})`)) {
+      setCoreVehicleMsg(`No alcanzan los €$ para ${v.name} (${cost.toLocaleString()} €$).`);
+      return;
+    }
+    addVehicleToCharacter(coreVehicleToOwned(v, rooms, 'Comprado'));
+    setCoreVehicleMsg(`${v.name} comprado por ${cost.toLocaleString()} €$.`);
   };
 
   const handleVehicleRamming = (veh: OwnedVehicle) => {
@@ -1065,10 +1158,10 @@ export const NetAndRolesDeckView: React.FC = () => {
                     )}
                   </div>
                   <p className="text-[10px] font-mono-code text-[#94a3b8]">
-                    {activeInterfaceRank >= 4 ? `${NET_ACTIONS_PER_TURN} NET Actions/Turno • Acceso a los 11 Quickhacks oficiales (CEMK)` :
-                     activeInterfaceRank === 3 ? `${NET_ACTIONS_PER_TURN} NET Actions/Turno • Desbloquea Difficult (DV 10) · Bypass Firewall DV 6` :
-                     activeInterfaceRank === 2 ? `${NET_ACTIONS_PER_TURN} NET Actions/Turno • Desbloquea Standard (DV 8)` :
-                     activeInterfaceRank === 1 ? `${NET_ACTIONS_PER_TURN} NET Actions/Turno • Desbloquea Simple (DV 6)` :
+                    {activeInterfaceRank >= 4 ? `${netActionsPerTurn} NET Actions/Turno • Acceso a los 11 Quickhacks oficiales (CEMK)` :
+                     activeInterfaceRank === 3 ? `${netActionsPerTurn} NET Actions/Turno • Desbloquea Difficult (DV 10) · Bypass Firewall DV 6` :
+                     activeInterfaceRank === 2 ? `${netActionsPerTurn} NET Actions/Turno • Desbloquea Standard (DV 8)` :
+                     activeInterfaceRank === 1 ? `${netActionsPerTurn} NET Actions/Turno • Desbloquea Simple (DV 6)` :
                      'Sin Interface • Necesitas al menos Interface 1 para desbloquear Quickhacks'}
                   </p>
                 </div>
@@ -1383,7 +1476,7 @@ export const NetAndRolesDeckView: React.FC = () => {
           {/* Grilla de los 11 Quickhacks Oficiales */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {filteredQuickhacks.map(qh => {
-              const isLocked = !unlockAllQuickhacks && activeInterfaceRank < qh.requiredInterfaceRank;
+              const isLocked = quickhacksBlocked || (!unlockAllQuickhacks && activeInterfaceRank < qh.requiredInterfaceRank);
 
               return (
                 <div
@@ -1440,10 +1533,10 @@ export const NetAndRolesDeckView: React.FC = () => {
                         type="button"
                         disabled
                         className="w-full py-1.5 bg-red-950/30 text-red-400/80 border border-red-800/40 font-tech font-bold text-xs uppercase tracking-wider rounded-xs cursor-not-allowed flex items-center justify-center gap-1.5"
-                        title={`Requiere Rango de Interface ${qh.requiredInterfaceRank} o activa el Modo Libre arriba`}
+                        title={quickhacksBlocked ? 'En 2045 los Quickhacks requieren Neuroport (CEMK RB p.26)' : `Requiere Rango de Interface ${qh.requiredInterfaceRank} o activa el Modo Libre arriba`}
                       >
                         <Lock className="w-3.5 h-3.5" />
-                        <span>BLOQUEADO (REQ. INTERFACE {qh.requiredInterfaceRank}+)</span>
+                        <span>{quickhacksBlocked ? 'BLOQUEADO (REQUIERE NEUROPORT)' : `BLOQUEADO (REQ. INTERFACE ${qh.requiredInterfaceRank}+)`}</span>
                       </button>
                     ) : (
                       <button
@@ -2043,10 +2136,13 @@ export const NetAndRolesDeckView: React.FC = () => {
                     <span>MEDTECH LAB // PHARMACEUTICALS & CRYOSYSTEMS</span>
                   </h3>
                   <p className="text-xs font-mono-code text-[#64748b]">
-                    Sintetizador químico de fármacos canónicos (DV 13) y monitoreo de criotanques de pacientes.
+                    Síntesis de fármacos conocidos: TECH + Medical Tech (Pharmaceuticals + Cryosystem) + 1d10 vs DV {SYNTHESIS_DV}; {SYNTHESIS_MATERIALS_EB} €$ de materiales y 1 hora por tanda (Core pp. 149-150).
                   </p>
                 </div>
               </div>
+
+              <GameClockBar compact />
+              <MedtechTreatmentPanel defaultPatientId={character.id} />
 
               {medtechCraftLog && (
                 <div className="p-2.5 bg-emerald-950/40 border border-emerald-500/50 rounded-xs text-xs font-mono-code text-emerald-200">
@@ -2055,7 +2151,7 @@ export const NetAndRolesDeckView: React.FC = () => {
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                {['Antibiotic', 'Rapidetox', 'Speedheal', 'Stim', 'Surge'].map(drug => (
+                {['Antibiotic', 'Rapidetox', 'Speedheal', 'Stim', 'Surge'].filter(drug => (character.medicineAllocation?.knownPharmaceuticals ?? []).includes(drug)).map(drug => (
                   <div key={drug} className="bg-[#10141f] border border-[#1b2336] p-3 rounded-xs space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-tech text-xs font-bold text-white uppercase">{drug}</span>
@@ -2068,7 +2164,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                       className="w-full py-1.5 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-400 hover:text-black font-tech font-bold text-xs uppercase tracking-wider rounded-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       <Sparkles className="w-3.5 h-3.5" />
-                      <span>SINTETIZAR (DV 13)</span>
+                      <span>SINTETIZAR (DV {SYNTHESIS_DV} · {SYNTHESIS_MATERIALS_EB} €$)</span>
                     </button>
                   </div>
                 ))}
@@ -2724,7 +2820,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                           onClick={() => handleVehicleManeuverRoll(veh)}
                           className="flex-1 py-1 bg-[#1a2030] hover:bg-[#38bdf8] hover:text-black text-[11px] font-tech font-bold uppercase rounded-xs transition-colors cursor-pointer"
                         >
-                          Tirar Maniobra (REF+Drive)
+                          Tirar Maniobra (REF+Skill+Moto)
                         </button>
                         <button
                           onClick={() => handleVehicleRamming(veh)}
@@ -2739,6 +2835,50 @@ export const NetAndRolesDeckView: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* FAMILY MOTORPOOL (Core p.162): solo Nomad */}
+          {character.role === 'Nomad' && (
+            <div className="bg-[#090b10] border border-[#1b2234] p-4 rounded-xs space-y-3 shadow-xl">
+              <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
+                <h3 className="font-tech text-sm font-bold text-[#f97316] uppercase">Motorpool familiar (Moto {nomadMotoRank})</h3>
+                <span className="text-[10px] font-mono-code text-[#64748b]">Vehículos del Core hasta tu rango de Moto (Core p.162)</span>
+              </div>
+              {nomadTweaks2077.length > 0 && (
+                <div className="text-[10px] font-mono-code text-amber-300 space-y-1">
+                  {nomadTweaks2077.map((t, i) => (
+                    <div key={i}>Ajuste 2077 (CEMK RB p.25): {t.textEs}</div>
+                  ))}
+                </div>
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {CORE_VEHICLES.vehicles.map(v => {
+                  const minRank = coreMotorpoolMinRank(v);
+                  const available = minRank <= nomadMotoRank && coreVehicleMinRooms(v) !== null;
+                  return (
+                    <div key={v.name} className={`bg-[#10141f] border border-[#1b2336] p-3 rounded-xs space-y-1.5 ${available ? '' : 'opacity-50'}`}>
+                      <div className="flex items-center justify-between">
+                        <span className="font-tech text-xs font-bold text-white uppercase">{v.name}</span>
+                        <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs bg-[#1a2030] text-[#38bdf8] font-bold">{v.category}</span>
+                      </div>
+                      <div className="text-[10px] font-mono-code text-[#94a3b8]">
+                        SDP: <strong className="text-white">{v.sdp}</strong> • Plazas: <strong className="text-white">{v.seats}</strong> • {v.combatSpeed} ({v.narrativeSpeed}) • Core p.{v.page}
+                      </div>
+                      {available ? (
+                        <button
+                          onClick={() => handleTakeFromMotorpool(v)}
+                          className="w-full py-1 bg-[#f97316]/20 hover:bg-[#f97316] text-[#f97316] hover:text-black font-tech font-bold text-[10px] uppercase rounded-xs transition-colors cursor-pointer"
+                        >
+                          Tomar del motorpool
+                        </button>
+                      ) : (
+                        <div className="text-[10px] font-mono-code text-[#64748b]">Requiere Moto {minRank}</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* CATÁLOGO OFICIAL DE 14 VEHÍCULOS (COMPRA / NÓMADA MOTO) */}
           <div className="bg-[#090b10] border border-[#1b2234] p-4 rounded-xs space-y-4 shadow-xl">
@@ -2789,6 +2929,60 @@ export const NetAndRolesDeckView: React.FC = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* VEHÍCULOS GENÉRICOS DEL CORE (pp. 189-191) */}
+          <div className="bg-[#090b10] border border-[#1b2234] p-4 rounded-xs space-y-4 shadow-xl">
+            <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
+              <h3 className="font-tech text-sm font-bold text-white uppercase">Vehículos genéricos del Core (pp. 189-191)</h3>
+              <span className="text-[10px] font-mono-code text-[#64748b]">{CORE_VEHICLES.vehicles.length} modelos</span>
+            </div>
+            {coreVehicleMsg && (
+              <div className="p-2 bg-cyan-950/40 border border-cyan-500/50 rounded-xs text-xs font-mono-code text-cyan-200">{coreVehicleMsg}</div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {CORE_VEHICLES.vehicles.map(v => {
+                const rooms = coreVehicleMinRooms(v);
+                return (
+                  <div key={v.name} className="bg-[#10141f] border border-[#1b2336] p-3 rounded-xs space-y-2 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="font-tech text-xs font-bold text-white uppercase">{v.name}</span>
+                        <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs bg-[#1a2030] text-[#38bdf8] font-bold">{v.category}</span>
+                      </div>
+                      <span className="text-[10px] font-mono-code text-[#f59e0b] block mt-0.5">
+                        {rooms !== null ? `${(v.costEb * rooms).toLocaleString()} €$` : `${v.costEb.toLocaleString()} €$`} • {v.costTier} • Core p.{v.page}
+                      </span>
+                      {v.costNote && <span className="text-[10px] font-mono-code text-[#94a3b8] block">{v.costNote}</span>}
+                      <div className="text-[10px] font-mono-code text-[#94a3b8] mt-1.5">
+                        SDP: <strong className="text-white">{v.sdp}</strong> • Plazas: <strong className="text-white">{v.seats}</strong> • {v.combatSpeed} ({v.narrativeSpeed})
+                      </div>
+                      <p className="text-[10px] font-mono-code text-[#64748b] mt-1.5 line-clamp-2">{v.description}</p>
+                    </div>
+                    <button
+                      onClick={() => handleBuyCoreVehicle(v)}
+                      disabled={rooms === null}
+                      title={rooms === null ? v.costNote : undefined}
+                      className="w-full py-1 bg-[#1a2030] hover:bg-[#f59e0b] hover:text-black disabled:opacity-40 disabled:cursor-not-allowed font-tech font-bold text-[10px] uppercase rounded-xs transition-colors cursor-pointer"
+                    >
+                      Comprar (€$)
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="border-t border-[#1b2234] pt-3 space-y-2">
+              <h4 className="font-tech text-xs font-bold text-white uppercase">Mejoras de Nomad (referencia, Core pp. 163-165)</h4>
+              <p className="text-[10px] font-mono-code text-[#64748b]">{CORE_VEHICLES.upgradeCostNote}</p>
+              <ul className="space-y-1">
+                {CORE_VEHICLES.upgrades.map(u => (
+                  <li key={u.name} className="text-[10px] font-mono-code text-[#94a3b8]">
+                    <strong className="text-white">{u.name}</strong> • Moto {u.minMotoRank}+ • {u.appliesTo} • Core p.{u.page} — {u.effectEs}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>

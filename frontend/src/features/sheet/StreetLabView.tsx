@@ -22,7 +22,8 @@ import { CHARACTER_PORTRAITS_CATALOG } from '../../data/netAndRolesData';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
 import { CEMK_FOLIO_METADATA_MAP } from '../../data/cemkFolioPremadesData';
 import { useGmModeStore } from '../../store/gmModeStore';
-import { ipCostRoleRank, ipCostSkillLevel } from '../../engine/roleRules';
+import { ipCostRoleRank, ipCostSkillLevel, canApplySpeedheal } from '../../engine/roleRules';
+import { useGameClockStore, currentBeatId, currentDayKey } from '../../store/gameClockStore';
 import { IpLedgerPanel } from './IpLedgerPanel';
 import { OtherSkillsPanel } from './OtherSkillsPanel';
 import { RoleAllocationPanel } from './RoleAllocationPanel';
@@ -3666,6 +3667,15 @@ export const StreetLabView: React.FC = () => {
                     setTimeout(() => setRestFeedback(null), 4000);
                     return;
                   }
+                  // Plan 10, decisión 3: 1 por Beat por Medtech y 1 por día por paciente (Core p.150, CEMK Folios p.17).
+                  const speedhealUse = { medtechId: activeChar?.id ?? '', patientId: activeChar?.id ?? '', beatId: currentBeatId(), dayKey: currentDayKey() };
+                  const speedhealCheck = canApplySpeedheal(useGameClockStore.getState().speedhealLog, speedhealUse);
+                  if (!speedhealCheck.ok) {
+                    setRestFeedback(speedhealCheck.reason ?? 'Speedheal no disponible.');
+                    setTimeout(() => setRestFeedback(null), 4000);
+                    return;
+                  }
+                  useGameClockStore.getState().recordSpeedheal(speedhealUse);
                   const newHp = Math.min(maxHp, currentHp + healAmount);
                   setHp(newHp);
                   setRestFeedback(`Inyección de Speedheal aplicada: +${healAmount} HP restaurados al instante (${newHp}/${maxHp} HP). Máx 1 dosis por día (Core p. 150).`);

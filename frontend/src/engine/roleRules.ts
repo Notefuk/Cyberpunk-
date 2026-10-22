@@ -190,6 +190,17 @@ export function validateMedicineAllocation(alloc: Partial<MedicineAllocation> | 
 export function surgeryLevel(alloc: Partial<MedicineAllocation> | undefined): number {
   return Math.min(10, (alloc?.surgery ?? 0) * 2);
 }
+// Obsoleta desde v4.9.2: usar medicalTechLevel (Core p.150).
 export function medicalTechFromPharma(alloc: Partial<MedicineAllocation> | undefined): number {
   return Math.min(10, alloc?.pharmaceuticals ?? 0);
+}
+
+// Interface es la habilidad del Netrunner (Core p.147); otros roles solo con override del GM.
+export function getInterfaceRank(sheet: { role?: string; roleRank?: number; interfaceRankOverride?: number }): number {
+  return sheet.interfaceRankOverride ?? (sheet.role === 'Netrunner' ? (sheet.roleRank ?? 0) : 0);
+}
+
+// Core p.150: Medical Tech = puntos en Pharmaceuticals + Cryosystem.
+export function medicalTechLevel(alloc: Partial<MedicineAllocation> | undefined): number {
+  return Math.min(10, (alloc?.pharmaceuticals ?? 0) + (alloc?.cryosystem ?? 0));
 }

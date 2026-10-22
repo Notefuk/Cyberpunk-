@@ -26,6 +26,46 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.2',
+    date: '2026-10-23',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Roles',
+    title: 'Roles de combate: Round, Combat Awareness, Netrunner por rango, tratamiento de Críticas, reloj de partida y motorpool',
+    summary: 'Plan 10 (v4.9.2 del plan 8): las habilidades de Solo, Netrunner, Medtech y Nomad ya funcionan en el HUD y en la vista de roles, con las reglas del Core y CEMK y su página.',
+    highlights: [
+      'HUD: contador de Round con "Siguiente Round", tiradas de Iniciativa (REF + 1d10, Core pp. 126/168) y Perception (Core p.82), y reloj de partida "Día N · Beat N".',
+      'Solo, Combat Awareness (Core p.146): Damage Deflection en el primer daño del Round, Spot Weakness en el primer ataque exitoso, Fumble Recovery ignora la pifia al atacar, e Initiative Reaction y Threat Detection suman.',
+      'Netrunner: NET Actions por rango de Interface (Core p.197), DV de Quickhack y firewall base por rango (RB p.25), Quickhacks solo con Neuroport (RB p.26) y alcance 6/8/50 m. Los Quickhacks no generan Críticas (RB p.12).',
+      'Tabla de Críticas elegible: Core 2d6 con amputaciones o CEMK 1d6 (RB p.13), independiente del modo 2045/2077 (discrepancia 20).',
+      'Tratamiento: Quick Fix y Treatment con el skill y DV de cada herida, Surgery solo Medtech y Treatment no a uno mismo (Core p.223, RB p.14). El Medtech tira genérico, desde la tabla o sobre la herida de otra ficha. Estabilización DV 10/13/15 (Core p.222).',
+      'Medtech: Speedheal sobre cualquier ficha con límite de 1 por Beat por Medtech y 1 por día por paciente; síntesis corregida al Core (TECH + Medical Tech vs DV13, 200 €$, dosis = Medical Tech, solo fármacos conocidos; Medical Tech = Pharmaceuticals + Cryosystem, Core pp. 149-150).',
+      'Nomad: la maniobra suma REF + la skill real de vehículo + Moto (Core p.161); Motorpool familiar con los 14 vehículos genéricos del Core según rango (pp. 162, 189-191), y catálogo con esos vehículos y las 19 mejoras.',
+      'Red Chrome Cargo usa el rango de Interface real. Corregidos: Seriously Wounded = menos de la mitad (Core p.220). 222 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/medicalRules.ts',
+      'frontend/src/engine/combatAwareness.ts',
+      'frontend/src/engine/roleRules.ts',
+      'frontend/src/engine/combatEngine.ts',
+      'frontend/src/store/gameClockStore.ts',
+      'frontend/src/store/rulesSettingsStore.ts',
+      'frontend/src/store/useCombatStore.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/combat/GameClockBar.tsx',
+      'frontend/src/features/combat/CritTableSelector.tsx',
+      'frontend/src/features/netroles/MedtechTreatmentPanel.tsx',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/oneshot/RedChromeCargoView.tsx',
+      'data/creation-src/cemk-critical-injuries.json',
+      'data/creation-src/core-vehicles.json',
+      'docs/plans/plan10-v492-roles-combate.md'
+    ],
+    metricsBadge: 'v4.9.2 • Roles de combate • Plan 10'
+  },
+  {
     version: 'v4.9.1',
     date: '2026-10-22',
     author: 'Claude Code',
@@ -873,6 +913,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.2': true,
     'v4.9.1': true,
     'v4.9.0': true,
     'v4.8.2': true,

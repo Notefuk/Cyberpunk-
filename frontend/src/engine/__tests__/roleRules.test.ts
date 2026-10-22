@@ -4,6 +4,7 @@ import {
   netActionsForInterface, maxQuickhackDv, neuroportFirewallDv, canUseQuickhacks, jackInRangeM,
   fixerReach, getRoleRankInfo, canApplySpeedheal, makerPointsTotal, makerPointsFree,
   validateMakerAllocation, medicinePointsFree, validateMedicineAllocation, surgeryLevel, medicalTechFromPharma,
+  getInterfaceRank, medicalTechLevel,
 } from '../roleRules';
 
 describe('roleRules', () => {
@@ -127,5 +128,16 @@ describe('roleRules', () => {
     expect(surgeryLevel(a)).toBe(4);
     expect(medicalTechFromPharma(a)).toBe(1);
     expect(validateMedicineAllocation({ surgery: 6 }, 8).length).toBeGreaterThan(0);
+  });
+
+  it('Core p.147: getInterfaceRank Netrunner, otro rol y override', () => {
+    expect(getInterfaceRank({ role: 'Netrunner', roleRank: 4 })).toBe(4);
+    expect(getInterfaceRank({ role: 'Solo', roleRank: 4 })).toBe(0);
+    expect(getInterfaceRank({ role: 'Solo', roleRank: 4, interfaceRankOverride: 2 })).toBe(2);
+    expect(getInterfaceRank({ role: 'Netrunner', roleRank: 4, interfaceRankOverride: 1 })).toBe(1);
+  });
+  it('Core p.150: Medical Tech = Pharmaceuticals + Cryosystem', () => {
+    expect(medicalTechLevel({ pharmaceuticals: 1, cryosystem: 2 })).toBe(3);
+    expect(medicalTechLevel(undefined)).toBe(0);
   });
 });

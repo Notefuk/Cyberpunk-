@@ -76,7 +76,8 @@ export function createInitialAttackRoll(
   character: CharacterSheet,
   weapon: WeaponItem,
   options: InitialAttackRollOptions = {},
-  aimedShotTargetParam: AimedShotTarget = 'none'
+  aimedShotTargetParam: AimedShotTarget = 'none',
+  opts?: { ignoreCriticalFailure?: boolean }
 ): RollEntry {
   const {
     targetDv = null,
@@ -98,7 +99,9 @@ export function createInitialAttackRoll(
   // Lanza el primer 1d10
   const d10 = Math.floor(Math.random() * 10) + 1;
   const isCritSuccess = d10 === 10;
-  const isCritFail = d10 === 1;
+  // Core p.146 (Fumble Recovery): el 1 se ignora como fallo crítico (no hay dado de pifia) pero sigue valiendo 1.
+  const fumbleIgnored = !!opts?.ignoreCriticalFailure && d10 === 1;
+  const isCritFail = d10 === 1 && !fumbleIgnored;
 
   // Si d10 === 10 o d10 === 1: NO lanzar todavía critDie.
   // needsExplosionClick = true, critDie = null, cálculo provisional.
@@ -113,6 +116,9 @@ export function createInitialAttackRoll(
   const penaltyBreakdown = [...breakdown.penaltyBreakdown];
   if (aimedPenalty > 0 && aimedConfig) {
     penaltyBreakdown.push(`Ataque Apuntado (-${aimedPenalty}): ${aimedConfig.label}`);
+  }
+  if (fumbleIgnored) {
+    penaltyBreakdown.push('Fumble Recovery: se ignora el fallo crítico, el 1 sigue valiendo 1 (Core p.146)');
   }
 
   const provisionalTotalAttack = breakdown.netBase - aimedPenalty + luckSpent + d10;
