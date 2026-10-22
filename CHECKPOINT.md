@@ -14,7 +14,7 @@
 
 - [Claude Code · 2026-10-22] v4.9.0 Datos de roles por rango (plan 8) MERGEADA (PR #24) y PUBLICADA. Siguiente: v4.9.1 motor de roles (`engine/roleRules.ts`: NET Actions por rango, DV de Quickhack, mejor Reach, costos de IP), avance con IP (IP nuevos en 0, modo GM), quitar el selector +4 del creador, reparto inicial de los Folios aplicado a la ficha y migración de persistencia v4, en rama `claude/v4.9.1-*`. Datos en `ROLE_RANKS.roles.<Rol>`; reglas ya decididas en discrepancias 24-37.
 - [Claude Code · 2026-10-22] v4.9.1 (plan 9) MERGEADA (PR #25) y PUBLICADA. Siguiente: v4.9.2 herramientas de rol de combate (Solo en el HUD, Netrunner con `engine/roleRules.ts`, Medtech con Speedheal híbrido, Nomad con Moto). Pendiente previo: desborde horizontal de Street Lab en celular (ya estaba en v4.9.0).
-- [Claude Code · 2026-10-23] v4.9.2 (plan 10) TERMINADA y verificada (tsc, 222 tests, build, navegador) en la rama `claude/v4.9.2-roles-combate`. Falta: confirmar con Giuliano Damage Deflection después de armadura; PR, merge y gh-pages. Siguiente: v4.9.3 herramientas de rol sociales.
+- [Claude Code · 2026-10-23] v4.9.2 (plan 10) TERMINADA y verificada (tsc, 222 tests, build, navegador) en la rama `claude/v4.9.2-roles-combate`. Damage Deflection después de armadura confirmado por Giuliano. PR, merge y gh-pages en curso. Siguiente: v4.9.3 herramientas de rol sociales.
 - [Claude Code · 2026-10-22] Prueba de creación de PJs (sonda del motor: 10 roles × 2 eras × Streetrat/Edgerunner × 2 lifepaths, 7 Folios y 5 Easy Mode; y un Nomad 2077 en el wizard del navegador). HP, SW, Death Save, Humanidad y dinero dan bien. Encontrado: (1) [ARREGLADO en v4.9.0, verificado en navegador con Nomad y Rockerboy] BUG lifepath Core de rol: las tablas condicionales se exigen y se tiran todas aunque no apliquen (compañero de Netrunner/Tech/Medtech/Fixer con "Trabajás solo"; Nomad tierra, aire y mar a la vez; "Why Did You Leave?" del Rockerboy); "Tirar todo" no llena las tablas "a elección" y no avisa (`engine/characterCreation.ts` validateLifepath ~L871 y `LifepathStep.tsx`). (2) DUDA para Giuliano: en 2077 el Fixer y el Exec conservan el Internal Agent (ciberware, Core p.117) aunque el Neuroport trae el Agent (RB pp. 35-36). (3) Menor: la nota del Folio (p. ej. Wrench) se muestra en la pestaña de rol de cualquier Nomad, no solo del Folio. (4) Menor: munición "Incendiary Shotgun Shell" del Medtech sin ID en el catálogo.
 - [Claude Code · 2026-10-22] Cierre de v4.9.0 (plan de cierre aprobado, en `~/.claude/plans/cryptic-juggling-stonebraker.md`): Giuliano decidió las dudas 24-33 y 4 nuevas (Internal Agent y Biomonitor fuera en 2077; nota del Folio solo en su ficha; agregar Incendiary Shotgun Shell). TODO HECHO y verificado (tsc, 156 tests, build, sonda y navegador): Neuroport cubre Internal Agent y Biomonitor (alternativas "o" elegibles), munición incendiaria mapeada, nota del Folio solo en su ficha, discrepancias 24-37 y `doubts` anotadas. Falta: PR, merge y gh-pages.
 
@@ -25,7 +25,8 @@
 - A medias: nada. v4.9.2 terminada; falta PR, merge y gh-pages.
 - Siguiente paso exacto: PR de v4.9.2, merge, publicar; después v4.9.3 (roles sociales).
 - Pendientes previos: desborde horizontal en celular (Street Lab, vista de roles, barra del centro del HUD con módulos). Range Upgrade del cyberdeck (Core p.208) no existe en el modelo de ficha: el alcance por defecto es 6 m o 50 m con Cyberdeck Port.
-- Preguntas abiertas para Giuliano: Damage Deflection después de armadura (Core p.146), confirmar. Revocar el token de GitHub del remote `origin`.
+- Decidido (Giuliano, 2026-10-23): Damage Deflection va después de la armadura (Core p.146).
+- Preguntas abiertas para Giuliano: revocar el token de GitHub del remote `origin`.
 
 ## Último trabajo terminado
 
