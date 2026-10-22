@@ -1,0 +1,1393 @@
+{
+  "book": "Core RED v1.24 + CEMK (RB, Folios)",
+  "pageConvention": "Core y RB página impresa; Folios página del PDF",
+  "roles": {
+    "Solo": {
+      "ability": "Combat Awareness",
+      "source": {
+        "book": "Core RED",
+        "page": 146
+      },
+      "rulesEs": "Al comenzar el combate (antes de tirar Iniciativa), en cualquier momento fuera de combate, o dentro de combate gastando una Acción, el Solo reparte el total de puntos de su Combat Awareness (igual a su Rango) entre seis habilidades. Si no cambia la asignación, la anterior persiste. Cada habilidad cuesta distinto: Damage Deflection, Fumble Recovery y Precision Attack tienen escalones de costo fijo; Initiative Reaction, Spot Weakness y Threat Detection dan +1 por punto. Ejemplo del libro: un Solo de Rango 6 reparte 6 puntos y los reasigna al empezar una pelea o con una Acción durante ella.",
+      "ranks": [
+        {
+          "rank": 1,
+          "unlocksEs": [
+            "Total de 1 punto de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales).",
+            "Con 1 punto: +1 a Iniciativa (Initiative Reaction), +1 al daño del primer Ataque exitoso de la Ronda (Spot Weakness) o +1 a Perception (Threat Detection)."
+          ]
+        },
+        {
+          "rank": 2,
+          "unlocksEs": [
+            "Total de 2 puntos de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales).",
+            "Ya alcanza Damage Deflection con 2 puntos: reduce 1 el primer daño recibido en la Ronda."
+          ]
+        },
+        {
+          "rank": 3,
+          "unlocksEs": [
+            "Total de 3 puntos de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales).",
+            "Ya alcanza Precision Attack con 3 puntos: +1 a todos los Ataques."
+          ]
+        },
+        {
+          "rank": 4,
+          "unlocksEs": [
+            "Total de 4 puntos de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales).",
+            "Ya alcanza Damage Deflection con 4 puntos: reduce 2 el primer daño recibido en la Ronda.",
+            "Ya alcanza Fumble Recovery (4 puntos): ignora los fallos críticos (1) al atacar."
+          ]
+        },
+        {
+          "rank": 5,
+          "unlocksEs": [
+            "Total de 5 puntos de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales)."
+          ]
+        },
+        {
+          "rank": 6,
+          "unlocksEs": [
+            "Total de 6 puntos de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales).",
+            "Ya alcanza Damage Deflection con 6 puntos: reduce 3 el primer daño recibido en la Ronda.",
+            "Ya alcanza Precision Attack con 6 puntos: +2 a todos los Ataques."
+          ]
+        },
+        {
+          "rank": 7,
+          "unlocksEs": [
+            "Total de 7 puntos de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales)."
+          ]
+        },
+        {
+          "rank": 8,
+          "unlocksEs": [
+            "Total de 8 puntos de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales).",
+            "Ya alcanza Damage Deflection con 8 puntos: reduce 4 el primer daño recibido en la Ronda."
+          ]
+        },
+        {
+          "rank": 9,
+          "unlocksEs": [
+            "Total de 9 puntos de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales).",
+            "Ya alcanza Precision Attack con 9 puntos: +3 a todos los Ataques."
+          ]
+        },
+        {
+          "rank": 10,
+          "unlocksEs": [
+            "Total de 10 puntos de Combat Awareness para repartir entre las 6 opciones (el Rango de Rol = puntos totales).",
+            "Ya alcanza Damage Deflection con 10 puntos: reduce 5 el primer daño recibido en la Ronda."
+          ]
+        }
+      ],
+      "options": [
+        {
+          "id": "damage_deflection",
+          "name": "Damage Deflection",
+          "costs": [
+            {
+              "points": 2,
+              "effectEs": "Reduce 1 el primer daño que recibes esta Ronda."
+            },
+            {
+              "points": 4,
+              "effectEs": "Reduce 2 el primer daño que recibes esta Ronda."
+            },
+            {
+              "points": 6,
+              "effectEs": "Reduce 3 el primer daño que recibes esta Ronda."
+            },
+            {
+              "points": 8,
+              "effectEs": "Reduce 4 el primer daño que recibes esta Ronda."
+            },
+            {
+              "points": 10,
+              "effectEs": "Reduce 5 el primer daño que recibes esta Ronda."
+            }
+          ],
+          "effectEs": "Entrenado para 'rodar con los golpes': reduce el primer daño recibido en la Ronda según los puntos invertidos."
+        },
+        {
+          "id": "fumble_recovery",
+          "name": "Fumble Recovery",
+          "costs": [
+            {
+              "points": 4,
+              "effectEs": "Ignoras los fallos críticos (1) que saques al atacar; esas tiradas siguen contando como 1."
+            }
+          ],
+          "effectEs": "Recuperación instantánea de errores tomándose su tiempo con cada disparo."
+        },
+        {
+          "id": "initiative_reaction",
+          "name": "Initiative Reaction",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "+1 a las tiradas de Iniciativa (cada punto suma +1)."
+            }
+          ],
+          "effectEs": "Reflejos entrenados para responder al instante al inicio de un tiroteo; cada punto suma +1 a las tiradas de Iniciativa."
+        },
+        {
+          "id": "precision_attack",
+          "name": "Precision Attack",
+          "costs": [
+            {
+              "points": 3,
+              "effectEs": "+1 a cualquier Ataque que hagas."
+            },
+            {
+              "points": 6,
+              "effectEs": "+2 a cualquier Ataque que hagas."
+            },
+            {
+              "points": 9,
+              "effectEs": "+3 a cualquier Ataque que hagas."
+            }
+          ],
+          "effectEs": "Entrenado para apuntar con precisión, con mayor exactitud en los Ataques."
+        },
+        {
+          "id": "spot_weakness",
+          "name": "Spot Weakness",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "+1 al daño (antes de armadura) de tu primer Ataque exitoso de la Ronda (cada punto suma +1)."
+            }
+          ],
+          "effectEs": "Busca puntos débiles para dañar incluso a blancos muy blindados; cada punto suma +1 al daño antes de armadura del primer Ataque exitoso de la Ronda."
+        },
+        {
+          "id": "threat_detection",
+          "name": "Threat Detection",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "+1 a las Pruebas de Perception (cada punto suma +1)."
+            }
+          ],
+          "effectEs": "Conciencia situacional mejorada; cada punto suma +1 a cualquier Prueba de Perception."
+        }
+      ],
+      "tables": {
+        "damageDeflection": [
+          {
+            "points": 2,
+            "reduction": 1
+          },
+          {
+            "points": 4,
+            "reduction": 2
+          },
+          {
+            "points": 6,
+            "reduction": 3
+          },
+          {
+            "points": 8,
+            "reduction": 4
+          },
+          {
+            "points": 10,
+            "reduction": 5
+          }
+        ],
+        "precisionAttack": [
+          {
+            "points": 3,
+            "bonus": 1
+          },
+          {
+            "points": 6,
+            "bonus": 2
+          },
+          {
+            "points": 9,
+            "bonus": 3
+          }
+        ],
+        "perPointOptions": [
+          "initiative_reaction",
+          "spot_weakness",
+          "threat_detection"
+        ],
+        "pointsByRank": "Puntos totales = Rango (1 a 10)"
+      },
+      "tweak2077": [],
+      "cemk": null,
+      "folio": {
+        "pregen": "Hardpoint",
+        "folioTextEs": "Siempre estás evaluando la escena y tus reflejos están afinados. Suma +4 a cualquier tirada de Iniciativa que hagas.",
+        "source": {
+          "book": "CEMK Folios",
+          "page": 1
+        },
+        "convertsToEs": "Combat Awareness Rango 4 con los 4 puntos en Initiative Reaction (+4 a Iniciativa). El Folio no cubre ninguna otra opción de Combat Awareness, así que el Solo del Folio no tiene Damage Deflection, Precision Attack, etc.; como el jugador puede reasignar sus puntos libremente (al iniciar combate o con una Acción), la asignación inicial reproduce el Folio y el resto queda libre para el jugador.",
+        "startingAllocation": {
+          "initiative_reaction": 4
+        }
+      }
+    },
+    "Netrunner": {
+      "ability": "Interface",
+      "source": {
+        "book": "Core RED",
+        "page": 147
+      },
+      "rulesEs": "Interface permite Netrunear (sin ella no se puede), determina cuántas Acciones NET se pueden hacer por Turno y da acceso a las 9 Habilidades de Interface. En tu Turno haces 1 Acción de Carne (Meat) O tantas Acciones NET como te dé tu Interface; en ambos casos conservas tu Move Action. Las Acciones NET son: Jack In/Out (a ≤6 m/yd de un punto de acceso; sin pared de por medio), usar una Habilidad de Interface, activar/desactivar un Programa y 'misceláneo'. Moverte dentro de la Arquitectura y guardar copia de un Archivo no cuestan Acción NET. Las Habilidades de Interface (salvo Zap) se resuelven con Interface + 1d10 contra un DV; Interface es el Rango de Rol. Si haces Jack Out por tu cuenta, restableces las defensas de la Arquitectura; si te mueves fuera de los 6 m/yd estando conectado, sufres todo el efecto de la Black ICE encontrada pero no derrotada. Un Programa activado no puede reactivarse hasta desactivarse; cada Programa solo puede activarse una vez por Ronda de Meatspace.",
+      "ranks": [
+        {
+          "rank": 1,
+          "unlocksEs": [
+            "2 Acciones NET por Turno. (escalón nuevo)",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        },
+        {
+          "rank": 2,
+          "unlocksEs": [
+            "2 Acciones NET por Turno.",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        },
+        {
+          "rank": 3,
+          "unlocksEs": [
+            "2 Acciones NET por Turno.",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        },
+        {
+          "rank": 4,
+          "unlocksEs": [
+            "3 Acciones NET por Turno. (escalón nuevo)",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        },
+        {
+          "rank": 5,
+          "unlocksEs": [
+            "3 Acciones NET por Turno.",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        },
+        {
+          "rank": 6,
+          "unlocksEs": [
+            "3 Acciones NET por Turno.",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        },
+        {
+          "rank": 7,
+          "unlocksEs": [
+            "4 Acciones NET por Turno. (escalón nuevo)",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        },
+        {
+          "rank": 8,
+          "unlocksEs": [
+            "4 Acciones NET por Turno.",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        },
+        {
+          "rank": 9,
+          "unlocksEs": [
+            "4 Acciones NET por Turno.",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        },
+        {
+          "rank": 10,
+          "unlocksEs": [
+            "5 Acciones NET por Turno. (escalón nuevo)",
+            "Tira Interface + 1d10 (Interface = Rango, sin STAT) en las Habilidades de Interface; acceso a las 9 Habilidades de Interface desde Rango 1 (la tabla del Core no las separa por Rango)."
+          ]
+        }
+      ],
+      "options": [
+        {
+          "id": "backdoor",
+          "name": "Backdoor",
+          "costs": [],
+          "dvEs": "Interface + 1d10 contra el DV del Password (lo fija la Arquitectura); si ya conoces el Password, pasas sin tirar",
+          "netActionCost": "Permite romper Passwords y otras obstrucciones de la Arquitectura. Ejemplo del libro: Password DV10, Interface 7 + 1d10 = 16 y pasa. (En CEMK 2070s esta Acción NET se renombra Breach.)",
+          "effectEs": "1 Acción NET"
+        },
+        {
+          "id": "cloak",
+          "name": "Cloak",
+          "costs": [],
+          "dvEs": "El Check de Cloak fija el DV que otro Netrunner debe superar con Pathfinder (Interface + 1d10)",
+          "netActionCost": "Oculta tus rastros y cualquier Virus que dejaste en la Arquitectura. Si no usas Cloak antes de hacer Jack Out, otro Netrunner descubre automáticamente tus acciones al usar Pathfinder. Ejemplo: Interface 7 + 1d10 = 16 obliga al enemigo a superar 16.",
+          "effectEs": "1 Acción NET"
+        },
+        {
+          "id": "control",
+          "name": "Control",
+          "costs": [],
+          "dvEs": "Interface + 1d10 contra el DV del Control Node (ej. DV10 en el libro); para arrebatar un Nodo que tiene otro Netrunner o un Demon, el DV es el Check con que lo tomó",
+          "netActionCost": "Controla cosas conectadas a la Arquitectura (cámaras, drones, torretas, rejillas láser, ascensores, aspersores) mediante un Control Node. Operar cada cosa requiere una Acción NET aparte y puede hacerse desde cualquier parte de la Arquitectura mientras controles el Nodo. Cada Nodo solo puede activarse una vez por Turno. Al hacer Jack Out pierdes los Nodos que controlas.",
+          "effectEs": "1 Acción NET para tomar el Nodo; 1 Acción NET adicional por cada cosa que operes"
+        },
+        {
+          "id": "eye_dee",
+          "name": "Eye-Dee",
+          "costs": [],
+          "dvEs": "Interface + 1d10 contra el DV del Archivo (algunos Archivos tienen DV; ej. DV9 en el libro)",
+          "netActionCost": "Sabes qué es un dato encontrado (como un Archivo) y su valor.",
+          "effectEs": "1 Acción NET"
+        },
+        {
+          "id": "pathfinder",
+          "name": "Pathfinder",
+          "costs": [],
+          "dvEs": "Interface + 1d10; el Check no se compara con un DV fijo: ves tantos pisos como el resultado, o hasta la primera obstrucción (normalmente un Password) con DV mayor que tu Check",
+          "netActionCost": "Revela parcialmente el 'mapa' de la Arquitectura (qué hay, sin el DV de nada). Ejemplo: resultado 10 con un Password DV11 en el tercer piso: ves solo los 3 primeros pisos.",
+          "effectEs": "1 Acción NET"
+        },
+        {
+          "id": "scanner",
+          "name": "Scanner",
+          "costs": [],
+          "dvEs": "Interface + 1d10; cuanto mayor el resultado, más y más lejos detectas (lo decide el GM). Ejemplo del libro: Interface 7 + 1d10 = 14 revela la ubicación de 2 puntos de acceso cercanos",
+          "netActionCost": "Averigua la ubicación en el Meatspace de los puntos de acceso a Arquitecturas NET de un área. Es la única Habilidad de Interface que no se usa como Acción NET en el Core.",
+          "effectEs": "Acción de Carne (Meat Action) en el Core; Acción NET con el ajuste CEMK 2070s"
+        },
+        {
+          "id": "slide",
+          "name": "Slide",
+          "costs": [],
+          "dvEs": "Interface + 1d10 contra la Perception + 1d10 de la Black ICE (ej. Hellhound Perception 6)",
+          "netActionCost": "Huyes de un único Programa de Black ICE que no sea Demon: escapas al piso adyacente del ascensor (no más allá de un Password u otra obstrucción NET). La Black ICE deja de seguirte y queda al acecho donde estaba.",
+          "effectEs": "1 Acción NET; solo 1 intento por Turno; no se puede usar preventivamente"
+        },
+        {
+          "id": "virus",
+          "name": "Virus",
+          "costs": [],
+          "dvEs": "Interface + 1d10 contra un DV que asigna el GM según lo poderoso del Virus; el DV para destruirlo es el Check con que se creó",
+          "netActionCost": "Solo desde el piso más bajo de la Arquitectura: dejas un Virus propio que realiza hasta 2 acciones o cambios razonables. Es la única forma de hacer un cambio en la Arquitectura que persista tras el Jack Out. Ejemplos del libro: cambiar el icono de las Black ICE Asp DV6, 1 Acción NET; desactivar una Black ICE concreta DV10, 2 Acciones NET; hacer fallar un Control Node DV10, 2 Acciones NET; borrar toda la Black ICE permanentemente DV12, 10 Acciones NET; reducir a la mitad los pisos DV12, 10 Acciones NET.",
+          "effectEs": "Las que el GM determine (según el Virus)"
+        },
+        {
+          "id": "zap",
+          "name": "Zap",
+          "costs": [],
+          "dvEs": "Zap Check contra la Defense + 1d10 del Programa o la Interface + 1d10 del Netrunner (no usa DV fijo)",
+          "netActionCost": "Ataque básico del Netrunner contra un Programa o contra otro Netrunner. Si lo logras, haces 1d6 de daño al REZ del Programa o directamente al cerebro del Netrunner.",
+          "effectEs": "1 Acción NET"
+        }
+      ],
+      "tables": {
+        "netActionsByRank": [
+          {
+            "fromRank": 1,
+            "toRank": 3,
+            "actions": 2
+          },
+          {
+            "fromRank": 4,
+            "toRank": 6,
+            "actions": 3
+          },
+          {
+            "fromRank": 7,
+            "toRank": 9,
+            "actions": 4
+          },
+          {
+            "fromRank": 10,
+            "toRank": 10,
+            "actions": 5
+          }
+        ],
+        "netActionTypes": [
+          {
+            "name": "Jack In / Jack Out",
+            "textEs": "Entrar o salir con seguridad de una Arquitectura NET a ≤6 m/yd de un punto de acceso (una pared suele bloquear la Acción). Salir sin Jack Out te deja vulnerable a la Black ICE encontrada."
+          },
+          {
+            "name": "Usar Habilidad de Interface",
+            "textEs": "Todas menos una (Scanner en el Core) requieren al menos una Acción NET."
+          },
+          {
+            "name": "Activar/Desactivar Programa",
+            "textEs": "Activar o desactivar uno de tus Programas."
+          },
+          {
+            "name": "Misceláneo",
+            "textEs": "Rara vez algo no encaja en las categorías anteriores; el GM decide y probablemente cueste una Acción NET."
+          }
+        ],
+        "netCombat": "Tu Interface + ATK del Programa + 1d10 (o ATK de Black ICE + 1d10) contra Interface + 1d10 del blanco, o DEF del Programa/Black ICE + 1d10. Con un impacto el blanco sufre el efecto del Programa.",
+        "cyberdeckSlots": [
+          {
+            "type": "Poor Quality Cyberdeck",
+            "cost": "100eb (Premium)",
+            "slots": 5
+          },
+          {
+            "type": "Cyberdeck",
+            "cost": "500eb (Expensive)",
+            "slots": 7
+          },
+          {
+            "type": "Excellent Quality Cyberdeck",
+            "cost": "1.000eb (Very Expensive)",
+            "slots": 9
+          }
+        ]
+      },
+      "tweak2077": [
+        {
+          "fromRank": 1,
+          "textEs": "Quickhack de ciberware como parte de Interface: acceso a todos los Quickhacks Simple (DV6) desde Interface Rank 1.",
+          "source": {
+            "book": "CEMK RB",
+            "page": 25
+          }
+        },
+        {
+          "fromRank": 2,
+          "textEs": "Acceso a todos los Quickhacks Standard (DV8).",
+          "source": {
+            "book": "CEMK RB",
+            "page": 25
+          }
+        },
+        {
+          "fromRank": 3,
+          "textEs": "Acceso a todos los Quickhacks Difficult (DV10); además supera automáticamente, sin Check, el firewall base de un Neuroport.",
+          "source": {
+            "book": "CEMK RB",
+            "page": 25
+          }
+        },
+        {
+          "fromRank": 4,
+          "textEs": "Acceso a todos los Quickhacks Advanced (DV12).",
+          "source": {
+            "book": "CEMK RB",
+            "page": 25
+          }
+        },
+        {
+          "fromRank": null,
+          "textEs": "La Habilidad de Interface Scanner pasa de Meat Action a NET Action.",
+          "source": {
+            "book": "CEMK RB",
+            "page": 25
+          }
+        }
+      ],
+      "cemk": {
+        "textEs": "Quickhacking (2070s): solo funciona contra blancos con Neuroport. Interface es una Skill especial a la que nunca se suma un STAT (solo Interface + 1d10); sigue las reglas normales (Luck, Skill complementaria, tiempo extra; penalizadores como Grapple o Wound State la bajan). Un Netrunner hace 1 Meat Action o hasta 3 Net Actions por Turno (RB p.16; ver nota de duda: el Core da 2/3/4/5 por Rango). Acciones NET del RB: Jack In (Interface + 1d10 contra WILL + 1d10 del blanco; entra aunque falle, pero el blanco se entera; el blanco puede intentar expulsarlo como Acción ROF1 con WILL + Concentration + 1d10 contra Interface + 1d10; si lo expulsan no puede reintentar con ese individuo por 60 minutos), Jack Out, Breach (superar un Passwall) y Quickhack (Interface + 1d10 contra el DV del Quickhack; solo 1 Quickhack por blanco por Turno; solo tras superar todos los Passwalls). Firewall base del Neuroport: con Interface Rank 1 o 2 hay que superar un Check Interface DV6 antes del Check opuesto de Jack In (si falla, el defensor no se entera); desde Rank 3 se supera automáticamente. El firewall base no es un Passwall ni ocupa piso. Breach: cada Self-ICE instalado añade un Passwall y cuesta 1 Acción NET superarlo; el DV de todos los Passwalls depende del total de Self-ICE (máximo 3): 1 Self-ICE = DV6, 2 = DV8, 3 = DV10. Direct Connection: Jack In directo con Personal Link (Interface Plug); +1 Acción NET por Turno y se saltan los Passwalls (no la Black ICE); requiere proximidad y se corta si Netrunner o blanco se alejan más de 2 m/yd o se arranca el cable; no se puede hacer a un blanco que no sea inconsciente o inmovilizado por completo. Los Neuroports funcionan como Arquitectura NET: sin Self-ICE ni Black ICE hay 1 piso con un Control Node DV10 (holophone); si no, 1 piso por Passwall y/o Black ICE conectada. Un Neuroport no instala Black ICE propia: toma prestada la del Cyberdeck al que el usuario esté conectado. El Netrunner siempre está conectado a su propio Neuroport y no puede ser expulsado de él.",
+        "data": {
+          "quickhackDvByRank": [
+            {
+              "rank": 1,
+              "tier": "Simple",
+              "dv": 6
+            },
+            {
+              "rank": 2,
+              "tier": "Standard",
+              "dv": 8
+            },
+            {
+              "rank": 3,
+              "tier": "Difficult",
+              "dv": 10
+            },
+            {
+              "rank": 4,
+              "tier": "Advanced",
+              "dv": 12
+            }
+          ],
+          "quickhacks": [
+            {
+              "name": "Impair Movement",
+              "dv": 6,
+              "tier": "Simple",
+              "effectEs": "MOVE del blanco −1 por 60 s (20 Rounds); si llega a 0 no puede hacer Move Action."
+            },
+            {
+              "name": "Sonic Shock",
+              "dv": 6,
+              "tier": "Simple",
+              "effectEs": "Lesión Crítica Damaged Ear (sin daño adicional) por 60 s (20 Rounds)."
+            },
+            {
+              "name": "Overheat",
+              "dv": 8,
+              "tier": "Standard",
+              "effectEs": "El blanco arde: 4 de daño directo a HP al final de su Turno hasta apagar el fuego; ignora armadura sin ablandarla; apagarlo requiere una Acción ROF1 solo en su Turno."
+            },
+            {
+              "name": "Short Circuit",
+              "dv": 8,
+              "tier": "Standard",
+              "effectEs": "El GM elige 3 piezas de ciberware (excepto Cyberarm, Cyberleg, Cybereye, Cyberaudio Suite, Neuroport o Neuroport Cyberdeck Expansion; sí opciones adosadas como Mantis Blades o Low Light/Infrared/UV); dejan de funcionar 60 s (20 Rounds)."
+            },
+            {
+              "name": "Cyberware Malfunction",
+              "dv": 10,
+              "tier": "Difficult",
+              "effectEs": "El jugador del Netrunner elige una pieza de ciberware del blanco (excepto Neuroport o Neuroport Cyberdeck Port) que queda inoperante 60 s (20 Rounds); un cyberlimb inoperante actúa como Broken Arm/Broken Leg y sus opciones se apagan."
+            },
+            {
+              "name": "Lure",
+              "dv": 10,
+              "tier": "Difficult",
+              "effectEs": "Al inicio del siguiente Turno del blanco, hace una Move Action controlada por el Netrunner (investiga un ruido fantasma). Solo si el blanco no sabe que hay un Netrunner conectado; no lo alerta; no puede llevarlo a un peligro físico obvio."
+            },
+            {
+              "name": "Slow",
+              "dv": 10,
+              "tier": "Difficult",
+              "effectEs": "MOVE del blanco −1d6 por 60 s (20 Rounds); si llega a 0 no puede hacer Move Action."
+            },
+            {
+              "name": "Synapse Burnout",
+              "dv": 10,
+              "tier": "Difficult",
+              "effectEs": "3d6 de daño directo a HP; ignora armadura y no la ablanda."
+            },
+            {
+              "name": "Puppet",
+              "dv": 12,
+              "tier": "Advanced",
+              "effectEs": "Controlas la Acción y la Move Action del blanco en su siguiente Turno; los Checks usan los STATs y Skills del blanco."
+            },
+            {
+              "name": "Shard Ejection",
+              "dv": 12,
+              "tier": "Advanced",
+              "effectEs": "Desinstala y expulsa a una casilla adyacente una pieza de chipware del blanco (a elección del Netrunner); no funciona si la ranura tiene tapa (ni siquiera cinta)."
+            },
+            {
+              "name": "System Reset",
+              "dv": 12,
+              "tier": "Advanced",
+              "effectEs": "El blanco queda Inconsciente 60 s (20 Rounds) o hasta que lo despierte recibir daño, y cae Prone."
+            }
+          ],
+          "scannerNetAction": true,
+          "firewall": {
+            "baseDvRank1to2": 6,
+            "autoBypassFromRank": 3,
+            "notAPasswall": true
+          },
+          "rangeMeters": {
+            "externalCyberdeck": 6,
+            "externalCyberdeckWithHardwareOption": 8,
+            "neuroportCyberdeckPort": 50,
+            "notes": "Se necesita línea de visión. 6 m/yd = 3 casillas; 8 m/yd = 4 casillas; 50 m/yd = 25 casillas. El Neuroport Cyberdeck Port (RB p.36) da 20 m/yd para Arquitecturas NET normales y 50 m/yd para Neuroports; las paredes siguen bloqueando."
+          },
+          "breach": {
+            "selfIceMax": 3,
+            "passwallDvByTotalSelfIce": [
+              {
+                "selfIce": 1,
+                "dv": 6
+              },
+              {
+                "selfIce": 2,
+                "dv": 8
+              },
+              {
+                "selfIce": 3,
+                "dv": 10
+              }
+            ],
+            "backdoorRenamedBreach": true,
+            "netActionCostPerPasswall": 1
+          },
+          "selfIce": {
+            "cost": "500eb (Expensive)",
+            "install": "Hospital",
+            "humanityLoss": "3 (1d6)",
+            "maxInstalls": 3
+          },
+          "directConnection": {
+            "extraNetActionsPerTurn": 1,
+            "bypassesPasswalls": true,
+            "bypassesBlackIce": false,
+            "breakDistanceMeters": 2,
+            "requiresUnwillingTargetUnconsciousOrRestrained": true
+          },
+          "jackIn": {
+            "check": "Interface + 1d10 vs WILL + 1d10 del blanco",
+            "ejectCheck": "WILL + Concentration + 1d10 vs Interface + 1d10 (Acción ROF1)",
+            "lockoutMinutes": 60
+          },
+          "neuroportArchitecture": {
+            "floorsWithoutSelfIceOrBlackIce": 1,
+            "controlNodeDv": 10,
+            "controlNodeAttached": "Holophone"
+          }
+        },
+        "source": {
+          "book": "CEMK RB",
+          "page": "16-17, 25-27, 36",
+          "note": "Jack In/Breach/Quickhack y lista de Quickhacks pp.16-17; ajuste de rol p.25; rango, firewall y Arquitectura de Neuroport p.26; Direct Connection y Backdoor→Breach p.27; Self-ICE p.36"
+        }
+      },
+      "folio": {
+        "pregen": "Bluescreen",
+        "folioTextEs": "Olvida teclados y pantallas táctiles: puedes usar el cerebro para hackear gente. Tienes Interface 4 y 3 Net Actions en tu Turno a efectos de Quickhacking.",
+        "source": {
+          "book": "CEMK Folios",
+          "page": 13
+        },
+        "convertsToEs": "Netrunner con Interface Rango 4: 3 Acciones NET por Turno (igual que el Folio) y, con el ajuste 2070s, acceso a todos los Quickhacks hasta Advanced (DV12). El Folio no cubre el resto de Interface; el jugador elige libremente cómo usar sus Habilidades de Interface.",
+        "startingAllocation": {
+          "interface": 4
+        }
+      }
+    },
+    "Tech": {
+      "ability": "Maker",
+      "source": {
+        "book": "Core RED",
+        "page": 147
+      },
+      "rulesEs": "Maker permite arreglar, mejorar, modificar, fabricar e inventar objetos. Cada vez que el Tech sube 1 Rango de Maker, gana 1 Rango en dos Especialidades de Maker distintas a su elección (Field Expertise, Upgrade Expertise, Fabrication Expertise o Invention Expertise). Upgrade, Fabrication e Invention se tiran con TECH + Skill TECH apropiada + Rango de la especialidad + 1d10 contra un DV y tiempo que dependen de la Categoría de Precio (tabla DV/tiempo, Core p.149).",
+      "ranks": [
+        {
+          "rank": 1,
+          "unlocksEs": [
+            "Al subir a Rango 1 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 2 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 1 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Field Expertise: si tienes ≥1 Rango, puedes reparar temporalmente un objeto (jury-rig) y dura 10 min por cada Rango que tengas en esa especialidad."
+          ]
+        },
+        {
+          "rank": 2,
+          "unlocksEs": [
+            "Al subir a Rango 2 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 4 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 2 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Cada Rango extra en Field Expertise suma +1 a los Checks que cubre y alarga el jury-rig 10 minutos."
+          ]
+        },
+        {
+          "rank": 3,
+          "unlocksEs": [
+            "Al subir a Rango 3 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 6 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 3 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Cada Rango extra en Field Expertise suma +1 a los Checks que cubre y alarga el jury-rig 10 minutos."
+          ]
+        },
+        {
+          "rank": 4,
+          "unlocksEs": [
+            "Al subir a Rango 4 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 8 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 4 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Cada Rango extra en Field Expertise suma +1 a los Checks que cubre y alarga el jury-rig 10 minutos."
+          ]
+        },
+        {
+          "rank": 5,
+          "unlocksEs": [
+            "Al subir a Rango 5 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 10 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 5 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Cada Rango extra en Field Expertise suma +1 a los Checks que cubre y alarga el jury-rig 10 minutos."
+          ]
+        },
+        {
+          "rank": 6,
+          "unlocksEs": [
+            "Al subir a Rango 6 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 12 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 6 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Cada Rango extra en Field Expertise suma +1 a los Checks que cubre y alarga el jury-rig 10 minutos."
+          ]
+        },
+        {
+          "rank": 7,
+          "unlocksEs": [
+            "Al subir a Rango 7 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 14 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 7 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Cada Rango extra en Field Expertise suma +1 a los Checks que cubre y alarga el jury-rig 10 minutos."
+          ]
+        },
+        {
+          "rank": 8,
+          "unlocksEs": [
+            "Al subir a Rango 8 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 16 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 8 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Cada Rango extra en Field Expertise suma +1 a los Checks que cubre y alarga el jury-rig 10 minutos."
+          ]
+        },
+        {
+          "rank": 9,
+          "unlocksEs": [
+            "Al subir a Rango 9 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 18 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 9 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Cada Rango extra en Field Expertise suma +1 a los Checks que cubre y alarga el jury-rig 10 minutos."
+          ]
+        },
+        {
+          "rank": 10,
+          "unlocksEs": [
+            "Al subir a Rango 10 ganas 1 Rango en dos Especialidades de Maker distintas a elección; en total 20 Rangos de especialidad repartidos entre Field, Upgrade, Fabrication e Invention (máx. 10 por especialidad, porque cada subida da como mucho 1 a cada una).",
+            "Cada Rango extra en Field Expertise suma +1 a los Checks que cubre y alarga el jury-rig 10 minutos."
+          ]
+        }
+      ],
+      "options": [
+        {
+          "id": "field_expertise",
+          "name": "Field Expertise",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "1 Rango de especialidad (cada subida de Maker da 1 Rango en 2 especialidades distintas)"
+            }
+          ],
+          "effectEs": "Suma tu Rango en esta especialidad a cualquier Check de Basic Tech, Cybertech, Electronics/Security Tech, Weaponstech o Land/Sea/Air Vehicle Tech hecho para un propósito que no sea de especialidad Maker. Además, con al menos 1 Rango, en vez de una reparación completa larga puedes reparar temporalmente el objeto (mismo DV de una reparación típica) a perfecto estado como Acción (SP y HP completos), sumando tu Rango en Field Expertise a esa Prueba. El jury-rig dura 10 minutos por cada Rango; luego el objeto vuelve a su estado previo y no puede volver a improvisarse hasta una reparación completa."
+        },
+        {
+          "id": "upgrade_expertise",
+          "name": "Upgrade Expertise",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "1 Rango de especialidad (cada subida de Maker da 1 Rango en 2 especialidades distintas)"
+            }
+          ],
+          "effectEs": "Mejora un objeto (cada objeto solo recibe 1 mejora de esta especialidad): −1d6 a la pérdida de Humanidad de ciberware no-borgware si su pérdida típica es 2d6 o más; +1 ranura de un tipo que el objeto ya tenga (opciones, accesorios, Programas/Hardware, etc.); simplificarlo (reduce a la mitad el tiempo de futuras reparaciones completas); hacer ocultable un arma a una mano normalmente no ocultable; subir un arma de Calidad Promedio a Excelente; dar una ranura de Accesorio a un arma Exótica; permitir a un arma Exótica disparar una variedad de munición no básica de su tipo; +1 SP a un objeto que ya tuviera; instalar a un vehículo una mejora que solo requiera Rango 1 de Moto; instalar una mejora inventada con Invention Expertise (materiales extra igual a la Categoría de Precio asignada). Check: TECH + Skill TECH con que se repara el objeto + tu Rango en la especialidad + 1d10. Hay que comprar materiales de la misma Categoría de Precio que el objeto, que se consumen. DV y tiempo según la Categoría de Precio del objeto (las mejoras de vehículo se tratan como 1.000eb, Very Expensive). Si fallas, a mitad del proceso tienes que empezar de nuevo; materiales y objeto quedan intactos."
+        },
+        {
+          "id": "fabrication_expertise",
+          "name": "Fabrication Expertise",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "1 Rango de especialidad (cada subida de Maker da 1 Rango en 2 especialidades distintas)"
+            }
+          ],
+          "effectEs": "Fabrica un objeto existente (o uno inventado con Invention Expertise) a partir de materiales. Check: TECH + Skill TECH con que se repara el objeto + tu Rango en la especialidad + 1d10. Hay que comprar materiales de una Categoría de Precio inferior a la del objeto (excepto Super Luxury, que requiere materiales equivalentes a la mitad de su Precio). DV y tiempo según la Categoría de Precio del objeto. Si fallas, a mitad del proceso empiezas de nuevo; materiales intactos. Dato del libro: fabricar un objeto Cheap cuesta 5eb."
+        },
+        {
+          "id": "invention_expertise",
+          "name": "Invention Expertise",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "1 Rango de especialidad (cada subida de Maker da 1 Rango en 2 especialidades distintas)"
+            }
+          ],
+          "effectEs": "Inventa una mejora para un objeto existente o un objeto completamente nuevo. Describes al GM la función y el mecanismo; si lo aprueba, redacta las reglas sin crear algo desequilibrado y fija la Categoría de Precio según su valor de mercado (la más baja posible es Expensive). Check: TECH + Skill TECH asociada a reparar la invención o el objeto que mejora + tu Rango en la especialidad + 1d10 contra el DV de su Categoría de Precio; si fallas, hay que volver al tablero. Una vez inventado, tú u otro Tech con los planos pueden hacerlo real con Fabrication o Upgrade Expertise. El GM puede cambiar retroactivamente cómo opera la invención para mantener el equilibrio."
+        }
+      ],
+      "tables": {
+        "makerDvTime": [
+          {
+            "tier": "Cheap/Everyday",
+            "dv": 9,
+            "time": "1 hora"
+          },
+          {
+            "tier": "Costly",
+            "dv": 13,
+            "time": "6 horas"
+          },
+          {
+            "tier": "Premium",
+            "dv": 17,
+            "time": "1 día"
+          },
+          {
+            "tier": "Expensive",
+            "dv": 21,
+            "time": "1 semana"
+          },
+          {
+            "tier": "Very Expensive",
+            "dv": 24,
+            "time": "2 semanas"
+          },
+          {
+            "tier": "Luxury",
+            "dv": 29,
+            "time": "1 mes"
+          },
+          {
+            "tier": "Super Luxury",
+            "dv": 29,
+            "time": "1 mes por cada 10.000eb de costo"
+          }
+        ],
+        "specialtyRanksByMakerRank": "Rango de Maker N = 2N Rangos de especialidad; máx. N por especialidad (cada subida da 1 Rango a dos especialidades distintas)",
+        "fieldExpertiseSkills": [
+          "Basic Tech",
+          "Cybertech",
+          "Electronics/Security Tech",
+          "Weaponstech",
+          "Land Vehicle Tech",
+          "Sea Vehicle Tech",
+          "Air Vehicle Tech"
+        ]
+      },
+      "tweak2077": [],
+      "cemk": null,
+      "folio": {
+        "pregen": "Maven",
+        "folioTextEs": "Si es tecnología, puedes construirla, romperla o arreglarla. Ganas +4 a los Checks de Cybertech y Electronics/Security Tech (ya incluido en la ficha: Cybertech 8+5+4 = 17; Electronics/Security Tech 8+6+4 = 18).",
+        "source": {
+          "book": "CEMK Folios",
+          "page": 25
+        },
+        "convertsToEs": "Maker Rango 4 = 8 Rangos de especialidad. Field Expertise 4 reproduce el +4 de Cybertech y Electronics/Security Tech del Folio (Field suma su Rango a Basic Tech, Cybertech, Electronics/Security Tech, Weaponstech y Vehicle Tech, así que cubre y excede al Folio). Los otros 4 Rangos quedan libres para el jugador; no pueden ir a Field Expertise (ya está en 4, el máximo a Rango 4) y ninguna otra especialidad puede llevar más de 4.",
+        "startingAllocation": {
+          "field": 4,
+          "free": 4,
+          "maxPerSpecialty": 4
+        }
+      }
+    },
+    "Medtech": {
+      "ability": "Medicine",
+      "source": {
+        "book": "Core RED",
+        "page": 149
+      },
+      "rulesEs": "Cada vez que el Medtech sube su Rango de Medicine, elige una de tres Especialidades (Surgery, Medical Tech [Pharmaceuticals] o Medical Tech [Cryosystem Operation]) y le asigna 1 punto. Surgery: 1 punto = +2 niveles de la Skill Surgery (máx. 10). Pharmaceuticals y Cryosystem: 1 punto = +1 nivel de Medical Tech (máx. 10 de Skill y máx. 5 puntos por especialidad); el nivel de Medical Tech es la suma de puntos en Pharmaceuticals y en Cryosystem. Los usos adicionales de Surgery y Medical Tech del Core p.226 (instalar y extraer ciberware, Bodysculpting, Therapy) solo los tienen los Medtechs vía Medicine.",
+      "ranks": [
+        {
+          "rank": 1,
+          "unlocksEs": [
+            "Al subir a Rango 1 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 1 punto.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        },
+        {
+          "rank": 2,
+          "unlocksEs": [
+            "Al subir a Rango 2 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 2 puntos.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        },
+        {
+          "rank": 3,
+          "unlocksEs": [
+            "Al subir a Rango 3 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 3 puntos.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        },
+        {
+          "rank": 4,
+          "unlocksEs": [
+            "Al subir a Rango 4 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 4 puntos.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        },
+        {
+          "rank": 5,
+          "unlocksEs": [
+            "Al subir a Rango 5 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 5 puntos.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        },
+        {
+          "rank": 6,
+          "unlocksEs": [
+            "Al subir a Rango 6 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 6 puntos.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        },
+        {
+          "rank": 7,
+          "unlocksEs": [
+            "Al subir a Rango 7 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 7 puntos.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        },
+        {
+          "rank": 8,
+          "unlocksEs": [
+            "Al subir a Rango 8 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 8 puntos.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        },
+        {
+          "rank": 9,
+          "unlocksEs": [
+            "Al subir a Rango 9 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 9 puntos.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        },
+        {
+          "rank": 10,
+          "unlocksEs": [
+            "Al subir a Rango 10 asignas 1 punto de especialidad a Surgery, Medical Tech (Pharmaceuticals) o Medical Tech (Cryosystem Operation); en total 10 puntos.",
+            "Surgery: cada punto = +2 en la Skill Surgery (máx. 10, o sea 5 puntos). Pharmaceuticals: cada punto = +1 en Medical Tech y 1 farmacéutico a elegir (máx. 5 puntos). Cryosystem Operation: cada punto = +1 en Medical Tech y un beneficio de criogenia (máx. 5 puntos). Medical Tech = puntos en Pharmaceuticals + puntos en Cryosystem (tope 10)."
+          ]
+        }
+      ],
+      "options": [
+        {
+          "id": "surgery",
+          "name": "Surgery",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "+2 niveles en la Skill Surgery (máx. 10 de Skill, es decir 5 puntos)."
+            }
+          ],
+          "effectEs": "La Skill Surgery (TECH) sirve para tratar las Heridas Críticas más graves e implantar ciberware; solo existe para Medtechs mediante esta Especialidad. Los usos extra de Surgery y Medical Tech del Core p.226 (instalar y extraer ciberware, Bodysculpting, Therapy) solo están disponibles para Medtechs vía este Rol."
+        },
+        {
+          "id": "pharmaceuticals",
+          "name": "Medical Tech (Pharmaceuticals)",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "+1 nivel en la Skill Medical Tech y acceso a 1 farmacéutico (máx. 5 puntos en esta especialidad, 10 de Skill)."
+            }
+          ],
+          "effectEs": "Medical Tech es la Skill TECH para operar, entender y reparar maquinaria médica; solo para Medtechs y solo vía esta Especialidad o Cryosystem Operation. Cada punto da acceso a uno de los 5 farmacéuticos, que se sintetizan con un Check de Medical Tech DV13 (si fallas se pierden los materiales); con 200eb de materiales se hacen en 1 hora tantas dosis como tu nivel de Medical Tech. No se sintetizan Drogas Callejeras. Aplicar una dosis lleva una Acción; a un blanco no dispuesto se le hace un Ataque Melee con el Airhypo que en vez de daño aplica una dosis. Los no-Medtech no pueden administrarlos correctamente."
+        },
+        {
+          "id": "cryosystem",
+          "name": "Medical Tech (Cryosystem Operation)",
+          "costs": [
+            {
+              "points": 1,
+              "effectEs": "+1 nivel en la Skill Medical Tech y el siguiente beneficio de criogenia (máx. 5 puntos en esta especialidad, 10 de Skill)."
+            }
+          ],
+          "effectEs": "Cada punto da +1 en Medical Tech y un beneficio de criogenia según el nivel (ver tabla cryosystemByRank). Más información sobre Cryopumps y Cryotanks en Core p.353."
+        }
+      ],
+      "tables": {
+        "pharmaceuticals": [
+          {
+            "name": "Antibiotic",
+            "effectEs": "Un blanco que ya inició la curación natural cura 2 HP extra por día durante una semana. Solo se beneficia de una dosis a la vez."
+          },
+          {
+            "name": "Rapidetox",
+            "effectEs": "Un blanco afectado por una droga, veneno o intoxicante queda purgado de inmediato de sus efectos."
+          },
+          {
+            "name": "Speedheal",
+            "effectEs": "Un blanco que no esté en Mortally Wounded recupera de inmediato HP igual a su BODY + WILL. Solo se beneficia de una dosis por día."
+          },
+          {
+            "name": "Stim",
+            "effectEs": "El blanco ignora todas las penalizaciones del estado Seriously Wounded durante una hora. Solo una dosis por día."
+          },
+          {
+            "name": "Surge",
+            "effectEs": "El blanco funciona sin deterioro y sin dormir durante 24 horas completas. Solo una dosis por semana."
+          }
+        ],
+        "pharmaceuticalSynthesis": {
+          "check": "Medical Tech DV13",
+          "failure": "se pierden los materiales",
+          "dosesPerHour": "tantas dosis como el nivel de Medical Tech, con 200eb de materiales",
+          "streetDrugs": false,
+          "applyDose": "1 Acción"
+        },
+        "cryosystemByRank": [
+          {
+            "level": 1,
+            "benefitEs": "Obtienes 1 Cryopump."
+          },
+          {
+            "level": 2,
+            "benefitEs": "Eres Registered Cryotank Technician: acceso ilimitado 24/7 a 1 Cryotank a la vez en cualquier instalación de criogenia operada por corporaciones médicas o agencias del gobierno."
+          },
+          {
+            "level": 3,
+            "benefitEs": "Obtienes 1 Cryotank instalado en una sala de tu elección."
+          },
+          {
+            "level": 4,
+            "benefitEs": "Obtienes 2 Cryotanks más en la misma sala que el primero; tu Cryopump tiene 2 cargas y su capacidad máxima sube a 2 personas en estasis."
+          },
+          {
+            "level": 5,
+            "benefitEs": "Obtienes 3 Cryotanks más en la misma sala (los primeros tres); tu Cryopump tiene 3 cargas y su capacidad máxima sube a 3 personas en estasis."
+          }
+        ],
+        "limits": {
+          "surgerySkillPerPoint": 2,
+          "surgeryMaxSkill": 10,
+          "medicalTechPerPoint": 1,
+          "medicalTechMaxSkill": 10,
+          "maxPointsPharmaceuticals": 5,
+          "maxPointsCryosystem": 5
+        }
+      },
+      "tweak2077": [],
+      "cemk": null,
+      "folio": {
+        "pregen": "Insurance",
+        "folioTextEs": "Incluso en el Futuro Oscuro alguien tiene que curar a la gente; esa eres tú. Puedes usar la Skill Surgery con Base 12. Una vez por Beat puedes usar un Speedheal para restaurar HP a un paciente (cantidad igual a su BODY + WILL).",
+        "source": {
+          "book": "CEMK Folios",
+          "page": 17
+        },
+        "convertsToEs": "Medicine Rango 4 = 4 puntos: Surgery 2 puntos (= Surgery +4; TECH 8 + 4 = Base 12 del Folio), Pharmaceuticals 1 punto eligiendo Speedheal, y 1 punto libre para el jugador. Nota: en el Core, Speedheal se sintetiza con DV13 y se puede usar una dosis por día por persona; el Folio lo simplifica a 'una vez por Beat'.",
+        "startingAllocation": {
+          "surgery": 2,
+          "pharmaceuticals": [
+            "speedheal"
+          ],
+          "free": 1
+        }
+      }
+    },
+    "Nomad": {
+      "ability": "Moto",
+      "source": {
+        "book": "Core RED",
+        "page": 161
+      },
+      "rulesEs": "Vehicle Familiarity: suma su Rango de Moto a cualquier Check de Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech o Sea Vehicle Tech. Family Motorpool: cada vez que sube su Rango de Rol, puede (a) añadir al pool de vehículos que tiene permiso de usar un vehículo de serie (especificaciones mínimas) de su Rango de Moto o inferior, o (b) mejorar uno de sus Vehículos Familiares ya permitidos con una única mejora de su Rango de Moto o inferior. Solo puede tener un Vehículo Familiar fuera a la vez; puede llamar a su Familia para cambiarlo por otro y, si la Familia está cerca, el cambio es a la mañana siguiente. Si se destruye, la Familia lo repara por completo en una semana y el Nomad paga 500eb (se puede eximir si está pelado, a costa de reputación; hasta los Jefes de Familia pagan). Las reparaciones diarias, como sacar balas, corren por cuenta del Nomad. En Rango 10 es ascendido a líder de la Familia: puede tener todos sus Vehículos Familiares fuera a la vez, los nuevos Vehículos Familiares se compran a precio de mercado y las mejoras futuras cuestan 1.000eb cada una. Las mejoras de vehículo rara vez se venden en el mercado abierto: Very Expensive las de Rango 1 y Luxury las que no son de Rango 1.",
+      "ranks": [
+        {
+          "rank": 1,
+          "unlocksEs": [
+            "+1 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 1: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 1 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 1 o inferior.",
+            "Vehículos del Family Motorpool disponibles: Compact Groundcar, Gyrocopter, Jetski, Roadbike."
+          ]
+        },
+        {
+          "rank": 2,
+          "unlocksEs": [
+            "+2 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 2: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 2 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 2 o inferior.",
+            "Vehículos del Family Motorpool disponibles: Compact Groundcar, Gyrocopter, Jetski, Roadbike."
+          ]
+        },
+        {
+          "rank": 3,
+          "unlocksEs": [
+            "+3 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 3: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 3 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 3 o inferior.",
+            "Vehículos del Family Motorpool disponibles: Compact Groundcar, Gyrocopter, Jetski, Roadbike."
+          ]
+        },
+        {
+          "rank": 4,
+          "unlocksEs": [
+            "+4 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 4: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 4 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 4 o inferior.",
+            "Vehículos del Family Motorpool disponibles: Compact Groundcar, Gyrocopter, Jetski, Roadbike."
+          ]
+        },
+        {
+          "rank": 5,
+          "unlocksEs": [
+            "+5 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 5: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 5 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 5 o inferior.",
+            "Se suman al pool disponible: Helicopter, High Performance Groundcar, Speedboat (desde Rango 5)."
+          ]
+        },
+        {
+          "rank": 6,
+          "unlocksEs": [
+            "+6 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 6: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 6 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 6 o inferior.",
+            "Se suman al pool disponible: Helicopter, High Performance Groundcar, Speedboat (ya disponibles)."
+          ]
+        },
+        {
+          "rank": 7,
+          "unlocksEs": [
+            "+7 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 7: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 7 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 7 o inferior.",
+            "Se suman al pool disponible: AV-4, Cabin Cruiser, Superbike (desde Rango 7)."
+          ]
+        },
+        {
+          "rank": 8,
+          "unlocksEs": [
+            "+8 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 8: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 8 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 8 o inferior.",
+            "Se suman al pool disponible: AV-4, Cabin Cruiser, Superbike (ya disponibles)."
+          ]
+        },
+        {
+          "rank": 9,
+          "unlocksEs": [
+            "+9 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 9: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 9 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 9 o inferior.",
+            "Se suman al pool disponible: Aerozep, AV-9, Super Groundcar, Yacht (desde Rango 9)."
+          ]
+        },
+        {
+          "rank": 10,
+          "unlocksEs": [
+            "+10 a Drive Land Vehicle, Pilot Air Vehicle, Pilot Sea Vehicle, Air Vehicle Tech, Land Vehicle Tech y Sea Vehicle Tech (Vehicle Familiarity).",
+            "Al subir a Rango 10: añades al Family Motorpool un vehículo de serie (especificaciones mínimas) de Rango 10 o inferior, O mejoras un Vehículo Familiar ya permitido con una mejora única de Rango 10 o inferior.",
+            "Se suman al pool disponible: Aerozep, AV-9, Super Groundcar, Yacht (ya disponibles).",
+            "Promoción a líder de la Familia: puede tener todos sus Vehículos Familiares fuera a la vez; los futuros Vehículos Familiares se compran a precio de mercado y las mejoras futuras cuestan 1.000eb cada una."
+          ]
+        }
+      ],
+      "options": [
+        {
+          "id": "armored_chassis",
+          "name": "Armored Chassis",
+          "costs": [],
+          "minMotoRank": 5,
+          "appliesTo": "Todos los vehículos",
+          "effectEs": "Blinda el vehículo a SP13; no afecta al cristal."
+        },
+        {
+          "id": "bulletproof_glass",
+          "name": "Bulletproof Glass",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Todos los vehículos",
+          "effectEs": "Todo el cristal pasa a ser cobertura de cristal fino a prueba de balas (15 HP); con una segunda mejora pasa a cristal grueso (30 HP). Cada ventana sufre daño por separado."
+        },
+        {
+          "id": "communications_center",
+          "name": "Communications Center",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Todos los vehículos",
+          "effectEs": "Consola táctil con Agent a bordo y espacio de almacenamiento con equipo extraíble: 6 Radio Communicators, 6 Scrambler/Descramblers, un Radio Scanner/Music Player, un Homing Tracer con 6 rastreadores y una grabadora de audio."
+        },
+        {
+          "id": "nos",
+          "name": "NOS",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Todos los vehículos",
+          "effectEs": "Ráfaga de potencia: con tu Acción haces una Move Action adicional al conducir. Cada tanque de NOS se usa una vez al día; cada mejora adicional suma un tanque. Los tanques sintetizan óxido nitroso solos, sin recarga."
+        },
+        {
+          "id": "onboard_flamethrower",
+          "name": "Onboard Flamethrower",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Todos los vehículos",
+          "effectEs": "Lanzallamas montado al frente, lado o atrás; el conductor lo dispara con su Acción. No se recarga mientras se conduce; el arma no se retira ni acepta accesorios. Se pueden instalar varias mejoras."
+        },
+        {
+          "id": "onboard_machine_gun",
+          "name": "Onboard Machine Gun",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Todos los vehículos",
+          "effectEs": "Rifle de Asalto con 30 balas, solo en Autofire, montado al frente; el conductor lo dispara con su Acción. No se recarga mientras se conduce; el arma no se retira ni acepta accesorios. Se pueden instalar varias mejoras."
+        },
+        {
+          "id": "seating_upgrade",
+          "name": "Seating Upgrade",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Todos los vehículos",
+          "effectEs": "Añade dos asientos (pueden ser sidecar, incluso cerrado con el mismo cristal). Cualquier asiento puede equiparse como asiento eyectable (lanza al ocupante 10 m/yd hacia arriba por una trampilla; normalmente con paracaídas). Un pasajero golpeado por una hélice de helicóptero en la eyección sufre daño como de arma Melee Muy Pesada. Se puede tomar varias veces salvo en Bikes, Jetskis y Gyrocopters."
+        },
+        {
+          "id": "security_upgrade",
+          "name": "Security Upgrade",
+          "costs": [],
+          "minMotoRank": 5,
+          "appliesTo": "Todos los vehículos",
+          "effectEs": "Cambia todas las cerraduras por cerraduras de ADN (huella, iris, sangre u otro biométrico). No se abren sin la clave o un Check de Electronics/Security Tech DV17; quien presenta un biométrico inexacto o falla el Check recibe un golpe como de Stun Baton al cuerpo si está a ≤2 m/yd. Añade camuflaje: el vehículo quieto solo se detecta con un Check de Perception DV17; tarda un minuto en activarse."
+        },
+        {
+          "id": "smuggling_upgrade",
+          "name": "Smuggling Upgrade",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Todos los vehículos",
+          "effectEs": "Dos Hidden Holsters a bordo (mismas reglas que el ciberware) para conductor y un pasajero, y un gran espacio oculto para contrabando; solo se descubre con un Check de Conceal/Reveal Object DV17. Se puede tomar varias veces salvo en Bikes, Jetskis y Gyrocopters."
+        },
+        {
+          "id": "heavy_chassis",
+          "name": "Heavy Chassis",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Todos excepto Bikes, Jetskis y Gyrocopters",
+          "effectEs": "Añade 20 SDP al vehículo (no al cristal) y permite remolcar hasta 10 toneladas. Es prerrequisito de mejoras más pesadas."
+        },
+        {
+          "id": "onboard_rocket_pod",
+          "name": "Onboard Rocket Pod",
+          "costs": [],
+          "minMotoRank": 5,
+          "appliesTo": "Todos excepto Bikes, Jetskis y Gyrocopters",
+          "effectEs": "Lanzacohetes con tambor de tres cohetes, montado al frente; el conductor lo dispara con su Acción. No se recarga mientras se conduce; el arma no se retira ni acepta accesorios. Varias mejoras posibles. Requiere Heavy Chassis."
+        },
+        {
+          "id": "vehicle_heavy_weapon_mount",
+          "name": "Vehicle Heavy Weapon Mount",
+          "costs": [],
+          "minMotoRank": 5,
+          "appliesTo": "Todos excepto Bikes, Jetskis y Gyrocopters",
+          "effectEs": "Convierte un asiento en montura giratoria para cualquier arma a distancia de dos manos, disparada y recargada por un pasajero con su Acción (con vehículo en marcha); se retira o reinstala con una Acción. La primera vez, la Familia regala una Tsunami Arms Helix, una Rhinemetall EMG-86 Railgun o un Militech 'Cowboy' U-56 Grenade Launcher; las demás las consigue el Nomad. Con Bulletproof Glass, una burbuja del mismo cristal protege al artillero. Varias mejoras solo en Cabin Cruisers, Yachts, Aerozeps y Groundcars que ya tengan Housing Capacity. Requiere Heavy Chassis."
+        },
+        {
+          "id": "onboard_melee_weapon",
+          "name": "Onboard Melee Weapon",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Vehículos terrestres y marítimos",
+          "effectEs": "Arma Melee Muy Pesada montada al frente, lado o atrás; el conductor ataca con ella usando su Acción. No se retira. Varias mejoras posibles."
+        },
+        {
+          "id": "hover_upgrade",
+          "name": "Hover Upgrade",
+          "costs": [],
+          "minMotoRank": 5,
+          "appliesTo": "Vehículos terrestres",
+          "effectEs": "Instala ventiladores potentes en la base: el vehículo viaja sobre el agua a la velocidad de un Cabin Cruiser."
+        },
+        {
+          "id": "av4_engine_upgrade",
+          "name": "AV-4 Engine Upgrade",
+          "costs": [],
+          "minMotoRank": 7,
+          "appliesTo": "Vehículos terrestres",
+          "effectEs": "Añade un turbofán de empuje vectorial: puede volar y se trata como un AV-4 en el aire; en el aire se pilota con Pilot Air Vehicle en lugar de Drive Land Vehicle."
+        },
+        {
+          "id": "combat_plow",
+          "name": "Combat Plow",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Vehículos terrestres y marítimos excepto Bikes y Jetskis",
+          "effectEs": "Al embestir cobertura, otro vehículo o un peatón con el frente, tu vehículo no sufre daño y nadie dentro sufre la Lesión Crítica Whiplash. Si usaste NOS en ese Turno, el daño por embestida sube 2d6."
+        },
+        {
+          "id": "enhanced_interface_plug",
+          "name": "Enhanced Interface Plug Integration",
+          "costs": [],
+          "minMotoRank": 5,
+          "appliesTo": "Todas las bikes",
+          "effectEs": "Al conducir tu bike con Interface Plugs, si puedes esquivar balas (REF 8 o más) y tú, un pasajero o la bike son blanco de un ataque que podrías esquivar a pie, puedes esquivarlo con tu Evasion; tu elección se vuelve la defensa de tu pasajero. En ataques de área, la bike se aparta si esquivas."
+        },
+        {
+          "id": "deployable_spike_strip",
+          "name": "Deployable Spike Strip",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Groundcars",
+          "effectEs": "El conductor la despliega como Acción; los vehículos con llantas que lo sigan de cerca hacen un Check de Drive Land Vehicle DV17 o su vehículo sufre 4d6 en su punto débil (el daño que pasa el SP se multiplica ×2). Repuestos 10eb (Cheap). Más mejoras = más tiras antes de recargar (no se recarga en marcha)."
+        },
+        {
+          "id": "housing_capacity",
+          "name": "Housing Capacity",
+          "costs": [],
+          "minMotoRank": 1,
+          "appliesTo": "Aerozep, AV-4, Cabin Cruiser, Groundcars, Yacht",
+          "effectEs": "En Groundcar o AV-4 añade zona de dormir con 1 cama, baño, ducha y cocina pequeña (lo convierte en Kombi); en Cabin Cruiser, Yacht o Aerozep añade una habitación. Requiere Heavy Chassis en Compact Groundcar y High Performance Groundcar."
+        }
+      ],
+      "tables": {
+        "motorpoolByRank": [
+          {
+            "fromRank": 1,
+            "toRank": 4,
+            "vehicles": [
+              "Compact Groundcar",
+              "Gyrocopter",
+              "Jetski",
+              "Roadbike"
+            ]
+          },
+          {
+            "fromRank": 5,
+            "toRank": 6,
+            "vehicles": [
+              "Helicopter",
+              "High Performance Groundcar",
+              "Speedboat"
+            ]
+          },
+          {
+            "fromRank": 7,
+            "toRank": 8,
+            "vehicles": [
+              "AV-4",
+              "Cabin Cruiser",
+              "Superbike"
+            ]
+          },
+          {
+            "fromRank": 9,
+            "toRank": 10,
+            "vehicles": [
+              "Aerozep",
+              "AV-9",
+              "Super Groundcar",
+              "Yacht"
+            ]
+          }
+        ],
+        "familyVehicleRepair": {
+          "timeEs": "1 semana (reparación completa por la Familia si el vehículo fue destruido)",
+          "costEb": 500,
+          "waivedIfBroke": true,
+          "dailyRepairsEs": "Reparaciones diarias, como sacar balas, son responsabilidad del Nomad."
+        },
+        "rank10": {
+          "allVehiclesOutAtOnce": true,
+          "newVehiclesCost": "precio de mercado",
+          "upgradeCostEb": 1000
+        },
+        "vehicleUpgradeAvailability": {
+          "rank1UpgradesPrice": "Very Expensive",
+          "otherUpgradesPrice": "Luxury"
+        },
+        "vehicleSkillsGetMotoRank": [
+          "Drive Land Vehicle",
+          "Pilot Air Vehicle",
+          "Pilot Sea Vehicle",
+          "Air Vehicle Tech",
+          "Land Vehicle Tech",
+          "Sea Vehicle Tech"
+        ]
+      },
+      "tweak2077": [
+        {
+          "fromRank": 1,
+          "textEs": "Desde Moto Rank 1 el Nomad puede conseguir todos los Vehículos y Mejoras de Vehículo pieza a pieza aunque no estén disponibles.",
+          "source": {
+            "book": "CEMK RB",
+            "page": 25
+          }
+        }
+      ],
+      "cemk": null,
+      "folio": {
+        "pregen": "Wrench",
+        "folioTextEs": "Para un Nomad la movilidad es vida: pasas tanto tiempo al volante de tu vehículo como fuera de él. +4 a los Skill Checks de Drive Land Vehicle (ya incluido en la ficha: Drive Land Vehicle 6 + 6 + 4 = 16).",
+        "source": {
+          "book": "CEMK Folios",
+          "page": 5
+        },
+        "convertsToEs": "Moto Rango 4: +4 a Drive Land Vehicle (ya incluido en la base del Folio, no se suma de nuevo) y, con las otras Skills de vehículo, +4 también. Además 4 elecciones de Family Motorpool/mejora de Rango 1 a 4 (Compact Groundcar, Gyrocopter, Jetski, Roadbike y mejoras de Rango ≤4), que el Folio no especifica y quedan libres para el jugador.",
+        "startingAllocation": {
+          "moto": 4
+        }
+      }
+    }
+  },
+  "doubts": [
+    "Netrunner: el RB (p.16) da hasta 3 Net Actions por Turno (Quickhacking) y el Folio de Bluescreen también, mientras que el Core da 2/3/4/5 por Rango de Interface (1-3/4-6/7-9/10). A Rango 4 coinciden en 3; para otros Rangos se aplica la tabla del Core. El RB no dice qué pasa con Rangos 5+ en Quickhacks (no existe un tier superior a Advanced DV12 en el RB).",
+    "Netrunner: el rango de Jack In del RB p.16 dice 'a 50 m/yd' sin condicionar al hardware, pero la sección 2070s (RB p.26) condiciona el alcance a 6 m/yd (3 casillas), 8 m/yd (4 casillas) con 'el hardware adecuado' (no se nombra qué opción de hardware) o 50 m/yd con Neuroport Cyberdeck Port. Se transcriben ambos; Neuroport Cyberdeck Port (RB p.36) también da 20 m/yd para Arquitecturas normales.",
+    "Netrunner: las páginas pedidas (RB pp.17/36) no coinciden exactamente con el texto: Breach/Net Actions están en p.16 (PDF 17) y la lista de Quickhacks en pp.16-17; Self-ICE con DV por total está en p.36 (PDF 37) y también resumido en el Hardware de la hoja de referencia. Se cita lo que figura en cada página.",
+    "Netrunner: Core p.198-201 no fija DV universales para Backdoor, Control, Eye-Dee ni Virus; el DV lo fija la Arquitectura/GM (ejemplos del libro: Password DV10, Control Node DV10, Archivo DV9, Virus DV6-DV12). Scanner usa un resultado abierto a criterio del GM. Los valores se guardaron como ejemplos, no como DV fijos. Pathfinder y Slide no usan DV fijo.",
+    "Netrunner: el RB solo menciona 'el hardware adecuado' para alcance 8 m/yd; no se dice cuál es.",
+    "Tech: el Core no da una lista de beneficios por Rango de Maker; la regla es 'cada subida = 1 Rango en dos Especialidades distintas'. El máximo de Rangos por especialidad (= Rango de Maker) se deduce de esa regla (nunca se puede poner 2 Rangos de una subida en la misma especialidad); no figura impreso como tope. A Rango 4, Maven del Folio no puede superar 4 en ninguna especialidad y Field Expertise queda en 4.",
+    "Tech: Field Expertise (+4) cubre más Skills que el Folio de Maven (Basic Tech, Weaponstech y las Tech de vehículos además de Cybertech y Electronics/Security Tech), así que la conversión no es exactamente 1:1: da más que el Folio. Se anota por transparencia.",
+    "Medtech: Pharmaceuticals 1 punto da a la vez 1 nivel de Medical Tech, que el Folio de Insurance no lista (Medical Tech no aparece en su tabla de Skills). Con la conversión, Insurance tendría Medical Tech 1 que el Folio no refleja. Speedheal del Folio es 'una vez por Beat'; en el Core es una dosis por día por persona y requiere síntesis (DV13, materiales 200eb).",
+    "Medtech: Surgery 'Base 12' del Folio se obtiene como TECH 8 + 4; con Surgery 2 puntos = +4 en el Core, coincide.",
+    "Medtech: el Core no aclara si un Medtech de Rango 1 ya parte con su primer punto (se asume que sí, 1 punto por Rango = N puntos a Rango N).",
+    "Nomad: el Core no dice cuántas elecciones de Family Motorpool/mejora tiene un personaje en el Rango 1 inicial; se asume 1 por cada Rango (4 a Rango 4), pero el texto solo dice 'cada vez que sube su Rango'.",
+    "Nomad: el Rango mínimo de cada mejora de vehículo se leyó del número que precede a cada mejora en la capa de texto del PDF (Core pp.163-165); la maquetación en columnas hace posible algún desfase y conviene revisarlo visualmente antes de fijarlo. Los precios de mercado (Very Expensive para Rango 1 / Luxury para el resto) se transcriben del encabezado de la tabla.",
+    "Solo: el Core no limita los puntos por opción más allá de los escalones de costo; asignar a Rango 4 los 4 puntos a Initiative Reaction (+4) es válido (1 punto = +1). El Folio solo cubre Iniciativa.",
+    "Tweaks 2070s: el RB p.25 solo nombra Fixer, Exec, Media, Rockerboy, Lawman, Nomad y Netrunner; Solo, Tech y Medtech no tienen ajuste (tweak2077 = []).",
+    "Páginas: Core y RB con página impresa; Folios con página del PDF. El RB p.25 (ajuste de rol) corresponde al PDF 26."
+  ]
+}
