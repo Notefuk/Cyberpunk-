@@ -174,6 +174,38 @@ describe('Paquete de rol (Core pp. 98-99, 103, 117; CEMK RB pp. 35-36)', () => {
     expect(net.notes.some((n) => n.includes('Lo cubre el Neuroport (CEMK RB pp. 35-36)'))).toBe(true);
   });
 
+  it('2077 quita Internal Agent y Biomonitor (discrepancias 34-35, CEMK RB pp. 35-36); 2045 los conserva (Core p.117)', () => {
+    const names = (role: 'Fixer' | 'Exec' | 'Solo' | 'Medtech', era: '2045' | '2077') =>
+      getRolePackage(role, era, {}).cyberware.filter((c) => !c.coveredByNeuroport).map((c) => c.name);
+    expect(names('Fixer', '2077')).not.toContain('Internal Agent');
+    expect(names('Exec', '2077')).not.toContain('Internal Agent');
+    expect(names('Exec', '2077')).not.toContain('Biomonitor');
+    expect(names('Solo', '2077')).not.toContain('Biomonitor');
+    expect(names('Medtech', '2077')).not.toContain('Biomonitor');
+    expect(names('Fixer', '2045')).toContain('Internal Agent');
+    expect(names('Exec', '2045')).toEqual(expect.arrayContaining(['Biomonitor', 'Internal Agent']));
+  });
+
+  it('Fixer 2077: sin el Internal Agent la Humanidad sube 3 (Core p.117)', () => {
+    const fixer = (era: '2045' | '2077') => applyStreetratRow({ ...createEmptyDraft(), era, method: 'streetrat', role: 'Fixer', culturalLanguage: 'English' }, 1);
+    expect(computeDerived(fixer('2045')).humanityLoss - computeDerived(fixer('2077')).humanityLoss).toBe(3);
+  });
+
+  it('Exec 2077: el Biomonitor cubierto deja elegir Techhair; Nomad 2077 deja elegir Wolvers (Core p.117)', () => {
+    const exec = getRolePackage('Exec', '2077', {});
+    const bio = exec.cyberware.find((c) => c.name === 'Biomonitor')!;
+    expect(bio.coveredByNeuroport).toBe(true);
+    const withTechhair = getRolePackage('Exec', '2077', { [bio.key]: 1 });
+    expect(withTechhair.cyberware.find((c) => c.key === bio.key)?.name).toBe('Techhair');
+    const execDraft = { ...applyStreetratRow({ ...createEmptyDraft(), era: '2077' as const, method: 'streetrat' as const, role: 'Exec' as const, culturalLanguage: 'English' }, 1) };
+    expect(getCyberwareList(execDraft).some((c) => c.name === 'Biomonitor')).toBe(false);
+    expect(getCyberwareList({ ...execDraft, packageChoices: { [bio.key]: 1 } }).some((c) => c.name === 'Techhair')).toBe(true);
+    const nomad = getRolePackage('Nomad', '2077', {});
+    const plugs = nomad.cyberware.find((c) => c.name === 'Interface Plugs')!;
+    expect(plugs.coveredByNeuroport).toBe(true);
+    expect(getRolePackage('Nomad', '2077', { [plugs.key]: 1 }).cyberware.find((c) => c.key === plugs.key)?.name).toBe('Wolvers');
+  });
+
   it('aplica las opciones "o" y lista la munición (Core pp. 98-99)', () => {
     const solo = getRolePackage('Solo', '2045', {});
     expect(solo.weapons.some((w) => w.name === 'Basic Rifle Ammunition' && w.qty === 70)).toBe(true);

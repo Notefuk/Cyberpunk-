@@ -17,15 +17,18 @@ export function buildRoleAbilityProgression(): Record<string, RoleAbilityProgres
     for (const t of D.tweak2077) {
       if (t.fromRank === null) mechanicsOverview += ` · 2077 (${cite(t.source)}): ${t.textEs}`;
     }
-    if (D.folio) {
-      mechanicsOverview += ` · Folio CEMK de ${D.folio.pregen} (${cite(D.folio.source)}). El Folio dice: "${D.folio.folioTextEs}" → Pasa a: ${D.folio.convertsToEs}`;
-    }
     out[R] = {
       role: R,
       abilityName: D.ability,
       summary: `Habilidad de rol del Core RED, rangos 1 a 10 (${cite(D.source)}).` + (D.tweak2077.length > 0 ? ' En 2077 se suman los ajustes de CEMK RB p.25.' : ''),
       statUsed: `${cite(D.source)}`,
       mechanicsOverview,
+      ...(D.folio
+        ? {
+            folioNote: `Folio CEMK de ${D.folio.pregen} (${cite(D.folio.source)}). El Folio dice: "${D.folio.folioTextEs}" → Pasa a: ${D.folio.convertsToEs}`,
+            folioId: `cemk-folio-${D.folio.pregen.toLowerCase()}`,
+          }
+        : {}),
       ranks: D.ranks.map(r => ({
         rank: r.rank,
         title: `Rango ${r.rank}`,

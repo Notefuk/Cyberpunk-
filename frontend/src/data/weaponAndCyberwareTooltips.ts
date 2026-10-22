@@ -704,6 +704,9 @@ export interface RoleAbilityProgression {
   // Desde v4.9.0: fuente (libro y página) de la habilidad.
   statUsed: string;
   mechanicsOverview: string;
+  /** Desde v4.9.0: "El Folio dice… → Pasa a…"; se muestra solo en la ficha de ese Folio. */
+  folioNote?: string;
+  folioId?: string;
   ranks: RoleRankProgression[];
 }
 

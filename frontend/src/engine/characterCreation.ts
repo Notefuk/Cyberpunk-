@@ -620,6 +620,8 @@ export interface RolePackageCyberware {
   humanityLoss: number;
   chosen: number;
   alternatives: Array<{ name: string; humanityLoss: number }>;
+  /** En 2077 la opción principal la cubre el Neuroport: no se instala ni descuenta HL, pero se puede elegir la alternativa "o". */
+  coveredByNeuroport?: boolean;
 }
 
 export interface RolePackageResult {
@@ -665,6 +667,7 @@ function resolvePackageItem(
 }
 
 const CYBERWARE_ALT = /^o\s+(.+?)\s*\(HL\s*(\d+)\)\s*$/i;
+const NEUROPORT_COVERED_CYBERWARE = ['Neural Link', 'Interface Plugs', 'Internal Agent', 'Biomonitor'];
 
 export function getRolePackage(role: CoreRoleName, era: CharacterEra, choices: Record<string, number>): RolePackageResult {
   const pkg = CORE_GEAR_SKILLS.rolePackages[role];
@@ -705,8 +708,11 @@ export function getRolePackage(role: CoreRoleName, era: CharacterEra, choices: R
     if (chosen < 0 || chosen > alternatives.length) chosen = 0;
     const picked = chosen === 0 ? { name: item.name, humanityLoss: item.humanityLoss } : alternatives[chosen - 1];
     // CEMK RB pp. 35-36: el Neuroport reemplaza Neural Link e Interface Plugs (si se elige la alternativa, se conserva).
-    if (era === '2077' && chosen === 0 && (item.name === 'Neural Link' || item.name === 'Interface Plugs')) {
+    // Discrepancias 34-35 (decididas por Giuliano, 2026-10-22): también el Internal Agent (lo cubre el Holophone) y el Biomonitor (pieza del Neuroport).
+    if (era === '2077' && chosen === 0 && NEUROPORT_COVERED_CYBERWARE.includes(item.name)) {
       notes.push(`${item.name}: ${NEUROPORT_NOTE}`);
+      // Con alternativa "o" queda en la lista para poder elegirla (p. ej. Techhair del Exec, Wolvers del Nomad).
+      if (alternatives.length > 0) cyberware.push({ key, name: item.name, humanityLoss: 0, chosen, alternatives, coveredByNeuroport: true });
       return;
     }
     cyberware.push({ key, name: picked.name, humanityLoss: picked.humanityLoss, chosen, alternatives });
@@ -825,6 +831,7 @@ export function getCyberwareList(draft: CreatorDraft): CreatorCyberware[] {
   const list: CreatorCyberware[] = [];
   if (draft.role && (draft.method === 'streetrat' || draft.method === 'edgerunner')) {
     for (const c of getRolePackage(draft.role, draft.era, draft.packageChoices).cyberware) {
+      if (c.coveredByNeuroport) continue;
       list.push({ name: c.name, humanityLoss: c.humanityLoss, qty: 1, cost: 0, source: 'package' });
     }
   }
@@ -1106,6 +1113,7 @@ function buildPregenSheet(draft: CreatorDraft, nowId: string | undefined, warnin
     }, 0);
     sheet.currentHumanity = Math.max(0, sheet.stats.EMP * 10 - loss);
     sheet.creationMethod = 'pregen';
+    sheet.sourceFolioId = folio.id;
     sheet.era = '2077';
     warnings.push('Ficha de CEMK: no sigue los límites del Core; las skills que no trae quedan en 0.');
     return sheet;

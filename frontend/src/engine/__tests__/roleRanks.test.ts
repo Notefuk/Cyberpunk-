@@ -68,3 +68,20 @@ describe('Rangos de rol', () => {
     }
   });
 });
+
+describe('Nota del Folio solo en su ficha (decisión de Giuliano, 2026-10-22)', () => {
+  it('la progresión separa la nota del Folio y su id existe en los Folios de CEMK', async () => {
+    const { CEMK_FOLIO_METADATA_MAP } = await import('../../data/cemkFolioPremadesData');
+    const withFolio = Object.values(ROLE_ABILITIES_COMPLETE_PROGRESSION).filter((p) => p.folioNote);
+    expect(withFolio).toHaveLength(7);
+    for (const p of Object.values(ROLE_ABILITIES_COMPLETE_PROGRESSION)) expect(p.mechanicsOverview).not.toContain('El Folio dice');
+    for (const p of withFolio) expect(CEMK_FOLIO_METADATA_MAP[p.folioId!]).toBeDefined();
+  });
+
+  it('la copia de un Folio hecha con el creador guarda sourceFolioId', async () => {
+    const { buildCharacterSheetFromDraft, createEmptyDraft } = await import('../characterCreation');
+    const { sheet } = buildCharacterSheetFromDraft({ ...createEmptyDraft(), method: 'cemk_pregen', pregenId: 'cemk-folio-wrench' }, 't');
+    expect(sheet.sourceFolioId).toBe('cemk-folio-wrench');
+    expect(sheet.id).not.toBe('cemk-folio-wrench');
+  });
+});
