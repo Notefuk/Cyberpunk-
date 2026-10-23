@@ -58,6 +58,21 @@ Decididas por Giuliano al aprobar el plan 8: rangos del Core 1-10 más los ajust
 | 37 | Munición Incendiary Shotgun Shell del Medtech | El paquete (Core p.98) la nombra así y no se encontraba en el catálogo | **Decidida**: es la Incendiary Ammunition del Core (p.345, disponible para Shotgun Shells); el paquete apunta a esa entrada |
 | 38 | Backup del Lawman en Rango 10 con un 6 | Core p.158: "unless you are Rank 10, in which case two separate backup groups will arrive", sin decir cuáles | **Decidida** (Giuliano, 2026-10-23): llegan dos grupos independientes de Rango 10 (National Law Enforcement). Aplicada en v4.9.3. [Claude Code · 2026-10-23] |
 
+## Martial Arts (plan 14, auditoría del 2026-10-23) [Claude Code · 2026-10-23]
+
+Auditoría de `data/cyberfistsMartialArtsData.ts` contra Core pp. 83, 137, 176-182, 360 y 411 e Interface RED Vol. 4 pp. 73-83: los 55 movimientos (Recovery, 8 del Core y 46 de IR4) coinciden en requisito, DV, una vez por turno, Acción y efecto. Las de abajo las decidió Giuliano el 2026-10-23.
+
+| # | Tema | Detalle | Decisión |
+|---|---|---|---|
+| 39 | Citas y texto sin fuente | Faltaban las páginas de las formas del Core (pp. 179-180); creación citaba "p.86" (es pp. 81, 88 y 90); "p.181" sobraba; el Neuroport con 2 sockets no citaba fuente (es CEMK RB p.36); frases de ambientación inventadas en el texto de reglas | **Decidida**: se corrige todo según el libro y se quita lo que no tiene fuente |
+| 40 | Contact Combat (Krav Maga, IR4 p.79) | La lista de formas, ¿califica al ataque y al movimiento, o solo al movimiento? | **Decidida**: como está escrito en el libro: la herida crítica viene de un ataque o movimiento de Aikido, Boxing, Judo, Karate, Krav Maga o Wrestling |
+| 41 | Skill Chip y movimientos especiales | Core p.178 pide "al menos 1 punto en la forma"; p.360 da el chip a nivel 3, sin decir si cuenta | **Decidida**: el chip cuenta; con el chip equipado se usan los movimientos de la forma |
+| 42 | Counter Throw (Judo, p.179) | "esquivaste todos los ataques cuerpo a cuerpo desde tu último turno" si nadie te atacó | **Decidida**: hace falta haber esquivado al menos uno |
+| 43 | Golpe a la cabeza con −8 (Bone Breaking y Pressure Point, pp. 179-180) | El libro no dice si duplica el daño como un Aimed Shot a la cabeza | **Decidida**: sí, se trata como Aimed Shot a la cabeza (daño doble que pasa la armadura), más la herida |
+| 44 | Desarme (Disarming Combination de Aikido, Disarming Technique de Arnis) | El objeto queda "en tus manos o en el piso" sin decir quién elige | **Decidida**: elige el que desarma |
+| 45 | STATs clave por forma | El libro no los define; solo DEX para tirar y mínimos en algunos movimientos | **Decidida**: DEX más los STATs que piden sus movimientos, marcado "según los requisitos de sus movimientos" |
+| 46 | Mínimo 2d6 con ciberbrazo | Core p.176 lo da a Brawling; la tabla de Martial Arts (p.178) no lo menciona | **Decidida** (al aprobar el plan 14): no aplica a Martial Arts |
+
 ## Combate (van a un plan aparte, después del plan 7)
 
 No se tocan en el plan 7. Se deciden una por una con Giuliano en el plan de combate.

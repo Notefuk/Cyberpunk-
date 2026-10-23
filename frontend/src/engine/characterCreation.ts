@@ -18,6 +18,7 @@ import {
   resolveSkillKey
 } from '../data/characterCreationData';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
+import { MARTIAL_ARTS_FORMS } from '../data/cyberfistsMartialArtsData';
 import { applyFolioAllocation } from '../data/folioRoleAllocations';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, calculateMaxHumanity, parseHumanityLossAverage } from './characterEngine';
 import { cyberwareStatBonus } from './cyberwareEffects';
@@ -242,6 +243,54 @@ export function canonSkillKey(name: string): string {
 
 // "Language (Streetslang)" -> "Language": nombre base para buscar en el catálogo.
 const baseSkillName = (name: string): string => canonSkillKey(name).replace(/\s*\(.*\)\s*$/, '').trim();
+
+// Plan 14 v4.9.5 (Core p.83, decisiones 39-46): Martial Arts se compra por forma y Play Instrument/Science exigen especialidad. [Claude Code · 2026-10-23]
+export interface MartialArtsFormSkill { key: string; formId: string; name: string; sourceBook: 'core' | 'interface_red'; sourcePage?: number | string }
+
+/** Las 27 formas (Core primero) como claves 'Martial Arts (Forma)'. Cuestan x2 por nivel como su base (Core p.83). */
+export function getMartialArtsFormSkills(): MartialArtsFormSkill[] {
+  const toSkill = (f: (typeof MARTIAL_ARTS_FORMS)[number]): MartialArtsFormSkill => ({
+    key: `Martial Arts (${f.name})`,
+    formId: f.id,
+    name: f.name,
+    sourceBook: f.sourceBook,
+    sourcePage: f.sourcePage
+  });
+  return [
+    ...MARTIAL_ARTS_FORMS.filter((f) => f.sourceBook === 'core').map(toSkill),
+    ...MARTIAL_ARTS_FORMS.filter((f) => f.sourceBook !== 'core').map(toSkill)
+  ];
+}
+
+/** Bases que exigen elegir una especialidad (Core p.83). */
+export const SPECIALTY_SKILLS: readonly string[] = ['Play Instrument', 'Science'];
+
+/** 'Play Instrument (Guitarra)' -> 'Guitarra'; sin paréntesis o '(choose 1)' -> null. */
+export function skillSpecialty(key: string): string | null {
+  const m = /\(([^)]*)\)\s*$/.exec(key);
+  if (!m) return null;
+  const v = m[1].trim();
+  if (!v || /^choose 1$/i.test(v) || /^x2$/i.test(v)) return null;
+  return v;
+}
+
+/** Renombra la clave a 'Base (especialidad)' conservando el nivel. Si la especialidad queda vacía devuelve el borrador igual. */
+export function setSkillSpecialty(draft: CreatorDraft, oldKey: string, specialty: string): CreatorDraft {
+  const spec = specialty.trim();
+  if (!spec) return draft;
+  const newKey = `${baseSkillName(oldKey)} (${spec})`;
+  if (newKey === oldKey) return draft;
+  const skills: Record<string, number> = {};
+  for (const [k, v] of Object.entries(draft.skills)) {
+    if (k === oldKey) continue;
+    skills[k] = v;
+  }
+  skills[newKey] = Math.max(skills[newKey] ?? 0, draft.skills[oldKey] ?? 0);
+  return { ...draft, skills };
+}
+
+const isFormKeyBase = (name: string): boolean => baseSkillName(name) === 'Martial Arts';
+const isSpecialtyBase = (name: string): boolean => SPECIALTY_SKILLS.includes(baseSkillName(name));
 
 let skillCatalogCache: SkillCatalogEntry[] | null = null;
 
@@ -989,11 +1038,14 @@ function validateSkills(d: CreatorDraft): string[] {
   if (d.method === 'edgerunner') {
     if (!d.role) return [...errs, 'Elige un rol antes de repartir skills.'];
     const allowed = getEdgerunnerSkillNames(d.role);
+    // Martial Arts por forma y Play Instrument/Science con especialidad cuentan como la skill base del rol (Core p.83).
+    const matchesAllowed = (key: string, name: string): boolean =>
+      key === name || (baseSkillName(key) === name && (isFormKeyBase(key) || isSpecialtyBase(key)));
     for (const name of Object.keys(d.skills)) {
-      if (!allowed.includes(name)) errs.push(`Edgerunner: "${name}" no es una de las 20 skills del rol (Core pp. 86-87).`);
+      if (!allowed.some((a) => matchesAllowed(name, a))) errs.push(`Edgerunner: "${name}" no es una de las 20 skills del rol (Core pp. 86-87).`);
     }
     for (const name of allowed) {
-      const lvl = d.skills[name] ?? 0;
+      const lvl = Math.max(0, ...Object.entries(d.skills).filter(([k]) => matchesAllowed(k, name)).map(([, v]) => v));
       if (lvl < SKILL_MIN_EDGERUNNER || lvl > SKILL_MAX_LEVEL) {
         errs.push(`Edgerunner: ${name} debe estar entre ${SKILL_MIN_EDGERUNNER} y ${SKILL_MAX_LEVEL} (Core p.77).`);
       }
@@ -1010,6 +1062,13 @@ function validateSkills(d: CreatorDraft): string[] {
       if (lvl < 2) errs.push(`La skill básica ${s.name} debe empezar en 2 o más (Core p.85).`);
     }
     if (spent !== SKILL_POINTS) errs.push(`Las skills deben sumar ${SKILL_POINTS} puntos (llevas ${spent}) (Core p.81).`);
+  }
+  // Core p.83 (decisiones 39-46): forma de Martial Arts y especialidad de Play Instrument/Science obligatorias.
+  for (const [name, lvl] of Object.entries(d.skills)) {
+    if (lvl <= 0) continue;
+    const base = baseSkillName(name);
+    if (base === 'Martial Arts' && !skillSpecialty(name)) errs.push('Elegí la forma de Martial Arts (Core p.83).');
+    else if (SPECIALTY_SKILLS.includes(base) && !skillSpecialty(name)) errs.push(`Elegí la especialidad de ${base} (Core p.83).`);
   }
   return errs;
 }
@@ -1157,11 +1216,26 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
   // Skills: 16 de combate vía resolveSkillKey, el resto a generalSkills con nombre canon (Core pp. 81-85).
   const skills = createDefaultCombatSkills();
   const generalSkills: Record<string, number> = {};
+  const knownMartialArts: Record<string, number> = {};
   for (const [name, level] of Object.entries(draft.skills)) {
+    // Core p.83: cada forma de Martial Arts va a knownMartialArts y skills.martialArts toma el máximo.
+    const formName = isFormKeyBase(name) ? skillSpecialty(name) : null;
+    const form = formName ? MARTIAL_ARTS_FORMS.find((f) => f.name.toLowerCase() === formName.toLowerCase()) : undefined;
+    if (form) {
+      if (level > 0) knownMartialArts[form.id] = level;
+      continue;
+    }
+    // Play Instrument/Science con especialidad conservan su clave completa en generalSkills.
+    if (isSpecialtyBase(name) && skillSpecialty(name)) {
+      generalSkills[canonSkillKey(name)] = level;
+      continue;
+    }
     const ref = resolveSkillKey(name);
     if (ref && ref.kind === 'combat') skills[ref.key as CombatSkillKey] = Math.max(skills[ref.key as CombatSkillKey], level);
     else generalSkills[ref ? ref.key : canonSkillKey(name)] = level;
   }
+  const martialLevels = Object.values(knownMartialArts);
+  if (martialLevels.length > 0) skills.martialArts = Math.max(skills.martialArts, ...martialLevels);
   // Core p.90: 4 niveles de idioma cultural gratis.
   if (draft.culturalLanguage.trim()) generalSkills[`Language (${draft.culturalLanguage.trim()})`] = 4;
 
@@ -1309,6 +1383,7 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
     improvementPoints: 0,
     ipLog: [],
     generalSkills,
+    ...(Object.keys(knownMartialArts).length > 0 ? { knownMartialArts } : {}),
     fashionBudgetRemaining: 0,
     hasNeuroport: draft.era === '2077' && draft.installNeuroport,
     lifepath: buildCharacterLifepath(draft)

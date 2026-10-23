@@ -21,8 +21,11 @@ import {
   getRoleOrder,
   getRolePackage,
   getSkillCatalog,
+  getMartialArtsFormSkills,
   getSkillPointsSpent,
   getSummaryWarnings,
+  setSkillSpecialty,
+  skillSpecialty,
   getStartingMoney,
   getStatPointsSpent,
   lifepathKey,
@@ -544,5 +547,68 @@ describe('Grafted Muscle en el creador (Core p.114)', () => {
     const { sheet } = buildCharacterSheetFromDraft(d, 'g');
     expect(sheet.stats.BODY).toBe(6);
     expect(sheet.currentHp).toBe(derived.maxHp);
+  });
+});
+
+describe('Martial Arts por forma y skills con especialidad (Core pp. 83, 178; plan 14 v4.9.5)', () => {
+  const stats = { INT: 6, REF: 6, DEX: 6, TECH: 6, COOL: 6, WILL: 6, LUCK: 6, MOVE: 6, BODY: 6, EMP: 8 };
+  const skills: Record<string, number> = {
+    Concentration: 2, Perception: 6, Athletics: 4, Stealth: 2, Education: 2, 'Local Expert (Your Home)': 2,
+    Brawling: 2, Evasion: 6, Conversation: 2, 'Human Perception': 2, Persuasion: 2, 'First Aid': 6,
+    Handgun: 6, 'Shoulder Arms': 6, Autofire: 6, Interrogation: 6, 'Melee Weapon': 6, Tactics: 6, 'Resist Torture/Drugs': 6
+  };
+  const base = (): CreatorDraft => ({ ...createEmptyDraft(), method: 'complete_package', role: 'Solo', stats, skills, culturalLanguage: 'English' });
+  // Quita 12 puntos de otras skills (Evasion 6->3 = 3, Perception 6->3 = 3, Handgun 6->3 = 3, First Aid 6->3 = 3) para que el total siga en 86.
+  const withForms = (): CreatorDraft => ({
+    ...base(),
+    skills: { ...skills, Evasion: 3, Perception: 3, Handgun: 3, 'First Aid': 3, 'Martial Arts (Karate)': 4, 'Martial Arts (Judo)': 2 }
+  });
+
+  it('Karate 4 y Judo 2 cuestan 12 puntos (x2 por nivel, Core p.83) y mantienen el total en 86 (Core p.81)', () => {
+    expect(skillLevelCost('Martial Arts (Karate)', 4) + skillLevelCost('Martial Arts (Judo)', 2)).toBe(12);
+    expect(getSkillPointsSpent(withForms())).toBe(86);
+    expect(validateStep(withForms(), 'skills')).toEqual([]);
+  });
+
+  it('la ficha trae knownMartialArts {karate:4, judo:2}, skills.martialArts 4 y nada en generalSkills (Core p.83)', () => {
+    const { sheet } = buildCharacterSheetFromDraft({ ...withForms(), handle: 'Tester' }, 'ma');
+    expect(sheet.knownMartialArts).toEqual({ karate: 4, judo: 2 });
+    expect(sheet.skills.martialArts).toBe(4);
+    expect(Object.keys(sheet.generalSkills ?? {}).some((k) => k.startsWith('Martial Arts'))).toBe(false);
+  });
+
+  it('"Martial Arts" sin forma con nivel da error (Core p.83)', () => {
+    const d = { ...withForms(), skills: { ...withForms().skills, 'Martial Arts (Karate)': 0, 'Martial Arts': 4 } };
+    expect(validateStep(d, 'skills').some((m) => m.includes('forma de Martial Arts'))).toBe(true);
+  });
+
+  it('setSkillSpecialty conserva el nivel y llega a generalSkills con la clave completa (Core p.83)', () => {
+    const d = setSkillSpecialty({ ...base(), skills: { ...skills, 'Play Instrument': 2 } }, 'Play Instrument', ' Guitarra ');
+    expect(d.skills['Play Instrument (Guitarra)']).toBe(2);
+    expect(d.skills['Play Instrument']).toBeUndefined();
+    expect(skillSpecialty('Play Instrument (Guitarra)')).toBe('Guitarra');
+    expect(skillSpecialty('Play Instrument (choose 1)')).toBeNull();
+    expect(skillSpecialty('Play Instrument')).toBeNull();
+    expect(setSkillSpecialty(d, 'Play Instrument (Guitarra)', '  ')).toBe(d);
+    const { sheet } = buildCharacterSheetFromDraft({ ...d, handle: 'Tester' }, 'pi');
+    expect(sheet.generalSkills?.['Play Instrument (Guitarra)']).toBe(2);
+  });
+
+  it('Streetrat con "Play Instrument (choose 1)" da error hasta elegir especialidad (Core pp. 83, 87)', () => {
+    const role = (Object.keys(CORE_ROLE_TABLES.streetratSkills) as Array<keyof typeof CORE_ROLE_TABLES.streetratSkills>).find((r) =>
+      CORE_ROLE_TABLES.streetratSkills[r].skills.some((s) => s.name.startsWith('Play Instrument'))
+    )!;
+    const d = applyStreetratRow({ ...createEmptyDraft(), role, method: 'streetrat', culturalLanguage: 'English' }, 1);
+    expect(validateStep(d, 'skills').some((m) => m.includes('Play Instrument'))).toBe(true);
+    const fixed = setSkillSpecialty(d, 'Play Instrument', 'Guitarra');
+    expect(validateStep(fixed, 'skills').some((m) => m.includes('Play Instrument'))).toBe(false);
+  });
+
+  it('getMartialArtsFormSkills devuelve 27 formas con 4 Core primero (Core p.179; Interface RED Vol. 4)', () => {
+    const forms = getMartialArtsFormSkills();
+    expect(forms).toHaveLength(27);
+    expect(forms.filter((f) => f.sourceBook === 'core')).toHaveLength(4);
+    expect(forms.slice(0, 4).every((f) => f.sourceBook === 'core')).toBe(true);
+    expect(forms[0].key).toBe(`Martial Arts (${forms[0].name})`);
   });
 });
