@@ -31,7 +31,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
     author: 'Claude Code',
     phase: 'Codex',
     category: 'Creador',
-    title: 'Modo Novato del creador de personajes',
+    title: 'Modo Novato del creador, Grafted Muscle y ciberware repetible',
     summary: 'Plan 12 (ex v4.8.3 del plan 7): el creador explica cada paso con el texto del libro y su página, tiene ⓘ desplegables que funcionan en celular y cierra con un resumen de confirmación con avisos.',
     highlights: [
       'Interruptor "Modo Novato" en la cabecera del creador, prendido por defecto. Se guarda en el dispositivo y "Descartar borrador" no lo cambia.',
@@ -39,7 +39,10 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
       'Streetrat lleva la etiqueta "Recomendado por el libro", con la cita y la página (Core p.40).',
       'Los ⓘ de cada skill y cada STAT despliegan el texto completo con su página al tocarlos; reemplazan los tooltips que no andaban en celular.',
       'Resumen ordenado en tarjetas como la ficha, con un encabezado "Revisá y confirmá". La checklist sigue bloqueando "Crear".',
-      'Avisos que no bloquean: dinero sin gastar (Core p.98 en Streetrat y Edgerunner, p.104 en Paquete Completo), moda que se pierde (p.105), Humanidad que baja la EMP (p.80), skills básicas por debajo de 2 (p.90), sin armas y sin armadura. 280 tests.'
+      'Avisos que no bloquean: dinero sin gastar (Core p.98 en Streetrat y Edgerunner, p.104 en Paquete Completo), moda que se pierde (p.105), Humanidad que baja la EMP (p.80), skills básicas por debajo de 2 (p.90), sin armas y sin armadura.',
+      'Plan 13: las 10 STATs muestran el texto del Core p.72 con su página, en el creador y en Street Lab; se quitaron los umbrales que no eran del libro.',
+      'Grafted Muscle and Bone Lace (Core p.114, errata v1.25): +2 BODY por instalación, acumulable, tope 10, en las dos eras; recalcula HP, Seriously Wounded y Death Save, también en la vista previa del creador y en Choke, Throw y Brawling.',
+      'Cualquier ciberware se puede instalar más de una vez (se ve ×N) y desinstalar saca una sola copia; cada copia descuenta su Humanidad del libro. Thorn guarda BODY 8 de base y el motor le da 10 (migración de fichas v5). 296 tests.'
     ],
     filesTouched: [
       'data/creation-src/creator-guide.json',
@@ -51,7 +54,11 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
       'frontend/src/features/creator/steps/SummaryStep.tsx',
       'frontend/src/features/creator/steps/SkillsStep.tsx',
       'frontend/src/features/creator/steps/StatsStep.tsx',
-      'docs/plans/plan12-v494-modo-novato.md'
+      'frontend/src/engine/cyberwareEffects.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/store/persistence.ts',
+      'docs/plans/plan12-v494-modo-novato.md',
+      'docs/plans/plan13-v494-cierre-creador.md'
     ],
     metricsBadge: 'v4.9.4 • Modo Novato • Plan 12'
   },

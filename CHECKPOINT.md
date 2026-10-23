@@ -16,7 +16,7 @@
 - [Claude Code · 2026-10-22] v4.9.1 (plan 9) MERGEADA (PR #25) y PUBLICADA. Siguiente: v4.9.2 herramientas de rol de combate (Solo en el HUD, Netrunner con `engine/roleRules.ts`, Medtech con Speedheal híbrido, Nomad con Moto). Pendiente previo: desborde horizontal de Street Lab en celular (ya estaba en v4.9.0).
 - [Claude Code · 2026-10-23] v4.9.2 (plan 10) MERGEADA (PR #26) y PUBLICADA. Damage Deflection después de armadura confirmado por Giuliano. Siguiente: v4.9.3 herramientas de rol sociales (Rockerboy, Fixer, Media, Exec, Lawman; tablas en `ROLE_RANKS.roles.<Rol>.tables`).
 - [Claude Code · 2026-10-23] v4.9.3 (plan 11) MERGEADA (PR #27) y PUBLICADA. Con esto el plan 8 (roles Core + CEMK, v4.9.0-v4.9.3) queda completo. Siguiente: v4.9.4 Modo Novato (ex v4.8.3 del plan 7), que necesita plan nuevo.
-- [Claude Code · 2026-10-23] v4.9.4 Modo Novato (plan 12) TERMINADA y verificada (tsc, 280 tests, build, navegador en PC y 375 px) en la rama `claude/v4.9.4-modo-novato`. Falta PR, merge y gh-pages. [Claude Code · 2026-10-23] Plan 13 aprobado (`docs/plans/plan13-v494-cierre-creador.md`): entran en la misma v4.9.4 los STATs del Core p.72, Grafted Muscle (+2 BODY, tope 10, Core p.114), ciberware repetible, Thorn con BODY 8 de base + migración v5, cita CEMK RB del Neuroport y docs de lifepath. Paso actual: worker A (motor y datos) y worker B (store y UI) en paralelo.
+- [Claude Code · 2026-10-23] v4.9.4 (planes 12 y 13) TERMINADA y verificada (tsc, 296 tests, build, navegador en PC y 375 px) en la rama `claude/v4.9.4-modo-novato`: Modo Novato, STATs del Core p.72, Grafted Muscle (+2 BODY, tope 10), ciberware repetible, Thorn con BODY base 8 (migración v5), cita CEMK RB y docs de lifepath. Falta PR, merge y gh-pages.
 - [Claude Code · 2026-10-22] Cierre de v4.9.0 (plan de cierre aprobado, en `~/.claude/plans/cryptic-juggling-stonebraker.md`): Giuliano decidió las dudas 24-33 y 4 nuevas (Internal Agent y Biomonitor fuera en 2077; nota del Folio solo en su ficha; agregar Incendiary Shotgun Shell). TODO HECHO y verificado (tsc, 156 tests, build, sonda y navegador): Neuroport cubre Internal Agent y Biomonitor (alternativas "o" elegibles), munición incendiaria mapeada, nota del Folio solo en su ficha, discrepancias 24-37 y `doubts` anotadas. Falta: PR, merge y gh-pages.
 
 ## Traspaso
@@ -24,8 +24,8 @@
 - Cierra: [Claude Code · 2026-10-23].
 - Rama: `claude/v4.9.4-modo-novato` (pusheada). `main` = v4.9.3.1 publicada.
 - A medias: nada. v4.9.4 terminada; falta PR, merge y gh-pages.
-- Siguiente paso exacto: PR de v4.9.4, merge y publicar; después, plan 5 (Black Chrome completo + catálogo de vehículos).
-- Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y barra del centro del HUD. (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Los ⓘ de las STATs muestran `STAT_TOOLTIPS` (texto de la app de antes, sin página del libro).
+- Siguiente paso exacto: PR de v4.9.4 (planes 12 y 13), merge y publicar; después, plan 5 (Black Chrome completo + catálogo de vehículos).
+- Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y barra del centro del HUD. (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad (hasta el tope de terapia); es así desde antes, sin regla del libro revisada.
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub del remote `origin`.
 

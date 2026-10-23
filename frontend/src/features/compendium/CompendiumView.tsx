@@ -958,7 +958,7 @@ export const CompendiumView: React.FC = () => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    toggleCyberwareInstall(item.id);
+                    toggleCyberwareInstall(item.id, item.humanityLoss ? parseHumanityLossAverage(String(item.humanityLoss)) : undefined);
                     showFeedback(item.id, 'Ciberware desinstalado');
                   }}
                   className="px-2.5 py-1 bg-[#f43f5e]/20 hover:bg-[#f43f5e] border border-[#f43f5e] text-[#f43f5e] hover:text-white rounded-xs text-[10px] font-bold transition-all cursor-pointer active:scale-95"
@@ -990,7 +990,7 @@ export const CompendiumView: React.FC = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleAcquire(item.id, item.name, item.cost, 'buy', () => toggleCyberwareInstall(item.id));
+                      handleAcquire(item.id, item.name, item.cost, 'buy', () => toggleCyberwareInstall(item.id, item.humanityLoss ? parseHumanityLossAverage(String(item.humanityLoss)) : undefined));
                     }}
                     className="px-2.5 py-1 bg-[#10b981]/20 hover:bg-[#10b981] border border-[#10b981] text-[#10b981] hover:text-[#0b0e17] rounded-xs text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
                     title={`Comprar por ${item.cost} €$ e instalar`}
@@ -1000,7 +1000,7 @@ export const CompendiumView: React.FC = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleAcquire(item.id, item.name, item.cost, 'loot', () => toggleCyberwareInstall(item.id));
+                      handleAcquire(item.id, item.name, item.cost, 'loot', () => toggleCyberwareInstall(item.id, item.humanityLoss ? parseHumanityLossAverage(String(item.humanityLoss)) : undefined));
                     }}
                     className="px-2.5 py-1 bg-[#38bdf8]/20 hover:bg-[#38bdf8] border border-[#38bdf8] text-[#38bdf8] hover:text-[#0b0e17] rounded-xs text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 active:scale-95"
                     title="Instalar gratis (Loot / 0 €$)"
@@ -1756,10 +1756,10 @@ export const CompendiumView: React.FC = () => {
                           onClick={(e) => {
                             e.stopPropagation();
                             if (isInstalled) {
-                              toggleCyberwareInstall(cyber.id);
+                              toggleCyberwareInstall(cyber.id, cyber.humanityLoss ? parseHumanityLossAverage(String(cyber.humanityLoss)) : undefined);
                               showFeedback(cyber.id, 'Ciberware desinstalado');
                             } else {
-                              handleAcquire(cyber.id, cyber.name, cyber.cost, spendMoneyMode ? 'buy' : 'loot', () => toggleCyberwareInstall(cyber.id));
+                              handleAcquire(cyber.id, cyber.name, cyber.cost, spendMoneyMode ? 'buy' : 'loot', () => toggleCyberwareInstall(cyber.id, cyber.humanityLoss ? parseHumanityLossAverage(String(cyber.humanityLoss)) : undefined));
                             }
                           }}
                           className={`px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer chamfer-btn shrink-0 active:scale-95 ${
@@ -2492,10 +2492,10 @@ export const CompendiumView: React.FC = () => {
                             onClick={(e) => {
                               e.stopPropagation();
                               if (isInstalled) {
-                                toggleCyberwareInstall(c.id);
+                                toggleCyberwareInstall(c.id, c.humanityLoss ? parseHumanityLossAverage(String(c.humanityLoss)) : undefined);
                                 showFeedback(c.id, 'Ciberware desinstalado');
                               } else {
-                                handleAcquire(c.id, c.name, c.cost, spendMoneyMode ? 'buy' : 'loot', () => toggleCyberwareInstall(c.id));
+                                handleAcquire(c.id, c.name, c.cost, spendMoneyMode ? 'buy' : 'loot', () => toggleCyberwareInstall(c.id, c.humanityLoss ? parseHumanityLossAverage(String(c.humanityLoss)) : undefined));
                               }
                             }}
                             className={`px-2 py-0.5 rounded-xs text-[10px] font-bold transition-all cursor-pointer ${
