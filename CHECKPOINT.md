@@ -6,13 +6,13 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
-**Última actualización**: [Claude Code · 2026-10-23] v4.9.6 terminada en su rama.
-**Versión de la app**: v4.9.6 lista en la rama `claude/v4.9.6-martial-arts-hud`. `main` = v4.9.5, publicada.
-**Plan activo**: plan 14, Martial Arts completo (`docs/plans/plan14-martial-arts.md`, aprobado): paso 0 auditoría canon, v4.9.5 creador/ficha/referencia, v4.9.6 movimientos especiales automáticos [Claude Code · 2026-10-23]. Estado de todos los planes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
+**Última actualización**: [Claude Code · 2026-10-23] v4.9.6 mergeada y publicada.
+**Versión de la app**: v4.9.6 (en `main`, squash 2943b27, PR #31; publicada en gh-pages y verificada en vivo)
+**Plan activo**: ninguno abierto. Planes 14 y 15 (Martial Arts) terminados. Lo siguiente es el plan 5 (Black Chrome y vehículos). Estado de todos los planes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0 [Claude Code · 2026-10-23]. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-23] Plan 14 Martial Arts: paso 0 y v4.9.5 MERGEADA (PR #30) y PUBLICADA. v4.9.6 (plan 15: requisitos, una vez por turno, Fin de turno, tarjeta de efectos sin aplicar nada solo) TERMINADA y verificada en la rama `claude/v4.9.6-martial-arts-hud`. Falta PR, merge y gh-pages. Con eso el plan 14 queda completo.
+- [Claude Code · 2026-10-23] Plan 14 Martial Arts COMPLETO: v4.9.5 (PR #30) y v4.9.6 (plan 15, PR #31) mergeadas y publicadas. Referencia en `docs/rules/martial-arts.md`; decisiones 39-48.
 - [Claude Code · 2026-10-22] v4.9.0 Datos de roles por rango (plan 8) MERGEADA (PR #24) y PUBLICADA. Siguiente: v4.9.1 motor de roles (`engine/roleRules.ts`: NET Actions por rango, DV de Quickhack, mejor Reach, costos de IP), avance con IP (IP nuevos en 0, modo GM), quitar el selector +4 del creador, reparto inicial de los Folios aplicado a la ficha y migración de persistencia v4, en rama `claude/v4.9.1-*`. Datos en `ROLE_RANKS.roles.<Rol>`; reglas ya decididas en discrepancias 24-37.
 - [Claude Code · 2026-10-22] v4.9.1 (plan 9) MERGEADA (PR #25) y PUBLICADA. Siguiente: v4.9.2 herramientas de rol de combate (Solo en el HUD, Netrunner con `engine/roleRules.ts`, Medtech con Speedheal híbrido, Nomad con Moto). Pendiente previo: desborde horizontal de Street Lab en celular (ya estaba en v4.9.0).
 - [Claude Code · 2026-10-23] v4.9.2 (plan 10) MERGEADA (PR #26) y PUBLICADA. Damage Deflection después de armadura confirmado por Giuliano. Siguiente: v4.9.3 herramientas de rol sociales (Rockerboy, Fixer, Media, Exec, Lawman; tablas en `ROLE_RANKS.roles.<Rol>.tables`).
@@ -23,9 +23,9 @@
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-23].
-- Rama: `claude/v4.9.6-martial-arts-hud` (pusheada). `main` = v4.9.5 publicada.
+- Rama: `main` @ 2943b27 + este checkpoint (pusheada). v4.9.6 publicada en gh-pages.
 - A medias: nada.
-- Siguiente paso exacto: PR de v4.9.6, merge y publicar (con OK de Giuliano); después, plan 5 (Black Chrome + vehículos).
+- Siguiente paso exacto: planificar el plan 5 pendiente (Black Chrome completo + catálogo de vehículos), preguntando el alcance a Giuliano antes de codear.
 - Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y el HUD (760 px a 375). (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido (plan futuro, decisión del plan 15): blanco del HUD con Evasion, daño, SP, heridas y Prone aplicados de verdad; hoy hay 3 modelos de enemigo desconectados (`ActiveEncounterEnemy`, `InitiativeCombatant`, `EnemySheet`).
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub del remote `origin`.
