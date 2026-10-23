@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { RollEntry, AimedShotTarget } from '../types/cyberpunk';
 import { resolveExplosionSecondDie } from '../engine/combatEngine';
+import { emptyTurnLog, type TurnLog } from '../engine/martialArtsRules';
+import type { MartialHitKind } from '../data/cyberfistsMartialArtsData';
 
 // v4.9.3 [Claude Code · 2026-10-23] Backup del Lawman (Core p.158): llega tras 1d6 Rondas; un agente por miembro del grupo.
 export interface BackupCall {
@@ -27,6 +29,12 @@ export interface CombatStoreState {
   firstHitLandedThisRound: boolean;
   netActionsSpent: number;
   backupCalls: BackupCall[];
+  // v4.9.6 [Claude Code · 2026-10-23] Registro del turno propio (decisión 48): golpes, movimientos usados y metros movidos.
+  turnLog: TurnLog;
+  recordHit: (kind: MartialHitKind, formId?: string) => void;
+  recordMove: (moveId: string) => void;
+  setMovedMeters: (n: number) => void;
+  endTurn: () => void;
   addBackupCall: (call: Omit<BackupCall, 'id' | 'arrived' | 'calledAtRound'>) => void;
   damageBackupAgent: (callId: string, agentIndex: number, delta: number) => void;
   dismissBackupCall: (callId: string) => void;
@@ -47,6 +55,13 @@ export interface CombatStoreState {
   clearRollHistory: () => void;
 }
 
+// v4.9.6 [Claude Code · 2026-10-23] Migración v1 -> v2: asegura el turnLog (decisión 48).
+export function migrateCombatState(persistedState: unknown): CombatStoreState {
+  const st = persistedState as CombatStoreState;
+  if (st && !st.turnLog) st.turnLog = emptyTurnLog();
+  return st;
+}
+
 export const useCombatStore = create<CombatStoreState>()(
   persist(
     (set, get) => ({
@@ -61,6 +76,26 @@ export const useCombatStore = create<CombatStoreState>()(
       firstHitLandedThisRound: false,
       netActionsSpent: 0,
       backupCalls: [],
+      turnLog: emptyTurnLog(),
+
+      recordHit: (kind, formId) =>
+        set((state) => ({
+          turnLog: {
+            ...state.turnLog,
+            hitsByType: { ...state.turnLog.hitsByType, [kind]: (state.turnLog.hitsByType[kind] ?? 0) + 1 },
+            formHits: formId
+              ? { ...state.turnLog.formHits, [formId]: (state.turnLog.formHits[formId] ?? 0) + 1 }
+              : state.turnLog.formHits
+          }
+        })),
+
+      recordMove: (moveId) =>
+        set((state) => ({ turnLog: { ...state.turnLog, movesUsed: [...state.turnLog.movesUsed, moveId] } })),
+
+      setMovedMeters: (n) =>
+        set((state) => ({ turnLog: { ...state.turnLog, movedMeters: Math.max(0, Number.isFinite(n) ? n : 0) } })),
+
+      endTurn: () => set({ turnLog: emptyTurnLog() }),
 
       // Core p.158: cada llamada de Backup lleva su cuenta regresiva de Rondas.
       addBackupCall: (call) =>
@@ -99,6 +134,7 @@ export const useCombatStore = create<CombatStoreState>()(
           firstDamageTakenThisRound: false,
           firstHitLandedThisRound: false,
           netActionsSpent: 0,
+          turnLog: emptyTurnLog(),
           backupCalls: state.backupCalls.map((bc) => {
             const roundsLeft = Math.max(0, bc.roundsLeft - 1);
             return { ...bc, roundsLeft, arrived: bc.arrived || roundsLeft === 0 };
@@ -117,6 +153,7 @@ export const useCombatStore = create<CombatStoreState>()(
           firstDamageTakenThisRound: false,
           firstHitLandedThisRound: false,
           netActionsSpent: 0,
+          turnLog: emptyTurnLog(),
           backupCalls: []
         }),
 
@@ -163,8 +200,9 @@ export const useCombatStore = create<CombatStoreState>()(
     {
       name: 'cpr-omni-deck-combat-v2',
       // Versión del esquema persistido. Al cambiar la forma de los datos, subir el número y migrar aquí.
-      version: 1,
-      migrate: (persistedState: unknown) => persistedState as CombatStoreState
+      // v4.9.6 [Claude Code · 2026-10-23] versión 2: agrega turnLog (decisión 48).
+      version: 2,
+      migrate: migrateCombatState
     }
   )
 );

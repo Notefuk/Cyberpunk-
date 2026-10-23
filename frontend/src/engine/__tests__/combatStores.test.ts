@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useGameClockStore, currentBeatId, currentDayKey } from '../../store/gameClockStore';
 import { useRulesSettingsStore } from '../../store/rulesSettingsStore';
-import { useCombatStore } from '../../store/useCombatStore';
+import { useCombatStore, migrateCombatState } from '../../store/useCombatStore';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../../data/cemkFolioPremadesData';
 import type { CharacterSheet } from '../../types/cyberpunk';
 
@@ -101,5 +101,43 @@ describe('heridas y HP', () => {
     useCharacterStore.getState().adjustHpFor('b', -2);
     expect(get('b').currentHp).toBe(Math.max(0, before - 2));
     expect(get('a').currentHp).toBe(before);
+  });
+});
+
+// [Claude Code · 2026-10-23] v4.9.6: registro del turno (decisión 48).
+describe('turnLog del combate', () => {
+  it('recordHit, recordMove y endTurn', () => {
+    const st = useCombatStore.getState();
+    st.recordHit('brawling');
+    st.recordHit('martial_arts', 'f1');
+    st.recordHit('martial_arts', 'f1');
+    st.recordMove('m1');
+    st.setMovedMeters(4);
+    const log = useCombatStore.getState().turnLog;
+    expect(log.hitsByType.brawling).toBe(1);
+    expect(log.hitsByType.martial_arts).toBe(2);
+    expect(log.formHits.f1).toBe(2);
+    expect(log.movesUsed).toEqual(['m1']);
+    expect(log.movedMeters).toBe(4);
+    useCombatStore.getState().endTurn();
+    const cleared = useCombatStore.getState().turnLog;
+    expect(cleared.hitsByType.brawling).toBe(0);
+    expect(cleared.movesUsed).toEqual([]);
+    expect(cleared.movedMeters).toBe(0);
+  });
+
+  it('nextRound reinicia el turnLog', () => {
+    useCombatStore.getState().recordHit('melee');
+    useCombatStore.getState().recordMove('m1');
+    useCombatStore.getState().nextRound();
+    const log = useCombatStore.getState().turnLog;
+    expect(log.hitsByType.melee).toBe(0);
+    expect(log.movesUsed).toEqual([]);
+  });
+
+  it('migrate sin turnLog lo crea', () => {
+    const migrate = migrateCombatState;
+    const migrated = migrate({ round: 3 }) as { turnLog?: { movesUsed: string[] } };
+    expect(migrated.turnLog?.movesUsed).toEqual([]);
   });
 });
