@@ -178,128 +178,100 @@ export interface StatTooltipInfo {
   beginnerExplanation: string;
   dependentSkills: string[];
   mechanicalBreakpoints: string[];
+  /** [Claude Code · 2026-10-23] Fuente del texto (Core RED p.72). */
+  source: { book: string; page: number };
 }
 
 export const STAT_TOOLTIPS: Record<StatKey, StatTooltipInfo> = {
   INT: {
     name: 'Intelligence (INT)',
     spanishName: 'Inteligencia',
-    shortSummary: 'Capacidad de deducción, memoria, análisis táctico y conocimientos técnicos.',
-    beginnerExplanation:
-      'Representa tu astucia, agudeza mental y capacidad para resolver problemas bajo presión. Si quieres ser un Netrunner que hackea códigos complejos, un Detective que descubre pistas o un estratega que predice emboscadas, necesitas INT alta.',
+    shortSummary: 'Inteligencia general, astucia, percepción y capacidad de aprender.',
+    beginnerExplanation: '',
     dependentSkills: ['Perception', 'Deduction', 'Interface (Netrunning)', 'Library Search', 'Tactics', 'Local Expert'],
-    mechanicalBreakpoints: [
-      'INT 6+: Requerido para Netrunners competentes en arquitecturas de red complejas.',
-      'INT 8: Nivel genial; permite resolver enigmas científicos y hackeos de grado militar sin apenas margen de fallo.'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   },
   REF: {
     name: 'Reflexes (REF)',
     spanishName: 'Reflejos',
-    shortSummary: 'Velocidad de reacción física, puntería balística y tiempo de respuesta.',
-    beginnerExplanation:
-      'Tu velocidad nerviosa para apuntar y disparar armas a distancia. Gobierna el uso de pistolas, fusiles, ametralladoras y vehículos. ¡Y lo más importante en Cyberpunk: si tienes REF 8 o más, tus reflejos son tan inhumanos que puedes esquivar balas en pleno vuelo!',
+    shortSummary: 'Tiempo de respuesta y coordinación; es el STAT para pegar con armas a distancia.',
+    beginnerExplanation: '',
     dependentSkills: ['Handgun', 'Shoulder Arms', 'Autofire', 'Heavy Weapons', 'Archery', 'Drive Land Vehicle'],
-    mechanicalBreakpoints: [
-      '★ REF 8+: Habilidad legendaria de "Bullet Dodging" (Esquivar Proyectiles con la habilidad Evasion contra tirada de ataque enemiga).',
-      'REF 7+: Puntería de élite recomendada para francotiradores y soldados Solo.'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   },
   DEX: {
     name: 'Dexterity (DEX)',
     spanishName: 'Destreza',
-    shortSummary: 'Coordinación corporal, atletismo, combate cuerpo a cuerpo y sigilo.',
-    beginnerExplanation:
-      'Tu agilidad física, flexibilidad y control motor fino. Si quieres cortar a tus enemigos con katanas, pelear a puño limpio con artes marciales, saltar tejados, colarte por conductos en silencio o esquivar golpes y explosiones, DEX es tu estadística reina.',
+    shortSummary: 'Aptitud física general (equilibrio, saltos, combate, atletismo); es el STAT para pegar cuerpo a cuerpo y ayuda a esquivar.',
+    beginnerExplanation: '',
     dependentSkills: ['Evasion', 'Athletics', 'Melee Weapon', 'Brawling', 'Martial Arts', 'Stealth'],
-    mechanicalBreakpoints: [
-      'DEX alta + Evasion alta: La mejor defensa pasiva del juego para no recibir daño en combate cuerpo a cuerpo.',
-      'DEX 8: Permite maximizar maniobras especiales de Artes Marciales y acrobacias extremas.'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   },
   TECH: {
     name: 'Technique (TECH)',
     spanishName: 'Técnica',
-    shortSummary: 'Habilidad manual, reparación de ciberware, medicina y fabricación.',
-    beginnerExplanation:
-      'Mide la habilidad con tus manos, el pulso de cirujano y la comprensión de circuitos, armas y prótesis mecánicas. Los Medtechs que operan en ambulancias y los Techs que mejoran y construyen armas caseras dependen totalmente de TECH.',
+    shortSummary: 'Manejar herramientas e instrumentos (no es lo mismo que REF).',
+    beginnerExplanation: '',
     dependentSkills: ['First Aid', 'Paramedic', 'Cybertech', 'Electronics/Security Tech', 'Weaponstech', 'Maker'],
-    mechanicalBreakpoints: [
-      'TECH 6+: Permite reparar blindajes y realizar primeros auxilios (Quick Fix) con éxito regular en combate.',
-      'TECH 8: Requerido para cirugías cibernéticas mayores y fabricación de mejoras exóticas de armas (Maker).'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   },
   COOL: {
     name: 'Cool (COOL)',
     spanishName: 'Frialdad / Temple',
-    shortSummary: 'Carisma, temple bajo fuego, presencia intimidatoria y don de gentes.',
-    beginnerExplanation:
-      'Tu capacidad de mantener la calma cuando te apuntan con una escopeta a la cara, tu carisma para convencer a guardias de seguridad o tu magnetismo para mover multitudes en un concierto de rock. Muy importante para Rockerboys, Fixers y Medias.',
+    shortSummary: 'Impresionar e influir en la gente con tu carácter y carisma; el trato social.',
+    beginnerExplanation: '',
     dependentSkills: ['Persuasion', 'Interrogation', 'Streetwise', 'Trading', 'Charismatic Impact'],
-    mechanicalBreakpoints: [
-      'COOL alto: Permite superar chequeos de negociación y sobornos críticos sin disparar una sola bala.',
-      'Base de la habilidad de intimidación y negociación de precios en los Night Markets.'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   },
   WILL: {
     name: 'Willpower (WILL)',
     spanishName: 'Fuerza de Voluntad',
-    shortSummary: 'Determinación mental, tolerancia al dolor y componente clave de tus Puntos de Golpe (HP).',
-    beginnerExplanation:
-      'Tu resistencia mental para no quebrarte ante el estrés, resistir torturas, drogas callejeras y el pánico del Fuego de Supresión. Junto con BODY, determina cuántos Puntos de Golpe (HP) tienes en tu ficha.',
+    shortSummary: 'Determinación y valor ante el peligro, el estrés y las privaciones largas; pesa en cuánto daño aguantás.',
+    beginnerExplanation: '',
     dependentSkills: ['Concentration', 'Resist Torture/Drugs'],
-    mechanicalBreakpoints: [
-      'Fórmula de HP: 10 + 5 * ceil((BODY + WILL) / 2). Cada punto de WILL incrementa directamente tu supervivencia en combate.',
-      'WILL 6+: Permite resistir drogas y el pánico de granadas flashbang con solvencia.'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   },
   LUCK: {
     name: 'Luck (LUCK)',
     spanishName: 'Suerte Táctil',
-    shortSummary: 'Reserva de puntos rejugable que puedes sumar a cualquier tirada de dados crítica.',
-    beginnerExplanation:
-      'Un pool de puntos táctiles que gastas en momentos desesperados. Cada punto de Suerte gastado suma +1 directo al resultado de tu tirada de 1d10 (ataque, esquiva, habilidad o medicina). La reserva se gasta durante la sesión y se restaura por completo al inicio de la siguiente.',
+    shortSummary: 'Puntos que gastás para mejorar tiradas; el total vuelve al empezar la sesión siguiente.',
+    beginnerExplanation: '',
     dependentSkills: ['Aplica a cualquier tirada de 1d10 antes de lanzar el dado'],
-    mechanicalBreakpoints: [
-      'LUCK 6+: Te permite asegurar aciertos en disparos apuntados a la cabeza (-8) o estabilizaciones críticas.',
-      'LUCK 8: Un auténtico ángel guardián para sobrevivir a situaciones casi imposibles.'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   },
   MOVE: {
     name: 'Movement (MOVE)',
     spanishName: 'Movimiento',
-    shortSummary: 'Metros de desplazamiento por turno en combate y velocidad de carrera.',
-    beginnerExplanation:
-      'Determina qué tan rápido corres en combate táctico. Cada punto de MOVE te otorga 2 metros de movimiento estándar por turno (o MOVE * 4 metros si usas tu Acción completa para correr).',
+    shortSummary: 'Velocidad para moverte (correr, saltar, nadar).',
+    beginnerExplanation: '',
     dependentSkills: ['Velocidad de combate', 'Alcance de salto con Athletics'],
-    mechanicalBreakpoints: [
-      'MOVE 6: 12 metros por turno. Estándar cómodo para posicionarte detrás de coberturas.',
-      'MOVE 8+: 16 metros por turno. Flanqueador nato capaz de cruzar la calle y acuchillar antes de que reaccionen.'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   },
   BODY: {
     name: 'Body Type (BODY)',
     spanishName: 'Constitución Física',
-    shortSummary: 'Fuerza muscular, masa corporal, resistencia al daño y capacidad de carga.',
-    beginnerExplanation:
-      'Tu resistencia física pura y potencia atlética. Determina junto con WILL tus Puntos de Golpe (HP), el daño que infliges a puño limpio, tu umbral de muerte y si puedes disparar armas pesadas sin apoyo.',
+    shortSummary: 'Tamaño, dureza y capacidad de seguir vivo y consciente; pesa en cuánto daño aguantás.',
+    beginnerExplanation: '',
     dependentSkills: ['Brawling Damage', 'Death Saves'],
-    mechanicalBreakpoints: [
-      'BODY 8+: Permite disparar armas pesadas de dos manos a una mano y empuñar armas de cuerpo a cuerpo pesadas sin penalizador.',
-      'Base para Death Save: Cuanto mayor sea tu BODY, más difícil es que mueras cuando tus HP llegan a cero.'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   },
   EMP: {
     name: 'Empathy (EMP)',
     spanishName: 'Empatía y Humanidad',
-    shortSummary: 'Capacidad de conectar con otros seres humanos y margen de seguridad de Ciberpsicosis.',
-    beginnerExplanation:
-      'Mide tu humanidad, calidez y conexión emocional con los demás. Tu reserva máxima de Humanidad es EMP * 10. Cada vez que instalas ciberware en tu cuerpo, pierdes puntos de Humanidad. Si tu EMP cae a 0, te conviertes en un Ciberpsicópata homicida controlado por el Director de Juego.',
+    shortSummary: 'Relacionarte y preocuparte por otros; compensa la ciberpsicosis.',
+    beginnerExplanation: '',
     dependentSkills: ['Human Perception', 'Conversation', 'Pérdida de Humanidad'],
-    mechanicalBreakpoints: [
-      'MaxHumanity = EMP * 10: Cada punto de EMP te da 10 puntos de "colchón" de Humanidad para instalar ciberware.',
-      'Si pierdes 10 puntos de Humanidad, tu EMP baja en 1 punto, afectando tus tiradas de empatía y negociación.'
-    ]
+    mechanicalBreakpoints: [],
+    source: { book: 'Core RED', page: 72 }
   }
 };
 

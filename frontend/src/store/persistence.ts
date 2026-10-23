@@ -9,9 +9,9 @@ import { MARTIAL_ARTS_FORMS } from '../data/cyberfistsMartialArtsData';
 import { applyFolioAllocation } from '../data/folioRoleAllocations';
 
 export const CHARACTERS_STORAGE_KEY = 'cpr-omni-deck-characters-v2';
-export const CHARACTERS_SCHEMA_VERSION = 4;
+export const CHARACTERS_SCHEMA_VERSION = 5;
 // No existe una constante de versión en la app; la última entrada del changelog in-app es v4.7.0 y este trabajo es v4.8.0.
-export const APP_VERSION = 'v4.9.3.1';
+export const APP_VERSION = 'v4.9.4';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -157,6 +157,23 @@ export const MIGRATIONS: Record<number, (state: any) => any> = {
       return updated;
     });
     return state;
+  },
+  // v4 -> v5 (v4.9.4 [Claude Code · 2026-10-23]): Thorn del Folio guarda BODY base 8; el Grafted Muscle (Core p.114) pone el +2 en el motor.
+  4: (state) => {
+    if (!state || typeof state !== 'object' || !Array.isArray(state.characters)) return state;
+    state.characters = state.characters.map((c: any) => {
+      if (!c || typeof c !== 'object') return c;
+      if (
+        c.id === 'cemk-folio-thorn' &&
+        c.stats?.BODY === 10 &&
+        Array.isArray(c.installedCyberwareIds) &&
+        c.installedCyberwareIds.includes('cw-cemk-grafted-muscle')
+      ) {
+        return { ...c, stats: { ...c.stats, BODY: 8 } };
+      }
+      return c;
+    });
+    return state;
   }
 };
 
@@ -286,7 +303,8 @@ export const BACKUP_EXTRA_KEYS = [
   'cpr_gm_secret_notes_v1',
   'cpr_custom_net_arch_v1',
   'cpr-omni-deck-combat-v2',
-  'cpr_enemy_sheet_mode_v1'
+  'cpr_enemy_sheet_mode_v1',
+  'cpr_creator_novice_v1'
 ];
 
 export interface BackupFile {

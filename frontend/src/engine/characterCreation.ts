@@ -1,6 +1,6 @@
 // Motor de creación de personajes (plan 7, v4.8.2). Reglas: Core RED v1.24 pp. 40-119 y CEMK RB p.25. [Claude Code · 2026-10-22]
 // Motor puro: sin React ni localStorage. El wizard solo muestra datos y llama a estas funciones.
-import { CEMK_CREATION, CORE_GEAR_SKILLS, CORE_LIFEPATH, CORE_ROLE_TABLES, CORE_ROLES } from '../data/creation';
+import { CEMK_CREATION, CORE_GEAR_SKILLS, CORE_LIFEPATH, CORE_ROLE_TABLES, CORE_ROLES, CREATOR_GUIDE } from '../data/creation';
 import type {
   CoreRoleName,
   LifepathResult,
@@ -20,6 +20,7 @@ import {
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
 import { applyFolioAllocation } from '../data/folioRoleAllocations';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, calculateMaxHumanity, parseHumanityLossAverage } from './characterEngine';
+import { cyberwareStatBonus } from './cyberwareEffects';
 import type {
   CharacterEra,
   CharacterLifepath,
@@ -876,10 +877,19 @@ export interface DerivedStats {
   humanityLoss: number;
   humanity: number;
   effectiveEmp: number;
+  /** BODY con el bono de ciberware (Core p.114, Grafted Muscle). La ficha guarda el BODY base. */
+  effectiveBody: number;
 }
 
 export function computeDerived(draft: CreatorDraft): DerivedStats {
-  const { BODY, WILL, EMP } = draft.stats;
+  const { WILL, EMP } = draft.stats;
+  // [Claude Code · 2026-10-23] Core p.114: Grafted Muscle suma +2 BODY por instalación (tope 10).
+  const cyberIds: string[] = [];
+  for (const c of getCyberwareList(draft)) {
+    const id = c.catalogId ?? CANON_CYBERWARE_IDS[c.name];
+    if (id) for (let i = 0; i < c.qty; i++) cyberIds.push(id);
+  }
+  const BODY = cyberwareStatBonus(cyberIds, 'BODY', draft.stats.BODY);
   const maxHp = calculateMaxHp(BODY, WILL);
   const maxHumanity = calculateMaxHumanity(EMP);
   const humanityLoss = getCyberwareList(draft).reduce((s, c) => s + c.humanityLoss * c.qty, 0);
@@ -893,7 +903,8 @@ export function computeDerived(draft: CreatorDraft): DerivedStats {
     humanityLoss,
     humanity,
     // Core p.80: la EMP baja cada vez que baja una decena de Humanity.
-    effectiveEmp: Math.max(0, Math.min(EMP, Math.floor(humanity / 10)))
+    effectiveEmp: Math.max(0, Math.min(EMP, Math.floor(humanity / 10))),
+    effectiveBody: BODY
   };
 }
 
@@ -1303,4 +1314,65 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
     lifepath: buildCharacterLifepath(draft)
   };
   return { sheet, warnings };
+}
+
+// ============================================================================
+// 13. AVISOS DEL RESUMEN (plan 12, v4.9.4) [Claude Code · 2026-10-23]
+// ============================================================================
+
+export interface SummaryWarning {
+  id: string;
+  message: string;
+  source?: { book: string; page: number };
+}
+
+/** Avisos que no bloquean la creación. `built` acepta la forma con sheet null (checklist incompleta). */
+export function getSummaryWarnings(draft: CreatorDraft, built: { sheet: CharacterSheet | null }): SummaryWarning[] {
+  if (!draft.method || isPregenMethod(draft.method)) return [];
+  const out: SummaryWarning[] = [];
+  const push = (id: string, message: string, withSource: boolean): void => {
+    const src = withSource ? CREATOR_GUIDE.warningRules.find((r) => r.id === id)?.source : null;
+    out.push(src ? { id, message, source: { book: src.book, page: src.page } } : { id, message });
+  };
+
+  const left = getMoneyRemaining(draft);
+  if (left.cash > 0) {
+    const how =
+      draft.method === 'complete_package'
+        ? 'en Paquete Completo lo que no se gasta se conserva'
+        : 'en Streetrat y Edgerunner se guardan para después';
+    push('unspent-money', `Te quedan ${left.cash}eb sin gastar: ${how}.`, true);
+    // Streetrat y Edgerunner: Core p.98; Paquete Completo: Core p.104.
+    const last = out[out.length - 1];
+    if (last.source && draft.method !== 'complete_package') last.source = { ...last.source, page: 98 };
+  }
+  if (draft.method === 'complete_package' && left.fashionBudget > 0) {
+    const src = CREATOR_GUIDE.warningRules.find((r) => r.id === 'unspent-money')?.source;
+    out.push({
+      id: 'unspent-fashion',
+      message: `Te quedan ${left.fashionBudget}eb de moda sin gastar: se pierden.`,
+      ...(src ? { source: { book: src.book, page: 105 } } : {})
+    });
+  }
+
+  const derived = computeDerived(draft);
+  if (derived.effectiveEmp < draft.stats.EMP) {
+    push('humanity-emp', `Tu Humanidad (${derived.humanity}) baja tu EMP de ${draft.stats.EMP} a ${derived.effectiveEmp}.`, true);
+  }
+
+  // Si validateSkills ya lo marca como error bloqueante, no se duplica el aviso.
+  if ((draft.method === 'edgerunner' || draft.method === 'complete_package') && validateStep(draft, 'skills').length === 0) {
+    const low = getSkillCatalog()
+      .filter((x) => x.basic)
+      .filter((s) => !(s.name === 'Language' && draft.culturalLanguage.trim()))
+      .filter((s) => (Object.entries(draft.skills).find(([n]) => baseSkillName(n) === s.name)?.[1] ?? 0) < 2)
+      .map((s) => s.name);
+    if (low.length > 0) push('basic-skills-zero', `Skills básicas por debajo de 2: ${low.join(', ')}.`, true);
+  }
+
+  if (built.sheet) {
+    if (built.sheet.equippedWeapons.length === 0) push('no-weapon', 'El personaje no tiene armas.', false);
+    if (built.sheet.headArmor.maxSp <= 0 && built.sheet.bodyArmor.maxSp <= 0) push('no-armor', 'El personaje no tiene armadura.', false);
+  }
+  return out;
 }

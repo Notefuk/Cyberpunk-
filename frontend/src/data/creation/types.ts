@@ -525,3 +525,18 @@ export interface CemkCriticalInjuriesSrc { book: string; page: number; die: stri
 export interface CoreVehicleEntry { name: string; category: string; description: string; sdp: number; seats: string; combatSpeed: string; narrativeSpeed: string; costEb: number; costNote?: string; costTier: string; familyMotorpoolRank: string; page: number }
 export interface CoreVehicleUpgrade { name: string; appliesTo: string; minMotoRank: number; effectEs: string; page: number }
 export interface CoreVehiclesSrc { book: string; pageNote: string; vehicles: CoreVehicleEntry[]; upgrades: CoreVehicleUpgrade[]; upgradeCostNote: string; doubts: string[] }
+
+// Guia del creador (plan 12, v4.9.4). Fuente: data/creation-src/creator-guide.json. [Claude Code · 2026-10-23]
+export interface CreatorGuideStep {
+  step: 'method' | 'role' | 'lifepath' | 'stats' | 'skills' | 'gear' | 'summary';
+  whatEs: string;
+  source: { book: string; page: number } | null;
+  extra?: { whatEs: string; source: { book: string; page: number } | null }[];
+}
+export interface CreatorGuideSrc {
+  book: string;
+  notes: string;
+  steps: CreatorGuideStep[];
+  recommendsStreetrat: { value: boolean; quote: string; source: { book: string; page: number } | null };
+  warningRules: { id: string; ruleEs: string; source: { book: string; page: number } | null }[];
+}

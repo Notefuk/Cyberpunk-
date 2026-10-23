@@ -1,0 +1,190 @@
+{
+  "book": "Core RED / CEMK",
+  "notes": "[Claude Code · 2026-10-23] Paráfrasis breve del Core Rulebook v1.24 (página impresa; PDF = impresa + 1) y del CEMK Rule Book. Solo texto del libro, sin consejos propios. No duplica methods[].rulesEs, roles[].descEs, housing/culturalLanguageRule ni creationRules, que ya estan en frontend/src/data/creation.",
+  "steps": [
+    {
+      "step": "method",
+      "whatEs": "El libro ofrece tres formas de crear un personaje: Streetrat (plantillas), Edgerunner (rápido y sucio) y Paquete Completo (calculado). Cada una tiene sus ventajas y desventajas, y el libro trae cuadros paso a paso para cada una.",
+      "source": {
+        "book": "Core RED",
+        "page": 40
+      },
+      "extra": [
+        {
+          "whatEs": "Los pasos son ocho: elegir Rol, correr el Lifepath, tirar o comprar STATs, calcular derivadas, fijar skills, y registrar armas y armadura, equipo y ciberware (en Paquete Completo, armas, armadura, equipo y ciberware se compran juntos con el dinero inicial).",
+          "source": {
+            "book": "Core RED",
+            "page": 41
+          }
+        },
+        {
+          "whatEs": "En Streetrat y Edgerunner el personaje arranca con 500eb para gastar en otras cosas o guardar. El Paquete Completo recibe 2550eb para armas, armadura, equipo y ciberware, más 800eb solo para moda y fashionware.",
+          "source": {
+            "book": "Core RED",
+            "page": 42
+          }
+        },
+        {
+          "whatEs": "El Paquete Completo es el método más complejo y el libro no lo recomienda para jugadores novatos.",
+          "source": {
+            "book": "Core RED",
+            "page": 78
+          }
+        }
+      ]
+    },
+    {
+      "step": "role",
+      "whatEs": "El Rol es la ocupación por la que te conocen en la calle; hay diez Roles. Cada Rol da una Habilidad de Rol que anotás en Rango 4, lo que representa los años que ya pasaste en la calle.",
+      "source": {
+        "book": "Core RED",
+        "page": 29
+      }
+    },
+    {
+      "step": "lifepath",
+      "whatEs": "El Lifepath es un diagrama de flujo de complicaciones de trama que arma tu trasfondo: origen cultural, familia, amigos, enemigos, hábitos y eventos clave. Es una guía: si un resultado no encaja con tu personaje, podés cambiarlo o elegir.",
+      "source": {
+        "book": "Core RED",
+        "page": 44
+      },
+      "extra": [
+        {
+          "whatEs": "Se corre el Lifepath general y también el del Rol. Tu origen cultural determina el idioma nativo, que empieza en 4 puntos (Language).",
+          "source": {
+            "book": "Core RED",
+            "page": 45
+          }
+        }
+      ]
+    },
+    {
+      "step": "stats",
+      "whatEs": "Las STATs son números que describen las capacidades del personaje; hay diez, en cuatro grupos (Mental, Combate, Fortuna y Físico), normalmente de 1 a 8. Se anotan en el bloque de STATs, igual para los tres métodos.",
+      "source": {
+        "book": "Core RED",
+        "page": 72
+      },
+      "extra": [
+        {
+          "whatEs": "Streetrat tira 1d10 y copia la fila de la plantilla del Rol sin mover los números. Edgerunner tira 1d10 por cada STAT contra la columna de esa STAT.",
+          "source": {
+            "book": "Core RED",
+            "page": 73
+          }
+        },
+        {
+          "whatEs": "Paquete Completo reparte un pozo de puntos (normalmente 62 para un personaje inicial); ninguna STAT puede ser mayor que 8 ni menor que 2.",
+          "source": {
+            "book": "Core RED",
+            "page": 78
+          }
+        },
+        {
+          "whatEs": "Con las STATs se calculan las derivadas: Puntos de Golpe y Humanidad. Cada punto de EMP da 10 de Humanidad.",
+          "source": {
+            "book": "Core RED",
+            "page": 80
+          }
+        }
+      ]
+    },
+    {
+      "step": "skills",
+      "whatEs": "Las skills son lo que el personaje sabe hacer; su nivel mide cuán entrenado está y cada una se liga a una STAT que se suma en las tiradas. Hay nueve categorías, y las marcadas (x2) cuestan el doble de puntos por nivel.",
+      "source": {
+        "book": "Core RED",
+        "page": 81
+      },
+      "extra": [
+        {
+          "whatEs": "Streetrat recibe las skills y niveles ya fijados para su Rol. Edgerunner y Paquete Completo reparten 86 puntos; ninguna skill pasa de 6 y las skills básicas deben estar al menos en 2.",
+          "source": {
+            "book": "Core RED",
+            "page": 88
+          }
+        }
+      ]
+    },
+    {
+      "step": "gear",
+      "whatEs": "En Streetrat y Edgerunner las armas, armadura, equipo, moda y ciberware vienen predeterminados por Rol (con algunas opciones a elegir entre dos). En Paquete Completo se compran con el dinero inicial; lo que no se gasta se conserva, salvo el dinero de moda, que se pierde.",
+      "source": {
+        "book": "Core RED",
+        "page": 104
+      },
+      "extra": [
+        {
+          "whatEs": "Al empezar se vive en un contenedor alquilado con estilo de vida Kibble (los Exec, en un conapt corporativo); el primer mes viene pagado. La moda y el fashionware del Paquete Completo tienen 800eb aparte.",
+          "source": {
+            "book": "Core RED",
+            "page": 105
+          }
+        },
+        {
+          "whatEs": "Cada pieza de ciberware cuesta Pérdida de Humanidad (HL); se resta de la Humanidad actual y puede bajar la EMP. El libro ofrece una opción para quien se queda sin dinero.",
+          "source": {
+            "book": "Core RED",
+            "page": 117
+          }
+        },
+        {
+          "whatEs": "CEMK: durante la creación cualquier personaje puede instalarse el Neuroport gratis, con 0 de Pérdida de Humanidad y sin bajar la Humanidad Máxima.",
+          "source": {
+            "book": "CEMK RB",
+            "page": 25
+          }
+        }
+      ]
+    },
+    {
+      "step": "summary",
+      "whatEs": "",
+      "source": null
+    }
+  ],
+  "recommendsStreetrat": {
+    "value": true,
+    "quote": "Templates are the fastest way to start creating a Character",
+    "source": {
+      "book": "Core RED",
+      "page": 40
+    }
+  },
+  "warningRules": [
+    {
+      "id": "unspent-money",
+      "ruleEs": "Streetrat y Edgerunner tienen 500eb para gastar o guardar para después (p.98). En Paquete Completo se conserva lo que no se gasta de los 2550eb (p.104), pero los 800eb de moda que sobran se pierden (p.105).",
+      "source": {
+        "book": "Core RED",
+        "page": 104
+      }
+    },
+    {
+      "id": "humanity-emp",
+      "ruleEs": "Cada punto de EMP da 10 de Humanidad. Cada vez que baja el dígito de las decenas de la Humanidad, la EMP baja a ese dígito (con 44 de Humanidad la EMP es 4; al llegar a 39 baja a 3).",
+      "source": {
+        "book": "Core RED",
+        "page": 80
+      }
+    },
+    {
+      "id": "basic-skills-zero",
+      "ruleEs": "En Edgerunner y Paquete Completo las skills básicas (Athletics, Brawling, Concentration, Conversation, Education, Evasion, First Aid, Human Perception, Language Streetslang, Local Expert Your Home, Perception, Persuasion y Stealth) deben estar al menos en nivel 2.",
+      "source": {
+        "book": "Core RED",
+        "page": 90
+      }
+    },
+    {
+      "id": "no-weapon",
+      "ruleEs": "",
+      "source": null
+    },
+    {
+      "id": "no-armor",
+      "ruleEs": "",
+      "source": null
+    }
+  ]
+}

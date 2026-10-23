@@ -29,6 +29,7 @@ FILES = [
     ('cemk-creation', 'cemkCreation', 'CEMK_CREATION', 'CemkCreationSrc'),
     ('cemk-critical-injuries', 'cemkCriticalInjuries', 'CEMK_CRITICAL_INJURIES', 'CemkCriticalInjuriesSrc'),
     ('core-vehicles', 'coreVehicles', 'CORE_VEHICLES', 'CoreVehiclesSrc'),
+    ('creator-guide', 'creatorGuide', 'CREATOR_GUIDE', 'CreatorGuideSrc'),
 ]
 
 

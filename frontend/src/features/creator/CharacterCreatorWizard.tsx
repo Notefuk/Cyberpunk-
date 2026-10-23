@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Check, Sparkles, X } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { useCreatorNoviceStore } from '../../store/creatorNoviceStore';
 import {
   SKILL_POINTS,
   computeDerived,
@@ -46,6 +47,9 @@ const isPregenMethod = (d: CreatorDraft): boolean => d.method === 'cemk_pregen' 
 
 export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({ onClose, onComplete }) => {
   const createCharacterFromWizard = useCharacterStore((state) => state.createCharacterFromWizard);
+
+  const novice = useCreatorNoviceStore((s) => s.novice);
+  const toggleNovice = useCreatorNoviceStore((s) => s.toggle);
 
   const [boot] = useState(() => {
     const saved = loadCreatorDraft();
@@ -127,6 +131,10 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({ 
             <p className="text-xs font-mono-code text-[#64748b]">Protocolo de creación: Cyberpunk RED Core pp. 40-119 y Edgerunners Mission Kit</p>
           </div>
         </div>
+        <label className="flex items-center gap-2 text-xs font-mono-code text-[#cbd5e1] cursor-pointer">
+          <input type="checkbox" checked={novice} onChange={toggleNovice} className="cursor-pointer" />
+          Modo Novato
+        </label>
         {onClose && (
           <button type="button" onClick={onClose} aria-label="Cerrar creador" className="p-1.5 text-[#64748b] hover:text-white rounded hover:bg-[#1f2538] cursor-pointer">
             <X className="w-5 h-5" aria-hidden="true" />

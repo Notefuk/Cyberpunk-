@@ -28,7 +28,7 @@ import {
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
 import { beatsDv, rollCheckD10 } from '../../engine/combatEngine';
-import { isValidSoloAllocation, soloAwarenessPointCost } from '../../engine/characterEngine';
+import { getEffectiveBody, isValidSoloAllocation, soloAwarenessPointCost } from '../../engine/characterEngine';
 import { 
   NET_ARCHITECTURE_PRESETS, 
   NET_ACTIONS_CATALOG, 
@@ -1615,12 +1615,12 @@ export const NetAndRolesDeckView: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[#94a3b8]">BODY:</span>
-                  <strong className="text-white font-tech text-sm">{character.stats.BODY || 6}</strong>
+                  <strong className="text-white font-tech text-sm">{getEffectiveBody(character) || 6}</strong>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[#94a3b8]">Daño Base Golpe:</span>
                   <strong className="text-amber-400 font-bold">
-                    {(character.stats.BODY || 6) <= 4 ? '1d6' : (character.stats.BODY || 6) <= 6 ? '2d6' : (character.stats.BODY || 6) <= 10 ? '3d6' : '4d6'} Daño
+                    {(getEffectiveBody(character) || 6) <= 4 ? '1d6' : (getEffectiveBody(character) || 6) <= 6 ? '2d6' : (getEffectiveBody(character) || 6) <= 10 ? '3d6' : '4d6'} Daño
                   </strong>
                 </div>
                 <div className="flex items-center gap-1.5">

@@ -12,7 +12,7 @@ import {
   type LifepathPick,
   type LifepathSource
 } from '../../../engine/characterCreation';
-import { Btn, INPUT_CLS, Panel, SELECT_CLS, StepHeader, type StepProps } from './CreatorUi';
+import { Btn, INPUT_CLS, Panel, SELECT_CLS, NoviceGuide, StepHeader, type StepProps } from './CreatorUi';
 
 type GroupName = 'friends' | 'enemies' | 'love';
 const GROUP_LABEL: Record<GroupName, { title: string; one: string; countKey: 'friendsCount' | 'enemiesCount' | 'loveCount'; countTable?: string }> = {
@@ -165,6 +165,7 @@ export const LifepathStep: React.FC<StepProps> = ({ draft, update }) => {
   return (
     <div>
       <StepHeader title="Lifepath" subtitle="Tu pasado: tirá cada tabla o elegí el resultado a mano." page={source === 'cemk' ? 'CEMK RB pp. 19-24' : 'Core pp. 44-69'} />
+      <NoviceGuide step="lifepath" />
 
       <Panel className="mb-4">
         <div className="flex flex-wrap items-center gap-2">

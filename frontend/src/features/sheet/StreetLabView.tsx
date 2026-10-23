@@ -1177,19 +1177,14 @@ export const StreetLabView: React.FC = () => {
                           }`}
                         />
                         <div className="font-tech font-bold text-[#38bdf8] uppercase text-xs mb-0.5">
-                          {stat} — {STAT_TOOLTIPS[stat].name}
+                          {stat} — {STAT_TOOLTIPS[stat].name} · {STAT_TOOLTIPS[stat].spanishName}
                         </div>
                         <div className="text-[#cbd5e1] mb-1 font-sans">
                           {STAT_TOOLTIPS[stat].shortSummary}
                         </div>
-                        <div className="text-[#94a3b8] text-[9px] mb-1 leading-tight">
-                          {STAT_TOOLTIPS[stat].beginnerExplanation}
+                        <div className="text-[#f59e0b] text-[9px] border-t border-[#1e293b] pt-1">
+                          {STAT_TOOLTIPS[stat].source.book} p.{STAT_TOOLTIPS[stat].source.page}
                         </div>
-                        {STAT_TOOLTIPS[stat].mechanicalBreakpoints && STAT_TOOLTIPS[stat].mechanicalBreakpoints.length > 0 && (
-                          <div className="text-[9px] text-[#f59e0b] border-t border-[#1e293b] pt-1">
-                            {STAT_TOOLTIPS[stat].mechanicalBreakpoints[0]}
-                          </div>
-                        )}
                       </div>
                     </div>
                   )}

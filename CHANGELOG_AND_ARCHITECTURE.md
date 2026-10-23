@@ -247,6 +247,42 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.4] - 2026-10-23 (Modo Novato del creador) [Claude Code · 2026-10-23]
+* **Category**: Creador (plan 12, ex v4.8.3 del plan 7, con las decisiones de Giuliano del 2026-10-23: solo texto del libro, solo el creador, ⓘ desplegables y resumen como confirmación con avisos).
+* **Datos**: `data/creation-src/creator-guide.json`, generado a `data/creation/creatorGuide.ts` (`CREATOR_GUIDE`): texto de cada paso con su página del Core, `recommendsStreetrat` (Core p.40) y las reglas de los avisos.
+* **Motor**: `getSummaryWarnings(draft, built)` en `engine/characterCreation.ts`. Avisos que no bloquean:
+  * dinero sin gastar (Core p.98 en Streetrat y Edgerunner, p.104 en Paquete Completo);
+  * moda sin gastar en Paquete Completo, que se pierde (p.105);
+  * Humanidad que baja la EMP (p.80);
+  * skills básicas por debajo de 2 en Edgerunner y Paquete Completo (p.90), solo si la validación no lo bloquea ya;
+  * sin armas y sin armadura.
+* **Store**: `store/creatorNoviceStore.ts` (`cpr_creator_novice_v1`, prendido por defecto), sumado a `BACKUP_EXTRA_KEYS`.
+* **UI**:
+  * interruptor "Modo Novato" en la cabecera del creador;
+  * `NoviceGuide` ("Qué es esto" con página) en los pasos;
+  * "Recomendado por el libro" en Streetrat;
+  * `InfoToggle` (ⓘ desplegable con `aria-expanded`) en skills y STATs;
+  * resumen en tarjetas con "Revisá y confirmá". La checklist que bloquea "Crear" no cambia.
+* **Verificación**: tsc, 280 tests y build. En el navegador:
+  * el modo sale prendido por defecto, se guarda al recargar y "Descartar borrador" no lo cambia;
+  * la guía y la página aparecen en método, rol, Lifepath, STATs, skills y equipo;
+  * los ⓘ de STAT y de skill se despliegan, también a 375 px sin desborde;
+  * en el resumen de un Solo Streetrat salen los avisos de 500eb sin gastar (p.98) y Humanidad 33 que baja la EMP de 4 a 3 (p.80);
+  * la checklist bloqueó "Crear" hasta poner el handle, y el personaje se creó (después se borró).
+
+* **Plan 13 (mismo release)** [Claude Code · 2026-10-23]:
+  * **STATs**: `STAT_TOOLTIPS` pasa al texto del Core p.72 con `source`; se quitaron los umbrales inventados (REF 8+ Bullet Dodging, BODY 8+ armas pesadas). Lo usan el creador y Street Lab.
+  * **Grafted Muscle and Bone Lace** (Core p.114, errata v1.25): `engine/cyberwareEffects.ts` (`CYBERWARE_EFFECTS`, `cyberwareStatBonus`, `canInstallAnother`). Suma +2 BODY por instalación, acumulable, tope 10, para el id del Core y el de CEMK. Lo aplican `getEffectiveBody` (antes del FBC) y `computeDerived` del creador. Choke, Throw, Brawling y el Ripperdoc usan el BODY efectivo.
+  * **Ciberware repetible**: instalar otra copia (×N) en Compendium, Ripperdoc y Going Metal; desinstalar saca una sola copia. En Grafted, el botón se bloquea con el tope (Core p.114). El Compendium ahora descuenta el HL del libro de cada copia, no 7 fijo.
+  * **Thorn**: BODY base 8 y el motor le da 10 (HP 55, SW 28). Migración de fichas v4 a v5 solo para la ficha de Thorn del Folio.
+  * **Guía y docs**: el Neuroport cita CEMK RB p.25 (verificado en el PDF). Los docs que nombraban `characterLifepathData.ts` / `ROLE_SPECIFIC_LIFEPATHS` ahora nombran `coreLifepath.ts`.
+  * **Verificación**: tsc, 296 tests y build. En el navegador:
+    * Thorn migrado: BODY 8 de base, 10 efectivo, HP 55 y SW 28;
+    * Hardpoint (BODY 6): Grafted ×1 da BODY 8 y HP 45; ×2 da 10 y HP 50, con "Instalar otro" bloqueado por el tope; desinstalar saca una sola copia; cada copia descuenta 14 de Humanidad;
+    * las 10 STATs de Street Lab con Core p.72;
+    * a 375 px, los botones del Compendium entran.
+  * El HP de la vista previa del creador con Grafted lo cubren los tests (no lo probé en el navegador).
+
 ### [v4.9.3.1] - 2026-10-23 (Arreglo de skills) [Claude Code · 2026-10-23]
 * **Problema**: en el panel de Maker, Maven mostraba Electronics/Security Tech 0. El dato estaba bien (`electronicssecurity: 6`, CEMK Folios p.25), pero la búsqueda no reconocía la clave abreviada.
 * **Arreglo**: `engine/skillLookup.ts` (`sheetSkillLevel`) busca la skill en `skills` y `generalSkills`. Acepta la clave de combate, el nombre del libro, la clave compacta y el prefijo abreviado (mínimo 6 letras, sin especialidad), con la misma regla que el panel "Otras skills". La usan `MakerPanel` y `MediaPanel`.

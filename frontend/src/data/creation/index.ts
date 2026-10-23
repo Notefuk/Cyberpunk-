@@ -7,3 +7,4 @@ export { CEMK_CREATION } from './cemkCreation';
 export { ROLE_RANKS } from './roleRanks';
 export { CEMK_CRITICAL_INJURIES } from './cemkCriticalInjuries';
 export { CORE_VEHICLES } from './coreVehicles';
+export { CREATOR_GUIDE } from './creatorGuide';

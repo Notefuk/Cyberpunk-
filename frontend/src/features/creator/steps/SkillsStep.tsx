@@ -12,7 +12,7 @@ import {
   skillLevelCost,
   type SkillCatalogEntry
 } from '../../../engine/characterCreation';
-import { Btn, INPUT_CLS, Panel, SourceBadge, StepHeader, type StepProps } from './CreatorUi';
+import { Btn, INPUT_CLS, InfoToggle, NoviceGuide, Panel, SourceBadge, StepHeader, type StepProps } from './CreatorUi';
 
 const baseName = (name: string): string =>
   canonSkillKey(name)
@@ -91,6 +91,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
         }
         page="Core pp. 81-90"
       />
+      <NoviceGuide step="skills" />
 
       <Panel className="mb-4">
         <div className="flex flex-wrap items-center gap-3">
@@ -139,7 +140,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
                     key={s.name}
                     className={`flex items-center gap-2 py-1.5 border-b border-[#1e2334] ${!editable && !readOnly ? 'opacity-40' : ''}`}
                   >
-                    <div className="min-w-0 flex-1" title={s.descEs}>
+                    <div className="min-w-0 flex-1">
                       <span className="text-xs text-white font-bold">{s.name}</span>
                       {s.x2 && <span className="ml-1 text-[10px] font-mono-code text-[#f59e0b]">×2</span>}
                       <span className="ml-1 text-[10px] font-mono-code text-[#64748b]">{s.stat}</span>
@@ -147,6 +148,9 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
                         {s.books.map((b) => (
                           <SourceBadge key={b} book={b} />
                         ))}
+                      </span>
+                      <span className="ml-1 align-middle">
+                        <InfoToggle text={s.descEs} source={s.source.page != null ? { book: s.source.book, page: s.source.page } : null} />
                       </span>
                     </div>
                     {readOnly ? (

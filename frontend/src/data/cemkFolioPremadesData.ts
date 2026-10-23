@@ -4616,7 +4616,7 @@ export const CEMK_FOLIO_PREMADE_CHARACTERS: CharacterSheet[] = [
         "WILL": 8,
         "LUCK": 4,
         "MOVE": 7,
-        "BODY": 10,
+        "BODY": 8,
         "EMP": 6
     },
     "currentHp": 55,

@@ -1,6 +1,8 @@
 // Piezas visuales compartidas de los pasos del creador (plan 7, v4.8.3). [Claude Code · 2026-10-22]
 import React from 'react';
 import type { CreatorDraft } from '../../../engine/characterCreation';
+import { CREATOR_GUIDE, type CreatorGuideStep } from '../../../data/creation';
+import { useCreatorNoviceStore } from '../../../store/creatorNoviceStore';
 
 /** Props comunes de cada paso: el orquestador es dueño del borrador, los pasos lo modifican con funciones puras. */
 export interface StepProps {
@@ -28,6 +30,64 @@ export const StepHeader: React.FC<{ title: string; subtitle?: string; page?: str
     {subtitle && <p className="text-xs text-[#94a3b8] mt-1">{subtitle}</p>}
   </div>
 );
+
+const pageLabel = (s: { book: string; page: number }): string => `${s.book} p.${s.page}`;
+
+/** Recuadro "Qué es esto" del Modo Novato (plan 12): texto del libro con su página, solo si el modo está prendido. */
+export const NoviceGuide: React.FC<{ step: CreatorGuideStep['step'] }> = ({ step }) => {
+  const novice = useCreatorNoviceStore((s) => s.novice);
+  if (!novice) return null;
+  const g = CREATOR_GUIDE.steps.find((x) => x.step === step);
+  if (!g || !g.whatEs) return null;
+  return (
+    <aside aria-label="Qué es esto" className="mb-4 bg-[#06b6d4]/10 border border-[#06b6d4]/40 rounded-xs p-3 break-words">
+      <div className="flex flex-wrap items-center gap-2 mb-1">
+        <h3 className="font-tech text-xs font-bold text-[#06b6d4] uppercase tracking-wider">Qué es esto</h3>
+        {g.source && <SourceBadge book={pageLabel(g.source)} />}
+      </div>
+      <p className="text-xs text-[#cbd5e1]">{g.whatEs}</p>
+      {g.extra?.map((e, i) => (
+        <div key={i} className="mt-2">
+          <p className="text-xs text-[#cbd5e1]">{e.whatEs}</p>
+          {e.source && (
+            <div className="mt-0.5">
+              <SourceBadge book={pageLabel(e.source)} />
+            </div>
+          )}
+        </div>
+      ))}
+    </aside>
+  );
+};
+
+/** Botón ⓘ que despliega el texto completo debajo (funciona igual en celular y en PC). */
+export const InfoToggle: React.FC<{ text: string; source?: { book: string; page: number } | null; label?: string }> = ({ text, source, label }) => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <span className="inline-block max-w-full">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-label="Más información"
+        onClick={() => setOpen((o) => !o)}
+        className="inline-flex items-center gap-1 px-1.5 text-[11px] font-mono-code text-[#06b6d4] border border-[#06b6d4]/40 rounded-xs cursor-pointer hover:bg-[#06b6d4]/15"
+      >
+        <span aria-hidden="true">ⓘ</span>
+        {label && <span>{label}</span>}
+      </button>
+      {open && (
+        <span className="block mt-1 bg-[#0a0b0e] border border-[#1e2334] rounded-xs p-2 text-[11px] text-[#cbd5e1] whitespace-pre-line break-words">
+          {text}
+          {source && (
+            <span className="block mt-1">
+              <SourceBadge book={pageLabel(source)} />
+            </span>
+          )}
+        </span>
+      )}
+    </span>
+  );
+};
 
 export const Panel: React.FC<{ title?: string; children: React.ReactNode; className?: string }> = ({ title, children, className = '' }) => (
   <div className={`bg-[#10121a] border border-[#1e2334] rounded-xs p-3 ${className}`}>
