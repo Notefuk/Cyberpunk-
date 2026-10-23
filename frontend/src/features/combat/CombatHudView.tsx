@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
 import { 
@@ -38,7 +38,9 @@ import { LawmanPanel } from '../roles/LawmanPanel';
 import { useGmModeStore } from '../../store/gmModeStore';
 import type { WeaponItem, RollEntry, InventoryItem, AimedShotTarget, TechWeaponUpgradeType } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
-import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
+import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT, type MartialHitKind } from '../../data/cyberfistsMartialArtsData';
+import { checkMoveRequirements, resolveMoveRoll, describeMoveEffects, moveSupportsHeadShot } from '../../engine/martialArtsRules';
+import { useRulesSettingsStore } from '../../store/rulesSettingsStore';
 import { QUICKHACKS_2077_CATALOG, QUICKHACKING_OFFICIAL_RULES_GUIDE, type Quickhack2077 } from '../../data/netAndRolesData';
 import {
   getWeaponClassAndRebuildInfo,
@@ -880,6 +882,33 @@ export const CombatHudView: React.FC = () => {
   const markHitLanded = useCombatStore((state) => state.markHitLanded);
   const spendNetAction = useCombatStore((state) => state.spendNetAction);
   const resetCombatRound = useCombatStore((state) => state.resetCombatRound);
+  // v4.9.6 [Claude Code · 2026-10-23] Registro del turno propio (decisión 48) y estado local de los movimientos de Martial Arts.
+  const turnLog = useCombatStore((state) => state.turnLog);
+  const recordHit = useCombatStore((state) => state.recordHit);
+  const recordMove = useCombatStore((state) => state.recordMove);
+  const setMovedMeters = useCombatStore((state) => state.setMovedMeters);
+  const endTurn = useCombatStore((state) => state.endTurn);
+  const [moveConfirmed, setMoveConfirmed] = useState<Record<string, boolean>>({});
+  const [moveHeadShot, setMoveHeadShot] = useState<Record<string, boolean>>({});
+  const [moveAltOn, setMoveAltOn] = useState<Record<string, boolean>>({});
+  const [lastMoveRoll, setLastMoveRoll] = useState<Record<string, { rollId: string; headShot: boolean }>>({});
+  // Golpes pendientes de registrar: se cuentan cuando el resultado es definitivo (después de la explosión del 10/1).
+  const pendingHitsRef = useRef<Map<string, { kind: MartialHitKind; formId?: string }>>(new Map());
+  useEffect(() => {
+    pendingHitsRef.current.forEach((info, rollId) => {
+      const entry = rollHistory.find((r) => r.id === rollId);
+      if (!entry) {
+        pendingHitsRef.current.delete(rollId);
+        return;
+      }
+      if (entry.needsExplosionClick) return;
+      pendingHitsRef.current.delete(rollId);
+      if (entry.isHit) recordHit(info.kind, info.formId);
+    });
+  }, [rollHistory, recordHit]);
+  const trackHit = (entry: RollEntry, kind: MartialHitKind, formId?: string) => {
+    pendingHitsRef.current.set(entry.id, { kind, formId });
+  };
 
   // Local state: Reordenamiento, colapso y docking
   const [leftColumnOrder, setLeftColumnOrder] = useState<LeftPanelId[]>(() => {
@@ -1856,6 +1885,13 @@ export const CombatHudView: React.FC = () => {
     setQuickhackUsedThisTurn(false);
   };
 
+  const handleEndTurn = () => {
+    endTurn();
+    setMoveConfirmed({});
+    setMoveHeadShot({});
+    setMoveAltOn({});
+  };
+
   const handleResetCombat = () => {
     resetCombatRound();
     setQuickhackUsedThisTurn(false);
@@ -1966,6 +2002,7 @@ export const CombatHudView: React.FC = () => {
       aimedShotTarget
     }, aimedShotTarget, fumbleOpts);
 
+    if (weapon.type === 'Melee') trackHit(entry, 'melee');
     addRollEntry(entry);
   };
 
@@ -2024,6 +2061,7 @@ export const CombatHudView: React.FC = () => {
       weaponInstanceId: 'unarmed-brawling',
       aimedShotTarget
     }, aimedShotTarget, fumbleOpts);
+    trackHit(entry, 'brawling');
     addRollEntry(entry);
   };
 
@@ -2110,6 +2148,7 @@ export const CombatHudView: React.FC = () => {
       weaponInstanceId: 'unarmed-martial-arts',
       aimedShotTarget
     }, aimedShotTarget, fumbleOpts);
+    trackHit(entry, 'martial_arts', martialHandForm.id);
     addRollEntry(entry);
   };
 
@@ -2146,6 +2185,7 @@ export const CombatHudView: React.FC = () => {
       weaponInstanceId: `bayonet-${parentWeapon.id}`,
       aimedShotTarget
     }, aimedShotTarget, fumbleOpts);
+    trackHit(entry, 'melee');
     addRollEntry(entry);
   };
 
@@ -2311,6 +2351,7 @@ export const CombatHudView: React.FC = () => {
       penaltyBreakdown: penaltyBreakdown.length > 0 ? penaltyBreakdown : undefined,
       damageRolled: false
     };
+    trackHit(entry, 'martial_arts', form.id);
     addRollEntry(entry);
   };
 
@@ -2329,8 +2370,27 @@ export const CombatHudView: React.FC = () => {
   };
 
   // Cyberfists of Fury: Special Move execution
-  const handleExecuteMartialMove = (form: typeof MARTIAL_ARTS_FORMS[number], move: typeof MARTIAL_ARTS_FORMS[number]['moves'][number]) => {
+  type MartialMoveT = typeof MARTIAL_ARTS_FORMS[number]['moves'][number];
+  const getMoveRank = (form: typeof MARTIAL_ARTS_FORMS[number]) => {
+    const natural = activeChar?.knownMartialArts?.[form.id] ?? (activeChar?.skills?.martialArts ?? 0);
+    const chipped = (activeChar?.equippedMartialArtChips || []).includes(form.id);
+    return chipped ? Math.max(3, natural) : natural;
+  };
+  const getMoveCheck = (form: typeof MARTIAL_ARTS_FORMS[number], move: MartialMoveT) => {
+    const confirmedForMove: Record<string, boolean> = {};
+    (move.req?.confirm ?? []).forEach((c) => { confirmedForMove[c] = !!moveConfirmed[`${move.id}::${c}`]; });
+    return checkMoveRequirements(
+      move,
+      { stats: (activeChar?.stats ?? {}) as unknown as Record<string, number>, skills: activeChar?.skills, generalSkills: activeChar?.generalSkills },
+      getMoveRank(form),
+      turnLog,
+      confirmedForMove
+    );
+  };
+  const handleExecuteMartialMove = (form: typeof MARTIAL_ARTS_FORMS[number], move: MartialMoveT) => {
+    if (!getMoveCheck(form, move).ok) return;
     ensureTelemetryExpanded();
+    const headShot = !!moveHeadShot[move.id] && moveSupportsHeadShot(move);
     const naturalRank = activeChar?.knownMartialArts?.[form.id] ?? (activeChar?.skills?.martialArts ?? 0);
     const isChipEquipped = (activeChar?.equippedMartialArtChips || []).includes(form.id);
     const rank = isChipEquipped ? Math.max(3, naturalRank) : naturalRank;
@@ -2347,15 +2407,20 @@ export const CombatHudView: React.FC = () => {
     const isCritFail = d10 === 1 && !fumbleOpts;
     // Core p. 178: los movimientos sin DV se resuelven contra DEX + Evasion + 1d10 del defensor.
     const opposedDefense = move.isOpposed ? rollMeleeDefenseDv() : null;
-    const targetDv = opposedDefense ? opposedDefense.dv : move.resolutionDv;
     const totalBase = dex + rank + soloPrecision + luckSpent;
-    const totalAttack = totalBase + d10;
+    // Decisión 43: la cabeza resta 8 al total (como Aimed Shot).
+    const totalAttack = totalBase + d10 - (headShot ? 8 : 0);
+    const moveRes = resolveMoveRoll(move, totalAttack, opposedDefense ? opposedDefense.dv : move.resolutionDv);
+    const targetDv = moveRes.dv;
     const margin = totalAttack - targetDv;
-    const isHit = margin > 0;
+    const isHit = moveRes.hit;
 
     const penaltyBreakdown: string[] = [];
     if (soloPrecision > 0) {
       penaltyBreakdown.push(`[Combat Awareness] Precision: +${soloPrecision}`);
+    }
+    if (headShot) {
+      penaltyBreakdown.push('A la cabeza: -8 (como Aimed Shot, decisión 43)');
     }
 
     const entry: RollEntry = {
@@ -2383,6 +2448,8 @@ export const CombatHudView: React.FC = () => {
       penaltyBreakdown: penaltyBreakdown.length > 0 ? penaltyBreakdown : undefined,
       damageRolled: false
     };
+    recordMove(move.id);
+    setLastMoveRoll((prev) => ({ ...prev, [move.id]: { rollId: entry.id, headShot } }));
     addRollEntry(entry);
   };
 
@@ -2390,7 +2457,12 @@ export const CombatHudView: React.FC = () => {
   const handleRollComboDamage = (move: typeof MARTIAL_ARTS_FORMS[number]['moves'][number]) => {
     ensureTelemetryExpanded();
     const diceMatch = move.damageBonusOrFormula?.match(/(\d+d\d+)/i);
-    const formula = diceMatch ? diceMatch[1] : martialDmg;
+    // v4.9.6: si el movimiento trae un efecto de daño estructurado, usa su fórmula (y la alternativa si el usuario la marcó).
+    const dmgEffect = move.effects?.find((e) => e.kind === 'damage');
+    const effectFormula = dmgEffect && dmgEffect.kind === 'damage'
+      ? (moveAltOn[move.id] && dmgEffect.alt ? dmgEffect.alt.formula : dmgEffect.formula)
+      : null;
+    const formula = effectFormula ?? (diceMatch ? diceMatch[1] : martialDmg);
     const dmgEntry = createDamageRoll(
       `Combo: ${move.name}`,
       formula,
@@ -7640,14 +7712,72 @@ export const CombatHudView: React.FC = () => {
                               </div>
                             )}
 
+                            {(() => {
+                              const reqCheck = getMoveCheck(activeForm, move);
+                              let confirmIdx = 0;
+                              return (
+                                <div className="space-y-0.5">
+                                  {reqCheck.items.map((item, idx) => {
+                                    if (item.kind === 'confirm') {
+                                      const key = `${move.id}::${move.req?.confirm?.[confirmIdx] ?? item.label}`;
+                                      confirmIdx += 1;
+                                      return (
+                                        <label key={idx} className="flex items-start gap-1.5 text-[10px] font-mono-code text-[#cbd5e1] cursor-pointer">
+                                          <input
+                                            type="checkbox"
+                                            checked={!!moveConfirmed[key]}
+                                            onChange={(e) => setMoveConfirmed((prev) => ({ ...prev, [key]: e.target.checked }))}
+                                          />
+                                          <span>{item.ok ? '✓' : '✗'} {item.label}</span>
+                                        </label>
+                                      );
+                                    }
+                                    return (
+                                      <div key={idx} className={`text-[10px] font-mono-code ${item.ok ? 'text-[#10b981]' : 'text-[#f87171]'}`}>
+                                        {item.ok ? '✓' : '✗'} {item.label}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              );
+                            })()}
+
+                            {moveSupportsHeadShot(move) && (
+                              <label className="flex items-center gap-1.5 text-[10px] font-mono-code text-[#cbd5e1] cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={!!moveHeadShot[move.id]}
+                                  onChange={(e) => setMoveHeadShot((prev) => ({ ...prev, [move.id]: e.target.checked }))}
+                                />
+                                <span>−8 a la cabeza (como Aimed Shot, decisión 43)</span>
+                              </label>
+                            )}
+
+                            {(() => {
+                              const dmgEff = move.effects?.find((e) => e.kind === 'damage');
+                              if (!dmgEff || dmgEff.kind !== 'damage' || !dmgEff.alt?.when) return null;
+                              return (
+                                <label className="flex items-center gap-1.5 text-[10px] font-mono-code text-[#cbd5e1] cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={!!moveAltOn[move.id]}
+                                    onChange={(e) => setMoveAltOn((prev) => ({ ...prev, [move.id]: e.target.checked }))}
+                                  />
+                                  <span>{dmgEff.alt.when} ({dmgEff.alt.formula})</span>
+                                </label>
+                              );
+                            })()}
+
                             <div className="flex gap-2 pt-1">
                               <button
                                 onClick={() => handleExecuteMartialMove(activeForm, move)}
-                                className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#10b981] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d] cursor-pointer"
+                                disabled={!getMoveCheck(activeForm, move).ok}
+                                title={getMoveCheck(activeForm, move).items.find((i) => !i.ok)?.label ?? 'Ejecutar movimiento'}
+                                className="flex-1 py-1 px-2 bg-[#1b253b] hover:bg-[#10b981] hover:text-black text-[#38bdf8] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#293b5d] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#1b253b] disabled:hover:text-[#38bdf8]"
                               >
                                 <Target className="w-3 h-3" /> EJECUTAR COMBO (1d10 + DEX + {activeRank} vs {move.isOpposed ? (move.opposedBy ?? 'DEX + Evasion + 1d10') : `DV ${move.resolutionDv}`})
                               </button>
-                              {move.damageBonusOrFormula && move.damageBonusOrFormula.includes('d') && (
+                              {((move.damageBonusOrFormula && move.damageBonusOrFormula.includes('d')) || move.effects?.some((e) => e.kind === 'damage')) && (
                                 <button
                                   onClick={() => handleRollComboDamage(move)}
                                   className="py-1 px-2 bg-[#291b22] hover:bg-[#dc2626] text-white font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1 border border-[#441f28] cursor-pointer"
@@ -7657,6 +7787,37 @@ export const CombatHudView: React.FC = () => {
                                 </button>
                               )}
                             </div>
+
+                            {!getMoveCheck(activeForm, move).ok && (
+                              <div className="text-[10px] font-mono-code text-[#f87171]">
+                                Bloqueado: {getMoveCheck(activeForm, move).items.find((i) => !i.ok)?.label}
+                              </div>
+                            )}
+
+                            {(() => {
+                              const last = lastMoveRoll[move.id];
+                              const lastEntry = last ? rollHistory.find((r) => r.id === last.rollId) : undefined;
+                              if (!last || !lastEntry) return null;
+                              if (lastEntry.needsExplosionClick) {
+                                return <div className="text-[10px] font-mono-code text-[#f59e0b]">Resolvé el 10/1 en el registro de tiradas para ver el resultado.</div>;
+                              }
+                              if (!lastEntry.isHit) {
+                                return <div className="text-[10px] font-mono-code text-[#f87171]">Falló: sin efectos.</div>;
+                              }
+                              const lines = describeMoveEffects(move, { headShot: last.headShot, table: useRulesSettingsStore.getState().criticalTable });
+                              return (
+                                <div className="bg-[#0e111a] p-2 rounded border border-[#10b981]/40 space-y-1">
+                                  <div className="text-[10px] font-mono-code uppercase font-bold text-[#10b981]">Efectos para aplicar</div>
+                                  {lines.map((line, i) => (
+                                    <div key={i} className="text-[11px] font-sans text-[#cbd5e1]">
+                                      <strong className="text-white">{line.label}:</strong> {line.detail}
+                                      {line.source && <span className="text-[#64748b] ml-1">({line.source.book} p.{line.source.page})</span>}
+                                    </div>
+                                  ))}
+                                  <div className="text-[10px] font-mono-code text-[#94a3b8]">La app no aplica estos efectos: aplicalos en la ficha o el panel del enemigo.</div>
+                                </div>
+                              );
+                            })()}
                           </div>
                         ))}
                       </div>
@@ -8459,6 +8620,28 @@ export const CombatHudView: React.FC = () => {
         >
           Siguiente Round
         </button>
+        {/* v4.9.6 [Claude Code · 2026-10-23] Barra de turno (decisión 48). */}
+        <label className="flex items-center gap-1 text-[10px] font-mono-code text-slate-400">
+          Metros movidos este turno
+          <input
+            type="number"
+            min={0}
+            value={turnLog.movedMeters}
+            onChange={(e) => setMovedMeters(Number(e.target.value))}
+            className="w-14 px-1 py-0.5 rounded-xs bg-[#0e111a] border border-[#2b334a] text-white"
+          />
+        </label>
+        <button
+          type="button"
+          onClick={handleEndTurn}
+          className="px-2.5 py-1 rounded-xs font-tech font-bold text-[11px] uppercase tracking-wider bg-[#1b253b] hover:bg-[#10b981] hover:text-black text-[#10b981] border border-[#1f3b2d] cursor-pointer"
+          title="Reinicia el registro de tu turno (golpes, movimientos usados y metros movidos)"
+        >
+          Fin de turno
+        </button>
+        <span className="text-[10px] font-mono-code text-slate-500">
+          Golpes: Brawling {turnLog.hitsByType.brawling ?? 0}, Martial Arts {turnLog.hitsByType.martial_arts ?? 0}, Melee {turnLog.hitsByType.melee ?? 0} · Movimientos usados {turnLog.movesUsed.length}
+        </span>
         <button
           type="button"
           onClick={handleResetCombat}

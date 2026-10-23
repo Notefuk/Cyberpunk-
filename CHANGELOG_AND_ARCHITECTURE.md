@@ -247,6 +247,28 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.6] - 2026-10-23 (Movimientos especiales de Martial Arts en el HUD) [Claude Code · 2026-10-23]
+* **Category**: Combate (plan 15, que reemplaza la sección v4.9.6 del plan 14).
+* **Contexto**: el HUD no tiene blanco, porque la defensa es manual y los enemigos están en modelos desconectados. Giuliano decidió que los efectos los aplican los jugadores; el store de encuentro compartido queda como plan futuro.
+* **Datos**: los 55 movimientos ganan `req` (STATs, skills, rango de la forma, golpes y metros del turno, confirmaciones, una vez por turno, reemplaza los 2 ataques o gasta la Acción) y `effects[]` tipados, derivados del texto auditado.
+  * Correcciones al revisar: Woo Technique (Handgun 4+ **o** Combat Awareness 1, como confirmación), Grab Escape (los 2 golpes van como confirmación), Flying Kick (gasta la Acción) y Combat Reload (golpe de Gun Fu).
+* **Motor**: `engine/martialArtsRules.ts`, con `checkMoveRequirements`, `resolveMoveRoll` (empate a favor del defensor, Core p.129), `describeMoveEffects` (con la herida del Core si no está en la tabla CEMK, decisión 47) y `moveSupportsHeadShot`.
+* **Store**: `useCombatStore.turnLog`, con `recordHit`, `recordMove`, `setMovedMeters` y `endTurn`. `nextRound` lo reinicia. Persistencia en versión 2, migrada con `migrateCombatState`.
+* **HUD**:
+  * los golpes que aciertan (Brawling, Martial Arts por forma y armas cuerpo a cuerpo) se cuentan después de resolver el 10 o el 1;
+  * requisitos con ✓/✗ y casillas de confirmación;
+  * EJECUTAR bloqueado con el motivo;
+  * −8 a la cabeza;
+  * daño propio del movimiento;
+  * tarjeta "Efectos para aplicar";
+  * barra de turno con metros movidos y "Fin de turno".
+* **Decisiones**: 47 y 48 en `docs/canon-audit/discrepancias-cemk-core.md`.
+* **Verificación**: tsc, 323 tests y build. En el navegador:
+  * Disarming Combination se habilitó después de acertar con Brawling y con Aikido y de marcar "mismo objetivo"; al acertar mostró el desarme y quedó bloqueado con "Ya lo usaste este turno"; "Fin de turno" lo reinició;
+  * Bone Breaking con WILL 7 queda bloqueado con "WILL 8+ (tenés 7)" y con WILL 8 se habilita.
+  * La herida a la cabeza (Cracked Skull) y la herida del Core con la tabla CEMK las cubren los tests, no el navegador.
+  * A 375 px, la barra de turno y las tarjetas entran. El resto del HUD ya desbordaba antes (pendiente anotado).
+
 ### [v4.9.5] - 2026-10-23 (Martial Arts por forma) [Claude Code · 2026-10-23]
 * **Category**: Creador (plan 14, primera parte, con las decisiones de Giuliano del 2026-10-23).
 * **Auditoría canon**: `data/cyberfistsMartialArtsData.ts` contra Core pp. 83, 137, 176-182, 360 y 411 e Interface RED Vol. 4 pp. 73-83.
