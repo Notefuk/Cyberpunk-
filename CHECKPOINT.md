@@ -6,9 +6,9 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
-**Última actualización**: [Claude Code · 2026-10-23] v4.9.4 terminada en su rama.
-**Versión de la app**: v4.9.4 lista en la rama `claude/v4.9.4-modo-novato`. `main` = v4.9.3.1, publicada.
-**Plan activo**: plan 12 (v4.9.4 Modo Novato) terminado; con eso el plan 7 queda completo. Lo siguiente es el plan 5 (Black Chrome y vehículos). Estado de todos los planes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0 [Claude Code · 2026-10-23]. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
+**Última actualización**: [Claude Code · 2026-10-23] v4.9.4 mergeada y publicada.
+**Versión de la app**: v4.9.4 (en `main`, squash aef92c7, PR #29; publicada en gh-pages y verificada en vivo)
+**Plan activo**: ninguno abierto. Planes 7, 12 y 13 terminados (creador de personajes completo). Lo siguiente es el plan 5 (Black Chrome y vehículos). Estado de todos los planes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0 [Claude Code · 2026-10-23]. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
@@ -16,15 +16,15 @@
 - [Claude Code · 2026-10-22] v4.9.1 (plan 9) MERGEADA (PR #25) y PUBLICADA. Siguiente: v4.9.2 herramientas de rol de combate (Solo en el HUD, Netrunner con `engine/roleRules.ts`, Medtech con Speedheal híbrido, Nomad con Moto). Pendiente previo: desborde horizontal de Street Lab en celular (ya estaba en v4.9.0).
 - [Claude Code · 2026-10-23] v4.9.2 (plan 10) MERGEADA (PR #26) y PUBLICADA. Damage Deflection después de armadura confirmado por Giuliano. Siguiente: v4.9.3 herramientas de rol sociales (Rockerboy, Fixer, Media, Exec, Lawman; tablas en `ROLE_RANKS.roles.<Rol>.tables`).
 - [Claude Code · 2026-10-23] v4.9.3 (plan 11) MERGEADA (PR #27) y PUBLICADA. Con esto el plan 8 (roles Core + CEMK, v4.9.0-v4.9.3) queda completo. Siguiente: v4.9.4 Modo Novato (ex v4.8.3 del plan 7), que necesita plan nuevo.
-- [Claude Code · 2026-10-23] v4.9.4 (planes 12 y 13) TERMINADA y verificada (tsc, 296 tests, build, navegador en PC y 375 px) en la rama `claude/v4.9.4-modo-novato`: Modo Novato, STATs del Core p.72, Grafted Muscle (+2 BODY, tope 10), ciberware repetible, Thorn con BODY base 8 (migración v5), cita CEMK RB y docs de lifepath. Falta PR, merge y gh-pages.
+- [Claude Code · 2026-10-23] v4.9.4 (planes 12 y 13) MERGEADA (PR #29) y PUBLICADA: Modo Novato, STATs del Core p.72, Grafted Muscle (+2 BODY, tope 10), ciberware repetible, Thorn con BODY base 8 (migración v5), cita CEMK RB y docs de lifepath. Con esto el plan 7 queda completo.
 - [Claude Code · 2026-10-22] Cierre de v4.9.0 (plan de cierre aprobado, en `~/.claude/plans/cryptic-juggling-stonebraker.md`): Giuliano decidió las dudas 24-33 y 4 nuevas (Internal Agent y Biomonitor fuera en 2077; nota del Folio solo en su ficha; agregar Incendiary Shotgun Shell). TODO HECHO y verificado (tsc, 156 tests, build, sonda y navegador): Neuroport cubre Internal Agent y Biomonitor (alternativas "o" elegibles), munición incendiaria mapeada, nota del Folio solo en su ficha, discrepancias 24-37 y `doubts` anotadas. Falta: PR, merge y gh-pages.
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-23].
-- Rama: `claude/v4.9.4-modo-novato` (pusheada). `main` = v4.9.3.1 publicada.
-- A medias: nada. v4.9.4 terminada; falta PR, merge y gh-pages.
-- Siguiente paso exacto: PR de v4.9.4 (planes 12 y 13), merge y publicar; después, plan 5 (Black Chrome completo + catálogo de vehículos).
+- Rama: `main` @ aef92c7 + este checkpoint (pusheada). v4.9.4 publicada en gh-pages.
+- A medias: nada.
+- Siguiente paso exacto: planificar el plan 5 pendiente (Black Chrome completo + catálogo de vehículos), preguntando el alcance a Giuliano antes de codear.
 - Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y barra del centro del HUD. (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad (hasta el tope de terapia); es así desde antes, sin regla del libro revisada.
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub del remote `origin`.
