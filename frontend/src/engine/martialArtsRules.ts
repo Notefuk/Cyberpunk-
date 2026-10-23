@@ -186,7 +186,7 @@ function describeEffect(
       return [line('Agarre', t[e.result])];
     }
     case 'disarm':
-      return [line('Desarme', 'Un objeto en las manos del objetivo pasa a tus manos o cae al suelo')];
+      return [line('Desarme', 'Le sacás lo que tiene en las manos; el que desarma elige si queda en sus manos o en el piso (decisión 44)')];
     case 'text':
       return [line('Efecto', e.text)];
   }

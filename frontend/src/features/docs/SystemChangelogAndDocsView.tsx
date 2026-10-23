@@ -26,6 +26,31 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.6',
+    date: '2026-10-23',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Combate',
+    title: 'Movimientos especiales de Martial Arts en el HUD',
+    summary: 'Plan 15: los 55 movimientos chequean sus requisitos, respetan "una vez por turno" y muestran los efectos para aplicar con su página.',
+    highlights: [
+      'Requisitos con ✓/✗: STATs (WILL 8+, MOVE 8+...), rango de la forma, golpes acertados este turno y metros movidos se chequean solos; lo que el HUD no registra se marca con una casilla.',
+      'EJECUTAR se bloquea con el motivo si falta algo o si el movimiento ya se usó este turno.',
+      'Barra de turno: metros movidos, botón "Fin de turno" y resumen de golpes; "Siguiente Round" también reinicia el turno (decisión 48).',
+      'Golpe a la cabeza con −8 en Bone Breaking y Pressure Point, como Aimed Shot (decisión 43); daño propio en Borg Fist (5d6/6d6) y Combat Knife (4d6).',
+      'Tarjeta "Efectos para aplicar": herida crítica (con la del Core si no está en la tabla CEMK, decisión 47), SP extra, Prone, ataque extra, desarme y el resto, con su página. La app no aplica nada sola.',
+      '323 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/data/cyberfistsMartialArtsData.ts',
+      'frontend/src/engine/martialArtsRules.ts',
+      'frontend/src/store/useCombatStore.ts',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'docs/plans/plan15-v496-martial-moves-hud.md'
+    ],
+    metricsBadge: 'v4.9.6 • Movimientos especiales • Plan 15'
+  },
+  {
     version: 'v4.9.5',
     date: '2026-10-23',
     author: 'Claude Code',
@@ -1039,6 +1064,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.6': true,
     'v4.9.5': true,
     'v4.9.4': true,
     'v4.9.3.1': true,
