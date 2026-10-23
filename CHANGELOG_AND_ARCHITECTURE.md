@@ -247,6 +247,30 @@ Las Fases 0, 1, 2 y 3 se encuentran **COMPLETADAS**. Los siguientes módulos rep
 
 ## 📜 Master Version Changelog
 
+### [v4.9.5] - 2026-10-23 (Martial Arts por forma) [Claude Code · 2026-10-23]
+* **Category**: Creador (plan 14, primera parte, con las decisiones de Giuliano del 2026-10-23).
+* **Auditoría canon**: `data/cyberfistsMartialArtsData.ts` contra Core pp. 83, 137, 176-182, 360 y 411 e Interface RED Vol. 4 pp. 73-83.
+  * Los 55 movimientos (Recovery, 8 del Core y 46 de IR4) coinciden en requisito, DV, una vez por turno, Acción y efecto.
+  * Se corrigieron las páginas de las formas del Core, las citas (creación, p.181 y Neuroport en CEMK RB p.36) y se quitó el texto sin fuente.
+  * Decisiones 39-46 en `docs/canon-audit/discrepancias-cemk-core.md`: Contact Combat como el libro, el chip habilita los movimientos, Counter Throw pide esquivar al menos un ataque, el golpe a la cabeza con −8 es Aimed Shot, desarma quien elige, STATs clave = DEX + requisitos y sin mínimo por ciberbrazo.
+* **Motor** (`engine/characterCreation.ts`):
+  * `getMartialArtsFormSkills`: claves `Martial Arts (Forma)`, que cuestan ×2;
+  * `SPECIALTY_SKILLS`, `skillSpecialty` y `setSkillSpecialty`;
+  * la validación exige la forma y la especialidad (Core p.83);
+  * `buildCharacterSheetFromDraft` escribe `knownMartialArts` y `skills.martialArts` como el máximo.
+  * En `engine/characterEngine.ts`: `calculateMartialArtsDamage` (Core p.178).
+* **UI**:
+  * `SkillsStep`: bloque desplegable con las 27 formas (Core / IR Vol. 4), con nivel, página y ⓘ; campo de especialidad.
+  * HUD "En mano": selector de forma, tirada DEX + rango de la forma y daño por BODY.
+  * Vista de roles: STATs clave "según los requisitos de sus movimientos" y "contra DEX + Evasion del rival" en lugar de "DV 0".
+  * Grilla del creador con `grid-cols-1`, para que no desborde a 375 px.
+* **Docs**: `docs/rules/martial-arts.md`, con las reglas generales y las 27 formas.
+* **Verificación**: tsc, 306 tests y build. En el navegador:
+  * Paquete Completo: Karate 4 y Judo 2 cuestan 12 puntos y la ficha da `knownMartialArts {karate: 4, judo: 2}`;
+  * Play Instrument pide especialidad y queda "Play Instrument (Guitarra)";
+  * HUD: selector con Karate (R4) y Judo (R2), la base cambia con la forma y el daño es 2d6 con BODY 6;
+  * a 375 px, el creador sin desborde.
+
 ### [v4.9.4] - 2026-10-23 (Modo Novato del creador) [Claude Code · 2026-10-23]
 * **Category**: Creador (plan 12, ex v4.8.3 del plan 7, con las decisiones de Giuliano del 2026-10-23: solo texto del libro, solo el creador, ⓘ desplegables y resumen como confirmación con avisos).
 * **Datos**: `data/creation-src/creator-guide.json`, generado a `data/creation/creatorGuide.ts` (`CREATOR_GUIDE`): texto de cada paso con su página del Core, `recommendsStreetrat` (Core p.40) y las reglas de los avisos.

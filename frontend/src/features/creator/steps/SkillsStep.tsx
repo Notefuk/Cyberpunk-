@@ -249,7 +249,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
                             aria-label={`Especialidad de ${s.name}`}
                             placeholder="Especialidad"
                             defaultValue={skillSpecialty(key) ?? ''}
-                            className={`${INPUT_CLS} w-40`}
+                            className={`${INPUT_CLS} w-full max-w-40 min-w-0`}
                             onBlur={(e) => {
                               const v = e.target.value.trim();
                               if (v && v !== (skillSpecialty(key) ?? '')) update((d) => setSkillSpecialty(d, key, v));

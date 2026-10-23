@@ -185,7 +185,7 @@ export const CharacterCreatorWizard: React.FC<CharacterCreatorWizardProps> = ({ 
         })}
       </nav>
 
-      <div className="grid lg:grid-cols-[minmax(0,1fr)_260px] gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_260px] gap-5">
         <main>
           {stepId === 'method' && <MethodStep {...stepProps} />}
           {stepId === 'role' && <RoleStep {...stepProps} />}

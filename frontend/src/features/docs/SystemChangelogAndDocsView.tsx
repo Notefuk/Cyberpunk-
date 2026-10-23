@@ -26,6 +26,35 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.5',
+    date: '2026-10-23',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Creador',
+    title: 'Martial Arts por forma: creador, ficha, HUD y referencia',
+    summary: 'Plan 14 (primera parte): auditoría canon de las 27 formas y cada forma de Martial Arts como skill aparte en el creador, la ficha y el HUD.',
+    highlights: [
+      'Auditoría de las 27 formas (Core pp. 178-180 e Interface RED Vol. 4 pp. 73-83): los 55 movimientos coinciden con el libro; se corrigieron páginas, citas y texto sin fuente (decisiones 39-46).',
+      'Creador (Paquete Completo): Martial Arts se abre en las 27 formas, cada una con su nivel a ×2 (Core p.83) y su ⓘ con los movimientos. La ficha creada trae las formas compradas.',
+      'Play Instrument y Science piden elegir la especialidad, también cuando la lista de rol dice "elegí 1".',
+      'HUD: la tarjeta "En mano" de Martial Arts elige la forma que sabés y tira con su rango; el daño sale de la tabla de BODY de p.178, sin el mínimo de 2d6 por ciberbrazo (eso es solo de Brawling).',
+      'Referencia nueva en docs/rules/martial-arts.md y en el panel de la vista de roles, sin "DV 0" en los movimientos opuestos.',
+      'Arreglo: el creador desbordaba en celular (la grilla no tenía columna definida). 306 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/data/cyberfistsMartialArtsData.ts',
+      'frontend/src/engine/characterCreation.ts',
+      'frontend/src/engine/characterEngine.ts',
+      'frontend/src/features/creator/steps/SkillsStep.tsx',
+      'frontend/src/features/creator/CharacterCreatorWizard.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'docs/rules/martial-arts.md',
+      'docs/plans/plan14-martial-arts.md'
+    ],
+    metricsBadge: 'v4.9.5 • Martial Arts • Plan 14'
+  },
+  {
     version: 'v4.9.4',
     date: '2026-10-23',
     author: 'Claude Code',
@@ -1010,6 +1039,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.5': true,
     'v4.9.4': true,
     'v4.9.3.1': true,
     'v4.9.3': true,
