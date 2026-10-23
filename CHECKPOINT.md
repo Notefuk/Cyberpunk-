@@ -8,10 +8,11 @@
 
 **Última actualización**: [Claude Code · 2026-10-23] v4.9.4 mergeada y publicada.
 **Versión de la app**: v4.9.4 (en `main`, squash aef92c7, PR #29; publicada en gh-pages y verificada en vivo)
-**Plan activo**: ninguno abierto. Planes 7, 12 y 13 terminados (creador de personajes completo). Lo siguiente es el plan 5 (Black Chrome y vehículos). Estado de todos los planes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0 [Claude Code · 2026-10-23]. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
+**Plan activo**: plan 14, Martial Arts completo (`docs/plans/plan14-martial-arts.md`, aprobado): paso 0 auditoría canon, v4.9.5 creador/ficha/referencia, v4.9.6 movimientos especiales automáticos [Claude Code · 2026-10-23]. Estado de todos los planes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
+- [Claude Code · 2026-10-23] Plan 14 Martial Arts EN CURSO en la rama `claude/v4.9.5-martial-arts-creador`. Decisiones de Giuliano: las 27 formas (Core + Interface RED Vol. 4), efectos automáticos donde se pueda, el mínimo 2d6 por ciberbrazo no aplica a Martial Arts, cada forma se compra aparte en el creador (+ Play Instrument y Science con especialidad). Paso actual: auditoría canon de las 27 formas y 54 movimientos contra el PDF.
 - [Claude Code · 2026-10-22] v4.9.0 Datos de roles por rango (plan 8) MERGEADA (PR #24) y PUBLICADA. Siguiente: v4.9.1 motor de roles (`engine/roleRules.ts`: NET Actions por rango, DV de Quickhack, mejor Reach, costos de IP), avance con IP (IP nuevos en 0, modo GM), quitar el selector +4 del creador, reparto inicial de los Folios aplicado a la ficha y migración de persistencia v4, en rama `claude/v4.9.1-*`. Datos en `ROLE_RANKS.roles.<Rol>`; reglas ya decididas en discrepancias 24-37.
 - [Claude Code · 2026-10-22] v4.9.1 (plan 9) MERGEADA (PR #25) y PUBLICADA. Siguiente: v4.9.2 herramientas de rol de combate (Solo en el HUD, Netrunner con `engine/roleRules.ts`, Medtech con Speedheal híbrido, Nomad con Moto). Pendiente previo: desborde horizontal de Street Lab en celular (ya estaba en v4.9.0).
 - [Claude Code · 2026-10-23] v4.9.2 (plan 10) MERGEADA (PR #26) y PUBLICADA. Damage Deflection después de armadura confirmado por Giuliano. Siguiente: v4.9.3 herramientas de rol sociales (Rockerboy, Fixer, Media, Exec, Lawman; tablas en `ROLE_RANKS.roles.<Rol>.tables`).
@@ -24,7 +25,7 @@
 - Cierra: [Claude Code · 2026-10-23].
 - Rama: `main` @ aef92c7 + este checkpoint (pusheada). v4.9.4 publicada en gh-pages.
 - A medias: nada.
-- Siguiente paso exacto: planificar el plan 5 pendiente (Black Chrome completo + catálogo de vehículos), preguntando el alcance a Giuliano antes de codear.
+- Siguiente paso exacto: auditoría del plan 14 (scout compara `data/cyberfistsMartialArtsData.ts` contra Core pp. 178-180 e Interface RED Vol. 4 pp. 73-83) y preguntarle a Giuliano cada diferencia.
 - Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y barra del centro del HUD. (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad (hasta el tope de terapia); es así desde antes, sin regla del libro revisada.
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub del remote `origin`.
