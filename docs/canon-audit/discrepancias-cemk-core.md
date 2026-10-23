@@ -72,6 +72,8 @@ Auditoría de `data/cyberfistsMartialArtsData.ts` contra Core pp. 83, 137, 176-1
 | 44 | Desarme (Disarming Combination de Aikido, Disarming Technique de Arnis) | El objeto queda "en tus manos o en el piso" sin decir quién elige | **Decidida**: elige el que desarma |
 | 45 | STATs clave por forma | El libro no los define; solo DEX para tirar y mínimos en algunos movimientos | **Decidida**: DEX más los STATs que piden sus movimientos, marcado "según los requisitos de sus movimientos" |
 | 46 | Mínimo 2d6 con ciberbrazo | Core p.176 lo da a Brawling; la tabla de Martial Arts (p.178) no lo menciona | **Decidida** (al aprobar el plan 14): no aplica a Martial Arts |
+| 47 | Herida que no está en la tabla CEMK (1d6) | Pressure Point Strike (Spinal Injury) y Knockout Punch (Broken Jaw): la tabla CEMK (RB p.13) no las tiene | **Decidida** (plan 15): se usa la herida del Core (pp. 187-188) aunque esté elegida la tabla CEMK |
+| 48 | Inicio del turno para "una vez por turno" y requisitos del turno | El HUD solo tenía "Siguiente Round" | **Decidida** (plan 15): botón "Fin de turno" en el HUD; "Siguiente Round" también reinicia el registro del turno |
 
 ## Combate (van a un plan aparte, después del plan 7)
 
