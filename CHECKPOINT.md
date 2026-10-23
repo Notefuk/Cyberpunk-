@@ -12,7 +12,7 @@
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-23] Plan 14 Martial Arts EN CURSO en la rama `claude/v4.9.5-martial-arts-creador`. Decisiones de Giuliano: las 27 formas (Core + Interface RED Vol. 4), efectos automáticos donde se pueda, el mínimo 2d6 por ciberbrazo no aplica a Martial Arts, cada forma se compra aparte en el creador (+ Play Instrument y Science con especialidad). Paso actual: auditoría canon de las 27 formas y 54 movimientos contra el PDF.
+- [Claude Code · 2026-10-23] Plan 14 Martial Arts EN CURSO en la rama `claude/v4.9.5-martial-arts-creador`. Decisiones de Giuliano: las 27 formas (Core + Interface RED Vol. 4), efectos automáticos donde se pueda, el mínimo 2d6 por ciberbrazo no aplica a Martial Arts, cada forma se compra aparte en el creador (+ Play Instrument y Science con especialidad). Paso 0 HECHO: auditoría canon (55 movimientos coinciden con el libro), decisiones 39-46 en `docs/canon-audit/discrepancias-cemk-core.md`, datos corregidos en `cyberfistsMartialArtsData.ts` (páginas, citas, flavor sin fuente, keyStats), 299 tests. Siguiente: v4.9.5 (creador con formas aparte, Play Instrument/Science con especialidad, HUD "En mano" por forma, `calculateMartialArtsDamage`, `docs/rules/martial-arts.md`).
 - [Claude Code · 2026-10-22] v4.9.0 Datos de roles por rango (plan 8) MERGEADA (PR #24) y PUBLICADA. Siguiente: v4.9.1 motor de roles (`engine/roleRules.ts`: NET Actions por rango, DV de Quickhack, mejor Reach, costos de IP), avance con IP (IP nuevos en 0, modo GM), quitar el selector +4 del creador, reparto inicial de los Folios aplicado a la ficha y migración de persistencia v4, en rama `claude/v4.9.1-*`. Datos en `ROLE_RANKS.roles.<Rol>`; reglas ya decididas en discrepancias 24-37.
 - [Claude Code · 2026-10-22] v4.9.1 (plan 9) MERGEADA (PR #25) y PUBLICADA. Siguiente: v4.9.2 herramientas de rol de combate (Solo en el HUD, Netrunner con `engine/roleRules.ts`, Medtech con Speedheal híbrido, Nomad con Moto). Pendiente previo: desborde horizontal de Street Lab en celular (ya estaba en v4.9.0).
 - [Claude Code · 2026-10-23] v4.9.2 (plan 10) MERGEADA (PR #26) y PUBLICADA. Damage Deflection después de armadura confirmado por Giuliano. Siguiente: v4.9.3 herramientas de rol sociales (Rockerboy, Fixer, Media, Exec, Lawman; tablas en `ROLE_RANKS.roles.<Rol>.tables`).
@@ -25,7 +25,7 @@
 - Cierra: [Claude Code · 2026-10-23].
 - Rama: `main` @ aef92c7 + este checkpoint (pusheada). v4.9.4 publicada en gh-pages.
 - A medias: nada.
-- Siguiente paso exacto: auditoría del plan 14 (scout compara `data/cyberfistsMartialArtsData.ts` contra Core pp. 178-180 e Interface RED Vol. 4 pp. 73-83) y preguntarle a Giuliano cada diferencia.
+- Siguiente paso exacto: v4.9.5 del plan 14 (creador, ficha, daño y referencia de Martial Arts).
 - Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y barra del centro del HUD. (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad (hasta el tope de terapia); es así desde antes, sin regla del libro revisada.
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub del remote `origin`.

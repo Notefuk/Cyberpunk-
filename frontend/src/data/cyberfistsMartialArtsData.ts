@@ -28,6 +28,7 @@ export interface MartialArtForm {
   badge: string;
   sourcePage?: number;
   originAndFlavor: string;
+  /** DEX para tirar + STATs que piden sus movimientos (decisión 45). */
   keyStats: string[];
   tacticalRole: string;
   moves: [MartialArtMove, MartialArtMove];
@@ -43,6 +44,7 @@ export const SHARED_MARTIAL_ARTS_MOVES: MartialArtMove[] = [
     isNewCyberfists: false,
     requirements: 'Sin requisito. Al usar la Acción Get Up.',
     resolutionDv: 13,
+    sourcePage: 179,
     effectDescription: 'Si superas DV 13 con la resolución de Special Move, esa Acción Get Up no cuesta una Acción (Core p. 179).'
   }
 ];
@@ -56,6 +58,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Aikido',
     sourceBook: 'core',
     badge: 'CORE // CLÁSICO',
+    sourcePage: 179,
     originAndFlavor: 'Forma suave: barridos de mano y cuerpo para inmovilizar y desarmar, usando la fuerza del rival en su contra (Core p. 179).',
     keyStats: ['DEX'],
     tacticalRole: 'Desarmes y control del agarre.',
@@ -68,7 +71,8 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         isNewCyberfists: false,
         requirements: 'Impactaste al mismo objetivo con un Brawling Attack y un Martial Arts Attack este turno. Una vez por turno.',
         resolutionDv: 15,
-        effectDescription: 'Si superas DV 15, un objeto que el objetivo tenga en las manos pasa a tus manos o cae al suelo (Core p. 179).'
+        sourcePage: 179,
+        effectDescription: 'Si superas DV 15, un objeto que el objetivo tenga en las manos pasa a tus manos o cae al suelo; el que desarma elige si queda en sus manos o en el piso (decisión 44) (Core p. 179).'
       },
       {
         id: 'aikido-iron-grip',
@@ -78,6 +82,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         isNewCyberfists: false,
         requirements: 'Tienes al objetivo agarrado (Grab) y no está ya bajo Iron Grip. Una vez por turno, como Acción.',
         resolutionDv: 15,
+        sourcePage: 179,
         effectDescription: 'Si superas DV 15, el objetivo tiene -2 adicional a todos sus intentos de escapar de este Grapple y no puede hacer ataques a distancia mientras dure (Core p. 179).'
       }
     ]
@@ -87,6 +92,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Karate',
     sourceBook: 'core',
     badge: 'CORE // CLÁSICO',
+    sourcePage: 179,
     originAndFlavor: 'Forma dura: golpes pensados para romper huesos o armadura (Core p. 179).',
     keyStats: ['DEX', 'WILL'],
     tacticalRole: 'Romper armadura y huesos.',
@@ -99,7 +105,8 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         isNewCyberfists: false,
         requirements: 'Impactaste al mismo objetivo con un Melee Weapon y un Martial Arts Attack este turno. Una vez por turno.',
         resolutionDv: 15,
-        effectDescription: 'Si superas DV 15, toda la armadura que lleva el objetivo se abla 2 puntos adicionales (Core p. 179).'
+        sourcePage: 179,
+        effectDescription: 'Si superas DV 15, toda su armadura puesta pierde 2 SP extra (Core p. 179).'
       },
       {
         id: 'karate-bone-breaking-strike',
@@ -109,8 +116,9 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         isNewCyberfists: false,
         requirements: 'WILL 8 o más. En lugar de los 2 ataques de la Acción de Martial Arts, como Acción contra un objetivo en rango cuerpo a cuerpo.',
         resolutionDv: 0,
+        sourcePage: 179,
         isOpposed: true,
-        effectDescription: 'Si impactas, además del daño de Martial Arts el objetivo sufre Broken Ribs. Con -8 al Check puedes apuntar a la cabeza como un Aimed Shot: Cracked Skull en su lugar. Si ya tenía esa herida, no sufre otra (Core p. 179).',
+        effectDescription: 'Si impactas, además del daño de Martial Arts el objetivo sufre Broken Ribs; la herida se aplica después de calcular el daño. Con -8 al Check apuntás a la cabeza, se trata como un Aimed Shot a la cabeza (decisión 43) y causa Cracked Skull en lugar de Broken Ribs. Si ya tenía esa herida, no sufre otra (Core p. 179).',
         criticalInjuryApplied: 'Broken Ribs (o Cracked Skull a la cabeza con -8)'
       }
     ]
@@ -120,6 +128,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Judo',
     sourceBook: 'core',
     badge: 'CORE // CLÁSICO',
+    sourcePage: 179,
     originAndFlavor: 'Forma suave: agarres, proyecciones y escapes (Core p. 179).',
     keyStats: ['DEX'],
     tacticalRole: 'Proyecciones y escapes de agarres.',
@@ -130,8 +139,9 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         formId: 'judo',
         formName: 'Judo',
         isNewCyberfists: false,
-        requirements: 'Esquivaste todos los Melee Attacks contra ti desde tu último turno. Una vez por turno, como Acción.',
+        requirements: 'Esquivaste todos los ataques cuerpo a cuerpo dirigidos a vos desde tu último turno, y al menos uno (decisión 42). Una vez por turno, como Acción.',
         resolutionDv: 15,
+        sourcePage: 179,
         effectDescription: 'Si superas DV 15, usas la Acción Throw contra un objetivo en rango cuerpo a cuerpo cuyo ataque esquivaste; no se puede evitar y no hace falta tenerlo agarrado (Core p. 179).'
       },
       {
@@ -142,6 +152,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         isNewCyberfists: false,
         requirements: 'Impactaste con 2 Melee Attacks este turno a quien te tiene agarrado. Una vez por turno.',
         resolutionDv: 15,
+        sourcePage: 179,
         effectDescription: 'Si superas DV 15, dejas de estar agarrado por ese objetivo y sufre Broken Arm si no lo tenía; eliges el brazo (Core p. 179).',
         criticalInjuryApplied: 'Broken Arm'
       }
@@ -152,6 +163,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     name: 'Taekwondo',
     sourceBook: 'core',
     badge: 'CORE // CLÁSICO',
+    sourcePage: 180,
     originAndFlavor: 'Forma dura: patadas altas y golpes de precisión a puntos de presión (Core p. 180).',
     keyStats: ['DEX', 'WILL', 'MOVE'],
     tacticalRole: 'Golpes a puntos de presión y patadas voladoras.',
@@ -164,8 +176,9 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         isNewCyberfists: false,
         requirements: 'WILL 8 o más. En lugar de los 2 ataques de la Acción de Martial Arts, como Acción contra un objetivo en rango cuerpo a cuerpo.',
         resolutionDv: 0,
+        sourcePage: 180,
         isOpposed: true,
-        effectDescription: 'Si impactas, además del daño de Martial Arts el objetivo sufre Spinal Injury. Con -8 al Check puedes apuntar a la cabeza como un Aimed Shot: Brain Injury en su lugar. Si ya tenía esa herida, no sufre otra (Core p. 180).',
+        effectDescription: 'Si impactas, además del daño de Martial Arts el objetivo sufre Spinal Injury; la herida se aplica después de calcular el daño. Con -8 al Check apuntás a la cabeza, se trata como un Aimed Shot a la cabeza (decisión 43) y causa Brain Injury en lugar de Spinal Injury. Si ya tenía esa herida, no sufre otra (Core p. 180).',
         criticalInjuryApplied: 'Spinal Injury (o Brain Injury a la cabeza con -8)'
       },
       {
@@ -176,6 +189,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         isNewCyberfists: false,
         requirements: 'MOVE 8 o más y ya te moviste al menos 4 m este turno. En lugar de los 2 ataques de la Acción de Martial Arts, usando la Acción y todo tu movimiento restante, contra un objetivo a hasta 4 m en línea recta.',
         resolutionDv: 0,
+        sourcePage: 180,
         isOpposed: true,
         damageBonusOrFormula: 'Daño de Martial Arts al cuerpo',
         effectDescription: 'Si impactas, haces daño de Martial Arts al cuerpo, el objetivo queda Prone y cae de cualquier moto o vehículo sin cabina cerrada (Core p. 180).'
@@ -252,7 +266,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         requirements: 'Tu turno; esquivaste al menos un ataque de Melee Weapon desde tu último turno y todos los ataques de Melee Weapon dirigidos contra ti desde entonces; empuñas una Melee Weapon.',
         resolutionDv: 15,
         sourcePage: 76,
-        effectDescription: 'Una vez por turno. Si tienes éxito, una Melee Weapon sostenida por un objetivo en rango Melee que te haya atacado con un ataque de Melee Weapon desde tu último turno queda en tu poder o en el suelo.'
+        effectDescription: 'Una vez por turno. Si tienes éxito, una Melee Weapon sostenida por un objetivo en rango Melee que te haya atacado con un ataque de Melee Weapon desde tu último turno queda en tu poder o en el suelo; el que desarma elige si queda en sus manos o en el piso (decisión 44).'
       }
     ]
   },
@@ -263,7 +277,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 76,
     originAndFlavor: 'Arte directo de golpes y paradas; puede desgastar al rival o terminar rápido con ráfagas de golpes.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'BODY'],
     tacticalRole: 'Un golpe único a la cabeza que causa Broken Jaw y un ataque extra de Brawling tras dos golpes de Brawling.',
     moves: [
       {
@@ -333,7 +347,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 77,
     originAndFlavor: 'Arte chino de gran velocidad y versatilidad; sus ataques de barrido sirven para pelear contra varios oponentes.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'MOVE'],
     tacticalRole: 'Una Acción Run gratuita tras esquivar y un ataque de Brawling extra contra otro objetivo.',
     moves: [
       {
@@ -367,7 +381,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 77,
     originAndFlavor: 'Arte chino que imita a una persona ebria para golpear y defenderse de forma inesperada enroscando el cuerpo.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'LUCK'],
     tacticalRole: 'Mejora tus ataques de Brawling con el entorno y permite esquivar ataques que no ves; los requisitos de LUCK se refieren al STAT.',
     moves: [
       {
@@ -435,7 +449,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 78,
     originAndFlavor: 'Arte japonés que cede ante la fuerza del oponente y la redirige.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'WILL'],
     tacticalRole: 'Usa el BODY del rival para calcular el daño y permite un lanzamiento (Throw) tras dos golpes.',
     moves: [
       {
@@ -469,7 +483,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 79,
     originAndFlavor: 'Moderno Camino de la Espada japonés, con linaje que viene de los samuráis.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'WILL'],
     tacticalRole: 'Permite cortar una bala con un arma cuerpo a cuerpo y rebaja la penalización de Aimed Shot del primer ataque del siguiente turno.',
     moves: [
       {
@@ -514,7 +528,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
         formId: 'krav-maga',
         formName: 'Krav Maga',
         isNewCyberfists: true,
-        requirements: 'Infligiste una Critical Injury con un ataque de Martial Arts o una resolución de Special Move de Aikido, Boxing, Judo, Karate, Krav Maga o Wrestling en este turno.',
+        requirements: 'Infligiste una herida crítica con un Martial Arts Attack o una Special Move Resolution de Aikido, Boxing, Judo, Karate, Krav Maga o Wrestling (la lista califica a ambos, decisión 40) en este turno.',
         resolutionDv: 15,
         sourcePage: 79,
         effectDescription: 'Una vez por turno. Si tienes éxito, puedes hacer un único ataque de Brawling contra un objetivo al que hayas causado una Critical Injury en este turno.'
@@ -678,7 +692,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 81,
     originAndFlavor: 'Arte de los habitantes del Yukon Valley del Alaska estado libre, creada para combatir a los osos aumentados de Biotechnica.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'BODY'],
     tacticalRole: 'Ventajas en ataques de Brawling si tienes más brazos que el objetivo y daño directo a quienes sujetas en agarres.',
     moves: [
       {
@@ -712,7 +726,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 81,
     originAndFlavor: 'Arte desarrollada por la FBC que libera el poder de un cuerpo metálico contra los cuerpos blandos.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'BODY'],
     tacticalRole: 'Un golpe de 5d6/6d6 contra objetivos de menor BODY y un movimiento que repara y protege tu cyberware.',
     moves: [
       {
@@ -748,7 +762,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 81,
     originAndFlavor: 'Fusión de muchas artes indígenas del Sudeste Asiático; cientos de estilos variables.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'WILL'],
     tacticalRole: 'Dos movimientos que encadenan un ataque de Brawling o de Melee Weapon tras golpear o iniciar un agarre.',
     moves: [
       {
@@ -782,7 +796,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 82,
     originAndFlavor: 'Sucesor de Command Sambo creado por SovOil, pensado como arte comercial más popular que Arasaka-te.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'BODY'],
     tacticalRole: 'Un golpe que causa una Critical Injury de Cuerpo aleatoria y un contraataque tras sufrir una Critical Injury.',
     moves: [
       {
@@ -817,7 +831,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 82,
     originAndFlavor: 'Lucha japonesa que mueve al oponente con toda la fuerza del cuerpo.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'BODY', 'COOL'],
     tacticalRole: 'Evita un agarre o lanzamiento moviendo a ambos, y mejora tu Facedown.',
     moves: [
       {
@@ -851,7 +865,7 @@ export const MARTIAL_ARTS_FORMS: MartialArtForm[] = [
     badge: 'CYBERFISTS // IR4',
     sourcePage: 82,
     originAndFlavor: 'Arte chino que redirige y frustra los ataques manteniendo el equilibrio interior.',
-    keyStats: ['DEX'],
+    keyStats: ['DEX', 'WILL'],
     tacticalRole: 'Inutiliza una mano del atacante que falla y puede anular el Special Move de un rival.',
     moves: [
       {
@@ -1023,23 +1037,23 @@ export interface MartialArtsOfficialManualText {
 
 export const MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT: MartialArtsOfficialManualText = {
   title: 'Reglamento Oficial Canónico de Artes Marciales // Cyberpunk RED & Cyberfists',
-  sourceReferences: 'Cyberpunk RED Core Rulebook pp. 112, 178-181, 360, 411 • Interface RED Vol. 4 pp. 74-84 (Cyberfists of Fury)',
+  sourceReferences: 'Core pp. 81, 83, 88, 90, 112, 137, 176-180, 182, 360 y 411; Interface RED Vol. 4 pp. 73-83; CEMK RB p.36',
   overview: {
     title: 'Naturaleza de las Artes Marciales (Habilidad Difícil x2)',
-    definition: 'Martial Arts es la habilidad de combate cuerpo a cuerpo más mortífera y técnica de Night City. A diferencia del Brawling (pelea callejera basada en puñetazos desordenados y forcejeos), las Artes Marciales representan entrenamiento formal, biomecánica precisa y acondicionamiento muscular extremo.',
+    definition: 'Martial Arts es la habilidad de combate cuerpo a cuerpo de entrenamiento formal. A diferencia del Brawling, cada forma es una skill aparte y tiene Special Moves propios (Core pp. 178-180).',
     difficultyMultiplier: 'Coste Doble (x2): Al ser una habilidad avanzada de alta complejidad motriz, cada punto de Martial Arts cuesta el doble tanto en la creación de personaje (2 puntos de habilidad por nivel) como al entrenar durante la partida con Puntos de Mejora (Nivel Objetivo × 40 IP).',
-    whySeparateSkills: 'Cada una de las 27 Formas de Artes Marciales (Karate, Judo, Aikido, Taekwondo, Krav Maga, Capoeira, Wrestling, etc.) es una habilidad completamente separada e independiente en tu hoja. Tener Karate 6 no te otorga automáticamente puntos en Judo; debes aprender y entrenar cada estilo por separado.',
-    requirementToUse: 'Para poder empuñar un estilo en combate y desbloquear sus golpes o Movimientos Especiales, tu personaje DEBE tener al menos Rango 1 aprendido de forma natural O tener equipado un Skill Chip (Nivel 3) de esa forma en su Chipware Socket / Neuroport.'
+    whySeparateSkills: 'Hay 4 formas en el Core (p.178) y 23 en Interface RED Vol. 4 (pp. 73-83). Cada forma es una skill aparte (p.83).',
+    requirementToUse: 'Para poder empuñar un estilo en combate y desbloquear sus golpes o Movimientos Especiales, tu personaje DEBE tener al menos Rango 1 aprendido de forma natural O tener equipado un Skill Chip (Nivel 3) de esa forma en su Chipware Socket / Neuroport; el chip habilita los movimientos (decisión 41).'
   },
   combatMechanics: {
     title: 'Mecánicas de Combate Canónicas: ROF 2, 50% SP & Movimientos Especiales',
-    rateOfFire: 'ROF 2 (2 Ataques por Acción): Al atacar con Artes Marciales, realizas dos ataques completos por cada Acción de Ataque en tu turno. Cada golpe se resuelve tirando 1d10 + DEX + Rango en ese Estilo de Arte Marcial contra 1d10 + DEX + Evasion del defensor.',
-    armorPenetrationRule: 'Ignora la Mitad de la Armadura (50% SP, Redondeado Hacia Arriba): Los golpes de Artes Marciales concentran la fuerza cinética en puntos de presión y juntas estructurales. Al calcular el daño, la armadura del defensor (SP de Cabeza o Cuerpo) se divide por 2 antes de restarla. Además, si al menos 1 punto de daño penetra el SP reducido, la armadura se ablaciona en 1 punto (o más si el movimiento lo especifica). ¡Brawling NO ignora armadura; choca contra el 100% del SP!',
+    rateOfFire: 'ROF 2 (2 Ataques por Acción, Core p. 178): Al atacar con Artes Marciales, realizas dos ataques completos por cada Acción de Ataque en tu turno. Cada golpe se resuelve tirando 1d10 + DEX + Rango en ese Estilo de Arte Marcial contra 1d10 + DEX + Evasion del defensor.',
+    armorPenetrationRule: 'Ignora la Mitad de la Armadura (Core p. 178): el ataque ignora la mitad de la armadura del defensor, redondeando para arriba. La armadura se desgasta normalmente (p. 176). Brawling no ignora armadura.',
     bodyDamageScaleTable: [
-      { bodyRange: 'BODY 1 a 4', damageDice: '1d6 Daño Base', examples: 'Constitución frágil o clones de bajo tonelaje.' },
-      { bodyRange: 'BODY 5 a 6', damageDice: '2d6 Daño Base', examples: 'Físico estándar humano o edgerunner atlético.' },
-      { bodyRange: 'BODY 7 a 10', damageDice: '3d6 Daño Base', examples: 'Solos de asalto, ciberbrazos Gorilla o culturistas.' },
-      { bodyRange: 'BODY 11+ (FBC / Borg / Graf 3)', damageDice: '4d6 Daño Base', examples: 'Cuerpos Full Borg Conversion, Muscle & Bone Lace o Cyberware lineal.' }
+      { bodyRange: 'BODY 4 o menos', damageDice: '1d6', examples: '' },
+      { bodyRange: 'BODY 5 a 6', damageDice: '2d6', examples: '' },
+      { bodyRange: 'BODY 7 a 10', damageDice: '3d6', examples: '' },
+      { bodyRange: 'BODY 11+', damageDice: '4d6', examples: 'Sin mínimo por ciberbrazo: eso es solo de Brawling (p.176, decisión 46).' }
     ],
     specialMovesResolution: 'Resolución de Special Moves (Core p. 178): DEX + Skill de esa forma + 1d10 contra DEX + Evasion + 1d10 del defensor, o contra el DV del movimiento cuando lo indica (DV 15 en los del Core; Recovery DV 13). Cada forma tiene 2 Special Moves propios y todas pueden usar los Shared Special Moves (Recovery). Hace falta al menos 1 punto en la forma y cumplir el requisito del movimiento. Salvo que el movimiento lo diga, no sirven para Aimed Shots.'
   },
@@ -1049,8 +1063,8 @@ export const MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT: MartialArtsOfficialManualText = 
       {
         id: 'creation',
         name: '1. En Creación de Personaje (Puntos de Habilidad)',
-        sourcePage: 'Core Rulebook p. 86',
-        costExplanation: 'Cuesta 2 puntos de Habilidad por cada nivel (de tus 86 puntos de creación).',
+        sourcePage: 'Core pp. 81, 88 y 90',
+        costExplanation: 'Cuesta 2 puntos de Habilidad por cada nivel. Los 86 puntos de creación son de Edgerunner y Paquete Completo; en Streetrat las skills vienen de la plantilla.',
         mechanicDetails: 'Subir un estilo a Nivel 1 cuesta 2 puntos; Nivel 2 = 4 puntos; Nivel 3 = 6 puntos; Nivel 4 = 8 puntos; Nivel 5 = 10 puntos; hasta el tope inicial de Nivel 6 = 12 puntos de habilidad.'
       },
       {
@@ -1077,7 +1091,7 @@ export const MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT: MartialArtsOfficialManualText = 
         name: '3. Mediante Skill Chipware (Nivel 3 Instantáneo)',
         sourcePage: 'Core Rulebook pp. 112, 360',
         costExplanation: '1,000 €$ (Precio Oficial Very Expensive para habilidades x2)',
-        mechanicDetails: 'Requiere tener instalado un Chipware Socket (en 2045: Neural Link [500 €$] + Chipware Socket [500 €$]; en 2077: el Neuroport básico ya incluye 2 Chipware Sockets de serie). Mientras el Skill Chip esté insertado en tu ranura, tu mente recibe reflejos neurales descargados fijando tu Nivel en 3 (+3) en ese estilo específico de Arte Marcial si tu nivel natural es menor a 3. Esto habilita de inmediato los 2 ataques ROF 2 ignorando 50% SP y el acceso a sus 2 Movimientos Especiales.'
+        mechanicDetails: 'Requiere tener instalado un Chipware Socket (en 2045: Neural Link [500 €$] + Chipware Socket [500 €$]; en 2077 el Neuroport trae 2 Chipware Sockets (CEMK RB p.36)). Mientras el Skill Chip esté insertado en tu ranura, tu mente recibe reflejos neurales descargados fijando tu Nivel en 3 (+3) en ese estilo específico de Arte Marcial si tu nivel natural es menor a 3. El chip habilita los movimientos (decisión 41).'
       }
     ]
   }

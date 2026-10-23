@@ -15,7 +15,7 @@ import {
   calculateTherapyMaxHumanity,
   getEffectiveMove
 } from '../characterEngine';
-import { MARTIAL_ARTS_FORMS, SHARED_MARTIAL_ARTS_MOVES } from '../../data/cyberfistsMartialArtsData';
+import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT, SHARED_MARTIAL_ARTS_MOVES } from '../../data/cyberfistsMartialArtsData';
 import { beatsDv, calculateIncomingImpact, createDamageRoll, rollCheckD10 } from '../combatEngine';
 import { BLACK_ICE_STATS, NET_ACTIONS_PER_TURN, QUICKHACKS_2077_CATALOG } from '../../data/netAndRolesData';
 import { BODY_CRITICAL_INJURIES, HEAD_CRITICAL_INJURIES, rollCriticalInjury } from '../../data/criticalInjuries';
@@ -555,5 +555,30 @@ describe('Porte en UI/conversión v4.7.0', () => {
       ws.forEach((w) => expect(w.rof).toBe(2));
     }
     find('Cybersnake').forEach((w) => expect(w.rof).toBe(1));
+  });
+});
+
+describe('Martial Arts: auditoría canon plan 14', () => {
+  it('formas Core y Recovery citan Core p.179/180', () => {
+    const pg = (id: string) => MARTIAL_ARTS_FORMS.find((f) => f.id === id)!;
+    for (const id of ['aikido', 'karate', 'judo']) {
+      expect(pg(id).sourcePage).toBe(179);
+      pg(id).moves.forEach((m) => expect(m.sourcePage).toBe(179));
+    }
+    expect(pg('taekwondo').sourcePage).toBe(180);
+    pg('taekwondo').moves.forEach((m) => expect(m.sourcePage).toBe(180));
+    expect(SHARED_MARTIAL_ARTS_MOVES[0].sourcePage).toBe(179);
+  });
+
+  it('textos sin flavor inventado ni p.181', () => {
+    const all = JSON.stringify(MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT);
+    expect(all).not.toContain('Graf 3');
+    expect(all).not.toContain('mortífera');
+    expect(MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.sourceReferences).not.toContain('181');
+  });
+
+  it('keyStats incluyen los STATs de sus movimientos (decisión 45)', () => {
+    expect(MARTIAL_ARTS_FORMS.find((f) => f.id === 'karate')!.keyStats).toContain('WILL');
+    expect(MARTIAL_ARTS_FORMS.find((f) => f.id === 'taekwondo')!.keyStats).toContain('MOVE');
   });
 });
