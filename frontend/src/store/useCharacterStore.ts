@@ -37,6 +37,7 @@ import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
 import { SKILL_METADATA } from '../types/cyberpunk';
 import { checkRoleRankRaise, checkSkillRaise } from '../engine/roleRules';
 import type { MakerAllocation, MedicineAllocation } from '../engine/roleRules';
+import { canInstallAnother } from '../engine/cyberwareEffects';
 import { REPLACEMENT_FEE_EB, endOfSession, replacementMember } from '../engine/socialRoleRules';
 import type { ExecTeamMember } from '../engine/socialRoleRules';
 import coreRulesPack from '../data/core-rules.cprpack.json';
@@ -95,6 +96,13 @@ function gainHumanityCapped(c: CharacterSheet, delta: number, installedIds = c.i
     installedIds.map((id) => PACK_CYBERWARE_BY_ID.get(id) ?? {})
   );
   return Math.max(current, Math.min(cap, current + delta));
+}
+
+// v4.9.4 Quita UNA copia (la última ocurrencia) de un id de ciberware.
+function removeLastCopy(ids: readonly string[], id: string): string[] {
+  const idx = ids.lastIndexOf(id);
+  if (idx < 0) return [...ids];
+  return [...ids.slice(0, idx), ...ids.slice(idx + 1)];
 }
 
 function mapInjuryIcon(icon: string): ActiveCriticalInjury['iconType'] {
@@ -1532,13 +1540,14 @@ export const useCharacterStore = create<CharacterStoreState>()(
 
             const isInstalled = c.installedCyberwareIds.includes(cyberwareId);
             if (isInstalled) {
-              const remaining = c.installedCyberwareIds.filter(id => id !== cyberwareId);
+              const remaining = removeLastCopy(c.installedCyberwareIds, cyberwareId);
               return {
                 ...c,
                 installedCyberwareIds: remaining,
                 currentHumanity: gainHumanityCapped(c, humanityCostAvg, remaining)
               };
             } else {
+              if (!canInstallAnother(c.installedCyberwareIds, cyberwareId, c.stats).ok) return c;
               return {
                 ...c,
                 installedCyberwareIds: [...c.installedCyberwareIds, cyberwareId],
@@ -1558,6 +1567,10 @@ export const useCharacterStore = create<CharacterStoreState>()(
         armorSpBonus
       }) => {
         const char = get().getActiveCharacter();
+        const installCheck = canInstallAnother(char.installedCyberwareIds, cyberwareId, char.stats);
+        if (!installCheck.ok) {
+          return { success: false, message: installCheck.reason ?? 'No se puede instalar otra copia' };
+        }
         if (spendMoney && (char.eurodollars || 0) < cost) {
           return { success: false, message: 'Fondos insuficientes (€$)' };
         }
@@ -1579,9 +1592,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
           characters: state.characters.map((c) => {
             if (c.id !== state.activeCharacterId) return c;
 
-            const updatedCyberwareIds = c.installedCyberwareIds.includes(cyberwareId)
-              ? c.installedCyberwareIds
-              : [...c.installedCyberwareIds, cyberwareId];
+            const updatedCyberwareIds = [...c.installedCyberwareIds, cyberwareId];
 
             const updatedHumanity = Math.max(0, c.currentHumanity - humanityLossAmount);
 
@@ -1633,7 +1644,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
         set((state) => ({
           characters: state.characters.map((c) => {
             if (c.id !== state.activeCharacterId) return c;
-            const remaining = c.installedCyberwareIds.filter((id) => id !== cyberwareId);
+            const remaining = removeLastCopy(c.installedCyberwareIds, cyberwareId);
             return {
               ...c,
               installedCyberwareIds: remaining,
@@ -1913,6 +1924,13 @@ export const useCharacterStore = create<CharacterStoreState>()(
         const char = get().getActiveCharacter();
         const cost = Number(item.cost || 0);
 
+        if (category === 'cyberware' && autoEquip !== false) {
+          const installCheck = canInstallAnother(char.installedCyberwareIds, item.id, char.stats);
+          if (!installCheck.ok) {
+            return { success: false, message: installCheck.reason ?? 'No se puede instalar otra copia' };
+          }
+        }
+
         if (spendMoney && (char.eurodollars || 0) < cost) {
           return { success: false, message: 'Fondos insuficientes (€$)' };
         }
@@ -1969,7 +1987,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
                 };
               }
             } else if (category === 'cyberware' && autoEquip !== false) {
-              if (!updatedCyberwareIds.includes(item.id)) {
+              if (canInstallAnother(updatedCyberwareIds, item.id, c.stats).ok) {
                 updatedCyberwareIds.push(item.id);
                 const parsedHl = item.humanityLoss ? parseHumanityLossAverage(String(item.humanityLoss)) : 7;
                 updatedHumanity = Math.max(0, updatedHumanity - parsedHl);

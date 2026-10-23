@@ -525,3 +525,24 @@ describe('Guía del creador y avisos del resumen (plan 12; Core pp. 40, 80, 98, 
     expect(getSummaryWarnings(d, { sheet }).some((x) => x.id === 'no-weapon')).toBe(false);
   });
 });
+
+describe('Grafted Muscle en el creador (Core p.114)', () => {
+  it('comprar Grafted Muscle sube el BODY efectivo y cambia HP, SW y Death Save', () => {
+    const base = streetratSolo('2045');
+    const d: CreatorDraft = {
+      ...base,
+      handle: 'Tester',
+      stats: { ...base.stats, BODY: 6 },
+      purchases: [{ category: 'cyberware', catalogId: 'grafted-muscle-bone-lace', name: 'Grafted Muscle and Bone Lace', cost: 0, qty: 1, humanityLoss: 0 }]
+    };
+    const plain = computeDerived({ ...d, purchases: [] });
+    const derived = computeDerived(d);
+    expect(derived.effectiveBody).toBe(8);
+    expect(derived.deathSave).toBe(8);
+    expect(derived.maxHp).toBe(10 + 5 * Math.ceil((8 + d.stats.WILL) / 2));
+    expect(derived.maxHp).toBeGreaterThan(plain.maxHp);
+    const { sheet } = buildCharacterSheetFromDraft(d, 'g');
+    expect(sheet.stats.BODY).toBe(6);
+    expect(sheet.currentHp).toBe(derived.maxHp);
+  });
+});

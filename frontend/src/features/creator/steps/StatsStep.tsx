@@ -23,7 +23,7 @@ const StatLabel: React.FC<{ stat: StatKey }> = ({ stat }) => {
   return (
     <span className="inline-flex flex-wrap items-center gap-1 max-w-full">
       <span className="font-tech font-bold text-white">{stat}</span>
-      <InfoToggle text={`${t.name} · ${t.spanishName}\n${t.shortSummary}\n\n${t.beginnerExplanation}`} />
+      <InfoToggle text={`${t.name} · ${t.spanishName}\n${t.shortSummary}`} source={t.source} />
     </span>
   );
 };

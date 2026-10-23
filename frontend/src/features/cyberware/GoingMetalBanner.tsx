@@ -20,6 +20,7 @@ import {
   type FbcBody
 } from '../../data/goingMetalFbcData';
 import type { CharacterSheet } from '../../types/cyberpunk';
+import { canInstallAnother, countInstalls } from '../../engine/cyberwareEffects';
 import {
   parseHumanityLoss,
   renderCategoryFloatingTooltip,
@@ -317,7 +318,9 @@ export function GoingMetalBanner({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {FBC_16_CYBERWARE.map((cyber) => {
-            const isInstalled = activeChar.installedCyberwareIds.includes(cyber.id);
+            const installCount = countInstalls(activeChar.installedCyberwareIds, cyber.id);
+            const isInstalled = installCount > 0;
+            const anotherCheck = canInstallAnother(activeChar.installedCyberwareIds, cyber.id, activeChar.stats);
             const canAfford = (activeChar.eurodollars || 0) >= cyber.cost;
             const parsedHl = parseHumanityLoss(cyber.humanityLoss, hlMode);
             return (
@@ -397,6 +400,25 @@ export function GoingMetalBanner({
                       </button>
                     </>
                   ) : (
+                    <>
+                    <button
+                      onClick={() =>
+                        handleInstallCyberware({
+                          id: cyber.id,
+                          name: cyber.name,
+                          type: cyber.type,
+                          install: cyber.install,
+                          humanityLoss: cyber.humanityLoss,
+                          cost: cyber.cost,
+                          description: cyber.description
+                        }, false)
+                      }
+                      disabled={!anotherCheck.ok || !canAfford}
+                      className="px-2 py-1.5 bg-[#00f5d4]/20 hover:bg-[#00f5d4] text-[#00f5d4] hover:text-black border border-[#00f5d4]/40 font-tech text-[10px] font-bold uppercase rounded-xs cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+                      title={anotherCheck.ok ? (canAfford ? 'Instalar otra copia' : 'Fondos insuficientes') : anotherCheck.reason}
+                    >
+                      OTRO
+                    </button>
                     <button
                       onClick={() =>
                         handleUninstallImplant({
@@ -411,8 +433,9 @@ export function GoingMetalBanner({
                       }
                       className="w-full py-1.5 bg-[#ef4444]/20 hover:bg-[#ef4444] text-[#ef4444] hover:text-white border border-[#ef4444]/40 font-tech text-[10px] font-bold uppercase rounded-xs cursor-pointer"
                     >
-                      DESINSTALAR (+{parsedHl.amount} HUM)
+                      DESINSTALAR{installCount > 1 ? ` ×${installCount}` : ''} (+{parsedHl.amount} HUM)
                     </button>
+                    </>
                   )}
                 </div>
               </div>

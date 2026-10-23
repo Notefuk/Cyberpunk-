@@ -20,6 +20,7 @@ import {
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
 import { applyFolioAllocation } from '../data/folioRoleAllocations';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, calculateMaxHumanity, parseHumanityLossAverage } from './characterEngine';
+import { cyberwareStatBonus } from './cyberwareEffects';
 import type {
   CharacterEra,
   CharacterLifepath,
@@ -876,10 +877,19 @@ export interface DerivedStats {
   humanityLoss: number;
   humanity: number;
   effectiveEmp: number;
+  /** BODY con el bono de ciberware (Core p.114, Grafted Muscle). La ficha guarda el BODY base. */
+  effectiveBody: number;
 }
 
 export function computeDerived(draft: CreatorDraft): DerivedStats {
-  const { BODY, WILL, EMP } = draft.stats;
+  const { WILL, EMP } = draft.stats;
+  // [Claude Code · 2026-10-23] Core p.114: Grafted Muscle suma +2 BODY por instalación (tope 10).
+  const cyberIds: string[] = [];
+  for (const c of getCyberwareList(draft)) {
+    const id = c.catalogId ?? CANON_CYBERWARE_IDS[c.name];
+    if (id) for (let i = 0; i < c.qty; i++) cyberIds.push(id);
+  }
+  const BODY = cyberwareStatBonus(cyberIds, 'BODY', draft.stats.BODY);
   const maxHp = calculateMaxHp(BODY, WILL);
   const maxHumanity = calculateMaxHumanity(EMP);
   const humanityLoss = getCyberwareList(draft).reduce((s, c) => s + c.humanityLoss * c.qty, 0);
@@ -893,7 +903,8 @@ export function computeDerived(draft: CreatorDraft): DerivedStats {
     humanityLoss,
     humanity,
     // Core p.80: la EMP baja cada vez que baja una decena de Humanity.
-    effectiveEmp: Math.max(0, Math.min(EMP, Math.floor(humanity / 10)))
+    effectiveEmp: Math.max(0, Math.min(EMP, Math.floor(humanity / 10))),
+    effectiveBody: BODY
   };
 }
 

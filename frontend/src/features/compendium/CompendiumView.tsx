@@ -4,7 +4,8 @@ import { useCharacterStore } from '../../store/useCharacterStore';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
 import type { WeaponItem, ArmorItem } from '../../types/cyberpunk';
 import { RANGE_BRACKETS, WEAPON_RANGE_PROFILES, getWeaponProfileKey } from '../../data/rangeTables';
-import { getAutofireRulesSummary } from '../../engine/characterEngine';
+import { getAutofireRulesSummary, parseHumanityLossAverage } from '../../engine/characterEngine';
+import { canInstallAnother, countInstalls } from '../../engine/cyberwareEffects';
 import { SOURCEBOOKS_CATALOG, EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
 import {
   getWeaponClassAndRebuildInfo,
@@ -306,6 +307,7 @@ export const CompendiumView: React.FC = () => {
   const equipWeaponFromCatalog = useCharacterStore((state) => state.equipWeaponFromCatalog);
   const equipArmorFromCatalog = useCharacterStore((state) => state.equipArmorFromCatalog);
   const toggleCyberwareInstall = useCharacterStore((state) => state.toggleCyberwareInstall);
+  const installCyberwareAdvanced = useCharacterStore((state) => state.installCyberwareAdvanced);
   const updateCharacterMeta = useCharacterStore((state) => state.updateCharacterMeta);
 
   const activeChar = getActiveCharacter();
@@ -917,7 +919,9 @@ export const CompendiumView: React.FC = () => {
     }
 
     if (category === 'cyberware') {
-      const isInstalled = activeChar.installedCyberwareIds.includes(item.id);
+      const installCount = countInstalls(activeChar.installedCyberwareIds, item.id);
+      const isInstalled = installCount > 0;
+      const anotherCheck = canInstallAnother(activeChar.installedCyberwareIds, item.id, activeChar.stats);
 
       return (
         <div className="space-y-2.5 font-mono-code text-xs">
@@ -946,10 +950,11 @@ export const CompendiumView: React.FC = () => {
 
           <div className="pt-2 border-t border-[#1e2337] flex flex-wrap items-center justify-between gap-2">
             <span className="text-[10px] text-[#64748b]">
-              Estado: <strong className={isInstalled ? 'text-[#10b981]' : 'text-[#94a3b8]'}>{isInstalled ? 'Instalado' : 'No instalado'}</strong>
+              Estado: <strong className={isInstalled ? 'text-[#10b981]' : 'text-[#94a3b8]'}>{isInstalled ? (installCount > 1 ? `Instalado ×${installCount}` : 'Instalado') : 'No instalado'}</strong>
             </span>
             <div className="flex items-center gap-1.5">
               {isInstalled ? (
+                <>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -960,6 +965,26 @@ export const CompendiumView: React.FC = () => {
                 >
                   Desinstalar Ciberware
                 </button>
+                <button
+                  disabled={!anotherCheck.ok}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAcquire(item.id, item.name, item.cost, spendMoneyMode ? 'buy' : 'loot', () => {
+                      installCyberwareAdvanced({
+                        cyberwareId: item.id,
+                        cyberwareName: item.name,
+                        humanityLossAmount: item.humanityLoss ? parseHumanityLossAverage(String(item.humanityLoss)) : 7,
+                        cost: 0,
+                        spendMoney: false
+                      });
+                    });
+                  }}
+                  className="px-2.5 py-1 bg-[#10b981]/20 hover:bg-[#10b981] border border-[#10b981] text-[#10b981] hover:text-[#0b0e17] rounded-xs text-[10px] font-bold transition-all cursor-pointer active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                  title={anotherCheck.ok ? 'Instalar otra copia' : anotherCheck.reason}
+                >
+                  Instalar otro
+                </button>
+                </>
               ) : (
                 <>
                   <button
@@ -1699,7 +1724,9 @@ export const CompendiumView: React.FC = () => {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5">
                 {filteredCyberware.map((cyber: any) => {
-                  const isInstalled = activeChar.installedCyberwareIds.includes(cyber.id);
+                  const installCount = countInstalls(activeChar.installedCyberwareIds, cyber.id);
+                  const isInstalled = installCount > 0;
+                  const anotherCheck = canInstallAnother(activeChar.installedCyberwareIds, cyber.id, activeChar.stats);
                   const isExpanded = expandedItemId === cyber.id;
 
                   return (
@@ -1724,6 +1751,7 @@ export const CompendiumView: React.FC = () => {
                           </span>
                         </div>
 
+                        <div className="flex items-center gap-1 shrink-0">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -1742,8 +1770,30 @@ export const CompendiumView: React.FC = () => {
                                 : 'bg-[#a855f7]/20 hover:bg-[#a855f7] border border-[#a855f7] text-[#a855f7] hover:text-white'
                           }`}
                         >
-                          {isInstalled ? 'Desinstalar' : spendMoneyMode ? `💳 -${cyber.cost} eb` : '🎁 + Instalar'}
+                          {isInstalled ? (installCount > 1 ? `Desinstalar ×${installCount}` : 'Desinstalar') : spendMoneyMode ? `💳 -${cyber.cost} eb` : '🎁 + Instalar'}
                         </button>
+                        {isInstalled && (
+                          <button
+                            disabled={!anotherCheck.ok}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAcquire(cyber.id, cyber.name, cyber.cost, spendMoneyMode ? 'buy' : 'loot', () => {
+                                installCyberwareAdvanced({
+                                  cyberwareId: cyber.id,
+                                  cyberwareName: cyber.name,
+                                  humanityLossAmount: cyber.humanityLoss ? parseHumanityLossAverage(String(cyber.humanityLoss)) : 7,
+                                  cost: 0,
+                                  spendMoney: false
+                                });
+                              });
+                            }}
+                            className="px-2 py-0.5 rounded-xs text-[10px] font-mono-code font-bold transition-all cursor-pointer chamfer-btn shrink-0 active:scale-95 bg-[#10b981]/20 hover:bg-[#10b981] border border-[#10b981] text-[#10b981] hover:text-[#0b0e17] disabled:opacity-40 disabled:cursor-not-allowed"
+                            title={anotherCheck.ok ? 'Instalar otra copia' : anotherCheck.reason}
+                          >
+                            Instalar otro
+                          </button>
+                        )}
+                        </div>
                       </div>
 
                       {/* Stat Pills */}
@@ -2399,7 +2449,9 @@ export const CompendiumView: React.FC = () => {
 
                 {/* Cyberware in table */}
                 {filteredCyberware.map((c: any) => {
-                  const isInstalled = activeChar.installedCyberwareIds.includes(c.id);
+                  const installCount = countInstalls(activeChar.installedCyberwareIds, c.id);
+                  const isInstalled = installCount > 0;
+                  const anotherCheck = canInstallAnother(activeChar.installedCyberwareIds, c.id, activeChar.stats);
                   const isExpanded = expandedItemId === c.id;
                   return (
                     <React.Fragment key={c.id}>
@@ -2454,8 +2506,29 @@ export const CompendiumView: React.FC = () => {
                                   : 'bg-[#a855f7]/20 hover:bg-[#a855f7] border border-[#a855f7] text-[#a855f7] hover:text-white'
                             }`}
                           >
-                            {isInstalled ? 'Desinstalar' : spendMoneyMode ? `💳 -${c.cost} eb` : '🎁 + Instalar'}
+                            {isInstalled ? (installCount > 1 ? `Desinstalar ×${installCount}` : 'Desinstalar') : spendMoneyMode ? `💳 -${c.cost} eb` : '🎁 + Instalar'}
                           </button>
+                          {isInstalled && (
+                            <button
+                              disabled={!anotherCheck.ok}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleAcquire(c.id, c.name, c.cost, spendMoneyMode ? 'buy' : 'loot', () => {
+                                  installCyberwareAdvanced({
+                                    cyberwareId: c.id,
+                                    cyberwareName: c.name,
+                                    humanityLossAmount: c.humanityLoss ? parseHumanityLossAverage(String(c.humanityLoss)) : 7,
+                                    cost: 0,
+                                    spendMoney: false
+                                  });
+                                });
+                              }}
+                              className="ml-1 px-2 py-0.5 rounded-xs text-[10px] font-bold transition-all cursor-pointer bg-[#10b981]/20 hover:bg-[#10b981] border border-[#10b981] text-[#10b981] hover:text-[#0b0e17] disabled:opacity-40 disabled:cursor-not-allowed"
+                              title={anotherCheck.ok ? 'Instalar otra copia' : anotherCheck.reason}
+                            >
+                              Instalar otro
+                            </button>
+                          )}
                         </td>
                       </tr>
                       {isExpanded && (

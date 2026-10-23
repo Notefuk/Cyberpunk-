@@ -217,3 +217,23 @@ describe('injectPremades', () => {
     expect(out.filter((c) => c.id === 'cemk-folio-x')).toHaveLength(1);
   });
 });
+
+describe('migración v4 -> v5 (Thorn, Core p.114)', () => {
+  it('Thorn BODY 10 con Grafted Muscle CEMK pasa a BODY 8 y no toca otras fichas', () => {
+    const thorn = makeChar({ id: 'cemk-folio-thorn', stats: { BODY: 10, WILL: 8 }, installedCyberwareIds: ['cw-cemk-grafted-muscle'] });
+    const otra = makeChar({ id: 'otra', stats: { BODY: 10 }, installedCyberwareIds: ['cw-cemk-grafted-muscle'] });
+    const { state } = runMigrations({ characters: [thorn, otra] }, 4);
+    expect(state.characters[0].stats).toEqual({ BODY: 8, WILL: 8 });
+    expect(state.characters[1].stats.BODY).toBe(10);
+  });
+
+  it('no baja un Thorn que ya tiene BODY 8', () => {
+    const thorn = makeChar({ id: 'cemk-folio-thorn', stats: { BODY: 8 }, installedCyberwareIds: ['cw-cemk-grafted-muscle'] });
+    const { state } = runMigrations({ characters: [thorn] }, 4);
+    expect(state.characters[0].stats.BODY).toBe(8);
+  });
+
+  it('la versión de esquema es 5', () => {
+    expect(CHARACTERS_SCHEMA_VERSION).toBe(5);
+  });
+});

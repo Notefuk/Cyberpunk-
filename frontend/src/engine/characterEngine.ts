@@ -8,6 +8,7 @@ import type {
 } from '../types/cyberpunk';
 import { SKILL_METADATA } from '../types/cyberpunk';
 import { calculateWeaponAttachmentBonuses } from '../data/weaponAttachmentsAndTechData';
+import { cyberwareStatBonus } from './cyberwareEffects';
 
 export function calculateMaxHp(body: number, will: number): number {
   return 10 + 5 * Math.ceil((body + will) / 2);
@@ -130,7 +131,8 @@ export interface WeaponAttackBreakdown {
 }
 
 export function getEffectiveBody(character: CharacterSheet): number {
-  const baseBody = character.stats?.BODY ?? 0;
+  // [Claude Code · 2026-10-23] Core p.114: Grafted Muscle and Bone Lace suma al BODY base antes del FBC.
+  const baseBody = cyberwareStatBonus(character.installedCyberwareIds ?? [], 'BODY', character.stats?.BODY ?? 0);
   if (character.fbcState?.isFullBodyConversion && (character.fbcState.bodyOverride ?? 0) > 0) {
     return Math.max(baseBody, character.fbcState.bodyOverride);
   }

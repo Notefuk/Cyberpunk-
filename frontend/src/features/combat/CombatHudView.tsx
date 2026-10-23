@@ -2034,7 +2034,7 @@ export const CombatHudView: React.FC = () => {
   // Unarmed: Choke maneuver
   const handleChoke = () => {
     ensureTelemetryExpanded();
-    const bodyDmg = activeChar?.stats?.BODY ?? 6;
+    const bodyDmg = activeChar ? getEffectiveBody(activeChar) : 6;
     const chokeEntry: RollEntry = {
       id: `roll-dmg-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
       timestamp: new Date().toISOString(),
@@ -5890,9 +5890,9 @@ export const CombatHudView: React.FC = () => {
                           <button
                             onClick={handleChoke}
                             className="py-1.5 px-2 bg-[#25151c] hover:bg-[#dc2626] hover:text-white border border-[#4a1c29] text-[#f43f5e] font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 transition-all"
-                            title={`Ahorcar: ${activeChar?.stats?.BODY ?? 6} HP directos ignorando SP`}
+                            title={`Ahorcar: ${activeChar ? getEffectiveBody(activeChar) : 6} HP directos ignorando SP`}
                           >
-                            <Skull className="w-3.5 h-3.5" /> CHOKE ({activeChar?.stats?.BODY ?? 6} HP Directos)
+                            <Skull className="w-3.5 h-3.5" /> CHOKE ({activeChar ? getEffectiveBody(activeChar) : 6} HP Directos)
                           </button>
                         </div>
                       </div>
@@ -6612,7 +6612,7 @@ export const CombatHudView: React.FC = () => {
                               onClick={handleChoke}
                               className="py-1 px-1.5 bg-[#262016] hover:bg-[#dc2626] hover:text-white text-[#f87171] font-mono-code text-[10px] font-bold rounded transition-all border border-[#4d1f24]"
                             >
-                              💀 Ahorcar ({activeChar?.stats?.BODY ?? 6} HP)
+                              💀 Ahorcar ({activeChar ? getEffectiveBody(activeChar) : 6} HP)
                             </button>
                           </div>
                         </div>

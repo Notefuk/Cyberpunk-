@@ -1,7 +1,8 @@
 import { useState, useMemo, useRef } from 'react';
 import coreData from '../../data/core-rules.cprpack.json';
 import { useCharacterStore } from '../../store/useCharacterStore';
-import { calculateTherapyMaxHumanity } from '../../engine/characterEngine';
+import { calculateTherapyMaxHumanity, getEffectiveBody } from '../../engine/characterEngine';
+import { canInstallAnother, countInstalls } from '../../engine/cyberwareEffects';
 import { 
   Cpu, 
   Activity, 
@@ -508,7 +509,7 @@ export function CyberwareRipperdocView() {
               <div className="mt-1 flex items-center gap-1.5 bg-[#e11d48]/25 border border-[#e11d48] px-2 py-0.5 rounded text-[9px] font-mono-code text-[#ff0055] font-black">
                 <span>🦾 FBC ACTIVO:</span>
                 <span className="text-white">{activeChar.fbcState.activeChassisName || 'Chasis Borg'}</span>
-                <span className="text-[#00f5d4]">BODY {activeChar.fbcState.bodyOverride || activeChar.stats?.BODY}</span>
+                <span className="text-[#00f5d4]">BODY {getEffectiveBody(activeChar)}</span>
                 <span className="text-[#f59e0b]">SP {activeChar.fbcState.baseArmorSp || 0}</span>
               </div>
             )}
@@ -640,7 +641,7 @@ export function CyberwareRipperdocView() {
             <div className="bg-[#12141c] p-1.5 rounded border border-[#1f2434] text-left">
               <span className="text-[8px] font-mono-code text-[#94a3b8] uppercase block">BODY STAT</span>
               <span className="font-tech text-xs font-black text-white">
-                {activeChar.stats?.BODY || 6}
+                {getEffectiveBody(activeChar) || 6}
               </span>
             </div>
 
@@ -921,7 +922,9 @@ export function CyberwareRipperdocView() {
                 }
 
                 return zoneItems.map((item) => {
-                  const isInstalled = activeChar.installedCyberwareIds.includes(item.id);
+                  const installCount = countInstalls(activeChar.installedCyberwareIds, item.id);
+                  const isInstalled = installCount > 0;
+                  const anotherCheck = canInstallAnother(activeChar.installedCyberwareIds, item.id, activeChar.stats);
                   const canAfford = (activeChar.eurodollars || 0) >= item.cost;
                   const rollPreview = diceRollPreview[item.id];
                   const lossPreview =
@@ -953,7 +956,7 @@ export function CyberwareRipperdocView() {
                             </span>
                             {isInstalled && (
                               <span className="text-[10px] font-mono-code px-2 py-0.5 rounded bg-[#10b981]/20 border border-[#10b981]/40 text-[#10b981] font-bold uppercase flex items-center gap-1">
-                                <Check className="w-3 h-3" /> YA INSTALADO
+                                <Check className="w-3 h-3" /> YA INSTALADO{installCount > 1 ? ` ×${installCount}` : ''}
                               </span>
                             )}
                           </div>
@@ -1030,6 +1033,16 @@ export function CyberwareRipperdocView() {
                               </button>
                             </>
                           ) : (
+                            <>
+                            <button
+                              onClick={() => handleInstallCyberware(item, false)}
+                              disabled={!anotherCheck.ok || !canAfford}
+                              className="w-full sm:w-auto px-3.5 py-2 bg-[#00f5d4]/20 hover:bg-[#00f5d4] border border-[#00f5d4]/40 text-[#00f5d4] hover:text-black font-tech text-xs font-bold uppercase rounded-xs transition-colors cursor-pointer flex items-center justify-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                              title={anotherCheck.ok ? (canAfford ? 'Instalar otra copia y debitar dinero' : 'Fondos insuficientes') : anotherCheck.reason}
+                            >
+                              <Coins className="w-3.5 h-3.5" />
+                              <span>INSTALAR OTRO</span>
+                            </button>
                             <button
                               onClick={() => handleUninstallImplant(item)}
                               className="w-full sm:w-auto px-4 py-2 bg-[#ef4444]/20 hover:bg-[#ef4444] border border-[#ef4444]/40 text-[#ef4444] hover:text-white font-tech text-xs font-bold uppercase rounded-xs transition-colors cursor-pointer flex items-center justify-center gap-1"
@@ -1037,6 +1050,7 @@ export function CyberwareRipperdocView() {
                               <Trash2 className="w-3.5 h-3.5" />
                               <span>DESINSTALAR</span>
                             </button>
+                            </>
                           )}
                         </div>
                       </div>
