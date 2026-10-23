@@ -28,7 +28,7 @@
 - Siguiente paso exacto: planificar el plan 5 pendiente (Black Chrome completo + catálogo de vehículos), preguntando el alcance a Giuliano antes de codear.
 - Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y el HUD (760 px a 375). (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido (plan futuro, decisión del plan 15): blanco del HUD con Evasion, daño, SP, heridas y Prone aplicados de verdad; hoy hay 3 modelos de enemigo desconectados (`ActiveEncounterEnemy`, `InitiativeCombatant`, `EnemySheet`).
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
-- Preguntas abiertas para Giuliano: revocar el token de GitHub del remote `origin`.
+- Preguntas abiertas para Giuliano: ninguna.
 
 ## Último trabajo terminado
 
@@ -81,7 +81,7 @@
 
 ## Notas y bloqueos
 
-- Seguridad: el remote `origin` tiene un token de GitHub en la URL; Giuliano debe revocarlo. `gh` ya maneja el login, así que se puede pasar el remote a una URL sin token.
+- Seguridad [Claude Code · 2026-10-23]: token "Gemini" revocado; `origin` sin token (`https://github.com/Notefuk/Cyberpunk-.git`). Push con Git Credential Manager (login por navegador) y `scripts/gh` con su propio login. No volver a pegar tokens en la URL.
 - [Claude Code · 2026-10-23] Desde v4.9.4 el motor aplica Grafted Muscle (+2 BODY por instalación, tope 10, Core p.114) con `engine/cyberwareEffects.ts`.
 - El hook `Stop` solo corre en sesiones abiertas en la carpeta del repo.
 - [ARREGLADO en v4.9.4, Claude Code · 2026-10-23] Los docs mencionaban `characterLifepathData.ts` / `ROLE_SPECIFIC_LIFEPATHS`; ahora nombran `coreLifepath.ts` y compañía.
