@@ -6,13 +6,13 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
-**Última actualización**: [Claude Code · 2026-10-23] v4.9.5 terminada en su rama.
-**Versión de la app**: v4.9.5 lista en la rama `claude/v4.9.5-martial-arts-creador`. `main` = v4.9.4, publicada.
+**Última actualización**: [Claude Code · 2026-10-23] v4.9.5 mergeada y publicada; v4.9.6 en curso.
+**Versión de la app**: v4.9.5 (en `main`, squash 46948ba, PR #30; publicada en gh-pages y verificada en vivo)
 **Plan activo**: plan 14, Martial Arts completo (`docs/plans/plan14-martial-arts.md`, aprobado): paso 0 auditoría canon, v4.9.5 creador/ficha/referencia, v4.9.6 movimientos especiales automáticos [Claude Code · 2026-10-23]. Estado de todos los planes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-23] Plan 14 Martial Arts: paso 0 (auditoría, decisiones 39-46) y v4.9.5 (creador con formas aparte, especialidades, HUD "En mano" por forma, daño p.178, `docs/rules/martial-arts.md`) TERMINADOS y verificados en la rama `claude/v4.9.5-martial-arts-creador`. Falta PR, merge y gh-pages de v4.9.5. Después: v4.9.6 movimientos especiales automáticos.
+- [Claude Code · 2026-10-23] Plan 14 Martial Arts: paso 0 y v4.9.5 MERGEADA (PR #30) y PUBLICADA. v4.9.6 (movimientos especiales automáticos en el HUD) EN CURSO en la rama `claude/v4.9.6-martial-arts-hud`. Paso actual: scout de cómo el HUD elige blanco y aplica heridas críticas, SP, Prone y ataques.
 - [Claude Code · 2026-10-22] v4.9.0 Datos de roles por rango (plan 8) MERGEADA (PR #24) y PUBLICADA. Siguiente: v4.9.1 motor de roles (`engine/roleRules.ts`: NET Actions por rango, DV de Quickhack, mejor Reach, costos de IP), avance con IP (IP nuevos en 0, modo GM), quitar el selector +4 del creador, reparto inicial de los Folios aplicado a la ficha y migración de persistencia v4, en rama `claude/v4.9.1-*`. Datos en `ROLE_RANKS.roles.<Rol>`; reglas ya decididas en discrepancias 24-37.
 - [Claude Code · 2026-10-22] v4.9.1 (plan 9) MERGEADA (PR #25) y PUBLICADA. Siguiente: v4.9.2 herramientas de rol de combate (Solo en el HUD, Netrunner con `engine/roleRules.ts`, Medtech con Speedheal híbrido, Nomad con Moto). Pendiente previo: desborde horizontal de Street Lab en celular (ya estaba en v4.9.0).
 - [Claude Code · 2026-10-23] v4.9.2 (plan 10) MERGEADA (PR #26) y PUBLICADA. Damage Deflection después de armadura confirmado por Giuliano. Siguiente: v4.9.3 herramientas de rol sociales (Rockerboy, Fixer, Media, Exec, Lawman; tablas en `ROLE_RANKS.roles.<Rol>.tables`).
@@ -25,7 +25,7 @@
 - Cierra: [Claude Code · 2026-10-23].
 - Rama: `main` @ aef92c7 + este checkpoint (pusheada). v4.9.4 publicada en gh-pages.
 - A medias: nada.
-- Siguiente paso exacto: PR de v4.9.5, merge y publicar (con OK de Giuliano); después, v4.9.6 del plan 14 (scout de cómo el HUD elige blanco y aplica heridas críticas, y datos estructurados de los movimientos).
+- Siguiente paso exacto: v4.9.6 del plan 14: datos estructurados de los movimientos (`req`, `effects[]`), `engine/martialArtsRules.ts`, registro del turno en `useCombatStore` y aplicación de efectos en el HUD.
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
 - Preguntas abiertas para Giuliano: revocar el token de GitHub del remote `origin`.
 
