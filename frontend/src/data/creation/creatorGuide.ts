@@ -134,7 +134,7 @@ export const CREATOR_GUIDE: CreatorGuideSrc = {
         {
           "whatEs": "CEMK: durante la creación cualquier personaje puede instalarse el Neuroport gratis, con 0 de Pérdida de Humanidad y sin bajar la Humanidad Máxima.",
           "source": {
-            "book": "CEMK",
+            "book": "CEMK RB",
             "page": 25
           }
         }

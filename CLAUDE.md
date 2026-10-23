@@ -52,7 +52,7 @@ Al empezar una tarea nueva, lee en este orden (solo las secciones relevantes, so
 4. `CONTENT_CHECKLIST.md` — cobertura de reglas/libros por fase (`[x]`, `[~]`, `[ ]`).
 
 **Los docs pueden estar desfasados respecto al código.** Antes de afirmar que algo existe, verifícalo con grep. Desfases conocidos:
-- `AI_CONTEXT_HANDOFF.md` menciona `characterLifepathData.ts` y `ROLE_SPECIFIC_LIFEPATHS`: ese archivo/símbolo no existe; los lifepaths de rol viven en otros módulos de `src/data/`.
+- Los lifepaths de rol viven en `data/creation/coreLifepath.ts` (`CORE_LIFEPATH.byRole`), `ROLE_LIFEPATH_QUESTIONS` y `getApplicableRoleLifepathTables`; `characterLifepathData.ts` no existe (docs corregidos en v4.9.4) [Claude Code · 2026-10-23].
 - Algunos docs citan `features/roles/NetAndRolesDeckView.tsx`; la ruta real es `features/netroles/`.
 
 ## Comandos

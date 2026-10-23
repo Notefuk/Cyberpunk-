@@ -44,8 +44,6 @@
 - El bestiario no trae Trading (el Haggle contra un enemigo usa 0).
 - Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y barra del centro del HUD.
 - El Range Upgrade del cyberdeck (Core p.208) no está en el modelo de ficha.
-- Grafted Muscle no aplica su +2 a BODY (es solo texto).
-- Los docs mencionan `characterLifepathData.ts` / `ROLE_SPECIFIC_LIFEPATHS`, que no existen.
 - Seguridad: revocar el token de GitHub de la URL del remote `origin` (lo hace Giuliano).
 
 ---

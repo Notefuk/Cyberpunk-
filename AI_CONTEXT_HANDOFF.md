@@ -1,7 +1,7 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
 > **SYSTEM VERSION**: `v4.6.0 OPERATIVO`  
-> **LAST UPDATED**: [Claude Code · 2026-10-21]  
+> **LAST UPDATED**: [Claude Code · 2026-10-23]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
 > **ARCHITECTURE**: COMP/CON decoupled offline-first model. Single source of truth in typed registries and Zustand stores.
@@ -144,7 +144,7 @@ This file is the official AI-to-AI handoff document for future LLMs, subagents, 
   - **Matriz de Fabricación Maker**: Consulta en tiempo real de DVs de Tech (Cybertech/Weaponstech/Basic Tech) y tiempos reglamentarios según valor en Eurodólares del ítem base (Core pp. 147-148).
 
 ### C. Lifepaths Específicos de Rol
-* **Data Source**: `ROLE_SPECIFIC_LIFEPATHS` en `characterLifepathData.ts`.
+* **Data Source** [Claude Code · 2026-10-23]: `CORE_LIFEPATH.byRole[rol].tables` en `data/creation/coreLifepath.ts` (generado desde `data/creation-src/`), las preguntas en `ROLE_LIFEPATH_QUESTIONS` (`data/characterCreationData.ts`) y las tablas que aplican en `getApplicableRoleLifepathTables` (`engine/characterCreation.ts`). El estado del creador va en `draft.roleLifepath`.
 * **View**: Pestaña 8 en `StreetLabView.tsx` (`roleLifepath`).
 * **Mechanics**:
   - Cobertura completa de los 10 roles del Core Rulebook (pp. 44-71): Rockero, Solo, Netrunner, Tech, Medtech, Media, Policía (Lawman), Ejecutivo, Fixer y Nómada.
@@ -212,7 +212,7 @@ frontend/src/
 ├── data/
 │   ├── core-rules.cprpack.json          # 391+ ítems oficiales multi-libro
 │   ├── weaponAttachmentsAndTechData.ts  # 23 accesorios canónicos, slots, Maker Tech upgrades & DVs
-│   ├── characterLifepathData.ts         # ROLE_SPECIFIC_LIFEPATHS para los 10 roles
+│   ├── creation/coreLifepath.ts         # CORE_LIFEPATH (general + byRole), generado [Claude Code · 2026-10-23]
 │   ├── netAndRolesData.ts               # ROLE_ABILITIES_COMPLETE_PROGRESSION, Quickhacks, NET Topologies
 │   ├── weaponAndCyberwareTooltips.ts    # CEMK_WEAPON_REBUILD_SYSTEM_GUIDE, RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE
 │   ├── criticalInjuries.ts              # Tablas oficiales 2d6 de heridas críticas

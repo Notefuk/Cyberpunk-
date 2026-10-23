@@ -81,6 +81,6 @@
 ## Notas y bloqueos
 
 - Seguridad: el remote `origin` tiene un token de GitHub en la URL; Giuliano debe revocarlo. `gh` ya maneja el login, así que se puede pasar el remote a una URL sin token.
-- El Engine no aplica el efecto de Grafted Muscle (el +2 a BODY es solo texto en el Compendium).
+- [Claude Code · 2026-10-23] Desde v4.9.4 el motor aplica Grafted Muscle (+2 BODY por instalación, tope 10, Core p.114) con `engine/cyberwareEffects.ts`.
 - El hook `Stop` solo corre en sesiones abiertas en la carpeta del repo.
-- Los docs mencionan `characterLifepathData.ts` / `ROLE_SPECIFIC_LIFEPATHS`, que no existen en el código.
+- [ARREGLADO en v4.9.4, Claude Code · 2026-10-23] Los docs mencionaban `characterLifepathData.ts` / `ROLE_SPECIFIC_LIFEPATHS`; ahora nombran `coreLifepath.ts` y compañía.
