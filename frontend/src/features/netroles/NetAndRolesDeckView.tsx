@@ -1732,6 +1732,11 @@ export const NetAndRolesDeckView: React.FC = () => {
                       </div>
                     </div>
 
+                    <div className="p-2 bg-[#0b0e17] rounded-xs border border-[#1b2234] text-[10px] text-slate-300 space-y-1">
+                      <strong className="text-red-400 block">Special Moves:</strong>
+                      <p>{MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT.combatMechanics.specialMovesResolution}</p>
+                    </div>
+
                     {/* Tabla Oficial de Daño por BODY */}
                     <div className="overflow-x-auto border border-[#1e2638] rounded-xs mt-1">
                       <table className="w-full text-left text-[10px]">
@@ -1924,6 +1929,10 @@ export const NetAndRolesDeckView: React.FC = () => {
                         <div className="text-[10px] font-mono-code text-[#94a3b8]">
                           <span className="text-slate-500">Rol Táctico:</span> {form.tacticalRole}
                         </div>
+                        <div className="text-[10px] font-mono-code text-[#94a3b8]">
+                          <span className="text-slate-500">Stats clave (según los requisitos de sus movimientos):</span> {form.keyStats.join(', ')}
+                          {form.sourcePage != null && <span className="text-[#64748b] ml-1">{form.sourceBook === 'core' ? 'Core' : 'Interface RED Vol. 4'} p.{form.sourcePage}</span>}
+                        </div>
 
                         {/* Los 2 Movimientos Especiales */}
                         <div className="pt-2 border-t border-[#1b2234] space-y-1.5">
@@ -1934,10 +1943,11 @@ export const NetAndRolesDeckView: React.FC = () => {
                             <div key={m.id} className="bg-[#0b0e15] p-2 rounded-xs border border-[#1a2133] space-y-0.5 text-[10px] font-mono-code">
                               <div className="flex items-center justify-between font-bold">
                                 <span className="text-white">{m.name}</span>
-                                <span className="text-amber-400">{m.isOpposed ? `vs ${m.opposedBy ?? 'DEX + Evasion'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
+                                <span className="text-amber-400">{m.isOpposed || m.resolutionDv === 0 ? `contra ${m.opposedBy ?? 'DEX + Evasion del rival'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
                               </div>
                               <div className="text-[9px] text-slate-400 font-sans leading-tight">
                                 <strong>Req:</strong> {m.requirements}
+                                {/once per turn|una vez por turno/i.test(m.requirements) && <span className="ml-1 text-amber-400 font-bold">(1 vez por turno)</span>}
                               </div>
                               <div className="text-[9px] text-slate-300 font-sans leading-tight">
                                 {m.effectDescription}

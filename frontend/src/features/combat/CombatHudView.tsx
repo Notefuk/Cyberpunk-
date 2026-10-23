@@ -12,6 +12,7 @@ import {
   calculateMaxHp, 
   calculateSeriouslyWoundedThreshold,
   calculateUnarmedDamage,
+  calculateMartialArtsDamage,
   getEffectiveBody,
   getBaseDeathSavePenalty,
   AMMO_TYPE_CATALOG,
@@ -1649,6 +1650,37 @@ export const CombatHudView: React.FC = () => {
   const isMortallyWounded = (activeChar?.currentHp ?? 0) <= 0;
   const hasCyberarm = (activeChar?.installedCyberwareIds ?? []).some(id => id.includes('cyberarm') || id.includes('gorilla-arms'));
   const unarmedDmg = calculateUnarmedDamage(effectiveBody, hasCyberarm);
+  // Martial Arts (Core p.178): daño por BODY sin mínimo de ciberbrazo (decisión 46); cada forma es una skill aparte (Core p.83).
+  const martialDmg = calculateMartialArtsDamage(effectiveBody);
+  const martialKnownForms = MARTIAL_ARTS_FORMS.filter(
+    (f) => (activeChar?.knownMartialArts?.[f.id] ?? 0) > 0 || (activeChar?.equippedMartialArtChips || []).includes(f.id)
+  );
+  const martialHandForm = martialKnownForms.find((f) => f.id === selectedMartialFormId) ?? martialKnownForms[0] ?? null;
+  const martialHandRank = martialHandForm
+    ? (activeChar?.equippedMartialArtChips || []).includes(martialHandForm.id)
+      ? Math.max(3, activeChar?.knownMartialArts?.[martialHandForm.id] ?? 0)
+      : activeChar?.knownMartialArts?.[martialHandForm.id] ?? 0
+    : 0;
+  const martialFormSelector = martialHandForm ? (
+    <label className="flex items-center gap-2 text-[10px] font-mono-code text-[#94a3b8]">
+      Forma:
+      <select
+        aria-label="Forma de Martial Arts"
+        value={martialHandForm.id}
+        onChange={(e) => setSelectedMartialFormId(e.target.value)}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-[#0a0b0e] border border-[#2a3148] text-white rounded-xs px-1.5 py-0.5"
+      >
+        {martialKnownForms.map((f) => (
+          <option key={f.id} value={f.id}>
+            {f.name} (R{(activeChar?.equippedMartialArtChips || []).includes(f.id) ? Math.max(3, activeChar?.knownMartialArts?.[f.id] ?? 0) : activeChar?.knownMartialArts?.[f.id] ?? 0})
+          </option>
+        ))}
+      </select>
+    </label>
+  ) : (
+    <span className="text-[10px] font-mono-code text-[#f59e0b]">Sin forma de Martial Arts</span>
+  );
   const activeBracket = RANGE_BRACKETS.find((b) => b.range === selectedDistance);
 
   // Helper: DV for weapon & distance
@@ -2050,13 +2082,14 @@ export const CombatHudView: React.FC = () => {
 
   // Unarmed: Martial Arts attack
   const handleMartialArtsAttack = () => {
+    if (!martialHandForm || !activeChar) return;
     ensureTelemetryExpanded();
     const martialArtsWeapon: WeaponItem = {
       id: 'unarmed-martial-arts',
       name: 'Artes Marciales',
       type: 'Melee',
       skill: 'Martial Arts',
-      damage: unarmedDmg,
+      damage: martialDmg,
       rof: 2,
       hands: 1,
       concealable: true,
@@ -2069,7 +2102,9 @@ export const CombatHudView: React.FC = () => {
       setLuckToSpend(0);
     }
 
-    const entry = createInitialAttackRoll(activeChar, martialArtsWeapon, {
+    // La tirada usa DEX + rango de la forma elegida (chip: max(3, natural)).
+    const martialChar = { ...activeChar, skills: { ...activeChar.skills, martialArts: martialHandRank } };
+    const entry = createInitialAttackRoll(martialChar, martialArtsWeapon, {
       ...(() => { const def = rollMeleeDefenseDv(); return { targetDv: def.dv, distanceLabel: `${'Cuerpo a cuerpo (Ignora 50% SP)'} ${def.label}` }; })(),
       luckSpent,
       weaponInstanceId: 'unarmed-martial-arts',
@@ -2080,8 +2115,9 @@ export const CombatHudView: React.FC = () => {
 
   // Unarmed: Martial Arts damage
   const handleMartialArtsDamage = () => {
+    if (!martialHandForm) return;
     ensureTelemetryExpanded();
-    const dmgEntry = createDamageRoll('Artes Marciales (Ignora 50% SP)', unarmedDmg, false, 1, 'unarmed-martial-arts', aimedShotTarget);
+    const dmgEntry = createDamageRoll('Artes Marciales (Ignora 50% SP)', martialDmg, false, 1, 'unarmed-martial-arts', aimedShotTarget);
     addOutgoingDamageEntry(dmgEntry);
   };
 
@@ -2255,7 +2291,7 @@ export const CombatHudView: React.FC = () => {
       timestamp: new Date().toISOString(),
       type: 'attack',
       weaponName: `🥋 ${form.name} (Ataque)`,
-      damageFormula: `${unarmedDmg} (Ignora 50% SP)`,
+      damageFormula: `${martialDmg} (Ignora 50% SP)`,
       distanceLabel: 'Cuerpo a cuerpo · ROF 2',
       d10,
       critDie: null,
@@ -2283,7 +2319,7 @@ export const CombatHudView: React.FC = () => {
     ensureTelemetryExpanded();
     const dmgEntry = createDamageRoll(
       `${form.name} (Ignora 50% SP)`,
-      unarmedDmg,
+      martialDmg,
       false,
       1,
       `ma-${form.id}`,
@@ -2354,7 +2390,7 @@ export const CombatHudView: React.FC = () => {
   const handleRollComboDamage = (move: typeof MARTIAL_ARTS_FORMS[number]['moves'][number]) => {
     ensureTelemetryExpanded();
     const diceMatch = move.damageBonusOrFormula?.match(/(\d+d\d+)/i);
-    const formula = diceMatch ? diceMatch[1] : unarmedDmg;
+    const formula = diceMatch ? diceMatch[1] : martialDmg;
     const dmgEntry = createDamageRoll(
       `Combo: ${move.name}`,
       formula,
@@ -5931,7 +5967,7 @@ export const CombatHudView: React.FC = () => {
                         {/* Píldoras Rápidas */}
                         <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] font-mono-code">
                           <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs font-bold">
-                            Daño: {unarmedDmg}
+                            Daño: {martialDmg}
                           </span>
                           <span className="bg-[#1b1f2e] text-[#cbd5e1] border border-[#272e42] px-1.5 py-0.5 rounded-xs">
                             ROF {aimedShotTarget !== 'none' ? '1 (Apuntado)' : '2'}
@@ -5940,7 +5976,7 @@ export const CombatHudView: React.FC = () => {
                             vs {meleeDefenseBase}+1d10
                           </span>
                           <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
-                            Base: +{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0) + luckToSpendOnNextRoll - (aimedShotTarget !== 'none' ? 8 : 0)}{aimedShotTarget !== 'none' ? ' (-8)' : ''}
+                            Base: +{(activeChar?.stats?.DEX ?? 6) + martialHandRank + luckToSpendOnNextRoll - (aimedShotTarget !== 'none' ? 8 : 0)}{aimedShotTarget !== 'none' ? ' (-8)' : ''}
                           </span>
                         </div>
                       </div>
@@ -5965,9 +6001,11 @@ export const CombatHudView: React.FC = () => {
                   </div>
 
                   {/* Fila 2: Botones de Ataque Rápido */}
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-[#1f2334]">
+                  <div className="pt-2 border-t border-[#1f2334]">{martialFormSelector}</div>
+                  <div className="grid grid-cols-2 gap-2">
                     <button
                       onClick={handleMartialArtsAttack}
+                      disabled={!martialHandForm}
                       className="py-2 px-3 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 shadow-sm active:scale-95"
                     >
                       <Crosshair className="w-4 h-4" />
@@ -5975,10 +6013,11 @@ export const CombatHudView: React.FC = () => {
                     </button>
                     <button
                       onClick={handleMartialArtsDamage}
+                      disabled={!martialHandForm}
                       className="py-2 px-3 bg-[#1d2232] hover:bg-[#252c42] border border-[#2a3248] text-[#10b981] font-tech font-bold text-xs tracking-wider rounded-xs flex items-center justify-center gap-1.5 active:scale-95"
                     >
                       <Dices className="w-4 h-4" />
-                      <span>2. TIRAR DAÑO ({unarmedDmg})</span>
+                      <span>2. TIRAR DAÑO ({martialDmg})</span>
                     </button>
                   </div>
 
@@ -5987,11 +6026,11 @@ export const CombatHudView: React.FC = () => {
                     <div className="pt-2 border-t border-[#1f2434] space-y-2.5 animate-fade-in">
                       <div className="bg-[#101218] p-2.5 rounded border border-[#1f2434] text-xs font-mono-code flex items-center justify-between">
                         <span className="text-[#94a3b8]">
-                          Base: DEX ({activeChar?.stats?.DEX ?? 6}) + Martial Arts ({activeChar?.skills?.martialArts ?? 0})
+                          Base: DEX ({activeChar?.stats?.DEX ?? 6}) + Martial Arts ({martialHandRank})
                           {luckToSpendOnNextRoll > 0 && <span className="text-[#f59e0b]"> + Luck ({luckToSpendOnNextRoll})</span>}
                         </span>
                         <span className="text-white font-bold bg-[#1a2030] px-2 py-0.5 rounded border border-[#2b344c]">
-                          TOTAL: <span className="text-[#10b981]">{(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0) + luckToSpendOnNextRoll}</span>
+                          TOTAL: <span className="text-[#10b981]">{(activeChar?.stats?.DEX ?? 6) + martialHandRank + luckToSpendOnNextRoll}</span>
                         </span>
                       </div>
 
@@ -6639,7 +6678,7 @@ export const CombatHudView: React.FC = () => {
                               Artes Marciales (Martial Arts)
                             </div>
                             <div className="text-[10px] font-mono-code text-[#94a3b8] mt-0.5">
-                              Daño: <strong className="text-white">{unarmedDmg}</strong> • Ignora 50% SP
+                              Daño: <strong className="text-white">{martialDmg}</strong> • Ignora 50% SP
                             </div>
                           </div>
                         </button>
@@ -6658,17 +6697,20 @@ export const CombatHudView: React.FC = () => {
                       {openUnarmed.martialArts && (
                         <div className="p-2.5 pt-0 border-t border-[#13261f] bg-[#0a0f0d] space-y-2 mt-1">
                           <div className="text-[10px] font-mono-code text-[#94a3b8] pt-2">
-                            Base: {(activeChar?.stats?.DEX ?? 6) + (activeChar?.skills?.martialArts ?? 0)} (DEX {activeChar?.stats?.DEX ?? 6} + Martial Arts {activeChar?.skills?.martialArts ?? 0})
+                            Base: {(activeChar?.stats?.DEX ?? 6) + martialHandRank} (DEX {activeChar?.stats?.DEX ?? 6} + {martialHandForm?.name ?? 'Martial Arts'} {martialHandRank})
                           </div>
+                          {martialFormSelector}
                           <div className="grid grid-cols-2 gap-1.5">
                             <button
                               onClick={handleMartialArtsAttack}
+                              disabled={!martialHandForm}
                               className="py-1 px-1.5 bg-[#10b981] hover:bg-[#059669] text-black font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1"
                             >
                               <Target className="w-3 h-3" /> ATACAR (1d10)
                             </button>
                             <button
                               onClick={handleMartialArtsDamage}
+                              disabled={!martialHandForm}
                               className="py-1 px-1.5 bg-[#1e2334] hover:bg-[#2b334a] text-[#10b981] font-tech font-bold text-[10px] rounded transition-all flex items-center justify-center gap-1 border border-[#1f3b2d]"
                             >
                               <Dices className="w-3 h-3" /> TIRAR DAÑO
@@ -7553,7 +7595,7 @@ export const CombatHudView: React.FC = () => {
                         className="py-1.5 px-2 bg-[#181f2f] hover:bg-[#232d42] text-[#10b981] font-tech font-bold text-xs rounded transition-all flex items-center justify-center gap-1.5 border border-[#1f3b2d] cursor-pointer"
                       >
                         <Dices className="w-3.5 h-3.5" />
-                        <span>DAÑO ({unarmedDmg} · 50% SP)</span>
+                        <span>DAÑO ({martialDmg} · 50% SP)</span>
                       </button>
                     </div>
 

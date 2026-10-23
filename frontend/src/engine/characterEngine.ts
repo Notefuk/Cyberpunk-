@@ -328,6 +328,14 @@ export function calculateUnarmedDamage(body: number, hasCyberarm: boolean = fals
   return '4d6';
 }
 
+// Core p.178 y decisión 46: el daño de Martial Arts sale de BODY sin mínimo por Cyberarm (a diferencia de Brawling). [Claude Code · 2026-10-23]
+export function calculateMartialArtsDamage(body: number): string {
+  if (body <= 4) return '1d6';
+  if (body <= 6) return '2d6';
+  if (body <= 10) return '3d6';
+  return '4d6';
+}
+
 export interface AmmoTypeMeta {
   id: string;
   label: string;

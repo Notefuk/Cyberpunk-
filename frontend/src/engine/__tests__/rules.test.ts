@@ -3,6 +3,7 @@ import { describe, expect, it, vi, afterEach } from 'vitest';
 import {
   calculateMaxHp,
   calculateSeriouslyWoundedThreshold,
+  calculateMartialArtsDamage,
   calculateUnarmedDamage,
   getEffectiveEmp,
   isMortallyWounded,
@@ -580,5 +581,15 @@ describe('Martial Arts: auditoría canon plan 14', () => {
   it('keyStats incluyen los STATs de sus movimientos (decisión 45)', () => {
     expect(MARTIAL_ARTS_FORMS.find((f) => f.id === 'karate')!.keyStats).toContain('WILL');
     expect(MARTIAL_ARTS_FORMS.find((f) => f.id === 'taekwondo')!.keyStats).toContain('MOVE');
+  });
+});
+
+describe('Daño de Martial Arts separado de Brawling (Core p.178; decisión 46)', () => {
+  it('BODY 4/5/7/11 da 1d6/2d6/3d6/4d6 y no tiene mínimo por Cyberarm (Core p.178)', () => {
+    expect(calculateMartialArtsDamage(4)).toBe('1d6');
+    expect(calculateMartialArtsDamage(5)).toBe('2d6');
+    expect(calculateMartialArtsDamage(7)).toBe('3d6');
+    expect(calculateMartialArtsDamage(11)).toBe('4d6');
+    expect(calculateUnarmedDamage(4, true)).toBe('2d6');
   });
 });
