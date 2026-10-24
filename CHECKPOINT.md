@@ -9,10 +9,11 @@
 
 **Última actualización**: [Claude Code · 2026-10-24] Orden v2 de la documentación elegido por Giuliano y mergeado (PR #32, squash 2749592). Falta aprobar el plan 16.
 **Versión de la app**: v4.9.6 (en `main`, squash 2943b27, PR #31; publicada en gh-pages y verificada en vivo)
-**Plan activo**: plan 16 `docs/plans/plan16-firebase-mesa-online.md` (Firebase, mesa online), BORRADOR sin aprobar. Va antes del plan 5. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
+**Plan activo**: plan 17 `docs/plans/plan17-sync-cuota.md`, APROBADO [Claude Code · 2026-10-24]: primero la v4.9.7 (preparación sin Firebase). El plan 16 `docs/plans/plan16-firebase-mesa-online.md` (Firebase, mesa online) sigue BORRADOR sin aprobar. Va antes del plan 5. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
+- [Claude Code · 2026-10-24] **Plan 17 aprobado.** Siguiente: v4.9.7 en la rama `claude/v4.9.7-preparacion-sync`. Hace 5 cosas: campos con guardado diferido (`useCommittedField`), `utils/debounce.ts`, freno de 2.000 en `ipLog` y de 500 en `speedhealLog` (lo viejo a la copia de seguridad, totales en `ipLogArchivedTotals`), recorte de €$ en la compra de chips y `partialize` de `useCombatStore`. Nada de código empezado.
 - [Claude Code · 2026-10-24] **Plan 16, borrador** (ya en `main` desde el PR #32; la rama `claude/plan16-firebase-mesa-online` quedó superada). Decisiones de alcance tomadas (login Google, dos modos local/nube, resumen de party, cambios del GM directos con log, dados locales, varias campañas, 3 entornos). Tiene sección de cuotas (14 medidas; la clave es evitar el eco entre dispositivos). Se puede corregir hasta que Giuliano lo apruebe; después es inmutable. Al aprobarse, la fase 1 (v5.0.0) empieza con Giuliano creando los proyectos Firebase `dev` y `prod`.
 
 ## Traspaso
