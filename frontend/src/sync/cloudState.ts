@@ -1,5 +1,7 @@
 // [Claude Code · 2026-10-24] v5.0.0 (plan 16/17): estado de la sincronización con la nube (solo memoria).
 import { create } from 'zustand';
+import type { CampaignDoc } from './campaignRepo';
+import type { PartySummary } from './partySummary';
 
 export type SyncState = 'off' | 'loading' | 'saved' | 'saving' | 'offline' | 'paused' | 'readonly';
 
@@ -9,6 +11,14 @@ interface CloudState {
   needsAppUpdate: boolean;
   lastError: string | null;
   uploading: boolean;
+  // Campañas (plan 18). [Claude Code · 2026-10-24]
+  campaigns: CampaignDoc[];
+  /** Resumen de party por campaña: campId -> charId -> resumen. */
+  party: Record<string, Record<string, PartySummary>>;
+  /** Fichas de jugadores que ve el GM en su dispositivo: charId -> nombre del dueño. */
+  playerOwners: Record<string, string>;
+  /** Campaña asignada a cada ficha propia de la nube (null = ninguna). */
+  charCampaign: Record<string, string | null>;
   setSyncState: (s: SyncState) => void;
   setCloudIds: (ids: string[]) => void;
   setNeedsAppUpdate: (v: boolean) => void;
@@ -22,6 +32,10 @@ export const useCloudState = create<CloudState>()((set) => ({
   needsAppUpdate: false,
   lastError: null,
   uploading: false,
+  campaigns: [],
+  party: {},
+  playerOwners: {},
+  charCampaign: {},
   setSyncState: (syncState) => set({ syncState }),
   setCloudIds: (cloudIds) => set({ cloudIds }),
   setNeedsAppUpdate: (needsAppUpdate) => set({ needsAppUpdate }),

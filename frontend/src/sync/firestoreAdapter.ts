@@ -11,6 +11,8 @@ export type LogEntryDoc = { id: string } & Record<string, unknown>;
 export interface CloudRepo {
   listMyCharacters(): Promise<{ id: string; data: Record<string, unknown> }[]>;
   docExists(id: string): Promise<boolean>;
+  /** Lee una ficha (la de un jugador, para el GM). null si no existe. [Claude Code · 2026-10-24] */
+  getCharacter(id: string): Promise<Record<string, unknown> | null>;
   createCharacter(id: string, sheetDoc: Record<string, unknown>, writerId: string): Promise<Record<string, unknown>>;
   uploadLogEntries(id: string, field: LogField, entries: LogEntryDoc[]): Promise<void>;
   fetchLogEntries(id: string, field: LogField, afterKey?: string): Promise<LogEntryDoc[]>;
@@ -95,6 +97,11 @@ export function createFirestoreAdapter(h: FirebaseHandles, uid: string): SyncAda
         if (typeof e === 'object' && e !== null && (e as { code?: unknown }).code === 'permission-denied') return true;
         throw e;
       }
+    },
+
+    async getCharacter(id: string) {
+      const snap = await fs.getDoc(charRef(id));
+      return snap.exists() ? withoutLastWriter(snap.data() as Record<string, unknown>) : null;
     },
 
     async createCharacter(id, sheetDoc, writerId) {

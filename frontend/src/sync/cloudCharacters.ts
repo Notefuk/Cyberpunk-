@@ -10,6 +10,8 @@ import { createCharacterSync } from './characterSync';
 import { createQuotaGuard } from './quotaGuard';
 import { fromSheetDoc, toSheetDoc, type LogField } from './sheetDoc';
 import { getDeviceId, useCloudState } from './cloudState';
+import { createCampaignRepo } from './campaignRepo';
+import { createCampaignController, type CampaignController } from './cloudCampaigns';
 
 const TX_CAP = 50;
 const QUIET_MS = 2000;
@@ -55,6 +57,7 @@ interface Session {
   engine: Engine;
   tracked: Set<string>;
   owned: Set<string>; // todas las fichas que vinieron de la nube (incluye las solo lectura)
+  playerIds: Set<string>; // fichas de jugadores cargadas por ser GM (plan 18)
   unsubs: Map<string, (() => void)[]>;
   storeUnsub: () => void;
   interval: ReturnType<typeof setInterval> | null;
@@ -62,6 +65,7 @@ interface Session {
   dirty: boolean;
   lastChangeAt: number;
   ticking: boolean;
+  campaigns: CampaignController | null; // plan 18
 }
 
 let session: Session | null = null;
@@ -71,11 +75,55 @@ let initialized = false;
 const findChar = (id: string): CharacterSheet | undefined =>
   useCharacterStore.getState().characters.find((c) => c.id === id);
 
+// putChar solo escribe lo que vino de la nube: la marca evita republicar el resumen de party (sin eco). [Claude Code · 2026-10-24]
+let applyingRemote = false;
+
 function putChar(sheet: CharacterSheet): void {
-  useCharacterStore.setState((s) => {
-    const exists = s.characters.some((c) => c.id === sheet.id);
-    return { characters: exists ? s.characters.map((c) => (c.id === sheet.id ? sheet : c)) : [...s.characters, sheet] };
+  applyingRemote = true;
+  try {
+    useCharacterStore.setState((s) => {
+      const exists = s.characters.some((c) => c.id === sheet.id);
+      return { characters: exists ? s.characters.map((c) => (c.id === sheet.id ? sheet : c)) : [...s.characters, sheet] };
+    });
+  } finally {
+    applyingRemote = false;
+  }
+}
+
+/** Acciones de campaña de la sesión actual (null sin sesión). Plan 18. */
+export function getCampaignController(): CampaignController | null {
+  return session?.campaigns ?? null;
+}
+
+const campaignIdOf = (data: Record<string, unknown>): string | null =>
+  Array.isArray(data.campaignIds) && typeof data.campaignIds[0] === 'string' ? data.campaignIds[0] : null;
+
+function setCharCampaign(id: string, campId: string | null): void {
+  useCloudState.setState((st) => ({ charCampaign: { ...st.charCampaign, [id]: campId } }));
+}
+
+function myCloudIds(s: Session): string[] {
+  const players = useCloudState.getState().playerOwners;
+  return [...s.owned].filter((id) => players[id] === undefined && !s.playerIds.has(id));
+}
+
+/** GM: deja de seguir la ficha de un jugador y la quita de este dispositivo (sigue en la nube). */
+async function dropPlayerSheet(s: Session, id: string): Promise<void> {
+  if (session !== s || !s.playerIds.has(id)) return;
+  await s.engine.untrack(id);
+  for (const u of s.unsubs.get(id) ?? []) u();
+  s.unsubs.delete(id);
+  s.tracked.delete(id);
+  s.owned.delete(id);
+  s.playerIds.delete(id);
+  useCharacterStore.setState((st) => {
+    const characters = st.characters.filter((c) => c.id !== id);
+    return {
+      characters,
+      activeCharacterId: st.activeCharacterId === id && characters.length > 0 ? characters[0].id : st.activeCharacterId,
+    };
   });
+  refreshCloudIds(s);
 }
 
 const lastAt = (sheet: CharacterSheet | undefined): string | undefined => {
@@ -175,6 +223,7 @@ async function tick(s: Session): Promise<void> {
       await s.engine.flushAll();
       if (s.lastChangeAt === stamp) s.dirty = false;
     }
+    if (s.campaigns) await s.campaigns.tick(Date.now());
     if (session !== s) return;
     const quota = createQuotaGuard(localStorage);
     let next: ReturnType<typeof useCloudState.getState>['syncState'];
@@ -203,7 +252,17 @@ async function startSession(uid: string): Promise<void> {
     const quota = createQuotaGuard(localStorage);
     const writerId = `${uid}_${getDeviceId()}`;
     const engine = createCharacterSync({
-      adapter: repo,
+      // subscribeDoc también avisa la campaña asignada de mis fichas (campaignIds no viaja en la ficha).
+      adapter: {
+        ...repo,
+        subscribeDoc: (id, cb) => repo.subscribeDoc(id, (data, info) => {
+          if (data && session?.owned.has(id) && !session.playerIds.has(id)) {
+            const campId = campaignIdOf(data);
+            if (useCloudState.getState().charCampaign[id] !== campId) setCharCampaign(id, campId);
+          }
+          cb(data, info);
+        }),
+      },
       bridge: {
         getSheet: (id) => findChar(id),
         applyRemoteSheet: (id, sheet) => putChar({ ...sheet, id }),
@@ -217,13 +276,14 @@ async function startSession(uid: string): Promise<void> {
     });
     const s: Session = {
       uid, writerId, repo, engine,
-      tracked: new Set(), owned: new Set(), unsubs: new Map(),
+      tracked: new Set(), owned: new Set(), playerIds: new Set(), unsubs: new Map(),
       storeUnsub: () => {}, interval: null, pagehide: () => {},
-      dirty: false, lastChangeAt: 0, ticking: false,
+      dirty: false, lastChangeAt: 0, ticking: false, campaigns: null,
     };
     session = s;
 
     const remote = await repo.listMyCharacters();
+    useCloudState.setState({ charCampaign: Object.fromEntries(remote.map((r) => [r.id, campaignIdOf(r.data)])) });
     for (const r of remote) {
       if (token !== sessionToken) return;
       try {
@@ -243,12 +303,40 @@ async function startSession(uid: string): Promise<void> {
           s.dirty = true;
           s.lastChangeAt = Date.now();
           engine.onLocalChange(id);
+          s.campaigns?.onSheetChanged(id, applyingRemote);
         }
       }
     });
     s.pagehide = () => void engine.flushAll();
     window.addEventListener('pagehide', s.pagehide);
     s.interval = setInterval(() => void tick(s), 1000);
+
+    // Campañas (plan 18).
+    const authUser = useAuthStore.getState().user;
+    s.campaigns = createCampaignController({
+      uid,
+      myName: authUser?.displayName || authUser?.email?.split('@')[0] || 'Jugador',
+      writerId,
+      repo: createCampaignRepo(handles, uid),
+      getSheet: (id) => findChar(id),
+      myCloudIds: () => myCloudIds(s),
+      loadPlayerSheet: async (charId) => {
+        if (session !== s || s.owned.has(charId)) return true;
+        const data = await repo.getCharacter(charId);
+        if (!data || session !== s) return false;
+        s.playerIds.add(charId);
+        try {
+          await loadRemoteCharacter(s, charId, data);
+        } catch (e) {
+          s.playerIds.delete(charId);
+          throw e;
+        }
+        refreshCloudIds(s);
+        return true;
+      },
+      dropPlayerSheet: (charId) => dropPlayerSheet(s, charId),
+    });
+    s.campaigns.start();
     useCloudState.getState().setSyncState(useCloudState.getState().needsAppUpdate ? 'readonly' : 'saved');
   } catch (e) {
     useCloudState.getState().setLastError('No se pudo conectar con la nube: ' + errMsg(e));
@@ -264,6 +352,7 @@ export async function stopSession(): Promise<void> {
     return;
   }
   session = null;
+  s.campaigns?.stop();
   if (s.interval !== null) clearInterval(s.interval);
   s.storeUnsub();
   window.removeEventListener('pagehide', s.pagehide);
@@ -286,6 +375,7 @@ export async function stopSession(): Promise<void> {
   });
   const cs = useCloudState.getState();
   cs.setCloudIds([]);
+  useCloudState.setState({ charCampaign: {} });
   cs.setNeedsAppUpdate(false);
   cs.setUploading(false);
   cs.setSyncState('off');
@@ -319,6 +409,7 @@ export async function uploadCharacters(localIds: string[]): Promise<void> {
         s.engine.track(newId, data);
         s.tracked.add(newId);
         s.owned.add(newId);
+        setCharCampaign(newId, null);
         s.engine.markLogsKnown(newId, 'ipLog', logIdsOf(renamed, 'ipLog'));
         s.engine.markLogsKnown(newId, 'transactions', logIdsOf(renamed, 'transactions'));
         watchLogs(s, newId);
