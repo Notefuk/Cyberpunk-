@@ -1,0 +1,9 @@
+rules_version = '2';
+// [Claude Code · 2026-10-24] v5.0.0 (plan 16): reglas reales en la etapa 4 (plan 16, con tests en el emulador); mientras tanto todo cerrado.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

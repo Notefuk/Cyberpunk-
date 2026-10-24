@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Firebase (emulador) [Claude Code · 2026-10-24]
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebase/

@@ -16,7 +16,7 @@ Lee la última versión en `CHANGELOG_AND_ARCHITECTURE.md` (sección `## 📜 Ma
 
 ## 2. Verificar el código
 
-Desde `frontend/`: `npx tsc -b --noEmit` y `npm run build` con 0 errores.
+Desde `frontend/`: `npx tsc -b --noEmit` y `npm run build` con 0 errores. Para publicar en `gh-pages` (la beta) el build es `npm run build:beta` [Claude Code · 2026-10-24].
 
 ## 3. Actualizar docs (solo lo que cambió)
 
