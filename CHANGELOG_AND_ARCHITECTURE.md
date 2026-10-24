@@ -113,6 +113,19 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v4.9.7] - 2026-10-24 (Preparación para la sincronización: guardado diferido y topes de historial) [Claude Code · 2026-10-24]
+* **Category**: Persistencia (plan 17, `docs/plans/plan17-sync-cuota.md`). Sin Firebase: prepara la app para que la sincronización del plan 16 no agote la cuota gratis y mejora el modo local.
+* **Guardado diferido**: `hooks/useCommittedField.ts` y `components/CommittedInput.tsx`. El Handle y los €$ de Street Lab, el lifepath personalizado de la vista de roles y los metros movidos del HUD guardan una sola vez: al salir del campo, con Enter o tras 1,5 s sin escribir (máximo 5 s). Un cambio de ficha con texto pendiente lo descarta (`resetKey`) para no guardarlo en otra ficha. El rol y el lifepath con menú no cambian (ya guardaban una vez por elección).
+* **localStorage agrupado**: `utils/debounce.ts` y `hooks/useDebouncedLocalStorage.ts`. Las notas secretas del GM, el encuentro activo y los NPC propios se guardan agrupados, con guardado al cerrar la pestaña.
+* **Topes de historial**:
+  * Historial de IP: freno en 2.000 movimientos (141 bytes cada uno, medido; 2.000 son unos 282 KB). Lo más viejo pasa a `cpr_ip_log_archive_v1`, que entra en la copia de seguridad, y la app avisa. Los totales del panel de IP no cambian (`ipLogArchivedTotals`, sumado por `summarizeIpLog`).
+  * Registro de Speedheal: freno en 500 con el mismo criterio (`cpr_speedheal_archive_v1`).
+  * Historial de €$: la compra de chips de Martial Arts ahora pone el movimiento más nuevo primero y respeta el tope de 50, como el resto.
+  * Migraciones: fichas v6 y reloj de juego v1.
+* **Combate**: `useCombatStore` con `partialize` y dos grupos explícitos, `local` (UI y preparación de la tirada) y `shared` (estado del combate, que en v5.1.0 pasa al encuentro). Persistencia versión 3; el formato guardado no cambia.
+* **Files Modified**: `utils/debounce.ts`, `hooks/useCommittedField.ts`, `hooks/useDebouncedLocalStorage.ts`, `components/CommittedInput.tsx` (nuevos); `store/persistence.ts`, `store/useCharacterStore.ts`, `store/gameClockStore.ts`, `store/useCombatStore.ts`, `engine/ipLedger.ts`, `types/cyberpunk.ts`, `features/sheet/StreetLabView.tsx`, `features/sheet/IpLedgerPanel.tsx`, `features/netroles/NetAndRolesDeckView.tsx`, `features/combat/CombatHudView.tsx`, `features/gm/FixerDeckView.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`.
+* **Verificación**: tsc, 348 tests y build. En el navegador: un Handle de 10 letras hizo 0 escrituras mientras se tipeaba y 1 sola tras 1,5 s, con el texto completo; una ficha de prueba con 2.001 movimientos de IP quedó con 2.000, avisó, el más viejo quedó en el archivo y el panel siguió mostrando Ganados 2718 y Gastado en skills 666.
+
 ### [v4.9.6] - 2026-10-23 (Movimientos especiales de Martial Arts en el HUD) [Claude Code · 2026-10-23]
 * **Category**: Combate (plan 15, que reemplaza la sección v4.9.6 del plan 14).
 * **Contexto**: el HUD no tiene blanco, porque la defensa es manual y los enemigos están en modelos desconectados. Giuliano decidió que los efectos los aplican los jugadores; el store de encuentro compartido queda como plan futuro.

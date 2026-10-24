@@ -7,24 +7,24 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-10-24] Orden v2 de la documentación elegido por Giuliano y mergeado (PR #32, squash 2749592). Falta aprobar el plan 16.
-**Versión de la app**: v4.9.6 (en `main`, squash 2943b27, PR #31; publicada en gh-pages y verificada en vivo)
+**Última actualización**: [Claude Code · 2026-10-24] v4.9.7 terminada en su rama (plan 17), commiteada y sin pushear: falta el OK de Giuliano.
+**Versión de la app**: v4.9.6 en `main` y en gh-pages. v4.9.7 terminada en `claude/v4.9.7-preparacion-sync`, sin pushear.
 **Plan activo**: plan 17 `docs/plans/plan17-sync-cuota.md`, APROBADO [Claude Code · 2026-10-24]: primero la v4.9.7 (preparación sin Firebase). El plan 16 `docs/plans/plan16-firebase-mesa-online.md` (Firebase, mesa online) sigue BORRADOR sin aprobar. Va antes del plan 5. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-24] **Plan 17 aprobado.** Siguiente: v4.9.7 en la rama `claude/v4.9.7-preparacion-sync`. Hace 5 cosas: campos con guardado diferido (`useCommittedField`), `utils/debounce.ts`, freno de 2.000 en `ipLog` y de 500 en `speedhealLog` (lo viejo a la copia de seguridad, totales en `ipLogArchivedTotals`), recorte de €$ en la compra de chips y `partialize` de `useCombatStore`. Nada de código empezado.
+- [Claude Code · 2026-10-24] **v4.9.7 terminada (plan 17)** en `claude/v4.9.7-preparacion-sync`: guardado diferido (`CommittedInput`/`useCommittedField`), localStorage agrupado (`useDebouncedLocalStorage`), freno de 2.000 en IP y de 500 en Speedheal con archivo en la copia de seguridad, tope de 50 en la compra de chips y grupos local/shared en `useCombatStore`. tsc, 348 tests y build OK; verificada en el navegador. Desvíos del plan: el rol y el lifepath con menú (`StreetLabView` 655 y 2797) y las arquitecturas NET (`NetAndRolesDeckView:219`, un botón) no se tocaron porque guardan una sola vez por elección. Falta: OK para pushear la rama y abrir el PR, OK para mergear y OK aparte para publicar en gh-pages. La capa de sync espera la aprobación del plan 16.
 - [Claude Code · 2026-10-24] **Plan 16, borrador** (ya en `main` desde el PR #32; la rama `claude/plan16-firebase-mesa-online` quedó superada). Decisiones de alcance tomadas (login Google, dos modos local/nube, resumen de party, cambios del GM directos con log, dados locales, varias campañas, 3 entornos). Tiene sección de cuotas (14 medidas; la clave es evitar el eco entre dispositivos). Se puede corregir hasta que Giuliano lo apruebe; después es inmutable. Al aprobarse, la fase 1 (v5.0.0) empieza con Giuliano creando los proyectos Firebase `dev` y `prod`.
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-24].
-- Rama: `main` @ 2749592 + este checkpoint. Las ramas `claude/plan16-firebase-mesa-online` y `claude/docs-orden` ya están en `main` (se pueden borrar).
-- A medias: nada de código.
-- Siguiente paso exacto: Giuliano aprueba (o corrige) el plan 16. Si lo corrige antes de aprobarlo, se edita el borrador; después es inmutable.
+- Rama: `claude/v4.9.7-preparacion-sync` (pusheada: no — falta OK). `main` @ 709a3fb, pusheada.
+- A medias: nada de código; v4.9.7 completa y commiteada.
+- Siguiente paso exacto: con el OK de Giuliano, pushear `claude/v4.9.7-preparacion-sync` y abrir el PR; después el merge y la publicación, cada uno con su OK.
 - Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y el HUD (760 px a 375). (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido: entra en el plan 16, fase v5.1.0 (une `ActiveEncounterEnemy`, `InitiativeCombatant` y `EnemySheet`).
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
-- Preguntas abiertas para Giuliano: aprobación del plan 16.
+- Preguntas abiertas para Giuliano: OK para el push y el PR de la v4.9.7; aprobación del plan 16.
 
 ## Último trabajo terminado
 

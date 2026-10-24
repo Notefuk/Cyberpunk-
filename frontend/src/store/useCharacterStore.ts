@@ -52,6 +52,7 @@ import {
   CHARACTERS_SCHEMA_VERSION,
   CHARACTERS_STORAGE_KEY,
   backupRawBeforeMigration,
+  archiveIpLogEntries,
   buildFullBackup,
   emitPersistenceWarning,
   injectPremades,
@@ -59,24 +60,37 @@ import {
   runMigrations,
   safeCharacterStorage
 } from './persistence';
+import { capIpLog } from '../engine/ipLedger';
 
 // v4.9.1 [Claude Code · 2026-10-22] Aplica un movimiento de IP a la ficha y lo registra en ipLog.
 function appendIpLog(c: CharacterSheet, kind: IpLogKind, delta: number, reason: string): CharacterSheet {
   const balanceAfter = Math.max(0, (c.improvementPoints ?? 0) + delta);
+  const newIpLog = [
+    ...(c.ipLog ?? []),
+    {
+      id: `ip-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      at: new Date().toISOString(),
+      kind,
+      delta,
+      reason,
+      balanceAfter
+    }
+  ];
+  // v4.9.7 [Claude Code · 2026-10-24]: freno de 2.000; lo más viejo pasa a la copia de seguridad.
+  const capped = capIpLog(newIpLog, c.ipLogArchivedTotals);
+  if (capped.archived.length > 0) {
+    archiveIpLogEntries(c.id, c.handle, capped.archived);
+    return {
+      ...c,
+      improvementPoints: balanceAfter,
+      ipLog: capped.log,
+      ipLogArchivedTotals: capped.archivedTotals
+    };
+  }
   return {
     ...c,
     improvementPoints: balanceAfter,
-    ipLog: [
-      ...(c.ipLog ?? []),
-      {
-        id: `ip-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        at: new Date().toISOString(),
-        kind,
-        delta,
-        reason,
-        balanceAfter
-      }
-    ]
+    ipLog: newIpLog
   };
 }
 
@@ -2785,16 +2799,17 @@ export const useCharacterStore = create<CharacterStoreState>()(
           details: `Chipware Nivel 3 para ${formName}. Otorga Rango 3 en la habilidad mientras esté insertado en un Chipware Socket.`
         };
 
+        // v4.9.7 [Claude Code · 2026-10-24]: el más nuevo primero y tope de 50, como el resto de las compras.
         const newTx: EurodollarTransaction[] = chipCost > 0 ? [
-          ...(character.transactions || []),
           {
             id: `tx-${Date.now()}`,
             timestamp: new Date().toISOString(),
             concept: `Compra de Skill Chip: ${formName} (+3)`,
             amount: -chipCost,
             balanceAfter: character.eurodollars - chipCost
-          }
-        ] : (character.transactions || []);
+          },
+          ...(character.transactions || [])
+        ].slice(0, 50) : (character.transactions || []);
 
         set((s) => ({
           characters: s.characters.map((c) => {

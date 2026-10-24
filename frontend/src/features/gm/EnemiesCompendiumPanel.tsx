@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
 import { 
   ENEMIES_CATALOG, 
   DANGER_GAL_15_FACTIONS,
@@ -271,13 +272,8 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
     return [];
   });
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(activeEnemies));
-    } catch (e) {
-      console.error('Failed to save active encounter:', e);
-    }
-  }, [activeEnemies]);
+  // v4.9.7 [Claude Code · 2026-10-24] Guardado agrupado en localStorage (plan17).
+  useDebouncedLocalStorage(STORAGE_KEY, activeEnemies);
 
   // Filter states
   const [sheetMode, setSheetModeState] = useState<EnemySheetMode>(() => {
@@ -329,13 +325,7 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
     return [];
   });
 
-  useEffect(() => {
-    try {
-      localStorage.setItem('cpr_custom_npcs_v1', JSON.stringify(customNpcs));
-    } catch (e) {
-      console.error('Failed to save custom npcs:', e);
-    }
-  }, [customNpcs]);
+  useDebouncedLocalStorage('cpr_custom_npcs_v1', customNpcs);
 
   const [isCustomNpcModalOpen, setIsCustomNpcModalOpen] = useState(false);
   const [customNpcForm, setCustomNpcForm] = useState({

@@ -26,6 +26,32 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v4.9.7',
+    date: '2026-10-24',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Persistencia',
+    title: 'Preparación para la sincronización: guardado diferido y topes de historial',
+    summary: 'Plan 17: la app guarda menos y mejor, lista para la mesa online del plan 16 sin agotar la cuota gratis.',
+    highlights: [
+      'Handle, €$, lifepath personalizado y metros movidos guardan una sola vez: al salir del campo, con Enter o tras 1,5 s sin escribir.',
+      'Notas secretas del GM, encuentro activo y NPC propios se guardan agrupados, y lo pendiente se guarda al cerrar la pestaña.',
+      'Historial de IP con freno en 2.000 movimientos: lo más viejo pasa a la copia de seguridad con aviso y los totales del panel no cambian.',
+      'Registro de Speedheal con freno en 500; la compra de chips respeta el tope de 50 del historial de €$.',
+      'El estado del combate queda separado en lo de cada jugador y lo compartido, listo para el encuentro de la v5.1.0.',
+      '348 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/hooks/useCommittedField.ts',
+      'frontend/src/hooks/useDebouncedLocalStorage.ts',
+      'frontend/src/components/CommittedInput.tsx',
+      'frontend/src/store/persistence.ts',
+      'frontend/src/store/useCombatStore.ts',
+      'docs/plans/plan17-sync-cuota.md'
+    ],
+    metricsBadge: 'v4.9.7 • Guardado diferido • Plan 17'
+  },
+  {
     version: 'v4.9.6',
     date: '2026-10-23',
     author: 'Claude Code',
@@ -1064,6 +1090,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v4.9.7': true,
     'v4.9.6': true,
     'v4.9.5': true,
     'v4.9.4': true,

@@ -558,6 +558,8 @@ export interface MedtechCryoAndPharma {
 // v4.9.1 [Claude Code · 2026-10-22]
 export type IpLogKind = 'initial' | 'award' | 'adjust' | 'spend_role' | 'spend_skill' | 'spend_martial' | 'gm';
 export interface IpLogEntry { id: string; at: string; kind: IpLogKind; delta: number; reason: string; balanceAfter: number }
+// v4.9.7 [Claude Code · 2026-10-24]: totales de los movimientos de IP archivados, para que el panel no cambie.
+export interface IpArchivedTotals { earned: number; adjusted: number; spentRole: number; spentSkills: number; spentMartial: number; gmEdits: number }
 
 export interface CharacterSheet {
   id: string;
@@ -630,6 +632,7 @@ export interface CharacterSheet {
   medicineAllocation?: { surgery: number; pharmaceuticals: number; cryosystem: number; knownPharmaceuticals?: string[] };
   // v4.9.1 [Claude Code · 2026-10-22]
   ipLog?: IpLogEntry[];
+  ipLogArchivedTotals?: IpArchivedTotals;
 }
 
 export interface RollEntry {

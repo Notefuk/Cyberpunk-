@@ -55,6 +55,7 @@ import {
   TECH_MAKER_UPGRADE_OPTIONS
 } from '../../data/weaponAttachmentsAndTechData';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
+import { CommittedInput } from '../../components/CommittedInput';
 import { EnemiesCompendiumPanel } from '../gm/EnemiesCompendiumPanel';
 import { 
   Heart, 
@@ -8623,11 +8624,11 @@ export const CombatHudView: React.FC = () => {
         {/* v4.9.6 [Claude Code · 2026-10-23] Barra de turno (decisión 48). */}
         <label className="flex items-center gap-1 text-[10px] font-mono-code text-slate-400">
           Metros movidos este turno
-          <input
+          <CommittedInput
             type="number"
             min={0}
-            value={turnLog.movedMeters}
-            onChange={(e) => setMovedMeters(Number(e.target.value))}
+            value={String(turnLog.movedMeters)}
+            onCommit={(v) => setMovedMeters(Number(v) || 0)}
             className="w-14 px-1 py-0.5 rounded-xs bg-[#0e111a] border border-[#2b334a] text-white"
           />
         </label>

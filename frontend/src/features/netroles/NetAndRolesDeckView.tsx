@@ -70,6 +70,7 @@ import { ExecPanel } from '../roles/ExecPanel';
 import { LawmanPanel } from '../roles/LawmanPanel';
 import { MakerPanel } from '../roles/MakerPanel';
 import { materialCost, priceCategoryForEb, rollMakerCheck, specialtyRank } from '../../engine/makerRules';
+import { CommittedInput } from '../../components/CommittedInput';
 
 type ActiveTab = 'netrunning' | 'quickhacks' | 'martial' | 'roles' | 'vehicles';
 
@@ -2632,10 +2633,11 @@ export const NetAndRolesDeckView: React.FC = () => {
                           <option value="__custom__">-- Personalizado / Escribir abajo --</option>
                         </select>
 
-                        <input
+                        <CommittedInput
                           type="text"
                           value={currentVal}
-                          onChange={(e) => updateRoleSpecificLifepath(tbl.id, e.target.value)}
+                          onCommit={(v) => updateRoleSpecificLifepath(tbl.id, v)}
+                          resetKey={activeCharacterId}
                           placeholder="O escribe un trasfondo personalizado..."
                           className="w-full bg-[#07080d] border border-[#1a2133] text-white font-mono-code text-xs px-2.5 py-1 rounded focus:outline-none focus:border-[#38bdf8]"
                         />
