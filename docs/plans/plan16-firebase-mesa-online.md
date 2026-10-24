@@ -2,6 +2,8 @@
 
 [Claude Code · 2026-10-24]
 
+[Claude Code · 2026-10-24] Ajustado antes de aprobar, después de la v4.9.7: las cuotas remiten al plan 17, los historiales de IP y €$ van fuera de la ficha, la v5.0.0 incluye el arreglo para celulares y la fase 2 parte de lo que ya separó la v4.9.7 (decisiones 11 a 13).
+
 Agrega cuentas de Google, fichas en la nube y campañas compartidas entre el GM y los jugadores, con Firebase (Auth + Firestore + Hosting). Va antes del plan 5 (Black Chrome y vehículos), que después hereda la sincronización sin trabajo extra.
 
 ## Por qué
@@ -18,49 +20,36 @@ Hoy todo vive en el `localStorage` de cada navegador: las fichas no pasan de la 
 8. **Alcance**: fases 1 a 4 de este plan. La subida de imágenes (Cloud Storage) queda fuera.
 9. **Tres entornos**: local con el emulador de Firebase, beta en GitHub Pages con el proyecto Firebase "dev", y estable en Firebase Hosting con el proyecto Firebase "prod". Las pruebas nunca tocan las fichas reales.
 10. **Primera versión estable**: fichas en la nube, campañas y el GM viendo la party. Después la mesa compartida, después las acciones del GM y después el plan 5.
+11. **Historiales fuera de la ficha** (2026-10-24): el historial de IP también va aparte, igual que el de €$. Cada movimiento nuevo sube un documento chico; el panel de IP se ve igual.
+12. **Celulares en la v5.0.0** (2026-10-24): la primera versión estable ya llega sin desborde a 375 px en Street Lab, la barra de pestañas de la vista de roles y el HUD (pendiente 3 del checkpoint).
+13. **Direcciones** (2026-10-24): la mesa real se muda a Firebase Hosting (`*.web.app`) y la dirección de hoy, `notefuk.github.io/Cyberpunk-/`, pasa a ser la beta. Giuliano les manda la dirección nueva a los players cuando salga la v5.0.0.
 
 ## Reglas de diseño (obligatorias en todas las fases)
 - **Zustand sigue siendo la fuente local**. Una capa de sincronización (`sync/`) refleja los cambios en Firestore y aplica los que llegan. Las vistas no hablan con Firestore.
 - **Sincronización genérica por campos**: se escriben solo los campos que cambiaron (diff de rutas), sin conocer el significado de cada campo. Los planes futuros que agreguen campos a la ficha se sincronizan solos.
-- **Debounce de escritura** de 1 a 2 s por documento. Nunca una escritura por tecla.
+- **Debounce de escritura**: 1,5 s por documento, con un máximo de 5 s (plan 17). Nunca una escritura por tecla; los campos de texto ya guardan diferido desde la v4.9.7.
 - **Contadores atómicos**: HP, munición, Luck y Humanidad con `increment()`; Death Save y cambios encadenados en transacción.
-- **1 ficha = 1 documento**. Logs (`transactions`, tiradas) en subcolecciones recortadas, nunca dentro de la ficha.
+- **1 ficha = 1 documento**. Logs (`transactions`, `ipLog`, tiradas) en subcolecciones, nunca dentro del documento de la ficha (decisión 11). En el modo local siguen dentro de la ficha, con los topes de la v4.9.7; la capa de sync los traduce a documentos de solo creación y el documento de la ficha no los lleva. `ipLogArchivedTotals` sí viaja en la ficha.
 - **Privacidad por documento**: lo que el jugador no debe ver (secretos del GM, enemigos, pisos NET no revelados) va en documentos que las reglas de seguridad solo dejan leer al GM.
 - **Versión obligatoria**: cada documento guarda `schemaVersion`. Un cliente con versión vieja no escribe y muestra "Actualizá la app". Las migraciones de `persistence.ts` se aplican también a las fichas de la nube al leerlas.
 - **Datos estáticos sin Firestore**: compendio, catálogos, reglas y bestiario siguen dentro del bundle.
 - **SDK con carga diferida**: Firebase se carga con `import()` solo al iniciar sesión. El modo local no suma peso.
-- **Combat store dividido**: lo compartido (round, iniciativa, encuentro) va a Firestore; lo de la UI de cada jugador (autofire, distancia, Aimed Shot, Luck a gastar) queda local.
+- **Combat store dividido**: lo compartido (round, iniciativa, encuentro) va a Firestore; lo de la UI de cada jugador (autofire, distancia, Aimed Shot, Luck a gastar) queda local. Los dos grupos ya están separados desde la v4.9.7 (`COMBAT_LOCAL_KEYS` y `COMBAT_SHARED_KEYS` en `useCombatStore.ts`).
 
 ## Cuotas de Firebase: cómo la app evita pasarse
-Límite gratis diario (plan Spark, por proyecto): unas 50k lecturas, 20k escrituras y 20k borrados. Objetivo: una sesión de 4 h con 6 jugadores y el GM debe usar menos de la mitad.
 
-Escrituras:
-1. **Debounce** de 1 a 2 s por documento: una ráfaga de cambios (escribir notas, mover un slider, varios clics) sale como una sola escritura.
-2. **Solo campos cambiados**: el diff manda `currentHp`, no la ficha entera.
-3. **Sin eco**: un cambio que llega de Firestore se aplica al store marcado como remoto y la capa de sync no lo vuelve a escribir. Sin esto, dos dispositivos se reescriben en bucle y agotan la cuota en minutos. Test obligatorio.
-4. **Sin escrituras al abrir**: cargar la app, cambiar de pestaña o migrar no escribe nada. Una migración de `schemaVersion` escribe la ficha una sola vez.
-5. **Resumen de party solo si cambió**: `party/{charId}` se escribe únicamente cuando cambia uno de sus campos (HP, heridas, SP, condiciones), no con cada cambio de la ficha.
-6. **Log recortado**: una entrada por tirada o cambio del GM; se conservan las últimas 200 por campaña y el resto se borra al cerrar el encuentro.
-
-Lecturas:
-7. **Caché local de Firestore** (`persistentLocalCache`): al reabrir la app, lo que no cambió sale del caché y no cuenta como lectura.
-8. **Escuchar solo lo que se ve**: cada vista abre sus suscripciones al montarse y las cierra al salir. Con la app en segundo plano se pausan.
-9. **Consultas con límite**: el log se lee con `limit(50)`; las listas de campañas y personajes, sin escuchar en vivo.
-10. **Jugadores sin fichas ajenas**: leen el resumen de party (1 doc chico por personaje), no las fichas completas.
-11. **Datos estáticos en el bundle**: compendio, catálogos, reglas y bestiario no salen de Firestore. Cuestan 0.
-
-Control:
-12. **Contador de uso en modo debug** (local y beta): lecturas y escrituras de la sesión, visibles en un panel, para medir antes de salir a estable.
-13. **Alertas**: alerta de presupuesto en USD 5 si algún proyecto pasa a Blaze; revisar el uso en la consola después de cada sesión de prueba.
-14. **Si se agota la cuota en Spark**: la app sigue andando con los datos locales, muestra "Sincronización pausada hasta mañana" y vuelve a subir los cambios pendientes cuando se reinicia la cuota. Nada se pierde.
-
-Estimación con estas reglas: unas 5k escrituras y 17k lecturas por sesión intensa (25 % y 35 % del límite diario).
+[Claude Code · 2026-10-24] Lo define el **plan 17** (`docs/plans/plan17-sync-cuota.md`), que reemplaza la versión anterior de esta sección. Resumen:
+- Plan Spark gratis: 50.000 lecturas y 20.000 escrituras por día y por proyecto. Una sesión de 4 h con 6 jugadores y el GM usa unas 6.700 escrituras (34 %) y 22.400 lecturas (45 %).
+- Cola por documento (1,5 s, máximo 5 s), diff por campos, contadores con `increment()`, sin eco entre dispositivos (test obligatorio), nada al abrir.
+- Freno en las reglas por escritor (1 escritura por segundo por persona y dispositivo, con reintento), guardián de cuota por dispositivo y prueba de presupuesto de una sesión simulada dentro de `npm test`.
+- Si se agota la cuota, la sincronización se pausa hasta la medianoche del Pacífico y la app sigue con los datos locales; nada se pierde.
 
 ## Modelo de datos (Firestore)
 ```
 users/{uid}                          perfil, campañas a las que pertenece
 characters/{charId}                  ficha completa (CharacterSheet + ownerUid, campaignIds, schemaVersion)
 characters/{charId}/transactions/*   historial de €$, recortado
+characters/{charId}/ipLog/*          historial de IP, solo creación (decisión 11)
 campaigns/{campId}                   nombre, gmUid, memberUids, inviteCode, reloj de juego
 campaigns/{campId}/party/{charId}    resumen público de cada ficha (lo escribe la capa de sync)
 campaigns/{campId}/gm/*              solo GM: notas secretas, NPCs, arquitecturas NET
@@ -83,7 +72,7 @@ campaigns/{campId}/log/*             log de la mesa: tiradas y cambios del GM, r
 |---|---|---|---|
 | Local | `localhost:5173` | Emulator Suite | Desarrollo y tests |
 | Beta | GitHub Pages (`notefuk.github.io/Cyberpunk-/`) | proyecto `dev` | Giuliano prueba con la campaña de prueba |
-| Estable | Firebase Hosting (`*.web.app`) | proyecto `prod` | La mesa real |
+| Estable | Firebase Hosting (`*.web.app`, dirección nueva) | proyecto `prod` | La mesa real (decisión 13) |
 
 - La configuración va en `.env.development`, `.env.beta` y `.env.production` (Vite). La config web de Firebase no es secreta: la protección son las reglas.
 - Salida de una versión: local → beta → OK de Giuliano → el mismo build a estable. Rollback desde la consola de Hosting.
@@ -96,17 +85,18 @@ campaigns/{campId}/log/*             log de la mesa: tiradas y cambios del GM, r
 1. Crear los proyectos `dev` y `prod` (Giuliano, desde su cuenta de Google; la consola necesita su login). Habilitar Auth con Google, Firestore y Hosting. Agregar `notefuk.github.io` a los dominios autorizados de `dev`.
 2. `firebase.json`, `firestore.rules`, `firestore.indexes.json`, `.firebaserc` con los alias `dev` y `prod`, y scripts `npm run emulators`, `build:beta` y `deploy:prod`.
 3. `sync/firebaseClient.ts` (carga diferida, emulador en local), `sync/authStore.ts` (sesión, usuario, modo `local` | `cloud`).
-4. Capa de sync de fichas: suscripción a las fichas del usuario, diff por campos, debounce, `increment()` en contadores, escritura del resumen `party/*`, gate de `schemaVersion`.
+4. Capa de sync de fichas con las medidas del plan 17: suscripción a las fichas del usuario, diff por campos, cola de 1,5 s, `increment()` en contadores, sin eco, historiales de IP y €$ como subcolecciones, escritura del resumen `party/*`, gate de `schemaVersion`, freno en las reglas y guardián de cuota.
 5. Al iniciar sesión: elegir qué fichas locales subir. Al cerrar: volver al modo local.
 6. Campañas: crear, link de invitación, unirse, salir, pasar el GM, asignar ficha a campaña.
 7. Vista del GM: lista de la party con las fichas completas en vivo (solo lectura en esta fase). Jugadores: el resumen de los demás.
-8. Indicador de estado (local, sincronizado, sin conexión, guardando) y aviso de "Actualizá la app".
-9. Tests: diff y debounce de la capa de sync, reglas de seguridad con el emulador, migración de fichas de la nube.
+8. Indicador de estado (local, sincronizado, sin conexión, guardando, sincronización pausada) y aviso de "Actualizá la app".
+8b. Celulares (decisión 12): Street Lab, la barra de pestañas de la vista de roles y el HUD sin desborde horizontal a 375 px.
+9. Tests: diff y cola de la capa de sync, eco con dos clientes, prueba de presupuesto (plan 17), reglas de seguridad con el emulador, migración de fichas de la nube.
 
 ### Fase 2, v5.1.0: mesa compartida
 1. Reloj de juego en la campaña (hoy `cpr_game_clock_v1`).
 2. Encuentro compartido: round, orden de iniciativa, combatientes. Une los 3 modelos de enemigo desconectados (`ActiveEncounterEnemy`, `InitiativeCombatant`, `EnemySheet`) en uno solo con vista pública y vista del GM.
-3. División de `useCombatStore`: lo compartido al encuentro, lo de la UI local.
+3. `useCombatStore`: el grupo `shared` (ya separado en la v4.9.7) pasa al encuentro; el grupo `local` queda en cada dispositivo.
 4. Log de la mesa: las tiradas del HUD se publican en vivo.
 
 ### Fase 3, v5.2.0: el GM actúa sobre los jugadores
@@ -133,6 +123,7 @@ Subida de imágenes (retratos, tokens) con Cloud Storage, tiradas en el servidor
 
 ## Verificación por fase
 - `npx tsc -b --noEmit`, `npm test` (incluye reglas con el emulador) y `npm run build`.
-- **Navegador, local con emulador**: dos ventanas con dos usuarios (GM y jugador). El cambio de HP del jugador se ve en el GM en menos de 2 s; el jugador no puede leer `gm/*` ni la ficha completa de otro jugador; sin sesión la app funciona como en v4.9.6.
+- **Navegador, local con emulador**: dos ventanas con dos usuarios (GM y jugador). El cambio de HP del jugador se ve en el GM en menos de 3 s; el jugador no puede leer `gm/*` ni la ficha completa de otro jugador; sin sesión la app funciona como en la v4.9.7.
+- **Celular (v5.0.0)**: a 375 px, Street Lab, la vista de roles y el HUD no desbordan.
 - **Beta**: Giuliano prueba desde el celular con la campaña de prueba.
 - **Cuotas**: después de una sesión de prueba, revisar el uso en la consola de Firebase.
