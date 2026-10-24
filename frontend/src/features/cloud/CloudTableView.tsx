@@ -1,6 +1,10 @@
 // [Claude Code · 2026-10-24] v5.0.0 (plan 16): pestaña "MESA // CAMPAÑA" (login y estado; sin sync de fichas todavía).
 import { readFirebaseConfig } from '../../sync/firebaseConfig';
+import { useState } from 'react';
 import { useAuthStore } from '../../sync/authStore';
+import { useCloudState } from '../../sync/cloudState';
+import { uploadCharacters } from '../../sync/cloudCharacters';
+import { useCharacterStore } from '../../store/useCharacterStore';
 
 const ENV_LINES = {
   local: 'Entorno: local (emulador, datos de prueba)',
@@ -16,6 +20,12 @@ export function CloudTableView() {
   const error = useAuthStore((s) => s.error);
   const signIn = useAuthStore((s) => s.signInWithGoogle);
   const signOut = useAuthStore((s) => s.signOutCloud);
+  const characters = useCharacterStore((s) => s.characters);
+  const cloudIds = useCloudState((s) => s.cloudIds);
+  const needsAppUpdate = useCloudState((s) => s.needsAppUpdate);
+  const lastError = useCloudState((s) => s.lastError);
+  const uploading = useCloudState((s) => s.uploading);
+  const [selected, setSelected] = useState<string[]>([]);
 
   const config = readFirebaseConfig(import.meta.env as unknown as Record<string, string | undefined>);
   if (!config) {
@@ -25,6 +35,9 @@ export function CloudTableView() {
       </div>
     );
   }
+
+  const cloudChars = characters.filter((c) => cloudIds.includes(c.id));
+  const localChars = characters.filter((c) => !cloudIds.includes(c.id));
 
   const btn = 'px-4 py-2 bg-[#dc2626] hover:bg-white text-white hover:text-black font-tech font-bold text-sm uppercase tracking-wider rounded-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
 
@@ -74,7 +87,51 @@ export function CloudTableView() {
         <div className="grid gap-4 md:grid-cols-2">
           <div className="chamfer-card bg-[#10121a] border border-[#262c3e] p-5 space-y-2">
             <h3 className="font-tech text-sm text-white uppercase tracking-wider">Tus fichas en la nube</h3>
-            <p className="font-mono-code text-xs text-[#64748b]">{PENDING}</p>
+            {needsAppUpdate && (
+              <p className="font-mono-code text-xs text-[#ef4444]">Hay fichas guardadas con una versión más nueva de la app. Actualizá la página (Ctrl+F5) antes de editarlas.</p>
+            )}
+            {lastError && <p className="font-mono-code text-xs text-[#ef4444]">{lastError}</p>}
+            {cloudChars.length === 0 ? (
+              <p className="font-mono-code text-xs text-[#64748b]">Todavía no tenés fichas en la nube.</p>
+            ) : (
+              <ul className="space-y-1">
+                {cloudChars.map((c) => (
+                  <li key={c.id} className="font-mono-code text-xs text-[#94a3b8]">{c.handle} <span className="text-[#64748b]">({c.role})</span></li>
+                ))}
+              </ul>
+            )}
+            <h3 className="font-tech text-sm text-white uppercase tracking-wider pt-3">Fichas solo en este dispositivo</h3>
+            {localChars.length === 0 ? (
+              <p className="font-mono-code text-xs text-[#64748b]">No hay fichas locales para subir.</p>
+            ) : (
+              <ul className="space-y-1">
+                {localChars.map((c) => (
+                  <li key={c.id}>
+                    <label className="flex items-center gap-2 font-mono-code text-xs text-[#94a3b8] cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selected.includes(c.id)}
+                        onChange={(e) => setSelected((prev) => (e.target.checked ? [...prev, c.id] : prev.filter((x) => x !== c.id)))}
+                      />
+                      <span>{c.handle} ({c.role}){c.id.startsWith('char-') ? '' : ' (precargada: se sube como copia)'}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <button
+              type="button"
+              className={btn}
+              disabled={uploading || selected.length === 0}
+              onClick={() => {
+                const ids = selected;
+                setSelected([]);
+                void uploadCharacters(ids);
+              }}
+            >
+              {uploading ? 'Subiendo…' : 'Subir a la nube'}
+            </button>
+            <p className="font-mono-code text-[11px] text-[#64748b]">Al salir de tu cuenta, las fichas de la nube se quitan de este dispositivo y quedan guardadas en tu cuenta.</p>
           </div>
           <div className="chamfer-card bg-[#10121a] border border-[#262c3e] p-5 space-y-2">
             <h3 className="font-tech text-sm text-white uppercase tracking-wider">Campañas</h3>

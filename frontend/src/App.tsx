@@ -18,6 +18,7 @@ import { RulesCheatSheetDrawer } from './features/rules/RulesCheatSheetDrawer';
 import { PersistenceBanner } from './components/PersistenceBanner';
 import { CloudStatusChip } from './components/CloudStatusChip';
 import { useAuthStore } from './sync/authStore';
+import { initCloudSync } from './sync/cloudCharacters';
 
 // Cada vista se carga al abrir su pestaña para no meter toda la app en un solo bundle.
 const CombatHudView = lazy(() => import('./features/combat/CombatHudView').then((m) => ({ default: m.CombatHudView })));
@@ -40,7 +41,7 @@ export default function App() {
   const appTheme = useCharacterStore((state) => state.appTheme);
 
   // [Claude Code · 2026-10-24] v5.0.0 (plan 16): si ya había entrado a la nube, retoma la sesión.
-  useEffect(() => { void useAuthStore.getState().initAuth(); }, []);
+  useEffect(() => { initCloudSync(); void useAuthStore.getState().initAuth(); }, []);
 
   const themeConfig = {
     neo_red: {

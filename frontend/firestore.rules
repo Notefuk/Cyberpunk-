@@ -1,9 +1,158 @@
 rules_version = '2';
-// [Claude Code · 2026-10-24] v5.0.0 (plan 16): reglas reales en la etapa 4 (plan 16, con tests en el emulador); mientras tanto todo cerrado.
+
+// Reglas de seguridad de la mesa online. v5.0.0 (plan 16 y plan 17). [Claude Code · 2026-10-24]
+// La config web de Firebase es pública: estas reglas son lo único que protege los datos.
+// Tests: frontend/src/sync/__tests__/rules/ (npm run test:rules, con el emulador).
+//
+// Modelo:
+//   users/{uid}                              perfil propio
+//   characters/{charId}                      ficha (ownerUid, campaignIds[0..1], schemaVersion, _w, _ts, _lastWriter)
+//   characters/{charId}/ipLog/{id}           historial de IP, solo creación
+//   characters/{charId}/transactions/{id}    historial de €$, solo creación
+//   campaigns/{campId}                       name, gmUid, memberUids, inviteCode, createdAt
+//   campaigns/{campId}/party/{charId}        resumen público de cada ficha
+//   campaigns/{campId}/gm/{docId}            solo el GM
+//   campaigns/{campId}/log/{entryId}         log de la mesa, solo creación
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function uid() {
+      return request.auth.uid;
+    }
+
+    function campaign(campId) {
+      return get(/databases/$(database)/documents/campaigns/$(campId)).data;
+    }
+
+    function isGmOf(campId) {
+      return signedIn() && campaign(campId).gmUid == uid();
+    }
+
+    function isMemberOf(campId) {
+      return signedIn() && uid() in campaign(campId).memberUids;
+    }
+
+    // Una ficha está en una campaña como máximo (las reglas no pueden recorrer listas largas).
+    function charCampaignGm(data) {
+      return data.campaignIds.size() == 1 && isGmOf(data.campaignIds[0]);
+    }
+
+    function canEditCharacter(data) {
+      return signedIn() && (data.ownerUid == uid() || charCampaignGm(data));
+    }
+
+    // Freno anti-bucle por escritor (plan 17, punto 9; decisión 6): el escritor es uid + '_' + dispositivo.
+    // Cada escritura marca _w[escritor] con la hora del servidor; el mismo escritor no puede volver a
+    // escribir el mismo documento antes de 1 s. Otro escritor (el GM, otro dispositivo) no se frena.
+    function writerOk(before, after) {
+      let w = after._lastWriter;
+      return w is string
+        && w.matches(uid() + '_.+')
+        && after._ts == request.time
+        && after._w[w] == request.time
+        && after._w.diff(before == null ? {} : before._w).affectedKeys().hasOnly([w])
+        && (before == null || !(w in before._w) || request.time > before._w[w] + duration.value(1, 's'));
+    }
+
+    match /users/{userId} {
+      allow read, write: if signedIn() && uid() == userId;
+    }
+
+    match /characters/{charId} {
+      allow read: if canEditCharacter(resource.data);
+
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == uid()
+        && request.resource.data.campaignIds == []
+        && request.resource.data.schemaVersion is int
+        && writerOk(null, request.resource.data);
+
+      allow update: if canEditCharacter(resource.data)
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && request.resource.data.schemaVersion is int
+        && request.resource.data.schemaVersion >= resource.data.schemaVersion
+        && writerOk(resource.data, request.resource.data)
+        && campaignChangeOk(resource.data, request.resource.data);
+
+      allow delete: if signedIn() && resource.data.ownerUid == uid();
+
+      // Asignar la ficha a una campaña: solo el dueño, y solo a una campaña de la que es miembro.
+      // Sacarla (lista vacía) puede el dueño. El GM no cambia campaignIds.
+      function campaignChangeOk(before, after) {
+        return after.campaignIds == before.campaignIds
+          || (before.ownerUid == uid()
+              && after.campaignIds.size() <= 1
+              && (after.campaignIds.size() == 0 || isMemberOf(after.campaignIds[0])));
+      }
+
+      match /{logField}/{entryId} {
+        function parent() {
+          return get(/databases/$(database)/documents/characters/$(charId)).data;
+        }
+        allow read: if (logField == 'ipLog' || logField == 'transactions') && canEditCharacter(parent());
+        allow create: if (logField == 'ipLog' || logField == 'transactions')
+          && canEditCharacter(parent())
+          && request.resource.data._by == uid()
+          && request.resource.data.id == entryId;
+        allow update, delete: if false;
+      }
+    }
+
+    match /campaigns/{campId} {
+      allow read: if signedIn() && uid() in resource.data.memberUids;
+
+      allow create: if signedIn()
+        && request.resource.data.gmUid == uid()
+        && request.resource.data.memberUids == [uid()]
+        && request.resource.data.inviteCode is string
+        && request.resource.data.inviteCode.size() >= 12;
+
+      // El GM edita la campaña; puede pasarle el rol a otro miembro y sacar miembros, pero no a sí mismo.
+      allow update: if signedIn() && resource.data.gmUid == uid()
+        && request.resource.data.gmUid in request.resource.data.memberUids
+        && uid() in request.resource.data.memberUids
+        && request.resource.data.inviteCode is string
+        && request.resource.data.inviteCode.size() >= 12;
+
+      // Unirse con el link: solo agrega su propio uid y muestra el código vigente (lastJoinCode).
+      allow update: if signedIn()
+        && !(uid() in resource.data.memberUids)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberUids', 'lastJoinCode'])
+        && request.resource.data.lastJoinCode == resource.data.inviteCode
+        && request.resource.data.memberUids == resource.data.memberUids.concat([uid()]);
+
+      // Salir: un miembro que no es el GM se saca a sí mismo.
+      allow update: if signedIn()
+        && uid() in resource.data.memberUids
+        && resource.data.gmUid != uid()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberUids'])
+        && request.resource.data.memberUids == resource.data.memberUids.removeAll([uid()]);
+
+      allow delete: if signedIn() && resource.data.gmUid == uid();
+
+      match /party/{charId} {
+        allow read: if isMemberOf(campId);
+        // Lo escribe la capa de sync del dueño de la ficha (o el GM).
+        allow create, update: if isMemberOf(campId)
+          && (request.resource.data.ownerUid == uid() || isGmOf(campId))
+          && (resource == null || resource.data.ownerUid == request.resource.data.ownerUid);
+        allow delete: if isGmOf(campId) || (signedIn() && resource.data.ownerUid == uid());
+      }
+
+      match /gm/{docId} {
+        allow read, write: if isGmOf(campId);
+      }
+
+      match /log/{entryId} {
+        allow read: if isMemberOf(campId);
+        allow create: if isMemberOf(campId) && request.resource.data._by == uid();
+        allow update: if false;
+        allow delete: if isGmOf(campId);
+      }
     }
   }
 }

@@ -38,6 +38,12 @@ interface AuthState {
 
 let listenerAttached = false;
 
+// Tareas a correr antes de cerrar la sesión de Firebase (la capa de sync guarda lo pendiente). [Claude Code · 2026-10-24]
+const beforeSignOut: (() => Promise<void>)[] = [];
+export function registerBeforeSignOut(fn: () => Promise<void>): void {
+  beforeSignOut.push(fn);
+}
+
 const errorCode = (e: unknown): string | undefined =>
   typeof e === 'object' && e !== null && 'code' in e ? String((e as { code: unknown }).code) : undefined;
 
@@ -102,6 +108,13 @@ export const useAuthStore = create<AuthState>()(
         },
 
         signOutCloud: async () => {
+          for (const fn of beforeSignOut) {
+            try {
+              await fn();
+            } catch {
+              // un fallo al guardar no impide salir
+            }
+          }
           try {
             const handles = await getFirebase();
             await handles.authSdk.signOut(handles.auth);

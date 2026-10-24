@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "emulators": "node scripts/firebase-with-jdk.mjs emulators:start --project demo-cpr-omni-deck",
+    "test:rules": "node scripts/firebase-with-jdk.mjs emulators:exec --only firestore --project demo-cpr-omni-deck \"vitest run --config vitest.rules.config.ts\"",
     "build:beta": "tsc -b && vite build --mode beta",
     "deploy:prod": "npm run build && firebase deploy --only hosting,firestore --project prod"
   },

@@ -7,7 +7,8 @@ export const LOG_FIELDS = ['ipLog', 'transactions'] as const;
 export type LogField = typeof LOG_FIELDS[number];
 
 /** Campos de metadatos del documento que no pertenecen a la ficha. */
-export const META_FIELDS = ['ownerUid', 'campaignIds', 'schemaVersion', '_w', '_ts'] as const;
+// _lastWriter: quién escribió por última vez (lo usan las reglas para el freno por escritor). [Claude Code · 2026-10-24]
+export const META_FIELDS = ['ownerUid', 'campaignIds', 'schemaVersion', '_w', '_ts', '_lastWriter'] as const;
 
 // Se mandan como increment(delta) para que el GM y el jugador no se pisen;
 // la munición vive en un array y va entera.
