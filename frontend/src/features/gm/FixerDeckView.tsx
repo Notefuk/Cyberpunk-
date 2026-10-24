@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
 import { 
   calculateMaxHp, 
   getEffectiveBody
@@ -250,13 +251,8 @@ export function FixerDeckView() {
     }
   });
 
-  useEffect(() => {
-    try {
-      localStorage.setItem('cpr_gm_secret_notes_v1', secretNotes);
-    } catch (e) {
-      console.error('Failed to save secret notes:', e);
-    }
-  }, [secretNotes]);
+  // v4.9.7 [Claude Code · 2026-10-24] Guardado agrupado en localStorage (plan17).
+  useDebouncedLocalStorage('cpr_gm_secret_notes_v1', secretNotes, (v) => String(v));
 
   const handleInsertTimestamp = () => {
     const now = new Date();

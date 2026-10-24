@@ -44,6 +44,7 @@ import {
   TECH_LIFEPATH_TABLES,
   ROLE_SPECIFIC_LIFEPATH_TABLES_BY_ROLE
 } from '../../data/weaponAttachmentsAndTechData';
+import { CommittedInput } from '../../components/CommittedInput';
 import { 
   User, 
   Plus, 
@@ -641,10 +642,11 @@ export const StreetLabView: React.FC = () => {
 
           {/* Inputs inline: Handle, Rol, Rango, Eurodólares */}
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono-code">
-            <input
+            <CommittedInput
               type="text"
               value={activeChar?.handle ?? ''}
-              onChange={(e) => updateCharacterMeta({ handle: e.target.value })}
+              onCommit={(v) => updateCharacterMeta({ handle: v })}
+              resetKey={activeChar?.id}
               placeholder="Handle..."
               className="w-28 sm:w-36 bg-[#171924] border border-[#2c3246] text-white font-tech font-bold px-2 py-0.5 rounded focus:outline-none focus:border-[#dc2626]"
               title="Alias / Handle del personaje"
@@ -684,11 +686,12 @@ export const StreetLabView: React.FC = () => {
 
             <div className="flex items-center gap-1 bg-[#171924] border border-[#2c3246] px-2 py-0.5 rounded" title="Eurodólares disponibles">
               <Coins className="w-3 h-3 text-[#10b981]" />
-              <input
+              <CommittedInput
                 type="number"
                 min="0"
-                value={activeChar?.eurodollars ?? 0}
-                onChange={(e) => updateCharacterMeta({ eurodollars: Math.max(0, parseInt(e.target.value) || 0) })}
+                value={String(activeChar?.eurodollars ?? 0)}
+                onCommit={(v) => updateCharacterMeta({ eurodollars: Math.max(0, parseInt(v) || 0) })}
+                resetKey={activeChar?.id}
                 className="w-16 bg-transparent text-[#10b981] font-bold focus:outline-none"
               />
             </div>
