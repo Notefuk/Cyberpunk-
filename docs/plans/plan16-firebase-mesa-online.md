@@ -31,6 +31,31 @@ Hoy todo vive en el `localStorage` de cada navegador: las fichas no pasan de la 
 - **SDK con carga diferida**: Firebase se carga con `import()` solo al iniciar sesión. El modo local no suma peso.
 - **Combat store dividido**: lo compartido (round, iniciativa, encuentro) va a Firestore; lo de la UI de cada jugador (autofire, distancia, Aimed Shot, Luck a gastar) queda local.
 
+## Cuotas de Firebase: cómo la app evita pasarse
+Límite gratis diario (plan Spark, por proyecto): unas 50k lecturas, 20k escrituras y 20k borrados. Objetivo: una sesión de 4 h con 6 jugadores y el GM debe usar menos de la mitad.
+
+Escrituras:
+1. **Debounce** de 1 a 2 s por documento: una ráfaga de cambios (escribir notas, mover un slider, varios clics) sale como una sola escritura.
+2. **Solo campos cambiados**: el diff manda `currentHp`, no la ficha entera.
+3. **Sin eco**: un cambio que llega de Firestore se aplica al store marcado como remoto y la capa de sync no lo vuelve a escribir. Sin esto, dos dispositivos se reescriben en bucle y agotan la cuota en minutos. Test obligatorio.
+4. **Sin escrituras al abrir**: cargar la app, cambiar de pestaña o migrar no escribe nada. Una migración de `schemaVersion` escribe la ficha una sola vez.
+5. **Resumen de party solo si cambió**: `party/{charId}` se escribe únicamente cuando cambia uno de sus campos (HP, heridas, SP, condiciones), no con cada cambio de la ficha.
+6. **Log recortado**: una entrada por tirada o cambio del GM; se conservan las últimas 200 por campaña y el resto se borra al cerrar el encuentro.
+
+Lecturas:
+7. **Caché local de Firestore** (`persistentLocalCache`): al reabrir la app, lo que no cambió sale del caché y no cuenta como lectura.
+8. **Escuchar solo lo que se ve**: cada vista abre sus suscripciones al montarse y las cierra al salir. Con la app en segundo plano se pausan.
+9. **Consultas con límite**: el log se lee con `limit(50)`; las listas de campañas y personajes, sin escuchar en vivo.
+10. **Jugadores sin fichas ajenas**: leen el resumen de party (1 doc chico por personaje), no las fichas completas.
+11. **Datos estáticos en el bundle**: compendio, catálogos, reglas y bestiario no salen de Firestore. Cuestan 0.
+
+Control:
+12. **Contador de uso en modo debug** (local y beta): lecturas y escrituras de la sesión, visibles en un panel, para medir antes de salir a estable.
+13. **Alertas**: alerta de presupuesto en USD 5 si algún proyecto pasa a Blaze; revisar el uso en la consola después de cada sesión de prueba.
+14. **Si se agota la cuota en Spark**: la app sigue andando con los datos locales, muestra "Sincronización pausada hasta mañana" y vuelve a subir los cambios pendientes cuando se reinicia la cuota. Nada se pierde.
+
+Estimación con estas reglas: unas 5k escrituras y 17k lecturas por sesión intensa (25 % y 35 % del límite diario).
+
 ## Modelo de datos (Firestore)
 ```
 users/{uid}                          perfil, campañas a las que pertenece
@@ -104,7 +129,7 @@ Subida de imágenes (retratos, tokens) con Cloud Storage, tiradas en el servidor
 - **Refactor de `useCharacterStore`** (unas 3.000 líneas, todas las fichas en un array): la capa de sync se engancha al store en vez de reescribir sus 80 acciones. Si un diff por campos no alcanza para alguna acción (por ejemplo, reordenar listas), esa acción escribe la lista completa.
 - **Conflictos sin conexión**: el último que escribe gana, salvo en los contadores atómicos.
 - **Reglas de seguridad mal escritas**: tests obligatorios con el emulador antes de cada salida.
-- **Cuotas**: con las reglas de diseño, una sesión de 6 jugadores y el GM estimada en unas 5k escrituras y 17k lecturas, contra 20k y 50k diarias gratis.
+- **Cuotas**: ver la sección "Cuotas de Firebase". El riesgo mayor es el eco entre dispositivos, con test obligatorio.
 
 ## Verificación por fase
 - `npx tsc -b --noEmit`, `npm test` (incluye reglas con el emulador) y `npm run build`.
