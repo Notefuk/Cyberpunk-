@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { 
   Crosshair, 
   User, 
@@ -9,12 +9,15 @@ import {
   UserPlus,
   Network,
   Train,
-  FileText
+  FileText,
+  Users
 } from 'lucide-react';
 import { useCharacterStore } from './store/useCharacterStore';
 import { TopHudBar } from './features/layout/TopHudBar';
 import { RulesCheatSheetDrawer } from './features/rules/RulesCheatSheetDrawer';
 import { PersistenceBanner } from './components/PersistenceBanner';
+import { CloudStatusChip } from './components/CloudStatusChip';
+import { useAuthStore } from './sync/authStore';
 
 // Cada vista se carga al abrir su pestaña para no meter toda la app en un solo bundle.
 const CombatHudView = lazy(() => import('./features/combat/CombatHudView').then((m) => ({ default: m.CombatHudView })));
@@ -24,15 +27,20 @@ const CyberwareRipperdocView = lazy(() => import('./features/cyberware/Cyberware
 const CompendiumView = lazy(() => import('./features/compendium/CompendiumView').then((m) => ({ default: m.CompendiumView })));
 const DataPackManagerView = lazy(() => import('./features/datapacks/DataPackManagerView').then((m) => ({ default: m.DataPackManagerView })));
 const FixerDeckView = lazy(() => import('./features/gm/FixerDeckView').then((m) => ({ default: m.FixerDeckView })));
+// [Claude Code · 2026-10-24] v5.0.0 (plan 16): mesa online.
+const CloudTableView = lazy(() => import('./features/cloud/CloudTableView').then((m) => ({ default: m.CloudTableView })));
 const NetAndRolesDeckView = lazy(() => import('./features/netroles/NetAndRolesDeckView').then((m) => ({ default: m.NetAndRolesDeckView })));
 const RedChromeCargoView = lazy(() => import('./features/oneshot/RedChromeCargoView').then((m) => ({ default: m.RedChromeCargoView })));
 const SystemChangelogAndDocsView = lazy(() => import('./features/docs/SystemChangelogAndDocsView').then((m) => ({ default: m.SystemChangelogAndDocsView })));
 
-type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'oneshot' | 'creator' | 'docs';
+type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'mesa' | 'oneshot' | 'creator' | 'docs';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('combat');
   const appTheme = useCharacterStore((state) => state.appTheme);
+
+  // [Claude Code · 2026-10-24] v5.0.0 (plan 16): si ya había entrado a la nube, retoma la sesión.
+  useEffect(() => { void useAuthStore.getState().initAuth(); }, []);
 
   const themeConfig = {
     neo_red: {
@@ -92,6 +100,11 @@ export default function App() {
       icon: <Terminal className="w-4 h-4" />
     },
     {
+      id: 'mesa',
+      label: 'MESA // CAMPAÑA',
+      icon: <Users className="w-4 h-4" />
+    },
+    {
       id: 'oneshot',
       label: '🚆 RED CHROME CARGO',
       icon: <Train className="w-4 h-4 text-red-500" />
@@ -138,6 +151,7 @@ export default function App() {
               </button>
             );
           })}
+          <CloudStatusChip onClick={() => setActiveTab('mesa')} />
         </div>
       </nav>
 
@@ -157,6 +171,7 @@ export default function App() {
         {activeTab === 'compendium' && <CompendiumView />}
         {activeTab === 'packs' && <DataPackManagerView onNavigateTab={(tab) => setActiveTab(tab)} />}
         {activeTab === 'gm' && <FixerDeckView />}
+        {activeTab === 'mesa' && <CloudTableView />}
         {activeTab === 'oneshot' && <RedChromeCargoView />}
         {activeTab === 'docs' && <SystemChangelogAndDocsView />}
         </Suspense>
