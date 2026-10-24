@@ -9,7 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "emulators": "firebase emulators:start --project demo-cpr-omni-deck",
+    "emulators": "node scripts/firebase-with-jdk.mjs emulators:start --project demo-cpr-omni-deck",
     "build:beta": "tsc -b && vite build --mode beta",
     "deploy:prod": "npm run build && firebase deploy --only hosting,firestore --project prod"
   },
