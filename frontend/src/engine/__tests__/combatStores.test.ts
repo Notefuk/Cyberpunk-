@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useGameClockStore, currentBeatId, currentDayKey } from '../../store/gameClockStore';
 import { useRulesSettingsStore } from '../../store/rulesSettingsStore';
-import { useCombatStore, migrateCombatState } from '../../store/useCombatStore';
+import { useCombatStore, migrateCombatState, partializeCombat, COMBAT_LOCAL_KEYS, COMBAT_SHARED_KEYS } from '../../store/useCombatStore';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../../data/cemkFolioPremadesData';
 import type { CharacterSheet } from '../../types/cyberpunk';
 
@@ -139,5 +139,42 @@ describe('turnLog del combate', () => {
     const migrate = migrateCombatState;
     const migrated = migrate({ round: 3 }) as { turnLog?: { movesUsed: string[] } };
     expect(migrated.turnLog?.movesUsed).toEqual([]);
+  });
+});
+
+// [Claude Code · 2026-10-24] v4.9.7: grupos local/shared del estado persistido (plan 17, cambio 4).
+describe('persistencia del combate: grupos local y shared', () => {
+  it('partializeCombat devuelve exactamente las claves de ambos grupos y ninguna función', () => {
+    const persisted = partializeCombat(useCombatStore.getState()) as Record<string, unknown>;
+    expect(Object.keys(persisted).sort()).toEqual([...COMBAT_LOCAL_KEYS, ...COMBAT_SHARED_KEYS].sort());
+    for (const value of Object.values(persisted)) expect(typeof value).not.toBe('function');
+  });
+
+  it('cada campo de datos del store está en exactamente un grupo y los grupos no se solapan', () => {
+    const dataKeys = Object.entries(useCombatStore.getState())
+      .filter(([, value]) => typeof value !== 'function')
+      .map(([key]) => key);
+    const local = COMBAT_LOCAL_KEYS as readonly string[];
+    const shared = COMBAT_SHARED_KEYS as readonly string[];
+    for (const key of dataKeys) {
+      const count = Number(local.includes(key)) + Number(shared.includes(key));
+      expect(count, `el campo "${key}" debe estar en exactamente un grupo`).toBe(1);
+    }
+    expect(local.filter((k) => shared.includes(k))).toEqual([]);
+    expect([...local, ...shared].sort()).toEqual([...dataKeys].sort());
+  });
+
+  it('migrateCombatState con un objeto de forma v2 conserva los valores y el turnLog', () => {
+    const v2 = {
+      era: '2077',
+      round: 5,
+      rollHistory: [],
+      turnLog: { hitsByType: {}, formHits: {}, movesUsed: ['m9'], movedMeters: 2 }
+    };
+    const migrated = migrateCombatState(v2, 2) as unknown as typeof v2;
+    expect(migrated.round).toBe(5);
+    expect(migrated.rollHistory).toEqual([]);
+    expect(migrated.era).toBe('2077');
+    expect(migrated.turnLog.movesUsed).toEqual(['m9']);
   });
 });

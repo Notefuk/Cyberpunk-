@@ -2,14 +2,15 @@
 // almacenamiento seguro, canal de avisos y respaldo completo. TS puro, sin React.
 import { createJSONStorage } from 'zustand/middleware';
 import type { StateStorage } from 'zustand/middleware';
-import type { CharacterSheet } from '../types/cyberpunk';
+import type { CharacterSheet, IpLogEntry } from '../types/cyberpunk';
+import { IP_LOG_MAX, capIpLog } from '../engine/ipLedger';
 import coreRulesPack from '../data/core-rules.cprpack.json';
 import { FBC_16_CYBERWARE } from '../data/goingMetalFbcData';
 import { MARTIAL_ARTS_FORMS } from '../data/cyberfistsMartialArtsData';
 import { applyFolioAllocation } from '../data/folioRoleAllocations';
 
 export const CHARACTERS_STORAGE_KEY = 'cpr-omni-deck-characters-v2';
-export const CHARACTERS_SCHEMA_VERSION = 5;
+export const CHARACTERS_SCHEMA_VERSION = 6;
 // No existe una constante de versión en la app; la última entrada del changelog in-app es v4.7.0 y este trabajo es v4.8.0.
 export const APP_VERSION = 'v4.9.6';
 
@@ -64,6 +65,48 @@ export function isKnownCyberwareId(id: string): boolean {
 // ---------------------------------------------------------------------------
 // Migraciones: la clave N migra de N a N+1
 // ---------------------------------------------------------------------------
+// v4.9.7 [Claude Code · 2026-10-24]: claves donde van los movimientos viejos que superan los topes (incluidas en la copia de seguridad).
+export const IP_LOG_ARCHIVE_KEY = 'cpr_ip_log_archive_v1';
+export const SPEEDHEAL_ARCHIVE_KEY = 'cpr_speedheal_archive_v1';
+
+export function archiveIpLogEntries(characterId: string, handle: string, entries: IpLogEntry[]): void {
+  if (entries.length === 0) return;
+  try {
+    let map: Record<string, IpLogEntry[]> = {};
+    try {
+      const raw = localStorage.getItem(IP_LOG_ARCHIVE_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) map = parsed;
+    } catch {
+      map = {};
+    }
+    const prev = Array.isArray(map[characterId]) ? map[characterId] : [];
+    map[characterId] = [...prev, ...entries];
+    localStorage.setItem(IP_LOG_ARCHIVE_KEY, JSON.stringify(map));
+    emitPersistenceWarning(`Historial de IP de ${handle || characterId}: ${entries.length} movimiento(s) viejo(s) pasaron a la copia de seguridad (límite ${IP_LOG_MAX}). Descargá la copia de seguridad desde Street Lab para conservarlos.`);
+  } catch {
+    emitPersistenceWarning(`Historial de IP de ${handle || characterId}: no se pudo guardar el archivo de ${entries.length} movimiento(s) viejo(s) (sin espacio en el navegador). Descargá la copia de seguridad cuanto antes.`);
+  }
+}
+
+export function archiveSpeedhealEntries(entries: unknown[]): void {
+  if (entries.length === 0) return;
+  try {
+    let arr: unknown[] = [];
+    try {
+      const raw = localStorage.getItem(SPEEDHEAL_ARCHIVE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      if (Array.isArray(parsed)) arr = parsed;
+    } catch {
+      arr = [];
+    }
+    localStorage.setItem(SPEEDHEAL_ARCHIVE_KEY, JSON.stringify([...arr, ...entries]));
+    emitPersistenceWarning(`Registro de Speedheal: ${entries.length} uso(s) viejo(s) pasaron a la copia de seguridad (límite 500). Descargá la copia de seguridad desde Street Lab para conservarlos.`);
+  } catch {
+    emitPersistenceWarning(`Registro de Speedheal: no se pudo guardar el archivo de ${entries.length} uso(s) viejo(s) (sin espacio en el navegador). Descargá la copia de seguridad cuanto antes.`);
+  }
+}
+
 export const MIGRATIONS: Record<number, (state: any) => any> = {
   // v0 -> v1: solo agrega campos opcionales (deathSavePenalty, isDead, preFbc*Armor); no hace falta transformar.
   0: (state) => state,
@@ -172,6 +215,18 @@ export const MIGRATIONS: Record<number, (state: any) => any> = {
         return { ...c, stats: { ...c.stats, BODY: 8 } };
       }
       return c;
+    });
+    return state;
+  },
+  // v5 -> v6 (v4.9.7 [Claude Code · 2026-10-24]): freno de 2.000 en el historial de IP.
+  5: (state) => {
+    if (!state || typeof state !== 'object' || !Array.isArray(state.characters)) return state;
+    state.characters = state.characters.map((c: any) => {
+      if (!c || typeof c !== 'object') return c;
+      if (!Array.isArray(c.ipLog) || c.ipLog.length <= IP_LOG_MAX) return c;
+      const capped = capIpLog(c.ipLog, c.ipLogArchivedTotals);
+      archiveIpLogEntries(c.id, c.handle, capped.archived);
+      return { ...c, ipLog: capped.log, ipLogArchivedTotals: capped.archivedTotals };
     });
     return state;
   }
@@ -304,7 +359,9 @@ export const BACKUP_EXTRA_KEYS = [
   'cpr_custom_net_arch_v1',
   'cpr-omni-deck-combat-v2',
   'cpr_enemy_sheet_mode_v1',
-  'cpr_creator_novice_v1'
+  'cpr_creator_novice_v1',
+  IP_LOG_ARCHIVE_KEY,
+  SPEEDHEAL_ARCHIVE_KEY
 ];
 
 export interface BackupFile {

@@ -12,7 +12,7 @@ export const IpLedgerPanel: React.FC = () => {
   const [amount, setAmount] = useState<number>(10);
   const [reason, setReason] = useState('');
 
-  const totals = summarizeIpLog(activeChar?.ipLog, activeChar?.improvementPoints ?? 0);
+  const totals = summarizeIpLog(activeChar?.ipLog, activeChar?.improvementPoints ?? 0, activeChar?.ipLogArchivedTotals);
   const history = [...(activeChar?.ipLog ?? [])].reverse().slice(0, 20);
 
   const rows: [string, number][] = [
@@ -44,6 +44,9 @@ export const IpLedgerPanel: React.FC = () => {
           </div>
         ))}
       </div>
+      {activeChar?.ipLogArchivedTotals && (
+        <div className="text-[10px] text-slate-500">Los movimientos más viejos están en la copia de seguridad (Street Lab).</div>
+      )}
 
       <div className="flex flex-wrap items-center gap-1 text-[10px]">
         {QUICK_BUTTONS.map((n) => (

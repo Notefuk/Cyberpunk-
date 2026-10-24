@@ -5,6 +5,8 @@ import {
   BACKUP_FORMAT,
   CHARACTERS_SCHEMA_VERSION,
   CHARACTERS_STORAGE_KEY,
+  IP_LOG_ARCHIVE_KEY,
+  SPEEDHEAL_ARCHIVE_KEY,
   backupRawBeforeMigration,
   buildFullBackup,
   clearPersistenceWarnings,
@@ -233,7 +235,40 @@ describe('migración v4 -> v5 (Thorn, Core p.114)', () => {
     expect(state.characters[0].stats.BODY).toBe(8);
   });
 
-  it('la versión de esquema es 5', () => {
-    expect(CHARACTERS_SCHEMA_VERSION).toBe(5);
+  it('la versión de esquema es 6', () => {
+    expect(CHARACTERS_SCHEMA_VERSION).toBe(6);
+  });
+});
+
+// [Claude Code · 2026-10-24] v4.9.7: freno de 2.000 en el historial de IP y claves de archivo en el respaldo.
+describe('migración v5 -> v6 (freno del historial de IP)', () => {
+  const entry = (i: number) => ({ id: `ip-${i}`, at: '2026-10-24T00:00:00Z', kind: 'award', delta: 1, reason: 'x', balanceAfter: i });
+
+  it('una ficha con 2.001 movimientos queda en 2.000 y el más viejo se archiva', () => {
+    const warnings: string[] = [];
+    const off = onPersistenceWarning((m) => warnings.push(m));
+    const big = makeChar({ id: 'big', ipLog: Array.from({ length: 2001 }, (_, i) => entry(i)) });
+    const { state } = runMigrations({ characters: [big] }, 5);
+    off();
+    expect(state.characters[0].ipLog).toHaveLength(2000);
+    expect(state.characters[0].ipLog[0].id).toBe('ip-1');
+    expect(state.characters[0].ipLogArchivedTotals).toMatchObject({ earned: 1 });
+    const map = JSON.parse(storage.getItem(IP_LOG_ARCHIVE_KEY)!);
+    expect(map.big).toHaveLength(1);
+    expect(map.big[0].id).toBe('ip-0');
+    expect(warnings.length).toBeGreaterThan(0);
+  });
+
+  it('una ficha con historial corto no cambia', () => {
+    const short = makeChar({ id: 'short', ipLog: [entry(0), entry(1)] });
+    const { state } = runMigrations({ characters: [short] }, 5);
+    expect(state.characters[0].ipLog).toHaveLength(2);
+    expect(state.characters[0].ipLogArchivedTotals).toBeUndefined();
+    expect(storage.getItem(IP_LOG_ARCHIVE_KEY)).toBeNull();
+  });
+
+  it('el respaldo incluye las dos claves de archivo', () => {
+    expect(BACKUP_EXTRA_KEYS).toContain(IP_LOG_ARCHIVE_KEY);
+    expect(BACKUP_EXTRA_KEYS).toContain(SPEEDHEAL_ARCHIVE_KEY);
   });
 });

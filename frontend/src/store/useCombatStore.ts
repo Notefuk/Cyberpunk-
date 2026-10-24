@@ -55,8 +55,25 @@ export interface CombatStoreState {
   clearRollHistory: () => void;
 }
 
+// v4.9.7 [Claude Code · 2026-10-24] Grupos del estado persistido (plan 17, cambio 4).
+// local: UI y preparación de la tirada de cada jugador; nunca sale de su dispositivo.
+// shared: estado del combate; en v5.1.0 pasa al encuentro compartido.
+export const COMBAT_LOCAL_KEYS = ['era', 'selectedDistance', 'autofireByWeapon', 'luckToSpendOnNextRoll', 'aimedShotTarget'] as const;
+export const COMBAT_SHARED_KEYS = ['rollHistory', 'round', 'firstDamageTakenThisRound', 'firstHitLandedThisRound', 'netActionsSpent', 'backupCalls', 'turnLog'] as const;
+export type CombatLocalKey = typeof COMBAT_LOCAL_KEYS[number];
+export type CombatSharedKey = typeof COMBAT_SHARED_KEYS[number];
+export type PersistedCombatState = Pick<CombatStoreState, CombatLocalKey | CombatSharedKey>;
+
+// v4.9.7 [Claude Code · 2026-10-24] Devuelve un objeto plano (mismas claves de siempre) solo con los datos, sin funciones.
+export function partializeCombat(state: CombatStoreState): PersistedCombatState {
+  const out: Record<string, unknown> = {};
+  for (const key of [...COMBAT_LOCAL_KEYS, ...COMBAT_SHARED_KEYS]) out[key] = state[key];
+  return out as PersistedCombatState;
+}
+
 // v4.9.6 [Claude Code · 2026-10-23] Migración v1 -> v2: asegura el turnLog (decisión 48).
-export function migrateCombatState(persistedState: unknown): CombatStoreState {
+// v4.9.7 [Claude Code · 2026-10-24] v2 -> v3 no cambia la forma guardada (solo agrega partialize), no hace falta nada más.
+export function migrateCombatState(persistedState: unknown, _version?: number): CombatStoreState {
   const st = persistedState as CombatStoreState;
   if (st && !st.turnLog) st.turnLog = emptyTurnLog();
   return st;
@@ -201,7 +218,9 @@ export const useCombatStore = create<CombatStoreState>()(
       name: 'cpr-omni-deck-combat-v2',
       // Versión del esquema persistido. Al cambiar la forma de los datos, subir el número y migrar aquí.
       // v4.9.6 [Claude Code · 2026-10-23] versión 2: agrega turnLog (decisión 48).
-      version: 2,
+      // v4.9.7 [Claude Code · 2026-10-24] versión 3: partialize con grupos local/shared.
+      version: 3,
+      partialize: partializeCombat,
       migrate: migrateCombatState
     }
   )
