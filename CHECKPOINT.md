@@ -7,27 +7,27 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-10-24] Documentación ordenada en la rama `claude/docs-orden`, esperando que Giuliano compare los dos mapas y elija.
+**Última actualización**: [Claude Code · 2026-10-24] Orden v2 de la documentación elegido por Giuliano y mergeado (PR #32, squash 2749592). Falta aprobar el plan 16.
 **Versión de la app**: v4.9.6 (en `main`, squash 2943b27, PR #31; publicada en gh-pages y verificada en vivo)
 **Plan activo**: plan 16 `docs/plans/plan16-firebase-mesa-online.md` (Firebase, mesa online), BORRADOR sin aprobar. Va antes del plan 5. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
-- [Claude Code · 2026-10-24] **Plan 16, borrador** en `claude/plan16-firebase-mesa-online`. Decisiones de alcance tomadas (login Google, dos modos local/nube, resumen de party, cambios del GM directos con log, dados locales, varias campañas, 3 entornos). Tiene sección de cuotas (14 medidas; la clave es evitar el eco entre dispositivos). Se puede corregir hasta que Giuliano lo apruebe; después es inmutable. Al aprobarse, la fase 1 (v5.0.0) empieza con Giuliano creando los proyectos Firebase `dev` y `prod`.
-- [Claude Code · 2026-10-24] **Orden de la documentación** en `claude/docs-orden` (sale de la rama del plan 16, la incluye). Hecho: `docs/INDEX.md`, `docs/archive/` con lo histórico (sin borrar nada), estado de planes solo en `docs/plans/README.md`, HANDOFF como mapa técnico sin historia, changelog con v1.0-v3.9 archivado, checkpoint corto, referencias actualizadas en CLAUDE.md, COWORK, `.agent/AGENTS.md` y skills. Giuliano compara el "Mapa del Omni-Deck" (orden viejo) con el "Mapa del Omni-Deck v2" (orden nuevo) y elige. Si elige el viejo, se descarta la rama.
+- [Claude Code · 2026-10-24] **Plan 16, borrador** (ya en `main` desde el PR #32; la rama `claude/plan16-firebase-mesa-online` quedó superada). Decisiones de alcance tomadas (login Google, dos modos local/nube, resumen de party, cambios del GM directos con log, dados locales, varias campañas, 3 entornos). Tiene sección de cuotas (14 medidas; la clave es evitar el eco entre dispositivos). Se puede corregir hasta que Giuliano lo apruebe; después es inmutable. Al aprobarse, la fase 1 (v5.0.0) empieza con Giuliano creando los proyectos Firebase `dev` y `prod`.
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-24].
-- Ramas sin mergear: `claude/plan16-firebase-mesa-online` (borrador del plan 16) y `claude/docs-orden` (orden de docs, contiene a la anterior). `main` @ da562f5.
+- Rama: `main` @ 2749592 + este checkpoint. Las ramas `claude/plan16-firebase-mesa-online` y `claude/docs-orden` ya están en `main` (se pueden borrar).
 - A medias: nada de código.
-- Siguiente paso exacto: Giuliano elige el orden de docs y aprueba (o corrige) el plan 16.
+- Siguiente paso exacto: Giuliano aprueba (o corrige) el plan 16. Si lo corrige antes de aprobarlo, se edita el borrador; después es inmutable.
 - Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y el HUD (760 px a 375). (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido: entra en el plan 16, fase v5.1.0 (une `ActiveEncounterEnemy`, `InitiativeCombatant` y `EnemySheet`).
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
-- Preguntas abiertas para Giuliano: qué orden de docs queda; aprobación del plan 16.
+- Preguntas abiertas para Giuliano: aprobación del plan 16.
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-24] Orden v2 de la documentación (PR #32): `docs/INDEX.md`, `docs/archive/`, fuente única por dato (planes en `docs/plans/README.md`, historia en el CHANGELOG), HANDOFF como mapa técnico, checkpoint corto. Sin cambios de código.
 - [Claude Code · 2026-10-23] v4.9.6 Movimientos especiales de Martial Arts en el HUD (plan 15, PR #31) y v4.9.5 Martial Arts por forma (plan 14, PR #30), mergeadas y publicadas. Referencia en `docs/rules/martial-arts.md`; decisiones 39-48.
 - [Claude Code · 2026-10-23] v4.9.4 Modo Novato (planes 12 y 13, PR #29), mergeada y publicada. Con esto los planes 7 y 8 quedan completos.
 - Versiones anteriores: `CHANGELOG_AND_ARCHITECTURE.md`.
