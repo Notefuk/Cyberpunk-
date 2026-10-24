@@ -6,9 +6,9 @@
 > Es corto a propósito: el historial completo vive en `CHANGELOG_AND_ARCHITECTURE.md` y el contexto técnico en `AI_CONTEXT_HANDOFF.md`.
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 
-**Última actualización**: [Claude Code · 2026-10-23] v4.9.6 mergeada y publicada.
+**Última actualización**: [Claude Code · 2026-10-24] Borrador del plan 16 (Firebase, mesa online) esperando aprobación de Giuliano.
 **Versión de la app**: v4.9.6 (en `main`, squash 2943b27, PR #31; publicada en gh-pages y verificada en vivo)
-**Plan activo**: ninguno abierto. Planes 14 y 15 (Martial Arts) terminados. Lo siguiente es el plan 5 (Black Chrome y vehículos). Estado de todos los planes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0 [Claude Code · 2026-10-23]. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
+**Plan activo**: [Claude Code · 2026-10-24] plan 16 `docs/plans/plan16-firebase-mesa-online.md`, en rama `claude/plan16-firebase-mesa-online`, BORRADOR sin aprobar (se puede corregir hasta que Giuliano lo apruebe; después es inmutable). Decisiones de alcance ya tomadas y anotadas en el plan. Giuliano decidió hacerlo ANTES del plan 5 (Black Chrome y vehículos). Paso siguiente: aprobación; después la fase 1 (v5.0.0) empieza con Giuliano creando los proyectos Firebase `dev` y `prod`. Estado de todos los planes: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0 [Claude Code · 2026-10-23]. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
