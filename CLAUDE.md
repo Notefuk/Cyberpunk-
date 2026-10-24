@@ -6,20 +6,24 @@ Companion app offline-first para **Cyberpunk RED** (Core Rulebook + CEMK 2077 + 
 - Stack: React 19 + TypeScript + Vite + Tailwind CSS v4 + Zustand 5 (todo dentro de `frontend/`)
 - Idioma: la UI, los docs y los mensajes al usuario van en **español**. Nombres de reglas/ítems oficiales se mantienen en inglés cuando así figuran en los libros (ej. *Synapse Burnout*, *Autofire*).
 
+Principios de trabajo del agente principal (criterio, reglas solo RAW, push solo con OK de Giuliano, subagentes): [Claude Code · 2026-10-24]
+
+@docs/PRINCIPIOS.md
+
 ## Convivencia con Antigravity
 
 El proyecto se trabaja alternando Claude Code y Antigravity (cuando se agota el cupo de uno se sigue con el otro). Por eso:
 - **No borrar ni mover** `.agent/` (config de Antigravity) ni los docs de la raíz (`AI_CONTEXT_HANDOFF.md`, `PROJECT_STATUS_AND_ROADMAP.md`, `CHANGELOG_AND_ARCHITECTURE.md`, `CONTENT_CHECKLIST.md`). Son la memoria compartida entre ambas herramientas. Lo histórico se mueve como copia textual a `docs/archive/`; nunca se borra [Claude Code · 2026-10-24].
 - `.claude/` es la config de Claude Code. Si cambias una instrucción en un lado, replícala en el otro (`.agent/skills/` ↔ `.claude/skills/`, `.agent/agents/` ↔ `.claude/agents/`).
 - Al cerrar cada versión, actualiza los docs de la lista "Al cerrar una versión" de `docs/INDEX.md`, para que la otra herramienta pueda retomar sin perder contexto [Claude Code · 2026-10-24].
-- **Protocolo de cowork en `docs/COWORK.md`** (compartido con Antigravity): firma, inicio de sesión, ramas por herramienta y cierre de sesión. Al inicio el hook `SessionStart` (`.claude/hooks/checkpoint-start.sh`) carga `CHECKPOINT.md` en contexto; cuando Giuliano se va o cambia de herramienta, usa la skill `cierre-sesion` (checkpoint comprimido con `## Traspaso`, docs firmados, commit y push).
+- **Protocolo de cowork en `docs/COWORK.md`** (compartido con Antigravity): firma, inicio de sesión, ramas por herramienta y cierre de sesión. Al inicio el hook `SessionStart` (`.claude/hooks/checkpoint-start.sh`) carga `CHECKPOINT.md` en contexto; cuando Giuliano se va o cambia de herramienta, usa la skill `cierre-sesion` (checkpoint comprimido con `## Traspaso`, docs firmados, commit y push con OK de Giuliano).
 
 ## CHECKPOINT.md (obligatorio)
 
 `CHECKPOINT.md` en la raíz es el estado vivo del trabajo, compartido con Antigravity.
 - **Léelo primero** al iniciar sesión o tras una compactación de contexto.
 - **Actualízalo** al terminar cada tarea, antes de compactar contexto (o cuando la conversación ya sea larga) y antes de que el usuario cambie de herramienta: último trabajo terminado, qué quedó a medias (archivos y líneas), próximos pasos y bloqueos. Mantenlo breve y reemplaza lo viejo en vez de acumular historial.
-- Commitéalo junto con el trabajo al que corresponde, y **pushéalo**: un trabajo a medias que no está en GitHub se pierde (le pasó a v4.5.0 al pasar de claude.ai a Claude Code local).
+- Commitéalo junto con el trabajo al que corresponde y **pedile a Giuliano el OK para pushearlo** (nunca se pushea sin su OK, ver `docs/PRINCIPIOS.md`) [Claude Code · 2026-10-24]: un trabajo a medias que no está en GitHub se pierde (le pasó a v4.5.0 al pasar de claude.ai a Claude Code local).
 - Para actualizarlo usa la skill `checkpoint`. El hook `Stop` (`.claude/hooks/checkpoint-guard.sh`) frena el cierre de un turno si hay archivos cambiados más nuevos que `CHECKPOINT.md`.
 
 ## Firma de autoría (Claude Code ↔ Antigravity)

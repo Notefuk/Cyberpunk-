@@ -20,4 +20,8 @@ description: Actualiza CHECKPOINT.md con el estado vivo del trabajo (último tra
 4. **En curso**: qué está hecho y qué falta, con archivo y líneas aproximadas, en orden. Rama donde vive el trabajo.
 5. **Próximos pasos** y **Notas y bloqueos**: preguntas pendientes al usuario, decisiones tomadas, desvíos del plan y por qué.
 6. No borres firmas de Antigravity: agrega la tuya debajo.
-7. Si hay trabajo a medias, commitéalo junto con el checkpoint y **pushea la rama** (pedile OK al usuario si todavía no autorizó pushes en esta sesión). Un trabajo que no está en GitHub se pierde.
+7. Si hay trabajo a medias, commitéalo junto con el checkpoint. **Nunca pushees sin el OK explícito de Giuliano** (`docs/PRINCIPIOS.md`) [Claude Code · 2026-10-24]:
+   - Antes de pedirlo, decile la rama y el destino, los commits que suben (`git log origin/<rama>..HEAD --oneline`) y si `tsc`, los tests y el build pasan.
+   - Un OK cubre un solo push, no los siguientes.
+   - Si no está para darlo, dejá todo commiteado en local y anotá en el Traspaso "pusheada: no — falta OK".
+   - Un trabajo que no está en GitHub se pierde: por eso el OK se pide enseguida, no al final de la sesión.

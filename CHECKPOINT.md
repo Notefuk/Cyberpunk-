@@ -27,6 +27,7 @@
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-24] Regla de push de `docs/PRINCIPIOS.md` aplicada en las skills `checkpoint` y `cierre-sesion` y en el agente `github-web-deployer`: nunca pushear sin el OK explícito de Giuliano, un OK por push, y `gh-pages` con un OK aparte.
 - [Claude Code · 2026-10-24] Orden v2 de la documentación (PR #32): `docs/INDEX.md`, `docs/archive/`, fuente única por dato (planes en `docs/plans/README.md`, historia en el CHANGELOG), HANDOFF como mapa técnico, checkpoint corto. Sin cambios de código.
 - [Claude Code · 2026-10-23] v4.9.6 Movimientos especiales de Martial Arts en el HUD (plan 15, PR #31) y v4.9.5 Martial Arts por forma (plan 14, PR #30), mergeadas y publicadas. Referencia en `docs/rules/martial-arts.md`; decisiones 39-48.
 - [Claude Code · 2026-10-23] v4.9.4 Modo Novato (planes 12 y 13, PR #29), mergeada y publicada. Con esto los planes 7 y 8 quedan completos.

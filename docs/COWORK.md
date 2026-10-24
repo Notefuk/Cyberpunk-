@@ -37,7 +37,7 @@ Reglas:
 ## 3. Durante el trabajo
 
 - Una tarea, una rama: `claude/<tema>` o `antigravity/<tema>`. Nada de trabajar las dos en la misma rama a la vez.
-- Al cerrar cada paso: actualizar `CHECKPOINT.md` y commitear. Pushear seguido: lo que no está en GitHub no existe para la otra herramienta (así se perdió v4.5.0 en claude.ai).
+- Al cerrar cada paso: actualizar `CHECKPOINT.md` y commitear. Pushear seguido: lo que no está en GitHub no existe para la otra herramienta (así se perdió v4.5.0 en claude.ai). Claude Code pide el OK de Giuliano antes de cada push [Claude Code · 2026-10-24].
 - Planes grandes: van primero a `docs/plans/` firmados; el avance va en `CHECKPOINT.md`, no en el plan.
 
 ## 4. Cierre de sesión (Giuliano se va, se corta o se cambia de herramienta)
@@ -46,5 +46,5 @@ Claude Code usa la skill `cierre-sesion`; Antigravity sigue `.agent/skills/cierr
 1. Terminar o dejar en un punto estable el paso actual (que compile).
 2. `CHECKPOINT.md` comprimido: reemplazar lo viejo, no acumular. Completar la sección **Traspaso** (quién cierra, fecha, rama y último commit, qué quedó a medias con archivos y líneas, siguiente paso exacto, preguntas abiertas para Giuliano).
 3. Docs firmados si se cerró una versión: la lista "Al cerrar una versión" de `docs/INDEX.md` [Claude Code · 2026-10-24].
-4. Commit firmado y **push** de la rama. Si hay una rama sin mergear, dejar su nombre en el Traspaso.
+4. Commit firmado y **push** de la rama (Claude Code, con OK de Giuliano [Claude Code · 2026-10-24]). Si hay una rama sin mergear, dejar su nombre en el Traspaso.
 5. Decirle a Giuliano en 3-5 líneas dónde quedó todo y cuál es el primer paso de la próxima sesión.
