@@ -21,7 +21,7 @@
 - Cierra: [Claude Code · 2026-10-24].
 - Rama: `claude/v5.0.0-nube` (pusheada: no — falta OK). `main` @ 191b647, pusheada.
 - A medias: nada; etapas 1 a 4 terminadas y probadas.
-- Siguiente paso exacto: etapa 5 según el plan 18 (`docs/plans/plan18-v5-campanias.md`), paso 2 (reglas). Detalle original: etapa 5 del plan 16 (crear campaña, unirse con link, asignar ficha, vista de party para el GM). Aviso menor: el emulador marca `firestore.rules:72` (writerOk con before null) como advertencia de tipo; los tests pasan.
+- Siguiente paso exacto: etapa 5 según el plan 18 (`docs/plans/plan18-v5-campanias.md`), paso 3 (partySummary y campaignRepo). Paso 2 hecho: reglas con echar (el dueño debe seguir siendo miembro) y memberNames, 27 tests de reglas. Detalle original: etapa 5 del plan 16 (crear campaña, unirse con link, asignar ficha, vista de party para el GM). Aviso menor: el emulador marca `firestore.rules:72` (writerOk con before null) como advertencia de tipo; los tests pasan.
 - Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y el HUD (760 px a 375). (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido: entra en el plan 16, fase v5.1.0 (une `ActiveEncounterEnemy`, `InitiativeCombatant` y `EnemySheet`).
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
 - Preguntas abiertas para Giuliano: OK para pushear `claude/v5.0.0-nube` cuando quiera.

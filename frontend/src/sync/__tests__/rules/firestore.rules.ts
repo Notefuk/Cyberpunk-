@@ -11,7 +11,10 @@ import {
   type RulesTestEnvironment,
 } from '@firebase/rules-unit-testing';
 import {
+  arrayRemove,
+  arrayUnion,
   collection,
+  deleteField,
   doc,
   FieldPath,
   getDoc,
@@ -127,6 +130,14 @@ describe('fichas', () => {
     await assertFails(updateAs(db('bob'), 'c1', 'bob_dev1', 'currentHp', 1));
   });
 
+  it('si el GM echa al dueño, deja de ver y editar su ficha aunque siga diciendo la campaña (plan 18)', async () => {
+    await seed(['campaigns', 'camp1'], { ...camp, memberUids: ['gm', 'bob'] });
+    await seed(['characters', 'c1'], baseChar('alice', ['camp1']));
+    await assertFails(getDoc(doc(db('gm'), 'characters/c1')));
+    await assertFails(updateAs(db('gm'), 'c1', 'gm_dev1', 'currentHp', 20));
+    await assertSucceeds(getDoc(doc(db('alice'), 'characters/c1')));
+  });
+
   it('freno: el mismo escritor no puede escribir dos veces en menos de 1 s', async () => {
     await seed(['characters', 'c1'], baseChar('alice'));
     await assertSucceeds(updateAs(db('alice'), 'c1', 'alice_dev1', 'currentHp', 29));
@@ -208,6 +219,23 @@ describe('campañas', () => {
     await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1'), { memberUids: ['gm', 'alice'], lastJoinCode: 'codigo-malo-0000' }));
     await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1'), { memberUids: ['gm', 'carol'], lastJoinCode: 'codigo-secreto-123' }));
     await assertSucceeds(updateDoc(doc(db('alice'), 'campaigns/camp1'), { memberUids: ['gm', 'alice'], lastJoinCode: 'codigo-secreto-123' }));
+  });
+
+  it('unirse con arrayUnion y su nombre funciona; no se puede escribir el nombre de otro (plan 18)', async () => {
+    await seed(['campaigns', 'camp1'], { ...camp, memberUids: ['gm'], memberNames: { gm: 'GM' } });
+    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1'), {
+      memberUids: arrayUnion('alice'), lastJoinCode: 'codigo-secreto-123', 'memberNames.gm': 'Hackeado',
+    }));
+    await assertSucceeds(updateDoc(doc(db('alice'), 'campaigns/camp1'), {
+      memberUids: arrayUnion('alice'), lastJoinCode: 'codigo-secreto-123', 'memberNames.alice': 'Alice',
+    }));
+  });
+
+  it('salir con arrayRemove borra el propio nombre; el GM echa a un miembro (plan 18)', async () => {
+    await seed(['campaigns', 'camp1'], { ...camp, memberNames: { gm: 'GM', alice: 'Alice', bob: 'Bob' } });
+    await assertFails(updateDoc(doc(db('bob'), 'campaigns/camp1'), { memberUids: arrayRemove('bob'), 'memberNames.alice': deleteField() }));
+    await assertSucceeds(updateDoc(doc(db('bob'), 'campaigns/camp1'), { memberUids: arrayRemove('bob'), 'memberNames.bob': deleteField() }));
+    await assertSucceeds(updateDoc(doc(db('gm'), 'campaigns/camp1'), { memberUids: arrayRemove('alice'), 'memberNames.alice': deleteField() }));
   });
 
   it('los miembros leen la campaña; los demás no', async () => {

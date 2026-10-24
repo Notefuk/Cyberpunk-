@@ -37,8 +37,17 @@ service cloud.firestore {
     }
 
     // Una ficha está en una campaña como máximo (las reglas no pueden recorrer listas largas).
+    // El dueño tiene que seguir siendo miembro: si el GM lo echa, deja de ver su ficha aunque todavía
+    // diga esa campaña (plan 18). [Claude Code · 2026-10-24]
     function charCampaignGm(data) {
-      return data.campaignIds.size() == 1 && isGmOf(data.campaignIds[0]);
+      return data.campaignIds.size() == 1
+        && isGmOf(data.campaignIds[0])
+        && data.ownerUid in campaign(data.campaignIds[0]).memberUids;
+    }
+
+    // memberNames { uid: nombre }: cada uno solo toca su propia clave al unirse o salir (plan 18).
+    function onlyOwnName() {
+      return request.resource.data.get('memberNames', {}).diff(resource.data.get('memberNames', {})).affectedKeys().hasOnly([uid()]);
     }
 
     function canEditCharacter(data) {
@@ -120,10 +129,11 @@ service cloud.firestore {
         && request.resource.data.inviteCode is string
         && request.resource.data.inviteCode.size() >= 12;
 
-      // Unirse con el link: solo agrega su propio uid y muestra el código vigente (lastJoinCode).
+      // Unirse con el link: solo agrega su propio uid (y su nombre) y muestra el código vigente (lastJoinCode).
       allow update: if signedIn()
         && !(uid() in resource.data.memberUids)
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberUids', 'lastJoinCode'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberUids', 'lastJoinCode', 'memberNames'])
+        && onlyOwnName()
         && request.resource.data.lastJoinCode == resource.data.inviteCode
         && request.resource.data.memberUids == resource.data.memberUids.concat([uid()]);
 
@@ -131,7 +141,8 @@ service cloud.firestore {
       allow update: if signedIn()
         && uid() in resource.data.memberUids
         && resource.data.gmUid != uid()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberUids'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberUids', 'memberNames'])
+        && onlyOwnName()
         && request.resource.data.memberUids == resource.data.memberUids.removeAll([uid()]);
 
       allow delete: if signedIn() && resource.data.gmUid == uid();
