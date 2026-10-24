@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.9.6 OPERATIVO`  
+> **SYSTEM VERSION**: `v4.9.7 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-10-24]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -55,8 +55,15 @@ frontend/src/
 │       └── RedChromeCargoView.tsx       # Misión interactiva CEMK 2077 con mapa Maglev y roster dual
 └── store/
     ├── useCharacterStore.ts             # Estado de personajes, inventario, accesorios, EMP, descanso y reparación
-    └── useCombatStore.ts                # Estado de combate, DVs activos, objetivos y telemetría
+    ├── useCombatStore.ts                # Estado de combate, DVs activos, objetivos y telemetría (v4.9.7: partialize con grupos local/shared)
+    └── persistence.ts                   # Migraciones (esquema 6), copia de seguridad y archivos de historial (v4.9.7)
 ```
+
+[Claude Code · 2026-10-24] v4.9.7, contratos nuevos (plan 17):
+- **Campos de texto que escriben en un store**: usar `components/CommittedInput.tsx` (o `hooks/useCommittedField.ts`), que guarda al salir, con Enter o tras 1,5 s. No escribir en el store con cada tecla.
+- **useEffect que escribe localStorage**: usar `hooks/useDebouncedLocalStorage.ts`.
+- **Historiales**: `ipLog` tiene freno en 2.000 (`capIpLog`, `engine/ipLedger.ts`) y `speedhealLog` en 500; lo viejo va a `cpr_ip_log_archive_v1` / `cpr_speedheal_archive_v1`, incluidas en `BACKUP_EXTRA_KEYS`. Los totales archivados viven en `ipLogArchivedTotals`.
+- **Campos nuevos de `useCombatStore`**: agregarlos a `COMBAT_LOCAL_KEYS` o a `COMBAT_SHARED_KEYS` (un test falla si quedan afuera).
 
 ---
 

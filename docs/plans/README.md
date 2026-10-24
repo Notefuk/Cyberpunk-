@@ -29,6 +29,6 @@ Contenido sugerido de un plan: objetivo, decisiones tomadas con el usuario (preg
 | 14. `plan14-martial-arts.md` | Martial Arts canon | v4.9.5 | ✅ Terminado [Claude Code · 2026-10-24] |
 | 15. `plan15-v496-martial-moves-hud.md` | Movimientos especiales de Martial Arts en el HUD | v4.9.6 | ✅ Terminado [Claude Code · 2026-10-24] |
 | 16. `plan16-firebase-mesa-online.md` | Firebase: cuentas, fichas en la nube y mesa compartida | v5.0.0 a v5.2.0 | 📝 Borrador, esperando aprobación [Claude Code · 2026-10-24] |
-| 17. `plan17-sync-cuota.md` | Sync a prueba de cuota: v4.9.7 de preparación y capa de sync del plan 16 | v4.9.7 (+ v5.0.0 y v5.1.0) | ✅ Aprobado; v4.9.7 por empezar [Claude Code · 2026-10-24] |
+| 17. `plan17-sync-cuota.md` | Sync a prueba de cuota: v4.9.7 de preparación y capa de sync del plan 16 | v4.9.7 (+ v5.0.0 y v5.1.0) | ⏳ v4.9.7 hecha; la capa de sync espera la aprobación del plan 16 [Claude Code · 2026-10-24] |
 
 Pendientes y temas sin plan: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0.

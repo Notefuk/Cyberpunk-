@@ -1,8 +1,8 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v4.9.6 OPERATIVO`**  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v4.9.7 OPERATIVO`**  
 > **FECHA DE CORTE**: [Claude Code · 2026-10-24]  
-> **PLAN ACTIVO**: plan 16 (Firebase, mesa online), borrador esperando aprobación; va antes del plan 5. Estado de todos los planes en `docs/plans/README.md`.  
+> **PLAN ACTIVO**: plan 17 (sync a prueba de cuota): v4.9.7 hecha [Claude Code · 2026-10-24]. El plan 16 (Firebase, mesa online) sigue en borrador esperando aprobación; va antes del plan 5. Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 
