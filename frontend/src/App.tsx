@@ -19,6 +19,7 @@ import { PersistenceBanner } from './components/PersistenceBanner';
 import { CloudStatusChip } from './components/CloudStatusChip';
 import { useAuthStore } from './sync/authStore';
 import { initCloudSync } from './sync/cloudCharacters';
+import { captureInviteFromUrl } from './sync/inviteLink';
 
 // Cada vista se carga al abrir su pestaña para no meter toda la app en un solo bundle.
 const CombatHudView = lazy(() => import('./features/combat/CombatHudView').then((m) => ({ default: m.CombatHudView })));
@@ -37,7 +38,8 @@ const SystemChangelogAndDocsView = lazy(() => import('./features/docs/SystemChan
 type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'mesa' | 'oneshot' | 'creator' | 'docs';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<TabKey>('combat');
+  // [Claude Code · 2026-10-24] Plan 18: con un link ?unirse=… se abre directo la pestaña MESA.
+  const [activeTab, setActiveTab] = useState<TabKey>(() => (captureInviteFromUrl() ? 'mesa' : 'combat'));
   const appTheme = useCharacterStore((state) => state.appTheme);
 
   // [Claude Code · 2026-10-24] v5.0.0 (plan 16): si ya había entrado a la nube, retoma la sesión.

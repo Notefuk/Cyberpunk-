@@ -1,18 +1,19 @@
 // [Claude Code · 2026-10-24] v5.0.0 (plan 16): pestaña "MESA // CAMPAÑA" (login y estado; sin sync de fichas todavía).
+// [Claude Code · 2026-10-24] Plan 18: suma el panel de campañas.
 import { readFirebaseConfig } from '../../sync/firebaseConfig';
 import { useState } from 'react';
 import { useAuthStore } from '../../sync/authStore';
 import { useCloudState } from '../../sync/cloudState';
 import { uploadCharacters } from '../../sync/cloudCharacters';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { CampaignPanel } from './CampaignPanel';
+import { readPendingInvite } from '../../sync/inviteLink';
 
 const ENV_LINES = {
   local: 'Entorno: local (emulador, datos de prueba)',
   beta: 'Entorno: beta (Firebase de prueba)',
   prod: 'Entorno: estable',
 } as const;
-
-const PENDING = 'Se activa en las próximas etapas de la v5.0.0.';
 
 export function CloudTableView() {
   const status = useAuthStore((s) => s.status);
@@ -25,6 +26,7 @@ export function CloudTableView() {
   const needsAppUpdate = useCloudState((s) => s.needsAppUpdate);
   const lastError = useCloudState((s) => s.lastError);
   const uploading = useCloudState((s) => s.uploading);
+  const playerOwners = useCloudState((s) => s.playerOwners);
   const [selected, setSelected] = useState<string[]>([]);
 
   const config = readFirebaseConfig(import.meta.env as unknown as Record<string, string | undefined>);
@@ -36,7 +38,8 @@ export function CloudTableView() {
     );
   }
 
-  const cloudChars = characters.filter((c) => cloudIds.includes(c.id));
+  // Las fichas de jugadores que ve el GM no son "tuyas": se listan en la party de la campaña (plan 18).
+  const cloudChars = characters.filter((c) => cloudIds.includes(c.id) && playerOwners[c.id] === undefined);
   const localChars = characters.filter((c) => !cloudIds.includes(c.id));
 
   const btn = 'px-4 py-2 bg-[#dc2626] hover:bg-white text-white hover:text-black font-tech font-bold text-sm uppercase tracking-wider rounded-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
@@ -54,6 +57,9 @@ export function CloudTableView() {
             <p className="text-sm text-[#94a3b8]">
               Sin cuenta, tus fichas viven solo en este dispositivo. Con tu cuenta de Google se guardan en la nube, las ves en cualquier dispositivo y podés unirte a la campaña de tu GM.
             </p>
+            {readPendingInvite() && (
+              <p className="text-sm text-amber-300">Te invitaron a una campaña: entrá con Google para unirte.</p>
+            )}
             <button type="button" className={btn} onClick={() => void signIn()}>Entrar con Google</button>
           </>
         )}
@@ -133,10 +139,7 @@ export function CloudTableView() {
             </button>
             <p className="font-mono-code text-[11px] text-[#64748b]">Al salir de tu cuenta, las fichas de la nube se quitan de este dispositivo y quedan guardadas en tu cuenta.</p>
           </div>
-          <div className="chamfer-card bg-[#10121a] border border-[#262c3e] p-5 space-y-2">
-            <h3 className="font-tech text-sm text-white uppercase tracking-wider">Campañas</h3>
-            <p className="font-mono-code text-xs text-[#64748b]">{PENDING}</p>
-          </div>
+          <CampaignPanel />
         </div>
       )}
     </div>

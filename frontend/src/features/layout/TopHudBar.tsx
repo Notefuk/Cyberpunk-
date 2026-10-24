@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
+import { useCloudState } from '../../sync/cloudState';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, getEffectiveBody } from '../../engine/characterEngine';
 import { 
   Users, 
@@ -22,6 +23,8 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
   const activeCharacterId = useCharacterStore((state) => state.activeCharacterId);
   const setActiveCharacter = useCharacterStore((state) => state.setActiveCharacter);
   const getActiveCharacter = useCharacterStore((state) => state.getActiveCharacter);
+  // [Claude Code · 2026-10-24] Plan 18: fichas de jugadores que ve el GM (nube).
+  const playerOwners = useCloudState((state) => state.playerOwners);
 
   const era = useCombatStore((state) => state.era);
   const setEra = useCombatStore((state) => state.setEra);
@@ -76,7 +79,7 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
                 >
                   {characters.map((c) => (
                     <option key={c.id} value={c.id} className="bg-[#121318] text-white">
-                      {c.handle} ({c.role} {c.roleRank})
+                      {c.handle} ({c.role} {c.roleRank}){playerOwners[c.id] !== undefined ? ` · jugador: ${playerOwners[c.id] || '?'}` : ''}
                     </option>
                   ))}
                 </select>
