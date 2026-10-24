@@ -20,6 +20,6 @@ Protocolo completo en `docs/COWORK.md` §4. Antigravity sigue el mismo en `.agen
      - Siguiente paso exacto: <una acción concreta>
      - Preguntas abiertas para Giuliano: <o "ninguna">
      ```
-3. **Docs**: si se cerró una versión, entradas firmadas en CHANGELOG, HANDOFF, STATUS, CONTENT_CHECKLIST y changelog in-app con `author: 'Claude Code'` (skill `cpr-version-release`).
+3. **Docs**: si se cerró una versión, entradas firmadas en los docs de la lista "Al cerrar una versión" de `docs/INDEX.md`, con changelog in-app `author: 'Claude Code'` (skill `cpr-version-release`) [Claude Code · 2026-10-24].
 4. **Commit y push**: commit con `Autor-IA: Claude Code` y push de la rama. No dejes trabajo solo en local.
 5. **Respuesta a Giuliano**: 3-5 líneas con dónde quedó todo y el primer paso de la próxima sesión.

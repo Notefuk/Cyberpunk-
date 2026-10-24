@@ -23,8 +23,9 @@ Desde `frontend/`: `npx tsc -b --noEmit` y `npm run build` con 0 errores.
 | Archivo | Qué actualizar |
 |---|---|
 | `CHANGELOG_AND_ARCHITECTURE.md` | Nueva entrada arriba del changelog: `### [vX.Y.Z] - AAAA-MM-DD (Título)`, con `Category`, `Files Modified`, `What Changed`. Actualizar el árbol "Current Real Tree on Disk" si se crearon o movieron archivos. |
-| `AI_CONTEXT_HANDOFF.md` | Cabecera `SYSTEM VERSION` / `LAST UPDATED`, nueva sección "What Was Added in vX.Y.Z" y mover la anterior a "Historical Summary". |
-| `PROJECT_STATUS_AND_ROADMAP.md` | Cabecera de versión y fecha, métricas y tabla de módulos si cambiaron. |
+| `AI_CONTEXT_HANDOFF.md` | Cabecera `SYSTEM VERSION` / `LAST UPDATED`. Solo si cambiaron archivos críticos o contratos, actualizar el mapa técnico. Sin resúmenes de versión: la historia va solo al CHANGELOG [Claude Code · 2026-10-24]. |
+| `PROJECT_STATUS_AND_ROADMAP.md` | Cabecera de versión y fecha, y pendientes. |
+| `docs/plans/README.md` | Estado del plan (fuente única) [Claude Code · 2026-10-24]. |
 | `CONTENT_CHECKLIST.md` | Marcar `[x]` / `[~]` los ítems de reglas que se completaron. |
 
 ## 4. Actualizar el changelog in-app
