@@ -63,7 +63,9 @@ service cloud.firestore {
     }
 
     match /characters/{charId} {
-      allow read: if canEditCharacter(resource.data);
+      // Leer un id que no existe se permite (con sesión): al subir una ficha se pregunta si el id está libre.
+      // [Claude Code · 2026-10-24]
+      allow read: if resource == null ? signedIn() : canEditCharacter(resource.data);
 
       allow create: if signedIn()
         && request.resource.data.ownerUid == uid()

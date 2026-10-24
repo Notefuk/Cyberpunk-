@@ -131,3 +131,19 @@ export const useAuthStore = create<AuthState>()(
     }
   )
 );
+
+// Solo en el emulador local (npm run dev): permite probar sin la ventana emergente de Google, por
+// ejemplo desde el panel del navegador de Claude Code, que no abre popups. No existe en beta ni en estable.
+// Pasa por el store (cloudWanted + listener) para que arranque la sesión de nube igual que el login real.
+// [Claude Code · 2026-10-24]
+if (import.meta.env.DEV) {
+  (globalThis as Record<string, unknown>).__cprEmulatorSignIn = async (email: string) => {
+    const h = await getFirebase();
+    if (h.env !== 'local') throw new Error('Solo en el emulador');
+    useAuthStore.setState({ cloudWanted: true });
+    await useAuthStore.getState().initAuth();
+    const token = JSON.stringify({ sub: email, email, email_verified: true, name: email.split('@')[0] });
+    await h.authSdk.signInWithCredential(h.auth, h.authSdk.GoogleAuthProvider.credential(token));
+    return h.auth.currentUser?.uid;
+  };
+}

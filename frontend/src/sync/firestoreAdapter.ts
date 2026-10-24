@@ -87,8 +87,14 @@ export function createFirestoreAdapter(h: FirebaseHandles, uid: string): SyncAda
     },
 
     async docExists(id: string) {
-      const snap = await fs.getDoc(charRef(id));
-      return snap.exists();
+      try {
+        const snap = await fs.getDoc(charRef(id));
+        return snap.exists();
+      } catch (e) {
+        // Sin permiso = la ficha existe y es de otro: se sube con un id nuevo. [Claude Code · 2026-10-24]
+        if (typeof e === 'object' && e !== null && (e as { code?: unknown }).code === 'permission-denied') return true;
+        throw e;
+      }
     },
 
     async createCharacter(id, sheetDoc, writerId) {

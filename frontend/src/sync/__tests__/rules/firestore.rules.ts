@@ -107,6 +107,11 @@ describe('fichas', () => {
     await assertFails(getDoc(doc(db('bob'), 'characters/c1')));
   });
 
+  it('con sesión se puede preguntar si un id de ficha está libre (no existe); sin sesión no', async () => {
+    await assertSucceeds(getDoc(doc(db('alice'), 'characters/libre')));
+    await assertFails(getDoc(doc(anon(), 'characters/libre')));
+  });
+
   it('listar "mis fichas" (where ownerUid == uid) funciona', async () => {
     await seed(['characters', 'c1'], baseChar('alice'));
     await assertSucceeds(getDocs(query(collection(db('alice'), 'characters'), where('ownerUid', '==', 'alice'))));
