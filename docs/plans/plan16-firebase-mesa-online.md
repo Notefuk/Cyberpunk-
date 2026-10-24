@@ -2,6 +2,8 @@
 
 [Claude Code · 2026-10-24]
 
+**APROBADO por Giuliano el 2026-10-24.** Inmutable desde acá: los cambios van en un plan nuevo.
+
 [Claude Code · 2026-10-24] Ajustado antes de aprobar, después de la v4.9.7: las cuotas remiten al plan 17, los historiales de IP y €$ van fuera de la ficha, la v5.0.0 incluye el arreglo para celulares y la fase 2 parte de lo que ya separó la v4.9.7 (decisiones 11 a 13).
 
 Agrega cuentas de Google, fichas en la nube y campañas compartidas entre el GM y los jugadores, con Firebase (Auth + Firestore + Hosting). Va antes del plan 5 (Black Chrome y vehículos), que después hereda la sincronización sin trabajo extra.
