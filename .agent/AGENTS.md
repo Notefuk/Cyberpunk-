@@ -49,6 +49,8 @@ Cada vez que llames a `invoke_subagent` con `gemini-worker` para escribir o edit
 ```
 
 ## 4. CHECKPOINT.md (Compartido con Claude Code)
+
+[Claude Code · 2026-10-24] Qué es cada documento y dónde va cada dato: `docs/INDEX.md`. El estado de los planes está solo en `docs/plans/README.md`; lo histórico, en `docs/archive/` (no se edita).
 El archivo `CHECKPOINT.md` en la raíz del repo (`C:\Users\TeseoHeracles\cpr-omni-deck\CHECKPOINT.md`) es el estado vivo del trabajo, compartido entre Antigravity y Claude Code.
 - **Léelo primero** al iniciar sesión o tras compactar contexto.
 - **Actualízalo** al terminar cada tarea, antes de compactar contexto y antes de cambiar de herramienta: último trabajo terminado, qué quedó a medias (archivos y líneas), próximos pasos y bloqueos. Breve; reemplaza lo viejo en vez de acumular historial.

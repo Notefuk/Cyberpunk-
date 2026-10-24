@@ -9,9 +9,9 @@ Companion app offline-first para **Cyberpunk RED** (Core Rulebook + CEMK 2077 + 
 ## Convivencia con Antigravity
 
 El proyecto se trabaja alternando Claude Code y Antigravity (cuando se agota el cupo de uno se sigue con el otro). Por eso:
-- **No borrar ni mover** `.agent/` (config de Antigravity) ni los docs de la raíz (`AI_CONTEXT_HANDOFF.md`, `PROJECT_STATUS_AND_ROADMAP.md`, `CHANGELOG_AND_ARCHITECTURE.md`, `CONTENT_CHECKLIST.md`). Son la memoria compartida entre ambas herramientas.
+- **No borrar ni mover** `.agent/` (config de Antigravity) ni los docs de la raíz (`AI_CONTEXT_HANDOFF.md`, `PROJECT_STATUS_AND_ROADMAP.md`, `CHANGELOG_AND_ARCHITECTURE.md`, `CONTENT_CHECKLIST.md`). Son la memoria compartida entre ambas herramientas. Lo histórico se mueve como copia textual a `docs/archive/`; nunca se borra [Claude Code · 2026-10-24].
 - `.claude/` es la config de Claude Code. Si cambias una instrucción en un lado, replícala en el otro (`.agent/skills/` ↔ `.claude/skills/`, `.agent/agents/` ↔ `.claude/agents/`).
-- Al cerrar cada versión, deja `AI_CONTEXT_HANDOFF.md` al día para que la otra herramienta pueda retomar sin perder contexto.
+- Al cerrar cada versión, actualiza los docs de la lista "Al cerrar una versión" de `docs/INDEX.md`, para que la otra herramienta pueda retomar sin perder contexto [Claude Code · 2026-10-24].
 - **Protocolo de cowork en `docs/COWORK.md`** (compartido con Antigravity): firma, inicio de sesión, ramas por herramienta y cierre de sesión. Al inicio el hook `SessionStart` (`.claude/hooks/checkpoint-start.sh`) carga `CHECKPOINT.md` en contexto; cuando Giuliano se va o cambia de herramienta, usa la skill `cierre-sesion` (checkpoint comprimido con `## Traspaso`, docs firmados, commit y push).
 
 ## CHECKPOINT.md (obligatorio)
@@ -43,13 +43,14 @@ Tareas chicas (un fix, un ajuste de UI, un dato) no necesitan plan.
 
 ## Antes de tocar nada: leer contexto
 
-Al empezar una tarea nueva, lee en este orden (solo las secciones relevantes, son archivos largos):
+Al empezar una tarea nueva, lee en este orden (solo las secciones relevantes). Qué es cada documento: `docs/INDEX.md` [Claude Code · 2026-10-24].
 
 0. `CHECKPOINT.md` — dónde quedó el trabajo.
-1. `AI_CONTEXT_HANDOFF.md` — qué se hizo en las últimas versiones y el roadmap inmediato (Fase 4).
-2. `PROJECT_STATUS_AND_ROADMAP.md` — estado por módulo y fases futuras.
-3. `CHANGELOG_AND_ARCHITECTURE.md` — reglas de arquitectura, árbol real de archivos y changelog maestro.
-4. `CONTENT_CHECKLIST.md` — cobertura de reglas/libros por fase (`[x]`, `[~]`, `[ ]`).
+1. `docs/plans/README.md` — estado de cada plan (fuente única).
+2. `PROJECT_STATUS_AND_ROADMAP.md` — pendientes, temas sin plan y arreglos chicos.
+3. `CHANGELOG_AND_ARCHITECTURE.md` — reglas de arquitectura, árbol real de archivos y changelog (fuente única de historia).
+4. `AI_CONTEXT_HANDOFF.md` — mapa técnico de archivos críticos y directivas para subagentes.
+5. `CONTENT_CHECKLIST.md` — cobertura de reglas/libros por fase (`[x]`, `[~]`, `[ ]`).
 
 **Los docs pueden estar desfasados respecto al código.** Antes de afirmar que algo existe, verifícalo con grep. Desfases conocidos:
 - Los lifepaths de rol viven en `data/creation/coreLifepath.ts` (`CORE_LIFEPATH.byRole`), `ROLE_LIFEPATH_QUESTIONS` y `getApplicableRoleLifepathTables`; `characterLifepathData.ts` no existe (docs corregidos en v4.9.4) [Claude Code · 2026-10-23].

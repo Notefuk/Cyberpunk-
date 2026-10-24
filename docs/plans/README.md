@@ -25,5 +25,9 @@ Contenido sugerido de un plan: objetivo, decisiones tomadas con el usuario (preg
 | 10. `plan10-v492-roles-combate.md` | Herramientas de rol de combate | v4.9.2 | ✅ Terminado |
 | 11. `plan11-v493-roles-sociales.md` | Herramientas de rol sociales y de oficio | v4.9.3 + arreglo v4.9.3.1 | ✅ Terminado |
 | 12. `plan12-v494-modo-novato.md` | Modo Novato del creador | v4.9.4 | ✅ Terminado |
+| 13. `plan13-v494-cierre-creador.md` | Cierre del creador: STATs del Core p.72, Grafted Muscle, ciberware repetible | v4.9.4 | ✅ Terminado [Claude Code · 2026-10-24] |
+| 14. `plan14-martial-arts.md` | Martial Arts canon | v4.9.5 | ✅ Terminado [Claude Code · 2026-10-24] |
+| 15. `plan15-v496-martial-moves-hud.md` | Movimientos especiales de Martial Arts en el HUD | v4.9.6 | ✅ Terminado [Claude Code · 2026-10-24] |
+| 16. `plan16-firebase-mesa-online.md` | Firebase: cuentas, fichas en la nube y mesa compartida | v5.0.0 a v5.2.0 | 📝 Borrador, esperando aprobación [Claude Code · 2026-10-24] |
 
 Pendientes y temas sin plan: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0.
