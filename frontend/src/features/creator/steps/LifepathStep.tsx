@@ -7,6 +7,7 @@ import {
   getLifepathTables,
   getSingleLifepathTables,
   lifepathKey,
+  rollD10,
   rollLifepathTable,
   type CreatorDraft,
   type LifepathPick,
@@ -30,6 +31,10 @@ const COUNT_WORDS: Array<[RegExp, number]> = [
   [/^four\b/i, 4],
   [/^five\b/i, 5]
 ];
+// Core pp. 51-52: amigos, enemigos y romances trágicos son 1d10 − 7 (mínimo 0). [Claude Code · 2026-10-25]
+const CORE_COUNT_PAGE: Record<GroupName, number> = { friends: 51, enemies: 51, love: 52 };
+const rollCoreCount = (): number => Math.max(0, rollD10() - 7);
+
 function countFromPick(table: LifepathTable, pick: LifepathPick): number | null {
   const en = table.results.find((r) => r.es === pick.value)?.en ?? '';
   const digit = /^(\d+)\b/.exec(en);
@@ -111,6 +116,10 @@ export const LifepathStep: React.FC<StepProps> = ({ draft, update }) => {
   };
   const rollCount = (group: GroupName): void => {
     const info = GROUP_LABEL[group];
+    if (source === 'core') {
+      setCount(group, rollCoreCount());
+      return;
+    }
     const table = info.countTable ? tableById(info.countTable) : undefined;
     if (!table) return;
     const pick = rollLifepathTable(table);
@@ -131,7 +140,8 @@ export const LifepathStep: React.FC<StepProps> = ({ draft, update }) => {
         const p = rollLifepathTable(table);
         if (p) lifepath[table.id] = p;
       }
-      (['friends', 'enemies'] as GroupName[]).forEach((grp) => {
+      if (d.lifepathSource === 'core') (['friends', 'enemies', 'love'] as GroupName[]).forEach((grp) => { counts[grp] = rollCoreCount(); });
+      else (['friends', 'enemies'] as GroupName[]).forEach((grp) => {
         const ct = GROUP_LABEL[grp].countTable ? t.general.find((x) => x.id === GROUP_LABEL[grp].countTable) : undefined;
         if (!ct) return;
         const p = rollLifepathTable(ct);
@@ -207,7 +217,15 @@ export const LifepathStep: React.FC<StepProps> = ({ draft, update }) => {
                 value={n}
                 onChange={(e) => setCount(grp, parseInt(e.target.value, 10))}
               />
-              {countTable && (
+              {source === 'core' && (
+                <>
+                  <Btn tone="cyan" aria-label={`Tirar cantidad de ${info.title}`} onClick={() => rollCount(grp)}>
+                    🎲 Tirar 1d10 − 7
+                  </Btn>
+                  <span className="text-[10px] font-mono-code text-[#64748b]">Core p.{CORE_COUNT_PAGE[grp]}</span>
+                </>
+              )}
+              {source !== 'core' && countTable && (
                 <>
                   <Btn tone="cyan" aria-label={`Tirar cantidad de ${info.title}`} onClick={() => rollCount(grp)}>
                     🎲 Tirar {countTable.die}

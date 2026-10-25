@@ -26,6 +26,33 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.0.1',
+    date: '2026-10-25',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Canon / Creador de personajes',
+    title: 'Creador: arreglos de la prueba con un Netrunner',
+    summary: 'Nueve arreglos que salieron de crear un Netrunner por Complete Package: idiomas, Lifepath según la era, programas y munición en la tienda, y el simulador NET con los programas de la ficha.',
+    highlights: [
+      'Textos del rol con tildes y sin "Rango 4:" repetido.',
+      'En 2045 el Lifepath arranca con las tablas de Core; botón "Tirar 1d10 − 7" para amigos, enemigos y romances (Core pp. 51-52).',
+      'Language (Streetslang) arranca en 2 y el idioma de origen va aparte, gratis en 4 (Core pp. 45 y 85).',
+      'Tienda: pestaña Programas, Virtuality Goggles (Core p.351) y munición por tipo de arma, de a 10 balas (Core p.344).',
+      'El simulador NET usa los programas y los slots del cyberdeck de tu ficha (Core p.196).',
+      'Los clics rápidos en − y + de las skills ya no se pierden; el resumen no muestra "Ir a Resumen" estando en el resumen.',
+      '409 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/characterCreation.ts',
+      'frontend/src/features/creator/steps/GearStep.tsx',
+      'frontend/src/features/creator/steps/SkillsStep.tsx',
+      'frontend/src/features/creator/steps/LifepathStep.tsx',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'frontend/src/data/creation/coreRoles.ts'
+    ],
+    metricsBadge: 'v5.0.1 • Creador • Prueba Netrunner'
+  },
+  {
     version: 'v5.0.0',
     date: '2026-10-24',
     author: 'Claude Code',
@@ -1117,6 +1144,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.0.1': true,
     'v5.0.0': true,
     'v4.9.7': true,
     'v4.9.6': true,

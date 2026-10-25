@@ -225,9 +225,12 @@ export const SummaryStep: React.FC<SummaryProps> = ({ draft, update, onGoTo, onC
             {checklist.slice(0, 15).map((c, i) => (
               <li key={i} className="flex items-center gap-2 text-xs">
                 <span className="text-[#fca5a5] flex-1">• {c.message}</span>
-                <Btn aria-label={`Ir a ${STEP_LABEL[c.step]}`} onClick={() => onGoTo(c.step)}>
-                  Ir a {STEP_LABEL[c.step]}
-                </Btn>
+                {/* Lo que falta en este mismo paso (el handle) se completa acá: sin botón "Ir a Resumen". [Claude Code · 2026-10-25] */}
+                {c.step !== 'summary' && (
+                  <Btn aria-label={`Ir a ${STEP_LABEL[c.step]}`} onClick={() => onGoTo(c.step)}>
+                    Ir a {STEP_LABEL[c.step]}
+                  </Btn>
+                )}
               </li>
             ))}
             {checklist.length > 15 && <li className="text-xs text-[#64748b]">… y {checklist.length - 15} más.</li>}

@@ -153,12 +153,17 @@ export const NetAndRolesDeckView: React.FC = () => {
   const [isGmArchitectureManagerOpen, setIsGmArchitectureManagerOpen] = useState<boolean>(false);
   const [targetNetDv, setTargetNetDv] = useState<number>(8);
   const [expandedNetActionId, setExpandedNetActionId] = useState<string | null>(null);
-  const [rezzedPrograms, setRezzedPrograms] = useState<Record<string, boolean>>({
-    'Armor': true,
-    'Sword': true,
-    'Speedy Gonzalvez': false,
-    'Worm': false
+  // Programas del cyberdeck de la ficha (comprados o del paquete de rol "Program: X"); el REZ es de la sesión. [Claude Code · 2026-10-25]
+  const [rezzedPrograms, setRezzedPrograms] = useState<Record<string, boolean>>({});
+  const deckPrograms = (character.inventory ?? []).flatMap((item) => {
+    const isProgram = item.category === 'programs' || /^program:\s*/i.test(item.name);
+    if (!isProgram) return [];
+    const name = item.name.replace(/^program:\s*/i, '').trim();
+    return Array.from({ length: Math.max(1, item.quantity) }, (_, i) => (i === 0 ? name : `${name} #${i + 1}`));
   });
+  const deckItem = (character.inventory ?? []).find((item) => /cyberdeck/i.test(item.name));
+  // Core p.196: Poor Quality 5 slots, estándar 7, Excellent Quality 9.
+  const deckSlots = deckItem ? Number(/(\d+)\s*slots?/i.exec(deckItem.name)?.[1] ?? (/poor/i.test(deckItem.name) ? 5 : /excellent/i.test(deckItem.name) ? 9 : 7)) : null;
 
   const allPresets = [...NET_ARCHITECTURE_PRESETS, ...customPresets];
   const activeArch = allPresets.find(p => p.id === selectedPresetId) || NET_ARCHITECTURE_PRESETS[0];
@@ -1118,8 +1123,14 @@ export const NetAndRolesDeckView: React.FC = () => {
                 <span className="font-tech text-xs font-bold text-[#a855f7] uppercase tracking-wider block">
                   PROGRAMAS REZZED EN CYBERDECK:
                 </span>
+                <p className="text-[10px] font-mono-code text-[#64748b]">
+                  {deckItem ? `${deckItem.name} · ${deckPrograms.length}/${deckSlots} slots (Core p.196)` : 'Sin cyberdeck en el inventario de la ficha.'}
+                </p>
+                {deckPrograms.length === 0 && (
+                  <p className="text-[11px] text-[#94a3b8]">Sin programas: se compran en el creador (Tienda → Programas) o en el Compendio Omni.</p>
+                )}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {Object.entries(rezzedPrograms).map(([progName, isRezzed]) => (
+                  {deckPrograms.map((progName) => ({ progName, isRezzed: !!rezzedPrograms[progName] })).map(({ progName, isRezzed }) => (
                     <button
                       key={progName}
                       onClick={() => setRezzedPrograms({ ...rezzedPrograms, [progName]: !isRezzed })}

@@ -4,7 +4,9 @@ import pack from '../../../data/core-rules.cprpack.json';
 import { CEMK_CREATION, CORE_GEAR_SKILLS } from '../../../data/creation';
 import { parseHumanityLossAverage } from '../../../engine/characterEngine';
 import {
+  AMMO_CALIBERS,
   getFashionPrice,
+  isPerUnitAmmo,
   getMoneyRemaining,
   getRolePackage,
   getRoleDisplayName,
@@ -27,6 +29,8 @@ interface PackItem {
   type?: string;
   sp?: number;
   description?: string;
+  class?: string;
+  ammoType?: string;
 }
 
 const PACK = pack as unknown as Record<CreatorPurchaseCategory, PackItem[]>;
@@ -37,6 +41,7 @@ const TABS: Array<{ id: CreatorPurchaseCategory; label: string }> = [
   { id: 'cyberware', label: 'Ciberware' },
   { id: 'gear', label: 'Equipo' },
   { id: 'ammunition', label: 'Munición' },
+  { id: 'programs', label: 'Programas' },
   { id: 'drugs', label: 'Drogas' }
 ];
 
@@ -99,6 +104,14 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
   const [fashionStyle, setFashionStyle] = useState<string>(CORE_GEAR_SKILLS.fashionStyles[0].name);
   const [fashionPiece, setFashionPiece] = useState<string>('Top');
   const [fashionQty, setFashionQty] = useState<number>(1);
+  // Core p.344: la munición se compra para el tipo de arma; por defecto, el de la primera arma comprada. [Claude Code · 2026-10-25]
+  const firstWeaponCaliber = useMemo(() => {
+    const ids = draft.purchases.filter((p) => p.category === 'weapons').map((p) => p.catalogId);
+    const w = PACK.weapons.find((x) => ids.includes(x.id) && (AMMO_CALIBERS as readonly string[]).includes(x.ammoType ?? ''));
+    return w?.ammoType ?? AMMO_CALIBERS[0];
+  }, [draft.purchases]);
+  const [caliberPick, setCaliberPick] = useState<string | null>(null);
+  const caliber = caliberPick ?? firstWeaponCaliber;
 
   const hasPackage = method === 'streetrat' || method === 'edgerunner';
   const money = getStartingMoney(draft);
@@ -110,28 +123,34 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
     const q = query.trim().toLowerCase();
     return PACK[tab].filter((it) => {
       if (era === '2045' && (it.era === '2077' || it.sourceBook === 'cemk')) return false;
+      // El Black ICE no es un programa que se compre para el cyberdeck (Core p.200).
+      if (tab === 'programs' && it.class === 'Black ICE') return false;
       return !q || it.name.toLowerCase().includes(q);
     });
   }, [tab, query, era]);
 
   const canAfford = (extra: CreatorPurchase): boolean => getMoneyRemaining({ ...draft, purchases: [...draft.purchases, extra] }).cash >= 0;
 
-  const makePurchase = (item: PackItem, category: CreatorPurchaseCategory, location?: 'head' | 'body'): CreatorPurchase => ({
-    category,
-    catalogId: item.id,
-    name: item.name,
-    cost: item.cost,
-    qty: 1,
-    humanityLoss: category === 'cyberware' ? parseHumanityLossAverage(item.humanityLoss ?? '0') : 0,
-    sourceBook: item.sourceBook,
-    ...(location ? { location } : {})
-  });
+  const makePurchase = (item: PackItem, category: CreatorPurchaseCategory, location?: 'head' | 'body'): CreatorPurchase => {
+    const withCaliber = category === 'ammunition' && !isPerUnitAmmo(item.name);
+    return {
+      category,
+      catalogId: item.id,
+      name: withCaliber ? `${item.name} (${caliber})` : item.name,
+      cost: item.cost,
+      qty: 1,
+      humanityLoss: category === 'cyberware' ? parseHumanityLossAverage(item.humanityLoss ?? '0') : 0,
+      sourceBook: item.sourceBook,
+      ...(location ? { location } : {}),
+      ...(withCaliber ? { caliber } : {})
+    };
+  };
 
   const buy = (item: PackItem, location?: 'head' | 'body'): void => {
     const p = makePurchase(item, tab, location);
     if (!canAfford(p)) return;
     update((d) => {
-      const idx = d.purchases.findIndex((x) => x.category === p.category && x.catalogId === p.catalogId && x.location === p.location);
+      const idx = d.purchases.findIndex((x) => x.category === p.category && x.catalogId === p.catalogId && x.location === p.location && x.caliber === p.caliber);
       if (idx < 0) return { ...d, purchases: [...d.purchases, p] };
       return { ...d, purchases: d.purchases.map((x, i) => (i === idx ? { ...x, qty: x.qty + 1 } : x)) };
     });
@@ -278,6 +297,24 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
         </label>
         <input id="shop-search" className={`${INPUT_CLS} w-full mb-2`} placeholder="Buscar por nombre…" value={query} onChange={(e) => setQuery(e.target.value)} />
         {era === '2077' && <p className="text-[10px] font-mono-code text-[#64748b] mb-2">En 2077 se muestra Core + CEMK, cada ítem con su etiqueta.</p>}
+        {tab === 'ammunition' && (
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <label htmlFor="shop-caliber" className="text-xs text-[#cbd5e1]">
+              Para el arma
+            </label>
+            <select id="shop-caliber" className={SELECT_CLS} value={caliber} onChange={(e) => setCaliberPick(e.target.value)}>
+              {AMMO_CALIBERS.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            <span className="text-[10px] font-mono-code text-[#64748b]">Cada compra son 10 balas; granadas y cohetes, de a una (Core p.344).</span>
+          </div>
+        )}
+        {tab === 'programs' && (
+          <p className="text-[10px] font-mono-code text-[#64748b] mb-2">Cada programa ocupa un slot del cyberdeck: el estándar tiene 7 (Core pp. 196 y 200).</p>
+        )}
         <ul className="max-h-96 overflow-y-auto space-y-1">
           {items.map((it) => {
             const candidate = makePurchase(it, tab);
@@ -294,6 +331,7 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
                     <span className="ml-2 text-[10px] font-mono-code text-[#f59e0b]">HL {parseHumanityLossAverage(it.humanityLoss ?? '0')}</span>
                   )}
                   {tab === 'armor' && typeof it.sp === 'number' && <span className="ml-2 text-[10px] font-mono-code text-[#94a3b8]">SP {it.sp}</span>}
+                  {tab === 'programs' && it.class && <span className="ml-2 text-[10px] font-mono-code text-[#a855f7]">{it.class}</span>}
                 </div>
                 <span className="text-xs font-mono-code text-[#10b981]">{eb(it.cost)}</span>
                 {tab === 'armor' && !isShield(it.name) ? (
@@ -324,7 +362,7 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
         ) : (
           <ul className="space-y-1">
             {draft.purchases.map((p, i) => (
-              <li key={`${p.category}-${p.catalogId}-${p.location ?? ''}`} className="flex items-center gap-2 text-xs bg-[#0a0b0e] border border-[#1e2334] rounded-xs px-2 py-1">
+              <li key={`${p.category}-${p.catalogId}-${p.location ?? ''}-${p.caliber ?? ''}`} className="flex items-center gap-2 text-xs bg-[#0a0b0e] border border-[#1e2334] rounded-xs px-2 py-1">
                 <span className="flex-1 text-white">
                   {p.qty}× {p.name}
                   {p.location && <span className="ml-1 text-[#06b6d4]">({p.location === 'head' ? 'cabeza' : 'cuerpo'})</span>}
