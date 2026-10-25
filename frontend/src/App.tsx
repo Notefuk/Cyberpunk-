@@ -133,7 +133,8 @@ export default function App() {
       <TopHudBar onOpenStreetLab={() => setActiveTab('sheet')} />
 
       {/* Barra de Navegación Táctica */}
-      <nav className="border-b border-[#1f222e] bg-[#0d0e13] px-4 sticky top-[57px] z-40">
+      {/* [Claude Code · 2026-10-24] v5.0.0: en el celular la barra de pestañas queda fija arriba de todo (el encabezado ya no). */}
+      <nav className="border-b border-[#1f222e] bg-[#0d0e13] px-4 sticky top-0 md:top-[var(--hud-h,57px)] z-40">
         <div className="max-w-7xl mx-auto flex gap-1 overflow-x-auto no-scrollbar">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;

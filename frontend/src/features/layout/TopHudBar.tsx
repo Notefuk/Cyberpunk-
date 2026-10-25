@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
 import { useCloudState } from '../../sync/cloudState';
@@ -36,8 +36,26 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
   const seriousWoundThresh = calculateSeriouslyWoundedThreshold(maxHp);
   const isSeriouslyWounded = (activeChar?.currentHp ?? 0) < seriousWoundThresh;
 
+  // [Claude Code · 2026-10-24] v5.0.0 (decisión 12): en el celular el encabezado (~240 px) no queda fijo; solo en md+.
+  // Su alto real va a --hud-h para que la barra de pestañas (App.tsx) quede justo debajo aunque el encabezado
+  // ocupe dos renglones (antes la tapaba con top fijo de 57 px).
+  const headerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const sync = () => document.documentElement.style.setProperty('--hud-h', `${Math.round(el.getBoundingClientRect().height)}px`);
+    sync();
+    window.addEventListener('resize', sync);
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(sync);
+    ro?.observe(el);
+    return () => {
+      window.removeEventListener('resize', sync);
+      ro?.disconnect();
+    };
+  }, []);
+
   return (
-    <header className="border-b border-[#1f222e] bg-[#101217]/95 backdrop-blur-md sticky top-0 z-50 px-4 py-2.5">
+    <header ref={headerRef} className="border-b border-[#1f222e] bg-[#101217]/95 backdrop-blur-md relative md:sticky md:top-0 z-50 px-4 py-2.5">
       <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
         
         {/* Brand & Callout */}
