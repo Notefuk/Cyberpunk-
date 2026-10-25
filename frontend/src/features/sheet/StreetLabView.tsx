@@ -1475,7 +1475,8 @@ export const StreetLabView: React.FC = () => {
         <div className="lg:col-span-5 space-y-3">
           
           {/* Selector de Pestañas de Columna Derecha */}
-          <div className="flex gap-1 bg-[#121319] p-1 rounded-sm border border-[#232736]">
+          {/* [Claude Code · 2026-10-24] v5.0.0 (plan 16, decisión 12): flex-wrap para no desbordar a 375 px. */}
+          <div className="flex flex-wrap gap-1 bg-[#121319] p-1 rounded-sm border border-[#232736]">
             <button
               onClick={() => setRightColTab('combat')}
               className={`flex-1 py-1 px-1.5 rounded-2xs font-tech text-xs tracking-wider transition-all flex items-center justify-center gap-1.5 ${
@@ -2798,7 +2799,7 @@ export const StreetLabView: React.FC = () => {
                                 <select
                                   value={currentVal}
                                   onChange={(e) => updateRoleSpecificLifepath(q.id, e.target.value)}
-                                  className="flex-1 bg-[#12141f] border border-[#2b334a] text-slate-200 text-[9.5px] rounded px-1.5 py-1 font-mono-code"
+                                  className="flex-1 min-w-0 bg-[#12141f] border border-[#2b334a] text-slate-200 text-[9.5px] rounded px-1.5 py-1 font-mono-code"
                                 >
                                   <option value="">-- Seleccionar manualmente --</option>
                                   {q.options.map((opt, oIdx) => (

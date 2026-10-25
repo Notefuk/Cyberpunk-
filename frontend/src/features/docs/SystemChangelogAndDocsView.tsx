@@ -26,6 +26,60 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.0.1',
+    date: '2026-10-25',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Canon / Creador de personajes',
+    title: 'Creador: arreglos de la prueba con un Netrunner',
+    summary: 'Nueve arreglos que salieron de crear un Netrunner por Complete Package: idiomas, Lifepath según la era, programas y munición en la tienda, y el simulador NET con los programas de la ficha.',
+    highlights: [
+      'Textos del rol con tildes y sin "Rango 4:" repetido.',
+      'En 2045 el Lifepath arranca con las tablas de Core; botón "Tirar 1d10 − 7" para amigos, enemigos y romances (Core pp. 51-52).',
+      'Language (Streetslang) arranca en 2 y el idioma de origen va aparte, gratis en 4 (Core pp. 45 y 85).',
+      'Tienda: pestaña Programas, Virtuality Goggles (Core p.351) y munición por tipo de arma, de a 10 balas (Core p.344).',
+      'El simulador NET usa los programas y los slots del cyberdeck de tu ficha (Core p.196).',
+      'Los clics rápidos en − y + de las skills ya no se pierden; el resumen no muestra "Ir a Resumen" estando en el resumen.',
+      '409 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/characterCreation.ts',
+      'frontend/src/features/creator/steps/GearStep.tsx',
+      'frontend/src/features/creator/steps/SkillsStep.tsx',
+      'frontend/src/features/creator/steps/LifepathStep.tsx',
+      'frontend/src/features/netroles/NetAndRolesDeckView.tsx',
+      'frontend/src/data/creation/coreRoles.ts'
+    ],
+    metricsBadge: 'v5.0.1 • Creador • Prueba Netrunner'
+  },
+  {
+    version: 'v5.0.0',
+    date: '2026-10-24',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Nube',
+    title: 'Mesa online: cuentas, fichas en la nube y campañas',
+    summary: 'Planes 16, 17 y 18: con tu cuenta de Google las fichas se guardan en la nube y el GM arma la campaña con un link. Sin cuenta, la app sigue igual que siempre.',
+    highlights: [
+      'Pestaña MESA // CAMPAÑA: entrar con Google, subir fichas a la nube y verlas en cualquier dispositivo; al salir vuelven a quedar solo en la cuenta.',
+      'Los cambios llegan a los demás en 1 a 3 s y no se pisan: si el GM y el jugador restan HP a la vez, se aplican los dos.',
+      'Campañas: link de invitación (compartir o copiar, y cambiarlo si se filtró), asignar una ficha, salir, echar y pasar el rol de GM.',
+      'El GM ve y edita las fichas de sus jugadores desde el selector; cada uno ve el resumen de la party: HP, heridas (Core pp. 220-222), SP y críticas.',
+      'Pensada para el plan gratis de Firebase: una sesión de 4 h con 7 personas usa ~20 % de las escrituras y ~36 % de las lecturas del día.',
+      'Celular: nada se desborda a 375 px y el encabezado ya no ocupa media pantalla.',
+      '406 tests y 27 de reglas de seguridad.'
+    ],
+    filesTouched: [
+      'frontend/src/sync/characterSync.ts',
+      'frontend/src/sync/cloudCharacters.ts',
+      'frontend/src/sync/cloudCampaigns.ts',
+      'frontend/src/features/cloud/CampaignPanel.tsx',
+      'frontend/firestore.rules',
+      'docs/plans/plan18-v5-campanias.md'
+    ],
+    metricsBadge: 'v5.0.0 • Mesa online • Planes 16-18'
+  },
+  {
     version: 'v4.9.7',
     date: '2026-10-24',
     author: 'Claude Code',
@@ -1090,6 +1144,8 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.0.1': true,
+    'v5.0.0': true,
     'v4.9.7': true,
     'v4.9.6': true,
     'v4.9.5': true,

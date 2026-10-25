@@ -1422,7 +1422,8 @@ def build_core_pack():
             { "id": "tent-camping-equipment", "name": "Tent and Camping Equipment", "cost": 50, "costTier": "Costly", "description": "Single-person wilderness camping tent and survival kit." },
             { "id": "vial-of-biotoxin", "name": "Vial of Biotoxin", "cost": 500, "costTier": "Expensive", "description": "Lethal bio-agent dealing 3d6 damage direct to HP on failed DV15 Resist Torture/Drugs." },
             { "id": "vial-of-poison", "name": "Vial of Poison", "cost": 100, "costTier": "Premium", "description": "Street poison dealing 2d6 damage direct to HP on failed DV13 Resist Torture/Drugs." },
-            { "id": "video-camera", "name": "Video Camera", "cost": 100, "costTier": "Premium", "description": "Records up to 12 hours of high definition video and audio to Memory Chip." }
+            { "id": "video-camera", "name": "Video Camera", "cost": 100, "costTier": "Premium", "description": "Records up to 12 hours of high definition video and audio to Memory Chip." },
+            { "id": "virtuality-goggles", "name": "Virtuality Goggles", "cost": 100, "costTier": "Premium", "description": "Goggles that project cyberspace imagery over your view of the real world. A Netrunner needs them (or Virtuality cybereyes) to see the NET Architecture while jacked in.", "sourcePage": 351 }  # [Claude Code · 2026-10-25] Core p.351
         ],
         "programs": [
             # Boosters

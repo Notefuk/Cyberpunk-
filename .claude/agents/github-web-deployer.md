@@ -14,7 +14,7 @@ El agente principal te pasa: la entrada de versión para el changelog (opcional)
 ## Pasos
 
 1. **Changelog**: si te pasan una entrada de versión, agrégala justo debajo del encabezado `## 📜 Master Version Changelog` de `CHANGELOG_AND_ARCHITECTURE.md` (la más nueva arriba). No toques nada más del archivo.
-2. **Build**: en `frontend/`, corre `npm ci` si falta `node_modules`, luego `npx tsc -b --noEmit` y `npm run build`. Si hay cualquier error, detente y reporta el error tal cual. No intentes arreglarlo.
+2. **Build**: en `frontend/`, corre `npm ci` si falta `node_modules`, luego `npx tsc -b --noEmit` y `npm run build`. **Si después hay que publicar en `gh-pages`, el build de la web es `npm run build:beta`** (gh-pages es la beta, conectada al Firebase `dev`; `npm run build` usa la config de `prod`, la mesa real) [Claude Code · 2026-10-24]. Si hay cualquier error, detente y reporta el error tal cual. No intentes arreglarlo.
 3. **Commit**: con el build en verde, haz commit de los cambios con el mensaje indicado. No incluyas `frontend/dist` (está en `.gitignore`).
 4. **Push (solo con OK de Giuliano para este push)**: si el agente principal te dice que Giuliano dio el OK, push de la rama y destino indicados (`git push -u origin <rama-actual>`). Nunca a `main` sin que el OK lo diga expresamente. Sin OK, no pushees y reporta `[PUSH]: PENDIENTE OK`.
 5. **Web en vivo (solo con el OK aparte de Giuliano para publicar)**: publica `frontend/dist` en `gh-pages`:

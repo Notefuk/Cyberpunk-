@@ -7,7 +7,9 @@ import {
   applyEdgerunnerRoll,
   applyStreetratRow,
   buildCharacterLifepath,
+  AMMO_CALIBERS,
   buildCharacterSheetFromDraft,
+  isPerUnitAmmo,
   computeDerived,
   createEmptyDraft,
   getCyberwareList,
@@ -109,7 +111,8 @@ describe('Complete Package (Core pp. 78, 81, 85)', () => {
   const skills: Record<string, number> = {
     Concentration: 2, Perception: 6, Athletics: 4, Stealth: 2, Education: 2, 'Local Expert (Your Home)': 2,
     Brawling: 2, Evasion: 6, Conversation: 2, 'Human Perception': 2, Persuasion: 2, 'First Aid': 6,
-    Handgun: 6, 'Shoulder Arms': 6, Autofire: 6, Interrogation: 6, 'Melee Weapon': 6, Tactics: 6, 'Resist Torture/Drugs': 6
+    Handgun: 6, 'Shoulder Arms': 6, Autofire: 6, Interrogation: 6, 'Melee Weapon': 6, Tactics: 6, 'Resist Torture/Drugs': 4,
+    'Language (Streetslang)': 2
   };
   const base = (): CreatorDraft => ({ ...createEmptyDraft(), method: 'complete_package', role: 'Solo', stats, skills, culturalLanguage: 'English' });
 
@@ -129,6 +132,40 @@ describe('Complete Package (Core pp. 78, 81, 85)', () => {
     expect(validateStep(noBasic, 'skills').some((m) => m.includes('Stealth'))).toBe(true);
     const tooHigh = { ...base(), skills: { ...skills, Handgun: 7 } };
     expect(validateStep(tooHigh, 'skills').some((m) => m.includes('Handgun'))).toBe(true);
+  });
+
+  // [Claude Code · 2026-10-25] v5.0.1: Streetslang es básica (mínimo 2) y el idioma de origen va aparte, gratis en 4.
+  it('Language (Streetslang) en 2+ además del idioma de origen en 4, que no puede ser Streetslang (Core pp. 45, 85)', () => {
+    const { 'Language (Streetslang)': _drop, ...noSlang } = skills;
+    void _drop;
+    expect(validateStep({ ...base(), skills: { ...noSlang, 'Resist Torture/Drugs': 6 } }, 'skills').some((m) => m.includes('Language'))).toBe(true);
+    expect(validateStep({ ...base(), culturalLanguage: 'Streetslang' }, 'skills').some((m) => m.includes('Streetslang'))).toBe(true);
+    const sheet = buildCharacterSheetFromDraft({ ...base(), handle: 'X' }, 't').sheet;
+    expect(sheet.generalSkills?.['Language (Streetslang)']).toBe(2);
+    expect(sheet.generalSkills?.['Language (English)']).toBe(4);
+  });
+
+  it('munición por tipo de arma, de a 10 balas, y programas al inventario (Core pp. 200, 344)', () => {
+    const d: CreatorDraft = {
+      ...base(),
+      handle: 'X',
+      purchases: [
+        { category: 'ammunition', catalogId: 'basic-ammo', name: 'Basic Ammo (Heavy Pistol)', cost: 10, qty: 3, humanityLoss: 0, caliber: 'Heavy Pistol' },
+        { category: 'ammunition', catalogId: 'flashbang-grenade', name: 'Flashbang Grenade', cost: 100, qty: 2, humanityLoss: 0 },
+        { category: 'programs', catalogId: 'sword', name: 'Sword', cost: 50, qty: 1, humanityLoss: 0 }
+      ]
+    };
+    const inv = buildCharacterSheetFromDraft(d, 't').sheet.inventory ?? [];
+    expect(inv.find((i) => i.name === 'Basic Ammo (Heavy Pistol)')?.quantity).toBe(30);
+    expect(inv.find((i) => i.name === 'Flashbang Grenade')?.quantity).toBe(2);
+    expect(inv.find((i) => i.name === 'Sword')?.category).toBe('programs');
+    expect(isPerUnitAmmo('Rocket')).toBe(true);
+    expect(AMMO_CALIBERS).toContain('Very Heavy Pistol');
+  });
+
+  it('el texto de la habilidad de rol no repite "Rango 4:" (Core p.146)', () => {
+    const info = getRoleAbilityInfo('Netrunner', 'core', '2045');
+    expect(info.textEs.match(/Rango 4:/g)?.length ?? 0).toBeLessThanOrEqual(1);
   });
 });
 
@@ -555,7 +592,8 @@ describe('Martial Arts por forma y skills con especialidad (Core pp. 83, 178; pl
   const skills: Record<string, number> = {
     Concentration: 2, Perception: 6, Athletics: 4, Stealth: 2, Education: 2, 'Local Expert (Your Home)': 2,
     Brawling: 2, Evasion: 6, Conversation: 2, 'Human Perception': 2, Persuasion: 2, 'First Aid': 6,
-    Handgun: 6, 'Shoulder Arms': 6, Autofire: 6, Interrogation: 6, 'Melee Weapon': 6, Tactics: 6, 'Resist Torture/Drugs': 6
+    Handgun: 6, 'Shoulder Arms': 6, Autofire: 6, Interrogation: 6, 'Melee Weapon': 6, Tactics: 6, 'Resist Torture/Drugs': 4,
+    'Language (Streetslang)': 2
   };
   const base = (): CreatorDraft => ({ ...createEmptyDraft(), method: 'complete_package', role: 'Solo', stats, skills, culturalLanguage: 'English' });
   // Quita 12 puntos de otras skills (Evasion 6->3 = 3, Perception 6->3 = 3, Handgun 6->3 = 3, First Aid 6->3 = 3) para que el total siga en 86.

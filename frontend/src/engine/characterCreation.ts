@@ -48,7 +48,7 @@ export interface LifepathPick {
   value: string;
 }
 
-export type CreatorPurchaseCategory = 'weapons' | 'armor' | 'cyberware' | 'gear' | 'ammunition' | 'drugs';
+export type CreatorPurchaseCategory = 'weapons' | 'armor' | 'cyberware' | 'gear' | 'ammunition' | 'drugs' | 'programs';
 
 export interface CreatorPurchase {
   category: CreatorPurchaseCategory;
@@ -60,7 +60,14 @@ export interface CreatorPurchase {
   sourceBook?: string;
   /** Armadura por ubicación (Core p.97). Sin location = vale para cabeza y cuerpo (compatibilidad). */
   location?: 'head' | 'body';
+  /** Munición: tipo de arma para el que se compra (Core p.344). Va también en el nombre. [Claude Code · 2026-10-25] */
+  caliber?: string;
 }
+
+/** Core p.344: la munición se compra para el tipo de arma; granadas y cohetes van aparte, por unidad. */
+export const AMMO_CALIBERS = ['Medium Pistol', 'Heavy Pistol', 'Very Heavy Pistol', 'Slug', 'Rifle', 'Shotgun Shell', 'Arrow'] as const;
+/** Core p.344: todo menos granadas y cohetes se compra de a 10 unidades. */
+export const isPerUnitAmmo = (name: string): boolean => /grenade|rocket/i.test(name);
 
 export interface FashionPurchase {
   style: string;
@@ -203,7 +210,8 @@ export function getRoleAbilityInfo(role: CoreRoleName, variant: RoleAbilityVaria
   return {
     roleName,
     name: coreName,
-    textEs: `${coreRole.ability.summaryEs}\n\nRango 4: ${coreRole.ability.rank4Es}`,
+    // Algunos textos ya empiezan con "Rango 4:" o "Rangos 3 y 4:": no se repite el prefijo. [Claude Code · 2026-10-25]
+    textEs: `${coreRole.ability.summaryEs}\n\n${/^rangos?\s/i.test(coreRole.ability.rank4Es) ? '' : 'Rango 4: '}${coreRole.ability.rank4Es}`,
     source: coreRole.ability.source
   };
 }
@@ -1034,6 +1042,8 @@ function validateSkills(d: CreatorDraft): string[] {
   if (isPregenMethod(d.method)) return [];
   const errs: string[] = [];
   if (!d.culturalLanguage.trim()) errs.push('Elige el idioma cultural (Core p.90).');
+  // Core p.45: todos hablan Streetslang; el idioma de origen es otra lengua. [Claude Code · 2026-10-25]
+  else if (d.culturalLanguage.trim().toLowerCase() === 'streetslang') errs.push('El idioma de origen es otra lengua: Streetslang ya va como skill básica (Core pp. 45 y 85).');
   const spent = getSkillPointsSpent(d);
   if (d.method === 'edgerunner') {
     if (!d.role) return [...errs, 'Elige un rol antes de repartir skills.'];
@@ -1056,8 +1066,7 @@ function validateSkills(d: CreatorDraft): string[] {
       if (lvl > SKILL_MAX_LEVEL || lvl < 0) errs.push(`${name} no puede pasar de ${SKILL_MAX_LEVEL} (Core p.81).`);
     }
     for (const s of getSkillCatalog().filter((x) => x.basic)) {
-      // El idioma cultural (gratis en 4, Core p.90) cubre la skill básica Language.
-      if (s.name === 'Language' && d.culturalLanguage.trim()) continue;
+      // Language es Language (Streetslang), mínimo 2; el idioma de origen va aparte (Core pp. 45 y 85). [Claude Code · 2026-10-25]
       const lvl = Object.entries(d.skills).find(([n]) => baseSkillName(n) === s.name)?.[1] ?? 0;
       if (lvl < 2) errs.push(`La skill básica ${s.name} debe empezar en 2 o más (Core p.85).`);
     }
@@ -1298,8 +1307,11 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
         addInventory('weapons', p.catalogId, p.name, p.cost, p.qty, 'Compra de creación');
         warnings.push(`"${p.name}" no está en el catálogo de armas: queda en el inventario.`);
       }
+    } else if (p.category === 'ammunition') {
+      // Core p.344: cada compra son 10 balas (granadas y cohetes, de a una); el inventario cuenta unidades. [Claude Code · 2026-10-25]
+      addInventory('ammunition', p.catalogId, p.name, p.cost, isPerUnitAmmo(p.name) ? p.qty : p.qty * 10, 'Compra de creación');
     } else if (p.category !== 'cyberware') {
-      const cat = p.category === 'armor' || p.category === 'gear' || p.category === 'ammunition' || p.category === 'drugs' ? p.category : 'gear';
+      const cat = p.category === 'armor' || p.category === 'gear' || p.category === 'drugs' || p.category === 'programs' ? p.category : 'gear';
       addInventory(cat, p.catalogId, p.name, p.cost, p.qty, 'Compra de creación');
     }
   }
@@ -1439,7 +1451,6 @@ export function getSummaryWarnings(draft: CreatorDraft, built: { sheet: Characte
   if ((draft.method === 'edgerunner' || draft.method === 'complete_package') && validateStep(draft, 'skills').length === 0) {
     const low = getSkillCatalog()
       .filter((x) => x.basic)
-      .filter((s) => !(s.name === 'Language' && draft.culturalLanguage.trim()))
       .filter((s) => (Object.entries(draft.skills).find(([n]) => baseSkillName(n) === s.name)?.[1] ?? 0) < 2)
       .map((s) => s.name);
     if (low.length > 0) push('basic-skills-zero', `Skills básicas por debajo de 2: ${low.join(', ')}.`, true);

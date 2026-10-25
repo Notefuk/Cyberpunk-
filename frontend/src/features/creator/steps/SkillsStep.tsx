@@ -33,13 +33,14 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
   const readOnly = method === 'streetrat';
   const allowed = useMemo(() => (method === 'edgerunner' && role ? getEdgerunnerSkillNames(role) : []), [method, role]);
 
-  // Edgerunner arranca con sus 20 skills en el mínimo (Core p.77); Complete Package, con las básicas en 2 (Core p.85).
+  // Edgerunner arranca con sus 20 skills en el mínimo (Core p.77); Complete Package, con las básicas en 2 (Core p.85),
+  // Language incluida: es Language (Streetslang), aparte del idioma de origen (Core p.45). [Claude Code · 2026-10-25]
   useEffect(() => {
     if (Object.keys(draft.skills).length > 0) return;
     if (method === 'edgerunner' && allowed.length > 0) {
       update((d) => ({ ...d, skills: Object.fromEntries(allowed.map((n) => [n, SKILL_MIN_EDGERUNNER])) }));
     } else if (method === 'complete_package') {
-      update((d) => ({ ...d, skills: Object.fromEntries(catalog.filter((s) => s.basic && s.name !== 'Language').map((s) => [canonSkillKey(s.name), 2])) }));
+      update((d) => ({ ...d, skills: Object.fromEntries(catalog.filter((s) => s.basic).map((s) => [s.name === 'Language' ? 'Language (Streetslang)' : canonSkillKey(s.name), 2])) }));
     }
   }, [method, allowed, draft.skills, update, catalog]);
 
@@ -47,18 +48,29 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
     const b = baseName(entry.name);
     if (method === 'edgerunner') return allowed.find((n) => baseName(n) === b) ?? null;
     const existing = Object.keys(draft.skills).find((n) => baseName(n) === b);
-    return existing ?? canonSkillKey(entry.name);
+    return existing ?? (entry.name === 'Language' ? 'Language (Streetslang)' : canonSkillKey(entry.name));
   };
 
   const minFor = (entry: SkillCatalogEntry): number => {
     if (method === 'edgerunner') return SKILL_MIN_EDGERUNNER;
-    if (entry.basic && entry.name !== 'Language') return 2;
+    if (entry.basic) return 2;
     return 0;
   };
 
   const setLevel = (key: string, level: number, min: number): void => {
     const v = Math.max(min, Math.min(SKILL_MAX_LEVEL, Number.isFinite(level) ? Math.floor(level) : min));
     update((d) => {
+      const skills = { ...d.skills };
+      if (v === 0) delete skills[key];
+      else skills[key] = v;
+      return { ...d, skills };
+    });
+  };
+
+  // −/+ sobre el valor actual del borrador (no el del render): dos clics rápidos suman dos. [Claude Code · 2026-10-25]
+  const stepLevel = (key: string, delta: number, min: number): void => {
+    update((d) => {
+      const v = Math.max(min, Math.min(SKILL_MAX_LEVEL, (d.skills[key] ?? 0) + delta));
       const skills = { ...d.skills };
       if (v === 0) delete skills[key];
       else skills[key] = v;
@@ -99,7 +111,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <Btn aria-label={`Bajar ${f.key}`} disabled={readOnly || level <= 0} onClick={() => setLevel(f.key, level - 1, 0)}>
+            <Btn aria-label={`Bajar ${f.key}`} disabled={readOnly || level <= 0} onClick={() => stepLevel(f.key, -1, 0)}>
               −
             </Btn>
             <input
@@ -112,7 +124,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
               onChange={(e) => setLevel(f.key, parseInt(e.target.value, 10), 0)}
               className="w-12 text-center bg-[#0a0b0e] border border-[#2a3148] text-white font-tech font-black rounded-xs py-1 disabled:opacity-40"
             />
-            <Btn aria-label={`Subir ${f.key}`} disabled={readOnly || level >= SKILL_MAX_LEVEL} onClick={() => setLevel(f.key, level + 1, 0)}>
+            <Btn aria-label={`Subir ${f.key}`} disabled={readOnly || level >= SKILL_MAX_LEVEL} onClick={() => stepLevel(f.key, 1, 0)}>
               +
             </Btn>
           </div>
@@ -188,7 +200,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
         </div>
         <div className="mt-3">
           <label htmlFor="cultural-language" className="text-xs text-[#cbd5e1] block mb-1">
-            Idioma de origen cultural (4 gratis, Core p.90)
+            Idioma de origen cultural (4 gratis, además de Language (Streetslang), Core pp. 45 y 85)
           </label>
           <input
             id="cultural-language"
@@ -196,7 +208,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
             className={`${INPUT_CLS} w-full sm:w-72`}
             value={draft.culturalLanguage}
             onChange={(e) => update((d) => ({ ...d, culturalLanguage: e.target.value }))}
-            placeholder="p. ej. Streetslang"
+            placeholder="p. ej. Spanish"
           />
           <datalist id="cultural-language-suggestions">
             {languageSuggestions.map((l) => (
@@ -265,7 +277,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
                       <span className="font-tech font-black text-white w-6 text-center">{level}</span>
                     ) : (
                       <div className="flex items-center gap-1">
-                        <Btn aria-label={`Bajar ${s.name}`} disabled={!editable || level <= min} onClick={() => key && setLevel(key, level - 1, min)}>
+                        <Btn aria-label={`Bajar ${s.name}`} disabled={!editable || level <= min} onClick={() => key && stepLevel(key, -1, min)}>
                           −
                         </Btn>
                         <input
@@ -278,7 +290,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
                           onChange={(e) => key && setLevel(key, parseInt(e.target.value, 10), min)}
                           className="w-12 text-center bg-[#0a0b0e] border border-[#2a3148] text-white font-tech font-black rounded-xs py-1 disabled:opacity-40"
                         />
-                        <Btn aria-label={`Subir ${s.name}`} disabled={!editable || level >= SKILL_MAX_LEVEL} onClick={() => key && setLevel(key, level + 1, min)}>
+                        <Btn aria-label={`Subir ${s.name}`} disabled={!editable || level >= SKILL_MAX_LEVEL} onClick={() => key && stepLevel(key, 1, min)}>
                           +
                         </Btn>
                       </div>

@@ -8,20 +8,27 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "emulators": "node scripts/firebase-with-jdk.mjs emulators:start --project demo-cpr-omni-deck",
+    "test:rules": "node scripts/firebase-with-jdk.mjs emulators:exec --only firestore --project demo-cpr-omni-deck \"vitest run --config vitest.rules.config.ts\"",
+    "build:beta": "tsc -b && vite build --mode beta",
+    "deploy:prod": "npm run build && firebase deploy --only hosting,firestore --project prod"
   },
   "dependencies": {
+    "firebase": "^13.1.0",
     "lucide-react": "^1.57.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^6.0.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "firebase-tools": "^15.34.1",
     "oxlint": "^1.81.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",

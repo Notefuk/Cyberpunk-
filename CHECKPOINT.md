@@ -7,27 +7,28 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-10-24] Plan 16 ajustado (decisiones 11-13) y aprobado por Giuliano.
-**Versión de la app**: v4.9.7 (en `main`, squash 35e4581, PR #33; publicada en gh-pages y verificada en vivo)
+**Última actualización**: [Claude Code · 2026-10-25] v5.0.1 pusheada (rama `claude/v5.0.1-wizard`, OK de Giuliano) y publicada en gh-pages (deploy 4ce0b86, verificada en vivo): los 9 arreglos del creador que salieron de la prueba con un Netrunner. v5.0.0 publicada en gh-pages (beta, Firebase dev). Proyecto dev configurado por Giuliano (Google, Firestore y reglas). La prueba con el Firebase real queda pendiente; por ahora se trabaja con GitHub Pages y local.
+**Versión de la app**: v5.0.1 publicada en gh-pages desde la rama `claude/v5.0.1-wizard` (sale de `claude/v5.0.0-nube`; build:beta, deploy 4ce0b86). Antes, v5.0.0 publicada en gh-pages desde la rama `claude/v5.0.0-nube` (build:beta, proyecto `cpr-omni-deck-dev`; deploy d89cd2e, verificada en vivo). `main` sigue en 191b647 (v4.9.7): falta el PR.
 **Plan activo**: plan 16 `docs/plans/plan16-firebase-mesa-online.md` (Firebase, mesa online), APROBADO [Claude Code · 2026-10-24], con la capa de sync del plan 17 `docs/plans/plan17-sync-cuota.md`. Va antes del plan 5. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
 
 - [Claude Code · 2026-10-24] **v4.9.7 terminada (plan 17)** en `claude/v4.9.7-preparacion-sync`: guardado diferido (`CommittedInput`/`useCommittedField`), localStorage agrupado (`useDebouncedLocalStorage`), freno de 2.000 en IP y de 500 en Speedheal con archivo en la copia de seguridad, tope de 50 en la compra de chips y grupos local/shared en `useCombatStore`. tsc, 348 tests y build OK; verificada en el navegador. Desvíos del plan: el rol y el lifepath con menú (`StreetLabView` 655 y 2797) y las arquitecturas NET (`NetAndRolesDeckView:219`, un botón) no se tocaron porque guardan una sola vez por elección. Mergeada en `main` (PR #33, squash 35e4581). Publicada en gh-pages y verificada en vivo. La capa de sync espera la aprobación del plan 16.
-- [Claude Code · 2026-10-24] **Plan 16 aprobado.** Siguiente: v5.0.0 (fase 1). Primer paso: Giuliano crea los proyectos Firebase `dev` y `prod` con su cuenta de Google (lo guío paso a paso). Nada de código empezado.
+- [Claude Code · 2026-10-24] **v5.0.0 publicada en gh-pages como beta (Firebase dev)** (rama `claude/v5.0.0-nube`). Hecho: login con Google y modo local/nube, sync de fichas a prueba de cuota, reglas de seguridad (27 tests), campañas (plan 18), celulares a 375 px y encabezado no fijo en el celular, test de presupuesto (`sessionBudget.test.ts`: ~4.050 escrituras y ~17.950 lecturas en 4 h con 7 clientes) y cierre de versión (APP_VERSION, CHANGELOG, HANDOFF, ROADMAP, planes, changelog in-app). Detalle en la entrada v5.0.0 del CHANGELOG. tsc, 406 tests, 27 de reglas y build OK. FALTA: (a) Giuliano: en la consola del proyecto `cpr-omni-deck-dev` activar Google en Authentication y crear Firestore (`southamerica-east1`, modo producción), y correr `npx firebase login` en `frontend/`; (b) con su OK: deploy de las reglas de seguridad al proyecto dev (sin ellas Firestore en modo producción rechaza todo) y probar en celulares reales desde gh-pages; (c) PR a `main` y publicación estable en Firebase Hosting prod, cada paso con su OK. gh-pages pasa a beta recién con la estable (decisión 13).
 
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-24].
-- Rama: `main` (los commits del plan, pusheados con OK).
-- A medias: nada de código; v4.9.7 completa y commiteada.
-- Siguiente paso exacto: guiar a Giuliano para crear los proyectos Firebase `dev` y `prod` (Auth con Google, Firestore, Hosting; `notefuk.github.io` en los dominios autorizados de `dev`). Después, la v5.0.0 en una rama propia.
-- Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y el HUD (760 px a 375). (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido: entra en el plan 16, fase v5.1.0 (une `ActiveEncounterEnemy`, `InitiativeCombatant` y `EnemySheet`).
+- Rama: `claude/v5.0.0-nube` pusheada hasta bbcd7d1 (OK de Giuliano); gh-pages = v5.0.0 beta (OK de Giuliano). `main` @ 191b647.
+- A medias: nada en código; falta publicar (ver "En curso").
+- Siguiente paso exacto: definir con Giuliano lo próximo (PR de la v5.0.0 a `main` o plan de la v5.1.0). Decisión de Giuliano [2026-10-25]: por ahora se sigue con GitHub Pages (la app real) y pruebas locales con el emulador; Firebase Hosting prod (decisión 13 del plan 16) queda para después.
+- Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido: entra en el plan 16, fase v5.1.0 (une `ActiveEncounterEnemy`, `InitiativeCombatant` y `EnemySheet`).
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
-- Preguntas abiertas para Giuliano: ninguna.
+- Preguntas abiertas para Giuliano: ninguna por ahora.
 
 ## Último trabajo terminado
 
+- [Claude Code · 2026-10-25] v5.0.1 Creador: tildes y "Rango 4" del rol, Lifepath según la era, tiradas 1d10 − 7 de amigos/enemigos/romances (Core pp. 51-52), Streetslang básica en 2 + idioma de origen aparte (Core pp. 45 y 85), clics rápidos en skills, tienda con Programas, Virtuality Goggles y munición por calibre (Core pp. 200, 344, 351), simulador NET con los programas de la ficha y sin "Ir a Resumen". tsc, 409 tests y build OK; probado en el navegador local. Detalle en el CHANGELOG. Pusheada y publicada en gh-pages con OK de Giuliano [2026-10-25]. Fichas de prueba: "Bluewire2" en localhost y "Bluewire" en gh-pages (navegador del panel).
 - [Claude Code · 2026-10-24] Regla de push de `docs/PRINCIPIOS.md` aplicada en las skills `checkpoint` y `cierre-sesion` y en el agente `github-web-deployer`: nunca pushear sin el OK explícito de Giuliano, un OK por push, y `gh-pages` con un OK aparte.
 - [Claude Code · 2026-10-24] Orden v2 de la documentación (PR #32): `docs/INDEX.md`, `docs/archive/`, fuente única por dato (planes en `docs/plans/README.md`, historia en el CHANGELOG), HANDOFF como mapa técnico, checkpoint corto. Sin cambios de código.
 - [Claude Code · 2026-10-23] v4.9.6 Movimientos especiales de Martial Arts en el HUD (plan 15, PR #31) y v4.9.5 Martial Arts por forma (plan 14, PR #30), mergeadas y publicadas. Referencia en `docs/rules/martial-arts.md`; decisiones 39-48.
@@ -53,6 +54,8 @@
 - Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173). GitHub CLI portable: `scripts\gh.cmd` / `./scripts/gh`.
 
 ## Próximos pasos
+
+[Claude Code · 2026-10-25] **Prueba de la v5.0.0 con el Firebase real (proyecto `cpr-omni-deck-dev`), pendiente.** Ya verificado sin cuenta: Google habilitado, Firestore creado, `notefuk.github.io` autorizado; Giuliano publicó las reglas a mano desde la consola. Falta probar con cuentas reales: entrar con Google en gh-pages, subir ficha, crear campaña, unirse con otra cuenta. Para que la haga Claude Code: (1) instalar y conectar Claude in Chrome en la compu de Giuliano; (2) su cuenta de Google abierta en ese Chrome y su OK explícito para entrar con ella (contraseñas y códigos los pone él); (3) una segunda cuenta de Google para hacer de jugador; (4) opcional: `npx firebase login` en `frontend/` para que Claude Code suba las reglas con `node scripts/firebase-with-jdk.mjs deploy --only firestore --project dev` cuando cambien. Si las reglas cambian antes de eso, hay que volver a pegarlas en la consola.
 
 [Claude Code · 2026-10-24] Orden acordado con Giuliano:
 1. Plan 16 (Firebase): v5.0.0 fichas en la nube + campañas + el GM ve la party; v5.1.0 mesa compartida; v5.2.0 el GM actúa sobre los jugadores.

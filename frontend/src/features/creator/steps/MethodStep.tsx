@@ -83,7 +83,10 @@ export const MethodStep: React.FC<StepProps> = ({ draft, update }) => {
     if (era === draft.era) return;
     update((d) => {
       const stillValid = d.method && METHODS.find((m) => m.id === d.method)?.eras.includes(era);
-      return { ...resetMethodDependent(d), era, method: stillValid ? d.method : null, installNeuroport: era === '2077' };
+      // Lifepath por defecto según la era: Core en 2045 (Core pp. 44-53), CEMK en 2077 (CEMK RB pp. 19-24). [Claude Code · 2026-10-25]
+      const lifepathSource: CreatorDraft['lifepathSource'] = era === '2045' ? 'core' : 'cemk';
+      const lifepathReset = lifepathSource === d.lifepathSource ? {} : { lifepathSource, lifepath: {}, roleLifepath: {}, friendsCount: 0, enemiesCount: 0, loveCount: 0 };
+      return { ...resetMethodDependent(d), ...lifepathReset, era, method: stillValid ? d.method : null, installNeuroport: era === '2077' };
     });
   };
   const setMethod = (method: CreationMethodId): void => {

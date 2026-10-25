@@ -88,6 +88,9 @@ cpr-omni-deck/
 │   │   │   │   └── NetAndRolesDeckView.tsx # Simulador Netrunning 2045, Quickhacks 2077, Garaje y 10 Roles
 │   │   │   ├── oneshot/
 │   │   │   │   └── RedChromeCargoView.tsx # Centro de mando táctico interactivo de Red Chrome Cargo CEMK
+│   │   │   ├── cloud/                    # [Claude Code · 2026-10-24] v5.0.0
+│   │   │   │   ├── CloudTableView.tsx    # Pestaña MESA // CAMPAÑA: login, fichas en la nube y subida
+│   │   │   │   └── CampaignPanel.tsx     # Campañas: link, unirse, asignar ficha, party, GM
 │   │   │   ├── datapacks/
 │   │   │   │   └── DataPackManagerView.tsx # Gestor interactivo de paquetes .cprpack estilo COMP/CON
 │   │   │   ├── rules/
@@ -97,6 +100,7 @@ cpr-omni-deck/
 │   │   ├── store/
 │   │   │   ├── useCharacterStore.ts      # Store Zustand con persistencia (fichas, inventario, heridas)
 │   │   │   └── useCombatStore.ts         # Store Zustand de combate (DVs, objetivos, logs de tiradas)
+│   │   ├── sync/                         # [Claude Code · 2026-10-24] v5.0.0: mesa online (Firebase), ver AI_CONTEXT_HANDOFF.md
 │   │   ├── types/
 │   │   │   └── cyberpunk.ts              # Tipos de TypeScript canónicos de Cyberpunk RED
 │   │   ├── App.tsx                       # Integrador de vistas principales del Omni-Deck
@@ -112,6 +116,35 @@ cpr-omni-deck/
 ---
 
 ## 📜 Master Version Changelog
+
+### [v5.0.1] - 2026-10-25 (Creador: arreglos de la prueba con un Netrunner) [Claude Code · 2026-10-25]
+* **Category**: Canon / Creador de personajes. Sale de la prueba del wizard en gh-pages: un Netrunner rango 4 por Complete Package en 2045 ("Bluewire"). Sin plan: son nueve arreglos chicos, cada uno con su página.
+* **Textos del rol**: tildes y eñes en todos los textos en español de `data/creation/coreRoles.ts` (solo diacríticos: el texto sin tildes es idéntico al anterior). La habilidad de rol ya no dice "Rango 4: Rango 4:" (tampoco "Rango 4: Rangos 3 y 4:").
+* **Lifepath según la era**: al elegir 2045 arranca con las tablas de Core (pp. 44-53); en 2077, con las de CEMK (RB pp. 19-24). Se puede seguir cambiando a mano.
+* **Amigos, enemigos y romances trágicos (Core)**: botón "Tirar 1d10 − 7" para cada uno (mínimo 0, Core pp. 51-52), y "Tirar todo" también los tira. Con CEMK siguen los botones de sus tablas de cantidad.
+* **Idiomas**: Language (Streetslang) es skill básica y arranca en 2 en Complete Package (Core p.85). El idioma de origen, gratis en 4, va aparte y no puede ser Streetslang (Core p.45). El campo ahora dice "p. ej. Spanish".
+* **Clics rápidos en skills**: los botones − y + suman sobre el valor guardado, no sobre el que se ve en pantalla; tres clics seguidos ya no se pierden.
+* **Tienda del creador**:
+  * Pestaña **Programas** con los 15 programas de Core (Black ICE afuera), su clase y el aviso de slots del cyberdeck (Core pp. 196 y 200).
+  * **Virtuality Goggles** (100 €$, Core p.351) agregadas al pack en las dos copias y en `scripts/extract_core_pack.py`.
+  * **Munición por tipo de arma**: un selector elige el calibre (por defecto, el de la primera arma comprada) y la compra se llama "Basic Ammo (Heavy Pistol)". Cada compra son 10 balas en el inventario; granadas y cohetes, de a una (Core p.344).
+* **Simulador NET**: los programas del cyberdeck salen de la ficha (inventario `programs` o "Program: X" del paquete de rol) y muestra los slots usados del cyberdeck (Core p.196). Antes mostraba cuatro programas de ejemplo fijos.
+* **Resumen**: lo que falta completar en el mismo resumen (el handle) ya no muestra el botón "Ir a Resumen".
+* **Revisado y correcto, sin cambios**: 2.550 €$ y 800 de moda (Core pp. 104-105), Humanidad con Neural Link y Plugs, EMP efectivo, Interface 4 = 3 acciones NET (Core p.197) y `hasNeuroport` en false en 2045 (el Neuroport es de 2077, CEMK p.26).
+* **Files Modified**: `data/creation/coreRoles.ts`, `engine/characterCreation.ts`, `features/creator/steps/MethodStep.tsx`, `LifepathStep.tsx`, `SkillsStep.tsx`, `GearStep.tsx`, `SummaryStep.tsx`, `features/netroles/NetAndRolesDeckView.tsx`, `data/core-rules.cprpack.json` (y `data/` en la raíz), `scripts/extract_core_pack.py`, `engine/__tests__/characterCreation.test.ts`, `store/persistence.ts`, `features/docs/SystemChangelogAndDocsView.tsx`.
+* **Verificación**: tsc, 409 tests (3 nuevos: idiomas, munición y programas, prefijo de rango) y build. En el navegador (local): wizard completo 2045 + Complete Package + Netrunner, tiradas 1d10 − 7, Streetslang trabado en 2, tres clics rápidos = +3, tienda con programas, goggles y calibre, ficha creada con Streetslang 2 + Hindi 4, 20 balas de Heavy Pistol y 3 programas, y el simulador NET mostrando "3/7 slots".
+
+### [v5.0.0] - 2026-10-24 (Mesa online: cuentas, fichas en la nube y campañas) [Claude Code · 2026-10-24]
+* **Category**: Nube (plan 16 fase 1, `docs/plans/plan16-firebase-mesa-online.md`; capa de sync del plan 17; campañas del plan 18, `docs/plans/plan18-v5-campanias.md`). Firebase Auth + Firestore, plan Spark gratuito.
+* **Dos modos**: sin cuenta la app funciona como siempre (solo en el dispositivo). Con Google, las fichas viven en la nube, se ven en cualquier dispositivo y aparecen las campañas. El SDK de Firebase se carga solo si el usuario entra. Pestaña nueva **MESA // CAMPAÑA** y chip de estado (Guardando / Sincronizado / Sin conexión / Pausado).
+* **Sincronización a prueba de cuota** (plan 17): cola por ficha de 1,5 s (máximo 5 s), diff por campos, contadores con `increment()` (HP, Luck, Humanidad, €$, IP, SP, Death Save), sin eco (base confirmada por el servidor, snapshots con escrituras pendientes ignorados), historiales de IP y €$ como subcolecciones de solo creación, guardián de cuota diario con modo ahorro y gate de `schemaVersion`.
+* **Campañas** (plan 18): crear, link de invitación `?unirse=` (compartir con el menú del celular o copiar; cambiar el link invalida el viejo), unirse, asignar una ficha (una ficha, una campaña), salir, echar y pasar el rol de GM. El GM tiene las fichas de sus jugadores en el selector ("· jugador: Nombre") y las puede editar; cada miembro ve un resumen de la party (HP, estado de heridas Core pp. 220-222, SP y heridas críticas).
+* **Reglas de seguridad** (`frontend/firestore.rules`): cada uno lee y escribe lo suyo; el GM, las fichas de su campaña mientras el dueño siga siendo miembro; freno anti-bucle por escritor (1 escritura por segundo por dispositivo); unirse solo con el código vigente.
+* **Celulares** (decisión 12 del plan 16): sin desborde horizontal a 375 px (barras de pestañas de Street Lab, NET/roles y filtro de Quickhacking); en el celular el encabezado ya no queda fijo y la barra de pestañas sí; en pantallas grandes la barra queda justo debajo del encabezado aunque ocupe dos renglones.
+* **Entornos**: `.env.development` (emulador local, `npm run emulators` con JDK 21 portátil vía `scripts/firebase-with-jdk.mjs`), `.env.beta` (proyecto `cpr-omni-deck-dev`, `npm run build:beta`) y `.env.production` (proyecto `cpr-omni-deck-prod`, `npm run deploy:prod`).
+* **Files Modified**: `sync/` (nuevo: `firebaseConfig.ts`, `firebaseClient.ts`, `authStore.ts`, `cloudState.ts`, `diff.ts`, `writeQueue.ts`, `quotaGuard.ts`, `sheetDoc.ts`, `characterSync.ts`, `firestoreAdapter.ts`, `cloudCharacters.ts`, `campaignRepo.ts`, `partySummary.ts`, `cloudCampaigns.ts`, `inviteLink.ts`, `testing/fakeFirestore.ts` y tests), `features/cloud/CloudTableView.tsx`, `features/cloud/CampaignPanel.tsx`, `components/CloudStatusChip.tsx` (nuevos); `App.tsx`, `features/layout/TopHudBar.tsx`, `features/sheet/StreetLabView.tsx`, `features/netroles/NetAndRolesDeckView.tsx`, `store/persistence.ts`; `frontend/firestore.rules`, `firebase.json`, `.firebaserc`, `firestore.indexes.json`, `vitest.rules.config.ts`.
+* **Verificación**: tsc, 406 tests (incluye `sessionBudget.test.ts`: 4 h con GM + 6 jugadores dan ~4.050 escrituras y ~17.950 lecturas, contra 20.000 / 50.000 diarias del plan Spark), 27 tests de reglas contra el emulador y build. En el navegador con el emulador y dos usuarios: subir fichas, daño agrupado en una escritura, cambio remoto sin eco, GM y jugador restando HP en el mismo segundo (se aplican los dos), crear campaña, link, unirse, asignar, edición cruzada, party, cambiar link, echar, pasar GM y salir; medición a 375 px de todas las pestañas.
+* **Pendiente**: publicar la beta en el proyecto dev (requiere activar Google y Firestore en la consola y `firebase login`) y después la estable en Firebase Hosting; el botón "Compartir link" no se probó en un celular real.
 
 ### [v4.9.7] - 2026-10-24 (Preparación para la sincronización: guardado diferido y topes de historial) [Claude Code · 2026-10-24]
 * **Category**: Persistencia (plan 17, `docs/plans/plan17-sync-cuota.md`). Sin Firebase: prepara la app para que la sincronización del plan 16 no agote la cuota gratis y mejora el modo local.

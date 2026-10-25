@@ -4596,6 +4596,17 @@
       "era": "2045"
     },
     {
+      "id": "virtuality-goggles",
+      "name": "Virtuality Goggles",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Goggles that project cyberspace imagery over your view of the real world. A Netrunner needs them (or Virtuality cybereyes) to see the NET Architecture while jacked in.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 351,
+      "era": "2045"
+    },
+    {
       "id": "makigai-maimai",
       "name": "Makigai MaiMai",
       "cost": 10000,

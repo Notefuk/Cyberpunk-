@@ -1,0 +1,1 @@
+{ "projects": { "default": "demo-cpr-omni-deck", "dev": "cpr-omni-deck-dev", "prod": "cpr-omni-deck-prod" } }
