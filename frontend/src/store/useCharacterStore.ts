@@ -1043,7 +1043,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
           ...weapon,
           instanceId: `wep-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
           currentMag: weapon.standardMag || 0,
-          loadedAmmoType: weapon.ammoType || 'Standard',
+          loadedAmmoType: 'Basic', // tipo de bala (Core p.345); el calibre queda en ammoType [Claude Code · 2026-10-25]
           inHand: true,
           reserveAmmo: weapon.standardMag && weapon.standardMag > 0 ? 36 : 0
         };
@@ -1978,7 +1978,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
                 ...item,
                 instanceId: `wep-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
                 currentMag: item.standardMag || 0,
-                loadedAmmoType: item.ammoType || 'Standard',
+                loadedAmmoType: 'Basic', // tipo de bala (Core p.345); el calibre queda en ammoType [Claude Code · 2026-10-25]
                 inHand: true,
                 reserveAmmo: item.standardMag && item.standardMag > 0 ? 36 : 0
               };

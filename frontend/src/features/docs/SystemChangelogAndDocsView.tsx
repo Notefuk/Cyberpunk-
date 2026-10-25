@@ -26,6 +26,28 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.0.2',
+    date: '2026-10-25',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Combate',
+    title: 'Tipo de bala cargada en el HUD',
+    summary: 'El HUD muestra bien qué bala tiene cargada cada arma (Basic, Armor-Piercing…, Core p.345) y aparte su calibre, también en fichas y premades viejas.',
+    highlights: [
+      'La etiqueta del arma dice "Bala: Basic · Heavy Pistol" en vez de solo el calibre.',
+      'El selector de bala y los botones rápidos marcan la bala correcta y aparece su regla.',
+      'Las armas nuevas (creador, pregens y Compendio) arrancan con Basic cargada.',
+      '410 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/characterEngine.ts',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/src/engine/characterCreation.ts'
+    ],
+    metricsBadge: 'v5.0.2 • HUD • Tipo de bala'
+  },
+  {
     version: 'v5.0.1',
     date: '2026-10-25',
     author: 'Claude Code',
@@ -1144,6 +1166,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.0.2': true,
     'v5.0.1': true,
     'v5.0.0': true,
     'v4.9.7': true,

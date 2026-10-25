@@ -1576,7 +1576,7 @@ function buildCanonPregens(): PregenTemplate[] {
         standardMag: w.ammo ?? undefined,
         currentMag: w.ammo ?? 0,
         ammoType,
-        loadedAmmoType: ammoType ?? '',
+        loadedAmmoType: ammoType ? 'Basic' : '', // tipo de bala, no el calibre [Claude Code · 2026-10-25]
         inHand: idx === 0,
         reserveAmmo: extraMatch ? Number(extraMatch[1]) : undefined,
         notes: w.notes

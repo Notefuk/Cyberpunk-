@@ -16,6 +16,7 @@ import {
   getEffectiveBody,
   getBaseDeathSavePenalty,
   AMMO_TYPE_CATALOG,
+  normalizeLoadedAmmoType,
   isValidSoloAllocation,
   naturalHealingPerDay,
   speedhealAmount
@@ -5089,7 +5090,7 @@ export const CombatHudView: React.FC = () => {
                 const aimedPenalty = aimedShotTarget !== 'none' ? 8 : 0;
                 const effectiveRof = aimedShotTarget !== 'none' ? 1 : w.rof;
                 const netBaseWithLuck = breakdown.netBase - aimedPenalty + luckToSpendOnNextRoll;
-                const selectedAmmoMeta = AMMO_TYPE_CATALOG.find((a) => a.id === (w.loadedAmmoType || 'Basic'));
+                const selectedAmmoMeta = AMMO_TYPE_CATALOG.find((a) => a.id === normalizeLoadedAmmoType(w.loadedAmmoType));
                 const weaponInfo = getWeaponClassAndRebuildInfo(w);
 
                 // Find optimal range
@@ -5157,9 +5158,9 @@ export const CombatHudView: React.FC = () => {
                               ROF {effectiveRof}{aimedShotTarget !== 'none' ? ' (Apuntado)' : ''}
                             </span>
                             {isRanged && (
-                              <AmmoHoverTooltip ammoIdOrName={w.loadedAmmoType || w.ammoType || 'Basic'}>
+                              <AmmoHoverTooltip ammoIdOrName={normalizeLoadedAmmoType(w.loadedAmmoType)}>
                                 <span className="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded-xs font-bold cursor-help">
-                                  Bala: {w.loadedAmmoType || w.ammoType || 'Basic'}
+                                  Bala: {normalizeLoadedAmmoType(w.loadedAmmoType)}{w.ammoType && w.ammoType !== 'N/A' ? ` · ${w.ammoType}` : ''}
                                 </span>
                               </AmmoHoverTooltip>
                             )}
@@ -5562,7 +5563,7 @@ export const CombatHudView: React.FC = () => {
                               <div className="flex items-center justify-between gap-2">
                                 <span className="text-[10px] font-mono-code text-[#64748b] uppercase">TIPO DE BALA CARGADA:</span>
                                 <select
-                                  value={w.loadedAmmoType || 'Basic'}
+                                  value={normalizeLoadedAmmoType(w.loadedAmmoType)}
                                   onChange={(e) => setWeaponAmmoType(w.instanceId, e.target.value)}
                                   className="bg-[#171923] border border-[#2b334a] text-white text-[11px] font-mono-code rounded px-2 py-0.5 focus:outline-none focus:border-[#38bdf8]"
                                 >
@@ -5581,7 +5582,7 @@ export const CombatHudView: React.FC = () => {
                               <div className="flex items-center gap-1 flex-wrap mt-2 pt-2 border-t border-[#1e2333]">
                                 <span className="text-[9px] font-mono-code text-slate-400 uppercase font-bold mr-1">Rápido:</span>
                                 {QUICK_AMMO_TYPES.map((ammo) => {
-                                  const activeAmmo = w.loadedAmmoType || w.ammoType || 'Basic';
+                                  const activeAmmo = normalizeLoadedAmmoType(w.loadedAmmoType);
                                   const isActive = activeAmmo.toLowerCase() === ammo.toLowerCase();
                                   return (
                                     <AmmoHoverTooltip key={ammo} ammoIdOrName={ammo}>
@@ -6320,9 +6321,9 @@ export const CombatHudView: React.FC = () => {
                                           {w.currentMag ?? 0}/{w.standardMag ?? 0}
                                         </span>
                                         <span>•</span>
-                                        <AmmoHoverTooltip ammoIdOrName={w.loadedAmmoType || w.ammoType || 'Basic'}>
+                                        <AmmoHoverTooltip ammoIdOrName={normalizeLoadedAmmoType(w.loadedAmmoType)}>
                                           <span className="text-amber-300 font-bold cursor-help">
-                                            {w.loadedAmmoType || w.ammoType || 'Basic'}
+                                            {normalizeLoadedAmmoType(w.loadedAmmoType)}
                                           </span>
                                         </AmmoHoverTooltip>
                                       </>
@@ -6412,7 +6413,7 @@ export const CombatHudView: React.FC = () => {
                                     <div className="flex items-center justify-between text-[10px] font-mono-code">
                                       <span className="text-[#64748b]">TIPO DE MUNICIÓN:</span>
                                       <select
-                                        value={w.loadedAmmoType || 'Basic'}
+                                        value={normalizeLoadedAmmoType(w.loadedAmmoType)}
                                         onChange={(e) => setWeaponAmmoType(w.instanceId, e.target.value)}
                                         className="bg-[#12141f] border border-[#2b334a] text-white text-[10px] font-mono-code rounded px-1.5 py-0.5 focus:outline-none focus:border-[#38bdf8]"
                                       >
@@ -6426,7 +6427,7 @@ export const CombatHudView: React.FC = () => {
 
                                     <div className="flex items-center gap-1 flex-wrap pt-1">
                                       {QUICK_AMMO_TYPES.map((ammo) => {
-                                        const activeAmmo = w.loadedAmmoType || w.ammoType || 'Basic';
+                                        const activeAmmo = normalizeLoadedAmmoType(w.loadedAmmoType);
                                         const isActive = activeAmmo.toLowerCase() === ammo.toLowerCase();
                                         return (
                                           <AmmoHoverTooltip key={ammo} ammoIdOrName={ammo}>
