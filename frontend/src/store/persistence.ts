@@ -12,7 +12,7 @@ import { applyFolioAllocation } from '../data/folioRoleAllocations';
 export const CHARACTERS_STORAGE_KEY = 'cpr-omni-deck-characters-v2';
 export const CHARACTERS_SCHEMA_VERSION = 6;
 // No existe una constante de versión en la app; la última entrada del changelog in-app es v4.7.0 y este trabajo es v4.8.0.
-export const APP_VERSION = 'v4.9.7';
+export const APP_VERSION = 'v5.0.0';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

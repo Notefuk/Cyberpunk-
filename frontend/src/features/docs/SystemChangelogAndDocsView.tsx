@@ -26,6 +26,33 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.0.0',
+    date: '2026-10-24',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Nube',
+    title: 'Mesa online: cuentas, fichas en la nube y campañas',
+    summary: 'Planes 16, 17 y 18: con tu cuenta de Google las fichas se guardan en la nube y el GM arma la campaña con un link. Sin cuenta, la app sigue igual que siempre.',
+    highlights: [
+      'Pestaña MESA // CAMPAÑA: entrar con Google, subir fichas a la nube y verlas en cualquier dispositivo; al salir vuelven a quedar solo en la cuenta.',
+      'Los cambios llegan a los demás en 1 a 3 s y no se pisan: si el GM y el jugador restan HP a la vez, se aplican los dos.',
+      'Campañas: link de invitación (compartir o copiar, y cambiarlo si se filtró), asignar una ficha, salir, echar y pasar el rol de GM.',
+      'El GM ve y edita las fichas de sus jugadores desde el selector; cada uno ve el resumen de la party: HP, heridas (Core pp. 220-222), SP y críticas.',
+      'Pensada para el plan gratis de Firebase: una sesión de 4 h con 7 personas usa ~20 % de las escrituras y ~36 % de las lecturas del día.',
+      'Celular: nada se desborda a 375 px y el encabezado ya no ocupa media pantalla.',
+      '406 tests y 27 de reglas de seguridad.'
+    ],
+    filesTouched: [
+      'frontend/src/sync/characterSync.ts',
+      'frontend/src/sync/cloudCharacters.ts',
+      'frontend/src/sync/cloudCampaigns.ts',
+      'frontend/src/features/cloud/CampaignPanel.tsx',
+      'frontend/firestore.rules',
+      'docs/plans/plan18-v5-campanias.md'
+    ],
+    metricsBadge: 'v5.0.0 • Mesa online • Planes 16-18'
+  },
+  {
     version: 'v4.9.7',
     date: '2026-10-24',
     author: 'Claude Code',
@@ -1090,6 +1117,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.0.0': true,
     'v4.9.7': true,
     'v4.9.6': true,
     'v4.9.5': true,

@@ -88,6 +88,9 @@ cpr-omni-deck/
 │   │   │   │   └── NetAndRolesDeckView.tsx # Simulador Netrunning 2045, Quickhacks 2077, Garaje y 10 Roles
 │   │   │   ├── oneshot/
 │   │   │   │   └── RedChromeCargoView.tsx # Centro de mando táctico interactivo de Red Chrome Cargo CEMK
+│   │   │   ├── cloud/                    # [Claude Code · 2026-10-24] v5.0.0
+│   │   │   │   ├── CloudTableView.tsx    # Pestaña MESA // CAMPAÑA: login, fichas en la nube y subida
+│   │   │   │   └── CampaignPanel.tsx     # Campañas: link, unirse, asignar ficha, party, GM
 │   │   │   ├── datapacks/
 │   │   │   │   └── DataPackManagerView.tsx # Gestor interactivo de paquetes .cprpack estilo COMP/CON
 │   │   │   ├── rules/
@@ -97,6 +100,7 @@ cpr-omni-deck/
 │   │   ├── store/
 │   │   │   ├── useCharacterStore.ts      # Store Zustand con persistencia (fichas, inventario, heridas)
 │   │   │   └── useCombatStore.ts         # Store Zustand de combate (DVs, objetivos, logs de tiradas)
+│   │   ├── sync/                         # [Claude Code · 2026-10-24] v5.0.0: mesa online (Firebase), ver AI_CONTEXT_HANDOFF.md
 │   │   ├── types/
 │   │   │   └── cyberpunk.ts              # Tipos de TypeScript canónicos de Cyberpunk RED
 │   │   ├── App.tsx                       # Integrador de vistas principales del Omni-Deck
@@ -112,6 +116,18 @@ cpr-omni-deck/
 ---
 
 ## 📜 Master Version Changelog
+
+### [v5.0.0] - 2026-10-24 (Mesa online: cuentas, fichas en la nube y campañas) [Claude Code · 2026-10-24]
+* **Category**: Nube (plan 16 fase 1, `docs/plans/plan16-firebase-mesa-online.md`; capa de sync del plan 17; campañas del plan 18, `docs/plans/plan18-v5-campanias.md`). Firebase Auth + Firestore, plan Spark gratuito.
+* **Dos modos**: sin cuenta la app funciona como siempre (solo en el dispositivo). Con Google, las fichas viven en la nube, se ven en cualquier dispositivo y aparecen las campañas. El SDK de Firebase se carga solo si el usuario entra. Pestaña nueva **MESA // CAMPAÑA** y chip de estado (Guardando / Sincronizado / Sin conexión / Pausado).
+* **Sincronización a prueba de cuota** (plan 17): cola por ficha de 1,5 s (máximo 5 s), diff por campos, contadores con `increment()` (HP, Luck, Humanidad, €$, IP, SP, Death Save), sin eco (base confirmada por el servidor, snapshots con escrituras pendientes ignorados), historiales de IP y €$ como subcolecciones de solo creación, guardián de cuota diario con modo ahorro y gate de `schemaVersion`.
+* **Campañas** (plan 18): crear, link de invitación `?unirse=` (compartir con el menú del celular o copiar; cambiar el link invalida el viejo), unirse, asignar una ficha (una ficha, una campaña), salir, echar y pasar el rol de GM. El GM tiene las fichas de sus jugadores en el selector ("· jugador: Nombre") y las puede editar; cada miembro ve un resumen de la party (HP, estado de heridas Core pp. 220-222, SP y heridas críticas).
+* **Reglas de seguridad** (`frontend/firestore.rules`): cada uno lee y escribe lo suyo; el GM, las fichas de su campaña mientras el dueño siga siendo miembro; freno anti-bucle por escritor (1 escritura por segundo por dispositivo); unirse solo con el código vigente.
+* **Celulares** (decisión 12 del plan 16): sin desborde horizontal a 375 px (barras de pestañas de Street Lab, NET/roles y filtro de Quickhacking); en el celular el encabezado ya no queda fijo y la barra de pestañas sí; en pantallas grandes la barra queda justo debajo del encabezado aunque ocupe dos renglones.
+* **Entornos**: `.env.development` (emulador local, `npm run emulators` con JDK 21 portátil vía `scripts/firebase-with-jdk.mjs`), `.env.beta` (proyecto `cpr-omni-deck-dev`, `npm run build:beta`) y `.env.production` (proyecto `cpr-omni-deck-prod`, `npm run deploy:prod`).
+* **Files Modified**: `sync/` (nuevo: `firebaseConfig.ts`, `firebaseClient.ts`, `authStore.ts`, `cloudState.ts`, `diff.ts`, `writeQueue.ts`, `quotaGuard.ts`, `sheetDoc.ts`, `characterSync.ts`, `firestoreAdapter.ts`, `cloudCharacters.ts`, `campaignRepo.ts`, `partySummary.ts`, `cloudCampaigns.ts`, `inviteLink.ts`, `testing/fakeFirestore.ts` y tests), `features/cloud/CloudTableView.tsx`, `features/cloud/CampaignPanel.tsx`, `components/CloudStatusChip.tsx` (nuevos); `App.tsx`, `features/layout/TopHudBar.tsx`, `features/sheet/StreetLabView.tsx`, `features/netroles/NetAndRolesDeckView.tsx`, `store/persistence.ts`; `frontend/firestore.rules`, `firebase.json`, `.firebaserc`, `firestore.indexes.json`, `vitest.rules.config.ts`.
+* **Verificación**: tsc, 406 tests (incluye `sessionBudget.test.ts`: 4 h con GM + 6 jugadores dan ~4.050 escrituras y ~17.950 lecturas, contra 20.000 / 50.000 diarias del plan Spark), 27 tests de reglas contra el emulador y build. En el navegador con el emulador y dos usuarios: subir fichas, daño agrupado en una escritura, cambio remoto sin eco, GM y jugador restando HP en el mismo segundo (se aplican los dos), crear campaña, link, unirse, asignar, edición cruzada, party, cambiar link, echar, pasar GM y salir; medición a 375 px de todas las pestañas.
+* **Pendiente**: publicar la beta en el proyecto dev (requiere activar Google y Firestore en la consola y `firebase login`) y después la estable en Firebase Hosting; el botón "Compartir link" no se probó en un celular real.
 
 ### [v4.9.7] - 2026-10-24 (Preparación para la sincronización: guardado diferido y topes de historial) [Claude Code · 2026-10-24]
 * **Category**: Persistencia (plan 17, `docs/plans/plan17-sync-cuota.md`). Sin Firebase: prepara la app para que la sincronización del plan 16 no agote la cuota gratis y mejora el modo local.

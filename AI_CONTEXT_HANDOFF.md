@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v4.9.7 OPERATIVO`  
+> **SYSTEM VERSION**: `v5.0.0 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-10-24]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -64,6 +64,12 @@ frontend/src/
 - **useEffect que escribe localStorage**: usar `hooks/useDebouncedLocalStorage.ts`.
 - **Historiales**: `ipLog` tiene freno en 2.000 (`capIpLog`, `engine/ipLedger.ts`) y `speedhealLog` en 500; lo viejo va a `cpr_ip_log_archive_v1` / `cpr_speedheal_archive_v1`, incluidas en `BACKUP_EXTRA_KEYS`. Los totales archivados viven en `ipLogArchivedTotals`.
 - **Campos nuevos de `useCombatStore`**: agregarlos a `COMBAT_LOCAL_KEYS` o a `COMBAT_SHARED_KEYS` (un test falla si quedan afuera).
+
+[Claude Code · 2026-10-24] v5.0.0, mesa online (planes 16, 17 y 18). Todo en `frontend/src/sync/`; las vistas no hablan con Firestore:
+- **Sesión**: `authStore.ts` (login, modo local/nube) → `cloudCharacters.ts` (`initCloudSync`, `startSession`/`stopSession`, subir fichas) → `characterSync.ts` (motor puro: cola, diff, `increment()`, sin eco) con `firestoreAdapter.ts`. Campañas: `cloudCampaigns.ts` (controlador) + `campaignRepo.ts` (Firestore) + `partySummary.ts` (resumen puro).
+- **Campos que no viajan en la ficha**: `ipLog` y `transactions` van a subcolecciones (`sheetDoc.ts`, `LOG_FIELDS`); `ownerUid`, `campaignIds`, `schemaVersion`, `_w`, `_ts`, `_lastWriter` son metadatos (`META_FIELDS`). Un campo nuevo de la ficha sincroniza solo; si es un contador que el GM y el jugador tocan a la vez, sumarlo a `COUNTER_PATHS`.
+- **Escrituras directas al documento de la ficha** fuera del motor: llevan los campos de escritor (`_w.<writerId>`, `_lastWriter`, `_ts`) o las reglas las rechazan (ver `setSchemaVersion` y `assignCharacter`).
+- **Reglas**: `frontend/firestore.rules`, tests en `src/sync/__tests__/rules/` (`npx vitest run --config vitest.rules.config.ts` con el emulador prendido; borra sus datos). Presupuesto de cuota: `src/sync/__tests__/sessionBudget.test.ts`.
 
 ---
 
