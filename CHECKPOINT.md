@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-10-25] v5.0.0 publicada en gh-pages (beta, Firebase dev). Proyecto dev configurado por Giuliano (Google, Firestore y reglas). La prueba con el Firebase real queda pendiente; por ahora se trabaja con GitHub Pages y local.
+**Última actualización**: [Claude Code · 2026-10-25] Prueba del wizard (Netrunner por Complete Package) en gh-pages: anda y guarda; hallazgos en "Próximos pasos". v5.0.0 publicada en gh-pages (beta, Firebase dev). Proyecto dev configurado por Giuliano (Google, Firestore y reglas). La prueba con el Firebase real queda pendiente; por ahora se trabaja con GitHub Pages y local.
 **Versión de la app**: v5.0.0, publicada en gh-pages desde la rama `claude/v5.0.0-nube` (build:beta, proyecto `cpr-omni-deck-dev`; deploy d89cd2e, verificada en vivo). `main` sigue en 191b647 (v4.9.7): falta el PR.
 **Plan activo**: plan 16 `docs/plans/plan16-firebase-mesa-online.md` (Firebase, mesa online), APROBADO [Claude Code · 2026-10-24], con la capa de sync del plan 17 `docs/plans/plan17-sync-cuota.md`. Va antes del plan 5. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
@@ -55,6 +55,18 @@
 ## Próximos pasos
 
 [Claude Code · 2026-10-25] **Prueba de la v5.0.0 con el Firebase real (proyecto `cpr-omni-deck-dev`), pendiente.** Ya verificado sin cuenta: Google habilitado, Firestore creado, `notefuk.github.io` autorizado; Giuliano publicó las reglas a mano desde la consola. Falta probar con cuentas reales: entrar con Google en gh-pages, subir ficha, crear campaña, unirse con otra cuenta. Para que la haga Claude Code: (1) instalar y conectar Claude in Chrome en la compu de Giuliano; (2) su cuenta de Google abierta en ese Chrome y su OK explícito para entrar con ella (contraseñas y códigos los pone él); (3) una segunda cuenta de Google para hacer de jugador; (4) opcional: `npx firebase login` en `frontend/` para que Claude Code suba las reglas con `node scripts/firebase-with-jdk.mjs deploy --only firestore --project dev` cuando cambien. Si las reglas cambian antes de eso, hay que volver a pegarlas en la consola.
+
+[Claude Code · 2026-10-25] **Prueba del wizard en gh-pages (v5.0.0, modo local)**: se armó "Bluewire", Netrunner rango 4 por Complete Package en 2045. Se creó, se ve en HUD, Street Lab y NET, y sigue guardado después de recargar. Lo que se vio, para revisar con Giuliano (nada tocado todavía):
+1. Texto del rol sin tildes y "Rango 4:" repetido.
+2. El Lifepath arranca en las tablas de CEMK aunque la era sea 2045.
+3. No hay botón para tirar cuántos amigos y enemigos (se eligen a mano).
+4. Idioma básico (Streetslang) contra idioma de origen (4 gratis): verificar con Core pp. 85 y 90; el ejemplo "p. ej. Streetslang" en el campo del idioma de origen confunde.
+5. La tienda de creación no vende programas ni Virtuality Goggles; el cyberdeck queda vacío.
+6. La munición se compra como "Basic Ammo" sin calibre, y la Heavy Pistol pide munición "Heavy Pistol".
+7. Clics muy rápidos en los botones −/+ de skills se pierden (6 clics a 80 ms bajaron solo 2 niveles). Con un humano normal no pasó.
+8. El simulador NET muestra programas de ejemplo (Armor, Sword, Speedy Gonzalvez, Worm) que el personaje no tiene: no lee el cyberdeck de la ficha.
+9. En el resumen sale "IR A RESUMEN" estando ya en el resumen.
+Revisado y correcto: 2550 €$ y 800 de moda (Core pp. 104-105), Humanidad 46 con Neural Link y Plugs, EMP efectivo 4, Interface 4 = 3 acciones (Core p.197), `hasNeuroport` false en 2045 (el Neuroport es de 2077, CEMK p.26).
 
 [Claude Code · 2026-10-24] Orden acordado con Giuliano:
 1. Plan 16 (Firebase): v5.0.0 fichas en la nube + campañas + el GM ve la party; v5.1.0 mesa compartida; v5.2.0 el GM actúa sobre los jugadores.
