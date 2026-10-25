@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.0.1 OPERATIVO`** (en la rama `claude/v5.0.1-wizard`, sobre `claude/v5.0.0-nube`; en gh-pages: v5.0.0 beta) [Claude Code · 2026-10-25]  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.0.2 OPERATIVO`** (v5.0.1 en `main` por el PR #34 y en gh-pages como beta; v5.0.2 en la rama `claude/v5.0.2-tipo-bala`) [Claude Code · 2026-10-25]  
 > **FECHA DE CORTE**: [Claude Code · 2026-10-25]  
 > **PLAN ACTIVO**: plan 16 (Firebase, mesa online): v5.0.0 terminada en código con los planes 17 y 18, falta publicarla (beta en el proyecto dev, después estable en Firebase Hosting) [Claude Code · 2026-10-24]. Siguen la v5.1.0 (mesa compartida) y la v5.2.0; después el plan 5. Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  

@@ -1,5 +1,6 @@
 // Tests del motor de creación de personajes (plan 7, v4.8.2). Cada caso cita la página del libro que fija el valor. [Claude Code · 2026-10-22]
 import { describe, expect, it } from 'vitest';
+import { normalizeLoadedAmmoType } from '../characterEngine';
 import {
   SKILL_POINTS,
   STAT_KEYS,
@@ -161,6 +162,19 @@ describe('Complete Package (Core pp. 78, 81, 85)', () => {
     expect(inv.find((i) => i.name === 'Sword')?.category).toBe('programs');
     expect(isPerUnitAmmo('Rocket')).toBe(true);
     expect(AMMO_CALIBERS).toContain('Very Heavy Pistol');
+  });
+
+  it('el arma creada carga Basic (tipo de bala) y guarda el calibre aparte; los valores viejos se traducen (Core p.345)', () => {
+    const d: CreatorDraft = { ...base(), handle: 'X', purchases: [{ category: 'weapons', catalogId: 'heavy-pistol', name: 'Heavy Pistol', cost: 100, qty: 1, humanityLoss: 0 }] };
+    const w = buildCharacterSheetFromDraft(d, 't').sheet.equippedWeapons.find((x) => x.name === 'Heavy Pistol');
+    expect(w?.loadedAmmoType).toBe('Basic');
+    expect(w?.ammoType).toBe('Heavy Pistol');
+    expect(normalizeLoadedAmmoType('Heavy Pistol')).toBe('Basic');
+    expect(normalizeLoadedAmmoType('Standard')).toBe('Basic');
+    expect(normalizeLoadedAmmoType('Basic Heavy Pistol Ammunition')).toBe('Basic');
+    expect(normalizeLoadedAmmoType('Improved Smart Shotgun Shells')).toBe('Smart');
+    expect(normalizeLoadedAmmoType('Armor-Piercing')).toBe('Armor-Piercing');
+    expect(normalizeLoadedAmmoType(undefined)).toBe('Basic');
   });
 
   it('el texto de la habilidad de rol no repite "Rango 4:" (Core p.146)', () => {

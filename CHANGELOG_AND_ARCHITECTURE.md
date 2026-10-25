@@ -117,6 +117,15 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.0.2] - 2026-10-25 (Tipo de bala cargada en el HUD) [Claude Code · 2026-10-25]
+* **Category**: Combate / datos. Pendiente (7) del checkpoint.
+* **Problema**: `loadedAmmoType` es el tipo de bala (Basic, Armor-Piercing… Core p.345) y el HUD lo usa así, pero el creador, las pregens del Easy Mode y equipar un arma desde el Compendio guardaban ahí el calibre ("Heavy Pistol") o "Standard", y las premades del CEMK, el nombre del libro ("Basic Heavy Pistol Ammunition"). El HUD mostraba "Bala: Heavy Pistol", el selector apuntaba a una opción inexistente y no aparecía la regla de la bala. Solo afectaba lo que se ve: el cálculo de daño usa su propio selector de tipo de ataque.
+* **Arreglo**:
+  * `normalizeLoadedAmmoType()` en `engine/characterEngine.ts` traduce cualquier valor viejo al id del catálogo (palabras clave para los tipos especiales; lo demás, Basic). El HUD la usa en la etiqueta, el selector, los botones rápidos y la regla. La etiqueta ahora dice "Bala: Basic · Heavy Pistol" (tipo · calibre).
+  * Las armas nuevas (creador, pregens del Easy Mode, Compendio) arrancan con `loadedAmmoType: 'Basic'`; el calibre sigue en `ammoType`. Las fichas guardadas no se migran: se traducen al mostrarlas y se corrigen solas al elegir otra bala.
+* **Files Modified**: `engine/characterEngine.ts`, `engine/characterCreation.ts`, `data/characterCreationData.ts`, `store/useCharacterStore.ts`, `features/combat/CombatHudView.tsx`, `engine/__tests__/characterCreation.test.ts`, `store/persistence.ts`, `features/docs/SystemChangelogAndDocsView.tsx`.
+* **Verificación**: tsc, 410 tests (1 nuevo) y build. En el navegador (local): la ficha Bluewire2, creada con el valor viejo, muestra "Bala: Basic · Heavy Pistol", el selector en Basic y la regla "Ablación estándar 1 SP".
+
 ### [v5.0.1] - 2026-10-25 (Creador: arreglos de la prueba con un Netrunner) [Claude Code · 2026-10-25]
 * **Category**: Canon / Creador de personajes. Sale de la prueba del wizard en gh-pages: un Netrunner rango 4 por Complete Package en 2045 ("Bluewire"). Sin plan: son nueve arreglos chicos, cada uno con su página.
 * **Textos del rol**: tildes y eñes en todos los textos en español de `data/creation/coreRoles.ts` (solo diacríticos: el texto sin tildes es idéntico al anterior). La habilidad de rol ya no dice "Rango 4: Rango 4:" (tampoco "Rango 4: Rangos 3 y 4:").

@@ -402,6 +402,29 @@ export const AMMO_TYPE_CATALOG: AmmoTypeMeta[] = [
   }
 ];
 
+/**
+ * `loadedAmmoType` es el tipo de bala (Core p.345: Basic, Armor-Piercing…), no el calibre del arma (`ammoType`).
+ * Fichas viejas y premades guardan el calibre ("Heavy Pistol"), "Standard" o el nombre del libro
+ * ("Basic Heavy Pistol Ammunition"): se traducen al id del catálogo; lo que no es un tipo especial es Basic. [Claude Code · 2026-10-25]
+ */
+const AMMO_TYPE_KEYWORDS: Array<[RegExp, string]> = [
+  [/armor[-\s]?piercing|\bap\b/i, 'Armor-Piercing'],
+  [/incendiary/i, 'Incendiary'],
+  [/expansive/i, 'Expansive'],
+  [/rubber/i, 'Rubber'],
+  [/smart/i, 'Smart'],
+  [/biotoxin/i, 'Biotoxin'],
+  [/poison/i, 'Poison'],
+  [/\bemp\b/i, 'EMP'],
+  [/sleep/i, 'Sleep']
+];
+export function normalizeLoadedAmmoType(loaded?: string | null): string {
+  const raw = (loaded ?? '').trim();
+  const exact = AMMO_TYPE_CATALOG.find((a) => a.id.toLowerCase() === raw.toLowerCase());
+  if (exact) return exact.id;
+  return AMMO_TYPE_KEYWORDS.find(([re]) => re.test(raw))?.[1] ?? 'Basic';
+}
+
 
 // Core p. 146: costo en puntos de Combat Awareness. Los valores guardados son el bono (+N), no los puntos.
 export const SOLO_AWARENESS_MAX_BONUS: Partial<Record<keyof SoloCombatAwarenessAllocation, number>> = {

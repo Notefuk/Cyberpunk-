@@ -1265,7 +1265,8 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
       ...(w as unknown as EquippedWeapon),
       instanceId: `wep-${equippedWeapons.length}-${w.id}`,
       currentMag: w.standardMag ?? 0,
-      loadedAmmoType: ammoType ?? '',
+      // Tipo de bala, no el calibre (que queda en ammoType): Basic al crear (Core p.345). [Claude Code · 2026-10-25]
+      loadedAmmoType: ammoType ? 'Basic' : '',
       inHand: equippedWeapons.length === 0
     });
   };
