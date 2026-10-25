@@ -7,8 +7,8 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-10-25] v5.0.2 (tipo de bala cargada en el HUD) terminada en la rama `claude/v5.0.2-tipo-bala`, sin pushear. Antes: v5.0.0 y v5.0.1 mergeadas en `main` (PR #34, squash 8b58c07, OK de Giuliano). v5.0.1 publicada en gh-pages (beta, Firebase dev; deploy 4ce0b86, verificada en vivo). La prueba con el Firebase real y la estable en Firebase Hosting quedan pendientes; por ahora se trabaja con GitHub Pages y local.
-**Versión de la app**: v5.0.1 en `main` @ 8b58c07 (PR #34) y en gh-pages (build:beta, proyecto `cpr-omni-deck-dev`, deploy 4ce0b86). Las ramas `claude/v5.0.0-nube` y `claude/v5.0.1-wizard` ya están dentro de `main`.
+**Última actualización**: [Claude Code · 2026-10-25] v5.0.2 (tipo de bala cargada en el HUD) mergeada en `main` (PR #35, squash 646631c) y publicada en gh-pages (deploy af6c225, verificada en vivo), con OK de Giuliano. Antes: v5.0.0 y v5.0.1 mergeadas en `main` (PR #34, squash 8b58c07, OK de Giuliano). v5.0.1 publicada en gh-pages (beta, Firebase dev; deploy 4ce0b86, verificada en vivo). La prueba con el Firebase real y la estable en Firebase Hosting quedan pendientes; por ahora se trabaja con GitHub Pages y local.
+**Versión de la app**: v5.0.2 en `main` @ 646631c (PR #35) y en gh-pages (build:beta, proyecto `cpr-omni-deck-dev`, deploy af6c225). v5.0.0 + v5.0.1 entraron por el PR #34. Las ramas `claude/v5.0.0-nube` y `claude/v5.0.1-wizard` ya están dentro de `main`.
 **Plan activo**: plan 16 `docs/plans/plan16-firebase-mesa-online.md` (Firebase, mesa online), APROBADO [Claude Code · 2026-10-24], con la capa de sync del plan 17 `docs/plans/plan17-sync-cuota.md`. Va antes del plan 5. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
 ## En curso (a cargo)
@@ -19,7 +19,7 @@
 ## Traspaso
 
 - Cierra: [Claude Code · 2026-10-24].
-- Rama: `main` @ 8b58c07 (PR #34, v5.0.0 + v5.0.1, OK de Giuliano); gh-pages = v5.0.1 beta (OK de Giuliano). [Claude Code · 2026-10-25]
+- Rama: `main` @ 646631c (PR #34 v5.0.0 + v5.0.1 y PR #35 v5.0.2, OK de Giuliano); gh-pages = v5.0.2 beta (OK de Giuliano). [Claude Code · 2026-10-25]
 - A medias: nada en código; falta publicar (ver "En curso").
 - Siguiente paso exacto: cerrar la estable del plan 16 (ver "En curso", FALTA a-c) o empezar el plan de la v5.1.0. Decisión de Giuliano [2026-10-25]: por ahora se sigue con GitHub Pages y pruebas locales; Firebase Hosting prod queda para después.
 - Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido: entra en el plan 16, fase v5.1.0 (une `ActiveEncounterEnemy`, `InitiativeCombatant` y `EnemySheet`).
@@ -28,7 +28,7 @@
 
 ## Último trabajo terminado
 
-- [Claude Code · 2026-10-25] v5.0.2: `normalizeLoadedAmmoType()` (`engine/characterEngine.ts`) traduce el tipo de bala guardado (calibre, "Standard", nombre del libro) al catálogo del HUD; las armas nuevas arrancan con Basic. tsc, 410 tests y build OK; probado en el navegador local. Sin pushear ni publicar: pide OK.
+- [Claude Code · 2026-10-25] v5.0.2: `normalizeLoadedAmmoType()` (`engine/characterEngine.ts`) traduce el tipo de bala guardado (calibre, "Standard", nombre del libro) al catálogo del HUD; las armas nuevas arrancan con Basic. tsc, 410 tests y build OK; probado en el navegador local. Mergeada (PR #35) y publicada en gh-pages con OK de Giuliano.
 - [Claude Code · 2026-10-25] v5.0.1 Creador: tildes y "Rango 4" del rol, Lifepath según la era, tiradas 1d10 − 7 de amigos/enemigos/romances (Core pp. 51-52), Streetslang básica en 2 + idioma de origen aparte (Core pp. 45 y 85), clics rápidos en skills, tienda con Programas, Virtuality Goggles y munición por calibre (Core pp. 200, 344, 351), simulador NET con los programas de la ficha y sin "Ir a Resumen". tsc, 409 tests y build OK; probado en el navegador local. Detalle en el CHANGELOG. Pusheada y publicada en gh-pages con OK de Giuliano [2026-10-25]. Fichas de prueba: "Bluewire2" en localhost y "Bluewire" en gh-pages (navegador del panel).
 - [Claude Code · 2026-10-24] Regla de push de `docs/PRINCIPIOS.md` aplicada en las skills `checkpoint` y `cierre-sesion` y en el agente `github-web-deployer`: nunca pushear sin el OK explícito de Giuliano, un OK por push, y `gh-pages` con un OK aparte.
 - [Claude Code · 2026-10-24] Orden v2 de la documentación (PR #32): `docs/INDEX.md`, `docs/archive/`, fuente única por dato (planes en `docs/plans/README.md`, historia en el CHANGELOG), HANDOFF como mapa técnico, checkpoint corto. Sin cambios de código.
