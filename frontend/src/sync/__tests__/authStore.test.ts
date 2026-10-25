@@ -64,6 +64,16 @@ describe('useAuthStore', () => {
     expect(useAuthStore.getState().status).toBe('local');
   });
 
+  it('initAuth llamado dos veces no queda en "conectando" si ya hay usuario', async () => {
+    useAuthStore.setState({ cloudWanted: true });
+    const auth = { currentUser: { uid: 'u1', email: 'a@b.c' }, authStateReady: vi.fn().mockResolvedValue(undefined) };
+    h.getFirebase.mockResolvedValue({ ...h.handles, auth });
+    await useAuthStore.getState().initAuth();
+    await useAuthStore.getState().initAuth();
+    expect(useAuthStore.getState().status).toBe('cloud');
+    expect(useAuthStore.getState().user?.uid).toBe('u1');
+  });
+
   it('signInWithGoogle exitoso marca cloudWanted y usa popup', async () => {
     await useAuthStore.getState().signInWithGoogle();
     expect(h.authSdk.signInWithPopup).toHaveBeenCalledTimes(1);

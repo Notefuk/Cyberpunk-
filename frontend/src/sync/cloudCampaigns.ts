@@ -21,6 +21,8 @@ export interface CampaignHost {
 }
 
 const PARTY_QUIET_MS = 2000;
+const PARTY_RETRY_MS = 2000;
+const PARTY_MAX_RETRIES = 5;
 const errMsg = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 const isDenied = (e: unknown): boolean =>
   typeof e === 'object' && e !== null && (e as { code?: unknown }).code === 'permission-denied';
@@ -50,6 +52,7 @@ export function createCampaignController(host: CampaignHost) {
   const playerCamp = new Map<string, string>(); // charId de jugador -> campId (solo GM)
   const loading = new Set<string>();
   const failed = new Set<string>();
+  const partyRetries = new Map<string, number>();
   let stopped = false;
 
   const setError = (prefix: string, e: unknown) => cs().setLastError(prefix + errMsg(e));
@@ -121,7 +124,8 @@ export function createCampaignController(host: CampaignHost) {
     for (const id of host.myCloudIds()) {
       if (cs().charCampaign[id] !== campId || entries[id]) continue;
       const sheet = host.getSheet(id);
-      if (sheet) void writeSummary(campId, id, ownSummary(sheet)).catch((e) => setError('No se pudo publicar el resumen de party: ', e));
+      // Sin permiso = me acaban de echar (la lista de campañas todavía no se actualizó): no es un error.
+      if (sheet) void writeSummary(campId, id, ownSummary(sheet)).catch((e) => { if (!isDenied(e)) setError('No se pudo publicar el resumen de party: ', e); });
     }
   }
 
@@ -133,6 +137,7 @@ export function createCampaignController(host: CampaignHost) {
         c.id,
         (entries) => {
           if (stopped) return;
+          partyRetries.delete(c.id);
           const map: Record<string, PartySummary> = {};
           for (const e of entries) {
             const sum = parsePartySummary(e.data);
@@ -142,7 +147,15 @@ export function createCampaignController(host: CampaignHost) {
           ensureMyEntries(c.id);
           reconcilePlayers();
         },
-        (e) => console.error('[nube] error escuchando la party', c.id, e),
+        // Una campaña recién creada todavía puede no estar en el servidor (la lista sale del caché con la
+        // escritura pendiente): la regla falla y el listener muere. Se reintenta unas veces.
+        (e) => {
+          console.error('[nube] error escuchando la party', c.id, e);
+          partyUnsubs.delete(c.id);
+          const n = (partyRetries.get(c.id) ?? 0) + 1;
+          partyRetries.set(c.id, n);
+          if (n <= PARTY_MAX_RETRIES) setTimeout(() => { if (!stopped) syncPartySubs(cs().campaigns); }, PARTY_RETRY_MS);
+        },
       ));
     }
     for (const [campId, unsub] of partyUnsubs) {
@@ -214,7 +227,7 @@ export function createCampaignController(host: CampaignHost) {
         try {
           await writeSummary(campId, id, summary);
         } catch (e) {
-          setError('No se pudo publicar el resumen de party: ', e);
+          if (!isDenied(e)) setError('No se pudo publicar el resumen de party: ', e);
         }
       }
     },

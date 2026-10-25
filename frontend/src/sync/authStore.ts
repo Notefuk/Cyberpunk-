@@ -76,6 +76,11 @@ export const useAuthStore = create<AuthState>()(
           try {
             const handles = await getFirebase();
             ensureAuthListener(handles);
+            // Si el listener ya estaba puesto (initAuth dos veces, p. ej. StrictMode), su aviso pudo llegar antes
+            // de este 'connecting' y no se repite: se lee el usuario actual para no quedar colgado. [Claude Code · 2026-10-24]
+            await handles.auth.authStateReady?.();
+            const u = handles.auth.currentUser;
+            if (get().status === 'connecting') set(u ? { status: 'cloud', user: toCloudUser(u), error: null } : { status: 'local', user: null });
           } catch (e) {
             set({ status: 'error', error: e instanceof Error ? e.message : 'No se pudo conectar con la nube.' });
           }
