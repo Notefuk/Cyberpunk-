@@ -586,7 +586,8 @@ export const NetAndRolesDeckView: React.FC = () => {
         </div>
 
         {/* SELECTOR DE PESTAÑAS */}
-        <div className="flex items-center gap-1.5 bg-[#141722] border border-[#222738] p-1.5 rounded-xs">
+        {/* [Claude Code · 2026-10-24] v5.0.0 (plan 16, decisión 12): flex-wrap para no desbordar a 375 px. */}
+        <div className="flex flex-wrap items-center gap-1.5 bg-[#141722] border border-[#222738] p-1.5 rounded-xs">
           <button
             onClick={() => setActiveTab('netrunning')}
             className={`px-3 py-1.5 rounded-xs font-tech text-xs font-bold uppercase transition-colors flex items-center gap-1.5 cursor-pointer ${
@@ -1420,7 +1421,8 @@ export const NetAndRolesDeckView: React.FC = () => {
 
           {/* Barra de Filtro de Tiers */}
           <div className="bg-[#0d1017] border border-[#1b2234] p-3 rounded-xs flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
+            {/* [Claude Code · 2026-10-24] v5.0.0 (decisión 12): flex-wrap para no desbordar a 375 px. */}
+            <div className="flex flex-wrap items-center gap-2">
               <span className="font-tech text-xs font-bold text-[#f59e0b] uppercase tracking-wider">
                 FILTRAR POR NIVEL:
               </span>
