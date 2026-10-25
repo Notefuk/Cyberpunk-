@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-10-24] v5.0.0 pusheada (`claude/v5.0.0-nube` @ bbcd7d1) y publicada en gh-pages (beta, Firebase dev), con OK de Giuliano. Login en la nube pendiente de configurar el proyecto dev.
+**Última actualización**: [Claude Code · 2026-10-25] v5.0.0 publicada en gh-pages (beta, Firebase dev). Proyecto dev configurado por Giuliano (Google, Firestore y reglas). La prueba con el Firebase real queda pendiente; por ahora se trabaja con GitHub Pages y local.
 **Versión de la app**: v5.0.0, publicada en gh-pages desde la rama `claude/v5.0.0-nube` (build:beta, proyecto `cpr-omni-deck-dev`; deploy d89cd2e, verificada en vivo). `main` sigue en 191b647 (v4.9.7): falta el PR.
 **Plan activo**: plan 16 `docs/plans/plan16-firebase-mesa-online.md` (Firebase, mesa online), APROBADO [Claude Code · 2026-10-24], con la capa de sync del plan 17 `docs/plans/plan17-sync-cuota.md`. Va antes del plan 5. Regla de Giuliano: CEMK tiene prioridad y ante cualquier discrepancia CEMK/Core se le pregunta.
 
@@ -21,10 +21,10 @@
 - Cierra: [Claude Code · 2026-10-24].
 - Rama: `claude/v5.0.0-nube` pusheada hasta bbcd7d1 (OK de Giuliano); gh-pages = v5.0.0 beta (OK de Giuliano). `main` @ 191b647.
 - A medias: nada en código; falta publicar (ver "En curso").
-- Siguiente paso exacto: Giuliano activa Google y crea Firestore en `cpr-omni-deck-dev` y corre `npx firebase login` en `frontend/`; con su OK, `node scripts/firebase-with-jdk.mjs deploy --only firestore --project dev` (reglas + índices). Hasta entonces el modo local anda igual y "Entrar con Google" da error. Después: PR a `main`, estable en Firebase Hosting prod y v5.1.0.
-- Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (3) Desborde horizontal en celular: Street Lab, barra de pestañas de la vista de roles y el HUD (760 px a 375). (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido: entra en el plan 16, fase v5.1.0 (une `ActiveEncounterEnemy`, `InitiativeCombatant` y `EnemySheet`).
+- Siguiente paso exacto: definir con Giuliano lo próximo (PR de la v5.0.0 a `main` o plan de la v5.1.0). Decisión de Giuliano [2026-10-25]: por ahora se sigue con GitHub Pages (la app real) y pruebas locales con el emulador; Firebase Hosting prod (decisión 13 del plan 16) queda para después.
+- Pendientes encontrados: (1) La mejora de armadura usa siempre 100 €$ y DV 17. (2) El bestiario no trae Trading. (4) El Range Upgrade del cyberdeck no está en el modelo. (5) Desinstalar ciberware devuelve Humanidad, sin regla del libro revisada. (6) Store de encuentro compartido: entra en el plan 16, fase v5.1.0 (une `ActiveEncounterEnemy`, `InitiativeCombatant` y `EnemySheet`).
 - Datos de prueba en localhost: Hardpoint, Wrench e Insurance quedaron con HP, dosis o vehículo cambiados al probar v4.9.2 y v4.9.3; el reloj está en Sesión 2; el personaje activo quedó en Hardpoint.
-- Preguntas abiertas para Giuliano: OK para pushear `claude/v5.0.0-nube` cuando quiera.
+- Preguntas abiertas para Giuliano: ninguna por ahora.
 
 ## Último trabajo terminado
 
@@ -53,6 +53,8 @@
 - Dev server: `.claude/launch.json` (`omni-deck-dev`, puerto 5173). GitHub CLI portable: `scripts\gh.cmd` / `./scripts/gh`.
 
 ## Próximos pasos
+
+[Claude Code · 2026-10-25] **Prueba de la v5.0.0 con el Firebase real (proyecto `cpr-omni-deck-dev`), pendiente.** Ya verificado sin cuenta: Google habilitado, Firestore creado, `notefuk.github.io` autorizado; Giuliano publicó las reglas a mano desde la consola. Falta probar con cuentas reales: entrar con Google en gh-pages, subir ficha, crear campaña, unirse con otra cuenta. Para que la haga Claude Code: (1) instalar y conectar Claude in Chrome en la compu de Giuliano; (2) su cuenta de Google abierta en ese Chrome y su OK explícito para entrar con ella (contraseñas y códigos los pone él); (3) una segunda cuenta de Google para hacer de jugador; (4) opcional: `npx firebase login` en `frontend/` para que Claude Code suba las reglas con `node scripts/firebase-with-jdk.mjs deploy --only firestore --project dev` cuando cambien. Si las reglas cambian antes de eso, hay que volver a pegarlas en la consola.
 
 [Claude Code · 2026-10-24] Orden acordado con Giuliano:
 1. Plan 16 (Firebase): v5.0.0 fichas en la nube + campañas + el GM ve la party; v5.1.0 mesa compartida; v5.2.0 el GM actúa sobre los jugadores.
