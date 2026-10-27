@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
+import { useEncounterStore } from '../../store/encounterStore';
 import { 
   RANGE_BRACKETS, 
   WEAPON_RANGE_PROFILES, 
@@ -879,7 +880,6 @@ export const CombatHudView: React.FC = () => {
   const firstDamageTakenThisRound = useCombatStore((state) => state.firstDamageTakenThisRound);
   const firstHitLandedThisRound = useCombatStore((state) => state.firstHitLandedThisRound);
   const netActionsSpent = useCombatStore((state) => state.netActionsSpent);
-  const nextRound = useCombatStore((state) => state.nextRound);
   const markDamageTaken = useCombatStore((state) => state.markDamageTaken);
   const markHitLanded = useCombatStore((state) => state.markHitLanded);
   const spendNetAction = useCombatStore((state) => state.spendNetAction);
@@ -1883,7 +1883,7 @@ export const CombatHudView: React.FC = () => {
 
   // Round (decisión 1 del plan 10): pasa de Round y reinicia el Quickhack por objetivo.
   const handleNextRound = () => {
-    nextRound();
+    useEncounterStore.getState().nextRound();
     setQuickhackUsedThisTurn(false);
   };
 

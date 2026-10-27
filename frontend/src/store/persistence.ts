@@ -355,6 +355,7 @@ export const BACKUP_FORMAT = 'cpr-omni-deck-backup';
 export const BACKUP_EXTRA_KEYS = [
   'cpr_custom_npcs_v1',
   'cpr_active_encounter_v1',
+  'cpr_encounter_v1',
   'cpr_gm_secret_notes_v1',
   'cpr_custom_net_arch_v1',
   'cpr-omni-deck-combat-v2',
