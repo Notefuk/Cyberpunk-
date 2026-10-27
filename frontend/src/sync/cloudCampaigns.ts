@@ -150,10 +150,11 @@ export function createCampaignController(host: CampaignHost) {
         // Una campaña recién creada todavía puede no estar en el servidor (la lista sale del caché con la
         // escritura pendiente): la regla falla y el listener muere. Se reintenta unas veces.
         (e) => {
-          console.error('[nube] error escuchando la party', c.id, e);
           partyUnsubs.delete(c.id);
           const n = (partyRetries.get(c.id) ?? 0) + 1;
           partyRetries.set(c.id, n);
+          // Los reintentos son normales al crear una campaña: aviso; solo el último fallo es error. [Claude Code · 2026-10-27]
+          (n <= PARTY_MAX_RETRIES ? console.warn : console.error)('[nube] error escuchando la party', c.id, e);
           if (n <= PARTY_MAX_RETRIES) setTimeout(() => { if (!stopped) syncPartySubs(cs().campaigns); }, PARTY_RETRY_MS);
         },
       ));

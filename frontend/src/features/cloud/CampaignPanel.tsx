@@ -142,7 +142,9 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
   const share = async () => {
     const link = buildInviteLink(window.location.origin + window.location.pathname, camp.id, camp.inviteCode);
     const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
-    if (typeof nav.share === 'function') {
+    // En la compu se copia directo: la ventana de compartir de Windows estorba. Solo en pantallas táctiles. [Claude Code · 2026-10-27]
+    const touch = typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
+    if (touch && typeof nav.share === 'function') {
       try {
         await nav.share({ title: 'OMNI-DECK', text: `Unite a la campaña "${camp.name}"`, url: link });
         return;
