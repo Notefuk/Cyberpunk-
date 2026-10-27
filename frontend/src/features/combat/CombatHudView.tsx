@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
 import { useEncounterStore } from '../../store/encounterStore';
+import { recordMyInitiative, getActiveTable } from '../../sync/tableSync';
+import { EncounterOrderStrip } from './EncounterOrderStrip';
 import { 
   RANGE_BRACKETS, 
   WEAPON_RANGE_PROFILES, 
@@ -1883,6 +1885,13 @@ export const CombatHudView: React.FC = () => {
 
   // Round (decisión 1 del plan 10): pasa de Round y reinicia el Quickhack por objetivo.
   const handleNextRound = () => {
+    // v5.1.0 (plan 19): con mesa activa, el round lo pasa el GM y llega solo. [Claude Code · 2026-10-27]
+    const { table, isGm } = getActiveTable();
+    if (table && !isGm) {
+      setRoundToolFeedback(`El round lo pasa el GM de "${table.name}".`);
+      setTimeout(() => setRoundToolFeedback(null), 4000);
+      return;
+    }
     useEncounterStore.getState().nextRound();
     setQuickhackUsedThisTurn(false);
   };
@@ -1924,6 +1933,8 @@ export const CombatHudView: React.FC = () => {
       explosionType: null,
       penaltyBreakdown: [r.breakdown]
     });
+    // v5.1.0 (plan 19): la iniciativa entra sola al orden del encuentro (y de la mesa, si hay). [Claude Code · 2026-10-27]
+    if (activeChar) recordMyInitiative(activeChar.id, activeChar.handle, r.total);
     setRoundToolFeedback(`⏱️ Iniciativa: ${r.breakdown}`);
     setTimeout(() => setRoundToolFeedback(null), 6000);
   };
@@ -8669,6 +8680,7 @@ export const CombatHudView: React.FC = () => {
           Perception
         </button>
         <GameClockBar compact />
+        <EncounterOrderStrip />
         {roundToolFeedback && (
           <span className="w-full text-[11px] font-mono-code text-cyan-200 break-words">{roundToolFeedback}</span>
         )}

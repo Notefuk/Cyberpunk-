@@ -46,7 +46,11 @@ export interface EncounterCombatant {
   ownerUid?: string;
   /** Solo enemigos. `enemy.instanceId === id` y `enemy.initiative` sigue a `initiative`. */
   enemy?: EncounterEnemy;
+  /** Vista pública de la mesa (lo que ve el jugador de un enemigo, sin HP). Plan 19, punto 3. */
+  woundState?: WoundState;
 }
+
+export type WoundState = 'none' | 'light' | 'serious' | 'mortal';
 
 export interface QuickEnemyInput {
   name: string;
@@ -65,7 +69,7 @@ export interface EnemyDamageResult {
   ablated: boolean;
 }
 
-interface EncounterData {
+export interface EncounterData {
   round: number;
   /** Índice dentro de `order` de quien tiene el turno. */
   turnIndex: number;
@@ -88,6 +92,11 @@ interface EncounterState extends EncounterData {
   nextTurn: () => void;
   nextRound: () => void;
   reset: () => void;
+  /**
+   * Pone el encuentro que llegó de la mesa (vista pública en el jugador; el guardado en la nube en el GM).
+   * Si el round avanzó, `useCombatStore` hace sus reseteos por personaje; si volvió a 1, se reinicia. [Claude Code · 2026-10-27]
+   */
+  applyRemote: (data: EncounterData) => void;
 }
 
 const EMPTY: EncounterData = { round: 1, turnIndex: 0, combatants: [], order: [] };
@@ -313,6 +322,18 @@ export const useEncounterStore = create<EncounterState>()(
       reset: () => {
         set({ ...EMPTY });
         useCombatStore.getState().resetCombatRound();
+      },
+
+      applyRemote: (data) => {
+        const prevRound = get().round;
+        set({ round: data.round, turnIndex: data.turnIndex, combatants: data.combatants, order: data.order });
+        if (data.round > prevRound) {
+          for (let r = prevRound; r < data.round; r++) useCombatStore.getState().nextRound();
+          useCombatStore.setState({ round: data.round });
+        } else if (data.round < prevRound) {
+          useCombatStore.getState().resetCombatRound();
+          useCombatStore.setState({ round: data.round });
+        }
       }
     }),
     {

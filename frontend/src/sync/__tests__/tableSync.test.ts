@@ -1,6 +1,6 @@
 // [Claude Code · 2026-10-27] v5.1.0 (plan 19, "Mesa activa" y punto 1): reloj y era de la mesa.
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { resolveActiveTable, compareClock, planClockSync, syncActiveTable, chooseEra, getActiveTable } from '../tableSync';
+import { resolveActiveTable, compareClock, planClockSync, syncActiveTable, chooseEra, getActiveTable, disableEncounterSyncForTests } from '../tableSync';
 import type { CampaignDoc } from '../campaignRepo';
 import { useCloudState } from '../cloudState';
 import { useAuthStore } from '../authStore';
@@ -34,6 +34,7 @@ function signIn(uid: string) {
 }
 
 beforeEach(() => {
+  disableEncounterSyncForTests();
   vi.stubGlobal('localStorage', new MemoryStorage());
   useCharacterStore.setState({ characters: [sheet('mine'), sheet('theirs')], activeCharacterId: 'mine' });
   useGameClockStore.setState({ session: 1, day: 1, beat: 1 });

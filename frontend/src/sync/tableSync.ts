@@ -9,6 +9,10 @@ import { getCampaignController } from './cloudCharacters';
 import { useCharacterStore } from '../store/useCharacterStore';
 import { useCombatStore } from '../store/useCombatStore';
 import { useGameClockStore, setClockPublisher, ownCharacterIds } from '../store/gameClockStore';
+import { useEncounterStore, pcCombatantId } from '../store/encounterStore';
+import { getFirebase } from './firebaseClient';
+import { createEncounterRepo } from './encounterRepo';
+import { createEncounterSync, type EncounterSync } from './encounterSync';
 
 export interface ActiveTable {
   table: CampaignDoc | null;
@@ -89,11 +93,60 @@ let lastIsGm = false;
 const seededClock = new Set<string>();
 const seededEra = new Set<string>();
 
+// Encuentro compartido de la mesa activa (plan 19, punto 3). [Claude Code · 2026-10-27]
+let encounterSync: EncounterSync | null = null;
+let encounterSession = 0;
+
+export function getEncounterSync(): EncounterSync | null {
+  return encounterSync;
+}
+
+function stopEncounterSync(): void {
+  encounterSession += 1;
+  encounterSync?.stop();
+  encounterSync = null;
+}
+
+function startEncounterSync(campId: string, isGm: boolean): void {
+  stopEncounterSync();
+  const uid = useAuthStore.getState().user?.uid;
+  if (!uid) return;
+  const session = encounterSession;
+  void getFirebase().then((h) => {
+    if (session !== encounterSession) return; // cambió la mesa mientras cargaba
+    const sync = createEncounterSync({
+      adapter: createEncounterRepo(h, campId),
+      role: isGm ? 'gm' : 'player',
+      uid,
+      ownerOf: (charId) => {
+        const cs = useCloudState.getState();
+        return cs.party[campId]?.[charId]?.ownerUid ?? (cs.playerOwners[charId] === undefined ? uid : undefined);
+      },
+      onError: (e) => console.warn('[mesa] encuentro compartido:', e),
+    });
+    encounterSync = sync;
+    sync.start();
+  }).catch((e) => console.warn('[mesa] no se pudo abrir el encuentro compartido:', e));
+}
+
+/** Iniciativa del PJ propio (botón Iniciativa del HUD): entra al encuentro y, con mesa, a la mesa. */
+export function recordMyInitiative(charId: string, name: string, initiative: number): void {
+  if (encounterSync) {
+    void encounterSync.setMyInitiative(charId, name, initiative);
+    return;
+  }
+  useEncounterStore.getState().addPc(charId, name);
+  useEncounterStore.getState().setInitiative(pcCombatantId(charId), initiative);
+}
+
 /** Aplica la mesa activa a los stores locales. Exportada para los tests. */
 export function syncActiveTable(): void {
   const { table, isGm } = getActiveTable();
   if (!table) {
-    if (lastTableId) setClockPublisher(null);
+    if (lastTableId) {
+      setClockPublisher(null);
+      stopEncounterSync();
+    }
     lastTableId = null;
     lastIsGm = false;
     return;
@@ -104,6 +157,7 @@ export function syncActiveTable(): void {
     setClockPublisher(isGm ? (clock) => void getCampaignController()?.setTableClock(campId, clock).catch(() => {}) : null);
     lastTableId = table.id;
     lastIsGm = isGm;
+    if (!encounterSyncDisabled) startEncounterSync(campId, isGm);
   }
 
   const ctl = getCampaignController();
@@ -140,6 +194,11 @@ export function chooseEra(era: TableEra): boolean {
 }
 
 let started = false;
+/** En los tests de reloj y era no se abre Firestore. */
+let encounterSyncDisabled = false;
+export function disableEncounterSyncForTests(): void {
+  encounterSyncDisabled = true;
+}
 
 /** Se llama una vez al arrancar la app (App.tsx). */
 export function startTableSync(): void {
