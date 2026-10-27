@@ -400,7 +400,8 @@ export interface CharacterStoreState {
   inflictSpecificInjury: (characterId: string, location: 'head' | 'body', name: string, table: CritTable) => ActiveCriticalInjury | null;
   applyQuickFix: (characterId: string, injuryId: string, untilDay: number) => void;
   applyTreatment: (characterId: string, injuryId: string) => void;
-  expireQuickFixes: (day: number) => void;
+  /** onlyIds: solo esas fichas (con mesa compartida, cada dispositivo aplica a las suyas). [Claude Code · 2026-10-27] */
+  expireQuickFixes: (day: number, onlyIds?: string[]) => void;
   stabilizeCharacter: (characterId: string, opts: { wasMortallyWounded: boolean }) => void;
   adjustHpFor: (characterId: string, delta: number) => void;
   spendEurodollarsFor: (characterId: string, amount: number, reason: string) => boolean;
@@ -486,7 +487,7 @@ export interface CharacterStoreState {
   adjustExecMemberLoyalty: (memberId: string, delta: number) => void;
   adjustExecMemberHp: (memberId: string, delta: number) => void;
   replaceExecTeamMember: (memberId: string) => { success: boolean; message: string };
-  applyEndOfSessionToAll: () => { characterId: string; handle: string; resigned: string[] }[];
+  applyEndOfSessionToAll: (onlyIds?: string[]) => { characterId: string; handle: string; resigned: string[] }[];
   addRockerboyFanGroup: (group: Omit<RockerboyFanGroup, 'id' | 'createdAt'>) => void;
   updateRockerboyFanGroup: (id: string, patch: Partial<RockerboyFanGroup>) => void;
   removeRockerboyFanGroup: (id: string) => void;
@@ -1757,9 +1758,10 @@ export const useCharacterStore = create<CharacterStoreState>()(
       },
 
       // Core p. 223 / CEMK RB p. 14: el Quick Fix vence al pasar de día.
-      expireQuickFixes: (day) => {
+      expireQuickFixes: (day, onlyIds) => {
         set(state => ({
           characters: state.characters.map(c => {
+            if (onlyIds && !onlyIds.includes(c.id)) return c;
             if (!c.activeInjuries.some(inj => inj.quickFixed && (inj.quickFixUntilDay ?? 0) < day)) return c;
             return {
               ...c,
@@ -2639,10 +2641,11 @@ export const useCharacterStore = create<CharacterStoreState>()(
       },
 
       // Core p.154: al terminar la sesión, tope de Loyalty 10 y renuncia de quien quedó con Loyalty < 0.
-      applyEndOfSessionToAll: () => {
+      applyEndOfSessionToAll: (onlyIds) => {
         const summary: { characterId: string; handle: string; resigned: string[] }[] = [];
         set((state) => ({
           characters: state.characters.map((c) => {
+            if (onlyIds && !onlyIds.includes(c.id)) return c;
             if (!c.execTeam || c.execTeam.length === 0) return c;
             const res = endOfSession(c.execTeam);
             summary.push({ characterId: c.id, handle: c.handle, resigned: res.resigned });

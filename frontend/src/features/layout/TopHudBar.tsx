@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
 import { useCloudState } from '../../sync/cloudState';
+import { useActiveTable, chooseEra } from '../../sync/tableSync';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, getEffectiveBody } from '../../engine/characterEngine';
 import { 
   Users, 
@@ -27,7 +28,11 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
   const playerOwners = useCloudState((state) => state.playerOwners);
 
   const era = useCombatStore((state) => state.era);
-  const setEra = useCombatStore((state) => state.setEra);
+  // v5.1.0 (plan 19): con mesa activa, la era la fija el GM para toda la mesa. [Claude Code · 2026-10-27]
+  const { table: activeTable, isGm: isTableGm } = useActiveTable();
+  const eraLocked = !!activeTable && !isTableGm;
+  const setEra = (e: '2045' | '2077') => { chooseEra(e); };
+  const eraTitle = eraLocked ? `La era la fija el GM de "${activeTable!.name}"` : activeTable ? `Cambia la era de toda la mesa "${activeTable.name}"` : undefined;
   const appTheme = useCharacterStore((state) => state.appTheme);
   const setAppTheme = useCharacterStore((state) => state.setAppTheme);
 
@@ -232,7 +237,9 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
           <div className="flex bg-[#14161f] p-0.5 border border-[#222634] rounded-sm text-xs font-mono-code">
             <button 
               onClick={() => setEra('2045')}
-              className={`px-3 py-1 transition-all rounded-xs ${
+              disabled={eraLocked}
+              title={eraTitle}
+              className={`px-3 py-1 disabled:cursor-not-allowed transition-all rounded-xs ${
                 era === '2045' 
                   ? 'bg-[#dc2626] text-white font-bold shadow-sm' 
                   : 'text-[#64748b] hover:text-[#cbd5e1]'
@@ -242,7 +249,9 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
             </button>
             <button 
               onClick={() => setEra('2077')}
-              className={`px-3 py-1 transition-all rounded-xs ${
+              disabled={eraLocked}
+              title={eraTitle}
+              className={`px-3 py-1 disabled:cursor-not-allowed transition-all rounded-xs ${
                 era === '2077' 
                   ? 'bg-[#0284c7] text-white font-bold shadow-sm' 
                   : 'text-[#64748b] hover:text-[#cbd5e1]'

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuthStore } from '../../sync/authStore';
 import { useCloudState } from '../../sync/cloudState';
 import { getCampaignController } from '../../sync/cloudCharacters';
+import { useActiveTable } from '../../sync/tableSync';
 import { buildInviteLink, type CampaignDoc } from '../../sync/campaignRepo';
 import { clearPendingInvite, readPendingInvite } from '../../sync/inviteLink';
 import { useCharacterStore } from '../../store/useCharacterStore';
@@ -132,6 +133,9 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
   const cloudIds = useCloudState((s) => s.cloudIds);
   const characters = useCharacterStore((s) => s.characters);
   const [pick, setPick] = useState('');
+  // v5.1.0 (plan 19): mesa activa = la campaña cuyo reloj, era y combate usa este dispositivo. [Claude Code · 2026-10-27]
+  const { table: activeTable } = useActiveTable();
+  const isActiveTable = activeTable?.id === camp.id;
 
   const myCloud = characters.filter((ch) => cloudIds.includes(ch.id) && playerOwners[ch.id] === undefined);
   const mineHere = myCloud.filter((ch) => charCampaign[ch.id] === camp.id);
@@ -164,6 +168,15 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
         <span className={'font-mono-code text-[10px] px-1.5 py-0.5 rounded-xs ' + (isGm ? 'bg-[#dc2626] text-white' : 'bg-[#262c3e] text-[#94a3b8]')}>
           {isGm ? 'GM' : 'JUGADOR'}
         </span>
+        {isActiveTable ? (
+          <span className="font-mono-code text-[10px] px-1.5 py-0.5 rounded-xs bg-[#0e7490] text-white" title="El reloj, la era y el combate de este dispositivo son los de esta campaña">
+            MESA ACTIVA
+          </span>
+        ) : (
+          <button type="button" className={btnGhost} onClick={() => useCloudState.getState().setActiveTableId(camp.id)}>
+            Usar como mesa activa
+          </button>
+        )}
         {isGm && (
           <div className="ml-auto flex gap-2 flex-wrap">
             <button type="button" className={btn} disabled={busy} onClick={() => void run(share, 'Link listo para compartir (si no se abrió el menú, quedó copiado).')}>Compartir link</button>

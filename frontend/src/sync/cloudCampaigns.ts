@@ -2,7 +2,7 @@
 // Escucha mis campañas y sus resúmenes de party, carga en el dispositivo del GM las fichas de sus jugadores
 // (editables, decisión 1 del plan 18) y escribe el resumen de party cuando una ficha cambia en este dispositivo.
 import type { CharacterSheet } from '../types/cyberpunk';
-import type { CampaignDoc, CampaignRepo } from './campaignRepo';
+import type { CampaignDoc, CampaignRepo, TableClock, TableEra } from './campaignRepo';
 import { buildPartySummary, parsePartySummary, sameSummary, type PartySummary } from './partySummary';
 import { useCloudState } from './cloudState';
 
@@ -277,6 +277,15 @@ export function createCampaignController(host: CampaignHost) {
 
     async regenerateInvite(campId: string): Promise<void> {
       await repo.regenerateInvite(campId);
+    },
+
+    // v5.1.0 (plan 19, punto 1): reloj y era de la mesa, solo el GM. [Claude Code · 2026-10-27]
+    async setTableClock(campId: string, clock: TableClock): Promise<void> {
+      await repo.setTableClock(campId, clock);
+    },
+
+    async setTableEra(campId: string, era: TableEra): Promise<void> {
+      await repo.setTableEra(campId, era);
     },
   };
 }
