@@ -13,6 +13,11 @@ rules_version = '2';
 //   campaigns/{campId}/party/{charId}        resumen público de cada ficha
 //   campaigns/{campId}/gm/{docId}            solo el GM
 //   campaigns/{campId}/log/{entryId}         log de la mesa, solo creación
+// v5.1.0 (plan 19) [Claude Code · 2026-10-27]:
+//   campaigns/{campId}                       + clock {session, day, beat} y era ('2045'|'2077'), solo el GM
+//   campaigns/{campId}/encounters/current    round, turnIndex, order; lo escribe el GM
+//     .../combatants/{id}                    vista pública (nombre, iniciativa, estado de heridas); el dueño de un PJ toca su iniciativa
+//     .../gmCombatants/{id}                  enemigo completo (HP, SP, armas), solo el GM
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -113,6 +118,16 @@ service cloud.firestore {
       }
     }
 
+    // Reloj y era de la mesa (plan 19): si están, con forma válida. [Claude Code · 2026-10-27]
+    function tableFieldsOk(d) {
+      return (!('clock' in d) || (d.clock is map
+          && d.clock.keys().hasOnly(['session', 'day', 'beat'])
+          && d.clock.session is int && d.clock.session >= 1
+          && d.clock.day is int && d.clock.day >= 1
+          && d.clock.beat is int && d.clock.beat >= 1))
+        && (!('era' in d) || d.era in ['2045', '2077']);
+    }
+
     match /campaigns/{campId} {
       allow read: if signedIn() && uid() in resource.data.memberUids;
 
@@ -127,7 +142,8 @@ service cloud.firestore {
         && request.resource.data.gmUid in request.resource.data.memberUids
         && uid() in request.resource.data.memberUids
         && request.resource.data.inviteCode is string
-        && request.resource.data.inviteCode.size() >= 12;
+        && request.resource.data.inviteCode.size() >= 12
+        && tableFieldsOk(request.resource.data);
 
       // Unirse con el link: solo agrega su propio uid (y su nombre) y muestra el código vigente (lastJoinCode).
       allow update: if signedIn()
@@ -160,11 +176,48 @@ service cloud.firestore {
         allow read, write: if isGmOf(campId);
       }
 
+      // Log de la mesa (plan 19, punto 4): tiradas cortas, con su propio id, a nombre de quien las crea. [Claude Code · 2026-10-27]
       match /log/{entryId} {
         allow read: if isMemberOf(campId);
-        allow create: if isMemberOf(campId) && request.resource.data._by == uid();
+        allow create: if isMemberOf(campId)
+          && request.resource.data._by == uid()
+          && request.resource.data.id == entryId
+          && request.resource.data.keys().hasOnly(['id', '_by', 'at', 'charId', 'handle', 'kind', 'label', 'detail', 'total'])
+          && request.resource.data.at == request.time
+          && request.resource.data.kind in ['attack', 'damage', 'skill', 'initiative', 'deathSave']
+          && request.resource.data.handle is string && request.resource.data.handle.size() <= 60
+          && request.resource.data.label is string && request.resource.data.label.size() <= 120
+          && (!('detail' in request.resource.data) || (request.resource.data.detail is string && request.resource.data.detail.size() <= 300))
+          && (!('total' in request.resource.data) || request.resource.data.total is number);
         allow update: if false;
         allow delete: if isGmOf(campId);
+      }
+
+      // Encuentro compartido (plan 19, punto 3). [Claude Code · 2026-10-27]
+      match /encounters/{encId} {
+        allow read: if isMemberOf(campId);
+        allow write: if isGmOf(campId);
+
+        match /combatants/{cid} {
+          allow read: if isMemberOf(campId);
+          allow delete: if isGmOf(campId);
+          allow create, update: if isGmOf(campId);
+          // El jugador se suma con su propio PJ (id 'pc-' + charId de una ficha suya) y después solo cambia su iniciativa.
+          allow create: if isMemberOf(campId)
+            && request.resource.data.kind == 'pc'
+            && request.resource.data.ownerUid == uid()
+            && cid == 'pc-' + request.resource.data.charId
+            && get(/databases/$(database)/documents/characters/$(request.resource.data.charId)).data.ownerUid == uid()
+            && request.resource.data.keys().hasOnly(['kind', 'name', 'initiative', 'charId', 'ownerUid', 'woundState']);
+          allow update: if isMemberOf(campId)
+            && resource.data.kind == 'pc'
+            && resource.data.ownerUid == uid()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['initiative', 'woundState']);
+        }
+
+        match /gmCombatants/{cid} {
+          allow read, write: if isGmOf(campId);
+        }
       }
     }
   }

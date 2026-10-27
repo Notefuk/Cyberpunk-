@@ -14,6 +14,7 @@ import {
   arrayRemove,
   arrayUnion,
   collection,
+  deleteDoc,
   deleteField,
   doc,
   FieldPath,
@@ -272,11 +273,82 @@ describe('campañas', () => {
     await assertFails(getDoc(doc(db('alice'), 'campaigns/camp1/gm/notas')));
   });
 
+  // [Claude Code · 2026-10-27] v5.1.0 (plan 19): forma fija del log (id propio, hora del servidor, tamaños).
+  const logEntry = (id: string, by: string, over: Record<string, unknown> = {}) => ({
+    id, _by: by, at: serverTimestamp(), handle: 'Vex', kind: 'attack', label: 'Ataque: Heavy Pistol', total: 17, ...over,
+  });
+
   it('log de la mesa: los miembros agregan con su firma; nadie edita', async () => {
     await seed(['campaigns', 'camp1'], camp);
-    await assertSucceeds(setDoc(doc(db('alice'), 'campaigns/camp1/log/l1'), { _by: 'alice', text: 'Tirada 17' }));
-    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/log/l2'), { _by: 'bob', text: 'falsa' }));
-    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1/log/l1'), { text: 'Tirada 30' }));
-    await assertFails(setDoc(doc(db('carol'), 'campaigns/camp1/log/l3'), { _by: 'carol', text: 'intrusa' }));
+    await assertSucceeds(setDoc(doc(db('alice'), 'campaigns/camp1/log/l1'), logEntry('l1', 'alice')));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/log/l2'), logEntry('l2', 'bob')));
+    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1/log/l1'), { total: 30 }));
+    await assertFails(setDoc(doc(db('carol'), 'campaigns/camp1/log/l3'), logEntry('l3', 'carol')));
+    await assertSucceeds(getDoc(doc(db('bob'), 'campaigns/camp1/log/l1')));
+  });
+
+  it('log de la mesa: no acepta ids ajenos, campos de más, tipos raros ni textos largos (plan 19)', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/log/l1'), logEntry('otro', 'alice')));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/log/l2'), logEntry('l2', 'alice', { hp: 0 })));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/log/l3'), logEntry('l3', 'alice', { kind: 'hack' })));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/log/l4'), logEntry('l4', 'alice', { detail: 'x'.repeat(301) })));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/log/l5'), logEntry('l5', 'alice', { at: 5 })));
+    await assertSucceeds(setDoc(doc(db('alice'), 'campaigns/camp1/log/l6'), logEntry('l6', 'alice', { kind: 'deathSave', detail: 'Death Save 4 vs 6: salva' })));
+  });
+
+  it('el GM borra entradas del log; un jugador no', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['campaigns', 'camp1', 'log', 'l1'], { id: 'l1', _by: 'alice' });
+    await assertFails(deleteDoc(doc(db('alice'), 'campaigns/camp1/log/l1')));
+    await assertSucceeds(deleteDoc(doc(db('gm'), 'campaigns/camp1/log/l1')));
+  });
+});
+
+describe('mesa compartida (plan 19)', () => {
+  it('reloj y era: solo el GM los escribe, y con forma válida', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1'), { clock: { session: 1, day: 2, beat: 1 } }));
+    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1'), { era: '2077' }));
+    await assertSucceeds(updateDoc(doc(db('gm'), 'campaigns/camp1'), { clock: { session: 1, day: 2, beat: 1 }, era: '2077' }));
+    await assertFails(updateDoc(doc(db('gm'), 'campaigns/camp1'), { clock: { session: 0, day: 2, beat: 1 } }));
+    await assertFails(updateDoc(doc(db('gm'), 'campaigns/camp1'), { clock: { session: 1, day: 2, beat: 1, extra: 1 } }));
+    await assertFails(updateDoc(doc(db('gm'), 'campaigns/camp1'), { era: '2020' }));
+  });
+
+  it('encuentro: los miembros leen round y orden; solo el GM los escribe', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/encounters/current'), { round: 1, turnIndex: 0, order: [] }));
+    await assertSucceeds(getDoc(doc(db('alice'), 'campaigns/camp1/encounters/current')));
+    await assertFails(getDoc(doc(db('carol'), 'campaigns/camp1/encounters/current')));
+    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1/encounters/current'), { round: 9 }));
+  });
+
+  it('un jugador no lee la ficha completa de los enemigos (gmCombatants)', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/encounters/current/gmCombatants/e1'), { currentHp: 30 }));
+    await assertFails(getDoc(doc(db('alice'), 'campaigns/camp1/encounters/current/gmCombatants/e1')));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/encounters/current/gmCombatants/e2'), { currentHp: 1 }));
+  });
+
+  it('vista pública: la leen todos; el jugador solo toca la iniciativa de su propio PJ', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['characters', 'c1'], baseChar('alice', ['camp1']));
+    await seed(['characters', 'c2'], baseChar('bob', ['camp1']));
+    const pub = 'campaigns/camp1/encounters/current/combatants/';
+    await assertSucceeds(setDoc(doc(db('gm'), pub + 'e1'), { kind: 'enemy', name: 'Goon', initiative: 12, woundState: 'Sin heridas' }));
+    await assertSucceeds(getDoc(doc(db('bob'), pub + 'e1')));
+    await assertFails(updateDoc(doc(db('alice'), pub + 'e1'), { initiative: 1 }));
+    // Se suma con su PJ y cambia su iniciativa.
+    const pc = { kind: 'pc', name: 'Vex', initiative: 15, charId: 'c1', ownerUid: 'alice' };
+    await assertSucceeds(setDoc(doc(db('alice'), pub + 'pc-c1'), pc));
+    await assertSucceeds(updateDoc(doc(db('alice'), pub + 'pc-c1'), { initiative: 18 }));
+    await assertFails(updateDoc(doc(db('alice'), pub + 'pc-c1'), { name: 'Otro' }));
+    // No con la ficha de otro, ni con un id que no corresponde, ni tocando el PJ de otro.
+    await assertFails(setDoc(doc(db('alice'), pub + 'pc-c2'), { ...pc, charId: 'c2' }));
+    await assertFails(setDoc(doc(db('alice'), pub + 'pc-x'), pc));
+    await assertFails(updateDoc(doc(db('bob'), pub + 'pc-c1'), { initiative: 1 }));
+    // El GM corrige cualquier iniciativa.
+    await assertSucceeds(updateDoc(doc(db('gm'), pub + 'pc-c1'), { initiative: 10 }));
   });
 });
