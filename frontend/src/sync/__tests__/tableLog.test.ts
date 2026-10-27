@@ -1,5 +1,5 @@
 // [Claude Code · 2026-10-27] v5.1.0 (plan 19, punto 4): log de tiradas de la mesa.
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createTableLogPublisher, rollToLog, deathSaveToLog, isAutoShared, type TableLogEntry } from '../tableLog';
 import type { RollEntry } from '../../types/cyberpunk';
 
@@ -25,8 +25,38 @@ describe('log de la mesa', () => {
   it('publica combate e iniciativa solos; una tirada de skill no', () => {
     const { pub, created } = setup();
     pub.onHistory([skill('s1'), init('i1'), damage('d1'), attack('a1')]);
-    expect(created.map((e) => e.kind).sort()).toEqual(['attack', 'damage', 'initiative']);
+    expect(created.map((e) => e.kind).sort()).toEqual(['attack', 'initiative']);
     expect(isAutoShared(skill('s1'))).toBe(false);
+  });
+
+  // Decisión de Giuliano (2026-10-27, cuota): ataque + daño en una sola línea.
+  it('el ataque que pega sale junto con su daño, en una sola entrada', () => {
+    const { pub, created } = setup();
+    pub.onHistory([attack('a1')]);
+    expect(created).toEqual([]);
+    pub.onHistory([damage('d1'), attack('a1')]);
+    expect(created).toHaveLength(1);
+    expect(created[0]).toMatchObject({ id: 'a1', kind: 'attack', total: 17 });
+    expect(created[0].detail).toBe('vs DV 15 · impacta · 7-12 m · daño 11 (dados 6, 5)');
+  });
+
+  it('un ataque que falla sale enseguida; uno que pega sin daño sale solo a los 20 s', () => {
+    vi.useFakeTimers();
+    try {
+      const { pub, created } = setup();
+      pub.onHistory([{ ...attack('miss'), isHit: false }]);
+      expect(created.map((e) => e.id)).toEqual(['miss']);
+      pub.onHistory([attack('a2'), { ...attack('miss'), isHit: false }]);
+      vi.advanceTimersByTime(19999);
+      expect(created).toHaveLength(1);
+      vi.advanceTimersByTime(1);
+      expect(created.map((e) => e.id)).toEqual(['miss', 'a2']);
+      // Un daño suelto (sin ataque esperando) sale solo.
+      pub.onHistory([{ ...damage('d9'), weaponName: 'Otra' }]);
+      expect(created.map((e) => e.kind)).toEqual(['attack', 'attack', 'damage']);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('no repite entradas ni publica lo que había al abrir la mesa', () => {
@@ -35,6 +65,8 @@ describe('log de la mesa', () => {
     pub.onHistory([attack('a1'), attack('viejo')]);
     // triggerExplosionClick / markAttackDamageRolled cambian la entrada con el mismo id.
     pub.onHistory([{ ...attack('a1'), damageRolled: true }, attack('viejo')]);
+    pub.flush();
+    pub.flush();
     expect(created.map((e) => e.id)).toEqual(['a1']);
   });
 

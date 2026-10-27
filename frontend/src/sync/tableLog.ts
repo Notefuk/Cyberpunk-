@@ -10,6 +10,11 @@ export type TableLogKind = 'attack' | 'damage' | 'skill' | 'initiative' | 'death
 
 export const TABLE_LOG_LIMIT = 50;
 export const TABLE_LOG_KEEP = 200;
+/**
+ * Decisión de Giuliano (2026-10-27, cuota): el ataque y su daño van en una sola línea del log.
+ * Un ataque que pega espera su daño hasta este tiempo; si no llega, sale solo.
+ */
+export const ATTACK_DAMAGE_WAIT_MS = 20000;
 
 export interface TableLogEntry {
   id: string;
@@ -73,6 +78,14 @@ export function rollToLog(e: RollEntry, who: { uid: string; charId?: string; han
   return out;
 }
 
+/** Ataque + su daño en una sola entrada (con el id del ataque). */
+export function mergeAttackDamage(attack: RollEntry, damage: RollEntry, who: { uid: string; charId?: string; handle: string }): TableLogEntry {
+  const a = rollToLog(attack, who);
+  const d = rollToLog(damage, who);
+  const dmg = `daño ${d.total ?? '?'}${d.detail ? ` (${d.detail})` : ''}`;
+  return { ...a, detail: cut([a.detail, dmg].filter(Boolean).join(' · '), 300) };
+}
+
 export function deathSaveToLog(r: DeathSaveResult, who: { uid: string; charId?: string; handle: string }): TableLogEntry {
   const pen = r.basePenalty + r.accumulatedPenalty;
   const result = r.success ? 'sobrevive' : r.autoFail ? 'falla (10 natural)' : 'falla';
@@ -104,16 +117,23 @@ export const useTableLog = create<{ entries: TableLogEntry[]; set: (e: TableLogE
 
 /**
  * Publicador: compara `rollHistory` (más nueva primero) con lo ya visto. Lo que había al arrancar no se publica.
- * `markShared` (el botón "Mostrar a la mesa") publica una tirada vieja que no era de combate.
+ * Una tirada vieja marcada "Mostrar a la mesa" (`shareWithTable`) se publica al marcarla.
+ * Un ataque que pega espera su daño (mismo arma) para salir en una sola línea.
  */
 export function createTableLogPublisher(opts: {
   adapter: TableLogAdapter;
   who: () => { uid: string; charId?: string; handle: string };
   initial: RollEntry[];
   onError?: (e: unknown) => void;
+  waitMs?: number;
 }) {
   const seen = new Set(opts.initial.map((e) => e.id));
   const published = new Set<string>();
+  const waitMs = opts.waitMs ?? ATTACK_DAMAGE_WAIT_MS;
+  /** Ataques que pegaron y esperan su daño. */
+  const pending = new Map<string, { attack: RollEntry; timer: ReturnType<typeof setTimeout> }>();
+  const sameWeapon = (a: RollEntry, d: RollEntry) =>
+    a.weaponInstanceId && d.weaponInstanceId ? a.weaponInstanceId === d.weaponInstanceId : a.weaponName === d.weaponName;
 
   const publish = (entry: TableLogEntry) => {
     if (published.has(entry.id)) return;
@@ -124,17 +144,49 @@ export function createTableLogPublisher(opts: {
     });
   };
 
+  const flushPending = (id: string) => {
+    const p = pending.get(id);
+    if (!p) return;
+    clearTimeout(p.timer);
+    pending.delete(id);
+    publish(rollToLog(p.attack, opts.who()));
+  };
+
+  const handleNew = (e: RollEntry) => {
+    if (e.type === 'attack' && e.isHit) {
+      const timer = setTimeout(() => flushPending(e.id), waitMs);
+      pending.set(e.id, { attack: e, timer });
+      return;
+    }
+    if (e.type === 'damage') {
+      const match = [...pending.values()].find((p) => sameWeapon(p.attack, e));
+      if (match) {
+        clearTimeout(match.timer);
+        pending.delete(match.attack.id);
+        published.add(e.id);
+        publish(mergeAttackDamage(match.attack, e, opts.who()));
+        return;
+      }
+    }
+    if (isAutoShared(e) || e.shareWithTable) publish(rollToLog(e, opts.who()));
+  };
+
   return {
     /** Llamar con cada nuevo `rollHistory`. */
     onHistory(history: RollEntry[]): void {
-      for (const e of history) {
+      // De la más vieja a la más nueva, así el daño llega después de su ataque.
+      for (const e of [...history].reverse()) {
         if (seen.has(e.id)) {
           if (e.shareWithTable && !published.has(e.id)) publish(rollToLog(e, opts.who()));
           continue;
         }
         seen.add(e.id);
-        if (isAutoShared(e) || e.shareWithTable) publish(rollToLog(e, opts.who()));
+        handleNew(e);
       }
+    },
+    /** Al cerrar la mesa: lo que esperaba su daño sale solo. */
+    flush(): void {
+      for (const id of [...pending.keys()]) flushPending(id);
     },
     publishDeathSave(r: DeathSaveResult): void {
       publish(deathSaveToLog(r, opts.who()));

@@ -111,6 +111,7 @@ function stopEncounterSync(): void {
   encounterSync?.stop();
   encounterSync = null;
   for (const u of logUnsubs.splice(0)) u();
+  logPublisher?.flush();
   logPublisher = null;
   useTableLog.getState().set([]);
 }
