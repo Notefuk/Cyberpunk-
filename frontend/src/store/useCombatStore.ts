@@ -52,6 +52,8 @@ export interface CombatStoreState {
   addRollEntry: (entry: RollEntry) => void;
   triggerExplosionClick: (rollId: string) => void;
   markAttackDamageRolled: (rollId: string) => void;
+  /** v5.1.0 (plan 19): "Mostrar a la mesa". */
+  shareRollWithTable: (rollId: string) => void;
   clearRollHistory: () => void;
 }
 
@@ -210,6 +212,11 @@ export const useCombatStore = create<CombatStoreState>()(
           rollHistory: state.rollHistory.map((entry) =>
             entry.id === rollId ? { ...entry, damageRolled: true } : entry
           )
+        })),
+
+      shareRollWithTable: (rollId) =>
+        set((state) => ({
+          rollHistory: state.rollHistory.map((entry) => (entry.id === rollId ? { ...entry, shareWithTable: true } : entry))
         })),
 
       clearRollHistory: () => set({ rollHistory: [] })

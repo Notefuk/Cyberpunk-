@@ -11,7 +11,9 @@ import { useCombatStore } from '../store/useCombatStore';
 import { useGameClockStore, setClockPublisher, ownCharacterIds } from '../store/gameClockStore';
 import { useEncounterStore, pcCombatantId } from '../store/encounterStore';
 import { getFirebase } from './firebaseClient';
-import { createEncounterRepo } from './encounterRepo';
+import { createEncounterRepo, createTableLogRepo } from './encounterRepo';
+import { createTableLogPublisher, useTableLog, TABLE_LOG_KEEP, type TableLogPublisher } from './tableLog';
+import type { DeathSaveResult } from '../engine/characterEngine';
 import { createEncounterSync, type EncounterSync } from './encounterSync';
 
 export interface ActiveTable {
@@ -96,6 +98,9 @@ const seededEra = new Set<string>();
 // Encuentro compartido de la mesa activa (plan 19, punto 3). [Claude Code · 2026-10-27]
 let encounterSync: EncounterSync | null = null;
 let encounterSession = 0;
+// Log de la mesa (plan 19, punto 4).
+let logPublisher: TableLogPublisher | null = null;
+let logUnsubs: (() => void)[] = [];
 
 export function getEncounterSync(): EncounterSync | null {
   return encounterSync;
@@ -105,6 +110,45 @@ function stopEncounterSync(): void {
   encounterSession += 1;
   encounterSync?.stop();
   encounterSync = null;
+  for (const u of logUnsubs.splice(0)) u();
+  logPublisher = null;
+  useTableLog.getState().set([]);
+}
+
+function whoAmI(uid: string) {
+  const ch = useCharacterStore.getState().getActiveCharacter?.();
+  return { uid, charId: ch?.id, handle: ch?.handle ?? '' };
+}
+
+function startTableLog(h: Awaited<ReturnType<typeof getFirebase>>, campId: string, isGm: boolean, uid: string): void {
+  const repo = createTableLogRepo(h, campId);
+  const pub = createTableLogPublisher({
+    adapter: repo,
+    who: () => whoAmI(uid),
+    initial: useCombatStore.getState().rollHistory,
+    onError: (e) => console.warn('[mesa] log:', e),
+  });
+  logPublisher = pub;
+  logUnsubs.push(useCombatStore.subscribe((s, prev) => {
+    if (s.rollHistory !== prev.rollHistory) pub.onHistory(s.rollHistory);
+  }));
+  logUnsubs.push(repo.subscribe((entries) => useTableLog.getState().set(entries), (e) => console.warn('[mesa] log:', e)));
+  // El GM recorta a las últimas 200 al abrir la mesa (tiene permiso de borrar).
+  if (isGm) void repo.trim(TABLE_LOG_KEEP).catch((e) => console.warn('[mesa] recorte del log:', e));
+}
+
+/** "Mostrar a la mesa" en una tirada que no es de combate. */
+export function shareRollWithTable(rollId: string): void {
+  useCombatStore.getState().shareRollWithTable(rollId);
+}
+
+/** El Death Save no pasa por rollHistory: se publica aparte. */
+export function publishDeathSave(r: DeathSaveResult): void {
+  logPublisher?.publishDeathSave(r);
+}
+
+export function hasTableLog(): boolean {
+  return logPublisher !== null;
 }
 
 function startEncounterSync(campId: string, isGm: boolean): void {
@@ -126,6 +170,7 @@ function startEncounterSync(campId: string, isGm: boolean): void {
     });
     encounterSync = sync;
     sync.start();
+    startTableLog(h, campId, isGm, uid);
   }).catch((e) => console.warn('[mesa] no se pudo abrir el encuentro compartido:', e));
 }
 

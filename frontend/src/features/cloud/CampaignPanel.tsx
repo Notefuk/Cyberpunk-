@@ -5,6 +5,7 @@ import { useAuthStore } from '../../sync/authStore';
 import { useCloudState } from '../../sync/cloudState';
 import { getCampaignController } from '../../sync/cloudCharacters';
 import { useActiveTable } from '../../sync/tableSync';
+import { TableLogPanel } from './TableLogPanel';
 import { buildInviteLink, type CampaignDoc } from '../../sync/campaignRepo';
 import { clearPendingInvite, readPendingInvite } from '../../sync/inviteLink';
 import { useCharacterStore } from '../../store/useCharacterStore';
@@ -294,6 +295,8 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
           </ul>
         )}
       </div>
+
+      {isActiveTable && <TableLogPanel />}
 
       {!isGm && (
         <button
