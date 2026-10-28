@@ -12,7 +12,7 @@ import { useGameClockStore, setClockPublisher, ownCharacterIds } from '../store/
 import { useEncounterStore, pcCombatantId } from '../store/encounterStore';
 import { getFirebase } from './firebaseClient';
 import { createEncounterRepo, createTableLogRepo } from './encounterRepo';
-import { createTableLogPublisher, useTableLog, TABLE_LOG_KEEP, type TableLogPublisher } from './tableLog';
+import { createTableLogPublisher, gmActionToLog, useTableLog, TABLE_LOG_KEEP, type TableLogPublisher } from './tableLog';
 import type { DeathSaveResult } from '../engine/characterEngine';
 import { createEncounterSync, type EncounterAdapter, type EncounterSync } from './encounterSync';
 
@@ -171,6 +171,13 @@ export function shareRollWithTable(rollId: string): void {
 /** El Death Save no pasa por rollHistory: se publica aparte. */
 export function publishDeathSave(r: DeathSaveResult): void {
   logPublisher?.publishDeathSave(r);
+}
+
+/** v5.2.0 (plan 20): el GM actuó sobre la ficha de un PJ; queda en el log de la mesa. [Claude Code · 2026-10-28] */
+export function publishGmAction(a: { targetCharId: string; targetHandle: string; label: string; detail?: string; total?: number }): void {
+  const uid = useAuthStore.getState().user?.uid;
+  if (!uid || !logPublisher) return;
+  logPublisher.publishEntry(gmActionToLog(a, { uid }));
 }
 
 export function hasTableLog(): boolean {

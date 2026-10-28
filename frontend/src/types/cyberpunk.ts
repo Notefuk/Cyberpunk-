@@ -590,6 +590,8 @@ export interface CharacterSheet {
   installedCyberwareIds: string[];
   empDisabledCyberwareIds?: string[];
   activeInjuries: ActiveCriticalInjury[];
+  /** v5.2.0 (plan 20): condiciones activas (ids de `data/conditions.ts`); las pone el GM o el jugador. [Claude Code · 2026-10-28] */
+  conditions?: { id: string; since?: number }[];
   /** Death Save Penalty acumulado mientras está Mortally Wounded (Core p. 188). Vuelve a 0 al estabilizar a 1+ HP. */
   deathSavePenalty?: number;
   /** Falló un Death Save (Core p. 188). */

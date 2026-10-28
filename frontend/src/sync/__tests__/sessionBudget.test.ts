@@ -217,6 +217,7 @@ describe('presupuesto de una sesión de 4 h (7 clientes)', () => {
       if (combat && rand() < 1 / 10) {
         const target = charId(Math.floor(rand() * PLAYERS));
         bursts += 1;
+        logWrites += 1; // v5.2.0 (plan 20): cada acción del GM sobre un PJ deja una línea 'gm' en el log [Claude Code · 2026-10-28]
         gm.edit(target, (s) => hit(s, 1 + Math.floor(rand() * 6)));
       }
       await vi.advanceTimersByTimeAsync(1000);

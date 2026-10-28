@@ -1,8 +1,8 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.1.0`** (mesa compartida, plan 19) terminada en `claude/v5.1.0-mesa`, sin pushear; en `main` y gh-pages sigue la v5.0.2 [Claude Code · 2026-10-27]  
-> **FECHA DE CORTE**: [Claude Code · 2026-10-27]  
-> **PLAN ACTIVO**: plan 16 (Firebase, mesa online): v5.0.0 terminada en código con los planes 17 y 18, falta publicarla (beta en el proyecto dev, después estable en Firebase Hosting) [Claude Code · 2026-10-24]. Siguen la v5.1.0 (mesa compartida) y la v5.2.0; después el plan 5. Estado de todos los planes en `docs/plans/README.md`.  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.2.0`** (el GM actúa sobre los PJ, plan 20) terminada en `claude/v5.2.0-gm`, sin pushear; en `main`, gh-pages (beta) y Firebase prod (estable) está la v5.1.0 [Claude Code · 2026-10-28]  
+> **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
+> **PLAN ACTIVO**: plan 20 (fase 3 del plan 16): v5.2.0 terminada en código; sigue la v5.3.0 (secretos del GM en la nube, revelar y PIN solo local). Después el plan 5. Estado de todos los planes en `docs/plans/README.md` [Claude Code · 2026-10-28].  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 

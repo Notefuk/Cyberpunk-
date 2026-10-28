@@ -6,7 +6,8 @@ import { create } from 'zustand';
 import type { RollEntry } from '../types/cyberpunk';
 import type { DeathSaveResult } from '../engine/characterEngine';
 
-export type TableLogKind = 'attack' | 'damage' | 'skill' | 'initiative' | 'deathSave';
+/** 'gm': el GM actuó sobre la ficha de un PJ (v5.2.0, plan 20). [Claude Code · 2026-10-28] */
+export type TableLogKind = 'attack' | 'damage' | 'skill' | 'initiative' | 'deathSave' | 'gm';
 
 export const TABLE_LOG_LIMIT = 50;
 export const TABLE_LOG_KEEP = 200;
@@ -104,6 +105,21 @@ export function deathSaveToLog(r: DeathSaveResult, who: { uid: string; charId?: 
   return out;
 }
 
+/** v5.2.0 (plan 20): una acción del GM sobre la ficha de un PJ (daño, crítica, condición, Humanidad, €$). */
+export function gmActionToLog(a: { targetCharId: string; targetHandle: string; label: string; detail?: string; total?: number }, who: { uid: string }): TableLogEntry {
+  const out: TableLogEntry = {
+    id: `gm-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    _by: who.uid,
+    charId: a.targetCharId,
+    handle: 'GM',
+    kind: 'gm',
+    label: cut(`→ ${a.targetHandle || 'PJ'}: ${a.label}`, 120)
+  };
+  if (a.detail) out.detail = cut(a.detail, 300);
+  if (typeof a.total === 'number' && Number.isFinite(a.total)) out.total = a.total;
+  return out;
+}
+
 export interface TableLogAdapter {
   create(entry: TableLogEntry): Promise<void>;
   subscribe(cb: (entries: TableLogEntry[]) => void, onError?: (e: unknown) => void): () => void;
@@ -192,6 +208,10 @@ export function createTableLogPublisher(opts: {
     },
     publishDeathSave(r: DeathSaveResult): void {
       publish(deathSaveToLog(r, opts.who()));
+    },
+    /** Una entrada ya armada (p. ej. `gmActionToLog`). */
+    publishEntry(entry: TableLogEntry): void {
+      publish(entry);
     },
     isPublished(id: string): boolean {
       return published.has(id);

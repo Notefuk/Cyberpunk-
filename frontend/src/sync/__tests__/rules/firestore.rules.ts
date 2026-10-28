@@ -297,6 +297,13 @@ describe('campañas', () => {
     await assertSucceeds(setDoc(doc(db('alice'), 'campaigns/camp1/log/l6'), logEntry('l6', 'alice', { kind: 'deathSave', detail: 'Death Save 4 vs 6: salva' })));
   });
 
+  // [Claude Code · 2026-10-28] v5.2.0 (plan 20): las acciones del GM sobre un PJ van al log solo de su mano.
+  it('log de la mesa: solo el GM publica entradas "gm"', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/log/g1'), logEntry('g1', 'alice', { kind: 'gm' })));
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/log/g2'), logEntry('g2', 'gm', { kind: 'gm', charId: 'c1', detail: 'SP 11→10 · HP 25→21' })));
+  });
+
   it('el GM borra entradas del log; un jugador no', async () => {
     await seed(['campaigns', 'camp1'], camp);
     await seed(['campaigns', 'camp1', 'log', 'l1'], { id: 'l1', _by: 'alice' });

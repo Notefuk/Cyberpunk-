@@ -8,7 +8,8 @@ const KIND: Record<TableLogKind, { icon: string; cls: string }> = {
   damage: { icon: '💥', cls: 'text-orange-300' },
   skill: { icon: '🎲', cls: 'text-slate-200' },
   initiative: { icon: '⏱️', cls: 'text-emerald-300' },
-  deathSave: { icon: '☠️', cls: 'text-red-300' }
+  deathSave: { icon: '☠️', cls: 'text-red-300' },
+  gm: { icon: '🎭', cls: 'text-amber-300' }
 };
 
 export const TableLogPanel: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
