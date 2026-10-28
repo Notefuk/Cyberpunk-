@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
+import { useGmSecretBinding, useGmSecrets } from '../../sync/gmSecrets';
+import { useGmAccess, useGmPinSession } from '../../store/gmAccess';
 import { 
   calculateMaxHp, 
   getEffectiveBody
@@ -126,8 +128,11 @@ export function FixerDeckView() {
   const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     const pin = localStorage.getItem(GM_PIN_STORAGE_KEY);
-    return !(pin && pin.length === 4);
+    // v5.3.0 (plan 20, B.3): el PIN desbloqueado en el NET vale también acá (misma sesión). [Claude Code · 2026-10-28]
+    return !(pin && pin.length === 4) || useGmPinSession.getState().unlocked;
   });
+  // v5.3.0 (plan 20, B.3): con mesa activa manda el rol de la campaña; el PIN queda para el modo local.
+  const gmAccess = useGmAccess();
   const [pinInput, setPinInput] = useState<string>('');
   const [pinError, setPinError] = useState<string | null>(null);
   const [isSettingPin, setIsSettingPin] = useState<boolean>(false);
@@ -136,6 +141,7 @@ export function FixerDeckView() {
   const handleUnlock = () => {
     if (pinInput === savedPin) {
       setIsUnlocked(true);
+      useGmPinSession.getState().unlock();
       setPinError(null);
       setPinInput('');
     } else {
@@ -289,8 +295,15 @@ export function FixerDeckView() {
     }
   });
 
+  // v5.3.0 (plan 20): con mesa activa de GM, las notas son las de la campaña (nube). [Claude Code · 2026-10-28]
+  const notesCloud = useGmSecretBinding('notes', secretNotes, setSecretNotes, () => {
+    try { return localStorage.getItem('cpr_gm_secret_notes_v1') || ''; } catch { return ''; }
+  });
+
+  const gmSecretsNotice = useGmSecrets((s) => s.notice);
+
   // v4.9.7 [Claude Code · 2026-10-24] Guardado agrupado en localStorage (plan17).
-  useDebouncedLocalStorage('cpr_gm_secret_notes_v1', secretNotes, (v) => String(v));
+  useDebouncedLocalStorage('cpr_gm_secret_notes_v1', secretNotes, (v) => String(v), !notesCloud.cloud);
 
   const handleInsertTimestamp = () => {
     const now = new Date();
@@ -431,7 +444,17 @@ export function FixerDeckView() {
   };
 
   // --- PIN LOCK SCREEN ---
-  if (!isUnlocked && savedPin) {
+  if (gmAccess.mode === 'table-player') {
+    return (
+      <div className="max-w-md mx-auto my-12 bg-[#10121a] border border-[#262c3e] rounded-xs p-6 text-center space-y-2">
+        <Lock className="w-6 h-6 text-slate-500 mx-auto" />
+        <h2 className="font-tech text-sm font-bold text-white uppercase tracking-wider">Solo el GM de "{gmAccess.campName}"</h2>
+        <p className="text-xs font-mono-code text-[#94a3b8]">El Fixer Deck es la consola del GM de la mesa activa. Lo que revele te llega en MESA // CAMPAÑA y en el HUD.</p>
+      </div>
+    );
+  }
+
+  if (!isUnlocked && savedPin && gmAccess.mode !== 'table-gm') {
     return (
       <div className="max-w-md mx-auto my-12 bg-[#10121a] border-2 border-[#dc2626] rounded-xs p-6 shadow-2xl text-center space-y-6 animate-in fade-in duration-200">
         <div className="inline-flex p-3 bg-[#dc2626]/20 border border-[#dc2626] rounded-full text-[#dc2626] mb-1">
@@ -531,7 +554,7 @@ export function FixerDeckView() {
                 <Lock className="w-3.5 h-3.5" /> PIN ACTIVADO
               </span>
               <button
-                onClick={() => setIsUnlocked(false)}
+                onClick={() => { setIsUnlocked(false); useGmPinSession.getState().lock(); }}
                 className="px-2.5 py-1 bg-[#dc2626]/20 hover:bg-[#dc2626] text-[#dc2626] hover:text-white border border-[#dc2626]/40 text-xs font-tech font-bold uppercase rounded-2xs transition-colors cursor-pointer"
                 title="Bloquear consola inmediatamente para ocultar pantalla a jugadores"
               >
@@ -1386,8 +1409,11 @@ export function FixerDeckView() {
                 SECRET SCENE NOTES // CUADERNO DE CAMPAÑA GM
               </h2>
               <p className="text-[10px] font-mono-code text-slate-400">
-                Registro privado local sin spoilers para jugadores • Auto-guardado en tiempo real
+                {notesCloud.cloud
+                  ? `Solo las ves vos, el GM de "${notesCloud.campName}" • Guardadas en la nube de la campaña`
+                  : 'Registro privado local sin spoilers para jugadores • Auto-guardado en tiempo real'}
               </p>
+              {gmSecretsNotice && <p className="text-[10px] font-mono-code text-amber-300">{gmSecretsNotice}</p>}
             </div>
           </div>
 
@@ -1449,7 +1475,7 @@ export function FixerDeckView() {
           <div className="flex items-center justify-between text-[10px] font-mono-code text-slate-500 pt-0.5">
             <span>{secretNotes.length} caracteres • {secretNotes.split(/\s+/).filter(Boolean).length} palabras</span>
             <span className="text-emerald-500 flex items-center gap-1">
-              <Check className="w-3 h-3" /> Guardado automáticamente en navegador
+              <Check className="w-3 h-3" /> {notesCloud.cloud ? `Guardado en la nube (${notesCloud.campName})` : 'Guardado automáticamente en navegador'}
             </span>
           </div>
         </div>

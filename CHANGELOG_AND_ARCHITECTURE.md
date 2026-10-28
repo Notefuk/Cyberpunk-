@@ -117,6 +117,25 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.3.0] - 2026-10-28 (Secretos del GM en la nube, revelar a la mesa y PIN solo local) [Claude Code · 2026-10-28]
+* **Category**: Nube / GM (plan 20, `docs/plans/plan20-gm-actua-sobre-la-mesa.md`; segunda mitad de la fase 3 del plan 16).
+* **Secretos del GM por campaña** (`sync/gmSecrets.ts`, nuevo): con mesa activa de GM, las notas secretas del Fixer, los PNJ propios y las arquitecturas NET propias se leen y guardan en `campaigns/{c}/gm/notes|npcs|net` (solo los ve el GM). Se suben 1,5 s después de dejar de escribir (máximo 5 s) y lo pendiente se sube al cerrar la mesa. La primera vez se copia lo que el GM tiene local, con aviso ("Copié tus notas, NPCs, NET..."); la clave local no se toca. Sin mesa, todo sigue local como antes.
+* **Revelar a la mesa**:
+  * Enemigo: el GM toca "Revelar" en el orden de iniciativa y los jugadores ven "Ficha" con facción, nivel de amenaza, SP de cabeza y cuerpo, armas y reglas especiales. Nunca los HP. "Revelado" lo vuelve a ocultar.
+  * Handouts (`sync/tableReveals.ts`, `features/cloud/HandoutsPanel.tsx`, nuevos): el GM manda una pista o descripción desde MESA // CAMPAÑA ("De parte del GM"); le llega a toda la mesa y el HUD avisa del último que no viste. La mesa carga los últimos 10.
+  * Corrida NET: con "Mostrar la corrida a la mesa", el Netrunner ve en vivo los pisos desbloqueados con su DV y tipo de ICE. HP, ATK y DEF del ICE y las recompensas no salen del GM (`buildNetReveal`).
+* **PIN y rol** (`store/gmAccess.ts`, nuevo): con mesa activa manda el rol de la campaña. El GM entra sin PIN; el jugador ve "Solo el GM de <campaña>" en el Fixer Deck y en Modo Master del NET, y no ve el control de pisos ni CREAR PNJ. Sin mesa, el PIN del GM protege el Fixer y ahora también el modo GM del NET (se pide una vez por sesión; "Bloquear ahora" bloquea los dos).
+* **Reglas**: `gm/*` solo acepta notes, npcs o net, con su forma, tamaño (100.000 caracteres, 200 PNJ, 50 arquitecturas), hora del servidor y 1 escritura por segundo. `reveals/*`: los miembros leen y solo el GM crea y borra; `reveals/net` con hasta 30 pisos.
+* **Presupuesto**: `sessionBudget.test.ts` suma 30 guardados de secretos y 40 revelaciones por sesión. Con 20 handouts al abrir pasaba el tope de 35.000 lecturas; con 10 entra, con muy poco margen.
+* **Files Modified**: `sync/gmSecrets.ts`, `sync/tableReveals.ts`, `store/gmAccess.ts`, `features/cloud/HandoutsPanel.tsx`, `sync/__tests__/gmSecrets.test.ts`, `sync/__tests__/tableReveals.test.ts` (nuevos); `sync/tableSync.ts`, `sync/encounterSync.ts`, `store/encounterStore.ts`, `hooks/useDebouncedLocalStorage.ts`, `features/gm/FixerDeckView.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`, `features/netroles/NetAndRolesDeckView.tsx`, `features/combat/EncounterOrderStrip.tsx`, `features/combat/CombatHudView.tsx`, `features/cloud/CampaignPanel.tsx`, `firestore.rules` y sus tests, `sync/__tests__/sessionBudget.test.ts`, `store/persistence.ts`, `features/docs/SystemChangelogAndDocsView.tsx`.
+* **Verificación**: tsc, 456 tests, 36 tests de reglas y build. En el navegador, con el emulador y dos usuarios:
+  * La primera copia sube notas, PNJ y NET a la campaña, con aviso; la nota sigue ahí al recargar.
+  * El handout le llega al jugador.
+  * Enemigo revelado sin HP; al ocultarlo desaparece.
+  * El jugador ve los pisos 1 y 2 de la corrida con su DV; el documento no trae HP, ATK ni DEF del ICE.
+  * El jugador no entra al Fixer ni a Modo Master. Sin sesión, Modo Master pide el PIN, rechaza uno incorrecto y desbloquea también el Fixer.
+  * Arreglado en la prueba: el control de pisos del NET se veía siempre.
+
 ### [v5.2.0] - 2026-10-28 (El GM actúa sobre los PJ: daño, críticas, condiciones, Humanidad y €$) [Claude Code · 2026-10-28]
 * **Category**: Nube / combate (plan 20, `docs/plans/plan20-gm-actua-sobre-la-mesa.md`; primera mitad de la fase 3 del plan 16).
 * **Calculadora del GM** (`features/gm/GmTargetDialog.tsx`, nueva): botón "Daño" al lado de cada PJ en el orden de iniciativa y en la party (solo el GM de la mesa activa). Pestañas:

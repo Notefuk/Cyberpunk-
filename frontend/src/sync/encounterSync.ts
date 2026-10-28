@@ -13,6 +13,8 @@ import {
   useEncounterStore,
   computeOrder,
   pcCombatantId,
+  revealOf,
+  type RevealedEnemy,
   type EncounterCombatant,
   type EncounterData,
   type EncounterEnemy,
@@ -38,6 +40,8 @@ export interface PublicCombatant {
   threatTier?: string;
   charId?: string;
   ownerUid?: string;
+  /** v5.3.0 (plan 20, B.2): ficha pública de un enemigo que reveló el GM (sin HP). */
+  reveal?: RevealedEnemy;
 }
 
 export type CombatantColl = 'combatants' | 'gmCombatants';
@@ -83,6 +87,7 @@ export function toPublic(c: EncounterCombatant, ownerOf: (charId: string) => str
   if (c.enemy) {
     out.woundState = enemyWoundState(c.enemy);
     out.threatTier = c.enemy.threatTier;
+    if (c.revealed) out.reveal = revealOf(c.enemy);
   } else if (c.woundState) {
     out.woundState = c.woundState;
   }
@@ -100,6 +105,14 @@ export function parsePublic(data: Record<string, unknown>): PublicCombatant | nu
   if (typeof data.threatTier === 'string') out.threatTier = data.threatTier;
   if (typeof data.charId === 'string') out.charId = data.charId;
   if (typeof data.ownerUid === 'string') out.ownerUid = data.ownerUid;
+  const r = data.reveal as Record<string, unknown> | undefined;
+  if (r && typeof r === 'object' && typeof r.headSp === 'number' && typeof r.bodySp === 'number') {
+    const strs = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
+    out.reveal = { headSp: r.headSp, bodySp: r.bodySp, weapons: strs(r.weapons), specialRules: strs(r.specialRules) };
+    if (typeof r.subtitle === 'string') out.reveal.subtitle = r.subtitle;
+    if (typeof r.faction === 'string') out.reveal.faction = r.faction;
+    if (typeof r.threatTier === 'string') out.reveal.threatTier = r.threatTier;
+  }
   return out;
 }
 
@@ -120,7 +133,8 @@ export function publicToEncounter(head: EncounterHead | null, list: { id: string
     initiative: data.initiative,
     charId: data.charId,
     ownerUid: data.ownerUid,
-    woundState: data.woundState
+    woundState: data.woundState,
+    reveal: data.reveal
   }));
   const ids = new Set(combatants.map((c) => c.id));
   const known = (head?.order ?? []).filter((id) => ids.has(id));
@@ -228,7 +242,7 @@ export function createEncounterSync(opts: EncounterSyncOptions) {
       // Si este dispositivo no tiene encuentro, toma el de la nube (otro dispositivo del GM, o recargó).
       if (local.combatants.length === 0) {
         const data = publicToEncounter(head, publicList);
-        data.combatants = data.combatants.map((c) => (gm[c.id] ? { ...c, enemy: gm[c.id], woundState: undefined } : c));
+        data.combatants = data.combatants.map((c) => (gm[c.id] ? { ...c, enemy: gm[c.id], woundState: undefined, revealed: c.reveal ? true : undefined, reveal: undefined } : c));
         useEncounterStore.getState().applyRemote(data);
       } else {
         // Manda el encuentro local, pero los PJ que se sumaron solos desde su dispositivo se conservan.

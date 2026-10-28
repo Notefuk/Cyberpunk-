@@ -173,7 +173,18 @@ service cloud.firestore {
       }
 
       match /gm/{docId} {
-        allow read, write: if isGmOf(campId);
+        // v5.3.0 (plan 20, B.1): notas, NPCs propios y arquitecturas NET; forma, tamaño y 1 escritura/s. [Claude Code · 2026-10-28]
+        allow read, delete: if isGmOf(campId);
+        allow create, update: if isGmOf(campId)
+          && docId in ['notes', 'npcs', 'net']
+          && request.resource.data._ts == request.time
+          && (resource == null || request.time > resource.data._ts + duration.value(1, 's'))
+          && (docId != 'notes' || (request.resource.data.keys().hasOnly(['text', '_ts'])
+              && request.resource.data.text is string && request.resource.data.text.size() <= 100000))
+          && (docId != 'npcs' || (request.resource.data.keys().hasOnly(['items', '_ts'])
+              && request.resource.data.items is list && request.resource.data.items.size() <= 200))
+          && (docId != 'net' || (request.resource.data.keys().hasOnly(['items', '_ts'])
+              && request.resource.data.items is list && request.resource.data.items.size() <= 50));
       }
 
       // Log de la mesa (plan 19, punto 4): tiradas cortas, con su propio id, a nombre de quien las crea. [Claude Code · 2026-10-27]
@@ -193,6 +204,25 @@ service cloud.firestore {
           && (!('total' in request.resource.data) || request.resource.data.total is number);
         allow update: if false;
         allow delete: if isGmOf(campId);
+      }
+
+      // v5.3.0 (plan 20, B.2): lo que el GM revela a la mesa. Handouts (solo creación) y la corrida NET. [Claude Code · 2026-10-28]
+      match /reveals/{rid} {
+        allow read: if isMemberOf(campId);
+        allow delete: if isGmOf(campId);
+        allow create, update: if isGmOf(campId) && rid == 'net'
+          && request.resource.data.keys().hasOnly(['archName', 'totalFloors', 'currentFloor', 'floors', 'forCharId', '_ts'])
+          && request.resource.data.archName is string && request.resource.data.archName.size() <= 120
+          && request.resource.data.floors is list && request.resource.data.floors.size() <= 30
+          && request.resource.data._ts == request.time;
+        allow create: if isGmOf(campId) && rid != 'net'
+          && request.resource.data.keys().hasOnly(['id', 'kind', 'title', 'text', 'at', '_by'])
+          && request.resource.data.id == rid
+          && request.resource.data.kind == 'note'
+          && request.resource.data._by == uid()
+          && request.resource.data.at == request.time
+          && request.resource.data.title is string && request.resource.data.title.size() <= 80
+          && request.resource.data.text is string && request.resource.data.text.size() <= 2000;
       }
 
       // Encuentro compartido (plan 19, punto 3). [Claude Code · 2026-10-27]

@@ -269,8 +269,41 @@ describe('campañas', () => {
 
   it('los secretos del GM solo los ve el GM', async () => {
     await seed(['campaigns', 'camp1'], camp);
-    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/gm/notas'), { text: 'el Fixer los traiciona' }));
-    await assertFails(getDoc(doc(db('alice'), 'campaigns/camp1/gm/notas')));
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/gm/notes'), { text: 'el Fixer los traiciona', _ts: serverTimestamp() }));
+    await assertFails(getDoc(doc(db('alice'), 'campaigns/camp1/gm/notes')));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/gm/npcs'), { items: [], _ts: serverTimestamp() }));
+  });
+
+  // [Claude Code · 2026-10-28] v5.3.0 (plan 20, B.1): forma y tamaño de los secretos.
+  it('secretos del GM: solo notes/npcs/net, con su forma, tamaño y hora del servidor', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    const gm = db('gm');
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/otro'), { text: 'x', _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/notes'), { text: 'x'.repeat(100001), _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/notes'), { text: 'x', _ts: 5 }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/notes'), { text: 'x', extra: 1, _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/npcs'), { items: Array.from({ length: 201 }, (_, i) => ({ id: 'n' + i })), _ts: serverTimestamp() }));
+    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/npcs'), { items: [{ id: 'n1', name: 'Fixer' }], _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/net'), { items: Array.from({ length: 51 }, (_, i) => ({ id: 'a' + i })), _ts: serverTimestamp() }));
+    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/net'), { items: [], _ts: serverTimestamp() }));
+  });
+
+  // [Claude Code · 2026-10-28] v5.3.0 (plan 20, B.2): lo que revela el GM. La mesa lee; solo el GM escribe.
+  it('revelado: el GM manda handouts y la corrida NET; un jugador lee pero no escribe', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    const note = (id: string, by: string, over: Record<string, unknown> = {}) => ({ id, kind: 'note', title: 'Pista', text: 'La puerta está abierta', at: serverTimestamp(), _by: by, ...over });
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/h1'), note('h1', 'gm')));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/reveals/h2'), note('h2', 'alice')));
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/h3'), note('h3', 'gm', { text: 'x'.repeat(2001) })));
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/h4'), note('otro', 'gm')));
+    await assertFails(updateDoc(doc(db('gm'), 'campaigns/camp1/reveals/h1'), { text: 'cambiada' }));
+    await assertSucceeds(getDoc(doc(db('alice'), 'campaigns/camp1/reveals/h1')));
+    await assertFails(getDoc(doc(db('carol'), 'campaigns/camp1/reveals/h1')));
+    const net = { archName: 'Arasaka', totalFloors: 6, currentFloor: 2, floors: [{ floorNumber: 1, type: 'Password', name: 'Puerta', dv: 8 }], _ts: serverTimestamp() };
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/net'), net));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/reveals/net'), net));
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/net'), { ...net, secreto: 'ICE HP 20' }));
+    await assertSucceeds(getDoc(doc(db('alice'), 'campaigns/camp1/reveals/net')));
   });
 
   // [Claude Code · 2026-10-27] v5.1.0 (plan 19): forma fija del log (id propio, hora del servidor, tamaños).

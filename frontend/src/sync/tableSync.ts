@@ -15,6 +15,8 @@ import { createEncounterRepo, createTableLogRepo } from './encounterRepo';
 import { createTableLogPublisher, gmActionToLog, useTableLog, TABLE_LOG_KEEP, type TableLogPublisher } from './tableLog';
 import type { DeathSaveResult } from '../engine/characterEngine';
 import { createEncounterSync, type EncounterAdapter, type EncounterSync } from './encounterSync';
+import { startGmSecrets, stopGmSecrets, createGmSecretsRepo, GM_SECRET_LOCAL_KEYS, type GmSecretKind } from './gmSecrets';
+import { createTableRevealsRepo, useTableReveals } from './tableReveals';
 
 export interface ActiveTable {
   table: CampaignDoc | null;
@@ -106,14 +108,27 @@ export function getEncounterSync(): EncounterSync | null {
   return encounterSync;
 }
 
+/** Lo que el GM tiene en este dispositivo, para la primera copia a la campaña (v5.3.0, plan 20). */
+function readLocalSecret(kind: GmSecretKind): unknown {
+  try {
+    const raw = localStorage.getItem(GM_SECRET_LOCAL_KEYS[kind]);
+    if (kind === 'notes') return raw ?? '';
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return kind === 'notes' ? '' : [];
+  }
+}
+
 function stopEncounterSync(): void {
   encounterSession += 1;
+  stopGmSecrets();
   encounterSync?.stop();
   encounterSync = null;
   for (const u of logUnsubs.splice(0)) u();
   logPublisher?.flush();
   logPublisher = null;
   useTableLog.getState().set([]);
+  useTableReveals.setState({ handouts: [], net: null, adapter: null });
 }
 
 function whoAmI(uid: string) {
@@ -211,6 +226,21 @@ function startEncounterSync(campId: string, isGm: boolean): void {
     encounterSync = sync;
     sync.start();
     startTableLog(h, campId, isGm, uid, onListenError);
+    // v5.3.0 (plan 20, B.2): handouts y corrida NET que revela el GM (los lee toda la mesa). [Claude Code · 2026-10-28]
+    const reveals = createTableRevealsRepo(h, campId, uid);
+    useTableReveals.setState({ adapter: reveals });
+    logUnsubs.push(reveals.subscribeHandouts((handouts) => useTableReveals.setState({ handouts }), (e) => console.warn('[mesa] revelado:', e)));
+    logUnsubs.push(reveals.subscribeNet((net) => useTableReveals.setState({ net }), (e) => console.warn('[mesa] NET revelado:', e)));
+    // v5.3.0 (plan 20, B.1): secretos del GM de esta campaña. [Claude Code · 2026-10-28]
+    if (isGm) {
+      startGmSecrets({
+        campId,
+        campName: getActiveTable().table?.name ?? '',
+        adapter: createGmSecretsRepo(h, campId),
+        readLocal: readLocalSecret,
+        onError: (e) => console.warn('[mesa] secretos del GM:', e),
+      });
+    }
   }).catch((e) => console.warn('[mesa] no se pudo abrir el encuentro compartido:', e));
 }
 

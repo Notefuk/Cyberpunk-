@@ -48,6 +48,35 @@ export interface EncounterCombatant {
   enemy?: EncounterEnemy;
   /** Vista pública de la mesa (lo que ve el jugador de un enemigo, sin HP). Plan 19, punto 3. */
   woundState?: WoundState;
+  /** v5.3.0 (plan 20, B.2): el GM reveló la ficha pública de este enemigo. [Claude Code · 2026-10-28] */
+  revealed?: boolean;
+  /** Lo que ve el jugador de un enemigo revelado (nunca los HP). */
+  reveal?: RevealedEnemy;
+}
+
+export interface RevealedEnemy {
+  subtitle?: string;
+  faction?: string;
+  threatTier?: string;
+  headSp: number;
+  bodySp: number;
+  weapons: string[];
+  specialRules: string[];
+}
+
+/** Ficha pública de un enemigo para la mesa: sin HP ni stats (plan 20, decisión 4). */
+export function revealOf(e: EncounterEnemy): RevealedEnemy {
+  const cut = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
+  const out: RevealedEnemy = {
+    headSp: e.currentHeadSp,
+    bodySp: e.currentBodySp,
+    weapons: e.weapons.slice(0, 8).map((w) => cut(`${w.name} (${w.damage})`, 80)),
+    specialRules: e.specialRules.slice(0, 6).map((r) => cut(r, 240))
+  };
+  if (e.subtitle) out.subtitle = cut(e.subtitle, 120);
+  if (e.faction) out.faction = cut(e.faction, 80);
+  if (e.threatTier) out.threatTier = e.threatTier;
+  return out;
 }
 
 export type WoundState = 'none' | 'light' | 'serious' | 'mortal';
@@ -88,6 +117,8 @@ interface EncounterState extends EncounterData {
   repairEnemySp: (id: string) => void;
   applyEnemyDamage: (id: string, damage: number, location: 'head' | 'body') => EnemyDamageResult | null;
   remove: (id: string) => void;
+  /** v5.3.0 (plan 20): revela u oculta la ficha pública de un enemigo. */
+  setRevealed: (id: string, on: boolean) => void;
   clearEnemies: () => void;
   nextTurn: () => void;
   nextRound: () => void;
@@ -297,6 +328,10 @@ export const useEncounterStore = create<EncounterState>()(
       },
 
       remove: (id) => set((s) => withCombatants(s, s.combatants.filter((c) => c.id !== id))),
+
+      setRevealed: (id, on) => set((s) => ({
+        combatants: s.combatants.map((c) => (c.id === id && c.kind === 'enemy' ? { ...c, revealed: on || undefined } : c))
+      })),
 
       clearEnemies: () => set((s) => withCombatants(s, s.combatants.filter((c) => c.kind !== 'enemy'))),
 

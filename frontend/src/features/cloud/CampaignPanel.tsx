@@ -6,6 +6,7 @@ import { useCloudState } from '../../sync/cloudState';
 import { getCampaignController } from '../../sync/cloudCharacters';
 import { useActiveTable } from '../../sync/tableSync';
 import { TableLogPanel } from './TableLogPanel';
+import { HandoutsPanel } from './HandoutsPanel';
 import { GmTargetDialog } from '../gm/GmTargetDialog';
 import { buildInviteLink, type CampaignDoc } from '../../sync/campaignRepo';
 import { clearPendingInvite, readPendingInvite } from '../../sync/inviteLink';
@@ -309,6 +310,7 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
         )}
       </div>
 
+      {isActiveTable && <HandoutsPanel />}
       {isActiveTable && <TableLogPanel />}
       {targetCharId && <GmTargetDialog charId={targetCharId} onClose={() => setTargetCharId(null)} />}
 
