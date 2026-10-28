@@ -28,6 +28,7 @@ import type { DeathSaveResult } from '../engine/characterEngine';
 import { rollCriticalInjury, HEAD_CRITICAL_INJURIES, BODY_CRITICAL_INJURIES } from '../data/criticalInjuries';
 import { rollCemkCriticalInjury, findCemkCriticalInjury } from '../engine/medicalRules';
 import type { CritTable } from '../engine/medicalRules';
+import type { ImpactEffects } from '../engine/combatEngine';
 import { useRulesSettingsStore } from './rulesSettingsStore';
 import {
   PREGEN_TEMPLATES,
@@ -404,6 +405,13 @@ export interface CharacterStoreState {
   expireQuickFixes: (day: number, onlyIds?: string[]) => void;
   stabilizeCharacter: (characterId: string, opts: { wasMortallyWounded: boolean }) => void;
   adjustHpFor: (characterId: string, delta: number) => void;
+  // v5.2.0 (plan 20) [Claude Code · 2026-10-28] Para que el GM actúe sobre la ficha de un PJ.
+  ablateArmorFor: (characterId: string, location: 'head' | 'body', amount?: number) => void;
+  adjustHumanityFor: (characterId: string, delta: number) => void;
+  addDeathSavePenaltyFor: (characterId: string, amount: number) => void;
+  inflictRandomInjuryFor: (characterId: string, location: 'head' | 'body') => ActiveCriticalInjury | null;
+  /** Aplica los efectos de un impacto (planImpactEffects) y devuelve las heridas críticas que salieron. */
+  applyImpactTo: (characterId: string, effects: ImpactEffects) => ActiveCriticalInjury[];
   spendEurodollarsFor: (characterId: string, amount: number, reason: string) => boolean;
   toggleTreatInjury: (injuryId: string) => void;
   removeInjury: (injuryId: string) => void;
@@ -749,9 +757,13 @@ export const useCharacterStore = create<CharacterStoreState>()(
       },
 
       addDeathSavePenalty: (amount: number) => {
+        get().addDeathSavePenaltyFor(get().activeCharacterId, amount);
+      },
+
+      addDeathSavePenaltyFor: (characterId, amount) => {
         set(state => ({
           characters: state.characters.map(char =>
-            char.id === state.activeCharacterId
+            char.id === characterId
               ? { ...char, deathSavePenalty: Math.max(0, (char.deathSavePenalty ?? 0) + amount) }
               : char
           )
@@ -767,9 +779,13 @@ export const useCharacterStore = create<CharacterStoreState>()(
       },
 
       ablateArmor: (location: 'head' | 'body', amount = 1) => {
+        get().ablateArmorFor(get().activeCharacterId, location, amount);
+      },
+
+      ablateArmorFor: (characterId, location, amount = 1) => {
         set(state => ({
           characters: state.characters.map(char => {
-            if (char.id !== state.activeCharacterId) return char;
+            if (char.id !== characterId) return char;
             if (location === 'head') {
               return {
                 ...char,
@@ -1670,9 +1686,13 @@ export const useCharacterStore = create<CharacterStoreState>()(
       },
 
       adjustHumanity: (delta: number) => {
+        get().adjustHumanityFor(get().activeCharacterId, delta);
+      },
+
+      adjustHumanityFor: (characterId, delta) => {
         set((state) => ({
           characters: state.characters.map((c) => {
-            if (c.id !== state.activeCharacterId) return c;
+            if (c.id !== characterId) return c;
             return {
               ...c,
               currentHumanity: gainHumanityCapped(c, delta)
@@ -1681,8 +1701,10 @@ export const useCharacterStore = create<CharacterStoreState>()(
         }));
       },
 
-      inflictRandomInjury: (location: 'head' | 'body') => {
-        const active = get().characters.find(c => c.id === get().activeCharacterId);
+      inflictRandomInjury: (location: 'head' | 'body') => get().inflictRandomInjuryFor(get().activeCharacterId, location),
+
+      inflictRandomInjuryFor: (characterId, location) => {
+        const active = get().characters.find(c => c.id === characterId);
         const currentNames = (active?.activeInjuries ?? []).filter(i => !i.isTreated).map(i => i.name);
         const useCemk = useRulesSettingsStore.getState().criticalTable === 'cemk';
         const newInjury: ActiveCriticalInjury = useCemk
@@ -1699,7 +1721,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
 
         set(state => ({
           characters: state.characters.map(c =>
-            c.id === state.activeCharacterId
+            c.id === characterId
               ? {
                   ...c,
                   activeInjuries: [...c.activeInjuries, newInjury]
@@ -1709,6 +1731,29 @@ export const useCharacterStore = create<CharacterStoreState>()(
         }));
 
         return newInjury;
+      },
+
+      // Mismo orden que el HUD: ablación, HP, crítica (Core p. 187) y la de Mortally Wounded (Core p. 188).
+      applyImpactTo: (characterId, effects) => {
+        const st = get();
+        const injuries: ActiveCriticalInjury[] = [];
+        if (effects.ablation) st.ablateArmorFor(characterId, effects.ablation.location, effects.ablation.amount);
+        if (effects.hpLoss > 0) st.adjustHpFor(characterId, -effects.hpLoss);
+        if (effects.critical) {
+          const injury = st.inflictRandomInjuryFor(characterId, effects.critical.location);
+          if (injury) injuries.push(injury);
+          // Going Metal p. 94: un FBC inmune a la herida crítica también ignora el daño extra (+5).
+          const target = get().characters.find(c => c.id === characterId);
+          if (!injury && target?.fbcState?.isFullBodyConversion && effects.critical.fbcRefund > 0) {
+            st.adjustHpFor(characterId, effects.critical.fbcRefund);
+          }
+        }
+        if (effects.mortalCritical) {
+          const injury = st.inflictRandomInjuryFor(characterId, effects.mortalCritical.location);
+          if (injury) injuries.push(injury);
+          st.addDeathSavePenaltyFor(characterId, 1);
+        }
+        return injuries;
       },
 
       inflictSpecificInjury: (characterId, location, name, table) => {

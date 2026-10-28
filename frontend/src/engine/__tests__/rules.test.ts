@@ -17,7 +17,7 @@ import {
   getEffectiveMove
 } from '../characterEngine';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT, SHARED_MARTIAL_ARTS_MOVES } from '../../data/cyberfistsMartialArtsData';
-import { beatsDv, calculateIncomingImpact, createDamageRoll, rollCheckD10 } from '../combatEngine';
+import { beatsDv, calculateIncomingImpact, createDamageRoll, planImpactEffects, rollCheckD10 } from '../combatEngine';
 import { BLACK_ICE_STATS, NET_ACTIONS_PER_TURN, QUICKHACKS_2077_CATALOG } from '../../data/netAndRolesData';
 import { BODY_CRITICAL_INJURIES, HEAD_CRITICAL_INJURIES, rollCriticalInjury } from '../../data/criticalInjuries';
 import { CEMK_WEAPON_REBUILD_SYSTEM_GUIDE } from '../../data/weaponAndCyberwareTooltips';
@@ -117,6 +117,18 @@ describe('Daño y críticos (Core pp. 186-188)', () => {
     expect(calculateIncomingImpact({ ...base, damage: 10, isCritical: false }).hpLoss).toBe(6);
     expect(calculateIncomingImpact({ ...base, damage: 10, isCritical: false, hasCrackedSkull: true }).hpLoss).toBe(9);
     expect(calculateIncomingImpact({ ...base, damage: 5, isCritical: true }).hpLoss).toBe(5);
+  });
+  // v5.2.0 (plan 20): efectos sobre la ficha, iguales en el HUD y en la calculadora del GM. [Claude Code · 2026-10-28]
+  it('efectos: ablación, HP, crítica aunque no atraviese y Mortally Wounded (Core pp. 186-188)', () => {
+    const base = { location: 'body' as const, isCritical: false, passExcess: true, headSp: 11, bodySp: 11, shieldSdp: 0, attackType: 'standard' as const };
+    const hit = { ...base, damage: 15 };
+    const r = calculateIncomingImpact(hit);
+    expect(planImpactEffects(hit, r, r.hpLoss, false)).toEqual({ ablation: { location: 'body', amount: 1 }, hpLoss: 4, critical: null, mortalCritical: null });
+    const crit = { ...base, damage: 5, isCritical: true };
+    const rc = calculateIncomingImpact(crit);
+    expect(planImpactEffects(crit, rc, rc.hpLoss, false)).toMatchObject({ ablation: null, hpLoss: 5, critical: { location: 'body', fbcRefund: 5 } });
+    expect(planImpactEffects(hit, r, r.hpLoss, true).mortalCritical).toEqual({ location: 'body' });
+    expect(planImpactEffects({ ...hit, attackType: 'direct' }, r, r.hpLoss, true).mortalCritical).toBeNull();
   });
 });
 

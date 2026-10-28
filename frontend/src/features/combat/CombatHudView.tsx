@@ -31,9 +31,11 @@ import {
   createInitialAttackRoll, 
   createDamageRoll,
   calculateIncomingImpact,
+  planImpactEffects,
   beatsDv,
   AIMED_SHOT_OPTIONS
 } from '../../engine/combatEngine';
+import type { IncomingImpactInput } from '../../engine/combatEngine';
 import { applyDamageDeflection, spotWeaknessBonus, rollInitiative, rollPerception } from '../../engine/combatAwareness';
 import { getInterfaceRank, netActionsForInterface, maxQuickhackDv, neuroportFirewallDv, canUseQuickhacks, jackInRangeM } from '../../engine/roleRules';
 import { GameClockBar } from './GameClockBar';
@@ -841,7 +843,7 @@ export const CombatHudView: React.FC = () => {
   const addConsumableCharge = useCharacterStore((state) => state.addConsumableCharge);
   const inflictRandomInjury = useCharacterStore((state) => state.inflictRandomInjury);
   const rollDeathSave = useCharacterStore((state) => state.rollDeathSave);
-  const addDeathSavePenalty = useCharacterStore((state) => state.addDeathSavePenalty);
+  const applyImpactTo = useCharacterStore((state) => state.applyImpactTo);
   const setDead = useCharacterStore((state) => state.setDead);
   const toggleTreatInjury = useCharacterStore((state) => state.toggleTreatInjury);
   const removeInjury = useCharacterStore((state) => state.removeInjury);
@@ -1764,6 +1766,19 @@ export const CombatHudView: React.FC = () => {
   };
 
   // Calculation variables for Interactive Damage Calculator
+  const calcImpactInput: IncomingImpactInput = {
+    damage: incomingDamageInput,
+    location: calcLocation,
+    attackType: calcAttackType,
+    isCritical: calcIsCritical,
+    passExcess: calcPassExcess,
+    headSp: activeChar?.headArmor?.currentSp ?? 0,
+    bodySp: activeChar?.bodyArmor?.currentSp ?? 0,
+    shieldSdp: shieldCover.currentSdp,
+    // Core p. 188: con Cracked Skull los Ataques Apuntados a la cabeza multiplican x3 en vez de x2.
+    hasCrackedSkull: (activeChar?.activeInjuries ?? []).some(inj => !inj.isTreated && inj.name.includes('Cracked Skull'))
+  };
+  const calcImpactResult = calculateIncomingImpact(calcImpactInput);
   const {
     effectiveSp: calcEffectiveSp,
     penetratingDamage: calcPenetratingDamage,
@@ -1775,18 +1790,7 @@ export const CombatHudView: React.FC = () => {
     excessEffectiveSp: calcExcessEffectiveSp,
     excessSpAblation: calcExcessSpAblation,
     excessHpLoss: calcExcessHpLoss
-  } = calculateIncomingImpact({
-    damage: incomingDamageInput,
-    location: calcLocation,
-    attackType: calcAttackType,
-    isCritical: calcIsCritical,
-    passExcess: calcPassExcess,
-    headSp: activeChar?.headArmor?.currentSp ?? 0,
-    bodySp: activeChar?.bodyArmor?.currentSp ?? 0,
-    shieldSdp: shieldCover.currentSdp,
-    // Core p. 188: con Cracked Skull los Ataques Apuntados a la cabeza multiplican x3 en vez de x2.
-    hasCrackedSkull: (activeChar?.activeInjuries ?? []).some(inj => !inj.isTreated && inj.name.includes('Cracked Skull'))
-  });
+  } = calcImpactResult;
 
   let calcExplanation = '';
   if (calcLocation === 'shield') {
@@ -1819,40 +1823,13 @@ export const CombatHudView: React.FC = () => {
     if (incomingHpLoss > 0) {
       markDamageTaken();
     }
-    const critLocation: 'head' | 'body' = calcLocation === 'head' ? 'head' : 'body';
-    if (calcLocation === 'shield') {
-      if (calcShieldLoss > 0) {
-        setShieldSdp(calcNewShieldSdp);
-      }
-      if (calcExcessDamage > 0 && calcPassExcess) {
-        if (calcExcessSpAblation > 0) {
-          ablateArmor('body', calcExcessSpAblation);
-        }
-        if (appliedHpLoss > 0) {
-          adjustHp(-appliedHpLoss);
-        }
-      }
-    } else {
-      if (calcSpAblation > 0) {
-        ablateArmor(calcLocation, calcSpAblation);
-      }
-      if (appliedHpLoss > 0) {
-        adjustHp(-appliedHpLoss);
-      }
+    if (calcLocation === 'shield' && calcShieldLoss > 0) {
+      setShieldSdp(calcNewShieldSdp);
     }
-
-    // Core p. 187: con dos o más 6 se sufre la Herida Crítica aunque el daño no atraviese el SP.
-    if (calcIsCritical && (calcLocation !== 'shield' || calcExcessDamage > 0)) {
-      const injury = inflictRandomInjury(critLocation);
-      // Going Metal p. 94: un FBC inmune a la herida crítica también ignora el daño extra (+5).
-      if (injury === null && activeChar?.fbcState?.isFullBodyConversion && calcLocation !== 'shield' && calcHpLoss > 0) {
-        adjustHp(Math.min(5, calcHpLoss));
-      }
-    }
-    // Core p. 188: Mortally Wounded sufre una Herida Crítica por cada ataque que le hace daño y su Death Save Penalty sube 1.
-    if (wasMortallyWounded && calcAttackType !== 'direct' && appliedHpLoss > 0) {
-      inflictRandomInjury(critLocation);
-      addDeathSavePenalty(1);
+    // v5.2.0 (plan 20): ablación, HP, crítica (Core p. 187), FBC (Going Metal p. 94) y Mortally Wounded (Core p. 188)
+    // salen del motor, igual que cuando el GM daña a un PJ. [Claude Code · 2026-10-28]
+    if (activeChar) {
+      applyImpactTo(activeChar.id, planImpactEffects(calcImpactInput, calcImpactResult, appliedHpLoss, wasMortallyWounded));
     }
 
     const entry: RollEntry = {

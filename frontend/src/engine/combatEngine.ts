@@ -354,6 +354,43 @@ export function calculateIncomingImpact(input: IncomingImpactInput): IncomingImp
   };
 }
 
+// v5.2.0 (plan 20) [Claude Code · 2026-10-28]: qué hacerle a la ficha con un impacto ya calculado,
+// para usarlo igual en el HUD y cuando el GM daña a un PJ. El escudo (SDP) y Damage Deflection quedan afuera:
+// `appliedHpLoss` ya viene con la deflexión aplicada.
+export interface ImpactEffects {
+  ablation: { location: 'head' | 'body'; amount: number } | null;
+  hpLoss: number;
+  /** Core p. 187: dos o más 6 = Herida Crítica aunque no atraviese el SP. fbcRefund: Going Metal p. 94. */
+  critical: { location: 'head' | 'body'; fbcRefund: number } | null;
+  /** Core p. 188: Mortally Wounded sufre una Herida Crítica por cada ataque que le hace daño (+1 al Death Save Penalty). */
+  mortalCritical: { location: 'head' | 'body' } | null;
+}
+
+export function planImpactEffects(
+  input: IncomingImpactInput,
+  result: IncomingImpactResult,
+  appliedHpLoss: number,
+  wasMortallyWounded: boolean
+): ImpactEffects {
+  const location: 'head' | 'body' = input.location === 'head' ? 'head' : 'body';
+  let ablation: ImpactEffects['ablation'] = null;
+  let hpLoss = 0;
+  if (input.location === 'shield') {
+    if (result.excessDamage > 0 && input.passExcess) {
+      if (result.excessSpAblation > 0) ablation = { location: 'body', amount: result.excessSpAblation };
+      hpLoss = Math.max(0, appliedHpLoss);
+    }
+  } else {
+    if (result.spAblation > 0) ablation = { location, amount: result.spAblation };
+    hpLoss = Math.max(0, appliedHpLoss);
+  }
+  const critical = input.isCritical && (input.location !== 'shield' || result.excessDamage > 0)
+    ? { location, fbcRefund: input.location !== 'shield' && result.hpLoss > 0 ? Math.min(5, result.hpLoss) : 0 }
+    : null;
+  const mortalCritical = wasMortallyWounded && input.attackType !== 'direct' && appliedHpLoss > 0 ? { location } : null;
+  return { ablation, hpLoss, critical, mortalCritical };
+}
+
 // ============================================================================
 // Checks de Skill e Interface contra DV (Core p. 130, CEMK p. 5)
 // ============================================================================
