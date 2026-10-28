@@ -2,6 +2,7 @@
 // Daño con la armadura del jugador (SP, ablación, cabeza x2, crítica), heridas críticas, condiciones, Humanidad y €$.
 // La ficha del jugador ya está en useCharacterStore (la party la carga) y se sincroniza sola; cada acción va al log de la mesa.
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useEncounterStore } from '../../store/encounterStore';
@@ -230,7 +231,8 @@ export const GmTargetDialog: React.FC<{ charId: string; onClose: () => void }> =
   );
 };
 
-const Shell: React.FC<{ title: string; onClose: () => void; children: React.ReactNode }> = ({ title, onClose, children }) => (
+// En un portal: las tarjetas con chamfer recortan lo que tienen adentro, incluso lo `fixed`.
+const Shell: React.FC<{ title: string; onClose: () => void; children: React.ReactNode }> = ({ title, onClose, children }) => createPortal(
   <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={onClose}>
     <div role="dialog" aria-label={title} className="chamfer-card bg-[#12141f] border border-amber-500/40 p-3 w-full max-w-xl space-y-3 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
       <div className="flex items-center gap-2">
@@ -239,5 +241,6 @@ const Shell: React.FC<{ title: string; onClose: () => void; children: React.Reac
       </div>
       {children}
     </div>
-  </div>
+  </div>,
+  document.body
 );
