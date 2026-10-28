@@ -3,6 +3,26 @@ import { persist } from 'zustand/middleware';
 import type { SpeedhealUse } from '../engine/roleRules';
 import { useCharacterStore } from './useCharacterStore';
 import { archiveSpeedhealEntries } from './persistence';
+import { useCloudState } from '../sync/cloudState';
+
+/**
+ * v5.1.0 (plan 19, punto 1) [Claude Code · 2026-10-27]: con mesa activa, el reloj es de la campaña.
+ * Los efectos del reloj (Quick Fix, fin de sesión) se aplican solo a las fichas propias de este dispositivo:
+ * las de los jugadores que ve el GM las actualiza el dispositivo de cada jugador.
+ */
+export function ownCharacterIds(): string[] {
+  const owners = useCloudState.getState().playerOwners;
+  return useCharacterStore.getState().characters.map((c) => c.id).filter((id) => owners[id] === undefined);
+}
+
+export interface ClockValue { session: number; day: number; beat: number }
+
+/** Lo registra el puente de la mesa (sync/tableSync.ts): publica el reloj en la campaña si soy el GM. */
+let clockPublisher: ((clock: ClockValue) => void) | null = null;
+export function setClockPublisher(fn: ((clock: ClockValue) => void) | null): void {
+  clockPublisher = fn;
+}
+const publish = (s: ClockValue) => clockPublisher?.({ session: s.session, day: s.day, beat: s.beat });
 
 // v4.9.7 [Claude Code · 2026-10-24]: freno lejano al registro de Speedheal; lo más viejo pasa a la copia de seguridad.
 export const SPEEDHEAL_LOG_MAX = 500;
@@ -30,18 +50,23 @@ export const useGameClockStore = create<GameClockState>()(
       session: 1,
       speedhealLog: [],
 
-      newBeat: () => set((s) => ({ beat: s.beat + 1 })),
+      newBeat: () => {
+        set((s) => ({ beat: s.beat + 1 }));
+        publish(get());
+      },
 
       newDay: () => {
         const nextDay = get().day + 1;
         set({ day: nextDay, beat: 1 });
-        useCharacterStore.getState().expireQuickFixes(nextDay);
+        useCharacterStore.getState().expireQuickFixes(nextDay, ownCharacterIds());
+        publish(get());
       },
 
       // Core p.154: fin de sesión = tope de Loyalty 10 y renuncias de Team Members con Loyalty < 0.
       endSession: () => {
-        const summary = useCharacterStore.getState().applyEndOfSessionToAll();
+        const summary = useCharacterStore.getState().applyEndOfSessionToAll(ownCharacterIds());
         set((s) => ({ session: s.session + 1 }));
+        publish(get());
         return summary;
       },
 

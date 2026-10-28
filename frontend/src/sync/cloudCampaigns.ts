@@ -2,7 +2,7 @@
 // Escucha mis campañas y sus resúmenes de party, carga en el dispositivo del GM las fichas de sus jugadores
 // (editables, decisión 1 del plan 18) y escribe el resumen de party cuando una ficha cambia en este dispositivo.
 import type { CharacterSheet } from '../types/cyberpunk';
-import type { CampaignDoc, CampaignRepo } from './campaignRepo';
+import type { CampaignDoc, CampaignRepo, TableClock, TableEra } from './campaignRepo';
 import { buildPartySummary, parsePartySummary, sameSummary, type PartySummary } from './partySummary';
 import { useCloudState } from './cloudState';
 
@@ -150,10 +150,11 @@ export function createCampaignController(host: CampaignHost) {
         // Una campaña recién creada todavía puede no estar en el servidor (la lista sale del caché con la
         // escritura pendiente): la regla falla y el listener muere. Se reintenta unas veces.
         (e) => {
-          console.error('[nube] error escuchando la party', c.id, e);
           partyUnsubs.delete(c.id);
           const n = (partyRetries.get(c.id) ?? 0) + 1;
           partyRetries.set(c.id, n);
+          // Los reintentos son normales al crear una campaña: aviso; solo el último fallo es error. [Claude Code · 2026-10-27]
+          (n <= PARTY_MAX_RETRIES ? console.warn : console.error)('[nube] error escuchando la party', c.id, e);
           if (n <= PARTY_MAX_RETRIES) setTimeout(() => { if (!stopped) syncPartySubs(cs().campaigns); }, PARTY_RETRY_MS);
         },
       ));
@@ -276,6 +277,15 @@ export function createCampaignController(host: CampaignHost) {
 
     async regenerateInvite(campId: string): Promise<void> {
       await repo.regenerateInvite(campId);
+    },
+
+    // v5.1.0 (plan 19, punto 1): reloj y era de la mesa, solo el GM. [Claude Code · 2026-10-27]
+    async setTableClock(campId: string, clock: TableClock): Promise<void> {
+      await repo.setTableClock(campId, clock);
+    },
+
+    async setTableEra(campId: string, era: TableEra): Promise<void> {
+      await repo.setTableEra(campId, era);
     },
   };
 }

@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
+import { useEncounterStore, encounterEnemies, type EncounterEnemy } from '../../store/encounterStore';
 import { 
   ENEMIES_CATALOG, 
   DANGER_GAL_15_FACTIONS,
@@ -33,27 +34,8 @@ import {
   Wrench
 } from 'lucide-react';
 
-export interface ActiveEncounterEnemy {
-  instanceId: string;
-  catalogId: string;
-  name: string;
-  subtitle: string;
-  faction: string;
-  threatTier: ThreatTier;
-  era: CharacterEra;
-  role: string;
-  currentHp: number;
-  maxHp: number;
-  currentHeadSp: number;
-  maxHeadSp: number;
-  currentBodySp: number;
-  maxBodySp: number;
-  initiative: number | null;
-  stats: Record<StatKey, number>;
-  weapons: EnemyWeaponProfile[];
-  combatBases: EnemyCombatBase[];
-  specialRules: string[];
-}
+// v5.1.0 [Claude Code · 2026-10-27]: el encuentro vive en store/encounterStore.ts.
+export type ActiveEncounterEnemy = EncounterEnemy;
 
 export interface GmRollResult {
   actorName: string;
@@ -67,8 +49,6 @@ export interface GmRollResult {
   notes?: string;
   timestamp: string;
 }
-
-const STORAGE_KEY = 'cpr_active_encounter_v1';
 
 const THREAT_TIER_CONFIG: Record<ThreatTier, { label: string; badgeClass: string; borderClass: string }> = {
   mook: {
@@ -150,7 +130,8 @@ function rollFormula(formula: string): { diceResults: number[]; total: number } 
 }
 
 interface EnemiesCompendiumPanelProps {
-  onSpawnToInitiative?: (enemy: EnemySheet) => void;
+  /** v5.1.0 [Claude Code · 2026-10-27]: el Fixer tira la iniciativa (1d10 + REF) de cada enemigo al agregarlo. */
+  autoRollInitiative?: boolean;
 }
 
 const ENEMY_SHEET_MODE_KEY = 'cpr_enemy_sheet_mode_v1';
@@ -257,23 +238,13 @@ const EnemyPortView: React.FC<{ enemy: EnemySheet; mode: EnemySheetMode }> = ({ 
   );
 };
 
-export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ onSpawnToInitiative }) => {
+export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ autoRollInitiative }) => {
   // Store hook to import character into active roster
   const createCharacterFromWizard = useCharacterStore((state) => state.createCharacterFromWizard);
 
-  // Active encounter enemies state with local persistence
-  const [activeEnemies, setActiveEnemies] = useState<ActiveEncounterEnemy[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Failed to load active encounter:', e);
-    }
-    return [];
-  });
-
-  // v4.9.7 [Claude Code · 2026-10-24] Guardado agrupado en localStorage (plan17).
-  useDebouncedLocalStorage(STORAGE_KEY, activeEnemies);
+  // v5.1.0 [Claude Code · 2026-10-27]: encuentro unificado en useEncounterStore.
+  const combatants = useEncounterStore((s) => s.combatants);
+  const activeEnemies = useMemo(() => encounterEnemies({ combatants }), [combatants]);
 
   // Filter states
   const [sheetMode, setSheetModeState] = useState<EnemySheetMode>(() => {
@@ -461,50 +432,22 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
   // SPAWN LOGIC
   // --------------------------------------------------------------------------
   const spawnEnemy = (enemy: EnemySheet, count = 1) => {
-    const newItems: ActiveEncounterEnemy[] = [];
-    for (let i = 0; i < count; i++) {
-      const suffix = count > 1 ? ` #${i + 1}` : '';
-      newItems.push({
-        instanceId: `enc-${enemy.id}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-        catalogId: enemy.id,
-        name: `${enemy.name}${suffix}`,
-        subtitle: enemy.subtitle,
-        faction: enemy.faction,
-        threatTier: enemy.threatTier,
-        era: enemy.era,
-        role: enemy.role,
-        currentHp: enemy.hp,
-        maxHp: enemy.hp,
-        currentHeadSp: enemy.headSp,
-        maxHeadSp: enemy.headSp,
-        currentBodySp: enemy.bodySp,
-        maxBodySp: enemy.bodySp,
-        initiative: null,
-        stats: { ...enemy.stats },
-        weapons: [...enemy.weapons],
-        combatBases: [...enemy.combatBases],
-        specialRules: [...enemy.specialRules]
-      });
-    }
-
-    setActiveEnemies((prev) => [...prev, ...newItems]);
+    const ids = useEncounterStore.getState().addEnemyFromCatalog(enemy, count);
     setIsEncounterSectionOpen(true);
     showFeedback(`⚔️ Añadido(s) ${count}x "${enemy.name}" al Encuentro Activo.`);
 
-    if (onSpawnToInitiative) {
-      for (let i = 0; i < count; i++) {
-        onSpawnToInitiative(enemy);
-      }
+    if (autoRollInitiative) {
+      for (const id of ids) useEncounterStore.getState().setInitiative(id, rollD10() + (enemy.stats.REF ?? 6));
     }
   };
 
   const removeActiveEnemy = (instanceId: string) => {
-    setActiveEnemies((prev) => prev.filter((e) => e.instanceId !== instanceId));
+    useEncounterStore.getState().remove(instanceId);
   };
 
   const clearAllActiveEnemies = () => {
     if (window.confirm('¿Seguro que deseas vaciar todos los enemigos del encuentro activo?')) {
-      setActiveEnemies([]);
+      useEncounterStore.getState().clearEnemies();
       showFeedback('🗑️ Encuentro activo vaciado.');
     }
   };
@@ -518,9 +461,7 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
     const ref = target.stats.REF ?? 6;
     const initTotal = d10 + ref;
 
-    setActiveEnemies((prev) =>
-      prev.map((e) => (e.instanceId === instanceId ? { ...e, initiative: initTotal } : e))
-    );
+    useEncounterStore.getState().setInitiative(instanceId, initTotal);
 
     setLastGmRoll({
       actorName: target.name,
@@ -535,14 +476,9 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
   };
 
   const rollAllInitiatives = () => {
-    const updated = activeEnemies.map((e) => {
-      const d10 = rollD10();
-      const ref = e.stats.REF ?? 6;
-      return { ...e, initiative: d10 + ref };
+    activeEnemies.forEach((e) => {
+      useEncounterStore.getState().setInitiative(e.instanceId, rollD10() + (e.stats.REF ?? 6));
     });
-    // Sort descending
-    updated.sort((a, b) => (b.initiative ?? 0) - (a.initiative ?? 0));
-    setActiveEnemies(updated);
     showFeedback('🎲 Iniciativa tirada para todos los enemigos activos.');
   };
 
@@ -597,26 +533,11 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
   // HP & SP ABLATION
   // --------------------------------------------------------------------------
   const adjustEnemyHp = (instanceId: string, delta: number) => {
-    setActiveEnemies((prev) =>
-      prev.map((e) => {
-        if (e.instanceId !== instanceId) return e;
-        const newHp = Math.max(0, Math.min(e.maxHp, e.currentHp + delta));
-        return { ...e, currentHp: newHp };
-      })
-    );
+    useEncounterStore.getState().adjustEnemyHp(instanceId, delta);
   };
 
   const adjustEnemySp = (instanceId: string, location: 'head' | 'body', delta: number) => {
-    setActiveEnemies((prev) =>
-      prev.map((e) => {
-        if (e.instanceId !== instanceId) return e;
-        if (location === 'head') {
-          return { ...e, currentHeadSp: Math.max(0, Math.min(e.maxHeadSp, e.currentHeadSp + delta)) };
-        } else {
-          return { ...e, currentBodySp: Math.max(0, Math.min(e.maxBodySp, e.currentBodySp + delta)) };
-        }
-      })
-    );
+    useEncounterStore.getState().adjustEnemySp(instanceId, location, delta);
   };
 
   const applyIncomingDamageToEnemy = (instanceId: string) => {
@@ -627,23 +548,9 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
     const loc = damageLocationByEnemy[instanceId] || 'body';
     const currentSp = loc === 'head' ? target.currentHeadSp : target.currentBodySp;
 
-    const penetrating = Math.max(0, dmg - currentSp);
-    const ablates = dmg > currentSp;
-    const multipliedDmg = loc === 'head' ? penetrating * 2 : penetrating;
-    const newHp = Math.max(0, target.currentHp - multipliedDmg);
-    const newSp = ablates ? Math.max(0, currentSp - 1) : currentSp;
-
-    setActiveEnemies((prev) =>
-      prev.map((e) => {
-        if (e.instanceId !== instanceId) return e;
-        return {
-          ...e,
-          currentHp: newHp,
-          currentHeadSp: loc === 'head' ? newSp : e.currentHeadSp,
-          currentBodySp: loc === 'body' ? newSp : e.currentBodySp
-        };
-      })
-    );
+    const r = useEncounterStore.getState().applyEnemyDamage(instanceId, dmg, loc);
+    if (!r) return;
+    const { penetrating, hpLost: multipliedDmg, newSp } = r;
 
     showFeedback(
       `💥 Daño de ${dmg} a ${loc === 'head' ? 'CABEZA' : 'CUERPO'} (${target.name}): ` +

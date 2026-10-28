@@ -1,13 +1,15 @@
 // Presupuesto de cuota de una sesión (plan 17, punto 14). [Claude Code · 2026-10-24]
 // Simula 4 h de mesa con 7 clientes (GM + 6 jugadores) contra el Firestore falso, con el motor de sync real
 // y la misma regla de publicación del resumen de party que cloudCampaigns (2 s sin cambios + resumen distinto).
-// Falla si pasa de 10.000 escrituras o 25.000 lecturas (Spark: 20.000 y 50.000 por día).
+// Falla si pasa de 10.000 escrituras o 35.000 lecturas (Spark: 20.000 y 50.000 por día; tope de lecturas subido en la v5.1.0).
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { CharacterSheet } from '../../types/cyberpunk';
 import { createCharacterSync, type SyncAdapter } from '../characterSync';
 import { toSheetDoc } from '../sheetDoc';
 import { buildPartySummary, sameSummary, type PartySummary } from '../partySummary';
 import { createFakeFirestore } from '../testing/fakeFirestore';
+import { createEncounterSync, type EncounterAdapter } from '../encounterSync';
+import { useEncounterStore } from '../../store/encounterStore';
 
 const PLAYERS = 6;
 const MEMBERS = PLAYERS + 1;
@@ -17,7 +19,17 @@ const PARTY_QUIET_MS = 2000;
 // Abrir la app y reconexiones (tabla del plan 17): no pasa por el motor, se suma aparte.
 const OPEN_AND_RECONNECT_READS = 1300;
 const MAX_WRITES = 10000;
-const MAX_READS = 25000;
+// v5.1.0 [Claude Code · 2026-10-27]: con la mesa compartida una sesión de 4 h lee ~30.000 (60 % del gratis diario).
+// Decisión de Giuliano (2026-10-27): se acepta, con el ataque y su daño en una sola línea del log; tope 35.000 (70 %).
+// Una sesión larga por día entra en Spark; dos el mismo día pueden pausar la sync hasta la medianoche del Pacífico.
+const MAX_READS = 35000;
+// Mesa compartida (plan 19, paso 7): 6 peleas de 20 min en las 2 h de combate, 4 enemigos por pelea, un turno cada
+// 8 s. En su turno el jugador ataca: una línea de log (con el daño si pega, 70 %) y el GM baja HP al enemigo.
+// Las tiradas de los enemigos (bestiario del GM) no van al log. Cada documento del encuentro y del log lo leen los 7.
+const FIGHT_S = 20 * 60;
+const TURN_S = 8;
+const ENEMIES_PER_FIGHT = 4;
+const LOG_TRIM_READS = 201; // el GM recorta el log al abrir la mesa
 
 const charId = (i: number) => `c${i}`;
 
@@ -53,11 +65,21 @@ function rng(seed: number) {
   };
 }
 
-beforeEach(() => { vi.useFakeTimers(); });
+class MemoryStorage {
+  private data = new Map<string, string>();
+  get length() { return this.data.size; }
+  key(i: number) { return [...this.data.keys()][i] ?? null; }
+  clear() { this.data.clear(); }
+  getItem(k: string) { return this.data.has(k) ? this.data.get(k)! : null; }
+  setItem(k: string, v: string) { this.data.set(k, v); }
+  removeItem(k: string) { this.data.delete(k); }
+}
+
+beforeEach(() => { vi.useFakeTimers(); vi.stubGlobal('localStorage', new MemoryStorage()); });
 afterEach(() => { vi.useRealTimers(); });
 
 describe('presupuesto de una sesión de 4 h (7 clientes)', () => {
-  it('queda por debajo de 10.000 escrituras y 25.000 lecturas, sin eco', async () => {
+  it('queda por debajo de 10.000 escrituras y 35.000 lecturas, sin eco', async () => {
     const fs = createFakeFirestore();
     for (let i = 0; i < PLAYERS; i++) fs.seedDoc(charId(i), { ...toSheetDoc(makeSheet(i)), ownerUid: 'u' + i, schemaVersion: 6 });
 
@@ -140,9 +162,54 @@ describe('presupuesto de una sesión de 4 h (7 clientes)', () => {
       }
     };
 
+    // Encuentro compartido: el motor real del GM contra una nube que solo cuenta.
+    const enc = { headWrites: 0, publicWrites: 0, gmWrites: 0, deletes: 0, playerInitWrites: 0 };
+    let logWrites = 0;
+    const encAdapter: EncounterAdapter = {
+      subscribeHead: (cb) => { cb(null); return () => {}; },
+      subscribeCombatants: (cb) => { cb([]); return () => {}; },
+      loadGmCombatants: async () => ({}),
+      commit: async (c) => {
+        if (c.head) enc.headWrites += 1;
+        for (const w of c.set) { if (w.coll === 'combatants') enc.publicWrites += 1; else enc.gmWrites += 1; }
+        enc.deletes += c.del.length;
+      },
+      writeMyPc: async () => { enc.playerInitWrites += 1; },
+    };
+    useEncounterStore.getState().reset();
+    const encSync = createEncounterSync({ adapter: encAdapter, role: 'gm', uid: 'gm', ownerOf: () => 'u' });
+    encSync.start();
+    const encState = () => useEncounterStore.getState();
+
     await vi.advanceTimersByTimeAsync(100); // snapshots iniciales
     for (let t = 0; t < SESSION_S; t++) {
       const combat = t < COMBAT_S;
+      if (combat && t % FIGHT_S === 0) {
+        encState().reset();
+        for (let e = 0; e < ENEMIES_PER_FIGHT; e++) {
+          const id = encState().addQuickEnemy({ name: 'Goon ' + e, hp: 35, sp: 11, atkBase: 12, damageDice: '3d6' });
+          encState().setInitiative(id, 5 + Math.floor(rand() * 15));
+        }
+        for (let i = 0; i < PLAYERS; i++) {
+          enc.playerInitWrites += 1; // el jugador escribe su iniciativa; el GM la toma
+          logWrites += 1;
+          encState().addPc(charId(i), 'PJ ' + i, 'u' + i);
+          encState().setInitiative('pc-' + charId(i), 5 + Math.floor(rand() * 15));
+        }
+      }
+      if (combat && t % TURN_S === 0 && t % FIGHT_S !== 0) {
+        const st = encState();
+        const current = st.combatants.find((c) => c.id === st.order[st.turnIndex]);
+        const enemies = st.combatants.filter((c) => c.enemy && c.enemy.currentHp > 0);
+        if (current?.kind === 'pc') {
+          logWrites += 1; // ataque (con su daño en la misma línea)
+          if (rand() < 0.7 && enemies.length > 0) {
+            const target = enemies[Math.floor(rand() * enemies.length)];
+            st.applyEnemyDamage(target.id, 4 + Math.floor(rand() * 12), rand() < 0.2 ? 'head' : 'body');
+          }
+        }
+        st.nextTurn();
+      }
       players.forEach((p, i) => {
         // combate: ~cada 30 s; exploración: ~cada 2 min
         if (rand() < (combat ? 1 / 30 : 1 / 120)) burst(p, charId(i), combat);
@@ -157,13 +224,19 @@ describe('presupuesto de una sesión de 4 h (7 clientes)', () => {
     }
     await vi.advanceTimersByTimeAsync(20000);
     for (const c of clients) await c.engine.flushAll();
+    await encSync.flushNow();
     await vi.advanceTimersByTimeAsync(1000);
+    encSync.stop();
 
     const sheetWrites = fs.ops.updates + fs.ops.logCreates;
-    const writes = sheetWrites + partyWrites;
+    const tableWrites = enc.headWrites + enc.publicWrites + enc.gmWrites + enc.deletes + enc.playerInitWrites + logWrites;
+    const writes = sheetWrites + partyWrites + tableWrites;
     const partyReads = partyWrites * MEMBERS; // cada resumen lo leen los 7 miembros
-    const reads = sheetReads + partyReads + OPEN_AND_RECONNECT_READS;
-    console.info(`[presupuesto] ráfagas=${bursts} escrituras=${writes} (fichas ${sheetWrites}, party ${partyWrites}) lecturas=${reads} (fichas ${sheetReads}, party ${partyReads}, apertura ${OPEN_AND_RECONNECT_READS})`);
+    // Lo que escucha toda la mesa: orden y turno, vista pública, iniciativas y log. El documento del GM no lo lee nadie.
+    const tableReads = (enc.headWrites + enc.publicWrites + enc.deletes + enc.playerInitWrites + logWrites) * MEMBERS + LOG_TRIM_READS;
+    const reads = sheetReads + partyReads + OPEN_AND_RECONNECT_READS + tableReads;
+    console.info(`[presupuesto] ráfagas=${bursts} escrituras=${writes} (fichas ${sheetWrites}, party ${partyWrites}, mesa ${tableWrites}) lecturas=${reads} (fichas ${sheetReads}, party ${partyReads}, apertura ${OPEN_AND_RECONNECT_READS}, mesa ${tableReads})`);
+    console.info(`[presupuesto] mesa: turnos/orden ${enc.headWrites}, vista pública ${enc.publicWrites}, enemigos (GM) ${enc.gmWrites}, borrados ${enc.deletes}, iniciativas ${enc.playerInitWrites}, log ${logWrites}`);
 
     // Sin eco: nunca hay más escrituras de fichas que ráfagas de cambios (cada ráfaga se agrupa en una).
     expect(fs.ops.updates).toBeLessThanOrEqual(bursts);

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Clock } from 'lucide-react';
 import { useGameClockStore } from '../../store/gameClockStore';
+import { useActiveTable } from '../../sync/tableSync';
 
 export const GameClockBar: React.FC<{ compact?: boolean }> = ({ compact = false }) => {
   const day = useGameClockStore((s) => s.day);
@@ -12,6 +13,9 @@ export const GameClockBar: React.FC<{ compact?: boolean }> = ({ compact = false 
   const session = useGameClockStore((s) => s.session);
   const endSession = useGameClockStore((s) => s.endSession);
   const [sessionSummary, setSessionSummary] = useState<string | null>(null);
+  // v5.1.0 (plan 19): con mesa activa, solo el GM mueve el reloj; los jugadores lo ven. [Claude Code · 2026-10-27]
+  const { table, isGm } = useActiveTable();
+  const locked = !!table && !isGm;
 
   const handleNewDay = () => {
     if (window.confirm('Pasar al día siguiente: los Quick Fix vencen (Core p.223 / CEMK RB p.14). ¿Continuar?')) {
@@ -36,6 +40,12 @@ export const GameClockBar: React.FC<{ compact?: boolean }> = ({ compact = false 
       <span className="font-tech text-[11px] uppercase tracking-wider text-cyan-300 min-w-0">
         Sesión {session} · Día {day} · Beat {beat}
       </span>
+      {table && (
+        <span className="font-tech text-[10px] uppercase text-slate-400 min-w-0 truncate" title="Mesa activa: el reloj es de la campaña">
+          Mesa: {table.name}{locked ? ' · lo mueve el GM' : ''}
+        </span>
+      )}
+      {!locked && (
       <div className="flex flex-wrap gap-1.5 min-w-0">
         <button
           type="button"
@@ -59,6 +69,7 @@ export const GameClockBar: React.FC<{ compact?: boolean }> = ({ compact = false 
           Fin de sesión
         </button>
       </div>
+      )}
       {sessionSummary && (
         <span className="text-[11px] text-fuchsia-300 min-w-0 basis-full">{sessionSummary}</span>
       )}

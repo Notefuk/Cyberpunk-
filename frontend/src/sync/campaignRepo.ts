@@ -2,9 +2,23 @@
 // Todas las funciones del SDK salen de h.fsSdk (cargado de forma diferida en firebaseClient.ts).
 import type { FirebaseHandles } from './firebaseClient';
 
+export interface TableClock { session: number; day: number; beat: number }
+export type TableEra = '2045' | '2077';
+
 export interface CampaignDoc {
   id: string; name: string; gmUid: string; memberUids: string[];
   memberNames: Record<string, string>; inviteCode: string;
+  /** v5.1.0 (plan 19, punto 1): reloj y era de la mesa; los escribe solo el GM. Sin dato = todavía no se publicó. [Claude Code · 2026-10-27] */
+  clock?: TableClock;
+  era?: TableEra;
+}
+
+/** Lee el reloj de un documento de campaña; null si falta o no es válido. [Claude Code · 2026-10-27] */
+export function parseTableClock(v: unknown): TableClock | null {
+  if (!v || typeof v !== 'object') return null;
+  const o = v as Record<string, unknown>;
+  const ok = (n: unknown): n is number => typeof n === 'number' && Number.isInteger(n) && n >= 1;
+  return ok(o.session) && ok(o.day) && ok(o.beat) ? { session: o.session, day: o.day, beat: o.beat } : null;
 }
 
 export function newInviteCode(): string {
@@ -45,6 +59,8 @@ export interface CampaignRepo {
   writePartySummary(campId: string, charId: string, summary: Record<string, unknown>): Promise<void>;
   deletePartySummary(campId: string, charId: string): Promise<void>;
   assignCharacter(charId: string, campId: string | null, writerId: string): Promise<void>;
+  setTableClock(campId: string, clock: TableClock): Promise<void>;
+  setTableEra(campId: string, era: TableEra): Promise<void>;
 }
 
 export function createCampaignRepo(h: FirebaseHandles, uid: string): CampaignRepo {
@@ -60,6 +76,8 @@ export function createCampaignRepo(h: FirebaseHandles, uid: string): CampaignRep
     memberUids: (d.memberUids as string[] | undefined) ?? [],
     memberNames: (d.memberNames as Record<string, string> | undefined) ?? {},
     inviteCode: (d.inviteCode as string | undefined) ?? '',
+    clock: parseTableClock(d.clock) ?? undefined,
+    era: d.era === '2045' || d.era === '2077' ? d.era : undefined,
   });
 
   const removeMember = async (campId: string, memberUid: string) => {
@@ -144,6 +162,14 @@ export function createCampaignRepo(h: FirebaseHandles, uid: string): CampaignRep
         new fs.FieldPath('_lastWriter'), writerId,
         new fs.FieldPath('_ts'), fs.serverTimestamp(),
       );
+    },
+
+    async setTableClock(campId, clock) {
+      await fs.updateDoc(campRef(campId), { clock: { session: clock.session, day: clock.day, beat: clock.beat } });
+    },
+
+    async setTableEra(campId, era) {
+      await fs.updateDoc(campRef(campId), { era });
     },
   };
 }

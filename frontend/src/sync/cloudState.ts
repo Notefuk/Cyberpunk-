@@ -19,11 +19,24 @@ interface CloudState {
   playerOwners: Record<string, string>;
   /** Campaña asignada a cada ficha propia de la nube (null = ninguna). */
   charCampaign: Record<string, string | null>;
+  /** v5.1.0 (plan 19): campaña elegida a mano como mesa activa (null = la de la ficha activa). Se recuerda en localStorage. */
+  activeTableId: string | null;
+  setActiveTableId: (id: string | null) => void;
   setSyncState: (s: SyncState) => void;
   setCloudIds: (ids: string[]) => void;
   setNeedsAppUpdate: (v: boolean) => void;
   setLastError: (e: string | null) => void;
   setUploading: (v: boolean) => void;
+}
+
+const ACTIVE_TABLE_KEY = 'cpr_active_table_v1';
+
+function readActiveTableId(): string | null {
+  try {
+    return typeof localStorage === 'undefined' ? null : localStorage.getItem(ACTIVE_TABLE_KEY);
+  } catch {
+    return null;
+  }
 }
 
 export const useCloudState = create<CloudState>()((set) => ({
@@ -36,6 +49,14 @@ export const useCloudState = create<CloudState>()((set) => ({
   party: {},
   playerOwners: {},
   charCampaign: {},
+  activeTableId: readActiveTableId(),
+  setActiveTableId: (activeTableId) => {
+    try {
+      if (activeTableId) localStorage.setItem(ACTIVE_TABLE_KEY, activeTableId);
+      else localStorage.removeItem(ACTIVE_TABLE_KEY);
+    } catch { /* sin localStorage: queda en memoria */ }
+    set({ activeTableId });
+  },
   setSyncState: (syncState) => set({ syncState }),
   setCloudIds: (cloudIds) => set({ cloudIds }),
   setNeedsAppUpdate: (needsAppUpdate) => set({ needsAppUpdate }),

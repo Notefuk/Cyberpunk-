@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
+import { useEncounterStore } from '../../store/encounterStore';
+import { recordMyInitiative, getActiveTable, useActiveTable, publishDeathSave, shareRollWithTable } from '../../sync/tableSync';
+import { isAutoShared } from '../../sync/tableLog';
+import { TableLogPanel } from '../cloud/TableLogPanel';
+import { EncounterOrderStrip } from './EncounterOrderStrip';
 import { 
   RANGE_BRACKETS, 
   WEAPON_RANGE_PROFILES, 
@@ -868,6 +873,8 @@ export const CombatHudView: React.FC = () => {
   const aimedShotTarget = useCombatStore((state) => state.aimedShotTarget);
   const setAimedShotTarget = useCombatStore((state) => state.setAimedShotTarget);
   const rollHistory = useCombatStore((state) => state.rollHistory);
+  // v5.1.0 (plan 19): mesa activa para el log de tiradas. [Claude Code · 2026-10-27]
+  const { table: activeTableForLog } = useActiveTable();
   const addRollEntry = useCombatStore((state) => state.addRollEntry);
   const triggerExplosionClick = useCombatStore((state) => state.triggerExplosionClick);
   const markAttackDamageRolled = useCombatStore((state) => state.markAttackDamageRolled);
@@ -879,7 +886,6 @@ export const CombatHudView: React.FC = () => {
   const firstDamageTakenThisRound = useCombatStore((state) => state.firstDamageTakenThisRound);
   const firstHitLandedThisRound = useCombatStore((state) => state.firstHitLandedThisRound);
   const netActionsSpent = useCombatStore((state) => state.netActionsSpent);
-  const nextRound = useCombatStore((state) => state.nextRound);
   const markDamageTaken = useCombatStore((state) => state.markDamageTaken);
   const markHitLanded = useCombatStore((state) => state.markHitLanded);
   const spendNetAction = useCombatStore((state) => state.spendNetAction);
@@ -1883,7 +1889,14 @@ export const CombatHudView: React.FC = () => {
 
   // Round (decisión 1 del plan 10): pasa de Round y reinicia el Quickhack por objetivo.
   const handleNextRound = () => {
-    nextRound();
+    // v5.1.0 (plan 19): con mesa activa, el round lo pasa el GM y llega solo. [Claude Code · 2026-10-27]
+    const { table, isGm } = getActiveTable();
+    if (table && !isGm) {
+      setRoundToolFeedback(`El round lo pasa el GM de "${table.name}".`);
+      setTimeout(() => setRoundToolFeedback(null), 4000);
+      return;
+    }
+    useEncounterStore.getState().nextRound();
     setQuickhackUsedThisTurn(false);
   };
 
@@ -1924,6 +1937,8 @@ export const CombatHudView: React.FC = () => {
       explosionType: null,
       penaltyBreakdown: [r.breakdown]
     });
+    // v5.1.0 (plan 19): la iniciativa entra sola al orden del encuentro (y de la mesa, si hay). [Claude Code · 2026-10-27]
+    if (activeChar) recordMyInitiative(activeChar.id, activeChar.handle, r.total);
     setRoundToolFeedback(`⏱️ Iniciativa: ${r.breakdown}`);
     setTimeout(() => setRoundToolFeedback(null), 6000);
   };
@@ -3136,7 +3151,7 @@ export const CombatHudView: React.FC = () => {
                               Al inicio de cada Turno tira 1d10 + penalizador: vives si sacas menos que tu BODY ({effectiveBody}). Un 10 siempre falla. Penalizador: base {baseDsPenalty} + acumulado {accDsPenalty}. Stabilization DV 15 lo devuelve a 1 HP.
                             </div>
                             <button
-                              onClick={() => { const r = rollDeathSave(); if (r) setLastDeathSave(r); }}
+                              onClick={() => { const r = rollDeathSave(); if (r) { setLastDeathSave(r); publishDeathSave(r); } }}
                               className="w-full px-2 py-1 bg-[#dc2626]/20 hover:bg-[#dc2626] border border-[#dc2626]/60 text-white rounded-xs font-bold transition-all active:scale-95"
                             >
                               Tirar Death Save
@@ -4923,6 +4938,28 @@ export const CombatHudView: React.FC = () => {
                         <HeadshotCalculator entry={entry} />
                       )}
                     </div>
+                  )}
+
+                  {/* Skill (v5.1.0, plan 19): resumen corto; la iniciativa ya va sola a la mesa. [Claude Code · 2026-10-27] */}
+                  {entry.type === 'skill' && (
+                    <div className="flex items-center justify-between gap-2 font-mono-code text-[11px] text-[#94a3b8]">
+                      <span className="text-white truncate">{entry.skillName ?? entry.weaponName}</span>
+                      {typeof entry.totalAttack === 'number' && <span className="text-white font-bold">TOTAL: {entry.totalAttack}</span>}
+                    </div>
+                  )}
+                  {activeTableForLog && !isAutoShared(entry) && (
+                    entry.shareWithTable ? (
+                      <div className="text-[9px] font-mono-code text-amber-300 mt-1">En el log de la mesa</div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => shareRollWithTable(entry.id)}
+                        className="mt-1 text-[10px] font-mono-code px-1.5 py-0.5 border border-amber-500/50 text-amber-300 hover:bg-amber-500/10 rounded-xs cursor-pointer"
+                        title={`La ven todos en "${activeTableForLog.name}"`}
+                      >
+                        Mostrar a la mesa
+                      </button>
+                    )
                   )}
 
                   <div className="text-[8px] font-mono-code text-[#64748b] mt-1 text-right">
@@ -8669,6 +8706,8 @@ export const CombatHudView: React.FC = () => {
           Perception
         </button>
         <GameClockBar compact />
+        <EncounterOrderStrip />
+        {activeTableForLog && <TableLogPanel compact />}
         {roundToolFeedback && (
           <span className="w-full text-[11px] font-mono-code text-cyan-200 break-words">{roundToolFeedback}</span>
         )}

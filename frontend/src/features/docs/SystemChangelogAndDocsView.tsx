@@ -26,6 +26,30 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.1.0',
+    date: '2026-10-27',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa online',
+    title: 'Mesa compartida: reloj, era, encuentro y log de tiradas',
+    summary: 'Con una campaña como mesa activa, el GM maneja el reloj, la era y el combate para todos: los jugadores ven el orden de iniciativa, el turno y cómo están los enemigos, y las tiradas de combate aparecen en el log de la mesa.',
+    highlights: [
+      'Solo el GM pasa beat, día y sesión, y cambia la era; los jugadores lo ven en vivo.',
+      'Un solo encuentro para el HUD, el bestiario y el Fixer: sin enemigos duplicados ni dos rounds.',
+      'Los jugadores ven a los enemigos con su estado de heridas, sin los HP, y entran al orden tirando Iniciativa.',
+      'Log de la mesa: ataque con su daño, iniciativa y Death Save (Core p.188); las demás tiradas con "Mostrar a la mesa".',
+      '444 tests y 33 tests de reglas.'
+    ],
+    filesTouched: [
+      'frontend/src/store/encounterStore.ts',
+      'frontend/src/sync/tableSync.ts',
+      'frontend/src/sync/encounterSync.ts',
+      'frontend/src/sync/tableLog.ts',
+      'frontend/firestore.rules'
+    ],
+    metricsBadge: 'v5.1.0 • Nube • Mesa compartida'
+  },
+  {
     version: 'v5.0.2',
     date: '2026-10-25',
     author: 'Claude Code',
@@ -1166,6 +1190,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.1.0': true,
     'v5.0.2': true,
     'v5.0.1': true,
     'v5.0.0': true,

@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
 import { 
   calculateMaxHp, 
   getEffectiveBody
 } from '../../engine/characterEngine';
+import { useEncounterStore, orderedCombatants } from '../../store/encounterStore';
 import { EnemiesCompendiumPanel } from './EnemiesCompendiumPanel';
-import type { EnemySheet } from '../../data/enemiesCatalog';
 import { GM_LOOT_TABLES } from '../../data/netAndRolesData';
 import { 
   Terminal, 
@@ -109,10 +109,6 @@ function rollD10(): number {
   return Math.floor(Math.random() * 10) + 1;
 }
 
-function generateGoonId(): string {
-  return `goon-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
-}
-
 export function FixerDeckView() {
   const characters = useCharacterStore((state) => state.characters);
   const activeCharacterId = useCharacterStore((state) => state.activeCharacterId);
@@ -171,9 +167,51 @@ export function FixerDeckView() {
   const [payoutAmount, setPayoutAmount] = useState<number>(1000);
 
   // 3. Initiative & Goon Tracker State
-  const [combatants, setCombatants] = useState<InitiativeCombatant[]>([]);
-  const [currentRound, setCurrentRound] = useState<number>(1);
-  const [activeTurnIndex, setActiveTurnIndex] = useState<number>(0);
+  // v5.1.0 [Claude Code · 2026-10-27]: el tracker lee el encuentro unificado (encounterStore); `combatants` es una vista derivada.
+  const encCombatants = useEncounterStore((s) => s.combatants);
+  const encOrder = useEncounterStore((s) => s.order);
+  const currentRound = useEncounterStore((s) => s.round);
+  const activeTurnIndex = useEncounterStore((s) => s.turnIndex);
+  const combatants = useMemo<InitiativeCombatant[]>(
+    () =>
+      orderedCombatants({ combatants: encCombatants, order: encOrder }).map((c): InitiativeCombatant => {
+        if (c.kind === 'enemy' && c.enemy) {
+          const enemy = c.enemy;
+          const primaryWeapon = enemy.weapons[0];
+          return {
+            id: c.id,
+            name: c.name,
+            isPlayer: false,
+            initiative: c.initiative ?? 0,
+            currentHp: enemy.currentHp,
+            maxHp: enemy.maxHp,
+            currentSp: enemy.currentBodySp,
+            maxSp: enemy.maxBodySp,
+            atkBase: enemy.quick?.atkBase ?? primaryWeapon?.skillBase ?? 10,
+            damageDice: enemy.quick?.damageDice ?? primaryWeapon?.damage ?? '2d6',
+            notes:
+              enemy.quick?.notes ??
+              `${enemy.faction} • ${primaryWeapon?.name ?? 'Ataque Desarmado'} (${primaryWeapon?.damage ?? '2d6'}) • Head SP: ${enemy.maxHeadSp}`
+          };
+        }
+        const ch = characters.find((x) => x.id === c.charId);
+        const ref = ch?.stats?.REF || 5;
+        return {
+          id: c.id,
+          name: ch ? `${ch.handle} (${ch.role})` : c.name,
+          isPlayer: true,
+          characterId: c.charId,
+          initiative: c.initiative ?? 0,
+          currentHp: ch?.currentHp ?? 0,
+          maxHp: ch ? calculateMaxHp(getEffectiveBody(ch), ch.stats?.WILL ?? 0) : 0,
+          currentSp: ch ? Math.max(ch.headArmor?.currentSp || 0, ch.bodyArmor?.currentSp || 0) : 0,
+          maxSp: ch ? Math.max(ch.headArmor?.maxSp || 0, ch.bodyArmor?.maxSp || 0) : 0,
+          atkBase: ref + 6,
+          damageDice: '3d6'
+        };
+      }),
+    [encCombatants, encOrder, characters]
+  );
   const [lastGoonAttack, setLastGoonAttack] = useState<{
     goonName: string;
     d10: number;
@@ -287,38 +325,13 @@ export function FixerDeckView() {
 
   // Roll players initiative (1d10 + REF)
   const handleRollPlayersInitiative = () => {
-    const rolledPlayers: InitiativeCombatant[] = characters.map((c) => {
+    characters.forEach((c) => {
       const d10 = rollD10();
       const ref = c.stats?.REF || 5;
-      const maxHp = calculateMaxHp(getEffectiveBody(c), c.stats?.WILL ?? 0);
-      const avgSp = Math.max(c.headArmor?.currentSp || 0, c.bodyArmor?.currentSp || 0);
-      const maxSp = Math.max(c.headArmor?.maxSp || 0, c.bodyArmor?.maxSp || 0);
-
-      return {
-        id: `init-player-${c.id}`,
-        name: `${c.handle} (${c.role})`,
-        isPlayer: true,
-        characterId: c.id,
-        initiative: d10 + ref,
-        currentHp: c.currentHp,
-        maxHp,
-        currentSp: avgSp,
-        maxSp,
-        atkBase: ref + 6,
-        damageDice: '3d6',
-        notes: `1d10(${d10}) + REF(${ref})`
-      };
+      const id = useEncounterStore.getState().addPc(c.id, c.handle);
+      useEncounterStore.getState().setInitiative(id, d10 + ref);
     });
 
-    // Merge with existing goons and sort descending
-    setCombatants((prev) => {
-      const goons = prev.filter((cb) => !cb.isPlayer);
-      const merged = [...rolledPlayers, ...goons];
-      return merged.sort((a, b) => b.initiative - a.initiative);
-    });
-
-    setActiveTurnIndex(0);
-    setCurrentRound(1);
     showFeedback('⚡ Iniciativa de todos los jugadores lanzada y ordenada.');
   };
 
@@ -328,79 +341,37 @@ export function FixerDeckView() {
     const refEstimate = Math.max(4, preset.atkBase - 6);
     const goonNumber = combatants.filter((c) => c.name.startsWith(preset.name)).length + 1;
 
-    const newGoon: InitiativeCombatant = {
-      id: generateGoonId(),
-      name: `${preset.name} #${goonNumber}`,
-      isPlayer: false,
-      initiative: d10 + refEstimate,
-      currentHp: preset.hp,
-      maxHp: preset.hp,
-      currentSp: preset.sp,
-      maxSp: preset.sp,
+    const name = `${preset.name} #${goonNumber}`;
+    const initiative = d10 + refEstimate;
+    const id = useEncounterStore.getState().addQuickEnemy({
+      name,
+      hp: preset.hp,
+      sp: preset.sp,
       atkBase: preset.atkBase,
       damageDice: preset.damageDice,
       notes: `${preset.notes} • Init: 1d10(${d10})+${refEstimate}`
-    };
-
-    setCombatants((prev) => {
-      const updated = [...prev, newGoon];
-      return updated.sort((a, b) => b.initiative - a.initiative);
     });
+    useEncounterStore.getState().setInitiative(id, initiative);
 
-    showFeedback(`Spawned ${newGoon.name} con Iniciativa ${newGoon.initiative}.`);
-  };
-
-  const handleAddGoonFromSheet = (enemy: EnemySheet) => {
-    const d10 = rollD10();
-    const ref = enemy.stats.REF ?? 6;
-    const primaryWeapon = enemy.weapons[0] || { name: 'Ataque Desarmado', skillBase: 10, damage: '2d6' };
-    const goonNumber = combatants.filter((c) => c.name.startsWith(enemy.name)).length + 1;
-    const newGoon: InitiativeCombatant = {
-      id: generateGoonId(),
-      name: `${enemy.name} #${goonNumber}`,
-      isPlayer: false,
-      initiative: d10 + ref,
-      currentHp: enemy.hp,
-      maxHp: enemy.hp,
-      currentSp: enemy.bodySp,
-      maxSp: enemy.bodySp,
-      atkBase: primaryWeapon.skillBase,
-      damageDice: primaryWeapon.damage,
-      notes: `${enemy.faction} • ${primaryWeapon.name} (${primaryWeapon.damage}) • Head SP: ${enemy.headSp}`
-    };
-
-    setCombatants((prev) => {
-      const updated = [...prev, newGoon];
-      return updated.sort((a, b) => b.initiative - a.initiative);
-    });
-
-    showFeedback(`Spawned ${newGoon.name} en Iniciativa con ${newGoon.initiative}.`);
+    showFeedback(`Spawned ${name} con Iniciativa ${initiative}.`);
   };
 
   const handleAddCustomGoon = () => {
     const d10 = rollD10();
     const refEstimate = Math.max(4, customGoonForm.atkBase - 6);
-    const newGoon: InitiativeCombatant = {
-      id: generateGoonId(),
+    const initiative = d10 + refEstimate;
+    const id = useEncounterStore.getState().addQuickEnemy({
       name: customGoonForm.name,
-      isPlayer: false,
-      initiative: d10 + refEstimate,
-      currentHp: customGoonForm.hp,
-      maxHp: customGoonForm.hp,
-      currentSp: customGoonForm.sp,
-      maxSp: customGoonForm.sp,
+      hp: customGoonForm.hp,
+      sp: customGoonForm.sp,
       atkBase: customGoonForm.atkBase,
       damageDice: customGoonForm.damageDice,
       notes: customGoonForm.notes
-    };
-
-    setCombatants((prev) => {
-      const updated = [...prev, newGoon];
-      return updated.sort((a, b) => b.initiative - a.initiative);
     });
+    useEncounterStore.getState().setInitiative(id, initiative);
 
     setIsAddingCustomGoon(false);
-    showFeedback(`Spawned enemigo personalizado: ${newGoon.name}.`);
+    showFeedback(`Spawned enemigo personalizado: ${customGoonForm.name}.`);
   };
 
   // Attack with Goon
@@ -428,48 +399,35 @@ export function FixerDeckView() {
 
   // Next turn
   const handleNextTurn = () => {
-    if (combatants.length === 0) return;
-    if (activeTurnIndex + 1 >= combatants.length) {
-      setActiveTurnIndex(0);
-      setCurrentRound((r) => r + 1);
-    } else {
-      setActiveTurnIndex((i) => i + 1);
-    }
+    useEncounterStore.getState().nextTurn();
   };
 
   // Adjust combatant HP
   const handleAdjustCombatantHp = (id: string, delta: number) => {
-    setCombatants((prev) =>
-      prev.map((c) => {
-        if (c.id !== id) return c;
-        const newHp = Math.max(0, Math.min(c.maxHp, c.currentHp + delta));
-        return { ...c, currentHp: newHp };
-      })
-    );
+    const cb = combatants.find((c) => c.id === id);
+    if (!cb) return;
+    if (cb.isPlayer) {
+      if (cb.characterId) useCharacterStore.getState().adjustHpFor(cb.characterId, delta);
+    } else {
+      useEncounterStore.getState().adjustEnemyHp(id, delta);
+    }
   };
 
   // Adjust combatant SP
   const handleAdjustCombatantSp = (id: string, delta: number) => {
-    setCombatants((prev) =>
-      prev.map((c) => {
-        if (c.id !== id) return c;
-        const newSp = Math.max(0, Math.min(c.maxSp, c.currentSp + delta));
-        return { ...c, currentSp: newSp };
-      })
-    );
+    const cb = combatants.find((c) => c.id === id);
+    if (!cb || cb.isPlayer) return;
+    useEncounterStore.getState().adjustEnemySp(id, 'body', delta);
   };
 
   const handleRepairCombatantSp = (id: string) => {
-    setCombatants((prev) =>
-      prev.map((c) => {
-        if (c.id !== id) return c;
-        return { ...c, currentSp: c.maxSp };
-      })
-    );
+    const cb = combatants.find((c) => c.id === id);
+    if (!cb || cb.isPlayer) return;
+    useEncounterStore.getState().repairEnemySp(id);
   };
 
   const handleRemoveCombatant = (id: string) => {
-    setCombatants((prev) => prev.filter((c) => c.id !== id));
+    useEncounterStore.getState().remove(id);
   };
 
   // --- PIN LOCK SCREEN ---
@@ -941,9 +899,7 @@ export function FixerDeckView() {
 
             <button
               onClick={() => {
-                setCombatants([]);
-                setCurrentRound(1);
-                setActiveTurnIndex(0);
+                useEncounterStore.getState().reset();
                 showFeedback('Iniciativa reiniciada.');
               }}
               className="px-2.5 py-1.5 bg-[#1a1e2c] hover:bg-[#ef4444] text-[#94a3b8] hover:text-white font-tech text-xs uppercase rounded-xs transition-colors cursor-pointer"
@@ -1500,7 +1456,7 @@ export function FixerDeckView() {
       </div>
 
       {/* 7. BIBLIOTECA MASIVA DE ENEMIGOS, GOONS Y JEFES (15 FACCIONES & 128 FICHAS) */}
-      <EnemiesCompendiumPanel onSpawnToInitiative={handleAddGoonFromSheet} />
+      <EnemiesCompendiumPanel autoRollInitiative />
     </div>
   );
 }

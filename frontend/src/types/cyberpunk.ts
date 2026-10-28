@@ -675,4 +675,6 @@ export interface RollEntry {
   aimedShotTarget?: AimedShotTarget;
   aimedShotLabel?: string;
   aimedShotEffectSummary?: string;
+  /** v5.1.0 (plan 19): el jugador la mandó al log de la mesa (las de combate van solas). [Claude Code · 2026-10-27] */
+  shareWithTable?: boolean;
 }
