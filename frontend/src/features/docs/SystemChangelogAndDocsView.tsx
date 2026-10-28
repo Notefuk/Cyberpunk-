@@ -26,6 +26,31 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.3.0',
+    date: '2026-10-28',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa online',
+    title: 'Secretos del GM en la nube, revelar a la mesa y PIN solo local',
+    summary: 'Con mesa activa, las notas secretas, los PNJ y los NET propios del GM viven en la campaña y solo los ve él. El GM puede revelar la ficha de un enemigo (sin HP), mandar handouts a la mesa y compartir la corrida NET sin los stats del ICE. El rol de la campaña reemplaza al PIN; sin mesa, el PIN protege el Fixer y el modo GM del NET.',
+    highlights: [
+      'La primera vez se copia lo que el GM tiene en el dispositivo, con aviso.',
+      'Enemigo revelado: facción, nivel, SP, armas y reglas especiales; nunca los HP.',
+      'Handouts "De parte del GM" en MESA y aviso en el HUD.',
+      'Corrida NET compartida: pisos desbloqueados con DV e ICE, sin HP/ATK/DEF.',
+      'El jugador de la mesa ve "Solo el GM de <campaña>" en el Fixer y en Modo Master.',
+      '456 tests y 36 tests de reglas.'
+    ],
+    filesTouched: [
+      'frontend/src/sync/gmSecrets.ts',
+      'frontend/src/sync/tableReveals.ts',
+      'frontend/src/store/gmAccess.ts',
+      'frontend/src/features/cloud/HandoutsPanel.tsx',
+      'frontend/firestore.rules'
+    ],
+    metricsBadge: 'v5.3.0 • Nube • Secretos y revelar'
+  },
+  {
     version: 'v5.2.0',
     date: '2026-10-28',
     author: 'Claude Code',
@@ -1214,6 +1239,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.3.0': true,
     'v5.2.0': true,
     'v5.1.0': true,
     'v5.0.2': true,
