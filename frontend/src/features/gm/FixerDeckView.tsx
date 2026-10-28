@@ -554,7 +554,7 @@ export function FixerDeckView() {
                 <Lock className="w-3.5 h-3.5" /> PIN ACTIVADO
               </span>
               <button
-                onClick={() => setIsUnlocked(false)}
+                onClick={() => { setIsUnlocked(false); useGmPinSession.getState().lock(); }}
                 className="px-2.5 py-1 bg-[#dc2626]/20 hover:bg-[#dc2626] text-[#dc2626] hover:text-white border border-[#dc2626]/40 text-xs font-tech font-bold uppercase rounded-2xs transition-colors cursor-pointer"
                 title="Bloquear consola inmediatamente para ocultar pantalla a jugadores"
               >

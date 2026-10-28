@@ -718,7 +718,7 @@ export const NetAndRolesDeckView: React.FC = () => {
           {/* COLUMNA IZQUIERDA: SELECTOR DE ARQUITECTURAS & ACCIONES (5 cols) */}
           <div className="lg:col-span-5 space-y-4">
             {/* Presets & Custom Arch Selector (Con Modo Jugador vs Modo Master GM) */}
-            {!isGmArchitectureManagerOpen || gmAccess.mode === 'table-player' ? (
+            {!isGmArchitectureManagerOpen || gmAccess.mode === 'table-player' || gmAccess.mode === 'local-locked' ? (
               <div className="bg-[#0d1017] border border-[#1b2234] p-3.5 rounded-xs space-y-3">
                 <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
                   <div className="flex items-center gap-2">
@@ -1044,6 +1044,8 @@ export const NetAndRolesDeckView: React.FC = () => {
               </div>
 
               {/* 👑 CONTROL DEL MASTER (GM): DESBLOQUEAR / OCULTAR PISOS NET */}
+              {/* v5.3.0 (plan 20, B.3): es modo GM; el jugador de la mesa no lo ve y sin mesa aparece tras el PIN. [Claude Code · 2026-10-28] */}
+              {(gmAccess.mode === 'table-gm' || gmAccess.mode === 'local-open') && (
               <div className="bg-[#0b0e17] border border-cyan-500/40 p-3 rounded-xs space-y-2.5">
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-1.5">
@@ -1114,6 +1116,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                   })}
                 </div>
               </div>
+              )}
 
               {/* Escalera de pisos */}
               <div className="space-y-2">
