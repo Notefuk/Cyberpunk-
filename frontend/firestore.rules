@@ -184,7 +184,9 @@ service cloud.firestore {
           && request.resource.data.id == entryId
           && request.resource.data.keys().hasOnly(['id', '_by', 'at', 'charId', 'handle', 'kind', 'label', 'detail', 'total'])
           && request.resource.data.at == request.time
-          && request.resource.data.kind in ['attack', 'damage', 'skill', 'initiative', 'deathSave']
+          && (request.resource.data.kind in ['attack', 'damage', 'skill', 'initiative', 'deathSave']
+              // v5.2.0 (plan 20): acciones del GM sobre un PJ; solo las publica el GM. [Claude Code · 2026-10-28]
+              || (request.resource.data.kind == 'gm' && isGmOf(campId)))
           && request.resource.data.handle is string && request.resource.data.handle.size() <= 60
           && request.resource.data.label is string && request.resource.data.label.size() <= 120
           && (!('detail' in request.resource.data) || (request.resource.data.detail is string && request.resource.data.detail.size() <= 300))

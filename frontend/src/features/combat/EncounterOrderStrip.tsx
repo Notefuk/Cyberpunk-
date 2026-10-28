@@ -1,10 +1,11 @@
 // v5.1.0 [Claude Code · 2026-10-27]: orden de iniciativa del encuentro en el HUD (plan 19, punto 3).
 // El jugador ve quién tiene el turno y, de los enemigos, solo el estado de heridas. El GM ve también los HP.
-import React from 'react';
+import React, { useState } from 'react';
 import { Swords } from 'lucide-react';
 import { useEncounterStore, orderedCombatants, type WoundState } from '../../store/encounterStore';
 import { enemyWoundState } from '../../sync/encounterSync';
 import { useActiveTable } from '../../sync/tableSync';
+import { GmTargetDialog } from '../gm/GmTargetDialog';
 
 const WOUND_LABEL: Record<WoundState, { text: string; cls: string }> = {
   none: { text: 'Sin heridas', cls: 'text-emerald-300' },
@@ -20,6 +21,8 @@ export const EncounterOrderStrip: React.FC = () => {
   const round = useEncounterStore((s) => s.round);
   const nextTurn = useEncounterStore((s) => s.nextTurn);
   const { table, isGm } = useActiveTable();
+  // v5.2.0 (plan 20): el GM de la mesa abre la calculadora sobre un PJ. [Claude Code · 2026-10-28]
+  const [targetCharId, setTargetCharId] = useState<string | null>(null);
   const list = orderedCombatants({ combatants, order });
   if (list.length === 0) return null;
   const canDrive = !table || isGm;
@@ -59,10 +62,21 @@ export const EncounterOrderStrip: React.FC = () => {
               <span className={c.kind === 'pc' ? 'text-cyan-200' : 'text-rose-200'}>{c.name}</span>
               {c.kind === 'enemy' && wound && <span className={`ml-1 ${WOUND_LABEL[wound].cls}`}>· {WOUND_LABEL[wound].text}</span>}
               {c.enemy && <span className="ml-1 text-slate-500">({c.enemy.currentHp}/{c.enemy.maxHp})</span>}
+              {table && isGm && c.kind === 'pc' && c.charId && (
+                <button
+                  type="button"
+                  onClick={() => setTargetCharId(c.charId!)}
+                  className="ml-1.5 font-tech text-[10px] uppercase px-1 border border-amber-500/50 text-amber-300 hover:bg-amber-500/10 cursor-pointer"
+                  title="Daño, críticas, condiciones, Humanidad y €$ sobre este PJ"
+                >
+                  Daño
+                </button>
+              )}
             </li>
           );
         })}
       </ol>
+      {targetCharId && <GmTargetDialog charId={targetCharId} onClose={() => setTargetCharId(null)} />}
     </div>
   );
 };

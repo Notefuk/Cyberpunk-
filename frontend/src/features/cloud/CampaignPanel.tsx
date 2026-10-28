@@ -6,6 +6,7 @@ import { useCloudState } from '../../sync/cloudState';
 import { getCampaignController } from '../../sync/cloudCharacters';
 import { useActiveTable } from '../../sync/tableSync';
 import { TableLogPanel } from './TableLogPanel';
+import { GmTargetDialog } from '../gm/GmTargetDialog';
 import { buildInviteLink, type CampaignDoc } from '../../sync/campaignRepo';
 import { clearPendingInvite, readPendingInvite } from '../../sync/inviteLink';
 import { useCharacterStore } from '../../store/useCharacterStore';
@@ -137,6 +138,8 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
   // v5.1.0 (plan 19): mesa activa = la campaña cuyo reloj, era y combate usa este dispositivo. [Claude Code · 2026-10-27]
   const { table: activeTable } = useActiveTable();
   const isActiveTable = activeTable?.id === camp.id;
+  // v5.2.0 (plan 20): el GM de la mesa activa actúa sobre un PJ desde la party. [Claude Code · 2026-10-28]
+  const [targetCharId, setTargetCharId] = useState<string | null>(null);
 
   const myCloud = characters.filter((ch) => cloudIds.includes(ch.id) && playerOwners[ch.id] === undefined);
   const mineHere = myCloud.filter((ch) => charCampaign[ch.id] === camp.id);
@@ -282,6 +285,16 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
                   <span className="text-white font-bold">{p.handle}</span>
                   <span>({p.role})</span>
                   <span className="text-[#64748b]">· {memberName(p.ownerUid) || p.ownerName}</span>
+                  {isGm && isActiveTable && (
+                    <button
+                      type="button"
+                      onClick={() => setTargetCharId(charId)}
+                      className="font-tech text-[10px] uppercase px-1.5 border border-amber-500/50 text-amber-300 hover:bg-amber-500/10 cursor-pointer"
+                      title="Daño, críticas, condiciones, Humanidad y €$ sobre este PJ"
+                    >
+                      Daño
+                    </button>
+                  )}
                 </div>
                 <div className="flex gap-3 flex-wrap">
                   <span>HP {p.currentHp}/{p.maxHp}</span>
@@ -297,6 +310,7 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
       </div>
 
       {isActiveTable && <TableLogPanel />}
+      {targetCharId && <GmTargetDialog charId={targetCharId} onClose={() => setTargetCharId(null)} />}
 
       {!isGm && (
         <button

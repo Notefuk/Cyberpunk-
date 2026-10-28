@@ -1,6 +1,6 @@
 // [Claude Code · 2026-10-27] v5.1.0 (plan 19, punto 4): log de tiradas de la mesa.
 import { describe, expect, it, vi } from 'vitest';
-import { createTableLogPublisher, rollToLog, deathSaveToLog, isAutoShared, type TableLogEntry } from '../tableLog';
+import { createTableLogPublisher, rollToLog, deathSaveToLog, gmActionToLog, isAutoShared, type TableLogEntry } from '../tableLog';
 import type { RollEntry } from '../../types/cyberpunk';
 
 const base = (id: string, over: Partial<RollEntry>): RollEntry =>
@@ -89,6 +89,13 @@ describe('log de la mesa', () => {
     expect(rollToLog(base('p', { skillName: 'Perception', weaponName: '👁️ Perception (Core p.82)' }), { uid: 'u', handle: 'Vex' }).label).toBe('Perception');
     const a = rollToLog(attack('a'), { uid: 'u', handle: 'Vex' });
     expect(a).toMatchObject({ kind: 'attack', label: 'Ataque: Heavy Pistol', total: 17, detail: 'vs DV 15 · impacta · 7-12 m' });
+  });
+
+  // v5.2.0 (plan 20): acciones del GM sobre un PJ. [Claude Code · 2026-10-28]
+  it('acción del GM: a nombre del GM, con la ficha del PJ y los topes', () => {
+    const e = gmActionToLog({ targetCharId: 'c9', targetHandle: 'Doc Varela', label: 'daño 15 en cuerpo', detail: 'SP 11→10 · HP 25→21', total: 15 }, { uid: 'gm' });
+    expect(e).toMatchObject({ _by: 'gm', charId: 'c9', handle: 'GM', kind: 'gm', label: '→ Doc Varela: daño 15 en cuerpo', detail: 'SP 11→10 · HP 25→21', total: 15 });
+    expect(gmActionToLog({ targetCharId: 'c9', targetHandle: 'X', label: 'L'.repeat(300) }, { uid: 'gm' }).label.length).toBeLessThanOrEqual(120);
   });
 
   it('Death Save con su resultado (Core p.188)', () => {
