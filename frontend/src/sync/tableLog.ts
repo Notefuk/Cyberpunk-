@@ -67,7 +67,9 @@ export function rollToLog(e: RollEntry, who: { uid: string; charId?: string; han
     detail = e.penaltyBreakdown?.join(' · ');
   } else {
     kind = 'skill';
-    label = e.skillName ? `${e.skillName}${e.weaponName && e.weaponName !== e.skillName ? ` (${e.weaponName})` : ''}` : e.weaponName;
+    // Si weaponName ya nombra la skill (p. ej. "👁️ Perception (Core p.82)"), no se repite.
+    const extra = e.weaponName && !e.weaponName.includes(e.skillName ?? '') ? ` (${e.weaponName})` : '';
+    label = e.skillName ? `${e.skillName}${extra}` : e.weaponName;
     total = e.totalAttack;
     detail = e.penaltyBreakdown?.join(' · ');
   }

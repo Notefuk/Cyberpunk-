@@ -31,6 +31,6 @@ Contenido sugerido de un plan: objetivo, decisiones tomadas con el usuario (preg
 | 16. `plan16-firebase-mesa-online.md` | Firebase: cuentas, fichas en la nube y mesa compartida | v5.0.0 a v5.2.0 | ⏳ v5.0.0 en `main` (PR #34) y en gh-pages como beta; prueba con cuentas reales hecha [Claude Code · 2026-10-27]; falta la estable en Firebase Hosting; siguen v5.1.0 y v5.2.0 [Claude Code · 2026-10-24] |
 | 17. `plan17-sync-cuota.md` | Sync a prueba de cuota: v4.9.7 de preparación y capa de sync del plan 16 | v4.9.7 (+ v5.0.0 y v5.1.0) | ⏳ v4.9.7 y la capa de sync de la v5.0.0 hechas; falta la parte de la v5.1.0 [Claude Code · 2026-10-24] |
 | 18. `plan18-v5-campanias.md` | v5.0.0 etapa 5: campañas, link de invitación y vista de la party (el GM ya edita las fichas de sus jugadores) | v5.0.0 | ✅ Terminado (v5.0.0, en `main` por el PR #34) [Claude Code · 2026-10-25] |
-| 19. `plan19-v510-mesa-compartida.md` | v5.1.0 mesa compartida: reloj y era de la campaña, encuentro unificado y compartido, log de tiradas de la mesa | v5.1.0 | ⏳ Aprobado; en curso en `claude/v5.1.0-mesa` [Claude Code · 2026-10-27] |
+| 19. `plan19-v510-mesa-compartida.md` | v5.1.0 mesa compartida: reloj y era de la campaña, encuentro unificado y compartido, log de tiradas de la mesa | v5.1.0 | ✅ Terminado en código (v5.1.0, rama `claude/v5.1.0-mesa`, probado con dos usuarios en el emulador); falta push, merge y publicar las reglas nuevas en Firebase [Claude Code · 2026-10-27] |
 
 Pendientes y temas sin plan: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0.

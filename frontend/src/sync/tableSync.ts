@@ -14,7 +14,7 @@ import { getFirebase } from './firebaseClient';
 import { createEncounterRepo, createTableLogRepo } from './encounterRepo';
 import { createTableLogPublisher, useTableLog, TABLE_LOG_KEEP, type TableLogPublisher } from './tableLog';
 import type { DeathSaveResult } from '../engine/characterEngine';
-import { createEncounterSync, type EncounterSync } from './encounterSync';
+import { createEncounterSync, type EncounterAdapter, type EncounterSync } from './encounterSync';
 
 export interface ActiveTable {
   table: CampaignDoc | null;
@@ -121,7 +121,29 @@ function whoAmI(uid: string) {
   return { uid, charId: ch?.id, handle: ch?.handle ?? '' };
 }
 
-function startTableLog(h: Awaited<ReturnType<typeof getFirebase>>, campId: string, isGm: boolean, uid: string): void {
+/**
+ * Una campaña recién creada todavía puede no estar en el servidor: los listeners de la mesa fallan por permisos
+ * y mueren. Se reabre la mesa (encuentro + log) unas veces, como la party en cloudCampaigns. [Claude Code · 2026-10-27]
+ */
+const TABLE_MAX_RETRIES = 5;
+const TABLE_RETRY_MS = 1500;
+let tableRetries = 0;
+let tableRetryTimer: ReturnType<typeof setTimeout> | null = null;
+
+function retryTable(campId: string, isGm: boolean, session: number): void {
+  if (session !== encounterSession || tableRetryTimer) return;
+  tableRetries += 1;
+  if (tableRetries > TABLE_MAX_RETRIES) {
+    console.error('[mesa] no se pudo abrir la mesa', campId);
+    return;
+  }
+  tableRetryTimer = setTimeout(() => {
+    tableRetryTimer = null;
+    if (session === encounterSession) startEncounterSync(campId, isGm);
+  }, TABLE_RETRY_MS);
+}
+
+function startTableLog(h: Awaited<ReturnType<typeof getFirebase>>, campId: string, isGm: boolean, uid: string, onListenError: () => void): void {
   const repo = createTableLogRepo(h, campId);
   const pub = createTableLogPublisher({
     adapter: repo,
@@ -133,7 +155,10 @@ function startTableLog(h: Awaited<ReturnType<typeof getFirebase>>, campId: strin
   logUnsubs.push(useCombatStore.subscribe((s, prev) => {
     if (s.rollHistory !== prev.rollHistory) pub.onHistory(s.rollHistory);
   }));
-  logUnsubs.push(repo.subscribe((entries) => useTableLog.getState().set(entries), (e) => console.warn('[mesa] log:', e)));
+  logUnsubs.push(repo.subscribe((entries) => useTableLog.getState().set(entries), (e) => {
+    console.warn('[mesa] log:', e);
+    onListenError();
+  }));
   // El GM recorta a las últimas 200 al abrir la mesa (tiene permiso de borrar).
   if (isGm) void repo.trim(TABLE_LOG_KEEP).catch((e) => console.warn('[mesa] recorte del log:', e));
 }
@@ -159,8 +184,15 @@ function startEncounterSync(campId: string, isGm: boolean): void {
   const session = encounterSession;
   void getFirebase().then((h) => {
     if (session !== encounterSession) return; // cambió la mesa mientras cargaba
+    const onListenError = () => retryTable(campId, isGm, session);
+    const repo = createEncounterRepo(h, campId);
+    const adapter: EncounterAdapter = {
+      ...repo,
+      subscribeHead: (cb, onError) => repo.subscribeHead(cb, (e) => { onError?.(e); onListenError(); }),
+      subscribeCombatants: (cb, onError) => repo.subscribeCombatants(cb, (e) => { onError?.(e); onListenError(); }),
+    };
     const sync = createEncounterSync({
-      adapter: createEncounterRepo(h, campId),
+      adapter,
       role: isGm ? 'gm' : 'player',
       uid,
       ownerOf: (charId) => {
@@ -171,7 +203,7 @@ function startEncounterSync(campId: string, isGm: boolean): void {
     });
     encounterSync = sync;
     sync.start();
-    startTableLog(h, campId, isGm, uid);
+    startTableLog(h, campId, isGm, uid, onListenError);
   }).catch((e) => console.warn('[mesa] no se pudo abrir el encuentro compartido:', e));
 }
 
@@ -203,6 +235,7 @@ export function syncActiveTable(): void {
     setClockPublisher(isGm ? (clock) => void getCampaignController()?.setTableClock(campId, clock).catch(() => {}) : null);
     lastTableId = table.id;
     lastIsGm = isGm;
+    tableRetries = 0;
     if (!encounterSyncDisabled) startEncounterSync(campId, isGm);
   }
 

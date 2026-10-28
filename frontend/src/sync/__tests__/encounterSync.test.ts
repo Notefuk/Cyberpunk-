@@ -186,6 +186,9 @@ describe('encuentro compartido: jugador', () => {
     expect(useCombatStore.getState().round).toBe(2);
     expect(useCombatStore.getState().netActionsSpent).toBe(0);
     sync.stop();
+    // Al dejar la mesa, la copia del encuentro del GM no queda en el dispositivo.
+    expect(enc().combatants).toEqual([]);
+    expect(enc().round).toBe(1);
   });
 
   it('tira iniciativa: crea su PJ la primera vez y después solo cambia la iniciativa', async () => {

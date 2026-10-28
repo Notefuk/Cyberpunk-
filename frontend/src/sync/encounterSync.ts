@@ -310,6 +310,9 @@ export function createEncounterSync(opts: EncounterSyncOptions) {
       }
       stopped = true;
       for (const u of unsubs.splice(0)) u();
+      // El jugador tenía una copia del encuentro del GM: no queda en el dispositivo al dejar la mesa
+      // (si no, al ser GM de otra campaña la publicaría como propia). [Claude Code · 2026-10-27]
+      if (role === 'player') useEncounterStore.setState({ round: 1, turnIndex: 0, combatants: [], order: [] });
     },
 
     get role() { return role; }

@@ -86,6 +86,7 @@ describe('log de la mesa', () => {
     expect(e.detail!.length).toBeLessThanOrEqual(300);
     expect(e.handle.length).toBeLessThanOrEqual(60);
     expect(e).not.toHaveProperty('charId');
+    expect(rollToLog(base('p', { skillName: 'Perception', weaponName: '👁️ Perception (Core p.82)' }), { uid: 'u', handle: 'Vex' }).label).toBe('Perception');
     const a = rollToLog(attack('a'), { uid: 'u', handle: 'Vex' });
     expect(a).toMatchObject({ kind: 'attack', label: 'Ataque: Heavy Pistol', total: 17, detail: 'vs DV 15 · impacta · 7-12 m' });
   });
