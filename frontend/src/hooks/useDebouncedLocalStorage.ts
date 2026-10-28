@@ -34,17 +34,20 @@ export function createStorageWriter(
 export function useDebouncedLocalStorage(
   key: string,
   value: unknown,
-  serialize: (v: unknown) => string = JSON.stringify
+  serialize: (v: unknown) => string = JSON.stringify,
+  /** false: no escribe (p. ej. secretos del GM que viven en la nube, v5.3.0). [Claude Code · 2026-10-28] */
+  enabled = true
 ): void {
   const writerRef = useRef<ReturnType<typeof createStorageWriter> | null>(null);
   if (writerRef.current === null) writerRef.current = createStorageWriter(key);
   const writer = writerRef.current;
 
   useEffect(() => {
-    writer.write(serialize(value));
+    if (enabled) writer.write(serialize(value));
+    else writer.cancel();
     // serialize se omite a propósito: solo importa el cambio de valor.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, enabled]);
 
   // Guarda lo pendiente al cerrar la pestaña o al desmontar.
   useEffect(() => {

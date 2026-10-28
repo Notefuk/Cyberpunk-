@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
+import { useGmSecretBinding, useGmSecrets } from '../../sync/gmSecrets';
 import { 
   calculateMaxHp, 
   getEffectiveBody
@@ -289,8 +290,15 @@ export function FixerDeckView() {
     }
   });
 
+  // v5.3.0 (plan 20): con mesa activa de GM, las notas son las de la campaña (nube). [Claude Code · 2026-10-28]
+  const notesCloud = useGmSecretBinding('notes', secretNotes, setSecretNotes, () => {
+    try { return localStorage.getItem('cpr_gm_secret_notes_v1') || ''; } catch { return ''; }
+  });
+
+  const gmSecretsNotice = useGmSecrets((s) => s.notice);
+
   // v4.9.7 [Claude Code · 2026-10-24] Guardado agrupado en localStorage (plan17).
-  useDebouncedLocalStorage('cpr_gm_secret_notes_v1', secretNotes, (v) => String(v));
+  useDebouncedLocalStorage('cpr_gm_secret_notes_v1', secretNotes, (v) => String(v), !notesCloud.cloud);
 
   const handleInsertTimestamp = () => {
     const now = new Date();
@@ -1386,8 +1394,11 @@ export function FixerDeckView() {
                 SECRET SCENE NOTES // CUADERNO DE CAMPAÑA GM
               </h2>
               <p className="text-[10px] font-mono-code text-slate-400">
-                Registro privado local sin spoilers para jugadores • Auto-guardado en tiempo real
+                {notesCloud.cloud
+                  ? `Solo las ves vos, el GM de "${notesCloud.campName}" • Guardadas en la nube de la campaña`
+                  : 'Registro privado local sin spoilers para jugadores • Auto-guardado en tiempo real'}
               </p>
+              {gmSecretsNotice && <p className="text-[10px] font-mono-code text-amber-300">{gmSecretsNotice}</p>}
             </div>
           </div>
 
@@ -1449,7 +1460,7 @@ export function FixerDeckView() {
           <div className="flex items-center justify-between text-[10px] font-mono-code text-slate-500 pt-0.5">
             <span>{secretNotes.length} caracteres • {secretNotes.split(/\s+/).filter(Boolean).length} palabras</span>
             <span className="text-emerald-500 flex items-center gap-1">
-              <Check className="w-3 h-3" /> Guardado automáticamente en navegador
+              <Check className="w-3 h-3" /> {notesCloud.cloud ? `Guardado en la nube (${notesCloud.campName})` : 'Guardado automáticamente en navegador'}
             </span>
           </div>
         </div>

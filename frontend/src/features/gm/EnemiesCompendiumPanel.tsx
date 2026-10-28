@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
+import { useGmSecretBinding } from '../../sync/gmSecrets';
 import { useEncounterStore, encounterEnemies, type EncounterEnemy } from '../../store/encounterStore';
 import { 
   ENEMIES_CATALOG, 
@@ -296,7 +297,11 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
     return [];
   });
 
-  useDebouncedLocalStorage('cpr_custom_npcs_v1', customNpcs);
+  // v5.3.0 (plan 20): con mesa activa de GM, los NPCs propios son los de la campaña (nube). [Claude Code · 2026-10-28]
+  const npcsCloud = useGmSecretBinding('npcs', customNpcs, setCustomNpcs, () => {
+    try { return JSON.parse(localStorage.getItem('cpr_custom_npcs_v1') || '[]') as EnemySheet[]; } catch { return []; }
+  });
+  useDebouncedLocalStorage('cpr_custom_npcs_v1', customNpcs, JSON.stringify, !npcsCloud.cloud);
 
   const [isCustomNpcModalOpen, setIsCustomNpcModalOpen] = useState(false);
   const [customNpcForm, setCustomNpcForm] = useState({
@@ -989,6 +994,11 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
             <span className="text-xs font-mono-code text-amber-400 bg-amber-950/40 border border-amber-800/40 px-2.5 py-1.5 rounded-xs font-bold">
               {filteredEnemies.length} / {combinedCatalog.length} Fichas
             </span>
+            {npcsCloud.cloud && (
+              <span className="text-[10px] font-mono-code text-sky-300" title="Tus PNJ personalizados se guardan en la campaña; solo los ve el GM">
+                ☁ PNJ de "{npcsCloud.campName}"
+              </span>
+            )}
           </div>
         </div>
 

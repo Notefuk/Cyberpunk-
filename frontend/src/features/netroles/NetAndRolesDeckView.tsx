@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useGmSecretBinding } from '../../sync/gmSecrets';
 import { 
   Cpu, 
   Zap, 
@@ -147,6 +148,10 @@ export const NetAndRolesDeckView: React.FC = () => {
       return [];
     }
   });
+  // v5.3.0 (plan 20): con mesa activa de GM, las arquitecturas propias son las de la campaña (nube). [Claude Code · 2026-10-28]
+  const netCloud = useGmSecretBinding('net', customPresets, setCustomPresets, () => {
+    try { return JSON.parse(localStorage.getItem('cpr_custom_net_arch_v1') || '[]') as NetArchitecturePreset[]; } catch { return []; }
+  });
   const [currentFloorIndex, setCurrentFloorIndex] = useState<number>(0);
   const [unlockedNetFloors, setUnlockedNetFloors] = useState<number[]>([1]);
   const [activeNetRollResult, setActiveNetRollResult] = useState<{ action: string; roll: number; formula: string; success?: boolean; text?: string } | null>(null);
@@ -222,7 +227,7 @@ export const NetAndRolesDeckView: React.FC = () => {
       nextCustom.push(updatedArch);
     }
     setCustomPresets(nextCustom);
-    localStorage.setItem('cpr_custom_net_arch_v1', JSON.stringify(nextCustom));
+    if (!netCloud.cloud) localStorage.setItem('cpr_custom_net_arch_v1', JSON.stringify(nextCustom));
   };
 
   // ==========================================================================

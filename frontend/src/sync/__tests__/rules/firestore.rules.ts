@@ -269,8 +269,23 @@ describe('campañas', () => {
 
   it('los secretos del GM solo los ve el GM', async () => {
     await seed(['campaigns', 'camp1'], camp);
-    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/gm/notas'), { text: 'el Fixer los traiciona' }));
-    await assertFails(getDoc(doc(db('alice'), 'campaigns/camp1/gm/notas')));
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/gm/notes'), { text: 'el Fixer los traiciona', _ts: serverTimestamp() }));
+    await assertFails(getDoc(doc(db('alice'), 'campaigns/camp1/gm/notes')));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/gm/npcs'), { items: [], _ts: serverTimestamp() }));
+  });
+
+  // [Claude Code · 2026-10-28] v5.3.0 (plan 20, B.1): forma y tamaño de los secretos.
+  it('secretos del GM: solo notes/npcs/net, con su forma, tamaño y hora del servidor', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    const gm = db('gm');
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/otro'), { text: 'x', _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/notes'), { text: 'x'.repeat(100001), _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/notes'), { text: 'x', _ts: 5 }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/notes'), { text: 'x', extra: 1, _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/npcs'), { items: Array.from({ length: 201 }, (_, i) => ({ id: 'n' + i })), _ts: serverTimestamp() }));
+    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/npcs'), { items: [{ id: 'n1', name: 'Fixer' }], _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/net'), { items: Array.from({ length: 51 }, (_, i) => ({ id: 'a' + i })), _ts: serverTimestamp() }));
+    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/net'), { items: [], _ts: serverTimestamp() }));
   });
 
   // [Claude Code · 2026-10-27] v5.1.0 (plan 19): forma fija del log (id propio, hora del servidor, tamaños).
