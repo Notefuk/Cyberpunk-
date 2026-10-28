@@ -57,3 +57,15 @@ describe('el GM actúa sobre la ficha de un PJ', () => {
     expect(get('pj').currentHumanity).toBe(before - 2);
   });
 });
+
+describe('condiciones (plan 20, decisión 2)', () => {
+  it('se agregan una vez y se sacan', () => {
+    const st = useCharacterStore.getState();
+    st.addConditionFor('pj', 'prone', 2);
+    st.addConditionFor('pj', 'prone', 3);
+    expect(get('pj').conditions).toEqual([{ id: 'prone', since: 2 }]);
+    st.removeConditionFor('pj', 'prone');
+    expect(get('pj').conditions).toEqual([]);
+    expect(get('gm').conditions).toBeUndefined();
+  });
+});

@@ -412,6 +412,9 @@ export interface CharacterStoreState {
   inflictRandomInjuryFor: (characterId: string, location: 'head' | 'body') => ActiveCriticalInjury | null;
   /** Aplica los efectos de un impacto (planImpactEffects) y devuelve las heridas críticas que salieron. */
   applyImpactTo: (characterId: string, effects: ImpactEffects) => ActiveCriticalInjury[];
+  /** Condiciones de `data/conditions.ts`; `since` = round en que empezó (si hay combate). */
+  addConditionFor: (characterId: string, conditionId: string, since?: number) => void;
+  removeConditionFor: (characterId: string, conditionId: string) => void;
   spendEurodollarsFor: (characterId: string, amount: number, reason: string) => boolean;
   toggleTreatInjury: (injuryId: string) => void;
   removeInjury: (injuryId: string) => void;
@@ -1754,6 +1757,26 @@ export const useCharacterStore = create<CharacterStoreState>()(
           st.addDeathSavePenaltyFor(characterId, 1);
         }
         return injuries;
+      },
+
+      addConditionFor: (characterId, conditionId, since) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== characterId || (c.conditions ?? []).some(x => x.id === conditionId)) return c;
+            const entry = since != null ? { id: conditionId, since } : { id: conditionId };
+            return { ...c, conditions: [...(c.conditions ?? []), entry] };
+          })
+        }));
+      },
+
+      removeConditionFor: (characterId, conditionId) => {
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === characterId && (c.conditions ?? []).some(x => x.id === conditionId)
+              ? { ...c, conditions: (c.conditions ?? []).filter(x => x.id !== conditionId) }
+              : c
+          )
+        }));
       },
 
       inflictSpecificInjury: (characterId, location, name, table) => {

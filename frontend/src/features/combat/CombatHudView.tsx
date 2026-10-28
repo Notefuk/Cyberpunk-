@@ -39,6 +39,7 @@ import type { IncomingImpactInput } from '../../engine/combatEngine';
 import { applyDamageDeflection, spotWeaknessBonus, rollInitiative, rollPerception } from '../../engine/combatAwareness';
 import { getInterfaceRank, netActionsForInterface, maxQuickhackDv, neuroportFirewallDv, canUseQuickhacks, jackInRangeM } from '../../engine/roleRules';
 import { GameClockBar } from './GameClockBar';
+import { conditionById } from '../../data/conditions';
 import { CritTableSelector } from './CritTableSelector';
 import { MedtechTreatmentPanel } from '../netroles/MedtechTreatmentPanel';
 import { BackupCard } from './BackupCard';
@@ -844,6 +845,7 @@ export const CombatHudView: React.FC = () => {
   const inflictRandomInjury = useCharacterStore((state) => state.inflictRandomInjury);
   const rollDeathSave = useCharacterStore((state) => state.rollDeathSave);
   const applyImpactTo = useCharacterStore((state) => state.applyImpactTo);
+  const removeConditionFor = useCharacterStore((state) => state.removeConditionFor);
   const setDead = useCharacterStore((state) => state.setDead);
   const toggleTreatInjury = useCharacterStore((state) => state.toggleTreatInjury);
   const removeInjury = useCharacterStore((state) => state.removeInjury);
@@ -3041,6 +3043,32 @@ export const CombatHudView: React.FC = () => {
           >
             <div className={getLeftPanelClass('vitals')} style={getLeftPanelStyle('vitals')}>
               <div className="space-y-3">
+                {/* v5.2.0 (plan 20): condiciones activas; las pone el GM o el jugador. [Claude Code · 2026-10-28] */}
+                {activeChar && (activeChar.conditions ?? []).length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {(activeChar.conditions ?? []).map((c) => {
+                      const def = conditionById(c.id);
+                      return (
+                        <span
+                          key={c.id}
+                          className="inline-flex items-center gap-1 bg-amber-500/10 border border-amber-500/50 text-amber-300 font-mono-code text-[10px] px-1.5 py-0.5 rounded-xs"
+                          title={def ? `${def.effect} (${def.source})` : c.id}
+                        >
+                          {def?.name ?? c.id}
+                          {def && <span className="text-amber-500/70">· {def.source}</span>}
+                          <button
+                            type="button"
+                            onClick={() => removeConditionFor(activeChar.id, c.id)}
+                            className="ml-0.5 text-amber-400 hover:text-white cursor-pointer"
+                            title="Sacar condición"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
                 {/* HP Bar */}
                 <div className="mb-3 bg-[#171923] p-3 rounded-sm border border-[#222636]">
                   <div className="flex justify-between items-baseline mb-1">
