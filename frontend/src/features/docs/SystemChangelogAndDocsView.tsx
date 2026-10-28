@@ -26,6 +26,30 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.2.0',
+    date: '2026-10-28',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa online',
+    title: 'El GM actúa sobre los PJ: daño, críticas, condiciones, Humanidad y €$',
+    summary: 'El GM de la mesa toca "Daño" al lado de un PJ y le aplica daño con su armadura, heridas críticas, condiciones, Humanidad o €$. El jugador lo ve en su ficha al instante y cada acción queda en el log de la mesa.',
+    highlights: [
+      'Daño con SP, ablación, cabeza x2, Melee a la mitad del SP, crítico +5 y Mortally Wounded (Core pp.176, 186-188).',
+      'Condiciones canon con su cita: Prone (p.169), Grappled (p.177), On Fire (p.180), Drowning (p.180), Exposure (p.181) y Unconscious (pp.186, 188).',
+      'El jugador ve sus condiciones en el HUD y las puede sacar.',
+      'El GM y el jugador pueden cambiar HP o €$ al mismo tiempo sin pisarse.',
+      '450 tests y 34 tests de reglas.'
+    ],
+    filesTouched: [
+      'frontend/src/features/gm/GmTargetDialog.tsx',
+      'frontend/src/data/conditions.ts',
+      'frontend/src/engine/combatEngine.ts',
+      'frontend/src/store/useCharacterStore.ts',
+      'frontend/firestore.rules'
+    ],
+    metricsBadge: 'v5.2.0 • Nube • El GM actúa'
+  },
+  {
     version: 'v5.1.0',
     date: '2026-10-27',
     author: 'Claude Code',
@@ -1190,6 +1214,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.2.0': true,
     'v5.1.0': true,
     'v5.0.2': true,
     'v5.0.1': true,

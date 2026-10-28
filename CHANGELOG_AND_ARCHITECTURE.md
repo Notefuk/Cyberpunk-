@@ -117,6 +117,35 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.2.0] - 2026-10-28 (El GM actúa sobre los PJ: daño, críticas, condiciones, Humanidad y €$) [Claude Code · 2026-10-28]
+* **Category**: Nube / combate (plan 20, `docs/plans/plan20-gm-actua-sobre-la-mesa.md`; primera mitad de la fase 3 del plan 16).
+* **Calculadora del GM** (`features/gm/GmTargetDialog.tsx`, nueva): botón "Daño" al lado de cada PJ en el orden de iniciativa y en la party (solo el GM de la mesa activa). Pestañas:
+  * Daño: con la armadura del jugador, SP, ablación, cabeza x2 (x3 con Cracked Skull), Melee y Martial Arts con la mitad del SP, crítico +5 y Mortally Wounded (Core pp.176, 186-188).
+  * Crítica: al azar o elegida de la tabla Core o CEMK.
+  * Condiciones, Humanidad y €$ con motivo.
+  * Se abre en un portal porque las tarjetas con chamfer la recortaban.
+* **Un solo camino para el daño**: `planImpactEffects` (`engine/combatEngine.ts`) arma los efectos de un impacto y `applyImpactTo` (`store/useCharacterStore.ts`) los aplica a cualquier ficha. El HUD (`handleApplyCalculatedDamage`) los usa igual que antes. Se suman `ablateArmorFor`, `adjustHumanityFor`, `addDeathSavePenaltyFor` e `inflictRandomInjuryFor`; las versiones de la ficha activa ahora llaman a estas.
+* **Condiciones** (`data/conditions.ts`, campo `conditions?` en la ficha). Solo las que tienen regla en el Core v1.24; Stunned, Blinded y Deafened no existen como regla:
+  * Prone (p.169)
+  * Grappled (p.177)
+  * On Fire Mild, Strong o Deadly (p.180)
+  * Drowning (p.180)
+  * Exposure (p.181)
+  * Unconscious (pp.186, 188)
+
+  Se ven como chips en BIOMONITOR del HUD, con su cita y un botón para sacarlas.
+* **Log de la mesa**: tipo nuevo `gm` (`gmActionToLog`, `publishGmAction`) para cada acción del GM sobre un PJ; la regla del log lo permite solo al GM. HP, SP, Humanidad y €$ ya viajan como `increment`, así que el GM y el jugador no se pisan.
+* **Presupuesto**: `sessionBudget.test.ts` suma una línea de log por cada acción del GM: 6.579 escrituras y 34.594 lecturas (tope 35.000; queda poco margen).
+* **Files Modified**: `features/gm/GmTargetDialog.tsx`, `data/conditions.ts`, `store/__tests__/gmTargetActions.test.ts` (nuevos); `engine/combatEngine.ts`, `store/useCharacterStore.ts`, `types/cyberpunk.ts`, `features/combat/CombatHudView.tsx`, `features/combat/EncounterOrderStrip.tsx`, `features/cloud/CampaignPanel.tsx`, `features/cloud/TableLogPanel.tsx`, `sync/tableLog.ts`, `sync/tableSync.ts`, `firestore.rules` y sus tests, `engine/__tests__/rules.test.ts`, `sync/__tests__/tableLog.test.ts`, `sync/__tests__/sessionBudget.test.ts`.
+* **Verificación**: tsc, 450 tests, 34 tests de reglas y build. En el navegador, con el emulador y dos usuarios:
+  * 15 al cuerpo con SP 11: −4 HP y SP 10.
+  * 15 a la cabeza: −8 HP.
+  * Prone: el jugador lo ve como chip y desaparece al sacarlo.
+  * Humanidad 70→68 y €$ +500.
+  * GM +100 y jugador −50 a la vez: queda 650 en los dos.
+  * 5 líneas `gm` en el log del jugador.
+  * El jugador no tiene el botón "Daño".
+
 ### [v5.1.0] - 2026-10-27 (Mesa compartida: reloj, era, encuentro y log de tiradas) [Claude Code · 2026-10-27]
 * **Category**: Nube (plan 19, `docs/plans/plan19-v510-mesa-compartida.md`; fase 2 del plan 16; capa de sync del plan 17, puntos 10 a 12).
 * **Mesa activa**: la campaña que se comparte en vivo. Es la elegida en MESA // CAMPAÑA ("Usar como mesa activa"), o la de la ficha activa, o la única (`sync/tableSync.ts`, `cloudState.activeTableId`). Sin sesión o sin mesa, todo sigue local.

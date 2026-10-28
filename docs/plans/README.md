@@ -32,6 +32,6 @@ Contenido sugerido de un plan: objetivo, decisiones tomadas con el usuario (preg
 | 17. `plan17-sync-cuota.md` | Sync a prueba de cuota: v4.9.7 de preparación y capa de sync del plan 16 | v4.9.7 (+ v5.0.0 y v5.1.0) | ⏳ v4.9.7 y la capa de sync de la v5.0.0 hechas; falta la parte de la v5.1.0 [Claude Code · 2026-10-24] |
 | 18. `plan18-v5-campanias.md` | v5.0.0 etapa 5: campañas, link de invitación y vista de la party (el GM ya edita las fichas de sus jugadores) | v5.0.0 | ✅ Terminado (v5.0.0, en `main` por el PR #34) [Claude Code · 2026-10-25] |
 | 19. `plan19-v510-mesa-compartida.md` | v5.1.0 mesa compartida: reloj y era de la campaña, encuentro unificado y compartido, log de tiradas de la mesa | v5.1.0 | ✅ Terminado: en `main` (PR #37), en gh-pages (beta) y en Firebase prod (estable), probado con cuentas reales [Claude Code · 2026-10-28] |
-| 20. `plan20-gm-actua-sobre-la-mesa.md` | Fase 3 del plan 16: el GM actúa sobre los PJ (daño, críticas, condiciones, Humanidad, €$; v5.2.0) y secretos en la nube, revelar y PIN solo local (v5.3.0) | v5.2.0 / v5.3.0 | ⏳ Aprobado; en curso en `claude/v5.2.0-gm` [Claude Code · 2026-10-28] |
+| 20. `plan20-gm-actua-sobre-la-mesa.md` | Fase 3 del plan 16: el GM actúa sobre los PJ (daño, críticas, condiciones, Humanidad, €$; v5.2.0) y secretos en la nube, revelar y PIN solo local (v5.3.0) | v5.2.0 / v5.3.0 | ⏳ v5.2.0 terminada en código en `claude/v5.2.0-gm` (probada con dos usuarios en el emulador); sigue la v5.3.0 [Claude Code · 2026-10-28] |
 
 Pendientes y temas sin plan: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0.
