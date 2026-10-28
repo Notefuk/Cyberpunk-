@@ -10,6 +10,7 @@ import { buildPartySummary, sameSummary, type PartySummary } from '../partySumma
 import { createFakeFirestore } from '../testing/fakeFirestore';
 import { createEncounterSync, type EncounterAdapter } from '../encounterSync';
 import { useEncounterStore } from '../../store/encounterStore';
+import { HANDOUT_LIMIT } from '../tableReveals';
 
 const PLAYERS = 6;
 const MEMBERS = PLAYERS + 1;
@@ -23,6 +24,13 @@ const MAX_WRITES = 10000;
 // Decisión de Giuliano (2026-10-27): se acepta, con el ataque y su daño en una sola línea del log; tope 35.000 (70 %).
 // Una sesión larga por día entra en Spark; dos el mismo día pueden pausar la sync hasta la medianoche del Pacífico.
 const MAX_READS = 35000;
+// v5.3.0 (plan 20, B.4) [Claude Code · 2026-10-28]: secretos del GM y lo que revela. Los secretos (gm/notes|npcs|net) los
+// lee solo el GM: ~30 guardados por sesión (cada uno espera 1,5 s) y 3 lecturas al abrir. Revelar: ~40 por sesión
+// (handouts, corrida NET, enemigo revelado u oculto), cada una la leen los 7; al abrir, los últimos HANDOUT_LIMIT (10) handouts y la corrida.
+const GM_SECRET_SAVES = 30;
+const GM_SECRET_OPEN_READS = 3;
+const REVEALS = 40;
+const REVEAL_OPEN_READS = (HANDOUT_LIMIT + 1) * MEMBERS;
 // Mesa compartida (plan 19, paso 7): 6 peleas de 20 min en las 2 h de combate, 4 enemigos por pelea, un turno cada
 // 8 s. En su turno el jugador ataca: una línea de log (con el daño si pega, 70 %) y el GM baja HP al enemigo.
 // Las tiradas de los enemigos (bestiario del GM) no van al log. Cada documento del encuentro y del log lo leen los 7.
@@ -230,11 +238,12 @@ describe('presupuesto de una sesión de 4 h (7 clientes)', () => {
     encSync.stop();
 
     const sheetWrites = fs.ops.updates + fs.ops.logCreates;
-    const tableWrites = enc.headWrites + enc.publicWrites + enc.gmWrites + enc.deletes + enc.playerInitWrites + logWrites;
+    const tableWrites = enc.headWrites + enc.publicWrites + enc.gmWrites + enc.deletes + enc.playerInitWrites + logWrites + GM_SECRET_SAVES + REVEALS;
     const writes = sheetWrites + partyWrites + tableWrites;
     const partyReads = partyWrites * MEMBERS; // cada resumen lo leen los 7 miembros
     // Lo que escucha toda la mesa: orden y turno, vista pública, iniciativas y log. El documento del GM no lo lee nadie.
-    const tableReads = (enc.headWrites + enc.publicWrites + enc.deletes + enc.playerInitWrites + logWrites) * MEMBERS + LOG_TRIM_READS;
+    const tableReads = (enc.headWrites + enc.publicWrites + enc.deletes + enc.playerInitWrites + logWrites) * MEMBERS + LOG_TRIM_READS
+      + GM_SECRET_SAVES + GM_SECRET_OPEN_READS + REVEALS * MEMBERS + REVEAL_OPEN_READS;
     const reads = sheetReads + partyReads + OPEN_AND_RECONNECT_READS + tableReads;
     console.info(`[presupuesto] ráfagas=${bursts} escrituras=${writes} (fichas ${sheetWrites}, party ${partyWrites}, mesa ${tableWrites}) lecturas=${reads} (fichas ${sheetReads}, party ${partyReads}, apertura ${OPEN_AND_RECONNECT_READS}, mesa ${tableReads})`);
     console.info(`[presupuesto] mesa: turnos/orden ${enc.headWrites}, vista pública ${enc.publicWrites}, enemigos (GM) ${enc.gmWrites}, borrados ${enc.deletes}, iniciativas ${enc.playerInitWrites}, log ${logWrites}`);

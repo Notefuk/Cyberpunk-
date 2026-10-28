@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
 import { useGmSecretBinding } from '../../sync/gmSecrets';
+import { useGmAccess } from '../../store/gmAccess';
 import { useEncounterStore, encounterEnemies, type EncounterEnemy } from '../../store/encounterStore';
 import { 
   ENEMIES_CATALOG, 
@@ -304,6 +305,8 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
   useDebouncedLocalStorage('cpr_custom_npcs_v1', customNpcs, JSON.stringify, !npcsCloud.cloud);
 
   const [isCustomNpcModalOpen, setIsCustomNpcModalOpen] = useState(false);
+  // v5.3.0 (plan 20, B.3): con mesa activa, el editor de PNJ es solo del GM de la campaña. [Claude Code · 2026-10-28]
+  const isTablePlayer = useGmAccess().mode === 'table-player';
   const [customNpcForm, setCustomNpcForm] = useState({
     name: '',
     subtitle: 'Mercenario Independiente',
@@ -984,6 +987,7 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
           </div>
 
           <div className="flex items-center gap-2">
+            {!isTablePlayer && (
             <button
               onClick={() => setIsCustomNpcModalOpen(true)}
               className="px-3 py-1.5 bg-[#10b981] hover:bg-white text-black font-tech text-xs font-bold uppercase rounded-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
@@ -991,6 +995,7 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
               <UserPlus className="w-3.5 h-3.5" />
               <span>🛠️ CREAR PNJ PERSONALIZADO</span>
             </button>
+            )}
             <span className="text-xs font-mono-code text-amber-400 bg-amber-950/40 border border-amber-800/40 px-2.5 py-1.5 rounded-xs font-bold">
               {filteredEnemies.length} / {combinedCatalog.length} Fichas
             </span>
@@ -1482,7 +1487,7 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
       {/* =====================================================================
           MODAL: CREADOR DE PNJ PERSONALIZADO (CUSTOM NPC CREATOR)
       ===================================================================== */}
-      {isCustomNpcModalOpen && (
+      {isCustomNpcModalOpen && !isTablePlayer && (
         <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-3 sm:p-4 backdrop-blur-xs animate-in fade-in duration-150">
           <div className="bg-[#0e1017] border-2 border-[#10b981] w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-xs p-5 shadow-2xl space-y-4 font-mono-code text-xs text-slate-200">
             {/* Header */}

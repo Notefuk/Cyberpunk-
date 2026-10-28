@@ -6,7 +6,8 @@ import { create } from 'zustand';
 import type { FirebaseHandles } from './firebaseClient';
 import type { NetArchitecturePreset, NetFloor } from '../data/netAndRolesData';
 
-export const HANDOUT_LIMIT = 20;
+// La mesa carga los últimos 10: con 20 la sesión de 4 h pasaba el tope de 35.000 lecturas (sessionBudget.test.ts). [Claude Code · 2026-10-28]
+export const HANDOUT_LIMIT = 10;
 export const HANDOUT_TITLE_MAX = 80;
 export const HANDOUT_TEXT_MAX = 2000;
 export const NET_REVEAL_MAX_FLOORS = 30;

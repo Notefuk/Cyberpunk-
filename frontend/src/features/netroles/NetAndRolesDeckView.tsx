@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useGmSecretBinding } from '../../sync/gmSecrets';
 import { useActiveTable } from '../../sync/tableSync';
 import { buildNetReveal, useTableReveals } from '../../sync/tableReveals';
+import { readGmPin, useGmAccess, useGmPinSession } from '../../store/gmAccess';
 import { 
   Cpu, 
   Zap, 
@@ -158,6 +159,27 @@ export const NetAndRolesDeckView: React.FC = () => {
   const [unlockedNetFloors, setUnlockedNetFloors] = useState<number[]>([1]);
   const [activeNetRollResult, setActiveNetRollResult] = useState<{ action: string; roll: number; formula: string; success?: boolean; text?: string } | null>(null);
   const [isGmArchitectureManagerOpen, setIsGmArchitectureManagerOpen] = useState<boolean>(false);
+  // v5.3.0 (plan 20, B.3): el modo GM del NET lo abre el GM de la mesa activa; sin mesa, lo protege el PIN del GM. [Claude Code · 2026-10-28]
+  const gmAccess = useGmAccess();
+  const [gmPinPrompt, setGmPinPrompt] = useState<string | null>(null);
+  const [gmPinError, setGmPinError] = useState(false);
+  const openGmManager = () => {
+    if (gmAccess.mode === 'local-locked') {
+      setGmPinPrompt('');
+      setGmPinError(false);
+      return;
+    }
+    setIsGmArchitectureManagerOpen(true);
+  };
+  const submitGmPin = () => {
+    if (gmPinPrompt !== null && gmPinPrompt === readGmPin()) {
+      useGmPinSession.getState().unlock();
+      setGmPinPrompt(null);
+      setIsGmArchitectureManagerOpen(true);
+    } else {
+      setGmPinError(true);
+    }
+  };
   const [targetNetDv, setTargetNetDv] = useState<number>(8);
   const [expandedNetActionId, setExpandedNetActionId] = useState<string | null>(null);
   // Programas del cyberdeck de la ficha (comprados o del paquete de rol "Program: X"); el REZ es de la sesión. [Claude Code · 2026-10-25]
@@ -696,7 +718,7 @@ export const NetAndRolesDeckView: React.FC = () => {
           {/* COLUMNA IZQUIERDA: SELECTOR DE ARQUITECTURAS & ACCIONES (5 cols) */}
           <div className="lg:col-span-5 space-y-4">
             {/* Presets & Custom Arch Selector (Con Modo Jugador vs Modo Master GM) */}
-            {!isGmArchitectureManagerOpen ? (
+            {!isGmArchitectureManagerOpen || gmAccess.mode === 'table-player' ? (
               <div className="bg-[#0d1017] border border-[#1b2234] p-3.5 rounded-xs space-y-3">
                 <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
                   <div className="flex items-center gap-2">
@@ -722,14 +744,36 @@ export const NetAndRolesDeckView: React.FC = () => {
                       Piso Actual: <strong className="text-cyan-400">Nivel #{currentFloorIndex + 1} de {activeArch.floors.length}</strong> • El Árbitro administra la topología y revela pisos según tus tiradas.
                     </p>
                   </div>
+                  {gmAccess.mode === 'table-player' ? (
+                    <span className="text-[10px] font-mono-code text-[#64748b] whitespace-nowrap">👑 Modo Master: solo el GM de "{gmAccess.campName}"</span>
+                  ) : gmPinPrompt !== null ? (
+                    <div className="flex items-center gap-1.5">
+                      <input
+                        type="password"
+                        inputMode="numeric"
+                        maxLength={4}
+                        autoFocus
+                        value={gmPinPrompt}
+                        placeholder="PIN GM"
+                        aria-label="PIN del GM"
+                        onChange={(e) => { setGmPinPrompt(e.target.value.replace(/\D/g, '')); setGmPinError(false); }}
+                        onKeyDown={(e) => { if (e.key === 'Enter') submitGmPin(); if (e.key === 'Escape') setGmPinPrompt(null); }}
+                        className={`w-20 bg-[#0c0d12] border ${gmPinError ? 'border-red-500' : 'border-amber-500/40'} text-white font-mono-code text-xs px-2 py-1 rounded-xs`}
+                      />
+                      <button type="button" onClick={submitGmPin} className="px-2 py-1 border border-amber-500/40 text-amber-400 font-tech text-xs font-bold rounded-xs cursor-pointer hover:bg-amber-600 hover:text-black">Abrir</button>
+                      <button type="button" onClick={() => setGmPinPrompt(null)} className="px-1.5 py-1 text-[#64748b] font-tech text-xs cursor-pointer hover:text-white">✕</button>
+                      {gmPinError && <span className="text-[10px] font-mono-code text-red-400">PIN incorrecto</span>}
+                    </div>
+                  ) : (
                   <button
                     type="button"
-                    onClick={() => setIsGmArchitectureManagerOpen(true)}
+                    onClick={openGmManager}
                     className="px-3 py-1.5 bg-[#1a2030] hover:bg-amber-600 hover:text-black text-amber-400 border border-amber-500/40 font-tech text-xs font-bold rounded-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 shadow"
                   >
                     <span>👑</span>
                     <span>MODO MASTER (GM): SELECCIONAR / EDITAR</span>
                   </button>
+                  )}
                 </div>
 
                 {canShareNet && (

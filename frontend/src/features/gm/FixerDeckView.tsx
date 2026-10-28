@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
 import { useGmSecretBinding, useGmSecrets } from '../../sync/gmSecrets';
+import { useGmAccess, useGmPinSession } from '../../store/gmAccess';
 import { 
   calculateMaxHp, 
   getEffectiveBody
@@ -127,8 +128,11 @@ export function FixerDeckView() {
   const [isUnlocked, setIsUnlocked] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     const pin = localStorage.getItem(GM_PIN_STORAGE_KEY);
-    return !(pin && pin.length === 4);
+    // v5.3.0 (plan 20, B.3): el PIN desbloqueado en el NET vale también acá (misma sesión). [Claude Code · 2026-10-28]
+    return !(pin && pin.length === 4) || useGmPinSession.getState().unlocked;
   });
+  // v5.3.0 (plan 20, B.3): con mesa activa manda el rol de la campaña; el PIN queda para el modo local.
+  const gmAccess = useGmAccess();
   const [pinInput, setPinInput] = useState<string>('');
   const [pinError, setPinError] = useState<string | null>(null);
   const [isSettingPin, setIsSettingPin] = useState<boolean>(false);
@@ -137,6 +141,7 @@ export function FixerDeckView() {
   const handleUnlock = () => {
     if (pinInput === savedPin) {
       setIsUnlocked(true);
+      useGmPinSession.getState().unlock();
       setPinError(null);
       setPinInput('');
     } else {
@@ -439,7 +444,17 @@ export function FixerDeckView() {
   };
 
   // --- PIN LOCK SCREEN ---
-  if (!isUnlocked && savedPin) {
+  if (gmAccess.mode === 'table-player') {
+    return (
+      <div className="max-w-md mx-auto my-12 bg-[#10121a] border border-[#262c3e] rounded-xs p-6 text-center space-y-2">
+        <Lock className="w-6 h-6 text-slate-500 mx-auto" />
+        <h2 className="font-tech text-sm font-bold text-white uppercase tracking-wider">Solo el GM de "{gmAccess.campName}"</h2>
+        <p className="text-xs font-mono-code text-[#94a3b8]">El Fixer Deck es la consola del GM de la mesa activa. Lo que revele te llega en MESA // CAMPAÑA y en el HUD.</p>
+      </div>
+    );
+  }
+
+  if (!isUnlocked && savedPin && gmAccess.mode !== 'table-gm') {
     return (
       <div className="max-w-md mx-auto my-12 bg-[#10121a] border-2 border-[#dc2626] rounded-xs p-6 shadow-2xl text-center space-y-6 animate-in fade-in duration-200">
         <div className="inline-flex p-3 bg-[#dc2626]/20 border border-[#dc2626] rounded-full text-[#dc2626] mb-1">
