@@ -16,6 +16,7 @@ import { createTableLogPublisher, gmActionToLog, useTableLog, TABLE_LOG_KEEP, ty
 import type { DeathSaveResult } from '../engine/characterEngine';
 import { createEncounterSync, type EncounterAdapter, type EncounterSync } from './encounterSync';
 import { startGmSecrets, stopGmSecrets, createGmSecretsRepo, GM_SECRET_LOCAL_KEYS, type GmSecretKind } from './gmSecrets';
+import { createTableRevealsRepo, useTableReveals } from './tableReveals';
 
 export interface ActiveTable {
   table: CampaignDoc | null;
@@ -127,6 +128,7 @@ function stopEncounterSync(): void {
   logPublisher?.flush();
   logPublisher = null;
   useTableLog.getState().set([]);
+  useTableReveals.setState({ handouts: [], net: null, adapter: null });
 }
 
 function whoAmI(uid: string) {
@@ -224,6 +226,11 @@ function startEncounterSync(campId: string, isGm: boolean): void {
     encounterSync = sync;
     sync.start();
     startTableLog(h, campId, isGm, uid, onListenError);
+    // v5.3.0 (plan 20, B.2): handouts y corrida NET que revela el GM (los lee toda la mesa). [Claude Code · 2026-10-28]
+    const reveals = createTableRevealsRepo(h, campId, uid);
+    useTableReveals.setState({ adapter: reveals });
+    logUnsubs.push(reveals.subscribeHandouts((handouts) => useTableReveals.setState({ handouts }), (e) => console.warn('[mesa] revelado:', e)));
+    logUnsubs.push(reveals.subscribeNet((net) => useTableReveals.setState({ net }), (e) => console.warn('[mesa] NET revelado:', e)));
     // v5.3.0 (plan 20, B.1): secretos del GM de esta campaña. [Claude Code · 2026-10-28]
     if (isGm) {
       startGmSecrets({

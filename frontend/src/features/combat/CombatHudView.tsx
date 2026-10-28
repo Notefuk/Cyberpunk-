@@ -6,6 +6,7 @@ import { recordMyInitiative, getActiveTable, useActiveTable, publishDeathSave, s
 import { isAutoShared } from '../../sync/tableLog';
 import { TableLogPanel } from '../cloud/TableLogPanel';
 import { EncounterOrderStrip } from './EncounterOrderStrip';
+import { HandoutNotice } from '../cloud/HandoutsPanel';
 import { 
   RANGE_BRACKETS, 
   WEAPON_RANGE_PROFILES, 
@@ -8712,6 +8713,8 @@ export const CombatHudView: React.FC = () => {
         </button>
         <GameClockBar compact />
         <EncounterOrderStrip />
+        {/* v5.3.0 (plan 20): último handout del GM que no viste. [Claude Code · 2026-10-28] */}
+        <HandoutNotice />
         {activeTableForLog && <TableLogPanel compact />}
         {roundToolFeedback && (
           <span className="w-full text-[11px] font-mono-code text-cyan-200 break-words">{roundToolFeedback}</span>

@@ -288,6 +288,24 @@ describe('campañas', () => {
     await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/net'), { items: [], _ts: serverTimestamp() }));
   });
 
+  // [Claude Code · 2026-10-28] v5.3.0 (plan 20, B.2): lo que revela el GM. La mesa lee; solo el GM escribe.
+  it('revelado: el GM manda handouts y la corrida NET; un jugador lee pero no escribe', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    const note = (id: string, by: string, over: Record<string, unknown> = {}) => ({ id, kind: 'note', title: 'Pista', text: 'La puerta está abierta', at: serverTimestamp(), _by: by, ...over });
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/h1'), note('h1', 'gm')));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/reveals/h2'), note('h2', 'alice')));
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/h3'), note('h3', 'gm', { text: 'x'.repeat(2001) })));
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/h4'), note('otro', 'gm')));
+    await assertFails(updateDoc(doc(db('gm'), 'campaigns/camp1/reveals/h1'), { text: 'cambiada' }));
+    await assertSucceeds(getDoc(doc(db('alice'), 'campaigns/camp1/reveals/h1')));
+    await assertFails(getDoc(doc(db('carol'), 'campaigns/camp1/reveals/h1')));
+    const net = { archName: 'Arasaka', totalFloors: 6, currentFloor: 2, floors: [{ floorNumber: 1, type: 'Password', name: 'Puerta', dv: 8 }], _ts: serverTimestamp() };
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/net'), net));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/reveals/net'), net));
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/net'), { ...net, secreto: 'ICE HP 20' }));
+    await assertSucceeds(getDoc(doc(db('alice'), 'campaigns/camp1/reveals/net')));
+  });
+
   // [Claude Code · 2026-10-27] v5.1.0 (plan 19): forma fija del log (id propio, hora del servidor, tamaños).
   const logEntry = (id: string, by: string, over: Record<string, unknown> = {}) => ({
     id, _by: by, at: serverTimestamp(), handle: 'Vex', kind: 'attack', label: 'Ataque: Heavy Pistol', total: 17, ...over,

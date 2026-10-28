@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGmSecretBinding } from '../../sync/gmSecrets';
+import { useActiveTable } from '../../sync/tableSync';
+import { buildNetReveal, useTableReveals } from '../../sync/tableReveals';
 import { 
   Cpu, 
   Zap, 
@@ -172,6 +174,32 @@ export const NetAndRolesDeckView: React.FC = () => {
 
   const allPresets = [...NET_ARCHITECTURE_PRESETS, ...customPresets];
   const activeArch = allPresets.find(p => p.id === selectedPresetId) || NET_ARCHITECTURE_PRESETS[0];
+
+  // v5.3.0 (plan 20, B.2): el GM comparte la corrida (pisos desbloqueados, sin HP/ATK/DEF del ICE) y la mesa la ve. [Claude Code · 2026-10-28]
+  const { table: activeTable, isGm: isTableGm } = useActiveTable();
+  const tableNet = useTableReveals((s) => s.net);
+  const revealsAdapter = useTableReveals((s) => s.adapter);
+  const [shareNetWithTable, setShareNetWithTable] = useState(false);
+  const canShareNet = !!activeTable && isTableGm && !!revealsAdapter;
+  const lastNetKey = useRef('');
+  useEffect(() => {
+    if (!canShareNet || !revealsAdapter) return;
+    if (!shareNetWithTable) {
+      lastNetKey.current = '';
+      if (tableNet) void revealsAdapter.setNet(null).catch((e) => console.warn('[mesa] NET revelado:', e));
+      return;
+    }
+    const reveal = buildNetReveal(activeArch, unlockedNetFloors, currentFloorIndex);
+    const k = JSON.stringify(reveal);
+    if (k === lastNetKey.current) return; // solo se escribe si cambió algo que ve la mesa
+    const t = setTimeout(() => {
+      lastNetKey.current = k;
+      void revealsAdapter.setNet(reveal).catch((e) => console.warn('[mesa] NET revelado:', e));
+    }, 800);
+    return () => clearTimeout(t);
+    // tableNet se omite a propósito: solo se borra al apagar el toggle.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canShareNet, revealsAdapter, shareNetWithTable, activeArch, unlockedNetFloors, currentFloorIndex]);
 
   // Interface (Core p.147/197): rango según rol u override; NET Actions por rango (Core p.197).
   const era = useCombatStore((state) => state.era);
@@ -703,6 +731,27 @@ export const NetAndRolesDeckView: React.FC = () => {
                     <span>MODO MASTER (GM): SELECCIONAR / EDITAR</span>
                   </button>
                 </div>
+
+                {canShareNet && (
+                  <label className="flex items-center gap-2 font-mono-code text-[11px] text-sky-200 cursor-pointer">
+                    <input type="checkbox" checked={shareNetWithTable} onChange={(e) => setShareNetWithTable(e.target.checked)} />
+                    📡 Mostrar la corrida a la mesa ({activeTable?.name}): pisos desbloqueados con su DV e ICE, sin HP/ATK/DEF
+                  </label>
+                )}
+
+                {tableNet && !isTableGm && (
+                  <div className="p-2.5 bg-sky-950/20 border border-sky-500/40 rounded-xs space-y-1 font-mono-code text-[11px] text-slate-300">
+                    <div className="text-sky-200 font-bold">📡 El GM comparte: {tableNet.archName} · piso {tableNet.currentFloor} de {tableNet.totalFloors}</div>
+                    <ol className="space-y-0.5">
+                      {tableNet.floors.map((f) => (
+                        <li key={f.floorNumber} className={f.floorNumber === tableNet.currentFloor ? 'text-cyan-300' : ''}>
+                          {f.floorNumber === tableNet.currentFloor ? '▶ ' : ''}#{f.floorNumber} {f.type}: {f.name}
+                          {typeof f.dv === 'number' ? ` · DV ${f.dv}` : ''}{f.iceType ? ` · ICE ${f.iceType}` : ''}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="bg-[#0d1017] border border-amber-500/50 p-3.5 rounded-xs space-y-3 animate-fade-in shadow-xl">

@@ -23,6 +23,9 @@ export const EncounterOrderStrip: React.FC = () => {
   const { table, isGm } = useActiveTable();
   // v5.2.0 (plan 20): el GM de la mesa abre la calculadora sobre un PJ. [Claude Code · 2026-10-28]
   const [targetCharId, setTargetCharId] = useState<string | null>(null);
+  // v5.3.0 (plan 20, B.2): ficha pública de un enemigo revelado. [Claude Code · 2026-10-28]
+  const [openRevealId, setOpenRevealId] = useState<string | null>(null);
+  const setRevealed = useEncounterStore((s) => s.setRevealed);
   const list = orderedCombatants({ combatants, order });
   if (list.length === 0) return null;
   const canDrive = !table || isGm;
@@ -62,6 +65,26 @@ export const EncounterOrderStrip: React.FC = () => {
               <span className={c.kind === 'pc' ? 'text-cyan-200' : 'text-rose-200'}>{c.name}</span>
               {c.kind === 'enemy' && wound && <span className={`ml-1 ${WOUND_LABEL[wound].cls}`}>· {WOUND_LABEL[wound].text}</span>}
               {c.enemy && <span className="ml-1 text-slate-500">({c.enemy.currentHp}/{c.enemy.maxHp})</span>}
+              {table && isGm && c.kind === 'enemy' && c.enemy && (
+                <button
+                  type="button"
+                  onClick={() => setRevealed(c.id, !c.revealed)}
+                  className={`ml-1.5 font-tech text-[10px] uppercase px-1 border cursor-pointer ${c.revealed ? 'border-sky-400 text-sky-200 bg-sky-500/10' : 'border-slate-600 text-slate-400 hover:text-sky-200'}`}
+                  title={c.revealed ? 'La mesa ve su ficha pública (sin HP). Tocá para ocultarla.' : 'Mostrar a la mesa su ficha pública (nunca los HP)'}
+                >
+                  {c.revealed ? 'Revelado' : 'Revelar'}
+                </button>
+              )}
+              {!isGm && c.reveal && (
+                <button
+                  type="button"
+                  onClick={() => setOpenRevealId(openRevealId === c.id ? null : c.id)}
+                  className="ml-1.5 font-tech text-[10px] uppercase px-1 border border-sky-500/50 text-sky-300 hover:bg-sky-500/10 cursor-pointer"
+                  title="El GM reveló su ficha"
+                >
+                  Ficha
+                </button>
+              )}
               {table && isGm && c.kind === 'pc' && c.charId && (
                 <button
                   type="button"
@@ -76,6 +99,19 @@ export const EncounterOrderStrip: React.FC = () => {
           );
         })}
       </ol>
+      {(() => {
+        const open = list.find((c) => c.id === openRevealId && c.reveal);
+        const r = open?.reveal;
+        if (!open || !r) return null;
+        return (
+          <div className="border border-sky-500/40 bg-sky-950/20 p-2 font-mono-code text-[11px] text-slate-300 space-y-0.5">
+            <div className="text-sky-200 font-bold">{open.name}{r.subtitle ? ` · ${r.subtitle}` : ''}</div>
+            <div>{[r.faction, r.threatTier].filter(Boolean).join(' · ')} · SP cabeza {r.headSp} / cuerpo {r.bodySp}</div>
+            {r.weapons.length > 0 && <div>Armas: {r.weapons.join(', ')}</div>}
+            {r.specialRules.map((rule, i) => <div key={i} className="text-slate-400">• {rule}</div>)}
+          </div>
+        );
+      })()}
       {targetCharId && <GmTargetDialog charId={targetCharId} onClose={() => setTargetCharId(null)} />}
     </div>
   );
