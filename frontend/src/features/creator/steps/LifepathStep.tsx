@@ -35,6 +35,8 @@ const COUNT_WORDS: Array<[RegExp, number]> = [
 const CORE_COUNT_PAGE: Record<GroupName, number> = { friends: 51, enemies: 51, love: 52 };
 const rollCoreCount = (): number => Math.max(0, rollD10() - 7);
 
+const CUSTOM_OPTION = '__custom__';
+
 function countFromPick(table: LifepathTable, pick: LifepathPick): number | null {
   const en = table.results.find((r) => r.es === pick.value)?.en ?? '';
   const digit = /^(\d+)\b/.exec(en);
@@ -51,6 +53,8 @@ const TableRow: React.FC<{
 }> = ({ table, pick, onChange, prefix }) => {
   const choose = table.die === 'choose';
   const selectId = `lp-${prefix ?? ''}-${table.id}`;
+  // v5.4.0 [Claude Code · 2026-10-29]: "Otro (escribir)" guarda un texto propio como { roll: null, value }.
+  const isCustom = !!pick && !table.results.some((r) => r.es === pick.value);
   return (
     <div className="grid sm:grid-cols-[minmax(0,1fr)_auto] gap-2 items-center py-2 border-b border-[#1e2334] last:border-0">
       <div>
@@ -64,8 +68,12 @@ const TableRow: React.FC<{
         <select
           id={selectId}
           className={`${SELECT_CLS} w-full mt-1`}
-          value={pick?.value ?? ''}
-          onChange={(e) => onChange(e.target.value ? { roll: null, value: e.target.value } : null)}
+          value={isCustom ? CUSTOM_OPTION : pick?.value ?? ''}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v === CUSTOM_OPTION) onChange({ roll: null, value: '' });
+            else onChange(v ? { roll: null, value: v } : null);
+          }}
         >
           <option value="">— elegir a mano —</option>
           {table.results.map((r, i) => (
@@ -73,7 +81,18 @@ const TableRow: React.FC<{
               {r.roll} · {r.es}
             </option>
           ))}
+          <option value={CUSTOM_OPTION}>✎ Otro (escribir)</option>
         </select>
+        {isCustom && (
+          <input
+            aria-label={`${table.name}: texto propio`}
+            className={`${INPUT_CLS} w-full mt-1 min-h-[44px]`}
+            placeholder="Escribí tu propio resultado"
+            value={pick?.value ?? ''}
+            autoFocus={!pick?.value}
+            onChange={(e) => onChange({ roll: null, value: e.target.value })}
+          />
+        )}
       </div>
       <div className="flex items-center gap-2">
         {!choose && (
@@ -82,7 +101,7 @@ const TableRow: React.FC<{
           </Btn>
         )}
         {pick?.roll != null && <span className="text-xs font-mono-code text-[#10b981]">Tirada: {pick.roll}</span>}
-        {pick && pick.roll === null && <span className="text-[10px] font-mono-code text-[#64748b]">a mano</span>}
+        {pick && pick.roll === null && <span className="text-[10px] font-mono-code text-[#64748b]">{isCustom ? 'propio' : 'a mano'}</span>}
       </div>
     </div>
   );

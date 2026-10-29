@@ -17,13 +17,14 @@ import {
 } from '../../../engine/characterCreation';
 import type { StatKey } from '../../../types/cyberpunk';
 import { Btn, InfoToggle, NoviceGuide, Panel, StepHeader, type StepProps } from './CreatorUi';
+import { StatGuide } from './StatGuide';
 
 const StatLabel: React.FC<{ stat: StatKey }> = ({ stat }) => {
   const t = STAT_TOOLTIPS[stat];
   return (
     <span className="inline-flex flex-wrap items-center gap-1 max-w-full">
       <span className="font-tech font-bold text-white">{stat}</span>
-      <InfoToggle text={`${t.name} · ${t.spanishName}\n${t.shortSummary}`} source={t.source} />
+      <InfoToggle text={`${t.name} · ${t.spanishName}\n${t.beginnerExplanation || t.shortSummary}${t.mechanicalBreakpoints.length ? `\n• ${t.mechanicalBreakpoints.join('\n• ')}` : ''}`} source={t.source} />
     </span>
   );
 };
@@ -87,6 +88,7 @@ export const StatsStep: React.FC<StepProps> = ({ draft, update }) => {
         page={method === 'streetrat' ? 'Core p.73-74' : method === 'edgerunner' ? 'Core p.77' : 'Core p.78'}
       />
       <NoviceGuide step="stats" />
+      <StatGuide values={draft.stats} className="mb-4" />
 
       {method === 'streetrat' && table && (
         <Panel title="Streetrat: tabla del rol (1d10)" className="mb-4">

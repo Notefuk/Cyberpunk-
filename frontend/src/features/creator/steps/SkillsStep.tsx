@@ -9,13 +9,18 @@ import {
   getEdgerunnerSkillNames,
   getLifepathTables,
   getMartialArtsFormSkills,
+  getRoleAbilityInfo,
+  getRolePackage,
   getSkillCatalog,
   getSkillPointsSpent,
   setSkillSpecialty,
   skillLevelCost,
   skillSpecialty,
+  usesRolePackage,
   type SkillCatalogEntry
 } from '../../../engine/characterCreation';
+import { AUTOFIRE_RULES, AUTOFIRE_WARNING, WEAPON_SKILL_GUIDE, WEAPON_SKILLS_NOTE } from '../../../data/creation/weaponSkillGuide';
+import { RoleAllocationEditor } from '../../sheet/RoleAllocationPanel';
 import { MARTIAL_ARTS_FORMS } from '../../../data/cyberfistsMartialArtsData';
 import { Btn, INPUT_CLS, InfoToggle, NoviceGuide, Panel, SourceBadge, StepHeader, type StepProps } from './CreatorUi';
 
@@ -46,6 +51,8 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
 
   const keyFor = (entry: SkillCatalogEntry): string | null => {
     const b = baseName(entry.name);
+    // La fila Language es siempre Streetslang; los idiomas extra van en su propio bloque (v5.4.0).
+    if (entry.name === 'Language' && method !== 'edgerunner') return 'Language (Streetslang)';
     if (method === 'edgerunner') return allowed.find((n) => baseName(n) === b) ?? null;
     const existing = Object.keys(draft.skills).find((n) => baseName(n) === b);
     return existing ?? (entry.name === 'Language' ? 'Language (Streetslang)' : canonSkillKey(entry.name));
@@ -169,6 +176,30 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
   }, [catalog]);
 
   const spent = getSkillPointsSpent(draft);
+  const roleAbility = role ? getRoleAbilityInfo(role, 'core', draft.era) : null;
+
+  // v5.4.0 [Claude Code · 2026-10-29]: idiomas extra como 'Language (X)' con puntos normales (Core p.84).
+  const [newLanguage, setNewLanguage] = React.useState('');
+  const extraLanguages = Object.keys(draft.skills).filter((k) => /^Language \(/.test(k) && k !== 'Language (Streetslang)');
+  const newLanguageTrim = newLanguage.trim();
+  const newLanguageOk =
+    !!newLanguageTrim &&
+    !['streetslang', draft.culturalLanguage.trim().toLowerCase()].includes(newLanguageTrim.toLowerCase()) &&
+    !extraLanguages.some((k) => k.toLowerCase() === `language (${newLanguageTrim.toLowerCase()})`);
+  const addLanguage = (): void => {
+    if (!newLanguageOk) return;
+    update((d) => ({ ...d, skills: { ...d.skills, [`Language (${newLanguageTrim})`]: 1 } }));
+    setNewLanguage('');
+  };
+
+  // Si el paquete o las compras traen un arma con Autofire, se sugiere la skill (sin obligar).
+  const hasAutofireWeapon = useMemo(() => {
+    const names = [
+      ...draft.purchases.filter((p) => p.category === 'weapons').map((p) => p.name),
+      ...(role && usesRolePackage(draft) ? getRolePackage(role, draft.era, draft.packageChoices).weapons.map((w) => w.name) : [])
+    ];
+    return names.some((n) => /\bSMG\b|assault rifle/i.test(n));
+  }, [draft, role]);
   const languageSuggestions = useMemo(() => {
     const table = getLifepathTables(draft.lifepathSource, null).general.find((t) => t.id === 'cultural_origins');
     const pick = draft.lifepath['cultural_origins'];
@@ -191,6 +222,32 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
       />
       <NoviceGuide step="skills" />
 
+      {role && roleAbility && (
+        <Panel title={`Habilidad de rol: ${roleAbility.name} (rango 4)`} className="mb-4 border-[#a855f7]/50">
+          <p className="text-[11px] text-[#cbd5e1] whitespace-pre-line">{roleAbility.textEs}</p>
+          <p className="text-[10px] font-mono-code text-[#64748b] mt-1">
+            {roleAbility.source.book} p.{roleAbility.source.page ?? '?'} · no gasta los {SKILL_POINTS} puntos de skills
+          </p>
+          {(role === 'Tech' || role === 'Medtech') && (
+            <div className="mt-2">
+              <p className="text-[11px] text-[#f59e0b] mb-1">Repartí acá los puntos de tu habilidad de rol. Después los podés cambiar en la ficha (pestaña ROL).</p>
+              <RoleAllocationEditor
+                role={role}
+                rank={4}
+                makerAllocation={draft.makerAllocation}
+                medicineAllocation={draft.medicineAllocation}
+                setMakerAllocation={(a) => update((d) => ({ ...d, makerAllocation: a }))}
+                setMedicineAllocation={(a) => update((d) => ({ ...d, medicineAllocation: a }))}
+                showHelp
+              />
+            </div>
+          )}
+          {role === 'Solo' && (
+            <p className="text-[11px] text-[#94a3b8] mt-2">Combat Awareness se reparte durante el combate, en el HUD de combate.</p>
+          )}
+        </Panel>
+      )}
+
       <Panel className="mb-4">
         <div className="flex flex-wrap items-center gap-3">
           <span className={`font-tech text-lg font-black ${spent === SKILL_POINTS ? 'text-[#10b981]' : 'text-[#f59e0b]'}`} aria-live="polite">
@@ -200,7 +257,7 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
         </div>
         <div className="mt-3">
           <label htmlFor="cultural-language" className="text-xs text-[#cbd5e1] block mb-1">
-            Idioma de origen cultural (4 gratis, además de Language (Streetslang), Core pp. 45 y 85)
+            Idioma de tu origen cultural: 1 idioma a rango 4, gratis (Core p.45 y p.90)
           </label>
           <input
             id="cultural-language"
@@ -216,7 +273,39 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
             ))}
           </datalist>
           {languageSuggestions.length > 0 && (
-            <p className="text-[10px] font-mono-code text-[#64748b] mt-1">Sugeridos por tu Origen Cultural: {languageSuggestions.join(', ')}.</p>
+            <p className="text-[10px] font-mono-code text-[#64748b] mt-1">Sugeridos por tu Origen Cultural: {languageSuggestions.join(', ')} (podés elegir otro).</p>
+          )}
+          <p className="text-[10px] text-[#94a3b8] mt-1">
+            Es uno solo, no cuatro: ese idioma arranca en 4. Language (Streetslang) va aparte y arranca en 2 (Core p.85). Otros idiomas se compran con puntos.
+          </p>
+          {method === 'complete_package' && (
+            <div className="mt-2">
+              <div className="text-[11px] text-[#cbd5e1] font-bold mb-1">Otros idiomas (con puntos, Core p.84)</div>
+              {extraLanguages.map((k) => (
+                <div key={k} className="flex items-center gap-2 py-1">
+                  <span className="text-xs text-white flex-1">{k}</span>
+                  <Btn aria-label={`Bajar ${k}`} onClick={() => stepLevel(k, -1, 0)}>
+                    −
+                  </Btn>
+                  <span className="w-6 text-center font-tech font-black text-white">{draft.skills[k]}</span>
+                  <Btn aria-label={`Subir ${k}`} disabled={(draft.skills[k] ?? 0) >= SKILL_MAX_LEVEL} onClick={() => stepLevel(k, 1, 0)}>
+                    +
+                  </Btn>
+                </div>
+              ))}
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  aria-label="Nuevo idioma"
+                  className={`${INPUT_CLS} w-40 min-h-[36px]`}
+                  placeholder="p. ej. Japanese"
+                  value={newLanguage}
+                  onChange={(e) => setNewLanguage(e.target.value)}
+                />
+                <Btn tone="cyan" disabled={!newLanguageOk} onClick={addLanguage}>
+                  + otro idioma
+                </Btn>
+              </div>
+            </div>
           )}
         </div>
       </Panel>
@@ -226,6 +315,25 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
       ) : (
         categories.map(([category, list]) => (
           <Panel key={category} title={category} className="mb-3">
+            {(category === 'Ranged Weapon' || category === 'Fighting') && <p className="text-[11px] text-[#cbd5e1] mb-2">{WEAPON_SKILLS_NOTE}</p>}
+            {category === 'Ranged Weapon' && (
+              <details className="mb-2 border border-[#f59e0b]/40 rounded-xs bg-[#0a0b0e] p-2" open={hasAutofireWeapon}>
+                <summary className="cursor-pointer text-xs font-bold text-[#f59e0b] min-h-[32px] flex items-center">
+                  Cómo funciona Autofire (ráfaga y Suppressive Fire)
+                </summary>
+                <ul className="list-disc pl-4 mt-1 space-y-0.5 text-[11px] text-[#cbd5e1]">
+                  {AUTOFIRE_RULES.map((r) => (
+                    <li key={r}>{r}</li>
+                  ))}
+                </ul>
+                <p className="text-[11px] text-[#f59e0b] mt-1">{AUTOFIRE_WARNING}</p>
+              </details>
+            )}
+            {category === 'Ranged Weapon' && hasAutofireWeapon && (draft.skills['Autofire'] ?? 0) === 0 && (
+              <p className="text-[11px] text-[#f59e0b] mb-2" role="status">
+                Tenés un arma con Autofire: si querés disparar en ráfaga, poné puntos en Autofire. Sin la skill, la ráfaga solo suma tu REF.
+              </p>
+            )}
             <div className="grid md:grid-cols-2 gap-x-4">
               {list.map((s) => {
                 if (s.name === 'Martial Arts' && method === 'complete_package') return renderMartialArtsBlock();
@@ -254,6 +362,14 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
                       <span className="ml-1 align-middle">
                         <InfoToggle text={s.descEs} source={s.source.page != null ? { book: s.source.book, page: s.source.page } : null} />
                       </span>
+                      {WEAPON_SKILL_GUIDE[s.name] && (
+                        <p className="text-[10px] text-[#94a3b8] mt-0.5">
+                          🎯 {WEAPON_SKILL_GUIDE[s.name].weaponsEs}{' '}
+                          <span className="font-mono-code text-[#64748b]">
+                            {WEAPON_SKILL_GUIDE[s.name].rollEs} · {WEAPON_SKILL_GUIDE[s.name].page}
+                          </span>
+                        </p>
+                      )}
                       {key && level > 0 && isSpecialtySkill(key) && (
                         <div className="mt-1">
                           <input

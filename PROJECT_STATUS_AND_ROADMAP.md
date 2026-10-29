@@ -1,8 +1,8 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.3.2`** (arreglos del creador: Neuroport, cyberdecks y Hardware, etiqueta de origen en la tienda) en `claude/v5.3.2-wizard-fixes`, sin pushear; en `main`, gh-pages (beta) y Firebase prod (estable) está la v5.3.1 [Claude Code · 2026-10-29]  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.4.0`** (creador: texto propio, STATs, rol arriba, idiomas, skills de arma y Autofire, paquete en Complete Package) en `claude/v5.4.0-creador`, sin pushear; en `main`, gh-pages (beta) y Firebase prod (estable) está la v5.3.2 [Claude Code · 2026-10-29]  
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
-> **PLAN ACTIVO**: plan 20 (fase 3 del plan 16) terminado y publicado: v5.2.0 y v5.3.0 en prod, probadas con cuentas reales [Claude Code · 2026-10-29]. Después el plan 5. Estado de todos los planes en `docs/plans/README.md`.  
+> **PLAN ACTIVO**: plan 21 (creador, tienda y ficha): v5.4.0 terminada, siguen v5.5.0 (tienda) y v5.6.0 (ficha) [Claude Code · 2026-10-29]. Antes: plan 20 terminado y publicado. Después el plan 5. Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 

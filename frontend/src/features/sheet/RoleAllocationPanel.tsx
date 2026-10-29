@@ -52,13 +52,52 @@ const Stepper: React.FC<{ label: string; value: number; onMinus: () => void; onP
   </div>
 );
 
+// v5.4.0 [Claude Code · 2026-10-29]: qué hace cada especialidad (plan 21). Se muestra debajo de cada contador.
+const MAKER_HELP: Record<MakerSpecialty, string> = {
+  field: 'Suma tu rango a las tiradas de Basic Tech, Cybertech, Electronics/Security Tech, Weaponstech y Vehicle Tech, y te deja emparchar un ítem como Acción por 10 minutos por rango (Core p.147).',
+  upgrade: 'Mejorar un ítem que ya existe (por ejemplo, un arma a Excellent Quality o hacerla ocultable), pagando materiales de su misma categoría de precio (Core p.148).',
+  fabrication: 'Fabricar un ítem desde materiales que cuestan una categoría de precio menos que el ítem (Core p.148).',
+  invention: 'Inventar un ítem o mejora que no está en el libro, con el GM (Core p.148).',
+};
+const MEDICINE_HELP: Record<'surgery' | 'pharmaceuticals' | 'cryosystem', string> = {
+  surgery: 'Cada punto da 2 niveles de Surgery (TECH). Es la única skill que trata las Critical Injuries más graves (las de Treatment "Surgery" en Core pp.187-188) y la que implanta cyberware. Solo la tiene el Medtech (Core p.149).',
+  pharmaceuticals: 'Cada punto da +1 a Medical Tech (máx. 10) y te deja fabricar fármacos: Antibiotic, Rapidetox, Speedheal, Stim o Surge, con DV13 (Core pp.149-150).',
+  cryosystem: 'Cada punto da +1 a Medical Tech (máx. 10) y equipo de frío: Cryopump y Cryotank según el nivel (Core p.150).',
+};
+
+/** Editor del reparto de rol sin store: lo usan la ficha y el creador. */
+export interface RoleAllocationEditorProps {
+  role: string | null | undefined;
+  rank: number;
+  makerAllocation?: Partial<MakerAllocation>;
+  medicineAllocation?: Partial<MedicineAllocation>;
+  soloAllocation?: unknown;
+  setMakerAllocation: (a: MakerAllocation) => void;
+  setMedicineAllocation: (a: MedicineAllocation) => void;
+  showHelp?: boolean;
+}
+
 export const RoleAllocationPanel: React.FC = () => {
   const activeChar = useCharacterStore((state) => state.getActiveCharacter());
   const setMakerAllocation = useCharacterStore((state) => state.setMakerAllocation);
   const setMedicineAllocation = useCharacterStore((state) => state.setMedicineAllocation);
-
   if (!activeChar) return null;
-  const rank = activeChar.roleRank;
+  return (
+    <RoleAllocationEditor
+      role={activeChar.role}
+      rank={activeChar.roleRank}
+      makerAllocation={activeChar.makerAllocation}
+      medicineAllocation={activeChar.medicineAllocation}
+      soloAllocation={activeChar.soloAllocation}
+      setMakerAllocation={setMakerAllocation}
+      setMedicineAllocation={setMedicineAllocation}
+      showHelp
+    />
+  );
+};
+
+export const RoleAllocationEditor: React.FC<RoleAllocationEditorProps> = ({ role, rank, makerAllocation, medicineAllocation, soloAllocation, setMakerAllocation, setMedicineAllocation, showHelp }) => {
+  const activeChar = { role, makerAllocation, medicineAllocation, soloAllocation };
   const box = 'p-2.5 bg-[#121319] border border-[#232736] rounded space-y-2 font-mono-code';
 
   if (activeChar.role === 'Tech') {
@@ -73,7 +112,10 @@ export const RoleAllocationPanel: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
           {MAKER_ROWS.map(([k, label]) => (
-            <Stepper key={k} label={label} value={alloc[k]} minusOff={alloc[k] <= 0} plusOff={alloc[k] >= rank || free <= 0} onMinus={() => change(k, -1)} onPlus={() => change(k, 1)} />
+            <div key={k}>
+              <Stepper label={label} value={alloc[k]} minusOff={alloc[k] <= 0} plusOff={alloc[k] >= rank || free <= 0} onMinus={() => change(k, -1)} onPlus={() => change(k, 1)} />
+              {showHelp && <p className="text-[10px] text-slate-400 mt-0.5 font-sans">{MAKER_HELP[k]}</p>}
+            </div>
           ))}
         </div>
         {errors.map((er) => <div key={er} className="text-[10px] text-red-400">{er}</div>)}
@@ -102,7 +144,10 @@ export const RoleAllocationPanel: React.FC = () => {
         <div className="text-[11px] text-purple-300 font-bold">Medicine: {free} de {rank} puntos libres (Core pp. 149-150)</div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5">
           {MEDICINE_ROWS.map(([k, label]) => (
-            <Stepper key={k} label={label} value={alloc[k]} minusOff={alloc[k] <= 0} plusOff={alloc[k] >= MEDICINE_MAX || free <= 0} onMinus={() => change(k, -1)} onPlus={() => change(k, 1)} />
+            <div key={k}>
+              <Stepper label={label} value={alloc[k]} minusOff={alloc[k] <= 0} plusOff={alloc[k] >= MEDICINE_MAX || free <= 0} onMinus={() => change(k, -1)} onPlus={() => change(k, 1)} />
+              {showHelp && <p className="text-[10px] text-slate-400 mt-0.5 font-sans">{MEDICINE_HELP[k]}</p>}
+            </div>
           ))}
         </div>
         <div className="text-[11px] text-slate-300">Surgery nivel {surgeryLevel(alloc)} · Medical Tech +{medicalTechFromPharma(alloc)}</div>

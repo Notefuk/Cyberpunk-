@@ -26,6 +26,33 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.4.0',
+    date: '2026-10-29',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Creador',
+    title: 'Creador más libre y que explica',
+    summary: 'Resultados propios en el Lifepath, qué hace cada STAT, la habilidad de rol arriba de las skills, idiomas bien explicados, qué armas usa cada skill y cómo funciona Autofire, y el paquete del rol como opción en Complete Package.',
+    highlights: [
+      '"✎ Otro (escribir)" en todas las tablas del Lifepath.',
+      'Guía de STATs con sus reglas y página (REF 8+ esquiva tiros, Core p.172; HP y Death Save, Core pp.79 y 222).',
+      'Medicine y Maker se reparten en el creador, con qué hace cada especialidad (Core pp.147-150).',
+      'Un idioma de origen a 4 gratis (Core p.45) y "+ otro idioma" con puntos.',
+      'Cada skill de arma dice qué armas cubre; cuadro de Autofire y Suppressive Fire (Core pp.173-174).',
+      'Complete Package: paquete del rol + 500 €$ o 2.550 €$ sueltos (variante de mesa).',
+      '474 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/features/creator/steps/StatGuide.tsx',
+      'frontend/src/data/creation/weaponSkillGuide.ts',
+      'frontend/src/features/creator/steps/SkillsStep.tsx',
+      'frontend/src/features/creator/steps/LifepathStep.tsx',
+      'frontend/src/features/sheet/RoleAllocationPanel.tsx',
+      'frontend/src/engine/characterCreation.ts'
+    ],
+    metricsBadge: 'v5.4.0 • Creador • Plan 21'
+  },
+  {
     version: 'v5.3.2',
     date: '2026-10-29',
     author: 'Claude Code',
@@ -1282,6 +1309,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.4.0': true,
     'v5.3.2': true,
     'v5.3.1': true,
     'v5.3.0': true,

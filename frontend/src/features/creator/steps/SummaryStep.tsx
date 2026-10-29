@@ -15,7 +15,8 @@ import {
   getRolePackage,
   getSummaryWarnings,
   getSkillPointsSpent,
-  type CreatorStepId
+  type CreatorStepId,
+  usesRolePackage,
 } from '../../../engine/characterCreation';
 import type { CharacterSheet } from '../../../types/cyberpunk';
 import { Btn, INPUT_CLS, NoviceGuide, Panel, SourceBadge, StepHeader, eb, type StepProps } from './CreatorUi';
@@ -83,7 +84,7 @@ export const SummaryStep: React.FC<SummaryProps> = ({ draft, update, onGoTo, onC
   const summaryWarnings = getSummaryWarnings(draft, built);
   const derived = pregen ? null : computeDerived(draft);
   const lifepath = !pregen ? buildCharacterLifepath(draft) : null;
-  const pkg = !pregen && draft.role && (draft.method === 'streetrat' || draft.method === 'edgerunner') ? getRolePackage(draft.role, draft.era, draft.packageChoices) : null;
+  const pkg = !pregen && draft.role && usesRolePackage(draft) ? getRolePackage(draft.role, draft.era, draft.packageChoices) : null;
   const left = getMoneyRemaining(draft);
   const pregenName = draft.method === 'cemk_pregen' ? CEMK_FOLIO_METADATA_MAP[draft.pregenId ?? '']?.name : PREGEN_TEMPLATES.find((p) => p.id === draft.pregenId)?.handle;
   const housing = CORE_GEAR_SKILLS.housing;

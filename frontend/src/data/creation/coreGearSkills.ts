@@ -506,7 +506,7 @@ export const CORE_GEAR_SKILLS: CoreGearSkillsSrc = {
       "x2": true,
       "basic": false,
       "specialization": false,
-      "descEs": "Mantener en blanco el modo Autofire de un arma pese al retroceso.",
+      "descEs": "Disparar en ráfaga sin perder el blanco. Solo con armas con modo Autofire (SMG y Heavy SMG hasta x3, Assault Rifle hasta x4): 1 Acción y 10 balas, REF + Autofire + 1d10 contra la tabla de Autofire, daño 2d6 x lo que superaste el DV. También se usa para Suppressive Fire. No reemplaza a Handgun ni a Shoulder Arms en los tiros simples (Core pp. 173-174).",
       "source": {
         "book": "Core RED",
         "page": 83

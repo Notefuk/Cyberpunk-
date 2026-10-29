@@ -182,95 +182,96 @@ export interface StatTooltipInfo {
   source: { book: string; page: number };
 }
 
+// v5.4.0 [Claude Code · 2026-10-29]: beginnerExplanation y mechanicalBreakpoints completos, con página (plan 21).
 export const STAT_TOOLTIPS: Record<StatKey, StatTooltipInfo> = {
   INT: {
     name: 'Intelligence (INT)',
     spanishName: 'Inteligencia',
     shortSummary: 'Inteligencia general, astucia, percepción y capacidad de aprender.',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es tu cabeza: darte cuenta de las cosas, deducir y saber. Lo usan las skills de conocimiento y de percepción (Perception para ver una emboscada, Library Search, Deduction).',
     dependentSkills: ['Perception', 'Deduction', 'Interface (Netrunning)', 'Library Search', 'Tactics', 'Local Expert'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['Perception, Deduction, Library Search, Tactics y las skills de Education usan INT + skill + 1d10 (Core pp.82-85).'],
     source: { book: 'Core RED', page: 72 }
   },
   REF: {
     name: 'Reflexes (REF)',
     spanishName: 'Reflejos',
     shortSummary: 'Tiempo de respuesta y coordinación; es el STAT para pegar con armas a distancia.',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es tu puntería y tu tiempo de reacción. Es el STAT más importante para disparar y define quién actúa primero en combate.',
     dependentSkills: ['Handgun', 'Shoulder Arms', 'Autofire', 'Heavy Weapons', 'Archery', 'Drive Land Vehicle'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['Iniciativa = REF + 1d10 (Core p.168).', 'Disparar = REF + skill del arma (Handgun, Shoulder Arms, Heavy Weapons, Archery) + 1d10; en ráfaga, REF + Autofire (Core pp.172-173).', 'REF 8 o más: podés esquivar tiros con DEX + Evasion + 1d10 en lugar del DV por distancia; también Autofire y explosivos (Core pp.172-174, p.83).'],
     source: { book: 'Core RED', page: 72 }
   },
   DEX: {
     name: 'Dexterity (DEX)',
     spanishName: 'Destreza',
     shortSummary: 'Aptitud física general (equilibrio, saltos, combate, atletismo); es el STAT para pegar cuerpo a cuerpo y ayuda a esquivar.',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es tu agilidad física. Es el STAT para pegar cuerpo a cuerpo y para defenderte esquivando.',
     dependentSkills: ['Evasion', 'Athletics', 'Melee Weapon', 'Brawling', 'Martial Arts', 'Stealth'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['Atacar cuerpo a cuerpo = DEX + Melee Weapon / Brawling / Martial Arts + 1d10 (Core p.176).', 'Defenderte de un golpe = DEX + Evasion + 1d10 (Core p.176).', 'Contra tiros solo esquivás si además tenés REF 8 o más (Core p.172).'],
     source: { book: 'Core RED', page: 72 }
   },
   TECH: {
     name: 'Technique (TECH)',
     spanishName: 'Técnica',
     shortSummary: 'Manejar herramientas e instrumentos (no es lo mismo que REF).',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es tu mano para las herramientas: reparar, fabricar, curar con instrumental y abrir cerraduras.',
     dependentSkills: ['First Aid', 'Paramedic', 'Cybertech', 'Electronics/Security Tech', 'Weaponstech', 'Maker'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['First Aid, Paramedic, Cybertech, Weaponstech y Electronics/Security Tech usan TECH + skill + 1d10 (Core pp.82-85).', 'Las especialidades de Medicine del Medtech y Maker del Tech también tiran con TECH (Core pp.147-150).'],
     source: { book: 'Core RED', page: 72 }
   },
   COOL: {
     name: 'Cool (COOL)',
     spanishName: 'Frialdad / Temple',
     shortSummary: 'Impresionar e influir en la gente con tu carácter y carisma; el trato social.',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es tu presencia: imponer, convencer, mentir y no quebrarte en una situación tensa.',
     dependentSkills: ['Persuasion', 'Interrogation', 'Streetwise', 'Trading', 'Charismatic Impact'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['Persuasion, Interrogation, Streetwise, Trading, Bribery y Acting usan COOL + skill + 1d10 (Core pp.82-85).', 'Facedown (duelo de miradas) = COOL + Reputation + 1d10; el que pierde se echa atrás o se queda con −2 a sus acciones contra el ganador hasta vencerlo una vez (Core p.194).'],
     source: { book: 'Core RED', page: 72 }
   },
   WILL: {
     name: 'Willpower (WILL)',
     spanishName: 'Fuerza de Voluntad',
     shortSummary: 'Determinación y valor ante el peligro, el estrés y las privaciones largas; pesa en cuánto daño aguantás.',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es tu aguante mental: seguir con dolor, no ceder a la tortura o las drogas, concentrarte.',
     dependentSkills: ['Concentration', 'Resist Torture/Drugs'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['HP = 10 + 5 × ⌈(BODY + WILL) / 2⌉ (Core p.79).', 'Concentration y Resist Torture/Drugs usan WILL + skill + 1d10 (Core pp.82-85).', 'Algunos moves de Martial Arts piden WILL 8 o más (Core pp.179-180).'],
     source: { book: 'Core RED', page: 72 }
   },
   LUCK: {
     name: 'Luck (LUCK)',
     spanishName: 'Suerte Táctil',
     shortSummary: 'Puntos que gastás para mejorar tiradas; el total vuelve al empezar la sesión siguiente.',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es un fondo de puntos para salvarte en una tirada importante.',
     dependentSkills: ['Aplica a cualquier tirada de 1d10 antes de lanzar el dado'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['Antes de tirar, gastás puntos de LUCK y los sumás a esa tirada (Core p.72).', 'Los puntos se recuperan al empezar la sesión siguiente (Core p.72).'],
     source: { book: 'Core RED', page: 72 }
   },
   MOVE: {
     name: 'Movement (MOVE)',
     spanishName: 'Movimiento',
     shortSummary: 'Velocidad para moverte (correr, saltar, nadar).',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es tu velocidad. Define cuánto avanzás por turno.',
     dependentSkills: ['Velocidad de combate', 'Alcance de salto con Athletics'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['Con tu Move Action avanzás MOVE × 2 m/yds (Core p.169).', 'Algunos moves de Martial Arts piden MOVE 8 o más (Flying Kick, Core p.180).'],
     source: { book: 'Core RED', page: 72 }
   },
   BODY: {
     name: 'Body Type (BODY)',
     spanishName: 'Constitución Física',
     shortSummary: 'Tamaño, dureza y capacidad de seguir vivo y consciente; pesa en cuánto daño aguantás.',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es tu físico: cuánto daño aguantás, cuánto pegás a puño limpio y si sobrevivís al borde de la muerte.',
     dependentSkills: ['Brawling Damage', 'Death Saves'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['HP = 10 + 5 × ⌈(BODY + WILL) / 2⌉; Seriously Wounded = la mitad, redondeado para arriba (Core p.79).', 'Death Save = BODY: si estás Mortally Wounded, tirás 1d10 y tenés que sacar menos que tu BODY (Core p.79 y p.222).', 'Daño de Brawling y Martial Arts: BODY 4 o menos 1d6, 5-6 2d6, 7-10 3d6, 11 o más 4d6 (Core p.176 y p.178).'],
     source: { book: 'Core RED', page: 72 }
   },
   EMP: {
     name: 'Empathy (EMP)',
     spanishName: 'Empatía y Humanidad',
     shortSummary: 'Relacionarte y preocuparte por otros; compensa la ciberpsicosis.',
-    beginnerExplanation: '',
+    beginnerExplanation: 'Es tu humanidad: entender a la gente y conectar. Baja cuando ponés ciberware.',
     dependentSkills: ['Human Perception', 'Conversation', 'Pérdida de Humanidad'],
-    mechanicalBreakpoints: [],
+    mechanicalBreakpoints: ['Humanidad = EMP × 10 (Core p.80).', 'Cada vez que la Humanidad baja de una decena, baja 1 de EMP (44 → 39 deja EMP 3; Core p.80).', 'Human Perception y Conversation usan EMP + skill + 1d10 (Core pp.82-85).'],
     source: { book: 'Core RED', page: 72 }
   }
 };
