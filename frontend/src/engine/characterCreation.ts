@@ -1397,7 +1397,13 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
   // Notas: vivienda inicial (Core p.377 / housing) y Running Out of Cash.
   const notes: string[] = [];
   const h = CORE_GEAR_SKILLS.housing;
-  if (role === 'Exec') {
+  // v5.5.0: si eligió otra vivienda o estilo de vida (Core pp.377-378), va eso; el primer mes sigue pagado (Core p.105). [Claude Code · 2026-10-29]
+  const chosenHousing = draft.housing?.trim();
+  if (chosenHousing || draft.lifestyle) {
+    const home = chosenHousing || (role === 'Exec' ? h.exec.housing : h.default.housing);
+    const life = draft.lifestyle || (role === 'Exec' ? h.exec.lifestyle : h.default.lifestyle);
+    notes.push(`Vivienda inicial: ${home}, estilo de vida ${life}; el primer mes viene pagado (Core p.105), después alquiler y estilo de vida según Core pp.377-378.`);
+  } else if (role === 'Exec') {
     notes.push(`Vivienda inicial: ${h.exec.housing} (${h.exec.location}), estilo ${h.exec.lifestyle}; sin renta este mes, ${h.exec.lifestyleMonthly} €$ el día 1 de cada mes.`);
   } else {
     notes.push(`Vivienda inicial: ${h.default.housing} (${h.default.location}), estilo ${h.default.lifestyle}; primer mes gratis, ${h.default.owedNextMonth} €$ el día 1 del mes siguiente o desalojo el día ${h.default.evictionDay}.`);
