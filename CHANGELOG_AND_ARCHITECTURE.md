@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.5.0] - 2026-10-29 (Tienda del creador: detalle de cada ítem, ciberware por parte del cuerpo, disponibilidad, Rebuilds y vivienda) [Claude Code · 2026-10-29]
+* **Category**: Creador de personajes / tienda (plan 21, `docs/plans/plan21-creador-tienda-ficha.md`, segunda de tres versiones).
+* **What Changed**:
+  * Detalle: tocar el nombre de un ítem abre un panel con su descripción y sus datos (armas: skill, daño, ROF, manos, cargador, Autofire y slots; armadura: SP y penalización, Core pp.96-97; ciberware: ubicación, instalación y HL; drogas: efecto, adicción y DV, Core p.227; programas: ATK/DEF/REZ), su categoría de precio y su libro. Se compra desde ahí mismo.
+  * Pestañas: el ciberware se separa por parte del cuerpo (Neuralware, Cyberoptics, Cyberaudio, Internal, External, Fashionware, Cyberlimbs, Borgware) y el equipo en "Cyberdecks y Hardware" y "Resto".
+  * Disponibilidad: cada ítem muestra su categoría de precio (Core p.385); lo Expensive o más caro lleva ⚠ porque sin Fixer no se consigue. El interruptor "Sin Fixer: pagar el doble" duplica esos precios (CEMK p.26). Si hay compras así y el interruptor está apagado, el resumen avisa sin bloquear (decisión de Giuliano).
+  * Mejorar armas: cada arma a distancia comprada tiene "Mejorar" para ponerle accesorios del Core (3 slots, Core p.342) y, en 2077, convertirla a Power, Smart o Tech. La mejora suma su costo y llega a la ficha (`installedAttachments` y `rebuild2077`). Si la compra tenía varias unidades, la mejorada se separa.
+  * Arreglo de datos: los Rebuilds costaban 500 €$ y ocupaban 1 o 2 slots; ahora cuestan 1.000 €$ (Very Expensive), ocupan 2 slots, valen para toda arma a distancia no exótica (Tech, menos lanzagranadas y lanzacohetes) y solo Smart choca con el Smartgun Link (CEMK pp.30-31). Sus textos siguen el libro (Smart pide Interface Plug o Subdermal Grip, no Neuroport).
+  * Vivienda: se elige de la tabla de Core p.378 o se escribe una propia, y el estilo de vida de Core p.377. Muestra lo que se paga desde el mes que viene, sin descontar nada (el primer mes viene pagado, Core p.105), y queda en las notas de la ficha.
+* **Files Modified**: `frontend/src/features/creator/steps/ShopItemDetail.tsx`, `frontend/src/data/creation/housingOptions.ts`, `frontend/src/engine/__tests__/creatorV550.test.ts` (nuevos); `features/creator/steps/GearStep.tsx`; `engine/creatorShop.ts` (`priceTier`, `needsFixer`, `effectiveUnitCost`, `purchaseUnitCost`, `weaponModOptions`, `weaponModSlots`); `engine/characterCreation.ts` (`mods` en las compras, `noFixerDouble`, `housing`, `lifestyle`, aviso `expensive-no-fixer`); `data/weaponAttachmentsAndTechData.ts` (Rebuilds); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 483 tests y build. En el navegador local, tamaño iPad: detalle de la Heavy Pistol (3d6, ROF 2, 3 slots); comprarla y convertirla a Smart da 1.100 €$ y, con "pagar el doble", 2.100 €$; la pestaña Cyberoptics muestra solo ciberware de ojos; vivienda propia "Taller en Heywood" guardada en el borrador.
+
 ### [v5.4.0] - 2026-10-29 (Creador más libre y que explica: texto propio, STATs, rol arriba, idiomas, skills de arma y Autofire, paquete en Complete Package) [Claude Code · 2026-10-29]
 * **Category**: Creador de personajes (plan 21, `docs/plans/plan21-creador-tienda-ficha.md`, primera de tres versiones).
 * **What Changed**:

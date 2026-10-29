@@ -1,5 +1,6 @@
 // Motor de creación de personajes (plan 7, v4.8.2). Reglas: Core RED v1.24 pp. 40-119 y CEMK RB p.25. [Claude Code · 2026-10-22]
 // Motor puro: sin React ni localStorage. El wizard solo muestra datos y llama a estas funciones.
+import { WEAPON_ATTACHMENTS_CATALOG } from '../data/weaponAttachmentsAndTechData';
 import { CEMK_CREATION, CORE_GEAR_SKILLS, CORE_LIFEPATH, CORE_ROLE_TABLES, CORE_ROLES, CREATOR_GUIDE } from '../data/creation';
 import type {
   CoreRoleName,
@@ -22,7 +23,7 @@ import { MARTIAL_ARTS_FORMS } from '../data/cyberfistsMartialArtsData';
 import { applyFolioAllocation } from '../data/folioRoleAllocations';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, calculateMaxHumanity, parseHumanityLossAverage } from './characterEngine';
 import { cyberwareStatBonus } from './cyberwareEffects';
-import { deckSlotUse, neuroportCovers } from './creatorShop';
+import { deckSlotUse, needsFixer, neuroportCovers, purchaseUnitCost } from './creatorShop';
 import type {
   CharacterEra,
   CharacterLifepath,
@@ -63,6 +64,8 @@ export interface CreatorPurchase {
   location?: 'head' | 'body';
   /** Munición: tipo de arma para el que se compra (Core p.344). Va también en el nombre. [Claude Code · 2026-10-25] */
   caliber?: string;
+  /** v5.5.0: mejoras del arma comprada (ids de WEAPON_ATTACHMENTS_CATALOG, Rebuilds del CEMK incluidos); su costo ya va en `cost`. [Claude Code · 2026-10-29] */
+  mods?: string[];
 }
 
 /** Core p.344: la munición se compra para el tipo de arma; granadas y cohetes van aparte, por unidad. */
@@ -107,6 +110,11 @@ export interface CreatorDraft {
   installCyberdeckPort: boolean;
   /** v5.4.0 (plan 21): Complete Package con el paquete del rol + 500 €$ en vez de 2.550 €$ (variante de mesa, Core p.98 / p.104). */
   cpUsePackage?: boolean;
+  /** v5.5.0 (plan 21): sin Fixer, lo Expensive o más caro cuesta el doble (CEMK p.26). */
+  noFixerDouble?: boolean;
+  /** v5.5.0 (plan 21): vivienda y lifestyle elegidos (Core pp.105, 377-378); texto propio permitido. */
+  housing?: string;
+  lifestyle?: string;
   /** v5.4.0 (plan 21): reparto de la habilidad de rol hecho en el creador (Maker, Core pp.147-148; Medicine, Core pp.149-150). */
   makerAllocation?: { field: number; upgrade: number; fabrication: number; invention: number };
   medicineAllocation?: { surgery: number; pharmaceuticals: number; cryosystem: number; knownPharmaceuticals?: string[] };
@@ -832,12 +840,13 @@ export function getFashionPrice(style: string, piece: string): number | null {
   return typeof price === 'number' ? price : null;
 }
 
-function purchaseCost(p: CreatorPurchase): number {
-  return p.cost * p.qty;
+// v5.5.0: con sus mejoras y el doble costo sin Fixer (CEMK p.26) si el borrador lo pide. [Claude Code · 2026-10-29]
+function purchaseCost(p: CreatorPurchase, noFixerDouble?: boolean): number {
+  return purchaseUnitCost(p, noFixerDouble) * p.qty;
 }
 
 export function getCyberwareSpend(draft: CreatorDraft): number {
-  let total = draft.purchases.filter((p) => p.category === 'cyberware').reduce((s, p) => s + purchaseCost(p), 0);
+  let total = draft.purchases.filter((p) => p.category === 'cyberware').reduce((s, p) => s + purchaseCost(p, draft.noFixerDouble), 0);
   const port = getCyberdeckPortData();
   if (draft.installCyberdeckPort) total += port.cost;
   return total;
@@ -850,7 +859,7 @@ export function getRunningOutOfCashCoverage(draft: CreatorDraft): number {
 }
 
 export function getMoneySpent(draft: CreatorDraft): { cash: number; fashion: number } {
-  const total = draft.purchases.reduce((s, p) => s + purchaseCost(p), 0) + (draft.installCyberdeckPort ? getCyberdeckPortData().cost : 0);
+  const total = draft.purchases.reduce((s, p) => s + purchaseCost(p, draft.noFixerDouble), 0) + (draft.installCyberdeckPort ? getCyberdeckPortData().cost : 0);
   const fashion = draft.fashion.reduce((s, f) => s + f.unitCost * f.qty, 0);
   return { cash: total - getRunningOutOfCashCoverage(draft), fashion };
 }
@@ -1279,10 +1288,13 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
   const addInventory = (category: InventoryItem['category'], catalogId: string, name: string, cost: number, quantity: number, details?: string): void => {
     inventory.push({ id: `inv-${++invCounter}`, catalogId, name, category, cost, quantity, ...(details ? { details } : {}) });
   };
-  const addWeapon = (w: PackWeapon): void => {
+  const addWeapon = (w: PackWeapon, mods: string[] = []): void => {
     const ammoType = w.ammoType && w.ammoType !== 'N/A' ? w.ammoType : undefined;
+    const rebuild = WEAPON_ATTACHMENTS_CATALOG.find((a) => mods.includes(a.id) && a.rebuild2077)?.rebuild2077;
     equippedWeapons.push({
       ...(w as unknown as EquippedWeapon),
+      ...(mods.length > 0 ? { installedAttachments: [...mods] } : {}),
+      ...(rebuild ? { rebuild2077: rebuild } : {}),
       instanceId: `wep-${equippedWeapons.length}-${w.id}`,
       currentMag: w.standardMag ?? 0,
       // Tipo de bala, no el calibre (que queda en ammoType): Basic al crear (Core p.345). [Claude Code · 2026-10-25]
@@ -1323,7 +1335,7 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
   for (const p of draft.purchases) {
     if (p.category === 'weapons') {
       const w = weaponsDb.find((x) => x.id === p.catalogId) ?? lookupByName(weaponsDb, p.name);
-      if (w) for (let i = 0; i < p.qty; i++) addWeapon(w);
+      if (w) for (let i = 0; i < p.qty; i++) addWeapon(w, p.mods ?? []);
       else {
         addInventory('weapons', p.catalogId, p.name, p.cost, p.qty, 'Compra de creación');
         warnings.push(`"${p.name}" no está en el catálogo de armas: queda en el inventario.`);
@@ -1385,7 +1397,13 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
   // Notas: vivienda inicial (Core p.377 / housing) y Running Out of Cash.
   const notes: string[] = [];
   const h = CORE_GEAR_SKILLS.housing;
-  if (role === 'Exec') {
+  // v5.5.0: si eligió otra vivienda o estilo de vida (Core pp.377-378), va eso; el primer mes sigue pagado (Core p.105). [Claude Code · 2026-10-29]
+  const chosenHousing = draft.housing?.trim();
+  if (chosenHousing || draft.lifestyle) {
+    const home = chosenHousing || (role === 'Exec' ? h.exec.housing : h.default.housing);
+    const life = draft.lifestyle || (role === 'Exec' ? h.exec.lifestyle : h.default.lifestyle);
+    notes.push(`Vivienda inicial: ${home}, estilo de vida ${life}; el primer mes viene pagado (Core p.105), después alquiler y estilo de vida según Core pp.377-378.`);
+  } else if (role === 'Exec') {
     notes.push(`Vivienda inicial: ${h.exec.housing} (${h.exec.location}), estilo ${h.exec.lifestyle}; sin renta este mes, ${h.exec.lifestyleMonthly} €$ el día 1 de cada mes.`);
   } else {
     notes.push(`Vivienda inicial: ${h.default.housing} (${h.default.location}), estilo ${h.default.lifestyle}; primer mes gratis, ${h.default.owedNextMonth} €$ el día 1 del mes siguiente o desalojo el día ${h.default.evictionDay}.`);
@@ -1497,6 +1515,16 @@ export function getSummaryWarnings(draft: CreatorDraft, built: { sheet: Characte
       id: 'deck-slots',
       message: `Programas y Hardware ocupan ${slots.deckSlots + slots.overflow} slots y el cyberdeck tiene ${slots.deckSlots}: lo que sobra queda en la mochila.`,
       source: { book: 'Core RED', page: 196 }
+    });
+  }
+
+  // v5.5.0: lo Expensive o más caro no se consigue sin Fixer (Core p.385); solo avisa, la mesa decide. [Claude Code · 2026-10-29]
+  const pricey = draft.purchases.filter((p) => needsFixer(p) || (p.mods ?? []).length > 0).map((p) => p.name);
+  if (pricey.length > 0 && !draft.noFixerDouble) {
+    out.push({
+      id: 'expensive-no-fixer',
+      message: `${pricey.join(', ')}: sin un Fixer solo se consigue hasta Premium (100 €$). Pedile al GM un contacto o marcá "Sin Fixer: pagar el doble" (CEMK p.26).`,
+      source: { book: 'Core RED', page: 385 }
     });
   }
 

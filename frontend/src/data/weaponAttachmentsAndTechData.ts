@@ -147,7 +147,7 @@ export const WEAPON_ATTACHMENTS_CATALOG: WeaponAttachment[] = [
     cost: 500,
     costTier: 'Expensive',
     eligibleWeaponTypes: ['handgun', 'shoulderArms', 'heavyWeapons'],
-    incompatibleWith: ['att-power-rebuild', 'att-tech-rebuild'],
+    incompatibleWith: ['att-smart-rebuild'],
     summary: 'Convierte el arma en Smartgun. Confiere +1 al ataque con Subdermal Grip o Interface Plugs.',
     fullRules: 'Conecta el procesador de puntería con el ciberware del tirador, otorgando un bonificador constante de +1 a las tiradas de ataque. Requiere 2 ranuras.',
     attackBonus: 1
@@ -164,41 +164,43 @@ export const WEAPON_ATTACHMENTS_CATALOG: WeaponAttachment[] = [
     fullRules: 'Los disparos no alertan a enemigos fuera de la estancia inmediata a menos que superen una prueba de Percepción DV 17.',
     isSilenced: true
   },
+  // v5.5.0 [Claude Code · 2026-10-29]: Rebuilds según CEMK pp.30-31: 1.000 €$ (Very Expensive), 2 slots, uno por arma.
+  // Power y Smart: toda arma a distancia no exótica; Tech: menos Grenade y Rocket Launcher; Smart no va con Smartgun Link.
   {
     id: 'att-power-rebuild',
     name: 'Modificación 2077: Power (Rebote Cinético)',
-    slots: 1,
-    cost: 500,
-    costTier: 'Expensive',
-    eligibleWeaponTypes: ['handgun', 'shoulderArms'],
-    incompatibleWith: ['att-smart-rebuild', 'att-tech-rebuild', 'att-smartgun-link'],
-    summary: 'Reconfiguración CEMK 2077 para proyectiles de alto impacto capaces de rebotar en superficies duras.',
-    fullRules: 'Convierte el arma en un arma Power balística con capacidad de tiro con rebote táctico.',
+    slots: 2,
+    cost: 1000,
+    costTier: 'Very Expensive',
+    eligibleWeaponTypes: ['handgun', 'shoulderArms', 'heavyWeapons', 'archery'],
+    incompatibleWith: ['att-smart-rebuild', 'att-tech-rebuild'],
+    summary: 'Convierte el arma en Power Weapon (CEMK pp.30-31): refuerzo para tiros de alta tensión.',
+    fullRules: 'Cuando un arma Power causa una Critical Injury, su Bonus Damage sube 5. Además se puede rebotar un tiro en una superficie para pegarle a un blanco fuera de la línea de visión, con penalización (CEMK p.30). 2 slots, 1.000 €$, 1 hora de instalación.',
     rebuild2077: 'power'
   },
   {
     id: 'att-smart-rebuild',
     name: 'Modificación 2077: Smart (Micro-misiles Guiados)',
     slots: 2,
-    cost: 500,
-    costTier: 'Expensive',
-    eligibleWeaponTypes: ['handgun', 'shoulderArms'],
+    cost: 1000,
+    costTier: 'Very Expensive',
+    eligibleWeaponTypes: ['handgun', 'shoulderArms', 'heavyWeapons', 'archery'],
     incompatibleWith: ['att-power-rebuild', 'att-tech-rebuild', 'att-smartgun-link'],
-    summary: 'Reconfiguración CEMK 2077 con micro-misiles dirigidos. Confiere +1 al ataque con Neuroport.',
-    fullRules: 'Convierte el arma en Smart 2077, otorgando un bono de +1 al ataque cuando se utiliza con Neuroport o Smartlink.',
+    summary: 'Convierte el arma en Smart Weapon (CEMK pp.30-31): puntería inteligente con balas gyrojet.',
+    fullRules: '+1 a las tiradas de ataque; hay que estar conectado al arma con Personal Link (Interface Plug) o Subdermal Grip. Permite usar Improved Smart Ammunition. No va en un arma con Smartgun Link (CEMK pp.30-31). 2 slots, 1.000 €$, 1 hora de instalación.',
     attackBonus: 1,
     rebuild2077: 'smart'
   },
   {
     id: 'att-tech-rebuild',
     name: 'Modificación 2077: Tech (Acelerador Electromagnético)',
-    slots: 1,
-    cost: 500,
-    costTier: 'Expensive',
-    eligibleWeaponTypes: ['handgun', 'shoulderArms'],
-    incompatibleWith: ['att-power-rebuild', 'att-smart-rebuild', 'att-smartgun-link'],
-    summary: 'Reconfiguración CEMK 2077 con raíles de inducción magnética para disparos cargados que penetran cobertura.',
-    fullRules: 'Convierte el arma en Tech electromagnética capaz de atravesar cobertura sólida mediante disparos cargados.',
+    slots: 2,
+    cost: 1000,
+    costTier: 'Very Expensive',
+    eligibleWeaponTypes: ['handgun', 'shoulderArms', 'archery'],
+    incompatibleWith: ['att-power-rebuild', 'att-smart-rebuild'],
+    summary: 'Convierte el arma en Tech Weapon (CEMK pp.30-31): módulos de lanzamiento electromagnético.',
+    fullRules: 'Sacrificando el Move Action se carga el arma; el próximo ataque no explosivo es ROF 1, atraviesa Thin Cover e ignora la mitad del SP. La carga dura hasta disparar o 60 segundos. Trae una mira que ve siluetas a través de Thin Cover. No va en Grenade ni Rocket Launcher (CEMK pp.30-31). 2 slots, 1.000 €$, 1 hora de instalación.',
     rebuild2077: 'tech'
   }
 ];

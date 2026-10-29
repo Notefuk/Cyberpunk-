@@ -3,7 +3,9 @@ import React, { useMemo, useState } from 'react';
 import pack from '../../../data/core-rules.cprpack.json';
 import { CEMK_CREATION, CORE_GEAR_SKILLS } from '../../../data/creation';
 import { parseHumanityLossAverage } from '../../../engine/characterEngine';
-import { deckSlotUse, neuroportCovers, shopSourceLabel } from '../../../engine/creatorShop';
+import { deckSlotUse, effectiveUnitCost, needsFixer, neuroportCovers, priceTier, purchaseUnitCost, shopSourceLabel } from '../../../engine/creatorShop';
+import { WEAPON_ATTACHMENTS_CATALOG } from '../../../data/weaponAttachmentsAndTechData';
+import { HOUSING_OPTIONS, HOUSING_SOURCE, LIFESTYLE_OPTIONS, LIFESTYLE_SOURCE } from '../../../data/creation/housingOptions';
 import {
   AMMO_CALIBERS,
   getFashionPrice,
@@ -19,22 +21,10 @@ import {
   usesRolePackage,
 } from '../../../engine/characterCreation';
 import { Btn, INPUT_CLS, Panel, SELECT_CLS, SourceBadge, NoviceGuide, StepHeader, eb, type StepProps } from './CreatorUi';
+import { ShopItemDetail, WeaponModsEditor, type ShopPackItem } from './ShopItemDetail';
 
-interface PackItem {
-  id: string;
-  name: string;
-  cost: number;
-  sourceBook?: string;
-  sourceBookTitle?: string;
-  sourcePage?: number | string;
-  era?: string;
-  humanityLoss?: string;
-  type?: string;
-  sp?: number;
-  description?: string;
-  class?: string;
-  ammoType?: string;
-}
+// v5.5.0: el detalle de la tienda usa todos los campos del pack. [Claude Code · 2026-10-29]
+type PackItem = ShopPackItem;
 
 const PACK = pack as unknown as Record<CreatorPurchaseCategory, PackItem[]>;
 
@@ -52,6 +42,24 @@ const TABS: Array<{ id: CreatorPurchaseCategory; label: string }> = [
 const bookLabel = (item: PackItem): string => shopSourceLabel(item);
 
 const isShield = (name: string): boolean => /shield/i.test(name);
+
+// v5.5.0 [Claude Code · 2026-10-29]: el ciberware se separa por parte del cuerpo (campo `type` del pack, Core pp.111-117).
+const CYBER_GROUPS: Array<{ id: string; label: string; types: string[] }> = [
+  { id: 'all', label: 'Todo', types: [] },
+  { id: 'neural', label: 'Neuralware (cerebro)', types: ['Neuralware', 'Neuralware Option'] },
+  { id: 'optics', label: 'Cyberoptics (ojos)', types: ['Cyberoptics'] },
+  { id: 'audio', label: 'Cyberaudio (oídos)', types: ['Cyberaudio'] },
+  { id: 'internal', label: 'Internal (adentro del cuerpo)', types: ['Internal'] },
+  { id: 'external', label: 'External (piel y cuerpo)', types: ['External'] },
+  { id: 'fashion', label: 'Fashionware (estética)', types: ['Fashionware'] },
+  { id: 'limbs', label: 'Cyberlimbs (brazos y piernas)', types: ['Cyberlimb', 'Cyberarm Option'] },
+  { id: 'borg', label: 'Borgware', types: ['Borgware'] }
+];
+const GEAR_GROUPS: Array<{ id: string; label: string; test: (id: string) => boolean }> = [
+  { id: 'all', label: 'Todo', test: () => true },
+  { id: 'net', label: 'Cyberdecks y Hardware', test: (id) => id.startsWith('cyberdeck-') || id.startsWith('hw-') },
+  { id: 'rest', label: 'Resto del equipo', test: (id) => !id.startsWith('cyberdeck-') && !id.startsWith('hw-') }
+];
 
 const PackageList: React.FC<{
   title: string;
@@ -98,6 +106,11 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
   const { method, role, era } = draft;
   const [tab, setTab] = useState<CreatorPurchaseCategory>('weapons');
   const [query, setQuery] = useState('');
+  const [detail, setDetail] = useState<PackItem | null>(null);
+  const [cyberGroup, setCyberGroup] = useState('all');
+  const [gearGroup, setGearGroup] = useState('all');
+  const [modsFor, setModsFor] = useState<number | null>(null);
+  const double = !!draft.noFixerDouble;
   const [fashionStyle, setFashionStyle] = useState<string>(CORE_GEAR_SKILLS.fashionStyles[0].name);
   const [fashionPiece, setFashionPiece] = useState<string>('Top');
   const [fashionQty, setFashionQty] = useState<number>(1);
@@ -123,9 +136,11 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
       if (era === '2045' && (it.era === '2077' || it.sourceBook === 'cemk')) return false;
       // El Black ICE no es un programa que se compre para el cyberdeck (Core p.200).
       if (tab === 'programs' && it.class === 'Black ICE') return false;
+      if (tab === 'cyberware' && cyberGroup !== 'all' && !CYBER_GROUPS.find((g) => g.id === cyberGroup)?.types.includes(it.type ?? '')) return false;
+      if (tab === 'gear' && !GEAR_GROUPS.find((g) => g.id === gearGroup)?.test(it.id)) return false;
       return !q || it.name.toLowerCase().includes(q);
     });
-  }, [tab, query, era]);
+  }, [tab, query, era, cyberGroup, gearGroup]);
 
   const canAfford = (extra: CreatorPurchase): boolean => getMoneyRemaining({ ...draft, purchases: [...draft.purchases, extra] }).cash >= 0;
 
@@ -148,7 +163,9 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
     const p = makePurchase(item, tab, location);
     if (!canAfford(p)) return;
     update((d) => {
-      const idx = d.purchases.findIndex((x) => x.category === p.category && x.catalogId === p.catalogId && x.location === p.location && x.caliber === p.caliber);
+      const idx = d.purchases.findIndex(
+        (x) => x.category === p.category && x.catalogId === p.catalogId && x.location === p.location && x.caliber === p.caliber && !(x.mods ?? []).length
+      );
       if (idx < 0) return { ...d, purchases: [...d.purchases, p] };
       return { ...d, purchases: d.purchases.map((x, i) => (i === idx ? { ...x, qty: x.qty + 1 } : x)) };
     });
@@ -158,6 +175,19 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
       ...d,
       purchases: d.purchases.flatMap((x, i) => (i !== index ? [x] : x.qty > 1 ? [{ ...x, qty: x.qty - 1 }] : []))
     }));
+
+  // Mejoras de un arma comprada: si la línea tiene varias unidades, la mejorada se separa en su propia línea.
+  const setMods = (index: number, mods: string[]): void =>
+    update((d) => {
+      const target = d.purchases[index];
+      if (!target) return d;
+      if (target.qty <= 1) return { ...d, purchases: d.purchases.map((x, i) => (i === index ? { ...x, mods } : x)) };
+      const rest = d.purchases.map((x, i) => (i === index ? { ...x, qty: x.qty - 1 } : x));
+      setModsFor(rest.length);
+      return { ...d, purchases: [...rest, { ...target, qty: 1, mods }] };
+    });
+  const modsPurchase = modsFor !== null ? draft.purchases[modsFor] : undefined;
+  const modsWeapon = modsPurchase ? PACK.weapons.find((w) => w.id === modsPurchase.catalogId) : undefined;
 
   const chooseOption = (key: string, idx: number): void => update((d) => ({ ...d, packageChoices: { ...d.packageChoices, [key]: idx } }));
 
@@ -178,6 +208,12 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
   const port = CEMK_CREATION.cyberdeckPort;
   const neuroport = CEMK_CREATION.neuroport;
   const housing = CORE_GEAR_SKILLS.housing;
+  const CUSTOM = '__custom__';
+  const defaultHousing = role === 'Exec' ? 'Corporate Conapt' : 'Cargo Container';
+  const housingValue = draft.housing ?? defaultHousing;
+  const housingOption = HOUSING_OPTIONS.find((h) => h.name === housingValue);
+  const housingIsCustom = !housingOption;
+  const lifestyleValue = draft.lifestyle ?? (role === 'Exec' ? 'Good Prepak' : 'Kibble');
   const roc = CORE_GEAR_SKILLS.runningOutOfCash;
 
   if (!method || !role) {
@@ -314,6 +350,36 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
         <p className="text-[10px] font-mono-code text-[#64748b] mb-2">
           {era === '2077' ? 'Core, CEMK y suplementos' : 'Core y suplementos (sin CEMK)'}: cada ítem dice de qué libro sale y, si está cargada, la página. Los suplementos (Black Chrome, DLC, Danger Gal) quedan marcados para que la mesa decida si los usa.
         </p>
+        <label className="flex items-start gap-2 text-[11px] text-[#cbd5e1] cursor-pointer mb-2 min-h-[32px]">
+          <input type="checkbox" checked={double} onChange={(e) => update((d) => ({ ...d, noFixerDouble: e.target.checked }))} />
+          <span>
+            <b className="text-white">Sin Fixer: pagar el doble.</b> Sin un Fixer solo se consigue hasta Premium (100 €$, Core p.385); con esto, lo Expensive o más caro se compra al
+            fabricante pagando el doble (CEMK p.26). Si la mesa te da un Fixer, dejalo apagado. Tocá el nombre de un ítem para ver su descripción.
+          </span>
+        </label>
+        {tab === 'cyberware' && (
+          <div className="flex flex-wrap gap-1 mb-2" role="tablist" aria-label="Parte del cuerpo">
+            {CYBER_GROUPS.map((g) => (
+              <Btn key={g.id} role="tab" aria-selected={cyberGroup === g.id} tone={cyberGroup === g.id ? 'cyan' : 'gray'} className="min-h-[36px]" onClick={() => setCyberGroup(g.id)}>
+                {g.label}
+              </Btn>
+            ))}
+          </div>
+        )}
+        {tab === 'gear' && (
+          <div className="flex flex-wrap gap-1 mb-2" role="tablist" aria-label="Tipo de equipo">
+            {GEAR_GROUPS.map((g) => (
+              <Btn key={g.id} role="tab" aria-selected={gearGroup === g.id} tone={gearGroup === g.id ? 'cyan' : 'gray'} className="min-h-[36px]" onClick={() => setGearGroup(g.id)}>
+                {g.label}
+              </Btn>
+            ))}
+          </div>
+        )}
+        {tab === 'weapons' && (
+          <p className="text-[10px] font-mono-code text-[#64748b] mb-2">
+            Para ponerle accesorios a un arma{era === '2077' ? ' o convertirla a Power, Smart o Tech (CEMK pp.30-31)' : ''}, comprala y tocá "Mejorar" en Compras.
+          </p>
+        )}
         {tab === 'ammunition' && (
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <label htmlFor="shop-caliber" className="text-xs text-[#cbd5e1]">
@@ -349,7 +415,14 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
             return (
               <li key={it.id} className="flex flex-wrap items-center gap-2 bg-[#0a0b0e] border border-[#1e2334] rounded-xs px-2 py-1.5">
                 <div className="min-w-0 flex-1">
-                  <span className="text-xs text-white font-bold">{it.name}</span>
+                  <button
+                    type="button"
+                    className="text-xs text-white font-bold underline decoration-dotted decoration-[#06b6d4]/60 underline-offset-2 text-left cursor-pointer min-h-[32px]"
+                    aria-label={`Ver detalle de ${it.name}`}
+                    onClick={() => setDetail(it)}
+                  >
+                    {it.name}
+                  </button>
                   <span className="ml-2">
                     <SourceBadge book={label} />
                   </span>
@@ -360,7 +433,11 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
                   {tab === 'programs' && it.class && <span className="ml-2 text-[10px] font-mono-code text-[#a855f7]">{it.class}</span>}
                   {covered && <span className="block text-[10px] font-mono-code text-[#06b6d4]">Ya viene en el Neuroport: {covered} (CEMK RB p.36).</span>}
                 </div>
-                <span className="text-xs font-mono-code text-[#10b981]">{eb(it.cost)}</span>
+                <span className={`text-[10px] font-mono-code ${needsFixer(it) ? 'text-[#f59e0b]' : 'text-[#64748b]'}`} title={needsFixer(it) ? 'Sin Fixer no se consigue (Core p.385)' : undefined}>
+                  {priceTier(it)}
+                  {needsFixer(it) ? ' ⚠' : ''}
+                </span>
+                <span className="text-xs font-mono-code text-[#10b981]">{eb(effectiveUnitCost(it.cost, double, it.costTier))}</span>
                 {tab === 'armor' && !isShield(it.name) ? (
                   <>
                     <Btn tone="green" disabled={!affordable} aria-label={`Comprar ${it.name} para la cabeza`} onClick={() => buy(it, 'head')}>
@@ -394,8 +471,16 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
                   {p.qty}× {p.name}
                   {p.location && <span className="ml-1 text-[#06b6d4]">({p.location === 'head' ? 'cabeza' : 'cuerpo'})</span>}
                   {p.category === 'cyberware' && <span className="ml-1 text-[#f59e0b] font-mono-code">HL {p.humanityLoss}</span>}
+                  {(p.mods ?? []).length > 0 && (
+                    <span className="block text-[10px] text-[#a855f7]">+ {(p.mods ?? []).map((id) => WEAPON_ATTACHMENTS_CATALOG.find((a) => a.id === id)?.name ?? id).join(', ')}</span>
+                  )}
                 </span>
-                <span className="font-mono-code text-[#10b981]">{eb(p.cost * p.qty)}</span>
+                {p.category === 'weapons' && PACK.weapons.find((w) => w.id === p.catalogId)?.type === 'Ranged' && (
+                  <Btn tone="cyan" aria-label={`Mejorar ${p.name}`} onClick={() => setModsFor(i)}>
+                    Mejorar
+                  </Btn>
+                )}
+                <span className="font-mono-code text-[#10b981]">{eb(purchaseUnitCost(p, double) * p.qty)}</span>
                 <Btn tone="red" aria-label={`Quitar una unidad de ${p.name}`} onClick={() => removeOne(i)}>
                   Quitar
                 </Btn>
@@ -518,14 +603,97 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
         )}
       </Panel>
 
-      <Panel title="Vivienda inicial (Core p.105 y p.377)">
+      <Panel title="Vivienda inicial (Core p.105, p.377 y p.378)">
         <p className="text-xs text-[#94a3b8]">
           {role === 'Exec'
-            ? `${housing.exec.housing} (${housing.exec.location}), estilo ${housing.exec.lifestyle}; sin renta este mes, ${eb(housing.exec.lifestyleMonthly)} el día 1 de cada mes.`
-            : `${housing.default.housing} (${housing.default.location}), estilo ${housing.default.lifestyle}; primer mes gratis, ${eb(housing.default.owedNextMonth)} el día 1 del mes siguiente o desalojo el día ${housing.default.evictionDay}.`}
+            ? `Por el libro: ${housing.exec.housing} (${housing.exec.location}), estilo ${housing.exec.lifestyle}; sin renta este mes, ${eb(housing.exec.lifestyleMonthly)} el día 1 de cada mes.`
+            : `Por el libro: ${housing.default.housing} (${housing.default.location}), estilo ${housing.default.lifestyle}; primer mes gratis, ${eb(housing.default.owedNextMonth)} el día 1 del mes siguiente o desalojo el día ${housing.default.evictionDay}.`}
         </p>
         {role === 'Nomad' && <p className="text-[11px] text-[#06b6d4] mt-1">{housing.nomadExtra}</p>}
+        <div className="grid sm:grid-cols-2 gap-2 mt-2">
+          <label className="text-[11px] text-[#cbd5e1]">
+            Vivienda ({HOUSING_SOURCE})
+            <select
+              className={`${SELECT_CLS} block w-full min-h-[40px]`}
+              value={housingIsCustom ? CUSTOM : housingValue}
+              onChange={(e) => update((d) => ({ ...d, housing: e.target.value === CUSTOM ? ' ' : e.target.value }))}
+            >
+              {HOUSING_OPTIONS.map((h) => (
+                <option key={h.name} value={h.name}>
+                  {h.name}
+                  {h.rent ? ` · ${eb(h.rent)}/mes` : h.buy ? ` · compra ${eb(h.buy)}` : ''}
+                </option>
+              ))}
+              <option value={CUSTOM}>✎ Otra (escribir)</option>
+            </select>
+          </label>
+          <label className="text-[11px] text-[#cbd5e1]">
+            Estilo de vida ({LIFESTYLE_SOURCE})
+            <select
+              className={`${SELECT_CLS} block w-full min-h-[40px]`}
+              value={lifestyleValue}
+              onChange={(e) => update((d) => ({ ...d, lifestyle: e.target.value }))}
+            >
+              {LIFESTYLE_OPTIONS.map((l) => (
+                <option key={l.name} value={l.name}>
+                  {l.name} · {eb(l.monthly)}/mes
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        {housingIsCustom && (
+          <input
+            aria-label="Vivienda propia"
+            className={`${INPUT_CLS} w-full mt-2 min-h-[44px]`}
+            placeholder="Describí tu vivienda (p. ej. el taller de tu tío en Heywood)"
+            value={(draft.housing ?? '').trim() === '' ? '' : draft.housing}
+            onChange={(e) => update((d) => ({ ...d, housing: e.target.value || ' ' }))}
+          />
+        )}
+        {housingOption?.note && <p className="text-[11px] text-[#94a3b8] mt-1">{housingOption.note}</p>}
+        <p className="text-[10px] font-mono-code text-[#64748b] mt-1">
+          El primer mes ya está pagado (Core p.105): no se descuenta nada ahora. Desde el mes que viene pagás{' '}
+          {housingOption?.rent ? `${eb(housingOption.rent)} de alquiler y ` : ''}
+          {eb(LIFESTYLE_OPTIONS.find((l) => l.name === lifestyleValue)?.monthly ?? 0)} de estilo de vida.
+        </p>
       </Panel>
+
+      {detail && (
+        <ShopItemDetail
+          item={detail}
+          category={tab}
+          noFixerDouble={double}
+          onClose={() => setDetail(null)}
+          buyActions={
+            tab === 'armor' && !isShield(detail.name) ? (
+              <>
+                <Btn tone="green" className="min-h-[44px]" disabled={!canAfford(makePurchase(detail, tab)) || !!neuroportCovers(detail.id, era, draft.installNeuroport)} onClick={() => buy(detail, 'head')}>
+                  Comprar para la cabeza
+                </Btn>
+                <Btn tone="green" className="min-h-[44px]" disabled={!canAfford(makePurchase(detail, tab)) || !!neuroportCovers(detail.id, era, draft.installNeuroport)} onClick={() => buy(detail, 'body')}>
+                  Comprar para el cuerpo
+                </Btn>
+              </>
+            ) : (
+              <Btn tone="green" className="min-h-[44px]" disabled={!canAfford(makePurchase(detail, tab)) || !!neuroportCovers(detail.id, era, draft.installNeuroport)} onClick={() => buy(detail)}>
+                Comprar
+              </Btn>
+            )
+          }
+        />
+      )}
+      {modsPurchase && modsWeapon && modsFor !== null && (
+        <WeaponModsEditor
+          weapon={modsWeapon}
+          mods={modsPurchase.mods ?? []}
+          era={era}
+          noFixerDouble={double}
+          cashLeft={left.cash}
+          onChange={(mods) => setMods(modsFor, mods)}
+          onClose={() => setModsFor(null)}
+        />
+      )}
     </div>
   );
 };
