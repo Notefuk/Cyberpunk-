@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.4.0] - 2026-10-29 (Creador más libre y que explica: texto propio, STATs, rol arriba, idiomas, skills de arma y Autofire, paquete en Complete Package) [Claude Code · 2026-10-29]
+* **Category**: Creador de personajes (plan 21, `docs/plans/plan21-creador-tienda-ficha.md`, primera de tres versiones).
+* **What Changed**:
+  * Lifepath: cada tabla suma "✎ Otro (escribir)" para poner un resultado propio que no está en la tabla; llega a la ficha igual que uno de la tabla. Vale también para el Lifepath de rol.
+  * STATs: el paso de STATs muestra "Qué hace cada STAT", una tarjeta por STAT con qué hace, las reglas que dependen de él con su página (por ejemplo, REF 8 o más para esquivar tiros, Core p.172; HP, Death Save y daño de Brawling por BODY, Core pp.79, 176 y 222; Humanidad = EMP × 10, Core p.80; Facedown con COOL, Core p.194) y las skills que lo usan. El ⓘ de cada STAT también lo muestra.
+  * Habilidad de rol arriba de todo en el paso de skills, con su texto de rango 4 y página. El Medtech reparte Medicine (Surgery, Pharmaceuticals, Cryosystem) y el Tech, Maker, ahí mismo, con una explicación de qué hace cada especialidad (Core pp.147-150); el reparto llega a la ficha. El panel de la ficha (pestaña ROL) muestra las mismas explicaciones.
+  * Idiomas: el texto dice que es UN idioma de origen a rango 4 gratis (Core p.45 y p.90), con Streetslang aparte en 2 (Core p.85). En Complete Package se pueden sumar otros idiomas con puntos ("+ otro idioma").
+  * Skills de arma: cada skill de combate dice qué armas cubre y su tirada (Handgun: pistolas y SMG en tiro simple; Shoulder Arms: escopetas y rifles; etc., Core pp.83-84, 171, 176), con una nota de que en RED no hay "proficiencia". Cuadro "Cómo funciona Autofire" con las reglas de Core pp.173-174 (10 balas, REF + Autofire, 2d6 × margen hasta ×3/×4, Suppressive Fire, no reemplaza a Handgun ni a Shoulder Arms); si el paquete o las compras traen un SMG o un Assault Rifle se abre solo y sugiere poner puntos.
+  * Complete Package: en EQUIPO se elige entre comprar todo suelto con 2.550 €$ (Core p.104) o el paquete del rol + 500 €$ (Core p.98), marcado como variante de mesa (decisión de Giuliano). Los 800 €$ de moda siguen en los dos casos.
+* **Files Modified**: `frontend/src/features/creator/steps/StatGuide.tsx`, `frontend/src/data/creation/weaponSkillGuide.ts`, `frontend/src/engine/__tests__/creatorV540.test.ts` (nuevos); `features/creator/steps/LifepathStep.tsx`, `StatsStep.tsx`, `SkillsStep.tsx`, `GearStep.tsx`, `SummaryStep.tsx`; `features/sheet/RoleAllocationPanel.tsx` (`RoleAllocationEditor` sin store); `engine/characterCreation.ts` (`usesRolePackage`, `cpUsePackage`, `makerAllocation`/`medicineAllocation` en el borrador, idiomas extra); `data/characterCreationData.ts` (STAT_TOOLTIPS completos); `data/creation/coreGearSkills.ts` (descripción de Autofire); `engine/__tests__/cyberwareEffects.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 474 tests y build. En el navegador local, tamaño iPad (768×1024): "Otro (escribir)" guarda "Colonia lunar de Tycho" y cuenta como respondida; guía de STATs con REF; bloque de Medicine con Surgery 2 → "Surgery nivel 4" guardado en el borrador; idioma extra "Language (Japanese)"; selector de paquete con el paquete del Netrunner y 500 €$.
+
 ### [v5.3.2] - 2026-10-29 (Arreglos del creador que salieron de probar el Complete Package) [Claude Code · 2026-10-29]
 * **Category**: Creador de personajes / tienda (pedido de Giuliano tras crear "Kuroi" y "Kessler" en prod; sin plan: arreglos).
 * **What Changed**:
