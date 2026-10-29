@@ -1,6 +1,8 @@
 // [Claude Code · 2026-10-24] v5.0.0 (plan 16): pestaña "MESA // CAMPAÑA" (login y estado; sin sync de fichas todavía).
 // [Claude Code · 2026-10-24] Plan 18: suma el panel de campañas.
+// [Claude Code · 2026-10-29] v5.3.1: botón para bajar todas las fichas de la nube, una por archivo.
 import { readFirebaseConfig } from '../../sync/firebaseConfig';
+import { downloadCharacters } from '../../utils/characterFile';
 import { useState } from 'react';
 import { useAuthStore } from '../../sync/authStore';
 import { useCloudState } from '../../sync/cloudState';
@@ -41,6 +43,12 @@ export function CloudTableView() {
   // Las fichas de jugadores que ve el GM no son "tuyas": se listan en la party de la campaña (plan 18).
   const cloudChars = characters.filter((c) => cloudIds.includes(c.id) && playerOwners[c.id] === undefined);
   const localChars = characters.filter((c) => !cloudIds.includes(c.id));
+  // Para bajar: las tuyas y, si sos GM, las de los jugadores que tenés cargadas.
+  const playerChars = characters.filter((c) => playerOwners[c.id] !== undefined);
+  const downloadAll = () => downloadCharacters([
+    ...cloudChars.map((sheet) => ({ sheet, player: user?.displayName ?? '' })),
+    ...playerChars.map((sheet) => ({ sheet, player: playerOwners[sheet.id] }))
+  ]);
 
   const btn = 'px-4 py-2 bg-[#dc2626] hover:bg-white text-white hover:text-black font-tech font-bold text-sm uppercase tracking-wider rounded-xs transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
 
@@ -137,6 +145,14 @@ export function CloudTableView() {
             >
               {uploading ? 'Subiendo…' : 'Subir a la nube'}
             </button>
+            <div className="pt-3 space-y-1">
+              <button type="button" className={btn} disabled={cloudChars.length + playerChars.length === 0} onClick={downloadAll}>
+                Descargar todas las fichas ⬇
+              </button>
+              <p className="font-mono-code text-[11px] text-[#64748b]">
+                Un archivo por ficha: "Personaje - Rol (Jugador).json"{playerChars.length > 0 ? ', incluidas las de tus jugadores' : ''}. Se vuelven a cargar con IMPORTAR FICHA (archivo) en STREET LAB.
+              </p>
+            </div>
             <p className="font-mono-code text-[11px] text-[#64748b]">Al salir de tu cuenta, las fichas de la nube se quitan de este dispositivo y quedan guardadas en tu cuenta.</p>
           </div>
           <CampaignPanel />

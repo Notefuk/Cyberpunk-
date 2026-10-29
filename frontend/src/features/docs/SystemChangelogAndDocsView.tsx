@@ -26,6 +26,25 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.3.1',
+    date: '2026-10-29',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa online',
+    title: 'Descargar todas las fichas de la nube',
+    summary: 'En MESA // CAMPAÑA, un botón baja todas tus fichas de la nube de una, un archivo por ficha con el nombre "Personaje - Rol (Jugador).json". Si sos GM, también las de tus jugadores.',
+    highlights: [
+      'Mismo formato que "Descargar" en STREET LAB: se vuelven a cargar con IMPORTAR FICHA (archivo).',
+      'El GM baja también las fichas de sus jugadores, con el nombre de cada uno.',
+      '459 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/utils/characterFile.ts',
+      'frontend/src/features/cloud/CloudTableView.tsx'
+    ],
+    metricsBadge: 'v5.3.1 • Nube • Respaldo de fichas'
+  },
+  {
     version: 'v5.3.0',
     date: '2026-10-28',
     author: 'Claude Code',
@@ -1239,6 +1258,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.3.1': true,
     'v5.3.0': true,
     'v5.2.0': true,
     'v5.1.0': true,
