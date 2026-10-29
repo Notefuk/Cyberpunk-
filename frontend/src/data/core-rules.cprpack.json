@@ -4302,6 +4302,95 @@
       "description": "Standard Netrunner rig featuring 7 option slots for Programs and Hardware.",
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 196,
+      "era": "2045"
+    },
+    {
+      "id": "cyberdeck-poor",
+      "name": "Cyberdeck (Poor, 5 slots)",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Poor Quality Cyberdeck with 5 slots for Programs and Hardware.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 196,
+      "era": "2045"
+    },
+    {
+      "id": "cyberdeck-excellent",
+      "name": "Cyberdeck (Excellent, 9 slots)",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Excellent Quality Cyberdeck with 9 slots for Programs and Hardware.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 196,
+      "era": "2045"
+    },
+    {
+      "id": "hw-backup-drive",
+      "name": "Backup Drive (Hardware, 2 slots)",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Cyberdeck Hardware. Saves non-Black ICE Attacker, Defender or Booster Programs the instant before they are destroyed; a Meat Action re-installs them if there are Slots. Takes 2 Hardware Option Slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 208,
+      "era": "2045"
+    },
+    {
+      "id": "hw-dna-lock",
+      "name": "DNA Lock (Hardware, 2 slots)",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Cyberdeck Hardware. Locks the Cyberdeck with a biometric key; without it, DV17 Electronics/Security Tech Check. Takes 2 Hardware Option Slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 208,
+      "era": "2045"
+    },
+    {
+      "id": "hw-hardened-circuitry",
+      "name": "Hardened Circuitry (Hardware, 1 slot)",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Cyberdeck Hardware. The Cyberdeck cannot be disabled or destroyed by EMP effects or Non-Black ICE Program Effects.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 208,
+      "era": "2045"
+    },
+    {
+      "id": "hw-insulated-wiring",
+      "name": "Insulated Wiring (Hardware, 1 slot)",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Cyberdeck Hardware. The Cyberdeck cannot catch fire or set the user's clothing on fire as the result of a Program effect.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 208,
+      "era": "2045"
+    },
+    {
+      "id": "hw-krash-barrier",
+      "name": "KRASH Barrier (Hardware, 2 slots)",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Cyberdeck Hardware. Immune to any Program Effect that forces the Netrunner to Jack Out. Takes 2 Hardware Option Slots.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 208,
+      "era": "2045"
+    },
+    {
+      "id": "hw-range-upgrade",
+      "name": "Range Upgrade (Hardware, 1 slot)",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Cyberdeck Hardware. Can connect to an access point from up to 8m away.",
+      "sourceBook": "core",
+      "sourceBookTitle": "Cyberpunk RED Core Rulebook",
+      "sourcePage": 208,
       "era": "2045"
     },
     {

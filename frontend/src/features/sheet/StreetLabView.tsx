@@ -8,6 +8,7 @@ import {
   getEffectiveEmp,
   getEffectiveBody,
   naturalHealingPerDay,
+  parseHumanityLossAverage,
   speedhealAmount
 } from '../../engine/characterEngine';
 import type { 
@@ -1259,7 +1260,7 @@ export const StreetLabView: React.FC = () => {
                 <Heart className="w-3.5 h-3.5 text-[#dc2626]" />
                 <span className="text-[#64748b]">MAX HP:</span>
                 <span className="text-white font-bold">{maxHp}</span>
-                <span className="text-[10px] text-[#64748b] hidden sm:inline">(10+5×⌈{bodyVal}+{willVal}⌉/2)</span>
+                <span className="text-[10px] text-[#64748b] hidden sm:inline">(10+5×⌈({bodyVal}+{willVal})/2⌉)</span>
               </div>
 
               <div className="flex items-center gap-1.5">
@@ -2238,7 +2239,10 @@ export const StreetLabView: React.FC = () => {
                         (c) => c.id === id
                       );
                       const name = cyber?.name || id;
-                      const hl = cyber?.humanityLoss || '2d6 (7)';
+                      // v5.3.2: el Neuroport de la creación 2077 es gratis y con HL 0 (CEMK RB p.25); desinstalar devuelve lo que costó. [Claude Code · 2026-10-29]
+                      const freeNeuroport = id === 'cw-cemk-neuroport' && !!activeChar.hasNeuroport;
+                      const hl = freeNeuroport ? '0 (gratis en la creación, CEMK RB p.25)' : cyber?.humanityLoss || '2d6 (7)';
+                      const hlAvg = freeNeuroport ? 0 : parseHumanityLossAverage(hl);
                       const type = cyber?.type || 'Prótesis';
                       const isEmpDisabled = (activeChar?.empDisabledCyberwareIds || []).includes(id);
 
@@ -2287,7 +2291,7 @@ export const StreetLabView: React.FC = () => {
 
                             <button
                               type="button"
-                              onClick={() => toggleCyberwareInstall(id)}
+                              onClick={() => toggleCyberwareInstall(id, hlAvg)}
                               className="text-[10px] font-mono-code text-[#dc2626] hover:underline cursor-pointer ml-1"
                             >
                               Desinstalar

@@ -22,6 +22,7 @@ import { MARTIAL_ARTS_FORMS } from '../data/cyberfistsMartialArtsData';
 import { applyFolioAllocation } from '../data/folioRoleAllocations';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, calculateMaxHumanity, parseHumanityLossAverage } from './characterEngine';
 import { cyberwareStatBonus } from './cyberwareEffects';
+import { deckSlotUse, neuroportCovers } from './creatorShop';
 import type {
   CharacterEra,
   CharacterLifepath,
@@ -1098,6 +1099,11 @@ function validateGear(d: CreatorDraft): string[] {
   if (d.installCyberdeckPort && !(d.era === '2077' && d.installNeuroport)) {
     errs.push('El Cyberdeck Port requiere el Neuroport (CEMK RB p.36).');
   }
+  // v5.3.2: lo que ya trae el Neuroport no se compra de nuevo (CEMK RB p.36). [Claude Code · 2026-10-29]
+  for (const p of d.purchases) {
+    const piece = neuroportCovers(p.catalogId, d.era, d.installNeuroport);
+    if (piece) errs.push(`${p.name} ya viene en el Neuroport${piece === p.name ? '' : ` (${piece})`}: sacalo de las compras (CEMK RB p.36).`);
+  }
   if (d.role && (d.method === 'streetrat' || d.method === 'edgerunner')) {
     const src = CORE_GEAR_SKILLS.rolePackages[d.role];
     const optionCounts: Record<string, number> = {};
@@ -1311,35 +1317,44 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
     } else if (p.category === 'ammunition') {
       // Core p.344: cada compra son 10 balas (granadas y cohetes, de a una); el inventario cuenta unidades. [Claude Code · 2026-10-25]
       addInventory('ammunition', p.catalogId, p.name, p.cost, isPerUnitAmmo(p.name) ? p.qty : p.qty * 10, 'Compra de creación');
-    } else if (p.category !== 'cyberware') {
-      const cat = p.category === 'armor' || p.category === 'gear' || p.category === 'drugs' || p.category === 'programs' ? p.category : 'gear';
+    } else if (p.category !== 'cyberware' && p.category !== 'armor') {
+      const cat = p.category === 'gear' || p.category === 'drugs' || p.category === 'programs' ? p.category : 'gear';
       addInventory(cat, p.catalogId, p.name, p.cost, p.qty, 'Compra de creación');
     }
   }
   for (const f of draft.fashion) addInventory('gear', '', `${f.style} - ${f.piece}`, f.unitCost, f.qty, 'Moda de creación');
 
   // Armadura: la de más SP entre el paquete y las compras (Light Armorjack SP 11 en los paquetes, Core p.98).
-  const armorUnits = (kind: 'Head' | 'Body'): Array<{ name: string; sp: number; penalty: number }> => {
-    const out: Array<{ name: string; sp: number; penalty: number }> = [];
+  type ArmorUnit = { name: string; sp: number; penalty: number; purchaseIndex?: number };
+  const armorUnits = (kind: 'Head' | 'Body'): ArmorUnit[] => {
+    const out: ArmorUnit[] = [];
     for (const e of rolePkg?.armor ?? []) {
       const sp = /\(SP(\d+)\)/.exec(e.name);
       if (new RegExp(`${kind} Armor`, 'i').test(e.name) && sp) {
         out.push({ name: e.name.replace(/\s*(Head|Body) Armor.*$/i, ''), sp: parseInt(sp[1], 10), penalty: lookupByName(armorDb, e.name.replace(/\s*(Head|Body) Armor.*$/i, ''))?.penalty ?? 0 });
       }
     }
-    for (const p of draft.purchases) {
+    draft.purchases.forEach((p, purchaseIndex) => {
       const a = p.category === 'armor' ? armorDb.find((x) => x.id === p.catalogId) : undefined;
       const locationOk = !p.location || p.location === (kind === 'Head' ? 'head' : 'body');
-      if (a && locationOk && !/shield/i.test(a.name)) out.push({ name: a.name, sp: a.sp ?? 0, penalty: a.penalty ?? 0 });
-    }
+      if (a && locationOk && !/shield/i.test(a.name)) out.push({ name: a.name, sp: a.sp ?? 0, penalty: a.penalty ?? 0, purchaseIndex });
+    });
     return out;
   };
+  const equippedFrom: number[] = [];
   const best = (kind: 'Head' | 'Body'): CharacterSheet['headArmor'] => {
     const top = armorUnits(kind).sort((a, b) => b.sp - a.sp)[0];
+    if (top?.purchaseIndex !== undefined) equippedFrom.push(top.purchaseIndex);
     return top ? { name: `${top.name} (${kind})`, maxSp: top.sp, currentSp: top.sp, penalty: top.penalty } : emptyArmor();
   };
   const headArmor = best('Head');
   const bodyArmor = best('Body');
+  // v5.3.2: la pieza que queda puesta no se repite en la mochila; solo van las de más y los escudos. [Claude Code · 2026-10-29]
+  draft.purchases.forEach((p, i) => {
+    if (p.category !== 'armor') return;
+    const qty = p.qty - equippedFrom.filter((x) => x === i).length;
+    if (qty > 0) addInventory('armor', p.catalogId, p.name, p.cost, qty, 'Compra de creación');
+  });
 
   // Ciberware: ids del pack por nombre; sin id -> warning y nota.
   const installedCyberwareIds: string[] = [];
@@ -1455,6 +1470,18 @@ export function getSummaryWarnings(draft: CreatorDraft, built: { sheet: Characte
       .filter((s) => (Object.entries(draft.skills).find(([n]) => baseSkillName(n) === s.name)?.[1] ?? 0) < 2)
       .map((s) => s.name);
     if (low.length > 0) push('basic-skills-zero', `Skills básicas por debajo de 2: ${low.join(', ')}.`, true);
+  }
+
+  // v5.3.2: programas y Hardware contra los slots del cyberdeck; solo avisa (decisión de Giuliano). [Claude Code · 2026-10-29]
+  const slots = deckSlotUse(draft.purchases);
+  if (slots.programs + slots.hardware > 0 && slots.deckSlots === 0) {
+    out.push({ id: 'no-cyberdeck', message: 'Compraste programas o Hardware pero no un cyberdeck.', source: { book: 'Core RED', page: 196 } });
+  } else if (slots.overflow > 0) {
+    out.push({
+      id: 'deck-slots',
+      message: `Programas y Hardware ocupan ${slots.deckSlots + slots.overflow} slots y el cyberdeck tiene ${slots.deckSlots}: lo que sobra queda en la mochila.`,
+      source: { book: 'Core RED', page: 196 }
+    });
   }
 
   if (built.sheet) {
