@@ -90,11 +90,13 @@ describe('Thorn del Folio (CEMK Folios pp. 21-22)', () => {
 });
 
 describe('STAT_TOOLTIPS (Core RED p.72)', () => {
-  it('tiene las 10 STATs con fuente Core p.72 y sin umbrales inventados', () => {
+  it('tiene las 10 STATs con fuente Core p.72 y umbrales con página', () => {
     expect(Object.keys(STAT_TOOLTIPS)).toHaveLength(10);
     for (const k of STAT_KEYS) {
       expect(STAT_TOOLTIPS[k].source).toEqual({ book: 'Core RED', page: 72 });
-      expect(STAT_TOOLTIPS[k].mechanicalBreakpoints).toEqual([]);
+      // v5.4.0 (plan 21): los umbrales se permiten, pero cada uno cita su página del Core. [Claude Code · 2026-10-29]
+      for (const bp of STAT_TOOLTIPS[k].mechanicalBreakpoints) expect(bp).toMatch(/Core pp?\.\d/);
+      expect(STAT_TOOLTIPS[k].beginnerExplanation.length).toBeGreaterThan(10);
       expect(STAT_TOOLTIPS[k].shortSummary.length).toBeGreaterThan(10);
     }
   });
