@@ -105,6 +105,16 @@ export interface CreatorDraft {
   fashion: FashionPurchase[];
   installNeuroport: boolean;
   installCyberdeckPort: boolean;
+  /** v5.4.0 (plan 21): Complete Package con el paquete del rol + 500 €$ en vez de 2.550 €$ (variante de mesa, Core p.98 / p.104). */
+  cpUsePackage?: boolean;
+  /** v5.4.0 (plan 21): reparto de la habilidad de rol hecho en el creador (Maker, Core pp.147-148; Medicine, Core pp.149-150). */
+  makerAllocation?: { field: number; upgrade: number; fabrication: number; invention: number };
+  medicineAllocation?: { surgery: number; pharmaceuticals: number; cryosystem: number; knownPharmaceuticals?: string[] };
+}
+
+/** Streetrat y Edgerunner traen el paquete del rol; Complete Package solo si lo eligió (plan 21). [Claude Code · 2026-10-29] */
+export function usesRolePackage(d: Pick<CreatorDraft, 'method' | 'cpUsePackage'>): boolean {
+  return d.method === 'streetrat' || d.method === 'edgerunner' || (d.method === 'complete_package' && !!d.cpUsePackage);
 }
 
 // ============================================================================
@@ -803,6 +813,8 @@ export function getStartingMoney(draft: CreatorDraft): StartingMoney {
       // Core p.98: paquete fijo + 500 €$ libres.
       return { cash: money.streetratEdgerunnerExtra, fashionBudget: 0, source: `Core RED p.${money.extraSource.page}` };
     case 'complete_package':
+      // Variante de mesa (plan 21): con el paquete del rol, 500 €$ libres como Streetrat/Edgerunner, y los 800 €$ de moda igual.
+      if (draft.cpUsePackage) return { cash: money.streetratEdgerunnerExtra, fashionBudget: money.fashion, source: `Core RED p.${money.extraSource.page} (variante de mesa)` };
       // Core pp. 104-105: 2.550 €$ para equipo y 800 €$ solo para moda (lo no gastado de moda se pierde).
       return { cash: money.gear, fashionBudget: money.fashion, source: `Core RED p.${money.source.page}` };
     case 'cemk_pregen':
@@ -889,7 +901,7 @@ function getCyberdeckPortData(): { name: string; humanityLoss: number; cost: num
 export function getCyberwareList(draft: CreatorDraft): CreatorCyberware[] {
   if (isPregenMethod(draft.method)) return [];
   const list: CreatorCyberware[] = [];
-  if (draft.role && (draft.method === 'streetrat' || draft.method === 'edgerunner')) {
+  if (draft.role && usesRolePackage(draft)) {
     for (const c of getRolePackage(draft.role, draft.era, draft.packageChoices).cyberware) {
       if (c.coveredByNeuroport) continue;
       list.push({ name: c.name, humanityLoss: c.humanityLoss, qty: 1, cost: 0, source: 'package' });
@@ -1068,7 +1080,8 @@ function validateSkills(d: CreatorDraft): string[] {
     }
     for (const s of getSkillCatalog().filter((x) => x.basic)) {
       // Language es Language (Streetslang), mínimo 2; el idioma de origen va aparte (Core pp. 45 y 85). [Claude Code · 2026-10-25]
-      const lvl = Object.entries(d.skills).find(([n]) => baseSkillName(n) === s.name)?.[1] ?? 0;
+      // v5.4.0: con idiomas extra hay varias 'Language (X)'; la básica es la de Streetslang. [Claude Code · 2026-10-29]
+      const lvl = s.name === 'Language' ? d.skills['Language (Streetslang)'] ?? 0 : Object.entries(d.skills).find(([n]) => baseSkillName(n) === s.name)?.[1] ?? 0;
       if (lvl < 2) errs.push(`La skill básica ${s.name} debe empezar en 2 o más (Core p.85).`);
     }
     if (spent !== SKILL_POINTS) errs.push(`Las skills deben sumar ${SKILL_POINTS} puntos (llevas ${spent}) (Core p.81).`);
@@ -1104,7 +1117,7 @@ function validateGear(d: CreatorDraft): string[] {
     const piece = neuroportCovers(p.catalogId, d.era, d.installNeuroport);
     if (piece) errs.push(`${p.name} ya viene en el Neuroport${piece === p.name ? '' : ` (${piece})`}: sacalo de las compras (CEMK RB p.36).`);
   }
-  if (d.role && (d.method === 'streetrat' || d.method === 'edgerunner')) {
+  if (d.role && usesRolePackage(d)) {
     const src = CORE_GEAR_SKILLS.rolePackages[d.role];
     const optionCounts: Record<string, number> = {};
     src.weaponsArmor.items.forEach((it, i) => {
@@ -1225,7 +1238,7 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
   const method = draft.method as 'streetrat' | 'edgerunner' | 'complete_package';
   const derived = computeDerived(draft);
   const money = getMoneyRemaining(draft);
-  const hasPackage = method === 'streetrat' || method === 'edgerunner';
+  const hasPackage = usesRolePackage(draft);
   const rolePkg = hasPackage ? getRolePackage(role, draft.era, draft.packageChoices) : null;
 
   // Skills: 16 de combate vía resolveSkillKey, el resto a generalSkills con nombre canon (Core pp. 81-85).
@@ -1241,7 +1254,8 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
       continue;
     }
     // Play Instrument/Science con especialidad conservan su clave completa en generalSkills.
-    if (isSpecialtyBase(name) && skillSpecialty(name)) {
+    // v5.4.0: los idiomas extra comprados con puntos ('Language (German)') también (Core p.84). [Claude Code · 2026-10-29]
+    if ((isSpecialtyBase(name) || baseSkillName(name) === 'Language') && skillSpecialty(name)) {
       generalSkills[canonSkillKey(name)] = level;
       continue;
     }
@@ -1390,6 +1404,8 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
     handle: draft.handle.trim(),
     role,
     roleRank: 4,
+    ...(role === 'Tech' && draft.makerAllocation ? { makerAllocation: { ...draft.makerAllocation } } : {}),
+    ...(role === 'Medtech' && draft.medicineAllocation ? { medicineAllocation: { ...draft.medicineAllocation } } : {}),
     notes: notes.join('\n'),
     stats: { ...draft.stats },
     currentHp: derived.maxHp,

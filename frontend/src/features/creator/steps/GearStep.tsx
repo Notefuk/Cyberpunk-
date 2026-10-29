@@ -15,7 +15,8 @@ import {
   type CreatorDraft,
   type CreatorPurchase,
   type CreatorPurchaseCategory,
-  type RolePackageEntry
+  type RolePackageEntry,
+  usesRolePackage,
 } from '../../../engine/characterCreation';
 import { Btn, INPUT_CLS, Panel, SELECT_CLS, SourceBadge, NoviceGuide, StepHeader, eb, type StepProps } from './CreatorUi';
 
@@ -109,7 +110,7 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
   const [caliberPick, setCaliberPick] = useState<string | null>(null);
   const caliber = caliberPick ?? firstWeaponCaliber;
 
-  const hasPackage = method === 'streetrat' || method === 'edgerunner';
+  const hasPackage = usesRolePackage(draft);
   const money = getStartingMoney(draft);
   const left = getMoneyRemaining(draft);
   const slots = deckSlotUse(draft.purchases);
