@@ -194,6 +194,23 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
       <StepHeader title="Equipo, dinero y ciberware" subtitle={`Rol: ${getRoleDisplayName(role, era)}`} page="Core pp. 97-119" />
       <NoviceGuide step="gear" />
 
+      {method === 'complete_package' && (
+        <Panel title="¿Cómo armás tu equipo?" className="mb-4">
+          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Equipo del Complete Package">
+            <Btn tone={!draft.cpUsePackage ? 'red' : 'gray'} role="radio" aria-checked={!draft.cpUsePackage} className="min-h-[44px]" onClick={() => update((d) => ({ ...d, cpUsePackage: false }))}>
+              Comprar todo suelto: {eb(CORE_GEAR_SKILLS.completePackageMoney.gear)}
+            </Btn>
+            <Btn tone={draft.cpUsePackage ? 'red' : 'gray'} role="radio" aria-checked={!!draft.cpUsePackage} className="min-h-[44px]" onClick={() => update((d) => ({ ...d, cpUsePackage: true }))}>
+              Paquete del rol + {eb(CORE_GEAR_SKILLS.completePackageMoney.streetratEdgerunnerExtra)}
+            </Btn>
+          </div>
+          <p className="text-[10px] text-[#94a3b8] mt-2">
+            El libro da {eb(CORE_GEAR_SKILLS.completePackageMoney.gear)} para comprar todo (Core p.104). El paquete del rol más {eb(CORE_GEAR_SKILLS.completePackageMoney.streetratEdgerunnerExtra)} es el de Streetrat y Edgerunner (Core p.98): usarlo en Complete Package es una
+            variante de mesa, para no tener que buscar ítem por ítem. Los {eb(CORE_GEAR_SKILLS.completePackageMoney.fashion)} de moda siguen en los dos casos.
+          </p>
+        </Panel>
+      )}
+
       <Panel className="mb-4">
         <div className="flex flex-wrap gap-4 items-center">
           <div>
