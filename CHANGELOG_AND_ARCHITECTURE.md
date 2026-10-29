@@ -117,6 +117,12 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.3.1] - 2026-10-29 (Descargar todas las fichas de la nube) [Claude Code · 2026-10-29]
+* **Category**: Nube / respaldo (pedido de Giuliano, sin plan: tarea chica).
+* **What Changed**: en MESA // CAMPAÑA, "Tus fichas en la nube" suma el botón "Descargar todas las fichas ⬇". Baja un archivo por ficha, llamado "Personaje - Rol (Jugador).json": las tuyas, con tu nombre de cuenta, y, si sos GM, las de tus jugadores que tenés cargadas, con el nombre de cada jugador. El contenido es el mismo que "Descargar" de STREET LAB, así que se vuelven a cargar con "IMPORTAR FICHA (archivo)". Se sacan del nombre los caracteres que Windows no acepta.
+* **Files Modified**: `frontend/src/utils/characterFile.ts`, `frontend/src/utils/__tests__/characterFile.test.ts` (nuevos); `frontend/src/features/cloud/CloudTableView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 459 tests y build. En el navegador, con el emulador: el GM baja "Hardpoint [CEMK Folio] - Solo (gm).json", "Insurance [CEMK Folio] - Medtech (gm).json" y la ficha de la jugadora de su campaña, "Wrench [CEMK Folio] - Nomad (jugadora).json"; los archivos los lee el importador (`parseFullBackup`).
+
 ### [v5.3.0] - 2026-10-28 (Secretos del GM en la nube, revelar a la mesa y PIN solo local) [Claude Code · 2026-10-28]
 * **Category**: Nube / GM (plan 20, `docs/plans/plan20-gm-actua-sobre-la-mesa.md`; segunda mitad de la fase 3 del plan 16).
 * **Secretos del GM por campaña** (`sync/gmSecrets.ts`, nuevo): con mesa activa de GM, las notas secretas del Fixer, los PNJ propios y las arquitecturas NET propias se leen y guardan en `campaigns/{c}/gm/notes|npcs|net` (solo los ve el GM). Se suben 1,5 s después de dejar de escribir (máximo 5 s) y lo pendiente se sube al cerrar la mesa. La primera vez se copia lo que el GM tiene local, con aviso ("Copié tus notas, NPCs, NET..."); la clave local no se toca. Sin mesa, todo sigue local como antes.
