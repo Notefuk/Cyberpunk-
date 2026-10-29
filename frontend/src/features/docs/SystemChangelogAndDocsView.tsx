@@ -26,6 +26,32 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.5.0',
+    date: '2026-10-29',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Creador',
+    title: 'Tienda del creador con detalle, disponibilidad y Rebuilds',
+    summary: 'Tocás un ítem y ves su descripción y sus datos; el ciberware está separado por parte del cuerpo; cada ítem dice su categoría de precio y podés pagar el doble sin Fixer; las armas se mejoran y se convierten a Power, Smart o Tech al comprarlas; y elegís o escribís tu vivienda.',
+    highlights: [
+      'Detalle de cada ítem con sus datos, categoría de precio y libro.',
+      'Ciberware por parte del cuerpo y equipo separado en Cyberdecks/Hardware y resto.',
+      'Categoría de precio (Core p.385) y "Sin Fixer: pagar el doble" (CEMK p.26).',
+      '"Mejorar" en las armas compradas: accesorios del Core y Rebuilds Power/Smart/Tech.',
+      'Rebuilds corregidos: 1.000 €$ y 2 slots (CEMK pp.30-31).',
+      'Vivienda de la tabla de Core p.378 o propia, y estilo de vida (Core p.377).',
+      '483 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/features/creator/steps/ShopItemDetail.tsx',
+      'frontend/src/features/creator/steps/GearStep.tsx',
+      'frontend/src/engine/creatorShop.ts',
+      'frontend/src/data/weaponAttachmentsAndTechData.ts',
+      'frontend/src/data/creation/housingOptions.ts'
+    ],
+    metricsBadge: 'v5.5.0 • Creador • Tienda'
+  },
+  {
     version: 'v5.4.0',
     date: '2026-10-29',
     author: 'Claude Code',
@@ -1309,6 +1335,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.5.0': true,
     'v5.4.0': true,
     'v5.3.2': true,
     'v5.3.1': true,

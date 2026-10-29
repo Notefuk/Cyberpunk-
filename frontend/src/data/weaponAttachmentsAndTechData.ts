@@ -174,8 +174,8 @@ export const WEAPON_ATTACHMENTS_CATALOG: WeaponAttachment[] = [
     costTier: 'Very Expensive',
     eligibleWeaponTypes: ['handgun', 'shoulderArms', 'heavyWeapons', 'archery'],
     incompatibleWith: ['att-smart-rebuild', 'att-tech-rebuild'],
-    summary: 'Reconfiguración CEMK 2077 para proyectiles de alto impacto capaces de rebotar en superficies duras.',
-    fullRules: 'Convierte el arma en un arma Power balística con capacidad de tiro con rebote táctico.',
+    summary: 'Convierte el arma en Power Weapon (CEMK pp.30-31): refuerzo para tiros de alta tensión.',
+    fullRules: 'Cuando un arma Power causa una Critical Injury, su Bonus Damage sube 5. Además se puede rebotar un tiro en una superficie para pegarle a un blanco fuera de la línea de visión, con penalización (CEMK p.30). 2 slots, 1.000 €$, 1 hora de instalación.',
     rebuild2077: 'power'
   },
   {
@@ -186,8 +186,8 @@ export const WEAPON_ATTACHMENTS_CATALOG: WeaponAttachment[] = [
     costTier: 'Very Expensive',
     eligibleWeaponTypes: ['handgun', 'shoulderArms', 'heavyWeapons', 'archery'],
     incompatibleWith: ['att-power-rebuild', 'att-tech-rebuild', 'att-smartgun-link'],
-    summary: 'Reconfiguración CEMK 2077 con micro-misiles dirigidos. Confiere +1 al ataque con Neuroport.',
-    fullRules: 'Convierte el arma en Smart 2077, otorgando un bono de +1 al ataque cuando se utiliza con Neuroport o Smartlink.',
+    summary: 'Convierte el arma en Smart Weapon (CEMK pp.30-31): puntería inteligente con balas gyrojet.',
+    fullRules: '+1 a las tiradas de ataque; hay que estar conectado al arma con Personal Link (Interface Plug) o Subdermal Grip. Permite usar Improved Smart Ammunition. No va en un arma con Smartgun Link (CEMK pp.30-31). 2 slots, 1.000 €$, 1 hora de instalación.',
     attackBonus: 1,
     rebuild2077: 'smart'
   },
@@ -199,8 +199,8 @@ export const WEAPON_ATTACHMENTS_CATALOG: WeaponAttachment[] = [
     costTier: 'Very Expensive',
     eligibleWeaponTypes: ['handgun', 'shoulderArms', 'archery'],
     incompatibleWith: ['att-power-rebuild', 'att-smart-rebuild'],
-    summary: 'Reconfiguración CEMK 2077 con raíles de inducción magnética para disparos cargados que penetran cobertura.',
-    fullRules: 'Convierte el arma en Tech electromagnética capaz de atravesar cobertura sólida mediante disparos cargados.',
+    summary: 'Convierte el arma en Tech Weapon (CEMK pp.30-31): módulos de lanzamiento electromagnético.',
+    fullRules: 'Sacrificando el Move Action se carga el arma; el próximo ataque no explosivo es ROF 1, atraviesa Thin Cover e ignora la mitad del SP. La carga dura hasta disparar o 60 segundos. Trae una mira que ve siluetas a través de Thin Cover. No va en Grenade ni Rocket Launcher (CEMK pp.30-31). 2 slots, 1.000 €$, 1 hora de instalación.',
     rebuild2077: 'tech'
   }
 ];
