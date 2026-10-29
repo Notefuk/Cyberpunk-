@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import pack from '../../../data/core-rules.cprpack.json';
 import { CEMK_CREATION, CORE_GEAR_SKILLS } from '../../../data/creation';
 import { parseHumanityLossAverage } from '../../../engine/characterEngine';
+import { deckSlotUse, neuroportCovers, shopSourceLabel } from '../../../engine/creatorShop';
 import {
   AMMO_CALIBERS,
   getFashionPrice,
@@ -24,6 +25,7 @@ interface PackItem {
   cost: number;
   sourceBook?: string;
   sourceBookTitle?: string;
+  sourcePage?: number | string;
   era?: string;
   humanityLoss?: string;
   type?: string;
@@ -45,14 +47,8 @@ const TABS: Array<{ id: CreatorPurchaseCategory; label: string }> = [
   { id: 'drugs', label: 'Drogas' }
 ];
 
-const BOOK_LABEL: Record<string, string> = {
-  core: 'Core RED',
-  cemk: 'CEMK',
-  dlc: 'DLC',
-  black_chrome: 'Black Chrome',
-  danger_gal: 'Danger Gal'
-};
-const bookLabel = (item: PackItem): string => BOOK_LABEL[item.sourceBook ?? ''] ?? item.sourceBookTitle ?? item.sourceBook ?? 'Core RED';
+// v5.3.2: la etiqueta dice libro y página (y el nombre del DLC) para que se vea de dónde sale cada ítem. [Claude Code · 2026-10-29]
+const bookLabel = (item: PackItem): string => shopSourceLabel(item);
 
 const isShield = (name: string): boolean => /shield/i.test(name);
 
@@ -116,6 +112,7 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
   const hasPackage = method === 'streetrat' || method === 'edgerunner';
   const money = getStartingMoney(draft);
   const left = getMoneyRemaining(draft);
+  const slots = deckSlotUse(draft.purchases);
   const pkg = useMemo(() => (role && hasPackage ? getRolePackage(role, era, draft.packageChoices) : null), [role, hasPackage, era, draft.packageChoices]);
   const basePkg = useMemo(() => (role && hasPackage ? getRolePackage(role, era, {}) : null), [role, hasPackage, era]);
 
@@ -296,7 +293,9 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
           Buscar por nombre
         </label>
         <input id="shop-search" className={`${INPUT_CLS} w-full mb-2`} placeholder="Buscar por nombre…" value={query} onChange={(e) => setQuery(e.target.value)} />
-        {era === '2077' && <p className="text-[10px] font-mono-code text-[#64748b] mb-2">En 2077 se muestra Core + CEMK, cada ítem con su etiqueta.</p>}
+        <p className="text-[10px] font-mono-code text-[#64748b] mb-2">
+          {era === '2077' ? 'Core, CEMK y suplementos' : 'Core y suplementos (sin CEMK)'}: cada ítem dice de qué libro sale y, si está cargada, la página. Los suplementos (Black Chrome, DLC, Danger Gal) quedan marcados para que la mesa decida si los usa.
+        </p>
         {tab === 'ammunition' && (
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <label htmlFor="shop-caliber" className="text-xs text-[#cbd5e1]">
@@ -312,13 +311,22 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
             <span className="text-[10px] font-mono-code text-[#64748b]">Cada compra son 10 balas; granadas y cohetes, de a una (Core p.344).</span>
           </div>
         )}
-        {tab === 'programs' && (
-          <p className="text-[10px] font-mono-code text-[#64748b] mb-2">Cada programa ocupa un slot del cyberdeck: el estándar tiene 7 (Core pp. 196 y 200).</p>
+        {(tab === 'programs' || tab === 'gear') && (
+          <p className={`text-[10px] font-mono-code mb-2 ${slots.overflow > 0 ? 'text-[#f59e0b]' : 'text-[#64748b]'}`}>
+            Programas y Hardware comparten los slots del cyberdeck: Poor 5, Standard 7, Excellent 9 (Core p.196); el Bodyweight Suit suma 1 slot solo para Hardware (Core p.208).
+            {' '}
+            {slots.deckSlots > 0
+              ? `Usás ${slots.programs + Math.max(0, slots.hardware - slots.hardwareOnlySlots)}/${slots.deckSlots} slots${slots.overflow > 0 ? `: sobran ${slots.overflow}` : ''}.`
+              : slots.programs + slots.hardware > 0
+              ? 'Todavía no compraste un cyberdeck.'
+              : ''}
+          </p>
         )}
         <ul className="max-h-96 overflow-y-auto space-y-1">
           {items.map((it) => {
             const candidate = makePurchase(it, tab);
-            const affordable = canAfford(candidate);
+            const covered = neuroportCovers(it.id, era, draft.installNeuroport);
+            const affordable = canAfford(candidate) && !covered;
             const label = bookLabel(it);
             return (
               <li key={it.id} className="flex flex-wrap items-center gap-2 bg-[#0a0b0e] border border-[#1e2334] rounded-xs px-2 py-1.5">
@@ -332,6 +340,7 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
                   )}
                   {tab === 'armor' && typeof it.sp === 'number' && <span className="ml-2 text-[10px] font-mono-code text-[#94a3b8]">SP {it.sp}</span>}
                   {tab === 'programs' && it.class && <span className="ml-2 text-[10px] font-mono-code text-[#a855f7]">{it.class}</span>}
+                  {covered && <span className="block text-[10px] font-mono-code text-[#06b6d4]">Ya viene en el Neuroport: {covered} (CEMK RB p.36).</span>}
                 </div>
                 <span className="text-xs font-mono-code text-[#10b981]">{eb(it.cost)}</span>
                 {tab === 'armor' && !isShield(it.name) ? (
@@ -439,7 +448,7 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
               onChange={(e) => update((d) => ({ ...d, installNeuroport: e.target.checked, installCyberdeckPort: e.target.checked ? d.installCyberdeckPort : false }))}
             />
             <span>
-              <b className="text-white">Neuroport</b> (gratis, HL 0): {neuroport.freeAtCreationEs} Cubre Agent, Neural Link e Interface Plugs (CEMK RB pp. 35-36).
+              <b className="text-white">Neuroport</b> (gratis, HL 0): {neuroport.freeAtCreationEs} Trae Neural Link, Holophone, Biomonitor, Virtu, HUD (Chyron), dos Chipware Sockets y Personal Link (Interface Plug); no se compran aparte (CEMK RB pp. 35-36).
             </span>
           </label>
           <label className="flex items-start gap-2 text-xs text-[#cbd5e1] cursor-pointer mt-2">

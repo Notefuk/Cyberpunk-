@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useGmSecretBinding } from '../../sync/gmSecrets';
 import { useActiveTable } from '../../sync/tableSync';
 import { buildNetReveal, useTableReveals } from '../../sync/tableReveals';
+import { HARDWARE_SLOTS } from '../../engine/creatorShop';
 import { readGmPin, useGmAccess, useGmPinSession } from '../../store/gmAccess';
 import { 
   Cpu, 
@@ -193,6 +194,10 @@ export const NetAndRolesDeckView: React.FC = () => {
   const deckItem = (character.inventory ?? []).find((item) => /cyberdeck/i.test(item.name));
   // Core p.196: Poor Quality 5 slots, estándar 7, Excellent Quality 9.
   const deckSlots = deckItem ? Number(/(\d+)\s*slots?/i.exec(deckItem.name)?.[1] ?? (/poor/i.test(deckItem.name) ? 5 : /excellent/i.test(deckItem.name) ? 9 : 7)) : null;
+  // v5.3.2: el Hardware también ocupa slots (Core p.208); el Bodyweight Suit suma 1 solo para Hardware. [Claude Code · 2026-10-29]
+  const hardwareSlots = (character.inventory ?? []).reduce((n, item) => n + (HARDWARE_SLOTS[item.catalogId] ?? 0) * Math.max(1, item.quantity), 0);
+  const hardwareOnlySlots = /bodyweight/i.test(character.bodyArmor?.name ?? '') ? 1 : 0;
+  const deckSlotsUsed = deckPrograms.length + Math.max(0, hardwareSlots - hardwareOnlySlots);
 
   const allPresets = [...NET_ARCHITECTURE_PRESETS, ...customPresets];
   const activeArch = allPresets.find(p => p.id === selectedPresetId) || NET_ARCHITECTURE_PRESETS[0];
@@ -1225,7 +1230,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                   PROGRAMAS REZZED EN CYBERDECK:
                 </span>
                 <p className="text-[10px] font-mono-code text-[#64748b]">
-                  {deckItem ? `${deckItem.name} · ${deckPrograms.length}/${deckSlots} slots (Core p.196)` : 'Sin cyberdeck en el inventario de la ficha.'}
+                  {deckItem ? `${deckItem.name} · ${deckSlotsUsed}/${deckSlots} slots${hardwareSlots > 0 ? ` (Hardware: ${hardwareSlots})` : ''} (Core pp.196 y 208)` : 'Sin cyberdeck en el inventario de la ficha.'}
                 </p>
                 {deckPrograms.length === 0 && (
                   <p className="text-[11px] text-[#94a3b8]">Sin programas: se compran en el creador (Tienda → Programas) o en el Compendio Omni.</p>

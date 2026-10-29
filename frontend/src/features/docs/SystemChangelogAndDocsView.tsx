@@ -26,6 +26,30 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.3.2',
+    date: '2026-10-29',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Creador',
+    title: 'Arreglos del creador: Neuroport, cyberdecks y origen de cada ítem',
+    summary: 'Salieron de crear un Solo y un Netrunner con el Complete Package. En 2077 no se puede comprar de nuevo lo que trae el Neuroport; hay cyberdecks Poor y Excellent y Hardware que ocupa slots; cada ítem de la tienda dice su libro y página.',
+    highlights: [
+      'Neuroport: Neural Link, Interface Plugs y demás piezas bloqueadas con cartel (CEMK RB p.36); en la ficha, HL 0.',
+      'Cyberdecks Poor (5 slots) y Excellent (9 slots) y 6 piezas de Hardware (Core pp.196 y 208); aviso si te pasás de slots.',
+      'Etiqueta de origen con libro, DLC y página en la tienda.',
+      'La armadura puesta ya no se repite en la mochila; desinstalar ciberware devuelve su HL real.',
+      '466 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/creatorShop.ts',
+      'frontend/src/engine/characterCreation.ts',
+      'frontend/src/features/creator/steps/GearStep.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/data/core-rules.cprpack.json'
+    ],
+    metricsBadge: 'v5.3.2 • Creador • Neuroport y cyberdecks'
+  },
+  {
     version: 'v5.3.1',
     date: '2026-10-29',
     author: 'Claude Code',
@@ -1258,6 +1282,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.3.2': true,
     'v5.3.1': true,
     'v5.3.0': true,
     'v5.2.0': true,

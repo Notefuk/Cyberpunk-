@@ -117,6 +117,19 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.3.2] - 2026-10-29 (Arreglos del creador que salieron de probar el Complete Package) [Claude Code · 2026-10-29]
+* **Category**: Creador de personajes / tienda (pedido de Giuliano tras crear "Kuroi" y "Kessler" en prod; sin plan: arreglos).
+* **What Changed**:
+  * Neuroport (2077): la tienda bloquea, con cartel, lo que ya trae el Neuroport (Neural Link, Interface Plugs, Biomonitor, Chipware Socket, Chyron, Virtuality y Virtuality Goggles; CEMK RB p.36), y el paso de equipo no avanza si quedó alguno en las compras. La nota del Neuroport lista las 7 piezas del libro (antes decía "Agent").
+  * Ficha: el Neuroport de la creación muestra "HL: 0" y desinstalarlo no devuelve Humanidad (CEMK RB p.25). Desinstalar cualquier ciberware desde STREET LAB devuelve su HL real (antes, siempre 7).
+  * Cyberdecks: se suman el Poor (100 €$, 5 slots) y el Excellent (1.000 €$, 9 slots) (Core p.196) y las 6 piezas de Hardware (Backup Drive, DNA Lock, Hardened Circuitry, Insulated Wiring, KRASH Barrier, Range Upgrade; 100 €$, 1 o 2 slots; Core p.208). Programas y Hardware cuentan contra los slots del mazo, y el Bodyweight Suit suma 1 slot solo para Hardware. Pasarse solo avisa (decisión de Giuliano), en la tienda y en el resumen; la pestaña NET muestra los slots con el Hardware.
+  * Tienda: cada ítem dice de qué libro sale y la página si el pack la trae (p. ej. "Core RED p.196", "DLC: 12 Days of Gunmas p.5", "Black Chrome"). No se bloquea nada por libro (decisión de Giuliano).
+  * La armadura comprada que queda puesta ya no se repite en la mochila.
+  * STREET LAB: la fórmula de HP se muestra "10+5×⌈(BODY+WILL)/2⌉".
+* **Revisado sin cambios**: la tabla de origen cultural del CEMK se tira con 2d6 y va de 2 a 12 (CEMK RB p.19).
+* **Files Modified**: `frontend/src/engine/creatorShop.ts`, `frontend/src/engine/__tests__/creatorShop.test.ts` (nuevos); `engine/characterCreation.ts`, `features/creator/steps/GearStep.tsx`, `features/sheet/StreetLabView.tsx`, `features/netroles/NetAndRolesDeckView.tsx`, `data/core-rules.cprpack.json` (y su copia en `data/`); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 466 tests y build. En el navegador local: Neural Link e Interface Plugs bloqueados con cartel, error si quedan en las compras, "Usás 7/5 slots: sobran 2", etiquetas con libro y página; ficha con Neuroport "HL: 0" (desinstalar no cambia la Humanidad), HP "10+5×⌈(5+6)/2⌉", Kevlar sin copia en la mochila y NET "6/5 slots (Hardware: 2)".
+
 ### [v5.3.1] - 2026-10-29 (Descargar todas las fichas de la nube) [Claude Code · 2026-10-29]
 * **Category**: Nube / respaldo (pedido de Giuliano, sin plan: tarea chica).
 * **What Changed**: en MESA // CAMPAÑA, "Tus fichas en la nube" suma el botón "Descargar todas las fichas ⬇". Baja un archivo por ficha, llamado "Personaje - Rol (Jugador).json": las tuyas, con tu nombre de cuenta, y, si sos GM, las de tus jugadores que tenés cargadas, con el nombre de cada jugador. El contenido es el mismo que "Descargar" de STREET LAB, así que se vuelven a cargar con "IMPORTAR FICHA (archivo)". Se sacan del nombre los caracteres que Windows no acepta.
