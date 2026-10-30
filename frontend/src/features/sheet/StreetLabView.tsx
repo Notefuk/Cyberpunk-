@@ -32,6 +32,12 @@ import { ipCostRoleRank, ipCostSkillLevel, canApplySpeedheal } from '../../engin
 import { useGameClockStore, currentBeatId, currentDayKey } from '../../store/gameClockStore';
 import { IpLedgerPanel } from './IpLedgerPanel';
 import { OtherSkillsPanel } from './OtherSkillsPanel';
+import { readFavOnly, writeFavOnly } from './favoriteSkills';
+import { ArmorRepairDialog, type ArmorRepairTarget } from './ArmorRepairDialog';
+import { CompendiumShopModal } from './CompendiumShopModal';
+import { ItemNameButton, useItemDisplayName } from './ItemNameButton';
+import { nicknameKey } from '../../engine/itemNames';
+import type { CompendiumCategory } from '../compendium/CompendiumView';
 import { RoleAllocationPanel } from './RoleAllocationPanel';
 import {
   getWeaponClassAndRebuildInfo,
@@ -268,7 +274,7 @@ export const StreetLabView: React.FC = () => {
   const updateCharacterMeta = useCharacterStore((state) => state.updateCharacterMeta);
   const updateStat = useCharacterStore((state) => state.updateStat);
   const updateSkill = useCharacterStore((state) => state.updateSkill);
-  const repairArmor = useCharacterStore((state) => state.repairArmor);
+  const toggleFavoriteSkill = useCharacterStore((state) => state.toggleFavoriteSkill);
   const reloadWeapon = useCharacterStore((state) => state.reloadWeapon);
   const unequipWeapon = useCharacterStore((state) => state.unequipWeapon);
   const setWeaponAmmoType = useCharacterStore((state) => state.setWeaponAmmoType);
@@ -297,7 +303,6 @@ export const StreetLabView: React.FC = () => {
   const toggleEmpDisableCyberware = useCharacterStore((state) => state.toggleEmpDisableCyberware);
   const clearAllEmpDisabledCyberware = useCharacterStore((state) => state.clearAllEmpDisabledCyberware);
   const restAndHealDays = useCharacterStore((state) => state.restAndHealDays);
-  const repairCharacterArmor = useCharacterStore((state) => state.repairCharacterArmor);
   const installWeaponAttachment = useCharacterStore((state) => state.installWeaponAttachment);
   const removeWeaponAttachment = useCharacterStore((state) => state.removeWeaponAttachment);
   const applyTechUpgradeToWeapon = useCharacterStore((state) => state.applyTechUpgradeToWeapon);
@@ -363,6 +368,15 @@ export const StreetLabView: React.FC = () => {
 
   // Skill filter and accordion state
   const [skillFilter, setSkillFilter] = useState<SkillFilterCategory>('all');
+  // v5.8.0 (plan 23): ☆ favoritas y filtro "Solo favoritas". [Claude Code · 2026-10-30]
+  const [favOnly, setFavOnly] = useState<boolean>(readFavOnly);
+  const toggleFavOnly = () => setFavOnly((prev) => { writeFavOnly(!prev); return !prev; });
+  // v5.8.0 (plan 23): "Reparar" abre la regla del libro (Core p.140) en vez de reparar al instante. [Claude Code · 2026-10-30]
+  const [armorRepairTarget, setArmorRepairTarget] = useState<ArmorRepairTarget | null>(null);
+  // v5.8.0 (plan 23): "+ Comprar / Añadir" abre el Compendium encima de la ficha. [Claude Code · 2026-10-30]
+  const [shopCategory, setShopCategory] = useState<CompendiumCategory | null>(null);
+  // v5.8.0 (plan 23): nombre propio de los ítems (solo lo que se ve). [Claude Code · 2026-10-30]
+  const itemName = useItemDisplayName();
   const [expandedSkills, setExpandedSkills] = useState<Record<string, boolean>>({});
   const [allExpanded, setAllExpanded] = useState(false);
 
@@ -540,13 +554,27 @@ export const StreetLabView: React.FC = () => {
   };
 
   // Filter skills based on tab
+  const favoriteSkills = activeChar?.favoriteSkills ?? [];
   const filteredSkillKeys = (Object.keys(SKILL_METADATA) as CombatSkillKey[]).filter((key) => {
+    if (favOnly && !favoriteSkills.includes(key)) return false;
     if (skillFilter === 'all') return true;
     return SKILL_METADATA[key].category === skillFilter;
   });
 
   return (
     <div className="space-y-4 max-w-7xl mx-auto pb-8">
+      {shopCategory && <CompendiumShopModal initialCategory={shopCategory} onClose={() => setShopCategory(null)} />}
+      {armorRepairTarget && (
+        <ArmorRepairDialog
+          target={armorRepairTarget}
+          onClose={() => setArmorRepairTarget(null)}
+          onDone={(msg) => {
+            showStatus(msg);
+            setRepairFeedback(msg);
+            setTimeout(() => setRepairFeedback(null), 4000);
+          }}
+        />
+      )}
       {/* Modal / Overlay del Creador de Personajes en 6 Pasos */}
       {isWizardOpen && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto flex items-start justify-center">
@@ -1454,10 +1482,29 @@ export const StreetLabView: React.FC = () => {
                   {tab.label}
                 </button>
               ))}
+              <button
+                type="button"
+                onClick={toggleFavOnly}
+                className={`px-2 py-0.5 rounded-2xs font-tech text-xs tracking-wider transition-all ${
+                  favOnly
+                    ? 'bg-amber-500 text-black font-bold'
+                    : 'bg-[#181a26] text-amber-300 hover:text-amber-200 border border-[#24293c]'
+                }`}
+                title="Mostrar solo las skills marcadas con ★ (también en OTRAS SKILLS)"
+              >
+                ★ SOLO FAVORITAS
+              </button>
             </div>
 
             {/* Lista compacta de habilidades con dropdowns */}
             <div className="space-y-1.5 max-h-[640px] overflow-y-auto pr-1">
+              {favOnly && filteredSkillKeys.length === 0 && (
+                <div className="text-[11px] text-slate-400 font-mono-code px-1 py-2">
+                  {favoriteSkills.length === 0
+                    ? 'Tocá ☆ en una skill para marcarla como favorita.'
+                    : 'Ninguna favorita en esta categoría.'}
+                </div>
+              )}
               {filteredSkillKeys.map((key) => {
                 const meta = SKILL_METADATA[key];
                 const lvl = activeChar?.skills?.[key] ?? 0;
@@ -1483,6 +1530,16 @@ export const StreetLabView: React.FC = () => {
                         ) : (
                           <ChevronRight className="w-3.5 h-3.5 text-[#64748b] shrink-0" />
                         )}
+
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); toggleFavoriteSkill(key); }}
+                          className={`text-sm leading-none cursor-pointer ${favoriteSkills.includes(key) ? 'text-amber-400' : 'text-[#475569] hover:text-amber-300'}`}
+                          title={favoriteSkills.includes(key) ? `Quitar ${meta.label} de favoritas` : `Marcar ${meta.label} como favorita`}
+                          aria-label={favoriteSkills.includes(key) ? `Quitar ${meta.label} de favoritas` : `Marcar ${meta.label} como favorita`}
+                        >
+                          {favoriteSkills.includes(key) ? '★' : '☆'}
+                        </button>
 
                         <span className="font-tech text-sm font-bold text-white tracking-wide">
                           {meta.label}
@@ -1558,7 +1615,7 @@ export const StreetLabView: React.FC = () => {
                                     const atk = weaponAttackLines(activeChar!, w);
                                     return (
                                       <li key={w.instanceId}>
-                                        {w.name}: {key === 'autofire' ? atk.burst : atk.single}
+                                        {itemName(nicknameKey.weapon(w.instanceId), w.name)}: {key === 'autofire' ? atk.burst : atk.single}
                                       </li>
                                     );
                                   })}
@@ -1709,15 +1766,16 @@ export const StreetLabView: React.FC = () => {
                   {/* Head */}
                   <div className="bg-[#171923] p-2 rounded border border-[#222636]">
                     <div className="text-[10px] text-[#64748b] uppercase">CABEZA</div>
-                    <div className="font-tech text-sm font-bold text-white truncate">
-                      {activeChar?.headArmor?.name || 'Head Armor'}
+                    <div className="font-tech text-sm font-bold text-white truncate flex items-center gap-1">
+                      <span className="truncate">{activeChar?.headArmor?.name ? itemName(nicknameKey.armor('head'), activeChar.headArmor.name) : 'Head Armor'}</span>
+                      {activeChar?.headArmor?.name && <ItemNameButton nickKey={nicknameKey.armor('head')} original={activeChar.headArmor.name} />}
                     </div>
                     <div className="flex items-center justify-between mt-1 text-[11px]">
                       <span className="text-[#38bdf8] font-bold">
                         {activeChar?.headArmor?.currentSp}/{activeChar?.headArmor?.maxSp} <TacticalTooltip term="SP">SP</TacticalTooltip>
                       </span>
                       <button
-                        onClick={() => repairArmor('head')}
+                        onClick={() => setArmorRepairTarget('head')}
                         className="text-[10px] text-[#f59e0b] hover:underline"
                       >
                         Reparar
@@ -1743,15 +1801,16 @@ export const StreetLabView: React.FC = () => {
                   {/* Body */}
                   <div className="bg-[#171923] p-2 rounded border border-[#222636]">
                     <div className="text-[10px] text-[#64748b] uppercase">TORSO</div>
-                    <div className="font-tech text-sm font-bold text-white truncate">
-                      {activeChar?.bodyArmor?.name || 'Body Armor'}
+                    <div className="font-tech text-sm font-bold text-white truncate flex items-center gap-1">
+                      <span className="truncate">{activeChar?.bodyArmor?.name ? itemName(nicknameKey.armor('body'), activeChar.bodyArmor.name) : 'Body Armor'}</span>
+                      {activeChar?.bodyArmor?.name && <ItemNameButton nickKey={nicknameKey.armor('body')} original={activeChar.bodyArmor.name} />}
                     </div>
                     <div className="flex items-center justify-between mt-1 text-[11px]">
                       <span className="text-[#38bdf8] font-bold">
                         {activeChar?.bodyArmor?.currentSp}/{activeChar?.bodyArmor?.maxSp} <TacticalTooltip term="SP">SP</TacticalTooltip>
                       </span>
                       <button
-                        onClick={() => repairArmor('body')}
+                        onClick={() => setArmorRepairTarget('body')}
                         className="text-[10px] text-[#f59e0b] hover:underline"
                       >
                         Reparar
@@ -1783,6 +1842,14 @@ export const StreetLabView: React.FC = () => {
                     <Crosshair className="w-3.5 h-3.5 text-[#dc2626]" />
                     <span>ARSENAL ({activeChar?.equippedWeapons?.length ?? 0})</span>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setShopCategory('weapons')}
+                    className="px-2 py-1 min-h-[32px] bg-[#10b981]/15 hover:bg-[#10b981] hover:text-black text-emerald-300 border border-emerald-500/40 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer"
+                    title="Abrir el Compendium para comprar o sumar gratis (loot)"
+                  >
+                    + Comprar / Añadir
+                  </button>
                 </div>
 
                 <div className="space-y-1.5">
@@ -1808,8 +1875,9 @@ export const StreetLabView: React.FC = () => {
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5 flex-wrap">
                                 <span className="font-tech text-sm font-bold text-white truncate">
-                                  {w.name}
+                                  {itemName(nicknameKey.weapon(w.instanceId), w.name)}
                                 </span>
+                                <ItemNameButton nickKey={nicknameKey.weapon(w.instanceId)} original={w.name} />
                                 <span className="text-[10px] font-mono-code bg-[#1f2434] text-[#38bdf8] px-1 rounded">
                                   {w.damage}
                                 </span>
@@ -2406,8 +2474,9 @@ export const StreetLabView: React.FC = () => {
                           <div>
                             <div className="flex items-center gap-1.5">
                               <span className="font-tech text-sm font-bold text-white truncate">
-                                {name}
+                                {itemName(nicknameKey.cyberware(id), name)}
                               </span>
+                              <ItemNameButton nickKey={nicknameKey.cyberware(id)} original={name} />
                               {isEmpDisabled && (
                                 <span className="text-[8px] font-mono-code px-1 rounded bg-red-950 text-red-400 border border-red-500/40 font-bold">
                                   ⚡ APAGADO
@@ -2462,9 +2531,19 @@ export const StreetLabView: React.FC = () => {
                   <Package className="w-3.5 h-3.5 text-[#f59e0b]" />
                   <span>MOCHILA / INVENTARIO GENERAL ({(activeChar?.inventory ?? []).length})</span>
                 </div>
-                <span className="text-[10px] font-mono-code text-[#64748b]">
-                  EQUIPO, MUNICIÓN Y DROGAS
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono-code text-[#64748b] hidden sm:inline">
+                    EQUIPO, MUNICIÓN Y DROGAS
+                  </span>
+                  <button
+                      type="button"
+                      onClick={() => setShopCategory('gear')}
+                      className="px-2 py-1 min-h-[32px] bg-[#10b981]/15 hover:bg-[#10b981] hover:text-black text-emerald-300 border border-emerald-500/40 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer"
+                      title="Abrir el Compendium para comprar o sumar gratis (loot)"
+                    >
+                      + Comprar / Añadir
+                    </button>
+                </div>
               </div>
 
               {(activeChar?.inventory ?? []).length === 0 ? (
@@ -2486,8 +2565,9 @@ export const StreetLabView: React.FC = () => {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span className="font-tech text-sm font-bold text-white truncate">
-                              {item.name}
+                              {itemName(nicknameKey.inventory(item.id), item.name)}
                             </span>
+                            <ItemNameButton nickKey={nicknameKey.inventory(item.id)} original={item.name} />
                             <span className="text-[9px] font-mono-code bg-[#212638] text-[#38bdf8] px-1 rounded uppercase">
                               {item.category}
                             </span>
@@ -4066,7 +4146,7 @@ export const StreetLabView: React.FC = () => {
                   <div className="p-2.5 bg-[#10131d] rounded border border-[#1e2335] flex items-center justify-between">
                     <div>
                       <div className="text-[10px] font-mono-code text-slate-400 uppercase">
-                        Cabeza: {activeChar?.headArmor?.name || 'Head Armor'}
+                        Cabeza: {activeChar?.headArmor?.name ? itemName(nicknameKey.armor('head'), activeChar.headArmor.name) : 'Head Armor'}
                       </div>
                       <div className="font-mono-code text-xs font-bold text-white mt-0.5">
                         SP: <span className="text-cyan-400">{activeChar?.headArmor?.currentSp}</span> / {activeChar?.headArmor?.maxSp}
@@ -4075,11 +4155,7 @@ export const StreetLabView: React.FC = () => {
                     <button
                       type="button"
                       disabled={!activeChar?.headArmor || activeChar.headArmor.currentSp >= activeChar.headArmor.maxSp}
-                      onClick={() => {
-                        repairCharacterArmor('head', 'full', 0);
-                        setRepairFeedback(`Armadura de cabeza reparada a ${activeChar?.headArmor?.maxSp} SP.`);
-                        setTimeout(() => setRepairFeedback(null), 4000);
-                      }}
+                      onClick={() => setArmorRepairTarget('head')}
                       className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:cursor-not-allowed text-black font-tech text-xs font-bold uppercase rounded transition-all cursor-pointer"
                     >
                       Reparar Cabeza
@@ -4090,7 +4166,7 @@ export const StreetLabView: React.FC = () => {
                   <div className="p-2.5 bg-[#10131d] rounded border border-[#1e2335] flex items-center justify-between">
                     <div>
                       <div className="text-[10px] font-mono-code text-slate-400 uppercase">
-                        Torso: {activeChar?.bodyArmor?.name || 'Body Armor'}
+                        Torso: {activeChar?.bodyArmor?.name ? itemName(nicknameKey.armor('body'), activeChar.bodyArmor.name) : 'Body Armor'}
                       </div>
                       <div className="font-mono-code text-xs font-bold text-white mt-0.5">
                         SP: <span className="text-cyan-400">{activeChar?.bodyArmor?.currentSp}</span> / {activeChar?.bodyArmor?.maxSp}
@@ -4099,11 +4175,7 @@ export const StreetLabView: React.FC = () => {
                     <button
                       type="button"
                       disabled={!activeChar?.bodyArmor || activeChar.bodyArmor.currentSp >= activeChar.bodyArmor.maxSp}
-                      onClick={() => {
-                        repairCharacterArmor('body', 'full', 0);
-                        setRepairFeedback(`Armadura de torso reparada a ${activeChar?.bodyArmor?.maxSp} SP.`);
-                        setTimeout(() => setRepairFeedback(null), 4000);
-                      }}
+                      onClick={() => setArmorRepairTarget('body')}
                       className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:cursor-not-allowed text-black font-tech text-xs font-bold uppercase rounded transition-all cursor-pointer"
                     >
                       Reparar Torso
@@ -4115,11 +4187,7 @@ export const StreetLabView: React.FC = () => {
                 <div className="flex justify-end pt-1">
                   <button
                     type="button"
-                    onClick={() => {
-                      repairCharacterArmor('both', 'full', 0);
-                      setRepairFeedback('Todo el blindaje (Cabeza y Torso) ha sido reparado a su SP máximo.');
-                      setTimeout(() => setRepairFeedback(null), 4000);
-                    }}
+                    onClick={() => setArmorRepairTarget('both')}
                     className="px-3 py-1 bg-[#1c2235] hover:bg-emerald-600 hover:text-white text-emerald-400 border border-emerald-500/40 rounded text-[11px] font-mono-code font-bold transition-all cursor-pointer flex items-center gap-1.5"
                   >
                     <span>🛡️ Reparar Todo el Blindaje (Cabeza + Torso)</span>

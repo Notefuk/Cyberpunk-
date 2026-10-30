@@ -26,6 +26,70 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.9.0',
+    date: '2026-10-30',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'HUD',
+    title: 'Bandeja de la columna izquierda del HUD',
+    summary: 'Biomonitor & Vitales, Blindaje, Suerte, Heridas, Ciberware y Consumibles tienen su propia bandeja, como los módulos tácticos: se mandan al centro, a la bandeja o se miran con Vista.',
+    highlights: [
+      '"➕ AL CENTRO", "➡️ A BANDEJA" y "👁️ VISTA" para cada panel izquierdo.',
+      'Se arrastran al centro; el botón del encabezado los manda a la bandeja o los vuelve a la columna.',
+      'Se guarda en el navegador; "Restaurar orden" vuelve todo a la columna.'
+    ],
+    filesTouched: [
+      'frontend/src/features/combat/leftTray.ts',
+      'frontend/src/features/combat/CombatHudView.tsx'
+    ],
+    metricsBadge: 'v5.9.0 • HUD • Plan 23'
+  },
+  {
+    version: 'v5.8.0',
+    date: '2026-10-30',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Ficha',
+    title: 'Street Lab más cómodo: favoritas, reparar explicado, comprar desde la ficha y nombre propio',
+    summary: 'Skills favoritas con ☆, el botón Reparar explica la regla del libro (Core p.140) y deja pagarle a un Tech, "+ Comprar / Añadir" abre el Compendium encima de la ficha y cada ítem comprado puede tener nombre propio.',
+    highlights: [
+      '☆ en cada skill y filtro "★ SOLO FAVORITAS".',
+      'Reparar: TECH + Basic Tech contra el DV y el tiempo de la categoría de precio; 0 €$ por el libro, pago a un Tech opcional.',
+      '"+ Comprar / Añadir" en ARSENAL y MOCHILA.',
+      '✎ nombre propio en armas, mochila, blindaje y ciberware; se ve también en el HUD.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/armorRepair.ts',
+      'frontend/src/engine/itemNames.ts',
+      'frontend/src/features/sheet/ArmorRepairDialog.tsx',
+      'frontend/src/features/sheet/CompendiumShopModal.tsx',
+      'frontend/src/features/sheet/ItemNameButton.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx'
+    ],
+    metricsBadge: 'v5.8.0 • Ficha • Plan 23'
+  },
+  {
+    version: 'v5.7.1',
+    date: '2026-10-30',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa',
+    title: 'Red Chrome Cargo solo para el GM',
+    summary: 'La misión Red Chrome Cargo deja de verse para los jugadores: la pestaña, el botón del HUD y su tarjeta en DATA PACKS solo aparecen para el GM.',
+    highlights: [
+      'En una mesa, solo el GM ve Red Chrome Cargo.',
+      'Sin mesa, se esconde mientras el PIN del GM esté puesto y sin desbloquear.'
+    ],
+    filesTouched: [
+      'frontend/src/store/gmAccess.ts',
+      'frontend/src/App.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/datapacks/DataPackManagerView.tsx'
+    ],
+    metricsBadge: 'v5.7.1 • Mesa • GM'
+  },
+  {
     version: 'v5.7.0',
     date: '2026-10-30',
     author: 'Claude Code',
@@ -1384,6 +1448,9 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.9.0': true,
+    'v5.8.0': true,
+    'v5.7.1': true,
     'v5.7.0': true,
     'v5.6.0': true,
     'v5.5.0': true,

@@ -1,8 +1,8 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.7.0`** (qué ganás en cada rango de rol y filtro de skills por libro en el wizard) en `claude/v5.7.0-rangos-filtro`, sin pushear; en `main`, gh-pages (beta) y Firebase prod (estable) está la v5.6.0 [Claude Code · 2026-10-30]  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.9.0`** (bandeja izquierda del HUD, plan 23) en `claude/v5.9.0-hud-bandeja`, sin pushear; debajo, sin pushear, la v5.8.0 (`claude/v5.8.0-streetlab`) y la v5.7.1 (`claude/v5.7.1-rcc-gm`); en `main`, gh-pages (beta) y Firebase prod (estable) está la v5.7.0 [Claude Code · 2026-10-30]  
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
-> **PLAN ACTIVO**: plan 21 (creador, tienda y ficha): v5.4.0 y v5.5.0 publicadas; v5.6.0 (ficha) terminada, con lo que el plan 21 queda completo [Claude Code · 2026-10-29]. Antes: plan 20 terminado y publicado. Después el plan 5. Estado de todos los planes en `docs/plans/README.md`.  
+> **PLAN ACTIVO**: plan 23 (comodidades de Street Lab y bandeja izquierda del HUD) terminado en código: v5.8.0 y v5.9.0 [Claude Code · 2026-10-30]. Siguiente: el plan 22 (Interface RED, Black Chrome y FBC), en espera. Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 

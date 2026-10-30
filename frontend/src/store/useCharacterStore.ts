@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { pruneItemNicknames } from '../engine/itemNames';
 import { persist } from 'zustand/middleware';
 import type {
   ActiveCriticalInjury,
@@ -489,6 +490,10 @@ export interface CharacterStoreState {
   raiseSkillWithIp: (skill: CombatSkillKey) => { success: boolean; message: string };
   raiseGeneralSkillWithIp: (key: string, x2: boolean, label: string) => { success: boolean; message: string };
   setGeneralSkill: (key: string, level: number) => void;
+  /** v5.8.0 (plan 23): marca o desmarca una skill como favorita. [Claude Code · 2026-10-30] */
+  toggleFavoriteSkill: (key: string) => void;
+  /** v5.8.0 (plan 23): pone o quita (null) el nombre propio de un ítem. [Claude Code · 2026-10-30] */
+  setItemNickname: (key: string, original: string, nick: { name: string; showOriginal: boolean } | null) => void;
   gmSetRoleRank: (rank: number) => void;
   setMakerAllocation: (alloc: MakerAllocation) => void;
   // v4.9.3 [Claude Code · 2026-10-23] Roles sociales: Team del Exec (Core p.154) y fans del Rockerboy (Core pp.144-145).
@@ -1464,7 +1469,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
               const tx: EurodollarTransaction = {
                 id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
                 timestamp: new Date().toISOString(),
-                concept: `Reparación de Blindaje (${location})`,
+                concept: `Reparación de blindaje (${location === 'head' ? 'cabeza' : location === 'body' ? 'torso' : 'cabeza y torso'}): pago a un Tech`,
                 amount: -costEurobucks,
                 balanceAfter: newBalance
               };
@@ -2606,6 +2611,31 @@ export const useCharacterStore = create<CharacterStoreState>()(
               ...c,
               generalSkills: { ...(c.generalSkills ?? {}), [key]: Math.max(0, Math.min(10, level)) }
             };
+          })
+        }));
+      },
+
+      toggleFavoriteSkill: (key: string) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const favs = c.favoriteSkills ?? [];
+            return {
+              ...c,
+              favoriteSkills: favs.includes(key) ? favs.filter((k) => k !== key) : [...favs, key]
+            };
+          })
+        }));
+      },
+
+      setItemNickname: (key, original, nick) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const next = { ...(pruneItemNicknames(c) ?? {}) };
+            if (nick && nick.name.trim()) next[key] = { name: nick.name.trim().slice(0, 60), showOriginal: nick.showOriginal, original };
+            else delete next[key];
+            return { ...c, itemNicknames: next };
           })
         }));
       },

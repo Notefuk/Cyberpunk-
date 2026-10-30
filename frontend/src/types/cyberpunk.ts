@@ -635,6 +635,17 @@ export interface CharacterSheet {
   // v4.9.1 [Claude Code · 2026-10-22]
   ipLog?: IpLogEntry[];
   ipLogArchivedTotals?: IpArchivedTotals;
+  /** v5.8.0 (plan 23): skills marcadas con ☆ en Street Lab (claves de combate o de `generalSkills`). [Claude Code · 2026-10-30] */
+  favoriteSkills?: string[];
+  /** v5.8.0 (plan 23): nombre propio de cada ítem, por clave de ejemplar (ver `engine/itemNames.ts`). Solo cambia lo que se muestra. [Claude Code · 2026-10-30] */
+  itemNicknames?: Record<string, ItemNickname>;
+}
+
+/** v5.8.0 (plan 23): apodo de un ítem. `original` es el nombre del libro cuando se puso. [Claude Code · 2026-10-30] */
+export interface ItemNickname {
+  name: string;
+  showOriginal: boolean;
+  original: string;
 }
 
 export interface RollEntry {

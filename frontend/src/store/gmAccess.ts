@@ -24,6 +24,11 @@ export const useGmPinSession = create<{ unlocked: boolean; unlock: () => void; l
 
 export type GmAccessMode = 'table-gm' | 'table-player' | 'local-open' | 'local-locked';
 
+/** v5.7.1 [Claude Code · 2026-10-30]: contenido solo para el GM (Red Chrome Cargo). Lo ve el GM de la mesa o, sin mesa, quien no tenga el PIN puesto o ya lo haya desbloqueado. */
+export function canSeeGmOnly(mode: GmAccessMode): boolean {
+  return mode === 'table-gm' || mode === 'local-open';
+}
+
 export function useGmAccess(): { mode: GmAccessMode; campName: string } {
   const { table, isGm } = useActiveTable();
   const unlocked = useGmPinSession((s) => s.unlocked);
