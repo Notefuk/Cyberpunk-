@@ -15,6 +15,7 @@ import {
   type MakerSpecialty,
   type MedicineAllocation,
 } from '../../engine/roleRules';
+import { QUICK_FIX_VS_TREATMENT, surgeryInjuries } from '../../engine/medicineInfo';
 
 const MAKER_ROWS: [MakerSpecialty, string][] = [
   ['field', 'Field'],
@@ -41,11 +42,11 @@ const Stepper: React.FC<{ label: string; value: number; onMinus: () => void; onP
   <div className="flex items-center justify-between gap-2 bg-[#171924] border border-[#232736] rounded px-2 py-1">
     <span className="text-[11px] text-slate-300">{label}</span>
     <div className="flex items-center gap-1">
-      <button type="button" disabled={minusOff} onClick={onMinus} className="w-5 h-5 flex items-center justify-center bg-[#20273a] hover:bg-purple-600 text-white rounded disabled:opacity-30 cursor-pointer" aria-label={`Quitar ${label}`}>
+      <button type="button" disabled={minusOff} onClick={onMinus} className="w-8 h-8 flex items-center justify-center bg-[#20273a] hover:bg-purple-600 text-white rounded disabled:opacity-30 cursor-pointer" aria-label={`Quitar ${label}`}>
         <Minus className="w-3 h-3" />
       </button>
       <span className="w-5 text-center text-xs font-bold text-white">{value}</span>
-      <button type="button" disabled={plusOff} onClick={onPlus} className="w-5 h-5 flex items-center justify-center bg-[#20273a] hover:bg-emerald-600 text-white rounded disabled:opacity-30 cursor-pointer" aria-label={`Sumar ${label}`}>
+      <button type="button" disabled={plusOff} onClick={onPlus} className="w-8 h-8 flex items-center justify-center bg-[#20273a] hover:bg-emerald-600 text-white rounded disabled:opacity-30 cursor-pointer" aria-label={`Sumar ${label}`}>
         <Plus className="w-3 h-3" />
       </button>
     </div>
@@ -128,7 +129,11 @@ export const RoleAllocationEditor: React.FC<RoleAllocationEditorProps> = ({ role
     const known = alloc.knownPharmaceuticals ?? [];
     const free = medicinePointsFree(alloc, rank);
     const errors = validateMedicineAllocation(alloc, rank);
-    const pharmaList = ((ROLE_RANKS.roles.Medtech.tables as { pharmaceuticals?: { name: string }[] }).pharmaceuticals ?? []);
+    const medTables = ROLE_RANKS.roles.Medtech.tables as {
+      pharmaceuticals?: { name: string; effectEs?: string }[];
+      cryosystemByRank?: { level: number; benefitEs: string }[];
+    };
+    const pharmaList = medTables.pharmaceuticals ?? [];
     const change = (k: 'surgery' | 'pharmaceuticals' | 'cryosystem', d: number) => {
       const next = { ...alloc, [k]: alloc[k] + d };
       if (k === 'pharmaceuticals' && known.length > next.pharmaceuticals) next.knownPharmaceuticals = known.slice(0, next.pharmaceuticals);
@@ -166,6 +171,51 @@ export const RoleAllocationEditor: React.FC<RoleAllocationEditorProps> = ({ role
           </div>
         </div>
         {errors.map((er) => <div key={er} className="text-[10px] text-red-400">{er}</div>)}
+        {/* v5.6.0 [Claude Code · 2026-10-29]: qué cura y qué da cada especialidad (plan 21). */}
+        <details className="text-[11px] text-slate-300 font-sans bg-[#11131c] border border-[#232736] rounded px-2 py-1">
+          <summary className="cursor-pointer text-purple-300 font-bold">Surgery: heridas que trata ({surgeryInjuries().length}) · Core pp.187-188</summary>
+          {(['head', 'body'] as const).map((loc) => (
+            <div key={loc} className="mt-1">
+              <div className="text-[10px] uppercase text-slate-400 font-bold">{loc === 'head' ? 'Cabeza' : 'Cuerpo'}</div>
+              <ul className="space-y-0.5">
+                {surgeryInjuries().filter((i) => i.location === loc).map((i) => (
+                  <li key={i.id} className="flex flex-wrap gap-x-2">
+                    <span>{i.name}</span>
+                    <span className="font-mono text-[10px] text-amber-300">Surgery DV {i.surgeryDv}</span>
+                    {i.paramedicDv !== undefined && <span className="font-mono text-[10px] text-emerald-300">o Paramedic DV {i.paramedicDv}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </details>
+        <details className="text-[11px] text-slate-300 font-sans bg-[#11131c] border border-[#232736] rounded px-2 py-1">
+          <summary className="cursor-pointer text-purple-300 font-bold">Pharmaceuticals: qué hace cada fármaco · Core pp.149-150</summary>
+          <ul className="mt-1 space-y-0.5">
+            {pharmaList.map((p) => (
+              <li key={p.name}>
+                <b className={known.includes(p.name) ? 'text-emerald-300' : 'text-white'}>{p.name}</b>: {p.effectEs}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-1 text-[10px] text-slate-400">Fabricar: Medical Tech DV13, 1 hora y 200 €$ de materiales por tanda; hacés tantas dosis como tu nivel de Medical Tech. Si fallás, perdés los materiales. Aplicar una dosis es 1 Acción.</p>
+        </details>
+        <details className="text-[11px] text-slate-300 font-sans bg-[#11131c] border border-[#232736] rounded px-2 py-1">
+          <summary className="cursor-pointer text-purple-300 font-bold">Cryosystem: qué da cada nivel (tenés {alloc.cryosystem}) · Core p.150</summary>
+          <ul className="mt-1 space-y-0.5">
+            {(medTables.cryosystemByRank ?? []).map((c) => (
+              <li key={c.level} className={c.level <= alloc.cryosystem ? 'text-emerald-300' : 'text-slate-500'}>
+                <b>Nivel {c.level}</b>{c.level <= alloc.cryosystem ? ' ✓' : ''}: {c.benefitEs}
+              </li>
+            ))}
+          </ul>
+        </details>
+        <details className="text-[11px] text-slate-300 font-sans bg-[#11131c] border border-[#232736] rounded px-2 py-1">
+          <summary className="cursor-pointer text-purple-300 font-bold">Quick Fix o Treatment · Core p.223</summary>
+          <ul className="mt-1 list-disc pl-4 space-y-0.5">
+            {QUICK_FIX_VS_TREATMENT.map((t) => <li key={t}>{t}</li>)}
+          </ul>
+        </details>
       </div>
     );
   }

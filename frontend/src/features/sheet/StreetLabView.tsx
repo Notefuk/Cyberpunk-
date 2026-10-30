@@ -18,9 +18,14 @@ import type {
 import { SKILL_METADATA } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { STAT_TOOLTIPS } from '../../data/characterCreationData';
+import { statInsights } from '../../engine/statInsights';
+import { weaponAttackLines } from '../../engine/weaponAttackLines';
+import { AUTOFIRE_RULES, AUTOFIRE_WARNING, WEAPON_SKILL_GUIDE, WEAPON_SKILLS_NOTE } from '../../data/creation/weaponSkillGuide';
+import { StatGuide } from '../creator/steps/StatGuide';
 import { CharacterCreatorWizard } from '../creator/CharacterCreatorWizard';
 import { CHARACTER_PORTRAITS_CATALOG } from '../../data/netAndRolesData';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
+import { MartialCommonRules, MartialMoveBoxes } from '../martial/MartialMoveBoxes';
 import { CEMK_FOLIO_METADATA_MAP } from '../../data/cemkFolioPremadesData';
 import { useGmModeStore } from '../../store/gmModeStore';
 import { ipCostRoleRank, ipCostSkillLevel, canApplySpeedheal } from '../../engine/roleRules';
@@ -363,6 +368,9 @@ export const StreetLabView: React.FC = () => {
 
   // Section collapse states for compact screen real estate
   const [isStatsCollapsed, setIsStatsCollapsed] = useState(false);
+  // v5.6.0: el STAT se explica tocándolo (en el iPad no hay hover). [Claude Code · 2026-10-29]
+  const [openStat, setOpenStat] = useState<StatKey | null>(null);
+  const [statGuideOpen, setStatGuideOpen] = useState(false);
   const [isVitalsCollapsed, setIsVitalsCollapsed] = useState(false);
   const [isSkillsCollapsed, setIsSkillsCollapsed] = useState(false);
 
@@ -1150,7 +1158,7 @@ export const StreetLabView: React.FC = () => {
         {/* Tira de 10 STATS */}
         {!isStatsCollapsed && (
           <div className="grid grid-cols-5 lg:grid-cols-10 gap-1.5 animate-fade-in relative z-30 overflow-visible">
-            {STAT_KEYS.map((stat, idx) => {
+            {STAT_KEYS.map((stat) => {
               // Con Full Body Conversion el chasis reemplaza BODY y fija un mínimo a REF/DEX/MOVE sin pisar los stats base.
               const isFbcActive = Boolean(activeChar?.fbcState?.isFullBodyConversion);
               const val = stat === 'BODY' && activeChar
@@ -1159,39 +1167,23 @@ export const StreetLabView: React.FC = () => {
                   ? Math.max(activeChar?.stats?.[stat] ?? 6, activeChar?.fbcState?.statFloor ?? 0)
                   : activeChar?.stats?.[stat] ?? 6;
               const penalty = getStatPenalty(stat);
-              const isRightSide = idx >= 5;
 
               return (
                 <div
                   key={stat}
-                  className="group/stat relative bg-[#151722] p-1.5 rounded border border-[#222636] text-center flex flex-col justify-between hover:border-[#38bdf8]/60 hover:z-[100] transition-all cursor-help"
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={openStat === stat}
+                  aria-label={`Qué hace ${stat}`}
+                  onClick={() => setOpenStat((cur) => (cur === stat ? null : stat))}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setOpenStat((cur) => (cur === stat ? null : stat));
+                    }
+                  }}
+                  className={`relative bg-[#151722] p-1.5 rounded border text-center flex flex-col justify-between hover:border-[#38bdf8]/60 transition-all cursor-pointer ${openStat === stat ? 'border-[#38bdf8]' : 'border-[#222636]'}`}
                 >
-                  {/* Tooltip táctico para principiantes hacia abajo interactivo */}
-                  {STAT_TOOLTIPS[stat] && (
-                    <div
-                      className={`absolute top-full ${
-                        isRightSide ? 'right-0' : 'left-0'
-                      } pt-2 hidden group-hover/stat:block z-[110] w-64 text-left`}
-                    >
-                      <div className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code font-normal leading-relaxed p-2.5 rounded-xs border border-[#38bdf8]/60 shadow-xl shadow-black/90 relative">
-                        {/* Triángulo indicador arriba */}
-                        <div
-                          className={`w-2 h-2 bg-[#0b0e17] border-l border-t border-[#38bdf8]/60 rotate-45 absolute -top-1.5 ${
-                            isRightSide ? 'right-6' : 'left-6'
-                          }`}
-                        />
-                        <div className="font-tech font-bold text-[#38bdf8] uppercase text-xs mb-0.5">
-                          {stat} — {STAT_TOOLTIPS[stat].name} · {STAT_TOOLTIPS[stat].spanishName}
-                        </div>
-                        <div className="text-[#cbd5e1] mb-1 font-sans">
-                          {STAT_TOOLTIPS[stat].shortSummary}
-                        </div>
-                        <div className="text-[#f59e0b] text-[9px] border-t border-[#1e293b] pt-1">
-                          {STAT_TOOLTIPS[stat].source.book} p.{STAT_TOOLTIPS[stat].source.page}
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
                   <div className="flex items-center justify-between text-[11px] font-tech text-[#94a3b8] px-0.5">
                     <span className="font-bold text-white">{stat}</span>
@@ -1208,14 +1200,20 @@ export const StreetLabView: React.FC = () => {
 
                   <div className="flex items-center justify-center gap-1 pt-1 border-t border-[#1e2230]">
                     <button
-                      onClick={() => updateStat(stat, val - 1)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateStat(stat, val - 1);
+                      }}
                       className="w-4 h-4 bg-[#202434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px]"
                       title={`Reducir ${stat}`}
                     >
                       <Minus className="w-2.5 h-2.5" />
                     </button>
                     <button
-                      onClick={() => updateStat(stat, val + 1)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateStat(stat, val + 1);
+                      }}
                       className="w-4 h-4 bg-[#202434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
                       title={`Aumentar ${stat}`}
                     >
@@ -1225,6 +1223,44 @@ export const StreetLabView: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        )}
+        {!isStatsCollapsed && openStat && activeChar && STAT_TOOLTIPS[openStat] && (
+          <div className="bg-[#0b0e17] border border-[#38bdf8]/60 rounded-xs p-2.5 text-left" role="region" aria-label={`Qué hace ${openStat}`}>
+            <div className="flex items-start gap-2">
+              <div className="font-tech font-bold text-[#38bdf8] uppercase text-xs flex-1">
+                {openStat} · {STAT_TOOLTIPS[openStat].spanishName} ({STAT_TOOLTIPS[openStat].name})
+              </div>
+              <button type="button" onClick={() => setOpenStat(null)} className="text-[#94a3b8] hover:text-white text-xs min-w-[32px] min-h-[32px]" aria-label="Cerrar">
+                ✕
+              </button>
+            </div>
+            <p className="text-[11px] text-[#cbd5e1] mb-1">{STAT_TOOLTIPS[openStat].beginnerExplanation || STAT_TOOLTIPS[openStat].shortSummary}</p>
+            <div className="text-[10px] font-mono-code text-[#64748b] uppercase mt-1">Con tus números</div>
+            <ul className="list-disc pl-4 space-y-0.5 text-[11px] text-[#e2e8f0]">
+              {statInsights(activeChar)[openStat].map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+            {STAT_TOOLTIPS[openStat].dependentSkills.length > 0 && (
+              <p className="text-[10px] text-[#94a3b8] mt-1">Skills que usa: {STAT_TOOLTIPS[openStat].dependentSkills.join(', ')}</p>
+            )}
+            <div className="text-[#f59e0b] text-[9px] border-t border-[#1e293b] pt-1 mt-1">
+              {STAT_TOOLTIPS[openStat].source.book} p.{STAT_TOOLTIPS[openStat].source.page}
+            </div>
+          </div>
+        )}
+        {!isStatsCollapsed && (
+          <div>
+            <button
+              type="button"
+              onClick={() => setStatGuideOpen((o) => !o)}
+              className="text-[10px] font-mono-code text-[#38bdf8] hover:text-white min-h-[32px]"
+              aria-expanded={statGuideOpen}
+            >
+              {statGuideOpen ? '▾' : '▸'} ¿Qué hace cada STAT? (tocá un STAT para ver sus cuentas)
+            </button>
+            {statGuideOpen && activeChar && <StatGuide values={activeChar.stats} className="mt-1" />}
           </div>
         )}
 
@@ -1294,7 +1330,35 @@ export const StreetLabView: React.FC = () => {
         
         {/* COLUMNA IZQUIERDA (7 COLS): MATRIZ DE HABILIDADES COMPACTA */}
         <div className="lg:col-span-7 space-y-3">
-          
+          {/* v5.6.0 [Claude Code · 2026-10-29]: el rol primero (plan 21). */}
+          {activeChar && (
+            <div className="chamfer-card px-3.5 py-2 bg-[#161320] border border-purple-500/40 flex flex-wrap items-center gap-2">
+              <span className="font-tech text-xs font-bold text-purple-300 uppercase">
+                {activeChar.role} · {activeChar.roleAbilityName} {activeChar.roleRank}
+              </span>
+              {(() => {
+                const parts: string[] = [];
+                const med = activeChar.medicineAllocation;
+                if (activeChar.role === 'Medtech' && med)
+                  parts.push(`Surgery ${med.surgery ?? 0} · Pharma ${med.pharmaceuticals ?? 0} · Cryo ${med.cryosystem ?? 0}`);
+                const mk = activeChar.makerAllocation;
+                if (activeChar.role === 'Tech' && mk)
+                  parts.push(`Field ${mk.field ?? 0} · Upgrade ${mk.upgrade ?? 0} · Fabrication ${mk.fabrication ?? 0} · Invention ${mk.invention ?? 0}`);
+                return parts.length > 0 && <span className="text-[11px] font-mono-code text-slate-300">{parts.join(' · ')}</span>;
+              })()}
+              <button
+                type="button"
+                onClick={() => {
+                  setRightColTab('roleAbility');
+                  document.getElementById('sheet-right-col')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                className="ml-auto px-3 py-1.5 text-[11px] font-tech font-bold uppercase bg-purple-600/20 border border-purple-500/50 text-purple-200 rounded hover:bg-purple-600/40 cursor-pointer"
+              >
+                Ver ROL
+              </button>
+            </div>
+          )}
+
           <div className="chamfer-card p-3.5 bg-[#121319] border border-[#232736]">
             
             {/* Header y Filtros */}
@@ -1411,7 +1475,7 @@ export const StreetLabView: React.FC = () => {
                           <button
                             disabled={!gmFreeEdit || lvl <= 0}
                             onClick={() => updateSkill(key, Math.max(0, lvl - 1))}
-                            className="w-4 h-4 bg-[#1f2434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px] disabled:opacity-30"
+                            className="w-8 h-8 bg-[#1f2434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px] disabled:opacity-30"
                             title={gmFreeEdit ? `Reducir ${meta.label}` : 'Solo en modo GM'}
                           >
                             <Minus className="w-2.5 h-2.5" />
@@ -1425,7 +1489,7 @@ export const StreetLabView: React.FC = () => {
                               const res = raiseSkillWithIp(key);
                               showSkillMsg(res.success, res.message);
                             }}
-                            className="w-4 h-4 bg-[#1f2434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
+                            className="w-8 h-8 bg-[#1f2434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
                             title={gmFreeEdit ? `Aumentar ${meta.label} (modo GM)` : `Subir a ${lvl + 1}: ${ipCostSkillLevel(lvl + 1, !!meta.isDoubleCost)} IP`}
                           >
                             <Plus className="w-2.5 h-2.5" />
@@ -1444,6 +1508,46 @@ export const StreetLabView: React.FC = () => {
                         <p className="text-[11px] text-[#94a3b8] font-sans leading-relaxed">
                           {meta.summary}
                         </p>
+                        {WEAPON_SKILL_GUIDE[meta.label] && (
+                          <div className="font-sans text-[11px] space-y-1 border-t border-[#222638] pt-1.5">
+                            <p className="text-[#cbd5e1]">
+                              🎯 {WEAPON_SKILL_GUIDE[meta.label].weaponsEs}{' '}
+                              <span className="font-mono-code text-[10px] text-[#64748b]">
+                                {WEAPON_SKILL_GUIDE[meta.label].rollEs} · {WEAPON_SKILL_GUIDE[meta.label].page}
+                              </span>
+                            </p>
+                            {(() => {
+                              const mine = (activeChar?.equippedWeapons ?? []).filter((w) => {
+                                const atk = weaponAttackLines(activeChar!, w);
+                                return key === 'autofire' ? !!atk.burst : atk.skillKey === key;
+                              });
+                              if (mine.length === 0) return key === 'evasion' ? null : <p className="text-[10px] text-[#64748b]">Ninguna de tus armas usa esta skill.</p>;
+                              return (
+                                <ul className="text-[10px] font-mono-code text-[#10b981] space-y-0.5">
+                                  {mine.map((w) => {
+                                    const atk = weaponAttackLines(activeChar!, w);
+                                    return (
+                                      <li key={w.instanceId}>
+                                        {w.name}: {key === 'autofire' ? atk.burst : atk.single}
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              );
+                            })()}
+                            {key === 'autofire' && (
+                              <>
+                                <ul className="list-disc pl-4 text-[10px] text-[#cbd5e1] space-y-0.5">
+                                  {AUTOFIRE_RULES.map((r) => (
+                                    <li key={r}>{r}</li>
+                                  ))}
+                                </ul>
+                                <p className="text-[10px] text-[#f59e0b]">{AUTOFIRE_WARNING}</p>
+                              </>
+                            )}
+                            {key !== 'evasion' && <p className="text-[10px] text-[#64748b]">{WEAPON_SKILLS_NOTE}</p>}
+                          </div>
+                        )}
                         <div className="flex flex-wrap gap-1.5 pt-1">
                           {meta.examples.map((ex, idx) => (
                             <span
@@ -1473,7 +1577,7 @@ export const StreetLabView: React.FC = () => {
         </div>
 
         {/* COLUMNA DERECHA (5 COLS): ARSENAL, MOCHILA Y BILLETERA */}
-        <div className="lg:col-span-5 space-y-3">
+        <div id="sheet-right-col" className="lg:col-span-5 space-y-3">
           
           {/* Selector de Pestañas de Columna Derecha */}
           {/* [Claude Code · 2026-10-24] v5.0.0 (plan 16, decisión 12): flex-wrap para no desbordar a 375 px. */}
@@ -1774,6 +1878,20 @@ export const StreetLabView: React.FC = () => {
                               </button>
                             </div>
                           </div>
+
+                          {/* v5.6.0: con qué tirada pega el arma (Core pp.172-176), ráfaga y Suppressive Fire (Core pp.173-174). [Claude Code · 2026-10-29] */}
+                          {(() => {
+                            const atk = weaponAttackLines(activeChar, w);
+                            return (
+                              <div className="text-[11px] font-mono-code bg-[#0f111a] px-2 py-1.5 rounded border border-[#1b2030] space-y-0.5">
+                                <div className="text-[#10b981]">🎯 {atk.single}</div>
+                                {atk.penalties.length > 0 && <div className="text-[10px] text-[#94a3b8]">{atk.penalties.join(' · ')}</div>}
+                                {atk.burst && <div className="text-[#f59e0b]">💥 {atk.burst}</div>}
+                                {atk.burstWarning && <div className="text-[10px] text-[#dc2626]">{atk.burstWarning}</div>}
+                                {atk.suppressive && <div className="text-[10px] text-[#94a3b8]">{atk.suppressive}</div>}
+                              </div>
+                            );
+                          })()}
 
                           {/* Notas del arma si existen */}
                           {w.notes && (
@@ -3143,16 +3261,8 @@ export const StreetLabView: React.FC = () => {
                                     <span className="text-red-400 font-bold">1d10 + {totalAttack} (DEX {dex} + R{effectiveRank})</span>
                                   </div>
 
-                                  <div className="space-y-1 pt-1 border-t border-[#1d2436]">
-                                    {form.moves.map((m) => (
-                                      <div
-                                        key={m.id}
-                                        className="text-[10px] font-mono-code flex items-center justify-between bg-[#0e111a] px-2 py-1 rounded border border-[#1b2234]"
-                                      >
-                                        <span className="text-white font-bold">{m.name}</span>
-                                        <span className="text-amber-400 font-bold">{m.isOpposed ? `vs ${m.opposedBy ?? 'DEX + Evasion'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
-                                      </div>
-                                    ))}
+                                  <div className="pt-1 border-t border-[#1d2436]">
+                                    <MartialMoveBoxes moves={form.moves} />
                                   </div>
                                 </div>
                               )}
@@ -3163,6 +3273,8 @@ export const StreetLabView: React.FC = () => {
                     );
                   })()}
                 </div>
+
+                <MartialCommonRules />
 
                 {/* FILTROS Y BÚSQUEDA DEL CATÁLOGO DE 27 FORMAS */}
                 <div className="flex flex-wrap items-center gap-2 pt-1">
@@ -3270,36 +3382,8 @@ export const StreetLabView: React.FC = () => {
                               "{form.originAndFlavor}"
                             </div>
 
-                            {/* Movimientos Especiales */}
-                            <div className="space-y-1.5">
-                              <span className="text-[10px] font-tech font-bold text-red-400 uppercase tracking-wider block">
-                                ⚡ Movimientos Especiales ({form.moves.length}):
-                              </span>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                                {form.moves.map((m) => (
-                                  <div
-                                    key={m.id}
-                                    className="bg-[#0b0e16] p-2 rounded-xs border border-[#1d2538] space-y-0.5 text-[10px] font-mono-code"
-                                  >
-                                    <div className="flex items-center justify-between font-bold">
-                                      <span className="text-white">{m.name}</span>
-                                      <span className="text-amber-400">{m.isOpposed ? `vs ${m.opposedBy ?? 'DEX + Evasion'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
-                                    </div>
-                                    <div className="text-[9px] text-slate-400 font-sans leading-tight">
-                                      <strong>Req:</strong> {m.requirements}
-                                    </div>
-                                    <div className="text-[9px] text-slate-300 font-sans leading-tight">
-                                      {m.effectDescription}
-                                    </div>
-                                    {m.damageBonusOrFormula && (
-                                      <div className="text-[9px] text-amber-300 font-bold">
-                                        Daño: {m.damageBonusOrFormula}
-                                      </div>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
+                            {/* Movimientos Especiales (v5.6.0: en cuadros) */}
+                            <MartialMoveBoxes moves={form.moves} wide />
 
                             {/* Fila de Estado y Acciones: IP + Skill Chip + Rango Manual */}
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#1c2436] items-center">
