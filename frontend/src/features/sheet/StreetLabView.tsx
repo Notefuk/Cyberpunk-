@@ -18,6 +18,8 @@ import type {
 import { SKILL_METADATA } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { STAT_TOOLTIPS } from '../../data/characterCreationData';
+import { statInsights } from '../../engine/statInsights';
+import { StatGuide } from '../creator/steps/StatGuide';
 import { CharacterCreatorWizard } from '../creator/CharacterCreatorWizard';
 import { CHARACTER_PORTRAITS_CATALOG } from '../../data/netAndRolesData';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
@@ -363,6 +365,9 @@ export const StreetLabView: React.FC = () => {
 
   // Section collapse states for compact screen real estate
   const [isStatsCollapsed, setIsStatsCollapsed] = useState(false);
+  // v5.6.0: el STAT se explica tocándolo (en el iPad no hay hover). [Claude Code · 2026-10-29]
+  const [openStat, setOpenStat] = useState<StatKey | null>(null);
+  const [statGuideOpen, setStatGuideOpen] = useState(false);
   const [isVitalsCollapsed, setIsVitalsCollapsed] = useState(false);
   const [isSkillsCollapsed, setIsSkillsCollapsed] = useState(false);
 
@@ -1150,7 +1155,7 @@ export const StreetLabView: React.FC = () => {
         {/* Tira de 10 STATS */}
         {!isStatsCollapsed && (
           <div className="grid grid-cols-5 lg:grid-cols-10 gap-1.5 animate-fade-in relative z-30 overflow-visible">
-            {STAT_KEYS.map((stat, idx) => {
+            {STAT_KEYS.map((stat) => {
               // Con Full Body Conversion el chasis reemplaza BODY y fija un mínimo a REF/DEX/MOVE sin pisar los stats base.
               const isFbcActive = Boolean(activeChar?.fbcState?.isFullBodyConversion);
               const val = stat === 'BODY' && activeChar
@@ -1159,39 +1164,23 @@ export const StreetLabView: React.FC = () => {
                   ? Math.max(activeChar?.stats?.[stat] ?? 6, activeChar?.fbcState?.statFloor ?? 0)
                   : activeChar?.stats?.[stat] ?? 6;
               const penalty = getStatPenalty(stat);
-              const isRightSide = idx >= 5;
 
               return (
                 <div
                   key={stat}
-                  className="group/stat relative bg-[#151722] p-1.5 rounded border border-[#222636] text-center flex flex-col justify-between hover:border-[#38bdf8]/60 hover:z-[100] transition-all cursor-help"
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={openStat === stat}
+                  aria-label={`Qué hace ${stat}`}
+                  onClick={() => setOpenStat((cur) => (cur === stat ? null : stat))}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setOpenStat((cur) => (cur === stat ? null : stat));
+                    }
+                  }}
+                  className={`relative bg-[#151722] p-1.5 rounded border text-center flex flex-col justify-between hover:border-[#38bdf8]/60 transition-all cursor-pointer ${openStat === stat ? 'border-[#38bdf8]' : 'border-[#222636]'}`}
                 >
-                  {/* Tooltip táctico para principiantes hacia abajo interactivo */}
-                  {STAT_TOOLTIPS[stat] && (
-                    <div
-                      className={`absolute top-full ${
-                        isRightSide ? 'right-0' : 'left-0'
-                      } pt-2 hidden group-hover/stat:block z-[110] w-64 text-left`}
-                    >
-                      <div className="bg-[#0b0e17] text-[#e2e8f0] text-[10px] font-mono-code font-normal leading-relaxed p-2.5 rounded-xs border border-[#38bdf8]/60 shadow-xl shadow-black/90 relative">
-                        {/* Triángulo indicador arriba */}
-                        <div
-                          className={`w-2 h-2 bg-[#0b0e17] border-l border-t border-[#38bdf8]/60 rotate-45 absolute -top-1.5 ${
-                            isRightSide ? 'right-6' : 'left-6'
-                          }`}
-                        />
-                        <div className="font-tech font-bold text-[#38bdf8] uppercase text-xs mb-0.5">
-                          {stat} — {STAT_TOOLTIPS[stat].name} · {STAT_TOOLTIPS[stat].spanishName}
-                        </div>
-                        <div className="text-[#cbd5e1] mb-1 font-sans">
-                          {STAT_TOOLTIPS[stat].shortSummary}
-                        </div>
-                        <div className="text-[#f59e0b] text-[9px] border-t border-[#1e293b] pt-1">
-                          {STAT_TOOLTIPS[stat].source.book} p.{STAT_TOOLTIPS[stat].source.page}
-                        </div>
-                      </div>
-                    </div>
-                  )}
 
                   <div className="flex items-center justify-between text-[11px] font-tech text-[#94a3b8] px-0.5">
                     <span className="font-bold text-white">{stat}</span>
@@ -1208,14 +1197,20 @@ export const StreetLabView: React.FC = () => {
 
                   <div className="flex items-center justify-center gap-1 pt-1 border-t border-[#1e2230]">
                     <button
-                      onClick={() => updateStat(stat, val - 1)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateStat(stat, val - 1);
+                      }}
                       className="w-4 h-4 bg-[#202434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px]"
                       title={`Reducir ${stat}`}
                     >
                       <Minus className="w-2.5 h-2.5" />
                     </button>
                     <button
-                      onClick={() => updateStat(stat, val + 1)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateStat(stat, val + 1);
+                      }}
                       className="w-4 h-4 bg-[#202434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
                       title={`Aumentar ${stat}`}
                     >
@@ -1225,6 +1220,44 @@ export const StreetLabView: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        )}
+        {!isStatsCollapsed && openStat && activeChar && STAT_TOOLTIPS[openStat] && (
+          <div className="bg-[#0b0e17] border border-[#38bdf8]/60 rounded-xs p-2.5 text-left" role="region" aria-label={`Qué hace ${openStat}`}>
+            <div className="flex items-start gap-2">
+              <div className="font-tech font-bold text-[#38bdf8] uppercase text-xs flex-1">
+                {openStat} · {STAT_TOOLTIPS[openStat].spanishName} ({STAT_TOOLTIPS[openStat].name})
+              </div>
+              <button type="button" onClick={() => setOpenStat(null)} className="text-[#94a3b8] hover:text-white text-xs min-w-[32px] min-h-[32px]" aria-label="Cerrar">
+                ✕
+              </button>
+            </div>
+            <p className="text-[11px] text-[#cbd5e1] mb-1">{STAT_TOOLTIPS[openStat].beginnerExplanation || STAT_TOOLTIPS[openStat].shortSummary}</p>
+            <div className="text-[10px] font-mono-code text-[#64748b] uppercase mt-1">Con tus números</div>
+            <ul className="list-disc pl-4 space-y-0.5 text-[11px] text-[#e2e8f0]">
+              {statInsights(activeChar)[openStat].map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+            {STAT_TOOLTIPS[openStat].dependentSkills.length > 0 && (
+              <p className="text-[10px] text-[#94a3b8] mt-1">Skills que usa: {STAT_TOOLTIPS[openStat].dependentSkills.join(', ')}</p>
+            )}
+            <div className="text-[#f59e0b] text-[9px] border-t border-[#1e293b] pt-1 mt-1">
+              {STAT_TOOLTIPS[openStat].source.book} p.{STAT_TOOLTIPS[openStat].source.page}
+            </div>
+          </div>
+        )}
+        {!isStatsCollapsed && (
+          <div>
+            <button
+              type="button"
+              onClick={() => setStatGuideOpen((o) => !o)}
+              className="text-[10px] font-mono-code text-[#38bdf8] hover:text-white min-h-[32px]"
+              aria-expanded={statGuideOpen}
+            >
+              {statGuideOpen ? '▾' : '▸'} ¿Qué hace cada STAT? (tocá un STAT para ver sus cuentas)
+            </button>
+            {statGuideOpen && activeChar && <StatGuide values={activeChar.stats} className="mt-1" />}
           </div>
         )}
 
