@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { ArmorRepairDialog, type ArmorRepairTarget } from '../sheet/ArmorRepairDialog';
 import { useItemDisplayName } from '../sheet/ItemNameButton';
+import { InjuryPenaltyReminder } from '../sheet/InjuryPenaltyReminder';
+import { summarizeInjuryPenalties } from '../../engine/injuryPenalties';
 import { nicknameKey } from '../../engine/itemNames';
 import { STORAGE_KEY_LEFT_CENTER, STORAGE_KEY_LEFT_TRAY, STORAGE_KEY_LEFT_TRAY_OPEN, loadIdList, moveLeftPanelTo, placeOf, saveIdList, splitLeftPanels, type LeftPanelPlace } from './leftTray';
 import { useCombatStore } from '../../store/useCombatStore';
@@ -4242,6 +4244,8 @@ export const CombatHudView: React.FC = () => {
 
       case 'injuries': {
         const injuriesCount = activeChar?.activeInjuries?.length ?? 0;
+        // v5.9.1: el resumen del panel recuerda el negativo a todas las acciones. [Claude Code · 2026-10-30]
+        const injuryAllActions = summarizeInjuryPenalties(activeChar?.activeInjuries).allActions;
         const isInjuriesAutoFull = injuriesCount > 3 && leftPanelSizeMode['injuries'] !== 'compact';
         return (
           <CollapsibleHudCard
@@ -4249,7 +4253,7 @@ export const CombatHudView: React.FC = () => {
             id="injuries"
             title={`HERIDAS CRÍTICAS (${injuriesCount})`}
             icon={<Skull className="w-3.5 h-3.5 text-[#dc2626]" />}
-            summary={`${injuriesCount} herida(s) activa(s)`}
+            summary={`${injuriesCount} herida(s) activa(s)${injuryAllActions > 0 ? ` · −${injuryAllActions} a todo` : ''}`}
             isCollapsed={isCollapsed}
             onToggleCollapse={() => toggleBoxCollapse('injuries')}
             canMoveUp={canMoveUp}
@@ -4282,6 +4286,7 @@ export const CombatHudView: React.FC = () => {
             subHeaderControls={renderLeftPanelHeaderControls('injuries', isInjuriesAutoFull, injuriesCount)}
           >
             <div className={getLeftPanelClass('injuries', isInjuriesAutoFull)} style={getLeftPanelStyle('injuries', isInjuriesAutoFull)}>
+              <InjuryPenaltyReminder injuries={activeChar?.activeInjuries} />
               {injuriesCount === 0 ? (
                 <div className="text-center py-3 text-[#64748b] font-mono-code text-[11px] bg-[#171923] rounded border border-[#222636]">
                   Sin heridas críticas.

@@ -8,6 +8,7 @@ import { resolveSkillKey, normalizeCanonSkillName } from '../../data/characterCr
 import { ipCostSkillLevel } from '../../engine/roleRules';
 import type { StatKey } from '../../types/cyberpunk';
 import { readFavOnly, writeFavOnly } from './favoriteSkills';
+import { InjuryPenaltyReminder } from './InjuryPenaltyReminder';
 
 interface Row {
   key: string;
@@ -127,6 +128,7 @@ export const OtherSkillsPanel: React.FC = () => {
 
       {open && (
         <div className="space-y-2">
+          <InjuryPenaltyReminder injuries={activeChar.activeInjuries} compact />
           <div className="flex flex-wrap items-center gap-2">
             <input
               type="text"

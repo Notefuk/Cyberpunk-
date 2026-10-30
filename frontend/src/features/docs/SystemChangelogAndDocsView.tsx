@@ -26,6 +26,27 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.9.1',
+    date: '2026-10-30',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'HUD',
+    title: 'Recordatorio de negativos por Heridas Críticas',
+    summary: 'El panel de Heridas Críticas y las skills de Street Lab avisan los negativos activos (−2 a todas las acciones, a distancia, MOVE, Death Save) y de qué herida sale cada uno.',
+    highlights: [
+      'Suma de negativos con su herida de origen (Core pp.187-188).',
+      'Los ataques con armas ya los restan; en las demás tiradas, restalos vos.',
+      'Quick Fix los saca hasta el final del día; Treatment, para siempre (Core p.223).'
+    ],
+    filesTouched: [
+      'frontend/src/engine/injuryPenalties.ts',
+      'frontend/src/features/sheet/InjuryPenaltyReminder.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx'
+    ],
+    metricsBadge: 'v5.9.1 • HUD • Heridas'
+  },
+  {
     version: 'v5.9.0',
     date: '2026-10-30',
     author: 'Claude Code',
@@ -1448,6 +1469,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.9.1': true,
     'v5.9.0': true,
     'v5.8.0': true,
     'v5.7.1': true,

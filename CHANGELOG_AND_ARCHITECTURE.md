@@ -117,6 +117,15 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.9.1] - 2026-10-30 (Recordatorio de negativos por Heridas Críticas) [Claude Code · 2026-10-30]
+* **Category**: HUD y ficha (STREET LAB). Pedido de Giuliano, sin plan (tarea chica).
+* **What Changed**:
+  * El panel HERIDAS CRÍTICAS del HUD empieza con "⚠️ Negativos activos por heridas": suma los negativos de las heridas activas y dice de cuál sale cada uno (−X a todas las acciones, a ataques a distancia y Perception con la vista, a melee, a MOVE y +X al Death Save Penalty; Core pp.187-188). Las heridas sin un número fijo (Broken Jaw, Foreign Object, Lost Ear, etc.) muestran su efecto. Aclara que los ataques con armas del HUD ya los restan, que en las demás tiradas hay que restarlos a mano, y que Quick Fix los saca hasta el final del día y Treatment para siempre (Core p.223). El resumen del panel plegado dice "· −X a todo".
+  * En Street Lab, arriba de HABILIDADES y de OTRAS SKILLS, una línea roja avisa los negativos y que la BASE mostrada no los resta.
+  * Las heridas con Quick Fix o tratadas no cuentan, igual que en el cálculo de ataques.
+* **Files Modified**: `frontend/src/engine/injuryPenalties.ts` (nuevo); `frontend/src/features/sheet/InjuryPenaltyReminder.tsx` (nuevo); `frontend/src/features/combat/CombatHudView.tsx`; `frontend/src/features/sheet/StreetLabView.tsx`; `frontend/src/features/sheet/OtherSkillsPanel.tsx`; `frontend/src/engine/__tests__/injuryPenalties.test.ts` (nuevo); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, tests y build. En el navegador local: con Concussion, Damaged Eye, Broken Jaw y Lost Ear el HUD muestra −2 a todas las acciones, −2 a distancia, +1 al Death Save y los dos efectos aparte; Street Lab muestra la línea corta; al borrar las heridas desaparece; consola limpia.
+
 ### [v5.9.0] - 2026-10-30 (Bandeja de la columna izquierda del HUD) [Claude Code · 2026-10-30]
 * **Category**: HUD (plan 23, `docs/plans/plan23-streetlab-hud-comodidades.md`, segunda y última versión).
 * **What Changed**:
