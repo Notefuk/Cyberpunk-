@@ -26,6 +26,28 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.7.0',
+    date: '2026-10-30',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Ficha',
+    title: 'Qué ganás en cada rango y skills por libro',
+    summary: 'En STREET LAB ves qué te da cada rango de tu rol y cuánto cuesta subir; en el wizard filtrás las skills entre las del CEMK y las del Core RED.',
+    highlights: [
+      '"¿Qué ganás más adelante?" en la tira del rol: los 10 rangos y su costo en IP (Core p.410).',
+      'Filtro de skills en el wizard: Todas (66), CEMK (46) o Solo Core RED (20).',
+      'El filtro avisa si ocultó skills con puntos.',
+      'Moda explicada en el wizard: para qué sirve y qué dice cada uno de los 10 estilos (Core pp.84, 102, 105, 328, 352).',
+      'Vivienda inicial: lo que elijas no cambia la plata inicial, y qué te da cada estilo de vida (Core pp.105, 377).',
+      'Arreglo: la munición del paquete del rol dice cuántas balas trae (x100, x10; Core p.98).'
+    ],
+    filesTouched: [
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/creator/steps/SkillsStep.tsx'
+    ],
+    metricsBadge: 'v5.7.0 • Ficha • Rangos'
+  },
+  {
     version: 'v5.6.0',
     date: '2026-10-29',
     author: 'Claude Code',
@@ -1362,6 +1384,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.7.0': true,
     'v5.6.0': true,
     'v5.5.0': true,
     'v5.4.0': true,

@@ -1356,6 +1356,36 @@ export const StreetLabView: React.FC = () => {
               >
                 Ver ROL
               </button>
+              {/* v5.7.0 [Claude Code · 2026-10-30]: qué da cada rango, para saber qué se consigue más adelante. */}
+              {(() => {
+                const prog = ROLE_ABILITIES_COMPLETE_PROGRESSION[activeChar.role];
+                if (!prog) return null;
+                const cur = activeChar.roleRank;
+                return (
+                  <details className="w-full text-[11px] font-sans">
+                    <summary className="cursor-pointer text-purple-300 font-bold py-1">
+                      ¿Qué ganás más adelante?{' '}
+                      <span className="font-mono-code text-[10px] text-slate-400">
+                        {cur >= 10 ? 'Ya estás en el rango máximo (10).' : `Próximo: Rango ${cur + 1} por ${ipCostRoleRank(cur + 1)} IP (60 × rango nuevo, Core p.410)`}
+                      </span>
+                    </summary>
+                    <ol className="mt-1 space-y-1">
+                      {prog.ranks.map((rk) => (
+                        <li
+                          key={rk.rank}
+                          className={`rounded border px-2 py-1 ${rk.rank === cur ? 'border-purple-500 bg-purple-950/50' : rk.rank < cur ? 'border-[#232736] text-slate-500' : 'border-[#2b2540] text-slate-200'}`}
+                        >
+                          <b className={rk.rank === cur ? 'text-purple-300' : rk.rank < cur ? '' : 'text-white'}>
+                            Rango {rk.rank}
+                            {rk.rank === cur ? ' (el tuyo)' : rk.rank < cur ? ' ✓' : ` · ${ipCostRoleRank(rk.rank)} IP`}
+                          </b>
+                          : {rk.unlocks}
+                        </li>
+                      ))}
+                    </ol>
+                  </details>
+                );
+              })()}
             </div>
           )}
 
@@ -3604,7 +3634,7 @@ export const StreetLabView: React.FC = () => {
                               ? 'bg-purple-950/50 border-purple-500 shadow-sm'
                               : isUnlocked
                               ? 'bg-[#151824] border-purple-900/40 opacity-90'
-                              : 'bg-[#0f1118] border-[#1f2434] opacity-50'
+                              : 'bg-[#0f1118] border-[#1f2434] opacity-80'
                           }`}
                         >
                           <div className="flex items-center justify-between gap-2">

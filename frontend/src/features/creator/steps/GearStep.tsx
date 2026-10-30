@@ -2,10 +2,11 @@
 import React, { useMemo, useState } from 'react';
 import pack from '../../../data/core-rules.cprpack.json';
 import { CEMK_CREATION, CORE_GEAR_SKILLS } from '../../../data/creation';
+import { FASHION_STYLE_GUIDE, FASHION_WHAT_FOR } from '../../../data/creation/fashionGuide';
 import { parseHumanityLossAverage } from '../../../engine/characterEngine';
 import { deckSlotUse, effectiveUnitCost, needsFixer, neuroportCovers, priceTier, purchaseUnitCost, shopSourceLabel } from '../../../engine/creatorShop';
 import { WEAPON_ATTACHMENTS_CATALOG } from '../../../data/weaponAttachmentsAndTechData';
-import { HOUSING_OPTIONS, HOUSING_SOURCE, LIFESTYLE_OPTIONS, LIFESTYLE_SOURCE } from '../../../data/creation/housingOptions';
+import { HOUSING_OPTIONS, HOUSING_SOURCE, LIFESTYLE_OPTIONS, LIFESTYLE_RULES, LIFESTYLE_SOURCE } from '../../../data/creation/housingOptions';
 import {
   AMMO_CALIBERS,
   getFashionPrice,
@@ -73,7 +74,11 @@ const PackageList: React.FC<{
       <h4 className="text-[11px] font-mono-code text-[#64748b] uppercase mb-1">{title}</h4>
       <ul className="space-y-2">
         {entries.map((e) => {
-          const main = baseEntries.find((b) => b.key === e.key)?.name ?? e.name;
+          const base = baseEntries.find((b) => b.key === e.key);
+          // v5.7.0 [Claude Code · 2026-10-30]: la opción principal también dice cuántas trae ("x100"), como las alternativas (Core p.98).
+          const mainName = base?.name ?? e.name;
+          const mainQty = base?.qty ?? e.qty;
+          const main = mainQty > 1 && !/x\d+$/.test(mainName) ? `${mainName} x${mainQty}` : mainName;
           const options = [main, ...e.alternatives];
           return (
             <li key={e.key} className="bg-[#0a0b0e] border border-[#1e2334] rounded-xs p-2 text-xs">
@@ -495,6 +500,31 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
           <p className="text-xs text-[#94a3b8] mb-2">
             {eb(money.fashionBudget)} solo para moda; lo que no uses se pierde. Estilos: Core p.{CORE_GEAR_SKILLS.fashionStyles[0].source.page ?? '?'} en adelante.
           </p>
+          {/* v5.7.0 [Claude Code · 2026-10-30]: para qué sirve la moda y qué dice cada estilo (Core pp.84, 102, 327-328, 352). */}
+          <details className="mb-2 text-[11px] text-[#cbd5e1] bg-[#0a0b0e] border border-[#1e2334] rounded-xs px-2 py-1">
+            <summary className="cursor-pointer text-[#22d3ee] font-bold">¿Para qué sirve la moda?</summary>
+            <ul className="mt-1 list-disc pl-4 space-y-0.5">
+              {FASHION_WHAT_FOR.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          </details>
+          <details className="mb-2 text-[11px] text-[#cbd5e1] bg-[#0a0b0e] border border-[#1e2334] rounded-xs px-2 py-1">
+            <summary className="cursor-pointer text-[#22d3ee] font-bold">Los 10 estilos: qué dicen de vos (Core p.328)</summary>
+            <ul className="mt-1 space-y-1">
+              {CORE_GEAR_SKILLS.fashionStyles.map((s) => {
+                const g = FASHION_STYLE_GUIDE[s.name];
+                const prices = Object.values(s.prices ?? {}).filter((v): v is number => typeof v === 'number');
+                return (
+                  <li key={s.name}>
+                    <b className="text-white">{s.name}</b> <span className="font-mono-code text-[10px] text-[#64748b]">({s.descriptors.join(', ')}{prices.length ? ` · ${eb(Math.min(...prices))} a ${eb(Math.max(...prices))} por pieza` : ''})</span>
+                    {g && <span>: {g.imageEs} <span className="text-[#94a3b8]">Encaja en: {g.fitsEs}</span></span>}
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-1 text-[10px] text-[#64748b]">Las 3 palabras de cada estilo son las del libro; dónde encaja es una sugerencia, lo decide tu mesa.</p>
+          </details>
           <div className="flex flex-wrap items-end gap-2">
             <label className="text-[11px] text-[#cbd5e1]">
               Estilo
@@ -524,6 +554,11 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
               Agregar {unit !== null ? `(${eb(unit * Math.max(1, fashionQty))})` : ''}
             </Btn>
           </div>
+          {style && FASHION_STYLE_GUIDE[style.name] && (
+            <p className="mt-1 text-[11px] text-[#94a3b8]">
+              <b className="text-white">{style.name}</b> ({style.descriptors.join(', ')}): {FASHION_STYLE_GUIDE[style.name].imageEs} Encaja en: {FASHION_STYLE_GUIDE[style.name].fitsEs}
+            </p>
+          )}
           {draft.fashion.length > 0 && (
             <ul className="mt-2 space-y-1">
               {draft.fashion.map((f, i) => (
@@ -610,6 +645,10 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
             : `Por el libro: ${housing.default.housing} (${housing.default.location}), estilo ${housing.default.lifestyle}; primer mes gratis, ${eb(housing.default.owedNextMonth)} el día 1 del mes siguiente o desalojo el día ${housing.default.evictionDay}.`}
         </p>
         {role === 'Nomad' && <p className="text-[11px] text-[#06b6d4] mt-1">{housing.nomadExtra}</p>}
+        {/* v5.7.0 [Claude Code · 2026-10-30]: lo que elijas no cambia la plata inicial (pedido de Giuliano). */}
+        <p className="text-[11px] text-[#22d3ee] mt-2 bg-[#0a0b0e] border border-[#22d3ee]/30 rounded-xs px-2 py-1">
+          Lo que elijas acá no cambia tu plata inicial: sea cual sea la vivienda y el estilo de vida, el primer mes viene pagado y no se descuenta nada. Lo único que cambia es lo que vas a tener que pagar desde el mes que viene. Elegir algo distinto de lo que dice el libro es variante de mesa: acordalo con tu GM.
+        </p>
         <div className="grid sm:grid-cols-2 gap-2 mt-2">
           <label className="text-[11px] text-[#cbd5e1]">
             Vivienda ({HOUSING_SOURCE})
@@ -652,6 +691,29 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
           />
         )}
         {housingOption?.note && <p className="text-[11px] text-[#94a3b8] mt-1">{housingOption.note}</p>}
+        {(() => {
+          const life = LIFESTYLE_OPTIONS.find((l) => l.name === lifestyleValue);
+          return life && (
+            <p className="text-[11px] text-[#cbd5e1] mt-1">
+              <b className="text-white">{life.name}</b> ({eb(life.monthly)}/mes): {life.descEs}
+            </p>
+          );
+        })()}
+        <details className="mt-1 text-[11px] text-[#cbd5e1] bg-[#0a0b0e] border border-[#1e2334] rounded-xs px-2 py-1">
+          <summary className="cursor-pointer text-[#22d3ee] font-bold">¿Qué hace cada estilo de vida? ({LIFESTYLE_SOURCE})</summary>
+          <ul className="mt-1 space-y-1">
+            {LIFESTYLE_OPTIONS.map((l) => (
+              <li key={l.name}>
+                <b className="text-white">{l.name}</b> <span className="font-mono-code text-[10px] text-[#64748b]">{eb(l.monthly)}/mes</span>: {l.descEs}
+              </li>
+            ))}
+          </ul>
+          <ul className="mt-1 list-disc pl-4 space-y-0.5 text-[#94a3b8]">
+            {LIFESTYLE_RULES.map((r) => (
+              <li key={r}>{r}</li>
+            ))}
+          </ul>
+        </details>
         <p className="text-[10px] font-mono-code text-[#64748b] mt-1">
           El primer mes ya está pagado (Core p.105): no se descuenta nada ahora. Desde el mes que viene pagás{' '}
           {housingOption?.rent ? `${eb(housingOption.rent)} de alquiler y ` : ''}

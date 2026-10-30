@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.6.0`** (la ficha que explica: STATs con tus números, líneas de ataque, Martial Arts en cuadros, Medtech y el rol primero) en `claude/v5.6.0-ficha`, sin pushear; en `main`, gh-pages (beta) y Firebase prod (estable) está la v5.5.0 [Claude Code · 2026-10-29]  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.7.0`** (qué ganás en cada rango de rol y filtro de skills por libro en el wizard) en `claude/v5.7.0-rangos-filtro`, sin pushear; en `main`, gh-pages (beta) y Firebase prod (estable) está la v5.6.0 [Claude Code · 2026-10-30]  
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
 > **PLAN ACTIVO**: plan 21 (creador, tienda y ficha): v5.4.0 y v5.5.0 publicadas; v5.6.0 (ficha) terminada, con lo que el plan 21 queda completo [Claude Code · 2026-10-29]. Antes: plan 20 terminado y publicado. Después el plan 5. Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
