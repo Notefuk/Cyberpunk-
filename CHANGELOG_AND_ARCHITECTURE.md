@@ -117,6 +117,19 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.6.0] - 2026-10-29 (La ficha que explica: STATs con tus números, líneas de ataque, Martial Arts en cuadros, Medtech y el rol primero) [Claude Code · 2026-10-29]
+* **Category**: Ficha (STREET LAB) (plan 21, `docs/plans/plan21-creador-tienda-ficha.md`, tercera y última versión).
+* **What Changed**:
+  * STATs: cada STAT de la ficha se toca (sin hover, para el iPad) y abre debajo un panel con su explicación, sus reglas con página y "Con tus números": con REF 8 o más, "podés esquivar tiros con DEX + Evasion = N + 1d10" (Core p.172); HP, Death Save y daño de Brawling y Martial Arts según BODY (Core pp.79, 176, 222); Humanidad / EMP (Core p.80); MOVE × 2 m (Core p.169); Facedown con COOL (Core p.194); LUCK que queda. Botón "¿Qué hace cada STAT?" con la guía completa.
+  * Armas: cada arma equipada dice con qué tirada pega ("Tiro simple: REF 7 + Handgun 6 = 13 + 1d10", o "Golpe: DEX + Melee Weapon"), con las penalizaciones. Las que tienen Autofire suman la ráfaga (REF + Autofire, tabla de Autofire, 10 balas, 2d6 × margen hasta ×3 en SMG o ×4 en Assault Rifle, Core p.173), un aviso si Autofire está en 0, y Suppressive Fire (Core p.174).
+  * Skills de combate: al abrir una skill de arma se ve qué armas cubre, cuáles de tus armas la usan con su total y, en Autofire, sus reglas. Los botones +/− pasan a 32 px.
+  * Martial Arts: los 2 movimientos de cada forma van en cuadros (requisito, DV o "contra…", efecto, reglas, daño y herida) y arriba un cuadro con las reglas de todas las formas (ROF 2, ignora la mitad del SP, daño por BODY, DEX + forma + 1d10, Recovery DV13; Core pp.178-179). En DOJO (formas activas y catálogo) y en NET, ROLES & VEHÍCULOS.
+  * Medtech: el reparto de Medicine muestra qué heridas trata Surgery con su DV (y cuáles también Paramedic; Core pp.187-188), qué hace cada fármaco y cómo se fabrica (Medical Tech DV13, Core pp.149-150), qué da cada nivel de Cryosystem marcando el tuyo (Core p.150) y Quick Fix o Treatment (Core p.223). Botones de 32 px.
+  * El rol primero: arriba de HABILIDADES, una tira con el rol, la habilidad, el rango y su reparto, y "Ver ROL" que abre esa pestaña.
+* **Files Modified**: `frontend/src/engine/statInsights.ts`, `frontend/src/engine/weaponAttackLines.ts`, `frontend/src/engine/medicineInfo.ts`, `frontend/src/features/martial/MartialMoveBoxes.tsx`, `frontend/src/engine/__tests__/sheetV560.test.ts`, `frontend/src/engine/__tests__/medicineInfo.test.ts` (nuevos); `features/sheet/StreetLabView.tsx`; `features/sheet/RoleAllocationPanel.tsx`; `features/netroles/NetAndRolesDeckView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Desvío del plan**: Martial Arts usa un componente de cuadros de movimientos y no una tarjeta entera; el encabezado de cada forma (rango, chip, IP) queda como estaba.
+* **Verificación**: tsc, 494 tests y build. En el navegador local, tamaño iPad: cuadros de Martial Arts en NET y DOJO; Insurance (Medtech) con "Ver ROL", las 18 heridas de Surgery, fármacos y Cryosystem; botones de 32 px; consola sin errores.
+
 ### [v5.5.0] - 2026-10-29 (Tienda del creador: detalle de cada ítem, ciberware por parte del cuerpo, disponibilidad, Rebuilds y vivienda) [Claude Code · 2026-10-29]
 * **Category**: Creador de personajes / tienda (plan 21, `docs/plans/plan21-creador-tienda-ficha.md`, segunda de tres versiones).
 * **What Changed**:

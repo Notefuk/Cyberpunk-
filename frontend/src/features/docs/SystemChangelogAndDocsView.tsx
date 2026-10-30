@@ -26,6 +26,33 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.6.0',
+    date: '2026-10-29',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Ficha',
+    title: 'La ficha que explica',
+    summary: 'Tocás un STAT y ves qué hace con tus números; cada arma dice con qué tirada pega, ráfaga incluida; Martial Arts muestra sus movimientos en cuadros; el Medtech ve qué cura y qué da cada especialidad; y el rol aparece primero.',
+    highlights: [
+      'STATs que se tocan (sin hover): "Con tus números", por ejemplo esquivar tiros con REF 8 o más (Core p.172).',
+      'Líneas de ataque por arma: tiro simple, ráfaga con Autofire y Suppressive Fire (Core pp.173-174).',
+      'Cada skill de arma lista tus armas que la usan.',
+      'Martial Arts en cuadros y reglas de todas las formas (Core pp.178-179).',
+      'Medtech: heridas de Surgery con DV, fármacos, Cryosystem y Quick Fix o Treatment (Core pp.149-150, 187-188, 223).',
+      'Tira del rol arriba de las skills con "Ver ROL"; botones de 32 px para el iPad.',
+      '494 tests.'
+    ],
+    filesTouched: [
+      'frontend/src/engine/statInsights.ts',
+      'frontend/src/engine/weaponAttackLines.ts',
+      'frontend/src/engine/medicineInfo.ts',
+      'frontend/src/features/martial/MartialMoveBoxes.tsx',
+      'frontend/src/features/sheet/StreetLabView.tsx',
+      'frontend/src/features/sheet/RoleAllocationPanel.tsx'
+    ],
+    metricsBadge: 'v5.6.0 • Ficha • Explica'
+  },
+  {
     version: 'v5.5.0',
     date: '2026-10-29',
     author: 'Claude Code',
@@ -1335,6 +1362,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.6.0': true,
     'v5.5.0': true,
     'v5.4.0': true,
     'v5.3.2': true,
