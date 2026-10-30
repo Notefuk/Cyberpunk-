@@ -22,6 +22,7 @@ Regla general: **cada dato vive en un solo lugar**. Los demás documentos enlaza
 | `CHANGELOG_AND_ARCHITECTURE.md` | **Historia de versiones** (fuente única, v4.0.0 en adelante) + reglas de arquitectura y árbol de archivos | Cada versión |
 | `AI_CONTEXT_HANDOFF.md` | Mapa técnico: archivos críticos y directivas para subagentes. Sin historia | Cuando cambian archivos críticos o contratos |
 | `CONTENT_CHECKLIST.md` | Qué reglas y libros están cubiertos (`[x]`, `[~]`, `[ ]`) | Cuando entra o se corrige contenido |
+| `docs/BIBLIOTECA.md` | Los 79 PDFs de la biblioteca, uno por uno, y qué se adaptó de cada uno [Claude Code · 2026-10-30] | Cuando entra o se corrige un libro |
 | Changelog in-app (`features/docs/SystemChangelogAndDocsView.tsx`) | Lo que ven los usuarios, con badge de autor | Cada versión |
 | `README.md` | Presentación del repo | Rara vez |
 
