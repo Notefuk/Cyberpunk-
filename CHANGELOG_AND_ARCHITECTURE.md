@@ -117,6 +117,15 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.9.0] - 2026-10-30 (Bandeja de la columna izquierda del HUD) [Claude Code · 2026-10-30]
+* **Category**: HUD (plan 23, `docs/plans/plan23-streetlab-hud-comodidades.md`, segunda y última versión).
+* **What Changed**:
+  * La columna izquierda del ACTIVE COMBAT HUD tiene su bandeja "🩺 BIOMONITOR & VITALES", igual que la de MÓDULOS TÁCTICOS: una tarjeta por panel (Biomonitor & Vitales, Matriz de Blindaje, Suerte, Heridas Críticas, Ciberware, Consumibles) con su resumen, "➕ AL CENTRO / ⬅️ A COLUMNA", "➡️ A BANDEJA" y "👁️ VISTA" (vista previa sin moverlo). El contador dice cuántos quedan en la columna (`n/6`).
+  * Cada panel está en uno de tres lugares: la columna (como siempre), el centro (arriba de los módulos de la derecha) o la bandeja (oculto). Se puede arrastrar de la columna o de la bandeja al centro, y a la zona "Arrastrá un panel acá" para mandarlo a la bandeja. El botón chico del encabezado del panel lo manda a la bandeja (📥) o, en el centro, lo vuelve a la columna (⬅️).
+  * Se guarda en el navegador. "Restaurar orden" vuelve todo a la columna. La bandeja arranca plegada para no empujar el Biomonitor hacia abajo (también en celular) y recuerda si la abrís. Subir/bajar un panel salta los que están en el centro o en la bandeja.
+* **Files Modified**: `frontend/src/features/combat/leftTray.ts` (nuevo: `splitLeftPanels`, `moveLeftPanelTo`, claves de guardado); `frontend/src/features/combat/CombatHudView.tsx`; `frontend/src/features/combat/__tests__/leftTray.test.ts` (nuevo); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 517 tests y build. En el navegador local: Biomonitor al centro y Suerte a la bandeja dejan la columna en 4/6; al recargar sigue igual; ⬅️ en el panel del centro y "A COLUMNA" lo vuelven todo a 6/6; en celular (375 px) la bandeja está plegada y no hay scroll horizontal; consola limpia.
+
 ### [v5.8.0] - 2026-10-30 (Street Lab más cómodo: skills favoritas, reparar explicado, comprar desde la ficha y nombre propio de ítems) [Claude Code · 2026-10-30]
 * **Category**: Ficha (STREET LAB) y HUD (plan 23, `docs/plans/plan23-streetlab-hud-comodidades.md`, primera de dos versiones).
 * **What Changed**:

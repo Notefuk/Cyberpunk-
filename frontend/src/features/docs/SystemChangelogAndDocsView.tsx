@@ -26,6 +26,25 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.9.0',
+    date: '2026-10-30',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'HUD',
+    title: 'Bandeja de la columna izquierda del HUD',
+    summary: 'Biomonitor & Vitales, Blindaje, Suerte, Heridas, Ciberware y Consumibles tienen su propia bandeja, como los módulos tácticos: se mandan al centro, a la bandeja o se miran con Vista.',
+    highlights: [
+      '"➕ AL CENTRO", "➡️ A BANDEJA" y "👁️ VISTA" para cada panel izquierdo.',
+      'Se arrastran al centro; el botón del encabezado los manda a la bandeja o los vuelve a la columna.',
+      'Se guarda en el navegador; "Restaurar orden" vuelve todo a la columna.'
+    ],
+    filesTouched: [
+      'frontend/src/features/combat/leftTray.ts',
+      'frontend/src/features/combat/CombatHudView.tsx'
+    ],
+    metricsBadge: 'v5.9.0 • HUD • Plan 23'
+  },
+  {
     version: 'v5.8.0',
     date: '2026-10-30',
     author: 'Claude Code',
@@ -1429,6 +1448,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.9.0': true,
     'v5.8.0': true,
     'v5.7.1': true,
     'v5.7.0': true,

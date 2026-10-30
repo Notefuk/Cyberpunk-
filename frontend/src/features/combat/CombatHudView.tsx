@@ -3,6 +3,7 @@ import { useCharacterStore } from '../../store/useCharacterStore';
 import { ArmorRepairDialog, type ArmorRepairTarget } from '../sheet/ArmorRepairDialog';
 import { useItemDisplayName } from '../sheet/ItemNameButton';
 import { nicknameKey } from '../../engine/itemNames';
+import { STORAGE_KEY_LEFT_CENTER, STORAGE_KEY_LEFT_TRAY, STORAGE_KEY_LEFT_TRAY_OPEN, loadIdList, moveLeftPanelTo, placeOf, saveIdList, splitLeftPanels, type LeftPanelPlace } from './leftTray';
 import { useCombatStore } from '../../store/useCombatStore';
 import { useEncounterStore } from '../../store/encounterStore';
 import { recordMyInitiative, getActiveTable, useActiveTable, publishDeathSave, shareRollWithTable } from '../../sync/tableSync';
@@ -679,6 +680,9 @@ interface CollapsibleHudCardProps {
   subHeaderControls?: React.ReactNode;
   accentBorderClass?: string;
   onSendToTray?: () => void;
+  /** v5.9.0 (plan 23): texto e ícono del botón de bandeja (los paneles izquierdos vuelven a su columna). [Claude Code · 2026-10-30] */
+  sendToTrayTitle?: string;
+  sendToTrayIcon?: string;
   headerDragHandler?: (e: React.MouseEvent) => void;
 }
 
@@ -702,6 +706,8 @@ const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
   subHeaderControls,
   accentBorderClass = 'border-[#232736]',
   onSendToTray,
+  sendToTrayTitle = 'Mandar este módulo a la Bandeja Derecha (quitar del centro)',
+  sendToTrayIcon = '➡️',
   headerDragHandler
 }) => {
   return (
@@ -758,10 +764,11 @@ const CollapsibleHudCard: React.FC<CollapsibleHudCardProps> = ({
                 <button
                   type="button"
                   onClick={onSendToTray}
-                  title="Mandar este módulo a la Bandeja Derecha (quitar del centro)"
+                  title={sendToTrayTitle}
+                  aria-label={sendToTrayTitle}
                   className="w-4 h-4 flex items-center justify-center rounded text-[9px] bg-[#1a1e2a] hover:bg-amber-600 hover:text-black text-slate-400 hover:text-amber-300 transition-colors ml-0.5 cursor-pointer"
                 >
-                  ➡️
+                  {sendToTrayIcon}
                 </button>
               )}
             </div>
@@ -1027,6 +1034,32 @@ export const CombatHudView: React.FC = () => {
   };
 
   const [showRightModulesFilter, setShowRightModulesFilter] = useState(false);
+
+  // v5.9.0 (plan 23): bandeja de la columna izquierda. Cada panel está en la columna, en el centro o en la bandeja. [Claude Code · 2026-10-30]
+  const [leftCenterModules, setLeftCenterModules] = useState<LeftPanelId[]>(() => loadIdList(STORAGE_KEY_LEFT_CENTER, DEFAULT_LEFT_ORDER));
+  const [leftTrayModules, setLeftTrayModules] = useState<LeftPanelId[]>(() => loadIdList(STORAGE_KEY_LEFT_TRAY, DEFAULT_LEFT_ORDER));
+  const [isLeftTrayOpen, setIsLeftTrayOpen] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_LEFT_TRAY_OPEN);
+      if (saved !== null) return saved === '1';
+    } catch {}
+    // Arranca plegada para no empujar el Biomonitor hacia abajo; se recuerda si la abrís.
+    return false;
+  });
+  const [leftPreviewModule, setLeftPreviewModule] = useState<LeftPanelId | null>(null);
+  const toggleLeftTrayOpen = () => {
+    setIsLeftTrayOpen((prev) => {
+      try { localStorage.setItem(STORAGE_KEY_LEFT_TRAY_OPEN, prev ? '0' : '1'); } catch {}
+      return !prev;
+    });
+  };
+  const setLeftPanelPlace = (id: LeftPanelId, place: LeftPanelPlace) => {
+    const next = moveLeftPanelTo(id, place, leftCenterModules, leftTrayModules);
+    setLeftCenterModules(next.center);
+    setLeftTrayModules(next.tray);
+    saveIdList(STORAGE_KEY_LEFT_CENTER, next.center);
+    saveIdList(STORAGE_KEY_LEFT_TRAY, next.tray);
+  };
   const [empFeedback, setEmpFeedback] = useState<string | null>(null);
   const [combatRestDays, setCombatRestDays] = useState<number>(1);
   const [combatRestAntibodies, setCombatRestAntibodies] = useState<boolean>(false);
@@ -1387,7 +1420,7 @@ export const CombatHudView: React.FC = () => {
     localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(next));
   };
 
-  const [draggedItem, setDraggedItem] = useState<{ column: 'left' | 'right' | 'tray'; id: string } | null>(null);
+  const [draggedItem, setDraggedItem] = useState<{ column: 'left' | 'right' | 'tray' | 'leftTray'; id: string } | null>(null);
   const [dragOverItem, setDragOverItem] = useState<string | null>(null);
 
   const toggleBoxCollapse = (boxId: string) => {
@@ -1437,13 +1470,21 @@ export const CombatHudView: React.FC = () => {
     localStorage.setItem(STORAGE_KEY_LEFT_ORDER, JSON.stringify(DEFAULT_LEFT_ORDER));
     localStorage.setItem(STORAGE_KEY_RIGHT_ORDER, JSON.stringify(DEFAULT_RIGHT_ORDER));
     localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(DEFAULT_RIGHT_ORDER));
+    setLeftCenterModules([]);
+    setLeftTrayModules([]);
+    saveIdList(STORAGE_KEY_LEFT_CENTER, []);
+    saveIdList(STORAGE_KEY_LEFT_TRAY, []);
   };
 
   const moveLeftPanel = (panelId: LeftPanelId, direction: 'up' | 'down') => {
     const idx = leftColumnOrder.indexOf(panelId);
     if (idx === -1) return;
-    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
-    if (targetIdx < 0 || targetIdx >= leftColumnOrder.length) return;
+    // v5.9.0: salta los paneles que están en el centro o en la bandeja. [Claude Code · 2026-10-30]
+    const visible = splitLeftPanels(leftColumnOrder, leftCenterModules, leftTrayModules).column;
+    const vIdx = visible.indexOf(panelId);
+    const neighbour = visible[direction === 'up' ? vIdx - 1 : vIdx + 1];
+    const targetIdx = neighbour ? leftColumnOrder.indexOf(neighbour) : -1;
+    if (vIdx === -1 || targetIdx < 0 || targetIdx >= leftColumnOrder.length) return;
     const next = [...leftColumnOrder];
     const temp = next[idx];
     next[idx] = next[targetIdx];
@@ -1465,7 +1506,7 @@ export const CombatHudView: React.FC = () => {
     localStorage.setItem(STORAGE_KEY_ACTIVE_CENTER, JSON.stringify(next));
   };
 
-  const handleDragStart = (column: 'left' | 'right' | 'tray', id: string) => {
+  const handleDragStart = (column: 'left' | 'right' | 'tray' | 'leftTray', id: string) => {
     setDraggedItem({ column, id });
   };
 
@@ -1512,6 +1553,8 @@ export const CombatHudView: React.FC = () => {
     setDragOverItem(null);
     setIsTrayDragOver(false);
   };
+
+  const leftSplit = splitLeftPanels(leftColumnOrder, leftCenterModules, leftTrayModules);
 
   const [incomingDamageInput, setIncomingDamageInput] = useState<number>(10);
   const [damageFeedback, setDamageFeedback] = useState<string | null>(null);
@@ -3016,10 +3059,17 @@ export const CombatHudView: React.FC = () => {
   );
 
   // Renderizadores de Paneles Modulares y Reordenables
-  const renderLeftPanel = (id: LeftPanelId, index: number) => {
-    const isCollapsed = !!collapsedBoxes[id];
-    const canMoveUp = index > 0;
-    const canMoveDown = index < leftColumnOrder.length - 1;
+  const renderLeftPanel = (id: LeftPanelId, index: number, where: 'column' | 'center' | 'preview' = 'column') => {
+    const isCollapsed = where === 'preview' ? false : !!collapsedBoxes[id];
+    const canMoveUp = where === 'column' && index > 0;
+    const canMoveDown = where === 'column' && index < leftSplit.column.length - 1;
+    // v5.9.0 (plan 23): desde la columna va a la bandeja; desde el centro vuelve a la columna. [Claude Code · 2026-10-30]
+    const leftTrayProps =
+      where === 'column'
+        ? { onSendToTray: () => setLeftPanelPlace(id, 'tray'), sendToTrayTitle: 'Mandar a la bandeja izquierda (ocultar de la columna)', sendToTrayIcon: '📥' }
+        : where === 'center'
+          ? { onSendToTray: () => setLeftPanelPlace(id, 'column'), sendToTrayTitle: 'Volver a la columna izquierda', sendToTrayIcon: '⬅️' }
+          : {};
 
     switch (id) {
       case 'vitals':
@@ -3039,6 +3089,7 @@ export const CombatHudView: React.FC = () => {
             onDragStart={() => handleDragStart('left', 'vitals')}
             onDragOver={(e) => handleDragOver(e, 'vitals')}
             onDrop={() => handleDrop('left', 'vitals')}
+            {...leftTrayProps}
             isDragOver={dragOverItem === 'vitals'}
             accentBorderClass={isSeriouslyWounded ? 'border-red-600/60 shadow-md shadow-red-950/40' : 'border-[#232736]'}
             headerRight={
@@ -3420,6 +3471,7 @@ export const CombatHudView: React.FC = () => {
             onDragStart={() => handleDragStart('left', 'armor')}
             onDragOver={(e) => handleDragOver(e, 'armor')}
             onDrop={() => handleDrop('left', 'armor')}
+            {...leftTrayProps}
             isDragOver={dragOverItem === 'armor'}
             subHeaderControls={renderLeftPanelHeaderControls('armor', false, 0)}
           >
@@ -4119,6 +4171,7 @@ export const CombatHudView: React.FC = () => {
             onDragStart={() => handleDragStart('left', 'luck')}
             onDragOver={(e) => handleDragOver(e, 'luck')}
             onDrop={() => handleDrop('left', 'luck')}
+            {...leftTrayProps}
             isDragOver={dragOverItem === 'luck'}
             headerRight={
               <button
@@ -4206,6 +4259,7 @@ export const CombatHudView: React.FC = () => {
             onDragStart={() => handleDragStart('left', 'injuries')}
             onDragOver={(e) => handleDragOver(e, 'injuries')}
             onDrop={() => handleDrop('left', 'injuries')}
+            {...leftTrayProps}
             isDragOver={dragOverItem === 'injuries'}
             headerRight={
               <div className="flex gap-1 mr-1" onClick={(e) => e.stopPropagation()}>
@@ -4360,6 +4414,7 @@ export const CombatHudView: React.FC = () => {
             onDragStart={() => handleDragStart('left', 'cyberware')}
             onDragOver={(e) => handleDragOver(e, 'cyberware')}
             onDrop={() => handleDrop('left', 'cyberware')}
+            {...leftTrayProps}
             isDragOver={dragOverItem === 'cyberware'}
             subHeaderControls={renderLeftPanelHeaderControls('cyberware', isCyberwareAutoFull, cyberwareCount)}
           >
@@ -4496,6 +4551,7 @@ export const CombatHudView: React.FC = () => {
             onDragStart={() => handleDragStart('left', 'consumables')}
             onDragOver={(e) => handleDragOver(e, 'consumables')}
             onDrop={() => handleDrop('left', 'consumables')}
+            {...leftTrayProps}
             isDragOver={dragOverItem === 'consumables'}
             subHeaderControls={renderLeftPanelHeaderControls('consumables', isConsumablesAutoFull, drugsCount)}
           >
@@ -8575,6 +8631,16 @@ export const CombatHudView: React.FC = () => {
     }
   };
 
+  // v5.9.0 (plan 23): tarjetas de la bandeja izquierda. [Claude Code · 2026-10-30]
+  const LEFT_MODULES_METADATA: Array<{ id: LeftPanelId; shortTitle: string; icon: string; getSummary: () => string }> = [
+    { id: 'vitals', shortTitle: 'Biomonitor & Vitales', icon: '🩺', getSummary: () => `${activeChar?.currentHp ?? 0}/${maxHp} HP` },
+    { id: 'armor', shortTitle: 'Matriz de Blindaje', icon: '🛡️', getSummary: () => `Cabeza SP ${activeChar?.headArmor?.currentSp ?? 0} · Torso SP ${activeChar?.bodyArmor?.currentSp ?? 0}` },
+    { id: 'luck', shortTitle: 'Suerte', icon: '🍀', getSummary: () => `LUCK ${activeChar?.currentLuck ?? 0}/${activeChar?.stats?.LUCK ?? 0}` },
+    { id: 'injuries', shortTitle: 'Heridas Críticas', icon: '🩹', getSummary: () => `${activeChar?.activeInjuries?.length ?? 0} herida(s) activa(s)` },
+    { id: 'cyberware', shortTitle: 'Ciberware', icon: '🦾', getSummary: () => `${installedCyberware.length} implante(s)` },
+    { id: 'consumables', shortTitle: 'Consumibles', icon: '💊', getSummary: () => `💣 ${totalGrenadeCharges} · 💉 ${totalDrugCharges}` }
+  ];
+
   const RIGHT_MODULES_METADATA: Array<{
     id: RightPanelId;
     title: string;
@@ -8877,7 +8943,111 @@ export const CombatHudView: React.FC = () => {
             </div>
           </div>
 
-          {leftColumnOrder.map((panelId, idx) => renderLeftPanel(panelId, idx))}
+          {/* v5.9.0 (plan 23): bandeja de la columna izquierda, igual que la derecha. [Claude Code · 2026-10-30] */}
+          <div className="chamfer-card p-2.5 bg-[#0e1017] border border-[#22283a] space-y-2">
+            <button type="button" onClick={toggleLeftTrayOpen} className="w-full flex items-center justify-between gap-2 cursor-pointer" aria-expanded={isLeftTrayOpen}>
+              <span className="flex items-center gap-1.5 min-w-0">
+                {isLeftTrayOpen ? <ChevronDown className="w-3.5 h-3.5 text-cyan-400 shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
+                <span className="font-tech text-xs font-bold text-white uppercase tracking-wider truncate">🩺 Biomonitor & Vitales</span>
+              </span>
+              <span className="text-[10px] font-mono-code font-bold px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-300 border border-cyan-600/40 shrink-0" title="Paneles en la columna / en total">
+                {leftSplit.column.length}/{DEFAULT_LEFT_ORDER.length}
+              </span>
+            </button>
+            {isLeftTrayOpen && (
+              <>
+                <div
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (draggedItem && (draggedItem.column === 'left' || draggedItem.column === 'leftTray')) {
+                      setLeftPanelPlace(draggedItem.id as LeftPanelId, 'tray');
+                    }
+                    setDraggedItem(null);
+                    setDragOverItem(null);
+                  }}
+                  className="p-1.5 rounded border-2 border-dashed border-[#22283a] text-center text-[9px] font-tech uppercase tracking-wider text-slate-500 select-none"
+                >
+                  📥 Arrastrá un panel acá para mandarlo a la bandeja
+                </div>
+                <div className="space-y-1.5">
+                  {LEFT_MODULES_METADATA.map((mod) => {
+                    const place = placeOf(mod.id, leftCenterModules, leftTrayModules);
+                    const isPreviewing = leftPreviewModule === mod.id;
+                    return (
+                      <div
+                        key={mod.id}
+                        draggable
+                        onDragStart={() => handleDragStart('leftTray', mod.id)}
+                        className={`p-2 rounded border transition-all ${
+                          place === 'center'
+                            ? 'bg-[#121522] border-cyan-500/40'
+                            : place === 'tray'
+                              ? 'bg-[#0d0f16] border-[#1f2434] opacity-85 hover:opacity-100'
+                              : 'bg-[#10121a] border-[#1f2434]'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-1.5">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span title="Arrastrá este panel al centro" className="cursor-grab active:cursor-grabbing text-slate-500 hover:text-cyan-400 shrink-0">
+                              <GripVertical className="w-3.5 h-3.5" />
+                            </span>
+                            <span className="shrink-0">{mod.icon}</span>
+                            <span className="font-tech text-[11px] font-bold text-white truncate uppercase">{mod.shortTitle}</span>
+                          </div>
+                          <span
+                            className={`text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded shrink-0 border ${
+                              place === 'center'
+                                ? 'bg-cyan-950 text-cyan-300 border-cyan-600/50'
+                                : place === 'tray'
+                                  ? 'bg-[#161a24] text-slate-500 border-[#232838]'
+                                  : 'bg-emerald-950/60 text-emerald-300 border-emerald-600/40'
+                            }`}
+                          >
+                            {place === 'center' ? '✅ CENTRO' : place === 'tray' ? '💤 BANDEJA' : '📍 COLUMNA'}
+                          </span>
+                        </div>
+                        <div className="text-[10px] font-mono-code text-slate-400 my-1 truncate">{mod.getSummary()}</div>
+                        <div className="flex flex-wrap items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => setLeftPanelPlace(mod.id, place === 'center' ? 'column' : 'center')}
+                            className={`flex-1 min-w-[90px] py-1 px-1.5 rounded text-[10px] font-tech font-bold uppercase border transition-all cursor-pointer ${
+                              place === 'center'
+                                ? 'bg-[#181d2a] hover:bg-emerald-950/80 text-cyan-300 border-cyan-500/30'
+                                : 'bg-[#182030] hover:bg-cyan-500 hover:text-black text-slate-300 border-[#2b354d]'
+                            }`}
+                          >
+                            {place === 'center' ? '⬅️ A COLUMNA' : '➕ AL CENTRO'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setLeftPanelPlace(mod.id, place === 'tray' ? 'column' : 'tray')}
+                            className="py-1 px-1.5 rounded text-[10px] font-tech font-bold uppercase border bg-[#141724] hover:bg-amber-950/80 hover:text-amber-300 text-slate-400 border-[#242b3e] transition-all cursor-pointer"
+                          >
+                            {place === 'tray' ? '⬅️ A COLUMNA' : '➡️ A BANDEJA'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setLeftPreviewModule(isPreviewing ? null : mod.id)}
+                            className={`py-1 px-1.5 rounded text-[10px] font-mono-code border transition-all cursor-pointer ${
+                              isPreviewing ? 'bg-amber-500 text-black font-bold border-amber-400' : 'bg-[#141724] text-slate-400 hover:text-white border-[#242b3e]'
+                            }`}
+                            title="Ver este panel acá sin moverlo"
+                          >
+                            {isPreviewing ? '✖ VISTA' : '👁️ VISTA'}
+                          </button>
+                        </div>
+                        {isPreviewing && <div className="mt-2 pt-2 border-t border-[#20273a]">{renderLeftPanel(mod.id, 0, 'preview')}</div>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
+
+          {leftSplit.column.map((panelId, idx) => renderLeftPanel(panelId, idx))}
         </div>
 
         {/* COLUMNA CENTRAL (CONFIGURABLE Y ADAPTABLE AL ANCHO IZQUIERDO Y BANDEJA) */}
@@ -8885,6 +9055,14 @@ export const CombatHudView: React.FC = () => {
           className={`${getCenterColumnClass()} space-y-4`}
           onDragOver={(e) => e.preventDefault()}
           onDrop={() => {
+            // v5.9.0 (plan 23): también recibe paneles de la columna izquierda o de su bandeja. [Claude Code · 2026-10-30]
+            if (draggedItem && (draggedItem.column === 'left' || draggedItem.column === 'leftTray')) {
+              const id = draggedItem.id as LeftPanelId;
+              if (!leftCenterModules.includes(id)) setLeftPanelPlace(id, 'center');
+              setDraggedItem(null);
+              setDragOverItem(null);
+              return;
+            }
             if (draggedItem && draggedItem.column === 'tray') {
               const draggedPanelId = draggedItem.id as RightPanelId;
               if (!activeCenterModules.includes(draggedPanelId)) {
@@ -8899,8 +9077,9 @@ export const CombatHudView: React.FC = () => {
             }
           }}
         >
+          {leftSplit.center.map((panelId, idx) => renderLeftPanel(panelId, idx, 'center'))}
           {activeCenterModules.length === 0 ||
-          (telemetryDockMode === 'floating_pip' && activeCenterModules.length === 1 && activeCenterModules[0] === 'telemetry') ? (
+          (telemetryDockMode === 'floating_pip' && activeCenterModules.length === 1 && activeCenterModules[0] === 'telemetry') ? (leftSplit.center.length > 0 ? null : (
             <div className="p-8 text-center bg-[#10121a] border-2 border-dashed border-[#242b3d] rounded-md space-y-3">
               <div className="text-3xl">🗂️</div>
               <h4 className="font-tech text-sm font-bold text-slate-300 uppercase">Centro de Combate Despejado</h4>
@@ -8938,7 +9117,7 @@ export const CombatHudView: React.FC = () => {
                 </button>
               </div>
             </div>
-          ) : telemetryDockMode === 'split_sticky' && activeCenterModules.includes('telemetry') ? (
+          )) : telemetryDockMode === 'split_sticky' && activeCenterModules.includes('telemetry') ? (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
               <div className="lg:col-span-5 sticky top-3 space-y-4">
                 {renderRightPanel('telemetry', activeCenterModules.indexOf('telemetry'))}
