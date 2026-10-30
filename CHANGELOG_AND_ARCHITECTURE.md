@@ -117,6 +117,14 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.7.0] - 2026-10-30 (Qué ganás en cada rango de rol y filtro de skills por libro en el wizard) [Claude Code · 2026-10-30]
+* **Category**: Ficha (STREET LAB) y creador de personajes. Pedido de Giuliano, sin plan (tarea chica).
+* **What Changed**:
+  * Rangos de rol: la tira del rol arriba de HABILIDADES suma "¿Qué ganás más adelante?", con el próximo rango y su costo (60 × rango nuevo, Core p.410) y los 10 rangos con lo que da cada uno: el tuyo resaltado, los pasados con ✓ y los que vienen con su costo en IP. Los textos son los de la habilidad de rol del Core RED, con los ajustes de 2077 (CEMK RB p.25). En la pestaña ROL, los rangos bloqueados ya no se ven tan apagados.
+  * Wizard, paso de skills: botones "Todas (66)", "CEMK (46)" y "Solo Core RED (20)". El filtro solo cambia lo que se ve y avisa qué skills con puntos quedan ocultas.
+* **Files Modified**: `frontend/src/features/sheet/StreetLabView.tsx`; `frontend/src/features/creator/steps/SkillsStep.tsx`; `frontend/src/engine/__tests__/creatorV570.test.ts` (nuevo); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, tests y build. En el navegador local, tamaño iPad: Insurance (Medtech) y Connect (Fixer) muestran sus 10 rangos con costos; en el wizard, CEMK oculta Archery, "Solo Core RED" oculta Handgun, y se avisan las skills ocultas con puntos.
+
 ### [v5.6.0] - 2026-10-29 (La ficha que explica: STATs con tus números, líneas de ataque, Martial Arts en cuadros, Medtech y el rol primero) [Claude Code · 2026-10-29]
 * **Category**: Ficha (STREET LAB) (plan 21, `docs/plans/plan21-creador-tienda-ficha.md`, tercera y última versión).
 * **What Changed**:

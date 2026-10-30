@@ -165,15 +165,21 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
     );
   };
 
+  // v5.7.0 [Claude Code · 2026-10-30]: filtro por libro. CEMK trae 46 de las 66 skills del Core RED (Core pp.81-85).
+  const [bookFilter, setBookFilter] = React.useState<'all' | 'Core RED' | 'CEMK'>('all');
+  const inFilter = (s: SkillCatalogEntry) => bookFilter === 'all' || (bookFilter === 'CEMK' ? s.books.includes('CEMK') : !s.books.includes('CEMK'));
+  const hiddenWithPoints = catalog.filter((s) => !inFilter(s) && (draft.skills[keyFor(s) ?? ''] ?? 0) > 0).map((s) => s.name);
+
   const categories = useMemo(() => {
     const map = new Map<string, SkillCatalogEntry[]>();
-    for (const s of catalog) {
+    for (const s of catalog.filter(inFilter)) {
       const list = map.get(s.category) ?? [];
       list.push(s);
       map.set(s.category, list);
     }
     return [...map.entries()];
-  }, [catalog]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [catalog, bookFilter]);
 
   const spent = getSkillPointsSpent(draft);
   const roleAbility = role ? getRoleAbilityInfo(role, 'core', draft.era) : null;
@@ -313,7 +319,32 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
       {!method || (method === 'edgerunner' && !role) ? (
         <p className="text-xs text-[#f59e0b]">Elegí método y rol antes de repartir skills.</p>
       ) : (
-        categories.map(([category, list]) => (
+        <>
+        <div className="flex flex-wrap items-center gap-2 mb-3" role="group" aria-label="Filtrar skills por libro">
+          <span className="text-[11px] text-[#94a3b8] font-mono-code uppercase">Ver skills de:</span>
+          {([
+            ['all', `Todas (${catalog.length})`],
+            ['CEMK', `CEMK (${catalog.filter((s) => s.books.includes('CEMK')).length})`],
+            ['Core RED', `Solo Core RED (${catalog.filter((s) => !s.books.includes('CEMK')).length})`],
+          ] as const).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              aria-pressed={bookFilter === id}
+              onClick={() => setBookFilter(id)}
+              className={`min-h-[36px] px-3 text-xs font-mono-code font-bold rounded-xs border cursor-pointer ${bookFilter === id ? 'bg-[#22d3ee]/20 border-[#22d3ee] text-[#22d3ee]' : 'bg-[#11131c] border-[#232736] text-[#94a3b8] hover:text-white'}`}
+            >
+              {label}
+            </button>
+          ))}
+          {bookFilter !== 'all' && (
+            <p className="w-full text-[10px] text-[#64748b]">
+              {bookFilter === 'CEMK' ? 'Las skills que trae la ficha del CEMK (Edgerunners Mission Kit).' : 'Las skills que están en el Core RED pero no en el CEMK.'} El filtro solo cambia lo que ves: los puntos no se tocan.
+              {hiddenWithPoints.length > 0 && <span className="text-[#f59e0b]"> Con puntos y ocultas: {hiddenWithPoints.join(', ')}.</span>}
+            </p>
+          )}
+        </div>
+        {categories.map(([category, list]) => (
           <Panel key={category} title={category} className="mb-3">
             {(category === 'Ranged Weapon' || category === 'Fighting') && <p className="text-[11px] text-[#cbd5e1] mb-2">{WEAPON_SKILLS_NOTE}</p>}
             {category === 'Ranged Weapon' && (
@@ -417,7 +448,8 @@ export const SkillsStep: React.FC<StepProps> = ({ draft, update }) => {
               })}
             </div>
           </Panel>
-        ))
+        ))}
+        </>
       )}
     </div>
   );
