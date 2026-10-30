@@ -38,6 +38,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
       'Filtro de skills en el wizard: Todas (66), CEMK (46) o Solo Core RED (20).',
       'El filtro avisa si ocultó skills con puntos.',
       'Moda explicada en el wizard: para qué sirve y qué dice cada uno de los 10 estilos (Core pp.84, 102, 105, 328, 352).',
+      'Vivienda inicial: lo que elijas no cambia la plata inicial, y qué te da cada estilo de vida (Core pp.105, 377).',
       'Arreglo: la munición del paquete del rol dice cuántas balas trae (x100, x10; Core p.98).'
     ],
     filesTouched: [

@@ -27,13 +27,24 @@ export const HOUSING_OPTIONS: HousingOption[] = [
 export interface LifestyleOption {
   name: string;
   monthly: number;
+  /** v5.7.0 [Claude Code · 2026-10-30]: qué te da ese estilo de vida (Core p.377). */
+  descEs: string;
 }
 
 export const LIFESTYLE_OPTIONS: LifestyleOption[] = [
-  { name: 'Kibble', monthly: 100 },
-  { name: 'Generic Prepak', monthly: 300 },
-  { name: 'Good Prepak', monthly: 600 },
-  { name: 'Fresh Food', monthly: 1500 }
+  { name: 'Kibble', monthly: 100, descEs: 'Comida horrible, de la que no le darías a un perro que quieras. Una vez por mes podés ver una película o un braindance.' },
+  { name: 'Generic Prepak', monthly: 300, descEs: 'Comida bastante mejor que el kibble. Cada fin de semana podés salir a un buen bar o fiesta, o comer sentado en un buen restaurante.' },
+  { name: 'Good Prepak', monthly: 600, descEs: 'Comida como la de casi cualquier restaurante: artificial, pero sabe casi igual que la real. Salís a bares y restaurantes excelentes, y una vez por mes vas a un concierto en vivo o a un evento deportivo.' },
+  { name: 'Fresh Food', monthly: 1500, descEs: 'Comida real. Una vez por mes, si estás cansado y lejos de casa, te pagás un hotel cerca sin preocuparte. Vas a bares ejecutivos y una vez por mes comés en un restaurante de primer nivel.' }
+];
+
+/** Reglas del estilo de vida y la vivienda (Core pp.105, 377). */
+export const LIFESTYLE_RULES: readonly string[] = [
+  'El estilo de vida es cómo vivís: qué comés y cómo te divertís. Se paga al principio de cada mes.',
+  'Si gastás por encima de tu estilo de vida (una cena cara, una noche de fiesta), el GM te lo cobra aparte.',
+  'Si no pagás el estilo de vida a principio de mes, tenés una semana; después tirás un Death Save al empezar cada día que no pagues.',
+  'Si tenés que elegir entre alquiler y comida, mejor que te desalojen a morirte de hambre (Core p.377).',
+  'Dormir mal (en la calle, apretados: más de 1 + dormitorios personas) te deja fatigado: −2 a todo al otro día (Core p.377).',
 ];
 
 export const HOUSING_SOURCE = 'Core p.378';
