@@ -1330,7 +1330,35 @@ export const StreetLabView: React.FC = () => {
         
         {/* COLUMNA IZQUIERDA (7 COLS): MATRIZ DE HABILIDADES COMPACTA */}
         <div className="lg:col-span-7 space-y-3">
-          
+          {/* v5.6.0 [Claude Code · 2026-10-29]: el rol primero (plan 21). */}
+          {activeChar && (
+            <div className="chamfer-card px-3.5 py-2 bg-[#161320] border border-purple-500/40 flex flex-wrap items-center gap-2">
+              <span className="font-tech text-xs font-bold text-purple-300 uppercase">
+                {activeChar.role} · {activeChar.roleAbilityName} {activeChar.roleRank}
+              </span>
+              {(() => {
+                const parts: string[] = [];
+                const med = activeChar.medicineAllocation;
+                if (activeChar.role === 'Medtech' && med)
+                  parts.push(`Surgery ${med.surgery ?? 0} · Pharma ${med.pharmaceuticals ?? 0} · Cryo ${med.cryosystem ?? 0}`);
+                const mk = activeChar.makerAllocation;
+                if (activeChar.role === 'Tech' && mk)
+                  parts.push(`Field ${mk.field ?? 0} · Upgrade ${mk.upgrade ?? 0} · Fabrication ${mk.fabrication ?? 0} · Invention ${mk.invention ?? 0}`);
+                return parts.length > 0 && <span className="text-[11px] font-mono-code text-slate-300">{parts.join(' · ')}</span>;
+              })()}
+              <button
+                type="button"
+                onClick={() => {
+                  setRightColTab('roleAbility');
+                  document.getElementById('sheet-right-col')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                className="ml-auto px-3 py-1.5 text-[11px] font-tech font-bold uppercase bg-purple-600/20 border border-purple-500/50 text-purple-200 rounded hover:bg-purple-600/40 cursor-pointer"
+              >
+                Ver ROL
+              </button>
+            </div>
+          )}
+
           <div className="chamfer-card p-3.5 bg-[#121319] border border-[#232736]">
             
             {/* Header y Filtros */}
@@ -1549,7 +1577,7 @@ export const StreetLabView: React.FC = () => {
         </div>
 
         {/* COLUMNA DERECHA (5 COLS): ARSENAL, MOCHILA Y BILLETERA */}
-        <div className="lg:col-span-5 space-y-3">
+        <div id="sheet-right-col" className="lg:col-span-5 space-y-3">
           
           {/* Selector de Pestañas de Columna Derecha */}
           {/* [Claude Code · 2026-10-24] v5.0.0 (plan 16, decisión 12): flex-wrap para no desbordar a 375 px. */}
