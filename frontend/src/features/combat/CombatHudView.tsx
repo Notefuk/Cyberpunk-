@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { ArmorRepairDialog, type ArmorRepairTarget } from '../sheet/ArmorRepairDialog';
+import { useItemDisplayName } from '../sheet/ItemNameButton';
+import { nicknameKey } from '../../engine/itemNames';
 import { useCombatStore } from '../../store/useCombatStore';
 import { useEncounterStore } from '../../store/encounterStore';
 import { recordMyInitiative, getActiveTable, useActiveTable, publishDeathSave, shareRollWithTable } from '../../sync/tableSync';
@@ -866,6 +868,8 @@ export const CombatHudView: React.FC = () => {
   const restAndHealDays = useCharacterStore((state) => state.restAndHealDays);
   // v5.8.0 (plan 23): "Reparar" abre la regla del libro (Core p.140). [Claude Code · 2026-10-30]
   const [armorRepairTarget, setArmorRepairTarget] = useState<ArmorRepairTarget | null>(null);
+  // v5.8.0 (plan 23): nombre propio de los ítems (se edita en Street Lab). [Claude Code · 2026-10-30]
+  const itemName = useItemDisplayName();
   const installWeaponAttachment = useCharacterStore((state) => state.installWeaponAttachment);
   const removeWeaponAttachment = useCharacterStore((state) => state.removeWeaponAttachment);
   const applyTechUpgradeToWeapon = useCharacterStore((state) => state.applyTechUpgradeToWeapon);
@@ -3429,7 +3433,7 @@ export const CombatHudView: React.FC = () => {
                       <div>
                         <span className="text-[9px] font-mono-code text-[#64748b] block uppercase">CABEZA</span>
                         <span className="font-tech text-xs font-bold text-white block truncate max-w-[120px]">
-                          {activeChar?.headArmor?.name || 'Head'}
+                          {activeChar?.headArmor?.name ? itemName(nicknameKey.armor('head'), activeChar.headArmor.name) : 'Head'}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -3514,7 +3518,7 @@ export const CombatHudView: React.FC = () => {
                       <div>
                         <span className="text-[9px] font-mono-code text-[#64748b] block uppercase">TORSO</span>
                         <span className="font-tech text-xs font-bold text-white block truncate max-w-[120px]">
-                          {activeChar?.bodyArmor?.name || 'Body'}
+                          {activeChar?.bodyArmor?.name ? itemName(nicknameKey.armor('body'), activeChar.bodyArmor.name) : 'Body'}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -4426,7 +4430,7 @@ export const CombatHudView: React.FC = () => {
                         <div className="flex items-center justify-between font-bold text-white mb-0.5 gap-2">
                           <div className="flex items-center gap-1.5 min-w-0">
                             <span className={isEmpDisabled ? 'text-red-400 line-through truncate' : 'text-[#a855f7] truncate'}>
-                              {c.name}
+                              {itemName(nicknameKey.cyberware(c.id), c.name)}
                             </span>
                             {isEmpDisabled && (
                               <span className="text-[8px] font-mono-code px-1 rounded bg-red-950 text-red-300 border border-red-500/50 font-bold shrink-0">
@@ -5175,7 +5179,7 @@ export const CombatHudView: React.FC = () => {
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="font-tech text-base font-bold text-white tracking-wide group-hover/header:text-[#38bdf8] transition-colors">
-                              {w.name}
+                              {itemName(nicknameKey.weapon(w.instanceId), w.name)}
                             </span>
                             <span className="bg-[#38bdf8]/20 border border-[#38bdf8]/50 text-[#38bdf8] text-[9px] font-mono-code font-bold px-1.5 py-0.2 rounded-xs">
                               EN MANO
@@ -6341,7 +6345,7 @@ export const CombatHudView: React.FC = () => {
                                 )}
                                 <div className="min-w-0 flex-1">
                                   <div className="font-tech text-xs font-bold text-white truncate group-hover/wep:text-[#38bdf8] transition-colors flex items-center gap-1.5 flex-wrap">
-                                    <span>{w.name}</span>
+                                    <span>{itemName(nicknameKey.weapon(w.instanceId), w.name)}</span>
                                     <WeaponClassTooltip weaponInfo={weaponInfo} notes={w.notes}>
                                       <span className="text-[9px] font-mono-code px-1 rounded bg-cyan-950/60 text-cyan-300 border border-cyan-500/40 font-bold hover:border-cyan-400">
                                         {weaponInfo.weaponClass}

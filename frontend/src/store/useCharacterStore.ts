@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { pruneItemNicknames } from '../engine/itemNames';
 import { persist } from 'zustand/middleware';
 import type {
   ActiveCriticalInjury,
@@ -491,6 +492,8 @@ export interface CharacterStoreState {
   setGeneralSkill: (key: string, level: number) => void;
   /** v5.8.0 (plan 23): marca o desmarca una skill como favorita. [Claude Code · 2026-10-30] */
   toggleFavoriteSkill: (key: string) => void;
+  /** v5.8.0 (plan 23): pone o quita (null) el nombre propio de un ítem. [Claude Code · 2026-10-30] */
+  setItemNickname: (key: string, original: string, nick: { name: string; showOriginal: boolean } | null) => void;
   gmSetRoleRank: (rank: number) => void;
   setMakerAllocation: (alloc: MakerAllocation) => void;
   // v4.9.3 [Claude Code · 2026-10-23] Roles sociales: Team del Exec (Core p.154) y fans del Rockerboy (Core pp.144-145).
@@ -2621,6 +2624,18 @@ export const useCharacterStore = create<CharacterStoreState>()(
               ...c,
               favoriteSkills: favs.includes(key) ? favs.filter((k) => k !== key) : [...favs, key]
             };
+          })
+        }));
+      },
+
+      setItemNickname: (key, original, nick) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const next = { ...(pruneItemNicknames(c) ?? {}) };
+            if (nick && nick.name.trim()) next[key] = { name: nick.name.trim().slice(0, 60), showOriginal: nick.showOriginal, original };
+            else delete next[key];
+            return { ...c, itemNicknames: next };
           })
         }));
       },

@@ -49,3 +49,15 @@ describe('reparar blindaje pagándole a un Tech', () => {
     expect(active().transactions?.[0]).toMatchObject({ amount: -50, concept: 'Reparación de blindaje (torso): pago a un Tech' });
   });
 });
+
+describe('nombre propio de ítems', () => {
+  it('se pone y se quita sin tocar el nombre del libro', () => {
+    const w = active().equippedWeapons[0];
+    const key = `w:${w.instanceId}`;
+    useCharacterStore.getState().setItemNickname(key, w.name, { name: '  Cuchillo  ', showOriginal: false });
+    expect(active().itemNicknames?.[key]).toEqual({ name: 'Cuchillo', showOriginal: false, original: w.name });
+    expect(active().equippedWeapons[0].name).toBe(w.name);
+    useCharacterStore.getState().setItemNickname(key, w.name, null);
+    expect(active().itemNicknames?.[key]).toBeUndefined();
+  });
+});

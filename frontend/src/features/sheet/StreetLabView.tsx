@@ -35,6 +35,8 @@ import { OtherSkillsPanel } from './OtherSkillsPanel';
 import { readFavOnly, writeFavOnly } from './favoriteSkills';
 import { ArmorRepairDialog, type ArmorRepairTarget } from './ArmorRepairDialog';
 import { CompendiumShopModal } from './CompendiumShopModal';
+import { ItemNameButton, useItemDisplayName } from './ItemNameButton';
+import { nicknameKey } from '../../engine/itemNames';
 import type { CompendiumCategory } from '../compendium/CompendiumView';
 import { RoleAllocationPanel } from './RoleAllocationPanel';
 import {
@@ -373,6 +375,8 @@ export const StreetLabView: React.FC = () => {
   const [armorRepairTarget, setArmorRepairTarget] = useState<ArmorRepairTarget | null>(null);
   // v5.8.0 (plan 23): "+ Comprar / Añadir" abre el Compendium encima de la ficha. [Claude Code · 2026-10-30]
   const [shopCategory, setShopCategory] = useState<CompendiumCategory | null>(null);
+  // v5.8.0 (plan 23): nombre propio de los ítems (solo lo que se ve). [Claude Code · 2026-10-30]
+  const itemName = useItemDisplayName();
   const [expandedSkills, setExpandedSkills] = useState<Record<string, boolean>>({});
   const [allExpanded, setAllExpanded] = useState(false);
 
@@ -1611,7 +1615,7 @@ export const StreetLabView: React.FC = () => {
                                     const atk = weaponAttackLines(activeChar!, w);
                                     return (
                                       <li key={w.instanceId}>
-                                        {w.name}: {key === 'autofire' ? atk.burst : atk.single}
+                                        {itemName(nicknameKey.weapon(w.instanceId), w.name)}: {key === 'autofire' ? atk.burst : atk.single}
                                       </li>
                                     );
                                   })}
@@ -1762,8 +1766,9 @@ export const StreetLabView: React.FC = () => {
                   {/* Head */}
                   <div className="bg-[#171923] p-2 rounded border border-[#222636]">
                     <div className="text-[10px] text-[#64748b] uppercase">CABEZA</div>
-                    <div className="font-tech text-sm font-bold text-white truncate">
-                      {activeChar?.headArmor?.name || 'Head Armor'}
+                    <div className="font-tech text-sm font-bold text-white truncate flex items-center gap-1">
+                      <span className="truncate">{activeChar?.headArmor?.name ? itemName(nicknameKey.armor('head'), activeChar.headArmor.name) : 'Head Armor'}</span>
+                      {activeChar?.headArmor?.name && <ItemNameButton nickKey={nicknameKey.armor('head')} original={activeChar.headArmor.name} />}
                     </div>
                     <div className="flex items-center justify-between mt-1 text-[11px]">
                       <span className="text-[#38bdf8] font-bold">
@@ -1796,8 +1801,9 @@ export const StreetLabView: React.FC = () => {
                   {/* Body */}
                   <div className="bg-[#171923] p-2 rounded border border-[#222636]">
                     <div className="text-[10px] text-[#64748b] uppercase">TORSO</div>
-                    <div className="font-tech text-sm font-bold text-white truncate">
-                      {activeChar?.bodyArmor?.name || 'Body Armor'}
+                    <div className="font-tech text-sm font-bold text-white truncate flex items-center gap-1">
+                      <span className="truncate">{activeChar?.bodyArmor?.name ? itemName(nicknameKey.armor('body'), activeChar.bodyArmor.name) : 'Body Armor'}</span>
+                      {activeChar?.bodyArmor?.name && <ItemNameButton nickKey={nicknameKey.armor('body')} original={activeChar.bodyArmor.name} />}
                     </div>
                     <div className="flex items-center justify-between mt-1 text-[11px]">
                       <span className="text-[#38bdf8] font-bold">
@@ -1869,8 +1875,9 @@ export const StreetLabView: React.FC = () => {
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5 flex-wrap">
                                 <span className="font-tech text-sm font-bold text-white truncate">
-                                  {w.name}
+                                  {itemName(nicknameKey.weapon(w.instanceId), w.name)}
                                 </span>
+                                <ItemNameButton nickKey={nicknameKey.weapon(w.instanceId)} original={w.name} />
                                 <span className="text-[10px] font-mono-code bg-[#1f2434] text-[#38bdf8] px-1 rounded">
                                   {w.damage}
                                 </span>
@@ -2467,8 +2474,9 @@ export const StreetLabView: React.FC = () => {
                           <div>
                             <div className="flex items-center gap-1.5">
                               <span className="font-tech text-sm font-bold text-white truncate">
-                                {name}
+                                {itemName(nicknameKey.cyberware(id), name)}
                               </span>
+                              <ItemNameButton nickKey={nicknameKey.cyberware(id)} original={name} />
                               {isEmpDisabled && (
                                 <span className="text-[8px] font-mono-code px-1 rounded bg-red-950 text-red-400 border border-red-500/40 font-bold">
                                   ⚡ APAGADO
@@ -2557,8 +2565,9 @@ export const StreetLabView: React.FC = () => {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5">
                             <span className="font-tech text-sm font-bold text-white truncate">
-                              {item.name}
+                              {itemName(nicknameKey.inventory(item.id), item.name)}
                             </span>
+                            <ItemNameButton nickKey={nicknameKey.inventory(item.id)} original={item.name} />
                             <span className="text-[9px] font-mono-code bg-[#212638] text-[#38bdf8] px-1 rounded uppercase">
                               {item.category}
                             </span>
@@ -4137,7 +4146,7 @@ export const StreetLabView: React.FC = () => {
                   <div className="p-2.5 bg-[#10131d] rounded border border-[#1e2335] flex items-center justify-between">
                     <div>
                       <div className="text-[10px] font-mono-code text-slate-400 uppercase">
-                        Cabeza: {activeChar?.headArmor?.name || 'Head Armor'}
+                        Cabeza: {activeChar?.headArmor?.name ? itemName(nicknameKey.armor('head'), activeChar.headArmor.name) : 'Head Armor'}
                       </div>
                       <div className="font-mono-code text-xs font-bold text-white mt-0.5">
                         SP: <span className="text-cyan-400">{activeChar?.headArmor?.currentSp}</span> / {activeChar?.headArmor?.maxSp}
@@ -4157,7 +4166,7 @@ export const StreetLabView: React.FC = () => {
                   <div className="p-2.5 bg-[#10131d] rounded border border-[#1e2335] flex items-center justify-between">
                     <div>
                       <div className="text-[10px] font-mono-code text-slate-400 uppercase">
-                        Torso: {activeChar?.bodyArmor?.name || 'Body Armor'}
+                        Torso: {activeChar?.bodyArmor?.name ? itemName(nicknameKey.armor('body'), activeChar.bodyArmor.name) : 'Body Armor'}
                       </div>
                       <div className="font-mono-code text-xs font-bold text-white mt-0.5">
                         SP: <span className="text-cyan-400">{activeChar?.bodyArmor?.currentSp}</span> / {activeChar?.bodyArmor?.maxSp}
