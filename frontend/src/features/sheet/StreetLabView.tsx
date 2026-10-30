@@ -32,6 +32,7 @@ import { ipCostRoleRank, ipCostSkillLevel, canApplySpeedheal } from '../../engin
 import { useGameClockStore, currentBeatId, currentDayKey } from '../../store/gameClockStore';
 import { IpLedgerPanel } from './IpLedgerPanel';
 import { OtherSkillsPanel } from './OtherSkillsPanel';
+import { readFavOnly, writeFavOnly } from './favoriteSkills';
 import { RoleAllocationPanel } from './RoleAllocationPanel';
 import {
   getWeaponClassAndRebuildInfo,
@@ -268,6 +269,7 @@ export const StreetLabView: React.FC = () => {
   const updateCharacterMeta = useCharacterStore((state) => state.updateCharacterMeta);
   const updateStat = useCharacterStore((state) => state.updateStat);
   const updateSkill = useCharacterStore((state) => state.updateSkill);
+  const toggleFavoriteSkill = useCharacterStore((state) => state.toggleFavoriteSkill);
   const repairArmor = useCharacterStore((state) => state.repairArmor);
   const reloadWeapon = useCharacterStore((state) => state.reloadWeapon);
   const unequipWeapon = useCharacterStore((state) => state.unequipWeapon);
@@ -363,6 +365,9 @@ export const StreetLabView: React.FC = () => {
 
   // Skill filter and accordion state
   const [skillFilter, setSkillFilter] = useState<SkillFilterCategory>('all');
+  // v5.8.0 (plan 23): ☆ favoritas y filtro "Solo favoritas". [Claude Code · 2026-10-30]
+  const [favOnly, setFavOnly] = useState<boolean>(readFavOnly);
+  const toggleFavOnly = () => setFavOnly((prev) => { writeFavOnly(!prev); return !prev; });
   const [expandedSkills, setExpandedSkills] = useState<Record<string, boolean>>({});
   const [allExpanded, setAllExpanded] = useState(false);
 
@@ -540,7 +545,9 @@ export const StreetLabView: React.FC = () => {
   };
 
   // Filter skills based on tab
+  const favoriteSkills = activeChar?.favoriteSkills ?? [];
   const filteredSkillKeys = (Object.keys(SKILL_METADATA) as CombatSkillKey[]).filter((key) => {
+    if (favOnly && !favoriteSkills.includes(key)) return false;
     if (skillFilter === 'all') return true;
     return SKILL_METADATA[key].category === skillFilter;
   });
@@ -1454,10 +1461,29 @@ export const StreetLabView: React.FC = () => {
                   {tab.label}
                 </button>
               ))}
+              <button
+                type="button"
+                onClick={toggleFavOnly}
+                className={`px-2 py-0.5 rounded-2xs font-tech text-xs tracking-wider transition-all ${
+                  favOnly
+                    ? 'bg-amber-500 text-black font-bold'
+                    : 'bg-[#181a26] text-amber-300 hover:text-amber-200 border border-[#24293c]'
+                }`}
+                title="Mostrar solo las skills marcadas con ★ (también en OTRAS SKILLS)"
+              >
+                ★ SOLO FAVORITAS
+              </button>
             </div>
 
             {/* Lista compacta de habilidades con dropdowns */}
             <div className="space-y-1.5 max-h-[640px] overflow-y-auto pr-1">
+              {favOnly && filteredSkillKeys.length === 0 && (
+                <div className="text-[11px] text-slate-400 font-mono-code px-1 py-2">
+                  {favoriteSkills.length === 0
+                    ? 'Tocá ☆ en una skill para marcarla como favorita.'
+                    : 'Ninguna favorita en esta categoría.'}
+                </div>
+              )}
               {filteredSkillKeys.map((key) => {
                 const meta = SKILL_METADATA[key];
                 const lvl = activeChar?.skills?.[key] ?? 0;
@@ -1483,6 +1509,16 @@ export const StreetLabView: React.FC = () => {
                         ) : (
                           <ChevronRight className="w-3.5 h-3.5 text-[#64748b] shrink-0" />
                         )}
+
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); toggleFavoriteSkill(key); }}
+                          className={`text-sm leading-none cursor-pointer ${favoriteSkills.includes(key) ? 'text-amber-400' : 'text-[#475569] hover:text-amber-300'}`}
+                          title={favoriteSkills.includes(key) ? `Quitar ${meta.label} de favoritas` : `Marcar ${meta.label} como favorita`}
+                          aria-label={favoriteSkills.includes(key) ? `Quitar ${meta.label} de favoritas` : `Marcar ${meta.label} como favorita`}
+                        >
+                          {favoriteSkills.includes(key) ? '★' : '☆'}
+                        </button>
 
                         <span className="font-tech text-sm font-bold text-white tracking-wide">
                           {meta.label}

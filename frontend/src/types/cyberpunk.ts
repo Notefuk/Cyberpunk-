@@ -635,6 +635,8 @@ export interface CharacterSheet {
   // v4.9.1 [Claude Code · 2026-10-22]
   ipLog?: IpLogEntry[];
   ipLogArchivedTotals?: IpArchivedTotals;
+  /** v5.8.0 (plan 23): skills marcadas con ☆ en Street Lab (claves de combate o de `generalSkills`). [Claude Code · 2026-10-30] */
+  favoriteSkills?: string[];
 }
 
 export interface RollEntry {

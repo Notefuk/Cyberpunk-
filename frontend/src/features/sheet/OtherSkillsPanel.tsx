@@ -7,6 +7,7 @@ import { getSkillCatalog } from '../../engine/characterCreation';
 import { resolveSkillKey, normalizeCanonSkillName } from '../../data/characterCreationData';
 import { ipCostSkillLevel } from '../../engine/roleRules';
 import type { StatKey } from '../../types/cyberpunk';
+import { readFavOnly, writeFavOnly } from './favoriteSkills';
 
 interface Row {
   key: string;
@@ -28,10 +29,13 @@ export const OtherSkillsPanel: React.FC = () => {
   const activeChar = useCharacterStore((state) => state.getActiveCharacter());
   const raiseGeneralSkillWithIp = useCharacterStore((state) => state.raiseGeneralSkillWithIp);
   const setGeneralSkill = useCharacterStore((state) => state.setGeneralSkill);
+  const toggleFavoriteSkill = useCharacterStore((state) => state.toggleFavoriteSkill);
   const gmFreeEdit = useGmModeStore((s) => s.gmFreeEdit);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [onlyMine, setOnlyMine] = useState(false);
+  // v5.8.0 (plan 23): mismo filtro "Solo favoritas" que la lista de combate. [Claude Code · 2026-10-30]
+  const [favOnly, setFavOnly] = useState<boolean>(readFavOnly);
   const [message, setMessage] = useState<{ success: boolean; text: string } | null>(null);
 
   const general = activeChar?.generalSkills;
@@ -87,12 +91,16 @@ export const OtherSkillsPanel: React.FC = () => {
 
   const levelOf = (key: string) => general?.[key] ?? 0;
   const q = search.trim().toLowerCase();
+  const favs = activeChar.favoriteSkills ?? [];
+  const isFav = (key: string) => favs.includes(key);
   const visible = rows
-    .filter((r) => (!q || r.name.toLowerCase().includes(q)) && (!onlyMine || levelOf(r.key) > 0))
+    .filter((r) => (!q || r.name.toLowerCase().includes(q)) && (!onlyMine || levelOf(r.key) > 0) && (!favOnly || isFav(r.key)))
     .sort((a, b) => {
+      const fa = isFav(a.key) ? 0 : 1;
+      const fb = isFav(b.key) ? 0 : 1;
       const ha = levelOf(a.key) > 0 ? 0 : 1;
       const hb = levelOf(b.key) > 0 ? 0 : 1;
-      return ha - hb || a.name.localeCompare(b.name);
+      return fa - fb || ha - hb || a.name.localeCompare(b.name);
     });
 
   const showMessage = (success: boolean, text: string) => {
@@ -131,6 +139,10 @@ export const OtherSkillsPanel: React.FC = () => {
               <input type="checkbox" checked={onlyMine} onChange={(e) => setOnlyMine(e.target.checked)} />
               <span>mostrar solo las que tengo</span>
             </label>
+            <label className="flex items-center gap-1 text-[10px] text-amber-300 cursor-pointer">
+              <input type="checkbox" checked={favOnly} onChange={(e) => { setFavOnly(e.target.checked); writeFavOnly(e.target.checked); }} />
+              <span>★ solo favoritas</span>
+            </label>
           </div>
 
           {message && (
@@ -144,6 +156,15 @@ export const OtherSkillsPanel: React.FC = () => {
               return (
                 <div key={r.key} className="flex items-center justify-between gap-2 py-1 px-2 bg-[#151722] border border-[#222638] rounded">
                   <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                    <button
+                      type="button"
+                      onClick={() => toggleFavoriteSkill(r.key)}
+                      className={`text-sm leading-none cursor-pointer ${isFav(r.key) ? 'text-amber-400' : 'text-[#475569] hover:text-amber-300'}`}
+                      title={isFav(r.key) ? `Quitar ${r.name} de favoritas` : `Marcar ${r.name} como favorita`}
+                      aria-label={isFav(r.key) ? `Quitar ${r.name} de favoritas` : `Marcar ${r.name} como favorita`}
+                    >
+                      {isFav(r.key) ? '★' : '☆'}
+                    </button>
                     <span className="font-tech text-xs font-bold text-white">{r.name}</span>
                     {r.x2 && <span className="text-[9px] bg-[#dc2626]/20 text-[#dc2626] px-1 rounded font-bold">x2</span>}
                     {r.stat && <span className="text-[10px] bg-[#202538] text-[#94a3b8] px-1 rounded">{r.stat} ({statVal})</span>}
@@ -181,7 +202,11 @@ export const OtherSkillsPanel: React.FC = () => {
                 </div>
               );
             })}
-            {visible.length === 0 && <div className="text-[11px] text-slate-500">Sin resultados.</div>}
+            {visible.length === 0 && (
+              <div className="text-[11px] text-slate-500">
+                {favOnly && favs.length === 0 ? 'Tocá ☆ en una skill para marcarla como favorita.' : 'Sin resultados.'}
+              </div>
+            )}
           </div>
         </div>
       )}

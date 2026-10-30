@@ -489,6 +489,8 @@ export interface CharacterStoreState {
   raiseSkillWithIp: (skill: CombatSkillKey) => { success: boolean; message: string };
   raiseGeneralSkillWithIp: (key: string, x2: boolean, label: string) => { success: boolean; message: string };
   setGeneralSkill: (key: string, level: number) => void;
+  /** v5.8.0 (plan 23): marca o desmarca una skill como favorita. [Claude Code · 2026-10-30] */
+  toggleFavoriteSkill: (key: string) => void;
   gmSetRoleRank: (rank: number) => void;
   setMakerAllocation: (alloc: MakerAllocation) => void;
   // v4.9.3 [Claude Code · 2026-10-23] Roles sociales: Team del Exec (Core p.154) y fans del Rockerboy (Core pp.144-145).
@@ -2605,6 +2607,19 @@ export const useCharacterStore = create<CharacterStoreState>()(
             return {
               ...c,
               generalSkills: { ...(c.generalSkills ?? {}), [key]: Math.max(0, Math.min(10, level)) }
+            };
+          })
+        }));
+      },
+
+      toggleFavoriteSkill: (key: string) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const favs = c.favoriteSkills ?? [];
+            return {
+              ...c,
+              favoriteSkills: favs.includes(key) ? favs.filter((k) => k !== key) : [...favs, key]
             };
           })
         }));
