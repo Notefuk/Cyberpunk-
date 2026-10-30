@@ -41,7 +41,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
-type CompendiumCategory = 
+export type CompendiumCategory = 
   | 'all' 
   | 'weapons' 
   | 'armor' 
@@ -281,14 +281,15 @@ const CyberCategoryTooltip: React.FC<{
   );
 };
 
-export const CompendiumView: React.FC = () => {
+// v5.8.0 (plan 23): `initialCategory` para abrirlo desde Street Lab en la categoría de donde viene. [Claude Code · 2026-10-30]
+export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory }> = ({ initialCategory = 'all' }) => {
   const [compendiumMode, setCompendiumMode] = useState<'items' | 'systems'>('items');
   const [selectedBookFilter, setSelectedBookFilter] = useState<SourceBookId | 'all'>('all');
   const [isBookSummaryExpanded, setIsBookSummaryExpanded] = useState<boolean>(true);
 
   // Search & Filters for Items
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<CompendiumCategory>('all');
+  const [selectedCategory, setSelectedCategory] = useState<CompendiumCategory>(initialCategory);
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);
   const [spendMoneyMode, setSpendMoneyMode] = useState<boolean>(true);

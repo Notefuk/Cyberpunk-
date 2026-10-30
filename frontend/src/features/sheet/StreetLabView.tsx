@@ -34,6 +34,8 @@ import { IpLedgerPanel } from './IpLedgerPanel';
 import { OtherSkillsPanel } from './OtherSkillsPanel';
 import { readFavOnly, writeFavOnly } from './favoriteSkills';
 import { ArmorRepairDialog, type ArmorRepairTarget } from './ArmorRepairDialog';
+import { CompendiumShopModal } from './CompendiumShopModal';
+import type { CompendiumCategory } from '../compendium/CompendiumView';
 import { RoleAllocationPanel } from './RoleAllocationPanel';
 import {
   getWeaponClassAndRebuildInfo,
@@ -369,6 +371,8 @@ export const StreetLabView: React.FC = () => {
   const toggleFavOnly = () => setFavOnly((prev) => { writeFavOnly(!prev); return !prev; });
   // v5.8.0 (plan 23): "Reparar" abre la regla del libro (Core p.140) en vez de reparar al instante. [Claude Code · 2026-10-30]
   const [armorRepairTarget, setArmorRepairTarget] = useState<ArmorRepairTarget | null>(null);
+  // v5.8.0 (plan 23): "+ Comprar / Añadir" abre el Compendium encima de la ficha. [Claude Code · 2026-10-30]
+  const [shopCategory, setShopCategory] = useState<CompendiumCategory | null>(null);
   const [expandedSkills, setExpandedSkills] = useState<Record<string, boolean>>({});
   const [allExpanded, setAllExpanded] = useState(false);
 
@@ -555,6 +559,7 @@ export const StreetLabView: React.FC = () => {
 
   return (
     <div className="space-y-4 max-w-7xl mx-auto pb-8">
+      {shopCategory && <CompendiumShopModal initialCategory={shopCategory} onClose={() => setShopCategory(null)} />}
       {armorRepairTarget && (
         <ArmorRepairDialog
           target={armorRepairTarget}
@@ -1831,6 +1836,14 @@ export const StreetLabView: React.FC = () => {
                     <Crosshair className="w-3.5 h-3.5 text-[#dc2626]" />
                     <span>ARSENAL ({activeChar?.equippedWeapons?.length ?? 0})</span>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setShopCategory('weapons')}
+                    className="px-2 py-1 min-h-[32px] bg-[#10b981]/15 hover:bg-[#10b981] hover:text-black text-emerald-300 border border-emerald-500/40 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer"
+                    title="Abrir el Compendium para comprar o sumar gratis (loot)"
+                  >
+                    + Comprar / Añadir
+                  </button>
                 </div>
 
                 <div className="space-y-1.5">
@@ -2510,9 +2523,19 @@ export const StreetLabView: React.FC = () => {
                   <Package className="w-3.5 h-3.5 text-[#f59e0b]" />
                   <span>MOCHILA / INVENTARIO GENERAL ({(activeChar?.inventory ?? []).length})</span>
                 </div>
-                <span className="text-[10px] font-mono-code text-[#64748b]">
-                  EQUIPO, MUNICIÓN Y DROGAS
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-mono-code text-[#64748b] hidden sm:inline">
+                    EQUIPO, MUNICIÓN Y DROGAS
+                  </span>
+                  <button
+                      type="button"
+                      onClick={() => setShopCategory('gear')}
+                      className="px-2 py-1 min-h-[32px] bg-[#10b981]/15 hover:bg-[#10b981] hover:text-black text-emerald-300 border border-emerald-500/40 rounded text-[10px] font-mono-code font-bold transition-all cursor-pointer"
+                      title="Abrir el Compendium para comprar o sumar gratis (loot)"
+                    >
+                      + Comprar / Añadir
+                    </button>
+                </div>
               </div>
 
               {(activeChar?.inventory ?? []).length === 0 ? (
