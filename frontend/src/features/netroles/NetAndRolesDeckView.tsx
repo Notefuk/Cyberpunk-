@@ -52,6 +52,7 @@ import {
   MARTIAL_ARTS_FORMS,
   MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT
 } from '../../data/cyberfistsMartialArtsData';
+import { MartialCommonRules, MartialMoveBoxes } from '../martial/MartialMoveBoxes';
 import type { SoloCombatAwarenessAllocation, OwnedVehicle, TechWeaponUpgradeType } from '../../types/cyberpunk';
 import {
   WEAPON_ATTACHMENTS_CATALOG,
@@ -1962,6 +1963,8 @@ export const NetAndRolesDeckView: React.FC = () => {
             </span>
           </div>
 
+          <MartialCommonRules />
+
           {/* GRILLA DE LAS 27 FORMAS DE ARTES MARCIALES */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {MARTIAL_ARTS_FORMS.filter(f => martialCategoryFilter === 'all' ? true : f.sourceBook === martialCategoryFilter).map(form => {
@@ -2054,31 +2057,9 @@ export const NetAndRolesDeckView: React.FC = () => {
                           {form.sourcePage != null && <span className="text-[#64748b] ml-1">{form.sourceBook === 'core' ? 'Core' : 'Interface RED Vol. 4'} p.{form.sourcePage}</span>}
                         </div>
 
-                        {/* Los 2 Movimientos Especiales */}
-                        <div className="pt-2 border-t border-[#1b2234] space-y-1.5">
-                          <span className="text-[10px] font-tech font-bold text-red-400 uppercase tracking-wider block">
-                            ⚡ Movimientos Especiales ({form.moves.length}):
-                          </span>
-                          {form.moves.map(m => (
-                            <div key={m.id} className="bg-[#0b0e15] p-2 rounded-xs border border-[#1a2133] space-y-0.5 text-[10px] font-mono-code">
-                              <div className="flex items-center justify-between font-bold">
-                                <span className="text-white">{m.name}</span>
-                                <span className="text-amber-400">{m.isOpposed || m.resolutionDv === 0 ? `contra ${m.opposedBy ?? 'DEX + Evasion del rival'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
-                              </div>
-                              <div className="text-[9px] text-slate-400 font-sans leading-tight">
-                                <strong>Req:</strong> {m.requirements}
-                                {/once per turn|una vez por turno/i.test(m.requirements) && <span className="ml-1 text-amber-400 font-bold">(1 vez por turno)</span>}
-                              </div>
-                              <div className="text-[9px] text-slate-300 font-sans leading-tight">
-                                {m.effectDescription}
-                              </div>
-                              {m.damageBonusOrFormula && (
-                                <div className="text-[9px] text-[#f59e0b] font-bold">
-                                  Daño: {m.damageBonusOrFormula}
-                                </div>
-                              )}
-                            </div>
-                          ))}
+                        {/* Los 2 Movimientos Especiales (v5.6.0: en cuadros) */}
+                        <div className="pt-2 border-t border-[#1b2234]">
+                          <MartialMoveBoxes moves={form.moves} />
                         </div>
                       </div>
 

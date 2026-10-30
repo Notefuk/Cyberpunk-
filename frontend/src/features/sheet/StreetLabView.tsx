@@ -25,6 +25,7 @@ import { StatGuide } from '../creator/steps/StatGuide';
 import { CharacterCreatorWizard } from '../creator/CharacterCreatorWizard';
 import { CHARACTER_PORTRAITS_CATALOG } from '../../data/netAndRolesData';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT } from '../../data/cyberfistsMartialArtsData';
+import { MartialCommonRules, MartialMoveBoxes } from '../martial/MartialMoveBoxes';
 import { CEMK_FOLIO_METADATA_MAP } from '../../data/cemkFolioPremadesData';
 import { useGmModeStore } from '../../store/gmModeStore';
 import { ipCostRoleRank, ipCostSkillLevel, canApplySpeedheal } from '../../engine/roleRules';
@@ -3232,16 +3233,8 @@ export const StreetLabView: React.FC = () => {
                                     <span className="text-red-400 font-bold">1d10 + {totalAttack} (DEX {dex} + R{effectiveRank})</span>
                                   </div>
 
-                                  <div className="space-y-1 pt-1 border-t border-[#1d2436]">
-                                    {form.moves.map((m) => (
-                                      <div
-                                        key={m.id}
-                                        className="text-[10px] font-mono-code flex items-center justify-between bg-[#0e111a] px-2 py-1 rounded border border-[#1b2234]"
-                                      >
-                                        <span className="text-white font-bold">{m.name}</span>
-                                        <span className="text-amber-400 font-bold">{m.isOpposed ? `vs ${m.opposedBy ?? 'DEX + Evasion'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
-                                      </div>
-                                    ))}
+                                  <div className="pt-1 border-t border-[#1d2436]">
+                                    <MartialMoveBoxes moves={form.moves} />
                                   </div>
                                 </div>
                               )}
@@ -3252,6 +3245,8 @@ export const StreetLabView: React.FC = () => {
                     );
                   })()}
                 </div>
+
+                <MartialCommonRules />
 
                 {/* FILTROS Y BÚSQUEDA DEL CATÁLOGO DE 27 FORMAS */}
                 <div className="flex flex-wrap items-center gap-2 pt-1">
@@ -3359,36 +3354,8 @@ export const StreetLabView: React.FC = () => {
                               "{form.originAndFlavor}"
                             </div>
 
-                            {/* Movimientos Especiales */}
-                            <div className="space-y-1.5">
-                              <span className="text-[10px] font-tech font-bold text-red-400 uppercase tracking-wider block">
-                                ⚡ Movimientos Especiales ({form.moves.length}):
-                              </span>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                                {form.moves.map((m) => (
-                                  <div
-                                    key={m.id}
-                                    className="bg-[#0b0e16] p-2 rounded-xs border border-[#1d2538] space-y-0.5 text-[10px] font-mono-code"
-                                  >
-                                    <div className="flex items-center justify-between font-bold">
-                                      <span className="text-white">{m.name}</span>
-                                      <span className="text-amber-400">{m.isOpposed ? `vs ${m.opposedBy ?? 'DEX + Evasion'}` : `DV ${m.resolutionDv}`}{m.sourcePage && <span className="text-[#64748b] ml-1">p.{m.sourcePage}</span>}</span>
-                                    </div>
-                                    <div className="text-[9px] text-slate-400 font-sans leading-tight">
-                                      <strong>Req:</strong> {m.requirements}
-                                    </div>
-                                    <div className="text-[9px] text-slate-300 font-sans leading-tight">
-                                      {m.effectDescription}
-                                    </div>
-                                    {m.damageBonusOrFormula && (
-                                      <div className="text-[9px] text-amber-300 font-bold">
-                                        Daño: {m.damageBonusOrFormula}
-                                      </div>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
+                            {/* Movimientos Especiales (v5.6.0: en cuadros) */}
+                            <MartialMoveBoxes moves={form.moves} wide />
 
                             {/* Fila de Estado y Acciones: IP + Skill Chip + Rango Manual */}
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-[#1c2436] items-center">
