@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { ArmorRepairDialog, type ArmorRepairTarget } from '../sheet/ArmorRepairDialog';
 import { useCombatStore } from '../../store/useCombatStore';
 import { useEncounterStore } from '../../store/encounterStore';
 import { recordMyInitiative, getActiveTable, useActiveTable, publishDeathSave, shareRollWithTable } from '../../sync/tableSync';
@@ -863,7 +864,8 @@ export const CombatHudView: React.FC = () => {
   const toggleEmpDisableCyberware = useCharacterStore((state) => state.toggleEmpDisableCyberware);
   const clearAllEmpDisabledCyberware = useCharacterStore((state) => state.clearAllEmpDisabledCyberware);
   const restAndHealDays = useCharacterStore((state) => state.restAndHealDays);
-  const repairCharacterArmor = useCharacterStore((state) => state.repairCharacterArmor);
+  // v5.8.0 (plan 23): "Reparar" abre la regla del libro (Core p.140). [Claude Code · 2026-10-30]
+  const [armorRepairTarget, setArmorRepairTarget] = useState<ArmorRepairTarget | null>(null);
   const installWeaponAttachment = useCharacterStore((state) => state.installWeaponAttachment);
   const removeWeaponAttachment = useCharacterStore((state) => state.removeWeaponAttachment);
   const applyTechUpgradeToWeapon = useCharacterStore((state) => state.applyTechUpgradeToWeapon);
@@ -3450,9 +3452,9 @@ export const CombatHudView: React.FC = () => {
                           </button>
                           <button
                             type="button"
-                            onClick={() => repairArmor('head')}
+                            onClick={() => setArmorRepairTarget('head')}
                             className="py-0.5 px-1.5 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-[10px] font-bold transition-all text-center cursor-pointer"
-                            title="Reparar SP al máximo"
+                            title="Cómo se repara (Core p.140) y reparar al máximo"
                           >
                             Reparar
                           </button>
@@ -3535,9 +3537,9 @@ export const CombatHudView: React.FC = () => {
                           </button>
                           <button
                             type="button"
-                            onClick={() => repairArmor('body')}
+                            onClick={() => setArmorRepairTarget('body')}
                             className="py-0.5 px-1.5 bg-[#222534] hover:bg-[#10b981] hover:text-white text-[#94a3b8] border border-[#2c3246] rounded-xs font-mono-code text-[10px] font-bold transition-all text-center cursor-pointer"
-                            title="Reparar SP al máximo"
+                            title="Cómo se repara (Core p.140) y reparar al máximo"
                           >
                             Reparar
                           </button>
@@ -4052,11 +4054,7 @@ export const CombatHudView: React.FC = () => {
                     <button
                       type="button"
                       disabled={!activeChar?.headArmor || activeChar.headArmor.currentSp >= activeChar.headArmor.maxSp}
-                      onClick={() => {
-                        repairCharacterArmor('head', 'full', 0);
-                        setCombatRepairFeedback('Cabeza reparada al 100% SP.');
-                        setTimeout(() => setCombatRepairFeedback(null), 3000);
-                      }}
+                      onClick={() => setArmorRepairTarget('head')}
                       className="py-1 px-1.5 bg-[#1b2234] hover:bg-amber-500 hover:text-black disabled:opacity-40 disabled:cursor-not-allowed text-amber-300 border border-amber-500/30 rounded font-bold transition-all cursor-pointer truncate"
                     >
                       🛡️ Reparar Cabeza
@@ -4064,22 +4062,14 @@ export const CombatHudView: React.FC = () => {
                     <button
                       type="button"
                       disabled={!activeChar?.bodyArmor || activeChar.bodyArmor.currentSp >= activeChar.bodyArmor.maxSp}
-                      onClick={() => {
-                        repairCharacterArmor('body', 'full', 0);
-                        setCombatRepairFeedback('Torso reparado al 100% SP.');
-                        setTimeout(() => setCombatRepairFeedback(null), 3000);
-                      }}
+                      onClick={() => setArmorRepairTarget('body')}
                       className="py-1 px-1.5 bg-[#1b2234] hover:bg-amber-500 hover:text-black disabled:opacity-40 disabled:cursor-not-allowed text-amber-300 border border-amber-500/30 rounded font-bold transition-all cursor-pointer truncate"
                     >
                       🛡️ Reparar Torso
                     </button>
                     <button
                       type="button"
-                      onClick={() => {
-                        repairCharacterArmor('both', 'full', 0);
-                        setCombatRepairFeedback('Todo el blindaje reparado al 100% SP.');
-                        setTimeout(() => setCombatRepairFeedback(null), 3000);
-                      }}
+                      onClick={() => setArmorRepairTarget('both')}
                       className="py-1 px-1.5 bg-[#18261e] hover:bg-emerald-600 hover:text-white text-emerald-400 border border-emerald-500/40 rounded font-bold transition-all cursor-pointer truncate"
                     >
                       🛡️ Reparar Todo
@@ -4089,6 +4079,16 @@ export const CombatHudView: React.FC = () => {
                     <div className="text-[10px] font-mono-code text-emerald-300 bg-emerald-950/60 p-1 rounded border border-emerald-500/40">
                       ✓ {combatRepairFeedback}
                     </div>
+                  )}
+                  {armorRepairTarget && (
+                    <ArmorRepairDialog
+                      target={armorRepairTarget}
+                      onClose={() => setArmorRepairTarget(null)}
+                      onDone={(msg) => {
+                        setCombatRepairFeedback(msg);
+                        setTimeout(() => setCombatRepairFeedback(null), 3000);
+                      }}
+                    />
                   )}
                 </div>
               </div>

@@ -33,3 +33,19 @@ describe('skills favoritas', () => {
     expect(useCharacterStore.getState().characters.find((c) => c.id === 'b')!.favoriteSkills).toBeUndefined();
   });
 });
+
+describe('reparar blindaje pagándole a un Tech', () => {
+  it('sin monto no descuenta nada; con 50 €$ descuenta y deja la transacción', () => {
+    useCharacterStore.setState((st) => ({
+      characters: st.characters.map((c) => (c.id === 'a' ? { ...c, eurodollars: 200, transactions: [], bodyArmor: { ...c.bodyArmor, maxSp: 11, currentSp: 4 } } : c))
+    }));
+    const { repairCharacterArmor } = useCharacterStore.getState();
+    repairCharacterArmor('body', 'full', 0);
+    expect(active().bodyArmor.currentSp).toBe(11);
+    expect(active().eurodollars).toBe(200);
+    useCharacterStore.setState((st) => ({ characters: st.characters.map((c) => (c.id === 'a' ? { ...c, bodyArmor: { ...c.bodyArmor, currentSp: 4 } } : c)) }));
+    repairCharacterArmor('body', 'full', 50);
+    expect(active().eurodollars).toBe(150);
+    expect(active().transactions?.[0]).toMatchObject({ amount: -50, concept: 'Reparación de blindaje (torso): pago a un Tech' });
+  });
+});

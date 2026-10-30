@@ -33,6 +33,7 @@ import { useGameClockStore, currentBeatId, currentDayKey } from '../../store/gam
 import { IpLedgerPanel } from './IpLedgerPanel';
 import { OtherSkillsPanel } from './OtherSkillsPanel';
 import { readFavOnly, writeFavOnly } from './favoriteSkills';
+import { ArmorRepairDialog, type ArmorRepairTarget } from './ArmorRepairDialog';
 import { RoleAllocationPanel } from './RoleAllocationPanel';
 import {
   getWeaponClassAndRebuildInfo,
@@ -270,7 +271,6 @@ export const StreetLabView: React.FC = () => {
   const updateStat = useCharacterStore((state) => state.updateStat);
   const updateSkill = useCharacterStore((state) => state.updateSkill);
   const toggleFavoriteSkill = useCharacterStore((state) => state.toggleFavoriteSkill);
-  const repairArmor = useCharacterStore((state) => state.repairArmor);
   const reloadWeapon = useCharacterStore((state) => state.reloadWeapon);
   const unequipWeapon = useCharacterStore((state) => state.unequipWeapon);
   const setWeaponAmmoType = useCharacterStore((state) => state.setWeaponAmmoType);
@@ -299,7 +299,6 @@ export const StreetLabView: React.FC = () => {
   const toggleEmpDisableCyberware = useCharacterStore((state) => state.toggleEmpDisableCyberware);
   const clearAllEmpDisabledCyberware = useCharacterStore((state) => state.clearAllEmpDisabledCyberware);
   const restAndHealDays = useCharacterStore((state) => state.restAndHealDays);
-  const repairCharacterArmor = useCharacterStore((state) => state.repairCharacterArmor);
   const installWeaponAttachment = useCharacterStore((state) => state.installWeaponAttachment);
   const removeWeaponAttachment = useCharacterStore((state) => state.removeWeaponAttachment);
   const applyTechUpgradeToWeapon = useCharacterStore((state) => state.applyTechUpgradeToWeapon);
@@ -368,6 +367,8 @@ export const StreetLabView: React.FC = () => {
   // v5.8.0 (plan 23): ☆ favoritas y filtro "Solo favoritas". [Claude Code · 2026-10-30]
   const [favOnly, setFavOnly] = useState<boolean>(readFavOnly);
   const toggleFavOnly = () => setFavOnly((prev) => { writeFavOnly(!prev); return !prev; });
+  // v5.8.0 (plan 23): "Reparar" abre la regla del libro (Core p.140) en vez de reparar al instante. [Claude Code · 2026-10-30]
+  const [armorRepairTarget, setArmorRepairTarget] = useState<ArmorRepairTarget | null>(null);
   const [expandedSkills, setExpandedSkills] = useState<Record<string, boolean>>({});
   const [allExpanded, setAllExpanded] = useState(false);
 
@@ -554,6 +555,17 @@ export const StreetLabView: React.FC = () => {
 
   return (
     <div className="space-y-4 max-w-7xl mx-auto pb-8">
+      {armorRepairTarget && (
+        <ArmorRepairDialog
+          target={armorRepairTarget}
+          onClose={() => setArmorRepairTarget(null)}
+          onDone={(msg) => {
+            showStatus(msg);
+            setRepairFeedback(msg);
+            setTimeout(() => setRepairFeedback(null), 4000);
+          }}
+        />
+      )}
       {/* Modal / Overlay del Creador de Personajes en 6 Pasos */}
       {isWizardOpen && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto flex items-start justify-center">
@@ -1753,7 +1765,7 @@ export const StreetLabView: React.FC = () => {
                         {activeChar?.headArmor?.currentSp}/{activeChar?.headArmor?.maxSp} <TacticalTooltip term="SP">SP</TacticalTooltip>
                       </span>
                       <button
-                        onClick={() => repairArmor('head')}
+                        onClick={() => setArmorRepairTarget('head')}
                         className="text-[10px] text-[#f59e0b] hover:underline"
                       >
                         Reparar
@@ -1787,7 +1799,7 @@ export const StreetLabView: React.FC = () => {
                         {activeChar?.bodyArmor?.currentSp}/{activeChar?.bodyArmor?.maxSp} <TacticalTooltip term="SP">SP</TacticalTooltip>
                       </span>
                       <button
-                        onClick={() => repairArmor('body')}
+                        onClick={() => setArmorRepairTarget('body')}
                         className="text-[10px] text-[#f59e0b] hover:underline"
                       >
                         Reparar
@@ -4111,11 +4123,7 @@ export const StreetLabView: React.FC = () => {
                     <button
                       type="button"
                       disabled={!activeChar?.headArmor || activeChar.headArmor.currentSp >= activeChar.headArmor.maxSp}
-                      onClick={() => {
-                        repairCharacterArmor('head', 'full', 0);
-                        setRepairFeedback(`Armadura de cabeza reparada a ${activeChar?.headArmor?.maxSp} SP.`);
-                        setTimeout(() => setRepairFeedback(null), 4000);
-                      }}
+                      onClick={() => setArmorRepairTarget('head')}
                       className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:cursor-not-allowed text-black font-tech text-xs font-bold uppercase rounded transition-all cursor-pointer"
                     >
                       Reparar Cabeza
@@ -4135,11 +4143,7 @@ export const StreetLabView: React.FC = () => {
                     <button
                       type="button"
                       disabled={!activeChar?.bodyArmor || activeChar.bodyArmor.currentSp >= activeChar.bodyArmor.maxSp}
-                      onClick={() => {
-                        repairCharacterArmor('body', 'full', 0);
-                        setRepairFeedback(`Armadura de torso reparada a ${activeChar?.bodyArmor?.maxSp} SP.`);
-                        setTimeout(() => setRepairFeedback(null), 4000);
-                      }}
+                      onClick={() => setArmorRepairTarget('body')}
                       className="px-2.5 py-1 bg-amber-500 hover:bg-amber-400 disabled:opacity-30 disabled:cursor-not-allowed text-black font-tech text-xs font-bold uppercase rounded transition-all cursor-pointer"
                     >
                       Reparar Torso
@@ -4151,11 +4155,7 @@ export const StreetLabView: React.FC = () => {
                 <div className="flex justify-end pt-1">
                   <button
                     type="button"
-                    onClick={() => {
-                      repairCharacterArmor('both', 'full', 0);
-                      setRepairFeedback('Todo el blindaje (Cabeza y Torso) ha sido reparado a su SP máximo.');
-                      setTimeout(() => setRepairFeedback(null), 4000);
-                    }}
+                    onClick={() => setArmorRepairTarget('both')}
                     className="px-3 py-1 bg-[#1c2235] hover:bg-emerald-600 hover:text-white text-emerald-400 border border-emerald-500/40 rounded text-[11px] font-mono-code font-bold transition-all cursor-pointer flex items-center gap-1.5"
                   >
                     <span>🛡️ Reparar Todo el Blindaje (Cabeza + Torso)</span>

@@ -1466,7 +1466,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
               const tx: EurodollarTransaction = {
                 id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
                 timestamp: new Date().toISOString(),
-                concept: `Reparación de Blindaje (${location})`,
+                concept: `Reparación de blindaje (${location === 'head' ? 'cabeza' : location === 'body' ? 'torso' : 'cabeza y torso'}): pago a un Tech`,
                 amount: -costEurobucks,
                 balanceAfter: newBalance
               };
