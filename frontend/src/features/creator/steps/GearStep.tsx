@@ -73,7 +73,11 @@ const PackageList: React.FC<{
       <h4 className="text-[11px] font-mono-code text-[#64748b] uppercase mb-1">{title}</h4>
       <ul className="space-y-2">
         {entries.map((e) => {
-          const main = baseEntries.find((b) => b.key === e.key)?.name ?? e.name;
+          const base = baseEntries.find((b) => b.key === e.key);
+          // v5.7.0 [Claude Code · 2026-10-30]: la opción principal también dice cuántas trae ("x100"), como las alternativas (Core p.98).
+          const mainName = base?.name ?? e.name;
+          const mainQty = base?.qty ?? e.qty;
+          const main = mainQty > 1 && !/x\d+$/.test(mainName) ? `${mainName} x${mainQty}` : mainName;
           const options = [main, ...e.alternatives];
           return (
             <li key={e.key} className="bg-[#0a0b0e] border border-[#1e2334] rounded-xs p-2 text-xs">

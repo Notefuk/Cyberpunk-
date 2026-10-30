@@ -36,7 +36,8 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
     highlights: [
       '"¿Qué ganás más adelante?" en la tira del rol: los 10 rangos y su costo en IP (Core p.410).',
       'Filtro de skills en el wizard: Todas (66), CEMK (46) o Solo Core RED (20).',
-      'El filtro avisa si ocultó skills con puntos.'
+      'El filtro avisa si ocultó skills con puntos.',
+      'Arreglo: la munición del paquete del rol dice cuántas balas trae (x100, x10; Core p.98).'
     ],
     filesTouched: [
       'frontend/src/features/sheet/StreetLabView.tsx',
