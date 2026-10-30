@@ -26,6 +26,26 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.7.1',
+    date: '2026-10-30',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa',
+    title: 'Red Chrome Cargo solo para el GM',
+    summary: 'La misión Red Chrome Cargo deja de verse para los jugadores: la pestaña, el botón del HUD y su tarjeta en DATA PACKS solo aparecen para el GM.',
+    highlights: [
+      'En una mesa, solo el GM ve Red Chrome Cargo.',
+      'Sin mesa, se esconde mientras el PIN del GM esté puesto y sin desbloquear.'
+    ],
+    filesTouched: [
+      'frontend/src/store/gmAccess.ts',
+      'frontend/src/App.tsx',
+      'frontend/src/features/combat/CombatHudView.tsx',
+      'frontend/src/features/datapacks/DataPackManagerView.tsx'
+    ],
+    metricsBadge: 'v5.7.1 • Mesa • GM'
+  },
+  {
     version: 'v5.7.0',
     date: '2026-10-30',
     author: 'Claude Code',
@@ -1384,6 +1404,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.7.1': true,
     'v5.7.0': true,
     'v5.6.0': true,
     'v5.5.0': true,

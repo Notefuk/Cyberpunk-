@@ -21,6 +21,7 @@ import { useAuthStore } from './sync/authStore';
 import { initCloudSync } from './sync/cloudCharacters';
 import { startTableSync } from './sync/tableSync';
 import { captureInviteFromUrl } from './sync/inviteLink';
+import { canSeeGmOnly, useGmAccess } from './store/gmAccess';
 
 // Cada vista se carga al abrir su pestaña para no meter toda la app en un solo bundle.
 const CombatHudView = lazy(() => import('./features/combat/CombatHudView').then((m) => ({ default: m.CombatHudView })));
@@ -42,6 +43,11 @@ export default function App() {
   // [Claude Code · 2026-10-24] Plan 18: con un link ?unirse=… se abre directo la pestaña MESA.
   const [activeTab, setActiveTab] = useState<TabKey>(() => (captureInviteFromUrl() ? 'mesa' : 'combat'));
   const appTheme = useCharacterStore((state) => state.appTheme);
+  // v5.7.1 [Claude Code · 2026-10-30]: Red Chrome Cargo es una misión: solo la ve el GM (pedido de Giuliano).
+  const gmOnlyVisible = canSeeGmOnly(useGmAccess().mode);
+  useEffect(() => {
+    if (!gmOnlyVisible && activeTab === 'oneshot') setActiveTab('combat');
+  }, [gmOnlyVisible, activeTab]);
 
   // [Claude Code · 2026-10-24] v5.0.0 (plan 16): si ya había entrado a la nube, retoma la sesión.
   useEffect(() => { initCloudSync(); startTableSync(); void useAuthStore.getState().initAuth(); }, []);
@@ -137,7 +143,7 @@ export default function App() {
       {/* [Claude Code · 2026-10-24] v5.0.0: en el celular la barra de pestañas queda fija arriba de todo (el encabezado ya no). */}
       <nav className="border-b border-[#1f222e] bg-[#0d0e13] px-4 sticky top-0 md:top-[var(--hud-h,57px)] z-40">
         <div className="max-w-7xl mx-auto flex gap-1 overflow-x-auto no-scrollbar">
-          {tabs.map((tab) => {
+          {tabs.filter((tab) => tab.id !== 'oneshot' || gmOnlyVisible).map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button
@@ -177,7 +183,7 @@ export default function App() {
         {activeTab === 'packs' && <DataPackManagerView onNavigateTab={(tab) => setActiveTab(tab)} />}
         {activeTab === 'gm' && <FixerDeckView />}
         {activeTab === 'mesa' && <CloudTableView />}
-        {activeTab === 'oneshot' && <RedChromeCargoView />}
+        {activeTab === 'oneshot' && gmOnlyVisible && <RedChromeCargoView />}
         {activeTab === 'docs' && <SystemChangelogAndDocsView />}
         </Suspense>
       </main>

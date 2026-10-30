@@ -117,6 +117,14 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.7.1] - 2026-10-30 (Red Chrome Cargo solo para el GM) [Claude Code · 2026-10-30]
+* **Category**: Mesa / GM. Pedido de Giuliano, sin plan (tarea chica).
+* **What Changed**:
+  * Red Chrome Cargo es una misión, así que solo la ve el GM: la pestaña "🚆 RED CHROME CARGO", el botón "RED CHROME CARGO // THE HAMMERHEAD" del HUD y su tarjeta en DATA PACKS se esconden para el jugador de una mesa y, sin mesa, mientras el PIN del GM esté puesto y sin desbloquear. Al desbloquear el PIN (Fixer Deck o NET) vuelven a aparecer. Sin mesa y sin PIN se ve, porque la app no puede saber quién es el GM.
+  * Si alguien estaba en la pestaña y deja de tener acceso, vuelve al HUD.
+* **Files Modified**: `frontend/src/store/gmAccess.ts` (`canSeeGmOnly`); `frontend/src/App.tsx`; `frontend/src/features/combat/CombatHudView.tsx`; `frontend/src/features/datapacks/DataPackManagerView.tsx`; `frontend/src/store/__tests__/gmOnly.test.ts` (nuevo); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, tests y build. En el navegador local: sin PIN se ve; con PIN puesto desaparecen la pestaña, el botón del HUD y la tarjeta; al desbloquear el PIN en el Fixer Deck vuelve la pestaña; consola limpia. El caso del jugador de una mesa se cubre con el test (mismo modo `table-player` que ya usa el Fixer Deck); no se probó en el navegador.
+
 ### [v5.7.0] - 2026-10-30 (Qué ganás en cada rango de rol y filtro de skills por libro en el wizard) [Claude Code · 2026-10-30]
 * **Category**: Ficha (STREET LAB) y creador de personajes. Pedido de Giuliano, sin plan (tarea chica).
 * **What Changed**:

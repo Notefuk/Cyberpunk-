@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v5.7.0 OPERATIVO`  
+> **SYSTEM VERSION**: `v5.7.1 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-10-30]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  

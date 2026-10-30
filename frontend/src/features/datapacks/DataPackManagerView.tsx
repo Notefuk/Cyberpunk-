@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import coreData from '../../data/core-rules.cprpack.json';
+import { canSeeGmOnly, useGmAccess } from '../../store/gmAccess';
 import { EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
 import { ENEMIES_CATALOG } from '../../data/enemiesCatalog';
 import { 
@@ -426,14 +427,21 @@ export const DataPackManagerView: React.FC<DataPackManagerViewProps> = ({ onNavi
   const [selectedModuleId, setSelectedModuleId] = useState<string>('cemk_2077');
   const [downloadSuccess, setDownloadSuccess] = useState(false);
 
+  // v5.7.1 [Claude Code · 2026-10-30]: Red Chrome Cargo (misión) solo lo ve el GM.
+  const gmOnlyVisible = canSeeGmOnly(useGmAccess().mode);
+  const visibleModules = useMemo(
+    () => OFFICIAL_13_MODULES.filter((m) => m.id !== 'red_chrome_cargo' || gmOnlyVisible),
+    [gmOnlyVisible]
+  );
+
   const selectedModule = useMemo(() => {
-    return OFFICIAL_13_MODULES.find((m) => m.id === selectedModuleId) || OFFICIAL_13_MODULES[0];
-  }, [selectedModuleId]);
+    return visibleModules.find((m) => m.id === selectedModuleId) || visibleModules[0];
+  }, [selectedModuleId, visibleModules]);
 
   const filteredModules = useMemo(() => {
-    if (activeEraFilter === 'all') return OFFICIAL_13_MODULES;
-    return OFFICIAL_13_MODULES.filter((m) => m.era === activeEraFilter || m.era === 'both');
-  }, [activeEraFilter]);
+    if (activeEraFilter === 'all') return visibleModules;
+    return visibleModules.filter((m) => m.era === activeEraFilter || m.era === 'both');
+  }, [activeEraFilter, visibleModules]);
 
   const totalCatalogItems = useMemo(() => {
     return (

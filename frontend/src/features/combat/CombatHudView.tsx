@@ -46,6 +46,7 @@ import { MedtechTreatmentPanel } from '../netroles/MedtechTreatmentPanel';
 import { BackupCard } from './BackupCard';
 import { LawmanPanel } from '../roles/LawmanPanel';
 import { useGmModeStore } from '../../store/gmModeStore';
+import { canSeeGmOnly, useGmAccess } from '../../store/gmAccess';
 import type { WeaponItem, RollEntry, InventoryItem, AimedShotTarget, TechWeaponUpgradeType } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { MARTIAL_ARTS_FORMS, MARTIAL_ARTS_OFFICIAL_MANUAL_TEXT, type MartialHitKind } from '../../data/cyberfistsMartialArtsData';
@@ -823,6 +824,7 @@ const QUICKHACK_RANGE_BY_CONNECTION = { external: 6, external_plus: 8, neuroport
 export const CombatHudView: React.FC = () => {
   // Store hooks
   const activeChar = useCharacterStore((state) => state.getActiveCharacter());
+  const rccVisible = canSeeGmOnly(useGmAccess().mode);
   const adjustHp = useCharacterStore((state) => state.adjustHp);
   const setHp = useCharacterStore((state) => state.setHp);
   const ablateArmor = useCharacterStore((state) => state.ablateArmor);
@@ -8736,7 +8738,8 @@ export const CombatHudView: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <button
+          {/* v5.7.1 [Claude Code · 2026-10-30]: el atajo a Red Chrome Cargo solo para el GM. */}
+          {rccVisible && <button
             type="button"
             onClick={() => {
               const oneshotTabBtn = document.querySelector('button:has(svg.lucide-train)') as HTMLButtonElement | null;
@@ -8747,7 +8750,7 @@ export const CombatHudView: React.FC = () => {
           >
             <Train className="w-3.5 h-3.5 text-red-400" />
             <span>🚆 RED CHROME CARGO // THE HAMMERHEAD</span>
-          </button>
+          </button>}
 
           {/* BOTONES GLOBALES DE COLAPSO Y REORDENAMIENTO */}
           <button
