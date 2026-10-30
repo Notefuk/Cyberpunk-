@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { getSkillCatalog } from '../characterCreation';
 import { ROLE_ABILITIES_COMPLETE_PROGRESSION } from '../../data/weaponAndCyberwareTooltips';
 import { ipCostRoleRank } from '../roleRules';
+import { CORE_GEAR_SKILLS } from '../../data/creation';
+import { FASHION_STYLE_GUIDE } from '../../data/creation/fashionGuide';
 
 describe('Skills por libro (Core pp.81-85)', () => {
   it('el Core RED tiene 66 skills y el CEMK trae 46 de ellas', () => {
@@ -30,5 +32,15 @@ describe('Rangos de rol', () => {
   it('subir de rango cuesta 60 × el rango nuevo (Core p.410)', () => {
     expect(ipCostRoleRank(5)).toBe(300);
     expect(ipCostRoleRank(10)).toBe(600);
+  });
+});
+
+describe('Guía de moda (Core p.328)', () => {
+  it('los 10 estilos del Core tienen su texto', () => {
+    expect(CORE_GEAR_SKILLS.fashionStyles).toHaveLength(10);
+    for (const st of CORE_GEAR_SKILLS.fashionStyles) {
+      expect(FASHION_STYLE_GUIDE[st.name], st.name).toBeDefined();
+      expect(st.descriptors).toHaveLength(3);
+    }
   });
 });

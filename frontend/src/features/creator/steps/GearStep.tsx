@@ -2,6 +2,7 @@
 import React, { useMemo, useState } from 'react';
 import pack from '../../../data/core-rules.cprpack.json';
 import { CEMK_CREATION, CORE_GEAR_SKILLS } from '../../../data/creation';
+import { FASHION_STYLE_GUIDE, FASHION_WHAT_FOR } from '../../../data/creation/fashionGuide';
 import { parseHumanityLossAverage } from '../../../engine/characterEngine';
 import { deckSlotUse, effectiveUnitCost, needsFixer, neuroportCovers, priceTier, purchaseUnitCost, shopSourceLabel } from '../../../engine/creatorShop';
 import { WEAPON_ATTACHMENTS_CATALOG } from '../../../data/weaponAttachmentsAndTechData';
@@ -499,6 +500,31 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
           <p className="text-xs text-[#94a3b8] mb-2">
             {eb(money.fashionBudget)} solo para moda; lo que no uses se pierde. Estilos: Core p.{CORE_GEAR_SKILLS.fashionStyles[0].source.page ?? '?'} en adelante.
           </p>
+          {/* v5.7.0 [Claude Code · 2026-10-30]: para qué sirve la moda y qué dice cada estilo (Core pp.84, 102, 327-328, 352). */}
+          <details className="mb-2 text-[11px] text-[#cbd5e1] bg-[#0a0b0e] border border-[#1e2334] rounded-xs px-2 py-1">
+            <summary className="cursor-pointer text-[#22d3ee] font-bold">¿Para qué sirve la moda?</summary>
+            <ul className="mt-1 list-disc pl-4 space-y-0.5">
+              {FASHION_WHAT_FOR.map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+          </details>
+          <details className="mb-2 text-[11px] text-[#cbd5e1] bg-[#0a0b0e] border border-[#1e2334] rounded-xs px-2 py-1">
+            <summary className="cursor-pointer text-[#22d3ee] font-bold">Los 10 estilos: qué dicen de vos (Core p.328)</summary>
+            <ul className="mt-1 space-y-1">
+              {CORE_GEAR_SKILLS.fashionStyles.map((s) => {
+                const g = FASHION_STYLE_GUIDE[s.name];
+                const prices = Object.values(s.prices ?? {}).filter((v): v is number => typeof v === 'number');
+                return (
+                  <li key={s.name}>
+                    <b className="text-white">{s.name}</b> <span className="font-mono-code text-[10px] text-[#64748b]">({s.descriptors.join(', ')}{prices.length ? ` · ${eb(Math.min(...prices))} a ${eb(Math.max(...prices))} por pieza` : ''})</span>
+                    {g && <span>: {g.imageEs} <span className="text-[#94a3b8]">Encaja en: {g.fitsEs}</span></span>}
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-1 text-[10px] text-[#64748b]">Las 3 palabras de cada estilo son las del libro; dónde encaja es una sugerencia, lo decide tu mesa.</p>
+          </details>
           <div className="flex flex-wrap items-end gap-2">
             <label className="text-[11px] text-[#cbd5e1]">
               Estilo
@@ -528,6 +554,11 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
               Agregar {unit !== null ? `(${eb(unit * Math.max(1, fashionQty))})` : ''}
             </Btn>
           </div>
+          {style && FASHION_STYLE_GUIDE[style.name] && (
+            <p className="mt-1 text-[11px] text-[#94a3b8]">
+              <b className="text-white">{style.name}</b> ({style.descriptors.join(', ')}): {FASHION_STYLE_GUIDE[style.name].imageEs} Encaja en: {FASHION_STYLE_GUIDE[style.name].fitsEs}
+            </p>
+          )}
           {draft.fashion.length > 0 && (
             <ul className="mt-2 space-y-1">
               {draft.fashion.map((f, i) => (
