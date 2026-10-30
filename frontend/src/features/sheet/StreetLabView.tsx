@@ -37,6 +37,7 @@ import { ArmorRepairDialog, type ArmorRepairTarget } from './ArmorRepairDialog';
 import { CompendiumShopModal } from './CompendiumShopModal';
 import { ItemNameButton, useItemDisplayName } from './ItemNameButton';
 import { nicknameKey } from '../../engine/itemNames';
+import { InjuryPenaltyReminder } from './InjuryPenaltyReminder';
 import type { CompendiumCategory } from '../compendium/CompendiumView';
 import { RoleAllocationPanel } from './RoleAllocationPanel';
 import {
@@ -1459,6 +1460,9 @@ export const StreetLabView: React.FC = () => {
 
             {!isSkillsCollapsed && (
               <>
+
+            {/* v5.9.1: recordatorio de negativos por heridas críticas. [Claude Code · 2026-10-30] */}
+            <InjuryPenaltyReminder injuries={activeChar?.activeInjuries} compact />
 
             {/* Sub-pestañas de filtro de categoría */}
             <div className="flex flex-wrap gap-1 mb-3">
