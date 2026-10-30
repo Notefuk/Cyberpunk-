@@ -295,6 +295,7 @@
 ---
 
 ## 🔍 FASE 5 (v4.0): Auditoría Integral del Sistema (UI, Mecánicas y Revisión Manual por Manual de los ~60 PDFs) [PENDIENTE]
+> [Claude Code · 2026-10-30] Son 79 PDFs, no ~60. La lista completa con el estado de cada uno está en `docs/BIBLIOTECA.md` (14 adaptados, 4 a medias, 34 sin empezar, 27 que no se adaptan como datos).
 - [ ] **Guía de Verificación y Checklist de Auditoría Oficial**:
   - Matriz formal de validación cruzada para cada mecánica implementada contra el texto oficial de las reglas de R. Talsorian Games.
   - Criterios de aceptación rigurosos de fidelidad matemática: DVs por metro, fórmulas de daño, ablación de SP, penalizadores situacionales y multiplicadores críticos.
