@@ -19,6 +19,8 @@ import { SKILL_METADATA } from '../../types/cyberpunk';
 import coreData from '../../data/core-rules.cprpack.json';
 import { STAT_TOOLTIPS } from '../../data/characterCreationData';
 import { statInsights } from '../../engine/statInsights';
+import { weaponAttackLines } from '../../engine/weaponAttackLines';
+import { AUTOFIRE_RULES, AUTOFIRE_WARNING, WEAPON_SKILL_GUIDE, WEAPON_SKILLS_NOTE } from '../../data/creation/weaponSkillGuide';
 import { StatGuide } from '../creator/steps/StatGuide';
 import { CharacterCreatorWizard } from '../creator/CharacterCreatorWizard';
 import { CHARACTER_PORTRAITS_CATALOG } from '../../data/netAndRolesData';
@@ -1444,7 +1446,7 @@ export const StreetLabView: React.FC = () => {
                           <button
                             disabled={!gmFreeEdit || lvl <= 0}
                             onClick={() => updateSkill(key, Math.max(0, lvl - 1))}
-                            className="w-4 h-4 bg-[#1f2434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px] disabled:opacity-30"
+                            className="w-8 h-8 bg-[#1f2434] hover:bg-[#dc2626] text-white rounded flex items-center justify-center text-[10px] disabled:opacity-30"
                             title={gmFreeEdit ? `Reducir ${meta.label}` : 'Solo en modo GM'}
                           >
                             <Minus className="w-2.5 h-2.5" />
@@ -1458,7 +1460,7 @@ export const StreetLabView: React.FC = () => {
                               const res = raiseSkillWithIp(key);
                               showSkillMsg(res.success, res.message);
                             }}
-                            className="w-4 h-4 bg-[#1f2434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
+                            className="w-8 h-8 bg-[#1f2434] hover:bg-[#10b981] text-white rounded flex items-center justify-center text-[10px]"
                             title={gmFreeEdit ? `Aumentar ${meta.label} (modo GM)` : `Subir a ${lvl + 1}: ${ipCostSkillLevel(lvl + 1, !!meta.isDoubleCost)} IP`}
                           >
                             <Plus className="w-2.5 h-2.5" />
@@ -1477,6 +1479,46 @@ export const StreetLabView: React.FC = () => {
                         <p className="text-[11px] text-[#94a3b8] font-sans leading-relaxed">
                           {meta.summary}
                         </p>
+                        {WEAPON_SKILL_GUIDE[meta.label] && (
+                          <div className="font-sans text-[11px] space-y-1 border-t border-[#222638] pt-1.5">
+                            <p className="text-[#cbd5e1]">
+                              🎯 {WEAPON_SKILL_GUIDE[meta.label].weaponsEs}{' '}
+                              <span className="font-mono-code text-[10px] text-[#64748b]">
+                                {WEAPON_SKILL_GUIDE[meta.label].rollEs} · {WEAPON_SKILL_GUIDE[meta.label].page}
+                              </span>
+                            </p>
+                            {(() => {
+                              const mine = (activeChar?.equippedWeapons ?? []).filter((w) => {
+                                const atk = weaponAttackLines(activeChar!, w);
+                                return key === 'autofire' ? !!atk.burst : atk.skillKey === key;
+                              });
+                              if (mine.length === 0) return key === 'evasion' ? null : <p className="text-[10px] text-[#64748b]">Ninguna de tus armas usa esta skill.</p>;
+                              return (
+                                <ul className="text-[10px] font-mono-code text-[#10b981] space-y-0.5">
+                                  {mine.map((w) => {
+                                    const atk = weaponAttackLines(activeChar!, w);
+                                    return (
+                                      <li key={w.instanceId}>
+                                        {w.name}: {key === 'autofire' ? atk.burst : atk.single}
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              );
+                            })()}
+                            {key === 'autofire' && (
+                              <>
+                                <ul className="list-disc pl-4 text-[10px] text-[#cbd5e1] space-y-0.5">
+                                  {AUTOFIRE_RULES.map((r) => (
+                                    <li key={r}>{r}</li>
+                                  ))}
+                                </ul>
+                                <p className="text-[10px] text-[#f59e0b]">{AUTOFIRE_WARNING}</p>
+                              </>
+                            )}
+                            {key !== 'evasion' && <p className="text-[10px] text-[#64748b]">{WEAPON_SKILLS_NOTE}</p>}
+                          </div>
+                        )}
                         <div className="flex flex-wrap gap-1.5 pt-1">
                           {meta.examples.map((ex, idx) => (
                             <span
@@ -1807,6 +1849,20 @@ export const StreetLabView: React.FC = () => {
                               </button>
                             </div>
                           </div>
+
+                          {/* v5.6.0: con qué tirada pega el arma (Core pp.172-176), ráfaga y Suppressive Fire (Core pp.173-174). [Claude Code · 2026-10-29] */}
+                          {(() => {
+                            const atk = weaponAttackLines(activeChar, w);
+                            return (
+                              <div className="text-[11px] font-mono-code bg-[#0f111a] px-2 py-1.5 rounded border border-[#1b2030] space-y-0.5">
+                                <div className="text-[#10b981]">🎯 {atk.single}</div>
+                                {atk.penalties.length > 0 && <div className="text-[10px] text-[#94a3b8]">{atk.penalties.join(' · ')}</div>}
+                                {atk.burst && <div className="text-[#f59e0b]">💥 {atk.burst}</div>}
+                                {atk.burstWarning && <div className="text-[10px] text-[#dc2626]">{atk.burstWarning}</div>}
+                                {atk.suppressive && <div className="text-[10px] text-[#94a3b8]">{atk.suppressive}</div>}
+                              </div>
+                            );
+                          })()}
 
                           {/* Notas del arma si existen */}
                           {w.notes && (
