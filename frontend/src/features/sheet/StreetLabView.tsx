@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { 
   calculateMaxHp, 
@@ -329,6 +330,10 @@ export const StreetLabView: React.FC = () => {
   const [newRole, setNewRole] = useState('Solo');
 
   const [isImporting, setIsImporting] = useState(false);
+  // v5.9.2: un solo botón "Descargar" que pregunta: archivo para volver a cargar (.json) o PDF para imprimir. [Claude Code · 2026-11-04]
+  const [downloadMenuAt, setDownloadMenuAt] = useState<{ top: number; left: number } | null>(null);
+  const isDownloadMenuOpen = downloadMenuAt !== null;
+  const setIsDownloadMenuOpen = (open: boolean) => { if (!open) setDownloadMenuAt(null); };
   const [importJsonText, setImportJsonText] = useState('');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
@@ -478,6 +483,13 @@ export const StreetLabView: React.FC = () => {
     showStatus('¡Respaldo completo descargado!');
   };
 
+  // v5.9.2: el PDF es una foto de la pantalla para imprimir; no trae los datos de la ficha. [Claude Code · 2026-11-04]
+  const isPdfFile = (file: File) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+  const PDF_NOT_IMPORTABLE =
+    'Ese PDF es solo para leer o imprimir: no trae los datos de la ficha y no se puede volver a cargar.\n\n' +
+    'Para pasar o guardar una ficha usá DESCARGAR → "Archivo de la ficha (.json)" y cargá ese archivo acá. ' +
+    'O entrá con Google en MESA // CAMPAÑA y subila a la nube.';
+
   const readFileAsText = (file: File, onText: (text: string) => void) => {
     const reader = new FileReader();
     reader.onload = () => onText(String(reader.result ?? ''));
@@ -489,6 +501,10 @@ export const StreetLabView: React.FC = () => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
+    if (isPdfFile(file)) {
+      alert(PDF_NOT_IMPORTABLE);
+      return;
+    }
     readFileAsText(file, (text) => {
       let count = 0;
       let extrasCount = 0;
@@ -516,6 +532,10 @@ export const StreetLabView: React.FC = () => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
+    if (isPdfFile(file)) {
+      alert(PDF_NOT_IMPORTABLE);
+      return;
+    }
     readFileAsText(file, (text) => {
       if (importCharacterJson(text)) {
         showStatus('¡Ficha importada correctamente!');
@@ -761,13 +781,58 @@ export const StreetLabView: React.FC = () => {
             <Copy className="w-3.5 h-3.5" />
           </button>
 
-          <button
-            onClick={handleDownloadJson}
-            className="p-1 bg-[#171924] hover:bg-[#222838] text-[#cbd5e1] rounded-xs border border-[#2a3044] transition-all"
-            title="Descargar archivo JSON"
-          >
-            <Download className="w-3.5 h-3.5" />
-          </button>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={(e) => {
+                if (downloadMenuAt) { setDownloadMenuAt(null); return; }
+                // El menú va en un portal: la tarjeta de arriba recorta lo que se sale de ella.
+                const r = e.currentTarget.getBoundingClientRect();
+                setDownloadMenuAt({ top: r.bottom + 4, left: Math.max(8, Math.min(r.left, window.innerWidth - 296)) });
+              }}
+              className="p-1 px-1.5 bg-[#171924] hover:bg-[#10b981] hover:text-black text-[#10b981] rounded-xs border border-[#2a3044] transition-all flex items-center gap-1"
+              title="Descargar la ficha: archivo para volver a cargar (.json) o PDF para imprimir"
+              aria-expanded={isDownloadMenuOpen}
+              aria-haspopup="menu"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="text-[10px] font-mono-code font-bold">DESCARGAR</span>
+            </button>
+            {downloadMenuAt && createPortal(
+              <>
+                <div className="fixed inset-0 z-[1000]" onClick={() => setIsDownloadMenuOpen(false)} aria-hidden="true" />
+                <div role="menu" style={{ top: downloadMenuAt.top, left: downloadMenuAt.left }} className="fixed z-[1001] w-72 max-w-[85vw] bg-[#10121a] border border-[#2a3044] rounded-xs shadow-xl p-1 space-y-1">
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => { setIsDownloadMenuOpen(false); handleDownloadJson(); }}
+                    className="w-full text-left p-2 rounded-xs hover:bg-[#142320] border border-emerald-500/30 cursor-pointer"
+                  >
+                    <div className="flex items-center gap-1.5 text-xs font-tech font-bold text-emerald-300">
+                      <Download className="w-3.5 h-3.5" /> Archivo de la ficha (.json) <span className="text-[9px] font-mono-code text-emerald-400/80">RECOMENDADO</span>
+                    </div>
+                    <div className="text-[10px] font-mono-code text-slate-400 mt-0.5">
+                      Trae toda la ficha. Sirve para volver a cargarla con IMPORTAR FICHA o pasársela a otra persona.
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => { setIsDownloadMenuOpen(false); window.print(); }}
+                    className="w-full text-left p-2 rounded-xs hover:bg-[#1a1d2a] border border-[#2a3044] cursor-pointer"
+                  >
+                    <div className="flex items-center gap-1.5 text-xs font-tech font-bold text-slate-200">
+                      <Printer className="w-3.5 h-3.5" /> PDF para imprimir
+                    </div>
+                    <div className="text-[10px] font-mono-code text-slate-400 mt-0.5">
+                      Solo para leer o imprimir. <strong className="text-amber-300">No se puede volver a cargar en la app.</strong>
+                    </div>
+                  </button>
+                </div>
+              </>,
+              document.body
+            )}
+          </div>
 
           <button
             onClick={() => setIsImporting(!isImporting)}
@@ -775,15 +840,6 @@ export const StreetLabView: React.FC = () => {
             title="Importar ficha desde JSON"
           >
             <Upload className="w-3.5 h-3.5" />
-          </button>
-
-          <button
-            onClick={() => window.print()}
-            className="p-1 bg-[#171924] hover:bg-[#10b981] hover:text-black text-[#10b981] rounded-xs border border-[#2a3044] transition-all flex items-center gap-1 px-1.5"
-            title="Imprimir Ficha / Dossier como PDF"
-          >
-            <Printer className="w-3.5 h-3.5" />
-            <span className="hidden md:inline text-[10px] font-mono-code font-bold">PDF</span>
           </button>
 
           {characters.length > 1 && (
@@ -818,14 +874,14 @@ export const StreetLabView: React.FC = () => {
           title="Restaurar un respaldo completo desde archivo"
         >
           RESTAURAR RESPALDO ⬆
-          <input type="file" accept=".json" className="hidden" onChange={handleRestoreBackupFile} />
+          <input type="file" accept=".json,.pdf" className="hidden" onChange={handleRestoreBackupFile} />
         </label>
         <label
           className="px-2 py-1 bg-[#171924] hover:bg-[#38bdf8] hover:text-black text-[#38bdf8] text-[10px] font-mono-code font-bold rounded-xs border border-[#2a3044] transition-all cursor-pointer"
           title="Importar una ficha desde archivo JSON"
         >
           IMPORTAR FICHA (archivo)
-          <input type="file" accept=".json" className="hidden" onChange={handleImportCharacterFile} />
+          <input type="file" accept=".json,.pdf" className="hidden" onChange={handleImportCharacterFile} />
         </label>
         <button
           onClick={handleRestorePremades}

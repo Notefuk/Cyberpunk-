@@ -117,6 +117,14 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.9.2] - 2026-11-04 (Un solo botón DESCARGAR y aviso al importar un PDF) [Claude Code · 2026-11-04]
+* **Category**: Ficha (STREET LAB). Pedido de Giuliano, sin plan (tarea chica): un jugador bajó la ficha como PDF con el botón de la impresora y después no se podía volver a cargar.
+* **What Changed**:
+  * Los dos íconos sin texto (⬇ JSON y 🖨️ PDF) pasan a ser un solo botón "DESCARGAR" con dos opciones: "Archivo de la ficha (.json)" (RECOMENDADO: trae toda la ficha, se vuelve a cargar con IMPORTAR FICHA o se le pasa a otro) y "PDF para imprimir" (solo para leer o imprimir; avisa que no se puede volver a cargar). El menú va en un portal para que la tarjeta no lo recorte.
+  * IMPORTAR FICHA y RESTAURAR RESPALDO aceptan elegir un PDF solo para explicar qué pasa: "Ese PDF es solo para leer o imprimir…" y cómo bajar el .json o subir la ficha a la nube desde MESA.
+* **Files Modified**: `frontend/src/features/sheet/StreetLabView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, tests y build. En el navegador local: DESCARGAR abre el menú con las dos opciones y se ve encima de la tarjeta; elegir un PDF en IMPORTAR FICHA muestra el aviso; consola limpia.
+
 ### [v5.9.1] - 2026-10-30 (Recordatorio de negativos por Heridas Críticas) [Claude Code · 2026-10-30]
 * **Category**: HUD y ficha (STREET LAB). Pedido de Giuliano, sin plan (tarea chica).
 * **What Changed**:
