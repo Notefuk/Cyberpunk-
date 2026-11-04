@@ -161,3 +161,13 @@
     transform: scale(var(--cpr-enter-scale, 1));
   }
 }
+
+/* v5.9.3: al imprimir, las listas con alto fijo y barra (skills, arsenal, mochila…) salen completas en vez de cortarse. [Claude Code · 2026-11-04] */
+@media print {
+  [class*="max-h-"],
+  .overflow-y-auto,
+  .overflow-auto {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
