@@ -818,14 +818,19 @@ export const StreetLabView: React.FC = () => {
                   <button
                     type="button"
                     role="menuitem"
-                    onClick={() => { setIsDownloadMenuOpen(false); window.print(); }}
+                    onClick={() => {
+                      setIsDownloadMenuOpen(false);
+                      // El PDF no puede llevar los datos: se baja también el .json para poder volver a cargarla.
+                      handleDownloadJson();
+                      setTimeout(() => window.print(), 400);
+                    }}
                     className="w-full text-left p-2 rounded-xs hover:bg-[#1a1d2a] border border-[#2a3044] cursor-pointer"
                   >
                     <div className="flex items-center gap-1.5 text-xs font-tech font-bold text-slate-200">
-                      <Printer className="w-3.5 h-3.5" /> PDF para imprimir
+                      <Printer className="w-3.5 h-3.5" /> PDF para imprimir + archivo (.json)
                     </div>
                     <div className="text-[10px] font-mono-code text-slate-400 mt-0.5">
-                      Solo para leer o imprimir. <strong className="text-amber-300">No se puede volver a cargar en la app.</strong>
+                      Baja el .json y abre la impresión. El PDF es solo para leer o imprimir: <strong className="text-amber-300">para volver a cargar la ficha usá el .json.</strong>
                     </div>
                   </button>
                 </div>

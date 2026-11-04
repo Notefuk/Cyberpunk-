@@ -34,7 +34,7 @@ export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
     title: 'Un solo botón DESCARGAR y aviso al importar un PDF',
     summary: 'DESCARGAR pregunta qué querés: el archivo de la ficha (.json), que se vuelve a cargar, o el PDF para imprimir, que no. Si alguien intenta importar un PDF, la app le explica qué hacer.',
     highlights: [
-      'DESCARGAR → "Archivo de la ficha (.json)" (recomendado) o "PDF para imprimir".',
+      'DESCARGAR → "Archivo de la ficha (.json)" (recomendado) o "PDF para imprimir + archivo (.json)", que baja los dos.',
       'Importar un PDF avisa que es solo para imprimir y cómo pasar la ficha.'
     ],
     filesTouched: ['frontend/src/features/sheet/StreetLabView.tsx'],
