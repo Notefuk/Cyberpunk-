@@ -23,6 +23,7 @@ import {
   query,
   serverTimestamp,
   setDoc,
+  Timestamp,
   updateDoc,
   where,
   type Firestore,
@@ -390,5 +391,104 @@ describe('mesa compartida (plan 19)', () => {
     await assertFails(updateDoc(doc(db('bob'), pub + 'pc-c1'), { initiative: 1 }));
     // El GM corrige cualquier iniciativa.
     await assertSucceeds(updateDoc(doc(db('gm'), pub + 'pc-c1'), { initiative: 10 }));
+  });
+});
+
+// v5.10.0 (plan 24): pasarle una ficha a otro jugador con un código de 24 h. [Claude Code · 2026-11-04]
+describe('traspaso de fichas (plan 24)', () => {
+  const CODE = 'K7P4QX9M2R';
+  const inHours = (h: number) => Timestamp.fromMillis(Date.now() + h * 3600_000);
+  const transfer = (over: Record<string, unknown> = {}) => ({
+    charId: 'c1', fromUid: 'alice', fromName: 'Alice', handle: 'Vex', role: 'Nomad', roleRank: 4,
+    createdAt: Timestamp.now(), expiresAt: inHours(24), ...over,
+  });
+  // Lo que hace el que recibe: un solo updateDoc con el dueño nuevo, sin código y con sus campos de escritor.
+  const claim = (fs: Firestore, uidW: string, campaignIds: string[] = []) => updateDoc(
+    doc(fs, 'characters', 'c1'),
+    'ownerUid', uidW.split('_')[0],
+    'transferCode', deleteField(),
+    'campaignIds', campaignIds,
+    new FieldPath('_w', uidW), serverTimestamp(),
+    '_lastWriter', uidW,
+    '_ts', serverTimestamp(),
+  );
+
+  it('el dueño crea el código de su ficha; nadie lo crea para una ficha ajena ni por más de 24 h', async () => {
+    await seed(['characters', 'c1'], baseChar('alice'));
+    await assertSucceeds(setDoc(doc(db('alice'), 'transfers', CODE), transfer()));
+    await assertFails(setDoc(doc(db('bob'), 'transfers', 'AAAAABBBBB'), transfer({ fromUid: 'bob' })));
+    await assertFails(setDoc(doc(db('alice'), 'transfers', 'CCCCCDDDDD'), transfer({ expiresAt: inHours(48) })));
+    await assertFails(setDoc(doc(db('alice'), 'transfers', 'CORTO'), transfer()));
+    await assertFails(setDoc(doc(db('alice'), 'transfers', 'EEEEEFFFFF'), transfer({ extra: 1 })));
+  });
+
+  it('con sesión se lee un código; nadie lista los códigos; el que lo creó lo cancela', async () => {
+    await seed(['characters', 'c1'], baseChar('alice'));
+    await seed(['transfers', CODE], transfer());
+    await assertSucceeds(getDoc(doc(db('bob'), 'transfers', CODE)));
+    await assertFails(getDoc(doc(anon(), 'transfers', CODE)));
+    await assertFails(getDocs(collection(db('bob'), 'transfers')));
+    await assertFails(deleteDoc(doc(db('bob'), 'transfers', CODE)));
+    await assertSucceeds(deleteDoc(doc(db('alice'), 'transfers', CODE)));
+  });
+
+  it('otro jugador recibe la ficha con el código correcto; después la lee y el viejo dueño no', async () => {
+    await seed(['characters', 'c1'], { ...baseChar('alice'), transferCode: CODE });
+    await seed(['transfers', CODE], transfer());
+    await assertSucceeds(claim(db('bob'), 'bob_dev1'));
+    await assertSucceeds(getDoc(doc(db('bob'), 'characters/c1')));
+    await assertFails(getDoc(doc(db('alice'), 'characters/c1')));
+    // El nuevo dueño borra el código usado.
+    await assertSucceeds(deleteDoc(doc(db('bob'), 'transfers', CODE)));
+  });
+
+  it('no se recibe con código vencido, de otra ficha, sin código en la ficha, ni cambiando otros campos', async () => {
+    await seed(['characters', 'c1'], { ...baseChar('alice'), transferCode: CODE });
+    await seed(['transfers', CODE], transfer({ expiresAt: Timestamp.fromMillis(Date.now() - 1000) }));
+    await assertFails(claim(db('bob'), 'bob_dev1'));
+
+    await seed(['transfers', CODE], transfer({ charId: 'otra' }));
+    await assertFails(claim(db('bob'), 'bob_dev1'));
+
+    await seed(['transfers', CODE], transfer());
+    await assertFails(updateDoc(
+      doc(db('bob'), 'characters', 'c1'),
+      'ownerUid', 'bob', 'transferCode', deleteField(), 'campaignIds', [], 'currentHp', 1,
+      new FieldPath('_w', 'bob_dev1'), serverTimestamp(), '_lastWriter', 'bob_dev1', '_ts', serverTimestamp(),
+    ));
+    // Ponerse otro dueño que no sea uno mismo, tampoco.
+    await assertFails(updateDoc(
+      doc(db('bob'), 'characters', 'c1'),
+      'ownerUid', 'carol', 'transferCode', deleteField(), 'campaignIds', [],
+      new FieldPath('_w', 'bob_dev1'), serverTimestamp(), '_lastWriter', 'bob_dev1', '_ts', serverTimestamp(),
+    ));
+
+    await seed(['characters', 'c1'], baseChar('alice'));
+    await assertFails(claim(db('bob'), 'bob_dev1'));
+  });
+
+  it('la ficha sigue en la campaña si el que la recibe es miembro; si no, tiene que salir', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['characters', 'c1'], { ...baseChar('gm', ['camp1']), transferCode: CODE });
+    await seed(['transfers', CODE], transfer({ fromUid: 'gm' }));
+    await assertFails(claim(db('carol'), 'carol_dev1', ['camp1']));
+    await assertSucceeds(claim(db('bob'), 'bob_dev1', ['camp1']));
+    // El GM la sigue viendo como ficha de un jugador de su campaña.
+    await assertSucceeds(getDoc(doc(db('gm'), 'characters/c1')));
+  });
+
+  it('un no miembro la recibe sacándola de la campaña', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['characters', 'c1'], { ...baseChar('gm', ['camp1']), transferCode: CODE });
+    await seed(['transfers', CODE], transfer({ fromUid: 'gm' }));
+    await assertSucceeds(claim(db('carol'), 'carol_dev1', []));
+  });
+
+  it('tras el traspaso, el nuevo dueño republica el resumen de party con su ownerUid; otro no', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['characters', 'c1'], baseChar('bob', ['camp1']));
+    await seed(['campaigns', 'camp1', 'party', 'c1'], { ownerUid: 'gm', handle: 'Vex', currentHp: 30 });
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/party/c1'), { ownerUid: 'alice', handle: 'Vex', currentHp: 30 }));
+    await assertSucceeds(setDoc(doc(db('bob'), 'campaigns/camp1/party/c1'), { ownerUid: 'bob', handle: 'Vex', currentHp: 30 }));
   });
 });

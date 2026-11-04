@@ -18,6 +18,9 @@ rules_version = '2';
 //   campaigns/{campId}/encounters/current    round, turnIndex, order; lo escribe el GM
 //     .../combatants/{id}                    vista pública (nombre, iniciativa, estado de heridas); el dueño de un PJ toca su iniciativa
 //     .../gmCombatants/{id}                  enemigo completo (HP, SP, armas), solo el GM
+// v5.10.0 (plan 24) [Claude Code · 2026-11-04]:
+//   transfers/{code}                         código de 24 h para pasarle una ficha a otro jugador (traspaso de dueño)
+//   characters/{charId}.transferCode         el código activo de esa ficha (lo pone el dueño)
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -72,6 +75,26 @@ service cloud.firestore {
         && (before == null || !(w in before._w) || request.time > before._w[w] + duration.value(1, 's'));
     }
 
+    // v5.10.0 (plan 24): código para pasarle una ficha a otro jugador. Se lee de a uno (con el código);
+    // no se puede listar. Vence a las 24 h. [Claude Code · 2026-11-04]
+    match /transfers/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn()
+        && code.size() == 10
+        && request.resource.data.keys().hasOnly(['charId', 'fromUid', 'fromName', 'handle', 'role', 'roleRank', 'createdAt', 'expiresAt'])
+        && request.resource.data.fromUid == uid()
+        && request.resource.data.charId is string
+        && get(/databases/$(database)/documents/characters/$(request.resource.data.charId)).data.ownerUid == uid()
+        && request.resource.data.expiresAt is timestamp
+        && request.resource.data.expiresAt > request.time
+        && request.resource.data.expiresAt <= request.time + duration.value(24, 'h') + duration.value(5, 'm');
+      allow update: if false;
+      allow delete: if signedIn()
+        && (resource.data.fromUid == uid()
+            || get(/databases/$(database)/documents/characters/$(resource.data.charId)).data.ownerUid == uid());
+    }
+
     match /users/{userId} {
       allow read, write: if signedIn() && uid() == userId;
     }
@@ -94,7 +117,29 @@ service cloud.firestore {
         && writerOk(resource.data, request.resource.data)
         && campaignChangeOk(resource.data, request.resource.data);
 
+      // v5.10.0 (plan 24): recibir una ficha con el código que creó su dueño. Solo cambia el dueño (y la
+      // campaña, que se mantiene si el que la recibe es miembro). [Claude Code · 2026-11-04]
+      allow update: if claimOk(resource.data, request.resource.data);
+
       allow delete: if signedIn() && resource.data.ownerUid == uid();
+
+      function claimOk(before, after) {
+        let code = before.get('transferCode', '');
+        let tPath = /databases/$(database)/documents/transfers/$(code);
+        return signedIn()
+          && code is string && code.size() == 10
+          && exists(tPath)
+          && get(tPath).data.charId == charId
+          && get(tPath).data.fromUid == before.ownerUid
+          && request.time < get(tPath).data.expiresAt
+          && before.ownerUid != uid()
+          && after.ownerUid == uid()
+          && !('transferCode' in after)
+          && after.diff(before).affectedKeys().hasOnly(['ownerUid', 'transferCode', 'campaignIds', '_w', '_ts', '_lastWriter'])
+          && (after.campaignIds == []
+              || (after.campaignIds == before.campaignIds && after.campaignIds.size() == 1 && isMemberOf(after.campaignIds[0])))
+          && writerOk(before, after);
+      }
 
       // Asignar la ficha a una campaña: solo el dueño, y solo a una campaña de la que es miembro.
       // Sacarla (lista vacía) puede el dueño. El GM no cambia campaignIds.
@@ -168,7 +213,10 @@ service cloud.firestore {
         // Lo escribe la capa de sync del dueño de la ficha (o el GM).
         allow create, update: if isMemberOf(campId)
           && (request.resource.data.ownerUid == uid() || isGmOf(campId))
-          && (resource == null || resource.data.ownerUid == request.resource.data.ownerUid);
+          && (resource == null || resource.data.ownerUid == request.resource.data.ownerUid
+              // v5.10.0 (plan 24): tras un traspaso, el nuevo dueño de la ficha republica el resumen. [Claude Code · 2026-11-04]
+              || (request.resource.data.ownerUid == uid()
+                  && get(/databases/$(database)/documents/characters/$(charId)).data.ownerUid == uid()));
         allow delete: if isGmOf(campId) || (signedIn() && resource.data.ownerUid == uid());
       }
 
