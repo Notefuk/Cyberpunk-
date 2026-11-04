@@ -5,13 +5,14 @@ import { useCharacterStore } from '../store/useCharacterStore';
 import { CHARACTERS_SCHEMA_VERSION, runMigrations } from '../store/persistence';
 import { registerBeforeSignOut, useAuthStore } from './authStore';
 import { getFirebase } from './firebaseClient';
-import { createFirestoreAdapter, type CloudRepo, type LogEntryDoc } from './firestoreAdapter';
+import { createFirestoreAdapter, type CloudRepo, type LogEntryDoc, type TransferInfo } from './firestoreAdapter';
 import { createCharacterSync } from './characterSync';
 import { createQuotaGuard } from './quotaGuard';
 import { fromSheetDoc, toSheetDoc, type LogField } from './sheetDoc';
 import { getDeviceId, useCloudState } from './cloudState';
 import { createCampaignRepo } from './campaignRepo';
 import { createCampaignController, type CampaignController } from './cloudCampaigns';
+import { TRANSFER_TTL_MS, campaignIdsAfterClaim, newTransferCode, parseTransferCode } from './transferCode';
 
 const TX_CAP = 50;
 const QUIET_MS = 2000;
@@ -124,6 +125,61 @@ async function dropPlayerSheet(s: Session, id: string): Promise<void> {
     };
   });
   refreshCloudIds(s);
+}
+
+/**
+ * v5.10.0 (plan 24): la ficha pasó a otro jugador (o se perdió el permiso). Se deja de seguir y se quita de este
+ * dispositivo. Si soy el GM de su campaña, el controlador de campañas la vuelve a cargar como ficha de jugador.
+ * [Claude Code · 2026-11-04]
+ */
+async function dropLostSheet(s: Session, id: string): Promise<void> {
+  if (session !== s || !s.owned.has(id) || s.playerIds.has(id)) return;
+  const handle = findChar(id)?.handle ?? 'La ficha';
+  s.owned.delete(id);
+  s.tracked.delete(id);
+  try {
+    await s.engine.untrack(id);
+  } catch {
+    // lo pendiente ya no se puede guardar: la ficha es de otro
+  }
+  for (const u of s.unsubs.get(id) ?? []) u();
+  s.unsubs.delete(id);
+  useCharacterStore.setState((st) => {
+    const characters = st.characters.filter((c) => c.id !== id);
+    return {
+      characters,
+      activeCharacterId: st.activeCharacterId === id && characters.length > 0 ? characters[0].id : st.activeCharacterId,
+    };
+  });
+  useCloudState.setState((st) => {
+    const pendingTransfers = { ...st.pendingTransfers };
+    delete pendingTransfers[id];
+    const charCampaign = { ...st.charCampaign };
+    delete charCampaign[id];
+    return { pendingTransfers, charCampaign, transferNotice: `${handle} ahora es de otro jugador.` };
+  });
+  refreshCloudIds(s);
+}
+
+const isDenied = (e: unknown): boolean =>
+  typeof e === 'object' && e !== null && (e as { code?: unknown }).code === 'permission-denied';
+
+/** Código activo de una ficha propia según el documento de la nube; busca el vencimiento una sola vez. */
+function notePendingTransfer(s: Session, id: string, data: Record<string, unknown>): void {
+  const code = typeof data.transferCode === 'string' ? data.transferCode : null;
+  const cur = useCloudState.getState().pendingTransfers[id];
+  if ((cur?.code ?? null) === code) return;
+  useCloudState.setState((st) => {
+    const pendingTransfers = { ...st.pendingTransfers };
+    if (code) pendingTransfers[id] = { code, expiresAt: null };
+    else delete pendingTransfers[id];
+    return { pendingTransfers };
+  });
+  if (!code) return;
+  void s.repo.getTransfer(code).then((t) => {
+    if (session !== s || useCloudState.getState().pendingTransfers[id]?.code !== code) return;
+    useCloudState.setState((st) => ({ pendingTransfers: { ...st.pendingTransfers, [id]: { code, expiresAt: t?.expiresAt ?? 0 } } }));
+  }).catch(() => { /* sin vencimiento a la vista; el código igual vale */ });
 }
 
 const lastAt = (sheet: CharacterSheet | undefined): string | undefined => {
@@ -248,7 +304,13 @@ async function startSession(uid: string): Promise<void> {
   try {
     const handles = await getFirebase();
     if (token !== sessionToken) return;
-    const repo = createFirestoreAdapter(handles, uid);
+    const repo = createFirestoreAdapter(handles, uid, {
+      onDocError: (id, err) => {
+        const cur = session;
+        if (cur && isDenied(err) && cur.owned.has(id) && !cur.playerIds.has(id)) void dropLostSheet(cur, id);
+        else console.error('[nube] error escuchando la ficha', id, err);
+      },
+    });
     const quota = createQuotaGuard(localStorage);
     const writerId = `${uid}_${getDeviceId()}`;
     const engine = createCharacterSync({
@@ -257,8 +319,14 @@ async function startSession(uid: string): Promise<void> {
         ...repo,
         subscribeDoc: (id, cb) => repo.subscribeDoc(id, (data, info) => {
           if (data && session?.owned.has(id) && !session.playerIds.has(id)) {
+            // Plan 24: si la ficha ya es de otro (sigo viéndola por ser su GM), deja de ser mía en este dispositivo.
+            if (typeof data.ownerUid === 'string' && data.ownerUid !== uid) {
+              void dropLostSheet(session, id);
+              return;
+            }
             const campId = campaignIdOf(data);
             if (useCloudState.getState().charCampaign[id] !== campId) setCharCampaign(id, campId);
+            notePendingTransfer(session, id, data);
           }
           cb(data, info);
         }),
@@ -375,7 +443,7 @@ export async function stopSession(): Promise<void> {
   });
   const cs = useCloudState.getState();
   cs.setCloudIds([]);
-  useCloudState.setState({ charCampaign: {} });
+  useCloudState.setState({ charCampaign: {}, pendingTransfers: {}, transferNotice: null });
   cs.setNeedsAppUpdate(false);
   cs.setUploading(false);
   cs.setSyncState('off');
@@ -421,6 +489,116 @@ export async function uploadCharacters(localIds: string[]): Promise<void> {
   } finally {
     useCloudState.getState().setUploading(false);
   }
+}
+
+// ---------------------------------------------------------------------------
+// v5.10.0 (plan 24): pasarle una ficha a otro jugador. [Claude Code · 2026-11-04]
+// ---------------------------------------------------------------------------
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** El freno por escritor rechaza dos escrituras del mismo dispositivo en menos de 1 s: se guarda lo pendiente y se reintenta una vez. */
+async function withWriterRetry<T>(s: Session, fn: () => Promise<T>): Promise<T> {
+  await s.engine.flushAll();
+  try {
+    return await fn();
+  } catch (e) {
+    if (!isDenied(e)) throw e;
+    await sleep(1200);
+    return fn();
+  }
+}
+
+/** Crea el código para pasar una ficha propia de la nube. Devuelve el código y su vencimiento. */
+export async function offerTransfer(id: string): Promise<{ code: string; expiresAt: number }> {
+  const s = session;
+  const sheet = findChar(id);
+  if (!s || !sheet || !s.owned.has(id) || s.playerIds.has(id)) throw new Error('Esa ficha no es tuya en la nube.');
+  if (useCloudState.getState().pendingTransfers[id]) await cancelOfferedTransfer(id);
+  const user = useAuthStore.getState().user;
+  const code = newTransferCode();
+  const info: TransferInfo = {
+    charId: id,
+    fromUid: s.uid,
+    fromName: user?.displayName || user?.email?.split('@')[0] || 'Jugador',
+    handle: sheet.handle,
+    role: sheet.role,
+    roleRank: sheet.roleRank,
+    campaignId: useCloudState.getState().charCampaign[id] ?? null,
+    // Un minuto menos que el tope de las reglas, por si el reloj del dispositivo adelanta.
+    expiresAt: Date.now() + TRANSFER_TTL_MS - 60_000,
+  };
+  await withWriterRetry(s, () => s.repo.createTransfer(code, info, s.writerId));
+  useCloudState.setState((st) => ({ pendingTransfers: { ...st.pendingTransfers, [id]: { code, expiresAt: info.expiresAt } } }));
+  return { code, expiresAt: info.expiresAt };
+}
+
+/** Cancela el código activo de una ficha propia: la ficha sigue siendo tuya. */
+export async function cancelOfferedTransfer(id: string): Promise<void> {
+  const s = session;
+  const pending = useCloudState.getState().pendingTransfers[id];
+  if (!s || !pending) return;
+  await withWriterRetry(s, () => s.repo.cancelTransfer(pending.code, id, s.writerId));
+  useCloudState.setState((st) => {
+    const pendingTransfers = { ...st.pendingTransfers };
+    delete pendingTransfers[id];
+    return { pendingTransfers };
+  });
+}
+
+export type TransferPreview =
+  | { ok: true; code: string; info: TransferInfo }
+  | { ok: false; error: string };
+
+/** Lo que ve el que recibe antes de aceptar. */
+export async function previewTransfer(input: string): Promise<TransferPreview> {
+  const s = session;
+  if (!s) return { ok: false, error: 'Entrá con tu cuenta de Google para recibir una ficha.' };
+  const code = parseTransferCode(input);
+  if (!code) return { ok: false, error: 'Ese código no tiene la forma correcta (10 letras y números, ej. K7P4Q-X9M2R).' };
+  const info = await s.repo.getTransfer(code);
+  if (!info) return { ok: false, error: 'No existe ese código. Puede que ya se haya usado o que lo hayan cancelado.' };
+  if (info.fromUid === s.uid) return { ok: false, error: 'Es tu propia ficha: el código es para que la reciba otra cuenta.' };
+  if (info.expiresAt <= Date.now()) return { ok: false, error: 'El código venció (duran 24 horas). Pedí uno nuevo.' };
+  return { ok: true, code, info };
+}
+
+/** Recibe la ficha: queda en mi cuenta, con sus historiales. Devuelve el nombre de la ficha. */
+export async function acceptTransfer(input: string): Promise<string> {
+  const pre = await previewTransfer(input);
+  if (!pre.ok) throw new Error(pre.error);
+  const s = session;
+  if (!s) throw new Error('No hay sesión en la nube.');
+  const myCamps = useCloudState.getState().campaigns.map((c) => c.id);
+  const campaignIds = campaignIdsAfterClaim(pre.info.campaignId ? [pre.info.campaignId] : [], myCamps);
+  const { charId } = pre.info;
+  try {
+    await s.repo.claimTransfer(charId, campaignIds, s.writerId);
+  } catch (e) {
+    if (isDenied(e)) throw new Error('No se pudo recibir la ficha: el código ya no vale. Pedí uno nuevo.');
+    throw e;
+  }
+  try {
+    await s.repo.deleteTransfer(pre.code);
+  } catch {
+    // el código ya no sirve (la ficha no lo tiene); que quede no molesta
+  }
+  // Si yo era el GM y la tenía cargada como ficha de jugador, pasa a ser mía.
+  if (s.playerIds.has(charId)) {
+    await dropPlayerSheet(s, charId);
+    useCloudState.setState((st) => {
+      const playerOwners = { ...st.playerOwners };
+      delete playerOwners[charId];
+      return { playerOwners };
+    });
+  }
+  const data = await s.repo.getCharacter(charId);
+  if (!data || session !== s) throw new Error('La ficha se recibió pero no se pudo cargar: actualizá la página.');
+  setCharCampaign(charId, campaignIdOf(data));
+  await loadRemoteCharacter(s, charId, data);
+  refreshCloudIds(s);
+  useCharacterStore.setState({ activeCharacterId: charId });
+  return pre.info.handle;
 }
 
 /** Se llama una sola vez al arrancar la app: arranca/corta la sesión según el estado de la cuenta. */
