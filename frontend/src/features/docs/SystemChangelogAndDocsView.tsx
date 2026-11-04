@@ -26,6 +26,21 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.9.3',
+    date: '2026-11-04',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Ficha',
+    title: 'El PDF para imprimir ya no corta las listas',
+    summary: 'Al imprimir la ficha, las listas con barra (skills, arsenal, mochila) salen completas. Antes se cortaban y faltaban skills como Perception o Concentration.',
+    highlights: [
+      'Las 16 skills de Street Lab salen enteras en el PDF.',
+      'En pantalla no cambia nada.'
+    ],
+    filesTouched: ['frontend/src/index.css'],
+    metricsBadge: 'v5.9.3 • Ficha • Imprimir'
+  },
+  {
     version: 'v5.9.2',
     date: '2026-11-04',
     author: 'Claude Code',
@@ -1484,6 +1499,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.9.3': true,
     'v5.9.2': true,
     'v5.9.1': true,
     'v5.9.0': true,

@@ -117,6 +117,13 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.9.3] - 2026-11-04 (El PDF para imprimir ya no corta las listas) [Claude Code · 2026-11-04]
+* **Category**: Ficha (impresión). Pedido de Giuliano, sin plan (tarea chica): en el PDF de Dow Jones faltaban Paramedic, Cybertech, Perception, Concentration y Resist Torture/Drugs.
+* **What Changed**: las listas con alto fijo y barra (skills de Street Lab con `max-h-[640px]`, arsenal, mochila, etc.) se imprimían cortadas. Una regla `@media print` las deja con alto libre y sin barra solo al imprimir; en pantalla no cambia nada.
+* **Files Modified**: `frontend/src/index.css`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, tests y build. En el navegador local, aplicando la regla de impresión, la lista de skills pasa de 640 px visibles (de 922) a 922 px: se ven las 16.
+* **Aparte**: la ficha de Dow Jones (jugador real) se rearmó desde su PDF y se subió a la nube de prod con la cuenta abierta en el Chrome de Giuliano; copia en `Documents\Rol\CEMK\dow_jones_sheet.json`. Le faltan 5 skills, OTRAS SKILLS, la mochila y el lifepath (no estaban en el PDF).
+
 ### [v5.9.2] - 2026-11-04 (Un solo botón DESCARGAR y aviso al importar un PDF) [Claude Code · 2026-11-04]
 * **Category**: Ficha (STREET LAB). Pedido de Giuliano, sin plan (tarea chica): un jugador bajó la ficha como PDF con el botón de la impresora y después no se podía volver a cargar.
 * **What Changed**:
