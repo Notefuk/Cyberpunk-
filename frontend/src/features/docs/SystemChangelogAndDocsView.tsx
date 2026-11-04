@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.10.0',
+    date: '2026-11-04',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa online',
+    title: 'Pasarle una ficha a otro jugador',
+    summary: 'En MESA // CAMPAÑA, PASAR A OTRO JUGADOR crea un código que dura 24 horas. El otro lo pega en RECIBIR UNA FICHA y la ficha pasa a su cuenta con sus historiales. Si es de tu campaña, la seguís viendo como GM.',
+    highlights: [
+      'Código de 10 caracteres con Copiar y Cancelar; hasta que lo usen, la ficha sigue siendo tuya.',
+      'El que la recibe ve de quién es antes de aceptar.',
+      'Si el que la recibe está en la campaña de la ficha, queda en la campaña; si no, sale.'
+    ],
+    filesTouched: ['frontend/src/features/cloud/TransferPanel.tsx', 'frontend/src/sync/cloudCharacters.ts', 'frontend/firestore.rules'],
+    metricsBadge: 'v5.10.0 • Mesa • Pasar ficha'
+  },
+  {
     version: 'v5.9.3',
     date: '2026-11-04',
     author: 'Claude Code',
@@ -1499,6 +1515,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.10.0': true,
     'v5.9.3': true,
     'v5.9.2': true,
     'v5.9.1': true,

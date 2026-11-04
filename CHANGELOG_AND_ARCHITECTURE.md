@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.10.0] - 2026-11-04 (Pasarle una ficha a otro jugador) [Claude Code · 2026-11-04]
+* **Category**: Mesa online (plan 24, `docs/plans/plan24-pasar-ficha.md`). Pedido de Giuliano: la ficha de un jugador quedó en la cuenta del GM y no había forma de pasársela.
+* **What Changed**:
+  * MESA // CAMPAÑA → TUS FICHAS EN LA NUBE: cada ficha tiene **PASAR A OTRO JUGADOR**. Crea un código de 10 caracteres (ej. `K7P4Q-X9M2R`, sin 0/O ni 1/I/L) que dura 24 horas, con Copiar y Cancelar; mientras tanto la ficha sigue siendo tuya y el código se ve al recargar.
+  * Bloque nuevo **RECIBIR UNA FICHA**: se pega el código, se ve "X te pasa a Vex (Nomad 4)" y ACEPTAR. La ficha pasa a la cuenta del que la recibe, con sus historiales de IP y €$ (traspaso de dueño, no copia).
+  * Campaña: si el que la recibe es miembro de la campaña de la ficha, queda en la campaña y el GM la sigue viendo y editando como ficha de jugador; si no, sale de la campaña (decisión de Giuliano, 2026-11-04).
+  * El que la dio: la ficha se quita de su dispositivo al momento, con el aviso "Vex ahora es de otro jugador".
+  * Reglas de Firestore: colección `transfers/{code}` (se lee de a uno con sesión, no se lista, vence a las 24 h, la crea solo el dueño de la ficha); campo `transferCode` en la ficha; rama nueva de update para recibir (solo cambia dueño, código y campaña; exige código válido y no vencido); el nuevo dueño puede republicar el resumen de party con su `ownerUid`.
+* **Files Modified**: `sync/transferCode.ts`, `features/cloud/TransferPanel.tsx`, `sync/__tests__/transferCode.test.ts` (nuevos); `firestore.rules` y sus tests (7 nuevos), `sync/firestoreAdapter.ts`, `sync/cloudCharacters.ts`, `sync/cloudState.ts`, `sync/sheetDoc.ts` (`transferCode` en META_FIELDS), `features/cloud/CloudTableView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 526 tests, 43 tests de reglas con el emulador y build. Con el emulador y dos cuentas de prueba: A pasa una ficha y B la recibe (A deja de verla con el aviso; B la tiene con sus €$ e historial); B se la devuelve por la pantalla RECIBIR UNA FICHA; con una campaña de A en la que B es miembro, la ficha queda en la campaña y A la edita como GM (HP 40 → 35 llega a la nube); cancelar borra el código; errores de código propio, inexistente y mal escrito; el código sigue al recargar; celular (375 px) sin scroll horizontal.
+* **Publicación**: hay que publicar las reglas (`firebase deploy --only firestore:rules`) en dev y en prod antes del hosting; cada una con OK de Giuliano.
+
 ### [v5.9.3] - 2026-11-04 (El PDF para imprimir ya no corta las listas) [Claude Code · 2026-11-04]
 * **Category**: Ficha (impresión). Pedido de Giuliano, sin plan (tarea chica): en el PDF de Dow Jones faltaban Paramedic, Cybertech, Perception, Concentration y Resist Torture/Drugs.
 * **What Changed**: las listas con alto fijo y barra (skills de Street Lab con `max-h-[640px]`, arsenal, mochila, etc.) se imprimían cortadas. Una regla `@media print` las deja con alto libre y sin barra solo al imprimir; en pantalla no cambia nada.

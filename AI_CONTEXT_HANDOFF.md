@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v5.9.3 OPERATIVO`  
+> **SYSTEM VERSION**: `v5.10.0 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-11-04]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -69,6 +69,7 @@ frontend/src/
 - **Sesión**: `authStore.ts` (login, modo local/nube) → `cloudCharacters.ts` (`initCloudSync`, `startSession`/`stopSession`, subir fichas) → `characterSync.ts` (motor puro: cola, diff, `increment()`, sin eco) con `firestoreAdapter.ts`. Campañas: `cloudCampaigns.ts` (controlador) + `campaignRepo.ts` (Firestore) + `partySummary.ts` (resumen puro).
 - **Campos que no viajan en la ficha**: `ipLog` y `transactions` van a subcolecciones (`sheetDoc.ts`, `LOG_FIELDS`); `ownerUid`, `campaignIds`, `schemaVersion`, `_w`, `_ts`, `_lastWriter` son metadatos (`META_FIELDS`). Un campo nuevo de la ficha sincroniza solo; si es un contador que el GM y el jugador tocan a la vez, sumarlo a `COUNTER_PATHS`.
 - **Escrituras directas al documento de la ficha** fuera del motor: llevan los campos de escritor (`_w.<writerId>`, `_lastWriter`, `_ts`) o las reglas las rechazan (ver `setSchemaVersion` y `assignCharacter`).
+- **Pasar una ficha (plan 24, v5.10.0)** [Claude Code · 2026-11-04]: `transferCode.ts` (código puro) + `cloudCharacters.ts` (`offerTransfer`, `cancelOfferedTransfer`, `previewTransfer`, `acceptTransfer`, `dropLostSheet`) + `firestoreAdapter.ts` (`createTransfer`, `getTransfer`, `cancelTransfer`, `claimTransfer`, `deleteTransfer`). Firestore: `transfers/{code}` y `characters/{id}.transferCode` (meta, no viaja en la ficha). UI: `features/cloud/TransferPanel.tsx`.
 - **Reglas**: `frontend/firestore.rules`, tests en `src/sync/__tests__/rules/` (`npx vitest run --config vitest.rules.config.ts` con el emulador prendido; borra sus datos). Presupuesto de cuota: `src/sync/__tests__/sessionBudget.test.ts`.
 
 ---
