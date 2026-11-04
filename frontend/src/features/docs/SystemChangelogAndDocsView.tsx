@@ -26,6 +26,21 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.9.2',
+    date: '2026-11-04',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Ficha',
+    title: 'Un solo botón DESCARGAR y aviso al importar un PDF',
+    summary: 'DESCARGAR pregunta qué querés: el archivo de la ficha (.json), que se vuelve a cargar, o el PDF para imprimir, que no. Si alguien intenta importar un PDF, la app le explica qué hacer.',
+    highlights: [
+      'DESCARGAR → "Archivo de la ficha (.json)" (recomendado) o "PDF para imprimir + archivo (.json)", que baja los dos.',
+      'Importar un PDF avisa que es solo para imprimir y cómo pasar la ficha.'
+    ],
+    filesTouched: ['frontend/src/features/sheet/StreetLabView.tsx'],
+    metricsBadge: 'v5.9.2 • Ficha • Descargar'
+  },
+  {
     version: 'v5.9.1',
     date: '2026-10-30',
     author: 'Claude Code',
@@ -1469,6 +1484,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.9.2': true,
     'v5.9.1': true,
     'v5.9.0': true,
     'v5.8.0': true,
