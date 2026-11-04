@@ -8,7 +8,8 @@ export type LogField = typeof LOG_FIELDS[number];
 
 /** Campos de metadatos del documento que no pertenecen a la ficha. */
 // _lastWriter: quién escribió por última vez (lo usan las reglas para el freno por escritor). [Claude Code · 2026-10-24]
-export const META_FIELDS = ['ownerUid', 'campaignIds', 'schemaVersion', '_w', '_ts', '_lastWriter'] as const;
+// transferCode: código activo para pasar la ficha a otro jugador (plan 24); es de la nube, no de la ficha. [Claude Code · 2026-11-04]
+export const META_FIELDS = ['ownerUid', 'campaignIds', 'schemaVersion', '_w', '_ts', '_lastWriter', 'transferCode'] as const;
 
 // Se mandan como increment(delta) para que el GM y el jugador no se pisen;
 // la munición vive en un array y va entera.

@@ -1,6 +1,7 @@
 // [Claude Code · 2026-10-24] v5.0.0 (plan 16): pestaña "MESA // CAMPAÑA" (login y estado; sin sync de fichas todavía).
 // [Claude Code · 2026-10-24] Plan 18: suma el panel de campañas.
 // [Claude Code · 2026-10-29] v5.3.1: botón para bajar todas las fichas de la nube, una por archivo.
+// [Claude Code · 2026-11-04] v5.10.0 (plan 24): pasar una ficha a otro jugador y recibir una.
 import { readFirebaseConfig } from '../../sync/firebaseConfig';
 import { downloadCharacters } from '../../utils/characterFile';
 import { useState } from 'react';
@@ -9,6 +10,7 @@ import { useCloudState } from '../../sync/cloudState';
 import { uploadCharacters } from '../../sync/cloudCharacters';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { CampaignPanel } from './CampaignPanel';
+import { ReceiveTransferBox, TransferRowAction } from './TransferPanel';
 import { readPendingInvite } from '../../sync/inviteLink';
 
 const ENV_LINES = {
@@ -108,9 +110,12 @@ export function CloudTableView() {
             {cloudChars.length === 0 ? (
               <p className="font-mono-code text-xs text-[#64748b]">Todavía no tenés fichas en la nube.</p>
             ) : (
-              <ul className="space-y-1">
+              <ul className="space-y-2">
                 {cloudChars.map((c) => (
-                  <li key={c.id} className="font-mono-code text-xs text-[#94a3b8]">{c.handle} <span className="text-[#64748b]">({c.role})</span></li>
+                  <li key={c.id} className="font-mono-code text-xs text-[#94a3b8] space-y-1">
+                    <div>{c.handle} <span className="text-[#64748b]">({c.role})</span></div>
+                    <TransferRowAction charId={c.id} handle={c.handle} />
+                  </li>
                 ))}
               </ul>
             )}
@@ -154,6 +159,7 @@ export function CloudTableView() {
               </p>
             </div>
             <p className="font-mono-code text-[11px] text-[#64748b]">Al salir de tu cuenta, las fichas de la nube se quitan de este dispositivo y quedan guardadas en tu cuenta.</p>
+            <ReceiveTransferBox />
           </div>
           <CampaignPanel />
         </div>

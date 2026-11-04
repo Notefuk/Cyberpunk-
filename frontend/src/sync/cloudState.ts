@@ -21,6 +21,10 @@ interface CloudState {
   charCampaign: Record<string, string | null>;
   /** v5.1.0 (plan 19): campaña elegida a mano como mesa activa (null = la de la ficha activa). Se recuerda en localStorage. */
   activeTableId: string | null;
+  /** v5.10.0 (plan 24): código activo para pasar cada ficha propia: charId -> código y vencimiento (ms). [Claude Code · 2026-11-04] */
+  pendingTransfers: Record<string, { code: string; expiresAt: number | null }>;
+  /** Aviso para mostrar en MESA (ej. "Vex ahora es de otro jugador"). */
+  transferNotice: string | null;
   setActiveTableId: (id: string | null) => void;
   setSyncState: (s: SyncState) => void;
   setCloudIds: (ids: string[]) => void;
@@ -50,6 +54,8 @@ export const useCloudState = create<CloudState>()((set) => ({
   playerOwners: {},
   charCampaign: {},
   activeTableId: readActiveTableId(),
+  pendingTransfers: {},
+  transferNotice: null,
   setActiveTableId: (activeTableId) => {
     try {
       if (activeTableId) localStorage.setItem(ACTIVE_TABLE_KEY, activeTableId);

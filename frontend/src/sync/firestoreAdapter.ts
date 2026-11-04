@@ -8,6 +8,20 @@ import { CHARACTERS_SCHEMA_VERSION } from '../store/persistence';
 
 export type LogEntryDoc = { id: string } & Record<string, unknown>;
 
+/** v5.10.0 (plan 24): código para pasarle una ficha a otro jugador (`transfers/{code}`). [Claude Code · 2026-11-04] */
+export interface TransferInfo {
+  charId: string;
+  fromUid: string;
+  fromName: string;
+  handle: string;
+  role: string;
+  roleRank: number;
+  /** Campaña de la ficha al crear el código (el que la recibe no puede leer la ficha antes). */
+  campaignId: string | null;
+  /** ms desde 1970. */
+  expiresAt: number;
+}
+
 export interface CloudRepo {
   listMyCharacters(): Promise<{ id: string; data: Record<string, unknown> }[]>;
   docExists(id: string): Promise<boolean>;
@@ -19,6 +33,16 @@ export interface CloudRepo {
   subscribeNewLogEntries(id: string, field: LogField, afterKey: string | undefined, cb: (entries: LogEntryDoc[]) => void): () => void;
   /** Escribe solo schemaVersion (una escritura), usado al migrar una ficha vieja. */
   setSchemaVersion(id: string, version: number, writerId: string): Promise<void>;
+  // v5.10.0 (plan 24): pasar una ficha a otro jugador. [Claude Code · 2026-11-04]
+  /** Crea el código y lo anota en la ficha (dos escrituras: primero el código, que las reglas piden que exista). */
+  createTransfer(code: string, info: TransferInfo, writerId: string): Promise<void>;
+  /** null si no existe (o ya se usó / se canceló). */
+  getTransfer(code: string): Promise<TransferInfo | null>;
+  /** Quita el código de la ficha y lo borra. */
+  cancelTransfer(code: string, charId: string, writerId: string): Promise<void>;
+  /** El que recibe: se pone como dueño, saca el código y deja la campaña que corresponda. */
+  claimTransfer(charId: string, campaignIds: string[], writerId: string): Promise<void>;
+  deleteTransfer(code: string): Promise<void>;
 }
 
 const BATCH_SIZE = 400;
@@ -37,9 +61,26 @@ function withoutLastWriter(data: Record<string, unknown>): Record<string, unknow
   return rest;
 }
 
-export function createFirestoreAdapter(h: FirebaseHandles, uid: string): SyncAdapter & CloudRepo {
+/** onDocError (plan 24): avisa si se cortó la escucha de una ficha (p. ej. sin permiso porque se la pasaron a otro). */
+export function createFirestoreAdapter(
+  h: FirebaseHandles,
+  uid: string,
+  opts: { onDocError?: (id: string, err: unknown) => void } = {},
+): SyncAdapter & CloudRepo {
   const fs = h.fsSdk;
   const charRef = (id: string) => fs.doc(h.db, 'characters', id);
+  const transferRef = (code: string) => fs.doc(h.db, 'transfers', code);
+
+  // Escribe campos sueltos con los campos de escritor que piden las reglas (freno por escritor). Plan 24.
+  const writeMeta = (id: string, writerId: string, ...pairs: unknown[]): Promise<void> => {
+    const [first, ...rest] = [
+      ...pairs,
+      new fs.FieldPath('_w', writerId), fs.serverTimestamp(),
+      new fs.FieldPath('_lastWriter'), writerId,
+      new fs.FieldPath('_ts'), fs.serverTimestamp(),
+    ];
+    return (fs.updateDoc as (ref: unknown, f: unknown, ...more: unknown[]) => Promise<void>)(charRef(id), first, ...rest);
+  };
 
   // ipLog: orden por 'at' ascendente (solo lo nuevo si hay afterKey). transactions: las 50 más nuevas.
   const logQuery = (id: string, field: LogField, afterKey?: string) => {
@@ -79,7 +120,10 @@ export function createFirestoreAdapter(h: FirebaseHandles, uid: string): SyncAda
         charRef(docId),
         { includeMetadataChanges: true },
         (snap) => cb(snap.exists() ? withoutLastWriter(snap.data() as Record<string, unknown>) : null, { hasPendingWrites: snap.metadata.hasPendingWrites }),
-        (err) => console.error('[nube] error escuchando la ficha', docId, err),
+        (err) => {
+          if (opts.onDocError) opts.onDocError(docId, err);
+          else console.error('[nube] error escuchando la ficha', docId, err);
+        },
       );
     },
 
@@ -150,6 +194,57 @@ export function createFirestoreAdapter(h: FirebaseHandles, uid: string): SyncAda
         new fs.FieldPath('_lastWriter'), writerId,
         new fs.FieldPath('_ts'), fs.serverTimestamp(),
       );
+    },
+
+    // v5.10.0 (plan 24). [Claude Code · 2026-11-04]
+    async createTransfer(code, info, writerId) {
+      await fs.setDoc(transferRef(code), {
+        charId: info.charId,
+        fromUid: uid,
+        fromName: info.fromName,
+        handle: info.handle,
+        role: info.role,
+        roleRank: info.roleRank,
+        campaignId: info.campaignId,
+        createdAt: fs.serverTimestamp(),
+        expiresAt: fs.Timestamp.fromMillis(info.expiresAt),
+      });
+      await writeMeta(info.charId, writerId, new fs.FieldPath('transferCode'), code);
+    },
+
+    async getTransfer(code) {
+      const snap = await fs.getDoc(transferRef(code));
+      if (!snap.exists()) return null;
+      const d = snap.data() as Record<string, unknown>;
+      const exp = d.expiresAt as { toMillis?: () => number } | undefined;
+      return {
+        charId: String(d.charId ?? ''),
+        fromUid: String(d.fromUid ?? ''),
+        fromName: String(d.fromName ?? ''),
+        handle: String(d.handle ?? ''),
+        role: String(d.role ?? ''),
+        roleRank: typeof d.roleRank === 'number' ? d.roleRank : 0,
+        campaignId: typeof d.campaignId === 'string' ? d.campaignId : null,
+        expiresAt: typeof exp?.toMillis === 'function' ? exp.toMillis() : 0,
+      };
+    },
+
+    async cancelTransfer(code, charId, writerId) {
+      await writeMeta(charId, writerId, new fs.FieldPath('transferCode'), fs.deleteField());
+      await fs.deleteDoc(transferRef(code));
+    },
+
+    async claimTransfer(charId, campaignIds, writerId) {
+      await writeMeta(
+        charId, writerId,
+        new fs.FieldPath('ownerUid'), uid,
+        new fs.FieldPath('transferCode'), fs.deleteField(),
+        new fs.FieldPath('campaignIds'), campaignIds,
+      );
+    },
+
+    async deleteTransfer(code) {
+      await fs.deleteDoc(transferRef(code));
     },
   };
 }
