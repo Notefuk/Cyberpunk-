@@ -67,6 +67,10 @@ interface Session {
   lastChangeAt: number;
   ticking: boolean;
   campaigns: CampaignController | null; // plan 18
+  /** v5.11.0 (plan 25): ids locales ya vistos; una ficha nueva (creada o importada con sesión) se sube sola. [Claude Code · 2026-11-05] */
+  knownLocal: Set<string>;
+  /** Fichas nuevas esperando subirse: id -> cuándo aparecieron (se espera un poco por si se siguen editando). */
+  pendingUploads: Map<string, number>;
 }
 
 let session: Session | null = null;
@@ -261,6 +265,23 @@ async function loadRemoteCharacter(s: Session, id: string, data: Record<string, 
   watchLogs(s, id);
 }
 
+/** Plan 25: sube sola una ficha nueva (las precargadas del CEMK Folio no tienen id `char-`). */
+function isAutoUploadable(id: string, s: Session): boolean {
+  return id.startsWith('char-') && !s.owned.has(id) && !s.playerIds.has(id);
+}
+
+const AUTO_UPLOAD_WAIT_MS = 1500;
+
+async function flushAutoUploads(s: Session): Promise<void> {
+  if (s.pendingUploads.size === 0 || useCloudState.getState().uploading || useCloudState.getState().needsAppUpdate) return;
+  const now = Date.now();
+  const ready = [...s.pendingUploads].filter(([, at]) => now - at >= AUTO_UPLOAD_WAIT_MS).map(([id]) => id);
+  if (ready.length === 0) return;
+  for (const id of ready) s.pendingUploads.delete(id);
+  const ids = ready.filter((id) => findChar(id) && isAutoUploadable(id, s));
+  if (ids.length > 0) await uploadCharacters(ids);
+}
+
 function refreshCloudIds(s: Session): void {
   useCloudState.getState().setCloudIds([...s.owned]);
 }
@@ -280,6 +301,8 @@ async function tick(s: Session): Promise<void> {
       if (s.lastChangeAt === stamp) s.dirty = false;
     }
     if (s.campaigns) await s.campaigns.tick(Date.now());
+    if (session !== s) return;
+    await flushAutoUploads(s);
     if (session !== s) return;
     const quota = createQuotaGuard(localStorage);
     let next: ReturnType<typeof useCloudState.getState>['syncState'];
@@ -347,6 +370,7 @@ async function startSession(uid: string): Promise<void> {
       tracked: new Set(), owned: new Set(), playerIds: new Set(), unsubs: new Map(),
       storeUnsub: () => {}, interval: null, pagehide: () => {},
       dirty: false, lastChangeAt: 0, ticking: false, campaigns: null,
+      knownLocal: new Set(), pendingUploads: new Map(),
     };
     session = s;
 
@@ -362,8 +386,17 @@ async function startSession(uid: string): Promise<void> {
     }
     if (token !== sessionToken) return;
     refreshCloudIds(s);
+    // Plan 25: las fichas que ya están en el dispositivo no suben solas (siguen con SUBIR A LA NUBE).
+    for (const c of useCharacterStore.getState().characters) s.knownLocal.add(c.id);
 
     s.storeUnsub = useCharacterStore.subscribe((state, prev) => {
+      if (state.characters !== prev.characters) {
+        for (const c of state.characters) {
+          if (s.knownLocal.has(c.id)) continue;
+          s.knownLocal.add(c.id);
+          if (isAutoUploadable(c.id, s)) s.pendingUploads.set(c.id, Date.now());
+        }
+      }
       for (const id of s.tracked) {
         const now = state.characters.find((c) => c.id === id);
         const before = prev.characters.find((c) => c.id === id);
@@ -461,11 +494,13 @@ export async function uploadCharacters(localIds: string[]): Promise<void> {
   try {
     for (const localId of localIds) {
       const sheet = findChar(localId);
-      if (!sheet) continue;
+      if (!sheet || s.owned.has(localId)) continue;
+      s.pendingUploads.delete(localId);
       try {
         const exists = await s.repo.docExists(localId);
         const newId = chooseUploadId(localId, exists, Date.now(), Math.random());
         const renamed: CharacterSheet = { ...sheet, id: newId };
+        s.knownLocal.add(newId); // plan 25: el id nuevo no es una ficha nueva
         const data = await s.repo.createCharacter(newId, toSheetDoc(renamed), s.writerId);
         await s.repo.uploadLogEntries(newId, 'ipLog', (renamed.ipLog ?? []) as unknown as LogEntryDoc[]);
         await s.repo.uploadLogEntries(newId, 'transactions', (renamed.transactions ?? []) as unknown as LogEntryDoc[]);
@@ -489,6 +524,8 @@ export async function uploadCharacters(localIds: string[]): Promise<void> {
   } finally {
     useCloudState.getState().setUploading(false);
   }
+  // Plan 25: las fichas de jugador recién subidas entran solas a la campaña.
+  if (session === s) s.campaigns?.autoAssign();
 }
 
 // ---------------------------------------------------------------------------
@@ -544,6 +581,7 @@ export async function cancelOfferedTransfer(id: string): Promise<void> {
     delete pendingTransfers[id];
     return { pendingTransfers };
   });
+  s.campaigns?.autoAssign(); // plan 25: sin traspaso pendiente, una ficha de jugador libre entra a la campaña
 }
 
 export type TransferPreview =
@@ -598,6 +636,7 @@ export async function acceptTransfer(input: string): Promise<string> {
   await loadRemoteCharacter(s, charId, data);
   refreshCloudIds(s);
   useCharacterStore.setState({ activeCharacterId: charId });
+  s.campaigns?.autoAssign(); // plan 25: si quedó sin campaña, entra a la mía
   return pre.info.handle;
 }
 

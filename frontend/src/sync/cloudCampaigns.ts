@@ -5,6 +5,7 @@ import type { CharacterSheet } from '../types/cyberpunk';
 import type { CampaignDoc, CampaignRepo, TableClock, TableEra } from './campaignRepo';
 import { buildPartySummary, parsePartySummary, sameSummary, type PartySummary } from './partySummary';
 import { useCloudState } from './cloudState';
+import { pickAutoCampaign, shouldAutoAssign } from './autoAssign';
 
 export interface CampaignHost {
   uid: string;
@@ -76,6 +77,26 @@ export function createCampaignController(host: CampaignHost) {
   };
 
   const ownSummary = (sheet: CharacterSheet) => buildPartySummary(sheet, uid, host.myName);
+  // v5.11.0 (plan 25): una ficha de NPC no publica resumen de party (los jugadores no la ven). [Claude Code · 2026-11-05]
+  const isNpc = (sheet: CharacterSheet | undefined) => sheet?.sheetKind === 'npc';
+  const autoFailed = new Set<string>();
+  let serverListSeen = false;
+
+  /** Plan 25: mis fichas de jugador sin campaña entran solas a la campaña donde soy jugador. */
+  function autoAssignFree(): void {
+    if (stopped || !serverListSeen) return;
+    const st = cs();
+    const campId = pickAutoCampaign(st.campaigns, uid, st.activeTableId);
+    if (!campId) return;
+    for (const id of host.myCloudIds()) {
+      if (autoFailed.has(id) || !(id in st.charCampaign)) continue;
+      if (!shouldAutoAssign(host.getSheet(id), st.charCampaign[id], !!st.pendingTransfers[id])) continue;
+      autoFailed.add(id); // una vez por sesión: si falla no se reintenta en bucle
+      void controller.assign(id, campId)
+        .then(() => autoFailed.delete(id))
+        .catch((e) => { if (!isDenied(e)) setError('No se pudo sumar la ficha a la campaña: ', e); });
+    }
+  }
 
   /** Fichas de jugadores que tiene que ver el GM: las de la party de sus campañas que no son suyas. */
   function reconcilePlayers(): void {
@@ -124,6 +145,7 @@ export function createCampaignController(host: CampaignHost) {
     for (const id of host.myCloudIds()) {
       if (cs().charCampaign[id] !== campId || entries[id]) continue;
       const sheet = host.getSheet(id);
+      if (isNpc(sheet)) continue;
       // Sin permiso = me acaban de echar (la lista de campañas todavía no se actualizó): no es un error.
       if (sheet) void writeSummary(campId, id, ownSummary(sheet)).catch((e) => { if (!isDenied(e)) setError('No se pudo publicar el resumen de party: ', e); });
     }
@@ -183,7 +205,7 @@ export function createCampaignController(host: CampaignHost) {
     }
   }
 
-  return {
+  const controller = {
     start(): void {
       campUnsub = repo.subscribeMyCampaigns(
         (list, info) => {
@@ -191,7 +213,11 @@ export function createCampaignController(host: CampaignHost) {
           useCloudState.setState({ campaigns: list });
           syncPartySubs(list);
           reconcilePlayers();
-          if (!info.fromCache) cleanupOrphans(list);
+          if (!info.fromCache) {
+            cleanupOrphans(list);
+            serverListSeen = true;
+            autoAssignFree();
+          }
         },
         (e) => setError('No se pudieron leer las campañas: ', e),
       );
@@ -218,7 +244,7 @@ export function createCampaignController(host: CampaignHost) {
         partyDirty.delete(id);
         const campId = campaignOf(id);
         const sheet = host.getSheet(id);
-        if (!campId || !sheet) continue;
+        if (!campId || !sheet || isNpc(sheet)) continue;
         const prev = cs().party[campId]?.[id];
         const summary = playerCamp.has(id)
           ? buildPartySummary(sheet, prev?.ownerUid ?? '', prev?.ownerName ?? '')
@@ -252,15 +278,30 @@ export function createCampaignController(host: CampaignHost) {
       await withBrakeRetry(() => repo.assignCharacter(charId, campId, host.writerId));
       setCharCampaign(charId, campId);
       const sheet = host.getSheet(charId);
-      if (campId && sheet) await writeSummary(campId, charId, ownSummary(sheet));
+      if (campId && sheet && !isNpc(sheet)) await writeSummary(campId, charId, ownSummary(sheet));
     },
 
-    /** Salir: primero libero mis fichas de esa campaña (después ya no tendría permiso). */
+    /** Plan 25: lo llama la sesión después de subir fichas. */
+    autoAssign(): void {
+      autoAssignFree();
+    },
+
+    /**
+     * Salir. v5.11.0 (plan 25): las fichas de jugador quedan fijas mientras soy miembro, así que primero
+     * salgo y después las libero (la regla lo permite cuando ya no soy miembro). Antes se liberaban primero.
+     */
     async leave(campId: string): Promise<void> {
-      for (const id of host.myCloudIds()) {
-        if (cs().charCampaign[id] === campId) await this.assign(id, null);
+      const mine = host.myCloudIds().filter((id) => cs().charCampaign[id] === campId);
+      for (const id of mine) {
+        setPartyEntry(campId, id, null);
+        await repo.deletePartySummary(campId, id).catch(() => {});
       }
       await repo.leaveCampaign(campId);
+      for (const id of mine) {
+        await withBrakeRetry(() => repo.assignCharacter(id, null, host.writerId))
+          .then(() => setCharCampaign(id, null))
+          .catch((e) => setError('No se pudo liberar la ficha de la campaña: ', e));
+      }
     },
 
     /** Echar (GM): borra los resúmenes de sus fichas y lo saca; el jugador libera su ficha solo. */
@@ -288,6 +329,7 @@ export function createCampaignController(host: CampaignHost) {
       await repo.setTableEra(campId, era);
     },
   };
+  return controller;
 }
 
 export type CampaignController = ReturnType<typeof createCampaignController>;
