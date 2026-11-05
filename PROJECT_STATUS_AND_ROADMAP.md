@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.10.0`** (pasarle una ficha a otro jugador, plan 24) en `main` (PR #56), en gh-pages (beta) y en Firebase prod (estable), con las reglas nuevas en dev y prod. Las reglas nuevas de Firestore todavía no están publicadas [Claude Code · 2026-11-04]  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.11.0`** (fichas fijas en la nube y fichas de NPC, plan 25) en `claude/v5.11.0-fichas-fijas`, sin pushear; en `main`, gh-pages (beta) y Firebase prod (estable) está la v5.10.0. Las reglas nuevas de Firestore todavía no están publicadas [Claude Code · 2026-11-05]  
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
 > **PLAN ACTIVO**: ninguno en curso. Plan 23 terminado y publicado (v5.8.0 y v5.9.0) [Claude Code · 2026-10-30]. En espera: plan 22 (Interface RED, Black Chrome y FBC). Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
