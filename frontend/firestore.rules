@@ -21,6 +21,9 @@ rules_version = '2';
 // v5.10.0 (plan 24) [Claude Code · 2026-11-04]:
 //   transfers/{code}                         código de 24 h para pasarle una ficha a otro jugador (traspaso de dueño)
 //   characters/{charId}.transferCode         el código activo de esa ficha (lo pone el dueño)
+// v5.11.0 (plan 25) [Claude Code · 2026-11-05]:
+//   characters/{charId}.sheetKind            'player' | 'npc' (sin el campo = jugador); el NPC no va a la party
+//   Las fichas no se borran, y una ficha de jugador queda en su campaña mientras su dueño sea miembro.
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -42,6 +45,15 @@ service cloud.firestore {
 
     function isMemberOf(campId) {
       return signedIn() && uid() in campaign(campId).memberUids;
+    }
+
+    // v5.11.0 (plan 25): sigo siendo miembro (la campaña puede ya no existir si el GM la borró). [Claude Code · 2026-11-05]
+    function stillMemberOf(campId) {
+      return exists(/databases/$(database)/documents/campaigns/$(campId)) && uid() in campaign(campId).memberUids;
+    }
+
+    function isNpcSheet(data) {
+      return data.get('sheetKind', 'player') == 'npc';
     }
 
     // Una ficha está en una campaña como máximo (las reglas no pueden recorrer listas largas).
@@ -121,7 +133,8 @@ service cloud.firestore {
       // campaña, que se mantiene si el que la recibe es miembro). [Claude Code · 2026-11-04]
       allow update: if claimOk(resource.data, request.resource.data);
 
-      allow delete: if signedIn() && resource.data.ownerUid == uid();
+      // v5.11.0 (plan 25): una ficha de la nube no se borra (decisión de Giuliano, 2026-11-05). [Claude Code · 2026-11-05]
+      allow delete: if false;
 
       function claimOk(before, after) {
         let code = before.get('transferCode', '');
@@ -142,12 +155,18 @@ service cloud.firestore {
       }
 
       // Asignar la ficha a una campaña: solo el dueño, y solo a una campaña de la que es miembro.
-      // Sacarla (lista vacía) puede el dueño. El GM no cambia campaignIds.
+      // El GM no cambia campaignIds. v5.11.0 (plan 25): una ficha de jugador queda fija en su campaña
+      // mientras el dueño sea miembro; se mueve o se libera recién cuando salió (o lo echaron). Las de NPC
+      // y las que el dueño tiene en una campaña donde es el GM se mueven libres. [Claude Code · 2026-11-05]
       function campaignChangeOk(before, after) {
         return after.campaignIds == before.campaignIds
           || (before.ownerUid == uid()
               && after.campaignIds.size() <= 1
-              && (after.campaignIds.size() == 0 || isMemberOf(after.campaignIds[0])));
+              && (after.campaignIds.size() == 0 || isMemberOf(after.campaignIds[0]))
+              && (before.campaignIds.size() == 0
+                  || isNpcSheet(after)
+                  || !stillMemberOf(before.campaignIds[0])
+                  || campaign(before.campaignIds[0]).gmUid == uid()));
       }
 
       match /{logField}/{entryId} {
@@ -211,7 +230,10 @@ service cloud.firestore {
       match /party/{charId} {
         allow read: if isMemberOf(campId);
         // Lo escribe la capa de sync del dueño de la ficha (o el GM).
+        // v5.11.0 (plan 25): una ficha de NPC no publica resumen (los jugadores no la ven). [Claude Code · 2026-11-05]
         allow create, update: if isMemberOf(campId)
+          && !(exists(/databases/$(database)/documents/characters/$(charId))
+               && isNpcSheet(get(/databases/$(database)/documents/characters/$(charId)).data))
           && (request.resource.data.ownerUid == uid() || isGmOf(campId))
           && (resource == null || resource.data.ownerUid == request.resource.data.ownerUid
               // v5.10.0 (plan 24): tras un traspaso, el nuevo dueño de la ficha republica el resumen. [Claude Code · 2026-11-04]
