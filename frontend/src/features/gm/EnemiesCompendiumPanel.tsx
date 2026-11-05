@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { NpcToEncounter } from './NpcToEncounter';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
 import { useGmSecretBinding } from '../../sync/gmSecrets';
 import { useGmAccess } from '../../store/gmAccess';
@@ -709,6 +710,7 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
 
         {isEncounterSectionOpen && (
           <>
+            <NpcToEncounter onAdd={spawnEnemy} />
             {activeEnemies.length === 0 ? (
               <div className="p-6 text-center font-mono-code text-xs text-slate-500 bg-[#0b0d14] rounded-xs border border-dashed border-[#23293c]">
                 No hay enemigos en el encuentro activo.<br />

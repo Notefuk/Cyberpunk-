@@ -356,7 +356,7 @@ export interface CharacterStoreState {
   setActiveCharacter: (id: string) => void;
   createNewCharacter: (handle: string, role: string) => void;
   deleteCharacter: (id: string) => void;
-  updateCharacterMeta: (patch: Partial<Pick<CharacterSheet, 'handle' | 'role' | 'roleRank' | 'eurodollars' | 'notes'>>) => void;
+  updateCharacterMeta: (patch: Partial<Pick<CharacterSheet, 'handle' | 'role' | 'roleRank' | 'eurodollars' | 'notes' | 'sheetKind'>>) => void;
   updateStat: (stat: StatKey, value: number) => void;
   updateSkill: (skill: CombatSkillKey, value: number) => void;
   adjustHp: (delta: number) => void;
