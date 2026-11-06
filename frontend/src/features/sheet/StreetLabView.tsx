@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useCharacterStore } from '../../store/useCharacterStore';
+import { useCloudState } from '../../sync/cloudState';
 import { 
   calculateMaxHp, 
   calculateSeriouslyWoundedThreshold, 
@@ -273,6 +274,9 @@ export const StreetLabView: React.FC = () => {
   const getActiveCharacter = useCharacterStore((state) => state.getActiveCharacter);
   const createNewCharacter = useCharacterStore((state) => state.createNewCharacter);
   const deleteCharacter = useCharacterStore((state) => state.deleteCharacter);
+  // v5.11.0 (plan 25): una ficha de la nube no se borra (queda guardada; se puede pasar a otro jugador). [Claude Code · 2026-11-05]
+  const cloudIds = useCloudState((s) => s.cloudIds);
+  const playerOwners = useCloudState((s) => s.playerOwners);
   const updateCharacterMeta = useCharacterStore((state) => state.updateCharacterMeta);
   const updateStat = useCharacterStore((state) => state.updateStat);
   const updateSkill = useCharacterStore((state) => state.updateSkill);
@@ -721,6 +725,18 @@ export const StreetLabView: React.FC = () => {
               ))}
             </select>
 
+            {/* v5.11.0 (plan 25): ficha de jugador o de NPC. [Claude Code · 2026-11-05] */}
+            <select
+              value={activeChar?.sheetKind ?? 'player'}
+              onChange={(e) => updateCharacterMeta({ sheetKind: e.target.value === 'npc' ? 'npc' : 'player' })}
+              className={'bg-[#171924] border border-[#2c3246] font-tech font-bold px-2 py-0.5 rounded focus:outline-none focus:border-[#dc2626] ' + (activeChar?.sheetKind === 'npc' ? 'text-amber-400' : 'text-[#10b981]')}
+              title="Ficha de jugador: entra sola a la campaña y el GM la ve. Ficha de NPC: solo la ve su dueño; el GM la puede sumar al combate como enemigo."
+              aria-label="Tipo de ficha"
+            >
+              <option value="player">Ficha de jugador</option>
+              <option value="npc">Ficha de NPC</option>
+            </select>
+
             <div className="flex items-center gap-1 bg-[#171924] border border-[#2c3246] px-1.5 py-0.5 rounded" title="Rango de Rol (1-10)">
               <span className="text-[10px] text-[#64748b]">Rnk:</span>
               <input
@@ -847,7 +863,16 @@ export const StreetLabView: React.FC = () => {
             <Upload className="w-3.5 h-3.5" />
           </button>
 
-          {characters.length > 1 && (
+          {characters.length > 1 && (cloudIds.includes(activeChar.id) || playerOwners[activeChar.id] !== undefined) && (
+            <span
+              className="p-1 bg-[#171924] text-[#475569] rounded-xs border border-[#2a3044] cursor-help"
+              title="Queda guardada en la nube: no se borra. Podés pasársela a otro jugador desde MESA // CAMPAÑA."
+              aria-label="Ficha de la nube: no se borra"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </span>
+          )}
+          {characters.length > 1 && !cloudIds.includes(activeChar.id) && playerOwners[activeChar.id] === undefined && (
             <button
               onClick={() => {
                 if (confirm(`¿Eliminar la ficha de ${activeChar.handle}?`)) {

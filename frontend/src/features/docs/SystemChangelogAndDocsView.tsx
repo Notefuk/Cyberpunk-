@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.11.0',
+    date: '2026-11-05',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa online',
+    title: 'Fichas fijas en la nube y fichas de NPC',
+    summary: 'Con tu cuenta abierta, las fichas nuevas suben solas y las de jugador entran solas a tu campaña: el GM las ve sin que las asignes y quedan ahí mientras seas miembro. Nadie borra una ficha de la nube. Cada ficha es de jugador o de NPC; las de NPC no las ven los jugadores y el GM las suma al combate como enemigos.',
+    highlights: [
+      'Subida y campaña automáticas; sin SACAR para las fichas de jugador.',
+      'Selector Ficha de jugador / Ficha de NPC en STREET LAB.',
+      'BESTIARIO: "Agregar NPC de mis fichas" al encuentro; el jugador nunca ve sus HP.'
+    ],
+    filesTouched: ['frontend/src/sync/cloudCampaigns.ts', 'frontend/src/sync/cloudCharacters.ts', 'frontend/src/engine/npcEnemy.ts', 'frontend/firestore.rules'],
+    metricsBadge: 'v5.11.0 • Mesa • Fichas fijas y NPC'
+  },
+  {
     version: 'v5.10.0',
     date: '2026-11-04',
     author: 'Claude Code',
@@ -1515,6 +1531,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.11.0': true,
     'v5.10.0': true,
     'v5.9.3': true,
     'v5.9.2': true,

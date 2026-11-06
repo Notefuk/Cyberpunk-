@@ -117,6 +117,20 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.11.0] - 2026-11-05 (Fichas fijas en la nube y fichas de NPC) [Claude Code · 2026-11-05]
+* **Category**: Mesa online (plan 25, `docs/plans/plan25-fichas-fijas-y-npc.md`). Pedido de Giuliano: el GM no veía las fichas de sus jugadores si no las asignaban a mano; las fichas tienen que quedar fijas en la nube, y las de NPC separadas de las de jugador.
+* **What Changed**:
+  * Con la cuenta abierta, toda ficha que se crea o se importa **sube sola** a la nube. Las que ya estaban solo en el dispositivo y las precargadas del CEMK Folio siguen con SUBIR A LA NUBE.
+  * Las fichas de jugador **entran solas** a la campaña donde el dueño es jugador (si es jugador en varias, a la mesa activa; nunca a una donde es GM) y **quedan fijas** mientras sea miembro: no hay SACAR. Al salir de la campaña (o si lo echan) la ficha queda en su nube sin campaña.
+  * **Nadie borra una ficha de la nube** (ni el dueño ni el GM); en STREET LAB el tacho se ve apagado con la explicación. Se puede pasar a otro jugador con el código (v5.10.0).
+  * STREET LAB: selector **Ficha de jugador / Ficha de NPC**. Las importadas del bestiario salen como NPC. Una ficha de NPC no entra a la party ni a ASIGNAR, y los jugadores no la pueden leer.
+  * BESTIARIO // tracker de encuentro: **"Agregar NPC de mis fichas"** suma una ficha de NPC como enemigo (stats, HP máximo, SP, armas con base STAT + skill). El jugador ve de ese NPC lo mismo que de cualquier enemigo: nombre, iniciativa, heridas y nivel de amenaza, nunca los HP.
+  * MESA // CAMPAÑA: etiqueta JUGADOR o NPC en TUS FICHAS EN LA NUBE y avisos de cómo funciona.
+  * Reglas de Firestore: `characters` sin `delete`; `campaignIds` fijo para una ficha de jugador mientras el dueño es miembro (se libera o se mueve cuando ya no lo es, o si la campaña se borró; las de NPC y las del GM en su campaña se mueven libres); el resumen de party de una ficha `sheetKind: 'npc'` se rechaza.
+* **Files Modified**: `engine/npcEnemy.ts`, `sync/autoAssign.ts`, `features/gm/NpcToEncounter.tsx` y sus tests (nuevos); `types/cyberpunk.ts` (`sheetKind`), `store/useCharacterStore.ts`, `data/enemiesCatalog.ts`, `sync/cloudCharacters.ts` (subida automática), `sync/cloudCampaigns.ts` (campaña automática, NPC fuera de la party, `leave` libera después de salir), `features/sheet/StreetLabView.tsx`, `features/cloud/CampaignPanel.tsx`, `features/cloud/CloudTableView.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`, `firestore.rules` y sus tests (6 nuevos); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 533 tests, 49 tests de reglas con el emulador y build. Con el emulador, un GM de prueba y el jugador Bob: Bob crea "Rata" y sube sola, entra sola a la campaña y el GM la lee y la ve en PARTY; el GM le baja el HP 40 → 33 y Bob lo ve; Bob no puede sacarla ni borrarla (permiso denegado); una ficha marcada NPC sube pero no entra a la campaña ni a la party; el NPC al combate entra con 40/40 HP y su vista pública no tiene HP; al salir, Rata queda sin campaña; al volver a unirse entra sola otra vez; las precargadas no subieron.
+* **Publicación**: hay que publicar las reglas en dev y en prod antes del hosting; cada una con OK de Giuliano. Una ficha que hoy está en una campaña queda fija ahí.
+
 ### [v5.10.0] - 2026-11-04 (Pasarle una ficha a otro jugador) [Claude Code · 2026-11-04]
 * **Category**: Mesa online (plan 24, `docs/plans/plan24-pasar-ficha.md`). Pedido de Giuliano: la ficha de un jugador quedó en la cuenta del GM y no había forma de pasársela.
 * **What Changed**:

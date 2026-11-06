@@ -567,6 +567,8 @@ export interface CharacterSheet {
   role: string;
   roleRank: number;
   notes?: string;
+  /** v5.11.0 (plan 25): ficha de jugador o de NPC (el NPC no entra a la party; va al combate como enemigo). Sin el campo = jugador. [Claude Code · 2026-11-05] */
+  sheetKind?: 'player' | 'npc';
   stats: Record<StatKey, number>;
   currentHp: number;
   currentLuck: number;

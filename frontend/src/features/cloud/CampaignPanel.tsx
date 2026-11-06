@@ -144,7 +144,8 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
 
   const myCloud = characters.filter((ch) => cloudIds.includes(ch.id) && playerOwners[ch.id] === undefined);
   const mineHere = myCloud.filter((ch) => charCampaign[ch.id] === camp.id);
-  const free = myCloud.filter((ch) => !charCampaign[ch.id]);
+  // v5.11.0 (plan 25): las de NPC no van a la party. [Claude Code · 2026-11-05]
+  const free = myCloud.filter((ch) => !charCampaign[ch.id] && ch.sheetKind !== 'npc');
   const memberName = (m: string) => camp.memberNames[m] || 'Miembro ' + m.slice(0, 5);
   const ctl = () => getCampaignController()!;
 
@@ -238,11 +239,19 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
 
       <div className="space-y-1">
         <div className="font-tech text-[11px] text-[#64748b] uppercase tracking-wider">Tus fichas en esta campaña</div>
+        {!isGm && (
+          <p className="font-mono-code text-[11px] text-[#64748b]">
+            Tus fichas de jugador entran solas a esta campaña y el GM las ve. Quedan acá mientras seas miembro.
+          </p>
+        )}
         {mineHere.length === 0 && <p className="font-mono-code text-xs text-[#64748b]">Ninguna todavía.</p>}
         {mineHere.map((ch) => (
           <div key={ch.id} className="flex items-center gap-2 font-mono-code text-xs text-[#94a3b8]">
             <span>{ch.handle} ({ch.role})</span>
-            <button type="button" className={btnGhost + ' ml-auto'} disabled={busy} onClick={() => void run(() => ctl().assign(ch.id, null))}>Sacar</button>
+            {/* Plan 25: una ficha de jugador queda fija; solo se saca la de NPC o la del GM en su campaña. */}
+            {(isGm || ch.sheetKind === 'npc') && (
+              <button type="button" className={btnGhost + ' ml-auto'} disabled={busy} onClick={() => void run(() => ctl().assign(ch.id, null))}>Sacar</button>
+            )}
           </div>
         ))}
         {free.length > 0 && (

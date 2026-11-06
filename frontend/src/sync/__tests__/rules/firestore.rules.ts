@@ -492,3 +492,55 @@ describe('traspaso de fichas (plan 24)', () => {
     await assertSucceeds(setDoc(doc(db('bob'), 'campaigns/camp1/party/c1'), { ownerUid: 'bob', handle: 'Vex', currentHp: 30 }));
   });
 });
+
+// v5.11.0 (plan 25): fichas fijas en la nube y fichas de NPC. [Claude Code · 2026-11-05]
+describe('fichas fijas y NPC (plan 25)', () => {
+  it('nadie borra una ficha de la nube, ni el dueño ni el GM', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['characters', 'c1'], baseChar('alice', ['camp1']));
+    await assertFails(deleteDoc(doc(db('alice'), 'characters/c1')));
+    await assertFails(deleteDoc(doc(db('gm'), 'characters/c1')));
+  });
+
+  it('una ficha de jugador queda en su campaña mientras el dueño es miembro', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['campaigns', 'camp2'], { ...camp, memberUids: ['gm', 'alice'] });
+    await seed(['characters', 'c1'], baseChar('alice', ['camp1']));
+    await assertFails(updateAs(db('alice'), 'c1', 'alice_dev1', 'campaignIds', []));
+    await assertFails(updateAs(db('alice'), 'c1', 'alice_dev2', 'campaignIds', ['camp2']));
+  });
+
+  it('cuando el dueño salió (o lo echaron, o se borró la campaña) la libera o la pasa a otra', async () => {
+    await seed(['campaigns', 'camp1'], { ...camp, memberUids: ['gm', 'bob'] });
+    await seed(['campaigns', 'camp2'], { ...camp, memberUids: ['gm', 'alice'] });
+    await seed(['characters', 'c1'], baseChar('alice', ['camp1']));
+    await assertSucceeds(updateAs(db('alice'), 'c1', 'alice_dev1', 'campaignIds', []));
+    await seed(['characters', 'c2'], baseChar('alice', ['camp1']));
+    await assertSucceeds(updateAs(db('alice'), 'c2', 'alice_dev1', 'campaignIds', ['camp2']));
+    await seed(['characters', 'c3'], baseChar('alice', ['borrada']));
+    await assertSucceeds(updateAs(db('alice'), 'c3', 'alice_dev1', 'campaignIds', []));
+  });
+
+  it('una ficha de NPC, o la del GM en su propia campaña, se mueve libre', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['characters', 'c1'], { ...baseChar('alice', ['camp1']), sheetKind: 'npc' });
+    await assertSucceeds(updateAs(db('alice'), 'c1', 'alice_dev1', 'campaignIds', []));
+    await seed(['characters', 'c2'], baseChar('gm', ['camp1']));
+    await assertSucceeds(updateAs(db('gm'), 'c2', 'gm_dev1', 'campaignIds', []));
+  });
+
+  it('el resumen de party de una ficha de NPC se rechaza; el de una de jugador no', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['characters', 'npc1'], { ...baseChar('gm', ['camp1']), sheetKind: 'npc' });
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/party/npc1'), { ownerUid: 'gm', handle: 'Jefe', currentHp: 40 }));
+    await seed(['characters', 'c1'], { ...baseChar('alice', ['camp1']), sheetKind: 'player' });
+    await assertSucceeds(setDoc(doc(db('alice'), 'campaigns/camp1/party/c1'), { ownerUid: 'alice', handle: 'Vex', currentHp: 30 }));
+  });
+
+  it('un jugador no lee la ficha de NPC del GM', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await seed(['characters', 'npc1'], { ...baseChar('gm'), sheetKind: 'npc' });
+    await assertFails(getDoc(doc(db('alice'), 'characters/npc1')));
+    await assertSucceeds(getDoc(doc(db('gm'), 'characters/npc1')));
+  });
+});

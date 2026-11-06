@@ -113,12 +113,21 @@ export function CloudTableView() {
               <ul className="space-y-2">
                 {cloudChars.map((c) => (
                   <li key={c.id} className="font-mono-code text-xs text-[#94a3b8] space-y-1">
-                    <div>{c.handle} <span className="text-[#64748b]">({c.role})</span></div>
+                    <div>
+                      {c.handle} <span className="text-[#64748b]">({c.role})</span>{' '}
+                      {/* v5.11.0 (plan 25): ficha de jugador o de NPC. [Claude Code · 2026-11-05] */}
+                      <span className={'text-[10px] px-1 py-0.5 rounded-xs ' + (c.sheetKind === 'npc' ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/15 text-emerald-300')}>
+                        {c.sheetKind === 'npc' ? 'NPC' : 'JUGADOR'}
+                      </span>
+                    </div>
                     <TransferRowAction charId={c.id} handle={c.handle} />
                   </li>
                 ))}
               </ul>
             )}
+            <p className="font-mono-code text-[11px] text-[#64748b]">
+              Las fichas que crees o importes con tu cuenta abierta suben solas y quedan guardadas en la nube (no se borran).
+            </p>
             <h3 className="font-tech text-sm text-white uppercase tracking-wider pt-3">Fichas solo en este dispositivo</h3>
             {localChars.length === 0 ? (
               <p className="font-mono-code text-xs text-[#64748b]">No hay fichas locales para subir.</p>

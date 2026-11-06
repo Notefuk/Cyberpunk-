@@ -2606,6 +2606,7 @@ export function convertEnemyToCharacterSheet(enemy: EnemySheet): CharacterSheet 
     handle: enemy.name,
     role: enemy.role,
     roleRank: rank,
+    sheetKind: 'npc', // v5.11.0 (plan 25): del bestiario sale como NPC. [Claude Code · 2026-11-05]
     notes: `[FICHA DE AMENAZA // ${enemy.faction.toUpperCase()}]\n${enemy.subtitle}\n\n${enemy.loreSummary}\n\nREGLAS ESPECIALES:\n${enemy.specialRules.map(r => `• ${r}`).join('\n')}`,
     stats: { ...enemy.stats },
     currentHp: enemy.hp,
