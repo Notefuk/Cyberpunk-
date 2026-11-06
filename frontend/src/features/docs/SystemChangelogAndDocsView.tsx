@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.12.0',
+    date: '2026-11-06',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido canon',
+    title: 'Black Chrome I: todos sus ítems',
+    summary: 'Entran los ítems de Black Chrome (armas, ciberware, Cyberfingers, Linear Frames, armadura, moda, equipo y apps) y de Black Chrome+, cada uno con su página. Se borran 15 ítems que no estaban en ningún libro; si tu ficha tiene uno, STREET LAB te avisa y lo conservás.',
+    highlights: [
+      '52 armas, 40 de ciberware, 16 de moda y armadura, 21 de equipo y 5 apps de Black Chrome; 12 ítems de Black Chrome+.',
+      'Ítems corregidos con los datos del libro (Kleaver, Mono-Katana, Perseus, Reflex Co-Processor y otros).',
+      'Aviso en STREET LAB por ítems que salieron del catálogo.'
+    ],
+    filesTouched: ['frontend/src/data/core-rules.cprpack.json', 'frontend/src/data/removedCatalogItems.ts', 'frontend/src/features/sheet/RemovedItemsNotice.tsx'],
+    metricsBadge: 'v5.12.0 • Canon • Black Chrome I'
+  },
+  {
     version: 'v5.11.1',
     date: '2026-11-06',
     author: 'Claude Code',
@@ -1543,6 +1559,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.12.0': true,
     'v5.11.1': true,
     'v5.11.0': true,
     'v5.10.0': true,

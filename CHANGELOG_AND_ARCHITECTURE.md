@@ -117,6 +117,22 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.12.0] - 2026-11-06 (Black Chrome I: todos los ítems de Black Chrome y Black Chrome+) [Claude Code · 2026-11-06]
+* **Category**: Contenido canon (plan 26, `docs/plans/plan26-black-chrome.md`, primera de tres versiones).
+* **What Changed**:
+  * Se reemplazan los 31 ítems "Black Chrome" que tenía el pack: solo 1 coincidía con el libro. 15 se borran (inventados, o vehículos cargados como equipo) y el resto se corrige con los datos del libro.
+  * Entran los ítems de *Black Chrome Tech & Style Guide*, todos con página y con su puesto de Night Market (`booth`):
+    * 52 armas (pp.85-124) y los 3 fluidos de la Weeping Reaver como equipo;
+    * 20 piezas de ciberware, 16 Cyberfingers y 4 Linear Frames (pp.15-26, 51-56);
+    * 14 armaduras y 2 de moda (pp.27-37);
+    * 21 de equipo y 5 apps.
+  * Entra *Black Chrome+*: 6 armas, 3 municiones, 1 armadura, 1 droga y 1 ítem más. "Looking the Part" queda citado en la guía de moda; "Looking at Linear" suma a los Linear Frames del Core la tirada de Cybertech para reconocerlos (DV13 Sigma, DV9 Beta).
+  * STREET LAB avisa si una ficha tiene un ítem borrado: lo nombra y dice por qué; la ficha lo conserva (`data/removedCatalogItems.ts`, `features/sheet/RemovedItemsNotice.tsx`).
+  * Las armas que se tiran con Athletics calculan su base con Athletics (antes caían en Handgun).
+  * Detalle de lo borrado y corregido: `docs/canon-audit/v5.12.0-black-chrome-items.md`.
+* **Files Modified**: `data/core-rules.cprpack.json` (v1.25), `data/removedCatalogItems.ts`, `features/sheet/RemovedItemsNotice.tsx` y `engine/__tests__/blackChromeCatalog.test.ts` (nuevos); `types/cyberpunk.ts` (`booth`, `sourcePage` en armadura), `engine/characterEngine.ts` (Athletics), `features/sheet/StreetLabView.tsx`, `data/creation/fashionGuide.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 541 tests (6 nuevos: nada borrado sigue en el catálogo, todo ítem de BC y BC+ tiene página, cantidades por categoría, ids únicos, aviso en la ficha) y build. En local: el Compendium filtra 137 ítems de Black Chrome con su página; el aviso aparece con una ficha que tiene un ciberware borrado; consola limpia.
+
 ### [v5.11.1] - 2026-11-06 (Las fichas de jugador entran solas a la campaña también en prod) [Claude Code · 2026-11-06]
 * **Category**: Mesa online (arreglo de la v5.11.0, plan 25).
 * **What Changed**: en prod, Dow Jones y Kessler (1swordhie) no entraban solas a la campaña. La campaña automática esperaba una lectura de la lista de campañas "confirmada por el servidor"; con la caché persistente de Firestore, si el servidor no trae cambios esa lectura no llega nunca. En el emulador no se veía porque la caché arrancaba vacía. Ahora corre con cualquier lectura de la lista; si el caché está viejo (por ejemplo, te echaron), la regla rechaza la asignación y no pasa nada. Liberar fichas de campañas viejas (`cleanupOrphans`) sigue esperando la lectura del servidor, como antes.
