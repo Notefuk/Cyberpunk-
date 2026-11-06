@@ -40,6 +40,7 @@ import { CompendiumShopModal } from './CompendiumShopModal';
 import { ItemNameButton, useItemDisplayName } from './ItemNameButton';
 import { nicknameKey } from '../../engine/itemNames';
 import { InjuryPenaltyReminder } from './InjuryPenaltyReminder';
+import { RemovedItemsNotice } from './RemovedItemsNotice';
 import type { CompendiumCategory } from '../compendium/CompendiumView';
 import { RoleAllocationPanel } from './RoleAllocationPanel';
 import {
@@ -889,6 +890,8 @@ export const StreetLabView: React.FC = () => {
         </div>
 
       </div>
+
+      <RemovedItemsNotice sheet={activeChar} />
 
       {/* Respaldo completo, restauración e importación por archivo */}
       <div className="flex flex-wrap items-center gap-1.5">

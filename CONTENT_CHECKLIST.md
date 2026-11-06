@@ -326,6 +326,9 @@
 - [x] [Claude Code · 2026-10-21] Conversión FBC: HL = 14 (Biosystem) + HL del paquete, cambio de cuerpo, HP al máximo, armadura con penalizador (pp. 94-95).
 - [x] [Claude Code · 2026-10-21] Motor FBC: `statFloor` de REF/DEX/MOVE, sin Wound State, sin Speedheal, inmune a 9 heridas críticas, terapia 'Borgware x2' (pp. 94, 107-108).
 - [x] [Claude Code · 2026-10-21] Borrados del pack 29 `fbc-*` inventados, `borg-heavy-autocannon`, `borg-super-shotgun`, `grenade-laser-chaff`, `external-linear-frame-omega`; `fbc-rules` reescrito.
-- [ ] [Claude Code · 2026-10-21] Marcos Black Chrome (Vermilion, Fūma Kotarō).
+- [x] [Claude Code · 2026-10-21] Marcos Black Chrome (Vermilion, Fūma Kotarō). Hecho en v5.12.0 con los 4 Linear Frames de BC pp.51-56 [Claude Code · 2026-11-06].
+- [x] [Claude Code · 2026-11-06] Black Chrome I (v5.12.0, plan 26): todos los ítems de BC (sin vehículos) y de Black Chrome+, con página y puesto; 15 inventados borrados con aviso en la ficha (`docs/canon-audit/v5.12.0-black-chrome-items.md`).
+- [ ] [Claude Code · 2026-11-06] Black Chrome II (v5.13.0): catálogo de vehículos y Nomad Access.
+- [ ] [Claude Code · 2026-11-06] Black Chrome III (v5.14.0): generador de Night Markets y Economics 101.
 - [ ] [Claude Code · 2026-10-21] HL de cada pieza del paquete como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad.
 - [ ] [Claude Code · 2026-10-21] Verificar dudas del libro: `packageHlAverage` impreso (Enforcer 53 vs p. 95 con 55) y precios del ejemplo Bazooka Joe.
