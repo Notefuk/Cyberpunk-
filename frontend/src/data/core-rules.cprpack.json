@@ -4812,7 +4812,7 @@
       "install": "Hospital",
       "humanityLoss": "4d6 (14)",
       "cost": 1000,
-      "description": "Implanted frame increasing BODY stat to 12. Requires BODY 6 and Grafted Muscle.",
+      "description": "Implanted frame increasing BODY stat to 12. Requires BODY 6 and Grafted Muscle. Black Chrome+ p.12: con ropa ajustada se le ven las líneas de expansión; reconocerlo es Cybertech DV13.",
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
       "era": "2045"
@@ -4824,7 +4824,7 @@
       "install": "Hospital",
       "humanityLoss": "4d6 (14)",
       "cost": 5000,
-      "description": "Heavy implanted frame increasing BODY stat to 14. Requires BODY 8 and 2x Grafted Muscle.",
+      "description": "Heavy implanted frame increasing BODY stat to 14. Requires BODY 8 and 2x Grafted Muscle. Black Chrome+ p.13: casi imposible de ocultar sin ropa holgada; reconocerlo es Cybertech DV9.",
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
       "era": "2045"

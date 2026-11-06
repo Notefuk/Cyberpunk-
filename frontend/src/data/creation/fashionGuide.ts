@@ -9,6 +9,8 @@ export const FASHION_WHAT_FOR: readonly string[] = [
   'Con un Agent tenés +2 a Wardrobe & Style, pero solo si usás la ropa que te sugiere (cambia cada temporada, Core p.352). Light Tattoo (3 o más) y el recubrimiento metálico brillante de un cyberlimb también dan +2, una sola vez cada uno (Core pp.358, 367).',
   'La ropa de 2045 es digital: avisa si está rota o sucia, se adapta a la temperatura y puede cambiar de color o mostrar imágenes (Core p.327).',
   'En Complete Package tenés 800 €$ solo para moda o Fashionware; lo que no gastes se pierde (Core p.105). Cada pieza tiene su precio según el estilo (Core p.102).',
+  // v5.12.0 (plan 26) [Claude Code · 2026-11-06]
+  'Black Chrome+ ("Looking the Part", pp.7-11) trae una ilustración de cada uno de los 10 estilos, con las mismas tres palabras del Core. Son inspiración, no límite: cada estilo abarca muchas variantes.',
 ];
 
 export interface FashionStyleGuide {
