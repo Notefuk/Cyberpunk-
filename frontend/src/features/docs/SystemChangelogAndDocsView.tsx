@@ -26,6 +26,18 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.11.1',
+    date: '2026-11-06',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa online',
+    title: 'Las fichas de jugador entran solas a la campaña',
+    summary: 'Arreglo de la v5.11.0: en algunos dispositivos las fichas de jugador no entraban solas a la campaña hasta que cambiaba algo en ella. Ahora entran al abrir la app.',
+    highlights: ['La campaña automática también corre con la lista de campañas guardada en el dispositivo.'],
+    filesTouched: ['frontend/src/sync/cloudCampaigns.ts'],
+    metricsBadge: 'v5.11.1 • Mesa • Arreglo'
+  },
+  {
     version: 'v5.11.0',
     date: '2026-11-05',
     author: 'Claude Code',
@@ -1531,6 +1543,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.11.1': true,
     'v5.11.0': true,
     'v5.10.0': true,
     'v5.9.3': true,
