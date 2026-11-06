@@ -297,6 +297,8 @@ export interface WeaponItem {
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
   rebuild2077?: 'standard' | 'power' | 'smart' | 'tech';
+  /** v5.12.0 (plan 26): puestos del Night Market donde se vende (Black Chrome, "Booth B1"). [Claude Code · 2026-11-06] */
+  booth?: string[];
 }
 
 export interface ArmorItem {
@@ -312,6 +314,9 @@ export interface ArmorItem {
   sourceBookTitle?: string;
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
+  sourcePage?: number;
+  /** v5.12.0 (plan 26): puestos del Night Market donde se vende (Black Chrome, "Booth B1"). [Claude Code · 2026-11-06] */
+  booth?: string[];
 }
 
 export interface CyberwareItem {
@@ -328,6 +333,8 @@ export interface CyberwareItem {
   sourcePage?: number;
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
+  /** v5.12.0 (plan 26): puestos del Night Market donde se vende (Black Chrome, "Booth B1"). [Claude Code · 2026-11-06] */
+  booth?: string[];
 }
 
 export interface ProgramItem {
@@ -360,6 +367,8 @@ export interface GearItem {
   sourcePage?: number;
   era?: '2045' | '2077';
   weaponTechType?: 'standard' | 'power' | 'tech' | 'smart';
+  /** v5.12.0 (plan 26): puestos del Night Market donde se vende (Black Chrome, "Booth B1"). [Claude Code · 2026-11-06] */
+  booth?: string[];
 }
 
 export interface DrugItem {

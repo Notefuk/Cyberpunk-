@@ -1,7 +1,7 @@
 {
   "id": "core-rules",
   "name": "Cyberpunk RED Core Rules",
-  "version": "1.24",
+  "version": "1.25",
   "era": "2045",
   "description": "The definitive Cyberpunk RED Core Rulebook master item catalog, weapons, armor, ammo, attachments, cyberware, street drugs, general gear, and netrunning programs.",
   "weapons": [
@@ -1270,192 +1270,6 @@
       "era": "2045"
     },
     {
-      "id": "rostovic-kleaver",
-      "name": "Rostović Kleaver",
-      "type": "Ranged",
-      "skill": "Shoulder Arms",
-      "damage": "5d6",
-      "rof": 1,
-      "hands": 2,
-      "concealable": false,
-      "cost": 500,
-      "costTier": "Expensive",
-      "standardMag": 2,
-      "ammoType": "Slug",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Double-barrel sawed-off break-action heavy shotgun. Fires both barrels simultaneously on demand."
-    },
-    {
-      "id": "sternmeyer-m02",
-      "name": "Sternmeyer M-02 Heavy Rifle",
-      "type": "Ranged",
-      "skill": "Shoulder Arms",
-      "damage": "5d6",
-      "rof": 1,
-      "hands": 2,
-      "concealable": false,
-      "cost": 1000,
-      "costTier": "Very Expensive",
-      "standardMag": 20,
-      "ammoType": "Rifle",
-      "altFireModes": "Autofire (4)",
-      "autofireMaxMult": 4,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Military-grade battle rifle with reinforced titanium barrel. +1 to Attack Checks (Excellent Quality)."
-    },
-    {
-      "id": "militech-perseus",
-      "name": "Militech Perseus",
-      "type": "Ranged",
-      "skill": "Shoulder Arms",
-      "damage": "5d6",
-      "rof": 1,
-      "hands": 2,
-      "concealable": false,
-      "cost": 1000,
-      "costTier": "Very Expensive",
-      "standardMag": 30,
-      "ammoType": "Rifle",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Composite assault weapon with integrated smartlink sensor suite."
-    },
-    {
-      "id": "gunmart-smart-special",
-      "name": "GunMart Smart Special",
-      "type": "Ranged",
-      "skill": "Handgun",
-      "damage": "3d6",
-      "rof": 2,
-      "hands": 1,
-      "concealable": true,
-      "cost": 100,
-      "costTier": "Premium",
-      "standardMag": 8,
-      "ammoType": "Heavy Pistol",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Budget smart pistol. Poor quality: Jams on critical failure (roll of 1)."
-    },
-    {
-      "id": "borg-assault-rifle",
-      "name": "Borg Assault Rifle",
-      "type": "Ranged",
-      "skill": "Shoulder Arms",
-      "damage": "5d6",
-      "rof": 1,
-      "hands": 2,
-      "concealable": false,
-      "cost": 1000,
-      "costTier": "Very Expensive",
-      "standardMag": 40,
-      "ammoType": "Rifle",
-      "altFireModes": "Autofire (4)",
-      "autofireMaxMult": 4,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Requires BODY 11+ or FBC chassis. Fires heavy depleted-uranium sabot rounds."
-    },
-    {
-      "id": "sanroo-hello-cutie",
-      "name": "Sanroo Hello Cutie Ultra-K8",
-      "type": "Ranged",
-      "skill": "Handgun",
-      "damage": "2d6",
-      "rof": 2,
-      "hands": 1,
-      "concealable": true,
-      "cost": 500,
-      "costTier": "Expensive",
-      "standardMag": 30,
-      "ammoType": "Medium Pistol",
-      "altFireModes": "Autofire (3)",
-      "autofireMaxMult": 3,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Concealable submachine gun disguised as a pink consumer novelty toy."
-    },
-    {
-      "id": "tsunami-rasetsu",
-      "name": "Tsunami Arms Rasetsu",
-      "type": "Ranged",
-      "skill": "Shoulder Arms",
-      "damage": "6d6",
-      "rof": 1,
-      "hands": 2,
-      "concealable": false,
-      "cost": 2000,
-      "costTier": "Super Luxury",
-      "standardMag": 3,
-      "ammoType": "Slug",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Electromagnetic heavy sniper railgun. Overpenetrates cover."
-    },
-    {
-      "id": "kendachi-mono-katana",
-      "name": "Kendachi Mono-Katana",
-      "type": "Melee",
-      "skill": "Melee Weapon",
-      "damage": "3d6",
-      "rof": 2,
-      "hands": 2,
-      "concealable": false,
-      "cost": 1000,
-      "costTier": "Very Expensive",
-      "standardMag": 0,
-      "ammoType": "N/A",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Monomolecular edged katana. Halves defender's armor SP. +1 to Attack Checks (Excellent Quality)."
-    },
-    {
-      "id": "slamdance-hyper-hammer",
-      "name": "SlamDance Hyper-Hammer",
-      "type": "Melee",
-      "skill": "Melee Weapon",
-      "damage": "4d6",
-      "rof": 1,
-      "hands": 2,
-      "concealable": false,
-      "cost": 500,
-      "costTier": "Expensive",
-      "standardMag": 0,
-      "ammoType": "N/A",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Hydraulically assisted sledgehammer. Destroys cover SP on impact."
-    },
-    {
-      "id": "faisals-magna-knuckles",
-      "name": "Faisal's Magna Knuckles",
-      "type": "Melee",
-      "skill": "Brawling",
-      "damage": "2d6",
-      "rof": 2,
-      "hands": 1,
-      "concealable": true,
-      "cost": 100,
-      "costTier": "Premium",
-      "standardMag": 0,
-      "ammoType": "N/A",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "notes": "Electromagnetic brawling knuckles. Inflicts EMP shock on metallic targets."
-    },
-    {
       "id": "arasaka-hjke11-yukimura",
       "name": "Arasaka HJKE-11 Yukimura",
       "type": "Ranged",
@@ -1970,6 +1784,1279 @@
       "sourcePage": 6,
       "era": "2045",
       "notes": "Poor Quality Exotic SMG. Autofire (3) and Suppressive Fire can be used only with 2 or more bullets in the clip; both drain the clip entirely, after which the barrel sloughs off and the weapon is destroyed beyond repair. Stats table: p.7."
+    },
+    {
+      "id": "arachnid-grenade",
+      "name": "Arachnid Grenade",
+      "type": "Ranged",
+      "skill": "Athletics",
+      "damage": "0",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Granada de red no letal (Grenade Ammunition, lanzable o con lanzagranadas). Sin daño: el objetivo queda atrapado (sin Move, -2 a todas las Acciones, no usa armas a dos manos) tras 30 s (10 rondas) salvo que lo empapen en alcohol. La red tiene 15 HP; escapar: DV15 Brawling.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 86,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "shuriken-tornado-grenade",
+      "name": "Shuriken Tornado Grenade",
+      "type": "Ranged",
+      "skill": "Athletics",
+      "damage": "6d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Grenade Ammunition que daña como granada Armor Piercing. El daño se tira por separado para cada objetivo. Si causa Foreign Object, se tira otra Lesión Crítica (no Foreign Object) que también se sufre, sin daño adicional.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 87,
+      "booth": [
+        "B7"
+      ]
+    },
+    {
+      "id": "gunmart-door-cracker",
+      "name": "GunMart Door Cracker",
+      "type": "Ranged",
+      "skill": "Demolitions",
+      "damage": "6d6",
+      "rof": 0,
+      "hands": 0,
+      "concealable": false,
+      "cost": 50,
+      "costTier": "Costly",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Explosivo de entrada forzada. Montaje y armado: 30 s (10 rondas), reducible a 1 Acción con DV15 Demolitions (un intento). Solo daña la sección de cobertura de 2x2 m a la que está pegado.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 87,
+      "booth": [
+        "B7",
+        "F4"
+      ]
+    },
+    {
+      "id": "micro-hydrogen-combustor",
+      "name": "Micro Hydrogen Combustor",
+      "type": "Ranged",
+      "skill": "Demolitions",
+      "damage": "6d6",
+      "rof": 0,
+      "hands": 0,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Explosivo que detona 30 s (10 rondas) tras sumergirse en líquido; explota como granada Armor Piercing y cubre 10x10 m de vapor 1 minuto (penalización típica -4).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 88,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "killchip-100-micro-bomb",
+      "name": "KillChip 100 Micro-Bomb",
+      "type": "Ranged",
+      "skill": "Demolitions",
+      "damage": "6d6",
+      "rof": 0,
+      "hands": 0,
+      "concealable": false,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Chip de memoria explosivo: al insertarlo en Chipware Socket causa 6d6 directo a HP (ignora armadura) y Lesión Crítica Brain Injury. DV15 Criminology/Cybertech/Demolitions/Electronics-Security Tech o DV21 Perception lo identifica.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 88,
+      "booth": [
+        "A2"
+      ]
+    },
+    {
+      "id": "ktech-security-grenade",
+      "name": "KTech Security Grenade",
+      "type": "Ranged",
+      "skill": "Athletics",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Grenade Ammunition Armor Piercing de 5d6 que no daña la cobertura. Lanzable o con lanzagranadas.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 89,
+      "booth": [
+        "F4"
+      ]
+    },
+    {
+      "id": "outlet-explosive",
+      "name": "OUTLet Explosive",
+      "type": "Ranged",
+      "skill": "Demolitions",
+      "damage": "6d6",
+      "rof": 0,
+      "hands": 0,
+      "concealable": false,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Explosivo disfrazado de adaptador de enchufe. Armado 30 s (10 rondas), reducible a 1 Acción con DV15 Demolitions (un intento). Detona a distancia como granada Armor Piercing. Identificable con DV15 Criminology/Demolitions/Electronics-Security Tech o DV21 Perception.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 89,
+      "booth": [
+        "A2"
+      ]
+    },
+    {
+      "id": "tr-4-detonator-fluid",
+      "name": "TR-4 Detonator Fluid",
+      "type": "Ranged",
+      "skill": "Demolitions",
+      "damage": "6d6",
+      "rof": 0,
+      "hands": 0,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Líquido que se vierte en el tanque de CHOOH2 de un vehículo (30 s / 10 rondas, o 1 Acción con DV15 Demolitions). Al arrancar el vehículo explota como granada Armor Piercing, ignora su blindaje y golpea el punto débil (doble daño).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 90,
+      "booth": [
+        "B7"
+      ]
+    },
+    {
+      "id": "arasaka-weeping-reaver-katana",
+      "name": "Arasaka Weeping Reaver Katana",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 5000,
+      "costTier": "Luxury",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Calidad Excelente, Exótica Very Heavy. Una vez por minuto (20 rondas), como Acción, recubre la hoja con fluidos de su empuñadura (3 cámaras, hasta 3 fluidos a la vez, 1 minuto cada uno): Fire (prende al objetivo, 2 HP por turno), Acid (ablanda armadura en 2) y Wound Salt (segunda Lesión Crítica). Cada cánister cuesta 100eb.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 91,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "kendachi-mono-katana",
+      "name": "Kendachi Mono-Katana",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exótica Very Heavy. Con la clave biométrica correcta, el daño ignora la armadura si es menor a SP7 (SP7+ funciona normal). Sin clave no vibra.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 92,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "solo-wolf-and-bot-mono-katana",
+      "name": "Solo Wolf and Bot Mono-Katana",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Calidad Pobre, réplica de coleccionista de la Mono-Katana: sin seguridad biométrica ni anulación de armadura. DV13 Perception/Weaponstech para notar que es falsa.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 92,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "kendachi-mono-wakizashi",
+      "name": "Kendachi Mono-Wakizashi",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exótica Heavy a una mano. Con la clave biométrica correcta, el daño ignora la armadura si es menor a SP7 (SP7+ funciona normal). Sin clave no vibra.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 93,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "white-hornet-tanto",
+      "name": "White Hornet Tanto",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "2d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exótica Medium, ocultable. Si el daño dejaría al objetivo bajo 1 HP, el portador puede dejarlo Inconsciente con 1 HP.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 93,
+      "booth": [
+        "F4"
+      ]
+    },
+    {
+      "id": "rostovic-kleaver",
+      "name": "Rostović Kleaver",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exótica Very Heavy, requiere BODY 11+. Cargarlo (Acción, 20 rondas de calentamiento, 3 baterías de 50eb que se destruyen) lo mantiene activo 5 minutos: 5d6, ignora armadura menor a SP11 y deja al objetivo Mildly On Fire. Si se desequipa cargado se funde y se destruye. Nunca se maneja a una mano.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 94,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "zhirafa-rhinocefist",
+      "name": "Zhirafa Rhinocefist",
+      "type": "Melee",
+      "skill": "Brawling",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exoesqueleto de brazo con Interface Plugs: los ataques de Brawling hacen siempre 4d6 sin importar BODY. Por una Acción se convierte en arma Exótica Very Heavy de Calidad Excelente (la mano queda inutilizada). Ponérselo o quitárselo es una Acción; no ocultable; bloquea las opciones del brazo.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 95,
+      "booth": [
+        "B5"
+      ]
+    },
+    {
+      "id": "kendachi-mono-guard",
+      "name": "Kendachi Mono-Guard",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Monolátigo Exótico Heavy a una mano, ocultable. Si causa Foreign Object, se tira otra Lesión Crítica (no Foreign Object) y se sufre esa en su lugar.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 96,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "faisals-magna-knuckles",
+      "name": "Faisal's Magna Knuckles",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "2d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exótica Medium. Si alguien recibe 2 golpes en un mismo turno debe superar DV15 Cybertech o el GM inutiliza 2 piezas de su cyberware 1 minuto; cada Check gasta 1 de 8 cargas de la batería (50eb, recarga 1 h). Sin cargas sigue siendo un arma Medium.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 96,
+      "booth": [
+        "E2"
+      ]
+    },
+    {
+      "id": "pursuit-security-bouncer",
+      "name": "The Pursuit Security Bouncer",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "2d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exótica combinada Stun Baton y Microwaver (CP:R p.348, modo microondas como Very Heavy Pistol). Ambos modos gastan 1 carga de la batería de 8 (50eb, recarga 1 h). Ponerlo o quitarlo es una Acción; no ocultable ni en popup cyberware; bloquea opciones de la mano.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 97,
+      "booth": [
+        "F4"
+      ]
+    },
+    {
+      "id": "slamdance-fangfist",
+      "name": "SlamDance FangFist",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "2d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Calidad Excelente, guante con hoja a una mano. El turno en que se desenvaina actúa como Very Heavy (4d6, ROF 1). Retraer la hoja o ponerse/quitarse el guante es una Acción; con la hoja extendida la mano no sirve para otra cosa. Ocultable con hoja retraída (Conceal/Reveal Object).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 98,
+      "booth": [
+        "F4"
+      ]
+    },
+    {
+      "id": "slamdance-tasmanskiy-klo",
+      "name": "SlamDance Tasmanskiy Klô",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 5000,
+      "costTier": "Luxury",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Calidad Excelente, Exótica Very Heavy en un Battleglove (se saca/guarda sin Acción; mano ocupada mientras está fuera). +2 a Interrogation al amenazar. El guante tiene 1 slot de opción de Cyberarm. Ponerlo/quitarlo es una Acción.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 99,
+      "booth": [
+        "D3"
+      ]
+    },
+    {
+      "id": "ranger-combat-boomerang",
+      "name": "Ranger Combat Boomerang",
+      "type": "Ranged",
+      "skill": "Athletics",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exótico Heavy; no sirve para ataque cuerpo a cuerpo. Mantiene la mitad de SP al lanzarse; lanzarlo cuenta como media de un ataque ROF 2. Con Targeting Scope vuelve al inicio del siguiente turno y se puede atrapar sin Acción.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 100,
+      "booth": [
+        "B2"
+      ]
+    },
+    {
+      "id": "utility-tomahawk",
+      "name": "Utility Tomahawk",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": false,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exótico Heavy a una mano. Lanzado (Athletics, ROF 1) sigue reduciendo a la mitad la SP de la armadura.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 101,
+      "booth": [
+        "B2"
+      ]
+    },
+    {
+      "id": "kendachi-mono-star",
+      "name": "Kendachi Mono-Star",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "2d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Exótico Medium, ocultable. Lanzado (Athletics, ROF 2) sigue reduciendo a la mitad la SP y cuenta como media de un ataque ROF 2; si causa Foreign Object, se tira además otra Lesión Crítica (no Foreign Object).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 101,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "arasaka-prototype-variable-assault-rifle",
+      "name": "Arasaka Prototype Variable Assault Rifle",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 15000,
+      "costTier": "Super Luxury",
+      "standardMag": 25,
+      "ammoType": "Rifle",
+      "notes": "Calidad Excelente, Assault Rifle Exótico con modo railgun (requiere las 2 piezas de conversión): sin Autofire ni Aimed Shot, ignora armadura menor a SP7 y gasta 1 carga de la batería de 8 (50eb, recarga 1 h) además de una bala; cambiar de modo es una Acción. Sin carga dispara en modo normal. Cada pieza faltante baja 5.000eb; arma base o pieza suelta valen 5.000eb.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 102,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "eagletech-survivalist",
+      "name": "Eagletech Survivalist",
+      "type": "Ranged",
+      "skill": "Archery",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 0,
+      "ammoType": "Arrow",
+      "notes": "Exótica combinada Crossbow (4d6) y Assault Rifle (5d6, 10 balas, Archery en vez de Shoulder Arms, sin Autofire). Ambos modos usan el Sniping Scope integrado y aceptan munición no básica.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 103,
+      "booth": [
+        "B3"
+      ]
+    },
+    {
+      "id": "faisals-dead-or-alive",
+      "name": "Faisal's Dead or Alive",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 4,
+      "ammoType": "Slug / Shell",
+      "notes": "Calidad Pobre, Shotgun Exótica con Net Launcher integrado de Calidad Pobre (2 redes, ROF 1, Shoulder Arms, alcance máx. 25 m). La red atrapa (sin Move, -2 a Acciones físicas, 15 HP); escapar DV13 Contortionist (solo el atrapado) o DV13 Brawling. Red de recambio 50eb.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 104,
+      "booth": [
+        "F2"
+      ]
+    },
+    {
+      "id": "georgia-arms-matchmaker",
+      "name": "Georgia Arms Matchmaker",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 20,
+      "costTier": "Everyday",
+      "standardMag": 1,
+      "ammoType": "Slug / Shell",
+      "notes": "Calidad Pobre, Shotgun Exótica de 1 solo tiro. Acepta munición no básica.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 105,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "federated-arms-pepper-shaker",
+      "name": "Federated Arms Pepper Shaker",
+      "type": "Ranged",
+      "skill": "Autofire",
+      "damage": "2d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 30,
+      "ammoType": "Medium Pistol",
+      "notes": "SMG Exótica solo Autofire (x3) y Suppressive Fire: sin Aimed Shot ni disparo simple. Gasta 6 balas por ataque en Autofire en vez de 10. Acepta munición no básica.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 105,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "gunmart-bubba-buster",
+      "name": "GunMart Bubba Buster",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 50,
+      "costTier": "Costly",
+      "standardMag": 4,
+      "ammoType": "Slug / Shell",
+      "notes": "Calidad Pobre, Shotgun Exótica. Acepta munición no básica. Si dispara 3 veces en 1 minuto (20 rondas) se destruye.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 106,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "gunmart-overlord-handcannon",
+      "name": "GunMart Overlord Handcannon",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": true,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 8,
+      "ammoType": "Heavy Pistol",
+      "notes": "Calidad Pobre, Heavy Pistol Exótica con ROF 1. En un Facedown da +1 a la tirada salvo que el oponente la reconozca como basura.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 106,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "gunmart-engage-rocket-launcher",
+      "name": "GunMart Engage Rocket Launcher",
+      "type": "Ranged",
+      "skill": "Heavy Weapons",
+      "damage": "8d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 1,
+      "ammoType": "Rocket",
+      "notes": "Calidad Pobre, Rocket Launcher Exótico que solo dispara cohetes Armor Piercing; viene con uno cargado. En un 1 al disparar, o al intentar sacar el cohete, este detona sobre el arma y la destruye (a veces al usuario).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 107,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "gunmart-special",
+      "name": "GunMart Special",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 20,
+      "costTier": "Everyday",
+      "standardMag": 8,
+      "ammoType": "Heavy Pistol",
+      "notes": "Calidad Pobre, Heavy Pistol Exótica desechable: en un 1 al disparar se destruye sin reparación.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 108,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "gunmart-smart-special",
+      "name": "GunMart Smart Special",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 8,
+      "ammoType": "Heavy Pistol",
+      "notes": "Calidad Pobre, Heavy Pistol Exótica con Smartgun Link permanente (no admite Subdermal Grip). En un 1 al disparar se destruye; si la desarman estando conectada a Interface Plugs, también se destruye.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 108,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "hades-multipurpose-assault-shotgun",
+      "name": "Hades Multipurpose Assault Shotgun",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 5000,
+      "costTier": "Luxury",
+      "standardMag": 16,
+      "ammoType": "Slug / Shell",
+      "notes": "Shotgun Exótica de 16 tiros. Acepta munición no básica y permite cargar hasta 5 tipos de munición de escopeta a la vez, eligiendo cuál disparar con cada tiro.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 109,
+      "booth": [
+        "B3",
+        "D2"
+      ]
+    },
+    {
+      "id": "ktech-techhammer",
+      "name": "KTech TechHammer",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 4,
+      "ammoType": "Slug / Shell",
+      "notes": "Shotgun Exótica o Rocket Launcher Exótico (Heavy Weapons, 8d6) según la munición: cargador interno de 4 Slugs/Shells básicos o 2 Smart Rockets (ningún otro cohete). Su láser permite Smart Rockets sin Targeting Scope.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 110,
+      "booth": [
+        "B3"
+      ]
+    },
+    {
+      "id": "midnight-arms-beast-shotgun",
+      "name": "Midnight Arms Beast Shotgun",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 40,
+      "ammoType": "Slug / Shell",
+      "notes": "Shotgun Exótica de 40 tiros. Acepta munición no básica. Dispararla sin sufrir Broken Arm exige BODY 10+ salvo que esté montada. Recargar requiere 2 Acciones (2 turnos).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 111,
+      "booth": [
+        "F2"
+      ]
+    },
+    {
+      "id": "militech-fox-dual-ammo-pistol",
+      "name": "Militech Fox Dual Ammo Pistol",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 10,
+      "ammoType": "Heavy Pistol",
+      "notes": "Heavy Pistol Exótica con dos cargadores de 10, cada uno con un tipo de munición distinto; se elige de cuál disparar y cada uno se recarga con una Acción propia. Acepta munición no básica.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 113,
+      "booth": [
+        "F5"
+      ]
+    },
+    {
+      "id": "militech-mastiff-smg",
+      "name": "Militech Mastiff SMG",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "2d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 30,
+      "ammoType": "Medium Pistol",
+      "notes": "Exótica combinada SMG a dos manos (2d6, 30 balas, Autofire x3, Suppressive Fire) y Shotgun (5d6, 3 tiros, Shoulder Arms). Cada modo usa su propio cargador y se recarga con una Acción distinta. No ocultable.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 113,
+      "booth": [
+        "F5"
+      ]
+    },
+    {
+      "id": "militech-perseus",
+      "name": "Militech Perseus",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 5000,
+      "costTier": "Luxury",
+      "standardMag": 11,
+      "ammoType": "Very Heavy Pistol",
+      "notes": "Calidad Excelente, Very Heavy Pistol Exótica de 11 tiros. Si disparó en la ronda anterior del combate, opera con ROF 2 en vez de ROF 1.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 112,
+      "booth": [
+        "D2",
+        "F5"
+      ]
+    },
+    {
+      "id": "modfire-10x",
+      "name": "ModFire 10X",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 8,
+      "ammoType": "Heavy Pistol",
+      "notes": "Heavy Pistol Exótica convertible en 1 minuto (sin Check) a SMG (2d6, 30 balas Medium Pistol, Autofire x3, ROF 1) o Assault Rifle (5d6, 25 balas Rifle, Autofire x4, ROF 1, 2 manos), usando las piezas del maletín. Sin Autofire en modo pistola.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 114,
+      "booth": [
+        "B3",
+        "F5"
+      ]
+    },
+    {
+      "id": "nomad-rocker",
+      "name": "Nomad Rocker",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 8,
+      "ammoType": "Rocks",
+      "notes": "Calidad Pobre, Very Heavy Pistol Exótica que dispara rocas (munición gratis). Reparar una destruida no requiere Check y toma 1 hora.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 115,
+      "booth": [
+        "B3"
+      ]
+    },
+    {
+      "id": "e-tack-public-defender",
+      "name": "E-TACK Public Defender",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 8,
+      "ammoType": "Heavy Pistol",
+      "notes": "Calidad Pobre, Heavy Pistol Exótica sin gatillo con Smartgun Link permanente; solo opera con Subdermal Grip. Modo letal normal, o less-than-lethal: deja Inconsciente a 1 HP en vez de matar, sin Lesión Crítica ni ablación, gastando una carga de la batería de 8 (50eb, recarga 1 h) en vez de bala.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 115,
+      "booth": [
+        "F5"
+      ]
+    },
+    {
+      "id": "pursuit-security-crowd-buster",
+      "name": "Pursuit Security Incorporated Crowd Buster",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 5000,
+      "costTier": "Luxury",
+      "standardMag": 25,
+      "ammoType": "Rifle",
+      "notes": "Assault Rifle Exótico (Autofire x4, Suppressive Fire). Modo alterno como Acción: un tiro (tabla de Assault Rifle) que en vez de daño obliga a DV15 Resist Torture/Drugs o sufre Damaged Ear; el usuario también la sufre sin protección auditiva (incluye Auto Level Dampening Ear Protectors). Gasta una carga de batería de 8 (50eb), no munición.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 116,
+      "booth": [
+        "F2"
+      ]
+    },
+    {
+      "id": "rostovic-ulicni-unistitelj",
+      "name": "Rostović Ulični Uništitelj",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "3d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 3,
+      "ammoType": "Slug / Shell",
+      "notes": "Calidad Pobre, Shotgun Exótica de 3 tiros que solo carga Shotgun Shells. Como Acción se meten objetos metálicos en los 3 cañones: el siguiente Shell hace 4d6 en vez de 3d6 y vacía los cañones.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 117,
+      "booth": [
+        "C4"
+      ]
+    },
+    {
+      "id": "sanroo-hello-cutie",
+      "name": "Sanroo Hello Cutie Ultra-K8 Assault Pistol",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 5000,
+      "costTier": "Luxury",
+      "standardMag": 30,
+      "ammoType": "Very Heavy Pistol",
+      "notes": "Calidad Excelente, Very Heavy Pistol Exótica reconfigurable con una Acción a Heavy SMG (3d6, Autofire x3, Suppressive Fire), mismo cargador de 30. Con 3+ prendas Asia Pop llevándola a la vista da +2 a Wardrobe & Style (no acumulable). 2 slots de accesorios (sin cargadores).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 118,
+      "booth": [
+        "D2",
+        "E2"
+      ]
+    },
+    {
+      "id": "sternmeyer-m04",
+      "name": "Sternmeyer M-04 Variable Assault",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 20,
+      "ammoType": "Rifle",
+      "notes": "Calidad Pobre, Exótica combinada Assault Rifle (5d6, 20 balas, Autofire x4, Suppressive Fire) y Grenade Launcher (Heavy Weapons, 6d6, 2 granadas, acepta granadas no básicas). Cargadores separados con Acciones distintas; si un modo se encasquilla, ninguno sirve hasta gastar una Acción.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 119,
+      "booth": [
+        "B3"
+      ]
+    },
+    {
+      "id": "superchrome-glam-rifle",
+      "name": "Superchrome® Glam Rifle",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 25,
+      "ammoType": "Rifle",
+      "notes": "Assault Rifle Exótico (Autofire x4, Suppressive Fire). Acepta munición no básica. Llevada a la vista da +2 a Wardrobe & Style (no acumulable con otras armas).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 120,
+      "booth": [
+        "D2",
+        "E2"
+      ]
+    },
+    {
+      "id": "superchrome-javelin",
+      "name": "Superchrome® Javelin",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 4,
+      "ammoType": "Rifle",
+      "notes": "Sniper Rifle Exótico. Acepta munición no básica. Llevada a la vista da +2 a Wardrobe & Style (no acumulable con otras armas).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 120,
+      "booth": [
+        "D2",
+        "E2"
+      ]
+    },
+    {
+      "id": "superchrome-sidearm",
+      "name": "Superchrome® Sidearm",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 8,
+      "ammoType": "Very Heavy Pistol",
+      "notes": "Very Heavy Pistol Exótica. Acepta munición no básica. Llevada a la vista da +2 a Wardrobe & Style (no acumulable con otras armas).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 121,
+      "booth": [
+        "D2",
+        "E2"
+      ]
+    },
+    {
+      "id": "westwood",
+      "name": "Westwood",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 6,
+      "ammoType": "Very Heavy Pistol",
+      "notes": "Very Heavy Pistol de 6 tiros, incompatible con cargadores de accesorio. Pantalla oculta en la empuñadura con películas precargadas. Se compra con cañón de 4\", 6-1/2\" u 8-3/8\".",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 121,
+      "booth": [
+        "D2",
+        "F5"
+      ]
+    },
+    {
+      "id": "techtronika-russia-bmg-500",
+      "name": "Techtronika Russia BMG-500",
+      "type": "Ranged",
+      "skill": "Heavy Weapons",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 500,
+      "ammoType": "Rifle",
+      "notes": "Assault Rifle Exótico disparado con Heavy Weapons a tiro simple (Autofire x4, Suppressive Fire), caja de 500 balas. Requiere BODY 11+ salvo que esté montada. Con una Acción despliega el bípode y cuenta como montada hasta moverse.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 122,
+      "booth": [
+        "B1"
+      ]
+    },
+    {
+      "id": "tommyknocker",
+      "name": "Tommyknocker",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 8,
+      "ammoType": "Very Heavy Pistol",
+      "notes": "Exótica combinada Very Heavy Pistol (8 tiros) y Shotgun de Calidad Pobre (5d6, 2 tiros, Shoulder Arms); cargadores separados. Sin BODY 10+ o dos manos, el arma sale volando 6 m al disparar. 1 slot de accesorio (solo mira compatible con ambos). Tamaño de escopeta: no ocultable ni en popup cyberware.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 123,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "big-dreem",
+      "name": "Big Dreem",
+      "type": "Ranged",
+      "skill": "Autofire",
+      "damage": "0",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 10,
+      "costTier": "Cheap",
+      "standardMag": 30,
+      "ammoType": "Proprietary",
+      "notes": "SMG Exótica solo Autofire (3). Solo carga bricks propietarios de 30 balas básicas (20eb cada uno). Tras disparar sigue en Autofire sola 2 turnos más aunque la suelten o muera el usuario; sin Acción de apuntar usa base de Autofire 10 y el GM elige el blanco. No ocultable.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 3,
+      "booth": []
+    },
+    {
+      "id": "everest-sportmaster",
+      "name": "Everest VentureWare SportMaster",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "3d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 50,
+      "costTier": "Costly",
+      "standardMag": 25,
+      "ammoType": "Small Game",
+      "notes": "Assault Rifle sin Autofire ni Suppressive Fire que solo carga munición Small Game (daño 3d6 ya reducido).",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 3,
+      "booth": []
+    },
+    {
+      "id": "everest-survivalmaster",
+      "name": "Everest VentureWare SurvivalMaster",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": true,
+      "cost": 100,
+      "costTier": "Premium",
+      "standardMag": 5,
+      "ammoType": "Rifle",
+      "notes": "Assault Rifle Exótico sin Autofire ni Suppressive Fire, cargador interno de 5; no mejorable por un Tech. Se desarma dentro de su culata (1 minuto cada vez) y así es ocultable.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 3,
+      "booth": []
+    },
+    {
+      "id": "sanroo-hello-cutie-1truluv",
+      "name": "Sanroo Hello Cutie 1TruLuv",
+      "type": "Ranged",
+      "skill": "Shoulder Arms",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 2,
+      "concealable": false,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 4,
+      "ammoType": "Rifle",
+      "notes": "Sniper Rifle Exótico con Agent integrado (no removible sin destruir todo), Sniper Scope e Infrared Nightvision Scope. Acepta munición no básica. Tras 10 bajas se vincula y actúa como Calidad Excelente; puede desactivar el bono si se la maltrata (dañarla, no dispararla, no limpiarla, Junk Ammo, otros Sniper Rifles).",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 4,
+      "booth": []
+    },
+    {
+      "id": "molotov-cocktail",
+      "name": "Molotov Cocktail",
+      "type": "Ranged",
+      "skill": "Athletics",
+      "damage": "5d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 20,
+      "costTier": "Everyday",
+      "standardMag": 0,
+      "ammoType": "N/A",
+      "notes": "Incendiary Grenade de 5d6. Si el portador recibe daño que atraviese su armadura, cada Molotov que lleve tiene 50% de destruirse: no explota pero lo deja Deadly on Fire y destruye los demás que cargue.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 4,
+      "booth": []
+    },
+    {
+      "id": "timeless-ww1-rifle-to-pistol-conversion",
+      "name": "Timeless WW1 Rifle to Pistol Conversion",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 20,
+      "costTier": "Everyday",
+      "standardMag": 5,
+      "ammoType": "Very Heavy Pistol",
+      "notes": "Calidad Pobre, Very Heavy Pistol de 5 tiros, incompatible con cargadores de accesorio. Entre cada tiro se debe gastar una Acción en accionar el cerrojo.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 4,
+      "booth": []
     }
   ],
   "armor": [
@@ -2095,64 +3182,249 @@
       "era": "2045"
     },
     {
-      "id": "militech-tacvest",
-      "name": "Militech Tac-Vest",
-      "sp": 12,
-      "penalty": 0,
-      "cost": 500,
-      "costTier": "Expensive",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Reinforced medium armorjack tactical vest with modular pouches and zero movement penalty."
-    },
-    {
-      "id": "trauma-team-armor",
-      "name": "Trauma Team Medtech Armor",
+      "id": "dirk-combat-jacket",
+      "name": "The Dirk Combat Jacket",
       "sp": 11,
       "penalty": 0,
       "cost": 500,
       "costTier": "Expensive",
+      "description": "Chaqueta Zhukova de cuero sintético con Kevlar. Armadura Light Armorjack (cuerpo) con apariencia de Leisurewear. Permite guardar dos cargadores estándar sin Chequeo.",
       "sourceBook": "black_chrome",
       "sourceBookTitle": "Black Chrome Tech & Style Guide",
       "era": "2045",
-      "description": "Standard issue Trauma Team high-visibility paramedical ballistic armor."
+      "sourcePage": 28,
+      "booth": [
+        "Pick-up or Browse at Booth E1",
+        "Pick-up or Browse at Booth F3"
+      ]
     },
     {
-      "id": "gibson-battlegear",
-      "name": "Gibson Battlegear",
-      "sp": 13,
-      "penalty": -2,
+      "id": "firebrand-bunker-gear",
+      "name": "Fire Brand Bunker Gear",
+      "sp": 15,
+      "penalty": -4,
       "cost": 1000,
       "costTier": "Very Expensive",
+      "description": "Equipo de bombero Flak (cuerpo y cabeza, se compra y repara como un solo conjunto). Inmune al fuego, máscara antigás integrada sin Acción y tanque de oxígeno de 30 min. Penalidad -4 a REF, DEX y MOVE.",
       "sourceBook": "black_chrome",
       "sourceBookTitle": "Black Chrome Tech & Style Guide",
       "era": "2045",
-      "description": "Heavy interlocking composite armor plates designed for riot suppression and trench warfare."
+      "sourcePage": 29,
+      "booth": [
+        "Pick-up or Browse at Booth B4",
+        "Pick-up or Browse at Booth F3"
+      ]
     },
     {
-      "id": "skunkworks-stealth-suit",
-      "name": "Skunkworks Stealth Suit",
+      "id": "shock-armor",
+      "name": "Shock Armor",
       "sp": 7,
       "penalty": 0,
       "cost": 500,
       "costTier": "Expensive",
+      "description": "Armadura Kevlar de Gibson Battlegear para guardias de prisión. Como defensor en un agarre, una Acción electrocuta al atacante (Chequeo DV15 Resist Torture/Drugs o se suelta el agarre).",
       "sourceBook": "black_chrome",
       "sourceBookTitle": "Black Chrome Tech & Style Guide",
       "era": "2045",
-      "description": "Radar-absorbent lightweight Kevlar bodysuit giving +2 to Stealth checks in darkness."
+      "sourcePage": 29,
+      "booth": [
+        "Pick-up or Browse at Booth F3"
+      ]
     },
     {
-      "id": "firebrand-bunker-gear",
-      "name": "Firebrand Bunker Gear",
-      "sp": 15,
-      "penalty": -4,
-      "cost": 1500,
+      "id": "tactical-smart-armor",
+      "name": "Tactical Smart Armor",
+      "sp": 12,
+      "penalty": -2,
+      "cost": 1000,
       "costTier": "Very Expensive",
+      "description": "Armadura Medium Armorjack de Gibson Battlegear (cuerpo y cabeza, un solo conjunto) con Smart Glasses integradas. Penalidad -2 a REF, DEX y MOVE.",
       "sourceBook": "black_chrome",
       "sourceBookTitle": "Black Chrome Tech & Style Guide",
       "era": "2045",
-      "description": "Industrial firefighting and hazmat flak suit with full thermal and flame resistance."
+      "sourcePage": 30,
+      "booth": [
+        "Pick-up or Browse at Booth F3"
+      ]
+    },
+    {
+      "id": "laser-light-street-jacket",
+      "name": "Laser Light Street Jacket",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Chaqueta Light Armorjack (cuerpo) con luces de fibra óptica y apariencia Urban Flash. Cuenta como 1 instalación de Light Tattoo para el bono de Wardrobe & Style.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 31,
+      "booth": [
+        "Pick-up or Browse at Booth E1"
+      ]
+    },
+    {
+      "id": "lotos-netsuit",
+      "name": "Lotos Netsuit",
+      "sp": 13,
+      "penalty": -2,
+      "cost": 5000,
+      "costTier": "Luxury",
+      "description": "Traje de netrunner (cuerpo y cabeza, SP13 en cada ubicación, un solo conjunto). Da 1 ranura extra de Hardware al Cyberdeck e incluye un Cyberdeck de Calidad Excelente. Penalidad -2 a REF, DEX y MOVE; no se combina con armadura o moda similar.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 31,
+      "booth": [
+        "Pick-up or Browse at Booth A4"
+      ]
+    },
+    {
+      "id": "montage-variable-clothing-line",
+      "name": "Montage Variable Clothing Line",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Ropa inteligente Light Armorjack (cuerpo o cabeza) que cambia de color y patrón (apariencia Generic Chic o Gang Colors) con el Agent. Trae un estilo; cada estilo extra cuesta 20eb.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 32,
+      "booth": [
+        "Pick-up or Browse at Booth E1"
+      ]
+    },
+    {
+      "id": "masetto-airrider",
+      "name": "Masetto AirRider",
+      "sp": 7,
+      "penalty": 0,
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Traje de moto Kevlar (cuerpo) con airbag de CO2 que evita el daño crítico Whiplash en choques. Inflado, reduce MOVE en 5 (mín. 1) hasta desinflarlo; el tanque de CO2 (20eb) debe reponerse.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 33,
+      "booth": [
+        "Pick-up or Browse at Booth B4",
+        "Pick-up or Browse at Booth E1"
+      ]
+    },
+    {
+      "id": "mimic-clothing-kit",
+      "name": "Mimic Clothing Kit",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Kit de placas que convierte una chaqueta o top de moda en armadura Light Armorjack (cuerpo) con la apariencia de esa moda. Irreversible; un kit por prenda.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 33,
+      "booth": [
+        "Pick-up or Browse at Booth E1"
+      ]
+    },
+    {
+      "id": "skidrow-trench",
+      "name": "SkidRow Trench",
+      "sp": 13,
+      "penalty": -4,
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Gabardina blindada, armadura Flak (cuerpo) con SP 13 en lugar de 15. Penalidad -4 a REF, DEX y MOVE.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 33,
+      "booth": [
+        "Pick-up or Browse at Booth E1",
+        "Pick-up or Browse at Booth F3"
+      ]
+    },
+    {
+      "id": "executive-armor",
+      "name": "Executive Armor",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Traje a medida de Torrell and Chiang, Light Armorjack (cuerpo) con apariencia Businesswear. Cada día sin perder SP, sus nanomáquinas reparan 1 punto de SP perdido.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 34,
+      "booth": [
+        "Pick-up or Browse at Booth D1",
+        "Pick-up or Browse at Booth E1"
+      ]
+    },
+    {
+      "id": "corporate-island",
+      "name": "Corporate Island",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Ropa de Nu-Tek, Light Armorjack (cuerpo) con apariencia Businesswear; se lleva sobre cyberware y armas ocultas.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 35,
+      "booth": [
+        "Pick-up or Browse at Booth E1"
+      ]
+    },
+    {
+      "id": "street-viper-riding-suit",
+      "name": "Street Viper Riding Suit",
+      "sp": 7,
+      "penalty": 0,
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Traje de moto Kevlar (cuerpo) de Zonda que incorpora 2 armas cuerpo a cuerpo Medium (cuchillas de codo), siempre consideradas desenfundadas mientras se viste.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 36,
+      "booth": [
+        "Pick-up or Browse at Booth B4",
+        "Pick-up or Browse at Booth F3"
+      ]
+    },
+    {
+      "id": "mechaman-motorcycle-helmet",
+      "name": "MechaMan Motorcycle Helmet",
+      "sp": 15,
+      "penalty": -4,
+      "cost": 5000,
+      "costTier": "Luxury",
+      "description": "Casco Flak (cabeza) de Tokyo Dynamics con Smart Glasses mejoradas integradas (Chyron y Low Light/Infrared/UV). Penalidad -4 a REF, DEX y MOVE.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 37,
+      "booth": [
+        "Pick-up or Browse at Booth B4",
+        "Pick-up or Browse at Booth D1"
+      ]
+    },
+    {
+      "id": "scavenged-armor",
+      "name": "Scavenged Armor",
+      "sp": 11,
+      "penalty": 0,
+      "cost": 50,
+      "costTier": "Costly",
+      "description": "Armadura corporal artesanal de Judie (SP 11). Una vez ablandada su SP no se restaura; al llegar a 0 SP se cae del portador.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 4,
+      "booth": []
     }
   ],
   "attachments": [
@@ -2389,6 +3661,42 @@
       "sourceBook": "core",
       "sourceBookTitle": "Cyberpunk RED Core Rulebook",
       "era": "2045"
+    },
+    {
+      "id": "bullet-to-slug-adapter-casings",
+      "name": "Bullet to Slug Adapter Casings",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Caja de 10 casquillos adaptadores reutilizables: permiten disparar cualquier munición de bala como Slug en armas que disparen Slugs. Cargar 10 con el jig incluido es una Acción; a mano, una Acción por casquillo.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 3,
+      "booth": []
+    },
+    {
+      "id": "junk-ammunition",
+      "name": "Junk Ammunition",
+      "cost": 10,
+      "costTier": "Cheap",
+      "description": "50 rondas (flechas, balas o Slugs). El daño en disparo simple baja 1d6 (mín. 1d6) contra objetivos con 1+ SP y el Autofire Rating baja 1 (mín. 3). Cualquier arma que cargue munición básica la acepta.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 3,
+      "booth": []
+    },
+    {
+      "id": "small-game-ammunition",
+      "name": "Small Game Ammunition",
+      "cost": 10,
+      "costTier": "Cheap",
+      "description": "100 rondas de bala. Cada bala en disparo simple hace 2d6 menos (mín. 1d6) y el Autofire Rating baja 1 (mín. 3). Cualquier arma que cargue munición básica la acepta.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 3,
+      "booth": []
     }
   ],
   "cyberware": [
@@ -3546,114 +4854,6 @@
       "era": "2045"
     },
     {
-      "id": "linear-frame-vermilion",
-      "name": "Linear Frame Vermilion",
-      "type": "Borgware",
-      "install": "Hospital",
-      "humanityLoss": "4d6 (14)",
-      "cost": 5000,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Heavy internal exoskeleton frame setting BODY to 12. Requires Grafted Muscle & Bone Lace x2."
-    },
-    {
-      "id": "linear-frame-fuma-kotaro",
-      "name": "Linear Frame Fūma Kotarō",
-      "type": "Borgware",
-      "install": "Hospital",
-      "humanityLoss": "4d6 (14)",
-      "cost": 6000,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Shinobi martial frame setting BODY to 12 and granting +2 to MOVE for athletic sprints."
-    },
-    {
-      "id": "extra-jointed-cyberlimb",
-      "name": "Extra-Jointed Cyberlimb",
-      "type": "Cyberlimb",
-      "install": "Clinic",
-      "humanityLoss": "2 (1d6/2)",
-      "cost": 500,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Contortionist cyberlimb upgrade allowing 360-degree rotation and escape from grapples."
-    },
-    {
-      "id": "trauma-nanomatrix",
-      "name": "Trauma Response Nanomatrix",
-      "type": "Internal",
-      "install": "Clinic",
-      "humanityLoss": "2d6 (7)",
-      "cost": 1000,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Subdermal nanobots that automatically stabilize user at 0 HP on first death save."
-    },
-    {
-      "id": "reflex-co-processor",
-      "name": "Reflex Co-Processor",
-      "type": "Neuralware",
-      "install": "Clinic",
-      "humanityLoss": "2d6 (7)",
-      "cost": 1000,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Secondary neural coprocessor granting +2 to Initiative checks. Stacks with Speedware."
-    },
-    {
-      "id": "sponsored-cybereye",
-      "name": "Sponsored Cybereye",
-      "type": "Cyberoptics",
-      "install": "Mall",
-      "humanityLoss": "1d6 (3)",
-      "cost": 50,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Economy cyberoptic subsidized by corporate sponsors. Projects occasional holographic ads."
-    },
-    {
-      "id": "sponsored-cyberarm",
-      "name": "Sponsored Cyberarm",
-      "type": "Cyberlimb",
-      "install": "Hospital",
-      "humanityLoss": "2d6 (7)",
-      "cost": 250,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Half-price cyberarm featuring unremovable corporate sponsor logos and telemetry."
-    },
-    {
-      "id": "modular-finger-hand",
-      "name": "Modular Finger Cyberhand",
-      "type": "Cyberlimb",
-      "install": "Clinic",
-      "humanityLoss": "2 (1d6/2)",
-      "cost": 500,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Specialized replacement hand with built-in lockpicks, screwdriver, and data probe."
-    },
-    {
-      "id": "discount-cyberaudio",
-      "name": "Discount Cyberaudio",
-      "type": "Cyberaudio",
-      "install": "Mall",
-      "humanityLoss": "2d6 (7)",
-      "cost": 250,
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Budget audio suite with occasional radio interference on open frequencies."
-    },
-    {
       "id": "cw-cemk-neuroport",
       "name": "Neuroport",
       "type": "Neuralware",
@@ -3894,6 +5094,661 @@
       "sourceBookTitle": "Hornet's Pharmacy",
       "sourcePage": 5,
       "era": "2045"
+    },
+    {
+      "id": "budget-chipware-socket",
+      "name": "Budget Chipware Socket",
+      "type": "Neuralware Option",
+      "install": "Clinic",
+      "humanityLoss": "7 (2d6)",
+      "cost": 100,
+      "description": "Requiere Neural Link. Socket para un Chipware en la nuca; instalar/quitar es una Acción. Al recibir daño en la cabeza expulsa el chip (1d10: con 1 se destruye). Se paga cada socket.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 17,
+      "booth": [
+        "C3"
+      ]
+    },
+    {
+      "id": "borgware-hardened-shielding",
+      "name": "Borgware Hardened Shielding",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "14 (4d6)",
+      "cost": 1000,
+      "description": "Endurece una pieza de Borgware ya instalada: inmune a descarga eléctrica, microwaver, EMP y efectos de programas que no sean Black ICE.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 17,
+      "booth": [
+        "F1"
+      ]
+    },
+    {
+      "id": "discount-cyberaudio",
+      "name": "Discount Cyberaudio Suite",
+      "type": "Cyberaudio",
+      "install": "Clinic",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Suite de Cyberaudio voluminosa y visible con 1 slot de opción. Solo una Cyberaudio Suite instalada.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 17,
+      "booth": [
+        "C3"
+      ]
+    },
+    {
+      "id": "dynalar-modular-finger-enthusiast-cyberhand",
+      "name": "Dynalar Modular Finger Enthusiast Cyberhand",
+      "type": "Cyberarm Option",
+      "install": "Hospital",
+      "humanityLoss": "14 (4d6)",
+      "cost": 500,
+      "slots": 2,
+      "description": "Borgware. Cyberarm Option, requiere 2 slots. Admite hasta 8 Cyberfingers por mano; incluye 8 Standard Cyberfingers.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 18,
+      "booth": [
+        "A5"
+      ]
+    },
+    {
+      "id": "explicit-memory-stimulator",
+      "name": "Explicit Memory Stimulator",
+      "type": "Neuralware",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Chipware. Instalado en un Chipware Socket da +2 a las Pruebas de Concentración para recordar información.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 18,
+      "booth": [
+        "C3"
+      ]
+    },
+    {
+      "id": "extra-jointed-cyberlimb",
+      "name": "Extra-Jointed Cyberlimb Upgrade",
+      "type": "Cyberlimb",
+      "install": "Clinic",
+      "humanityLoss": "3 (1d6)",
+      "cost": 500,
+      "description": "Cyberlimb Option. +2 a Contortionist; una por cyberlimb, máximo 4 cyberlimbs aprovechables (+8).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 18,
+      "booth": [
+        "A5"
+      ]
+    },
+    {
+      "id": "flashbulb",
+      "name": "Flashbulb",
+      "type": "Cyberarm Option",
+      "install": "Clinic",
+      "humanityLoss": "7 (2d6)",
+      "cost": 500,
+      "slots": 2,
+      "description": "Cyberarm Option, requiere 2 slots. Acción: objetivo a 25 m/yds hace Resist Torture/Drugs DV15 o sufre Damaged Eye 1 minuto. Anti-Dazzle protege.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 18,
+      "booth": [
+        "A5",
+        "C3"
+      ]
+    },
+    {
+      "id": "hardened-cybereye-casing",
+      "name": "Hardened Cybereye Casing",
+      "type": "Cyberoptics",
+      "install": "Clinic",
+      "humanityLoss": "3 (1d6)",
+      "cost": 500,
+      "description": "Cybereye Option. Cybereye y opciones inmunes a descarga, microwaver, EMP y efectos de programas que no sean Black ICE.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 19,
+      "booth": [
+        "F1"
+      ]
+    },
+    {
+      "id": "heuristic-health-monitor",
+      "name": "Heuristic Health Monitor",
+      "type": "Fashionware",
+      "install": "Clinic",
+      "humanityLoss": "0 (N/A)",
+      "cost": 500,
+      "description": "Requiere Biomonitor. Sensores que permiten conocer los propios Hit Points de un vistazo (puntuación Healthy Persons).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 19,
+      "booth": [
+        "D1",
+        "E3"
+      ]
+    },
+    {
+      "id": "integrated-cyberdeck-upgrade",
+      "name": "Integrated Cyberdeck Upgrade",
+      "type": "Cyberarm Option",
+      "install": "Clinic",
+      "humanityLoss": "7 (2d6)",
+      "cost": 500,
+      "description": "Añade 1 slot (Programa o Hardware) a un Cyberdeck integrado en la misma Cyberarm.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 19,
+      "booth": [
+        "A5"
+      ]
+    },
+    {
+      "id": "internal-body-cyberware-hardened-shielding",
+      "name": "Internal Body Cyberware Hardened Shielding",
+      "type": "Internal",
+      "install": "Hospital",
+      "humanityLoss": "14 (4d6)",
+      "cost": 1000,
+      "description": "Todo el Cyberware Internal Body del usuario resiste descarga, microwaver, EMP y efectos de programas que no sean Black ICE.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 20,
+      "booth": [
+        "F1"
+      ]
+    },
+    {
+      "id": "modular-finger-hand",
+      "name": "Modular Finger Cyberhand",
+      "type": "Cyberarm Option",
+      "install": "Hospital",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Cyberarm Option. Puede ser lo único instalado en un brazo de carne. Espacio para 5 Cyberfingers; incluye 5 Standard Cyberfingers.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 20,
+      "booth": [
+        "A5",
+        "C3"
+      ]
+    },
+    {
+      "id": "neo-soviet-cyberarm",
+      "name": "Neo-Soviet Cyberarm",
+      "type": "Cyberlimb",
+      "install": "Hospital",
+      "humanityLoss": "7 (2d6)",
+      "cost": 100,
+      "slots": 3,
+      "description": "Brazo de reemplazo, no requiere par. 3 slots de opción y Standard Hand incluida. Sin BODY 8 hay -1 a tiradas con ese brazo. Opciones siempre visibles; siempre reconocible como Cyberarm.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 20,
+      "booth": [
+        "B6",
+        "C3"
+      ]
+    },
+    {
+      "id": "popup-net-launcher",
+      "name": "Popup Net Launcher",
+      "type": "Cyberarm Option",
+      "install": "Clinic",
+      "humanityLoss": "7 (2d6)",
+      "cost": 500,
+      "slots": 3,
+      "description": "Cyberarm Option, requiere 3 slots. Lanzador de red (1 red, alcance 25 m/yds, Shoulder Arms) que agarra al objetivo. Red 15 HP; escapar con DV13 Contortionist o Brawling. Redes 50eb.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 20,
+      "booth": [
+        "B6"
+      ]
+    },
+    {
+      "id": "popup-shotgun",
+      "name": "Popup Shotgun",
+      "type": "Cyberarm Option",
+      "install": "Clinic",
+      "humanityLoss": "7 (2d6)",
+      "cost": 1000,
+      "slots": 3,
+      "description": "Cyberarm Option, requiere 3 slots. Escopeta de 2 disparos, solo compatible con Smartgun Link; se oculta sin Prueba y se saca sin Acción.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 21,
+      "booth": [
+        "B6",
+        "F1"
+      ]
+    },
+    {
+      "id": "reflex-co-processor",
+      "name": "Reflex Co-Processor",
+      "type": "Neuralware Option",
+      "install": "Hospital",
+      "humanityLoss": "14 (4d6)",
+      "cost": 500,
+      "description": "Neuralware Option. Asiste al Neural Link: permite esquivar balas sin importar el REF.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 21,
+      "booth": [
+        "B6",
+        "F1"
+      ]
+    },
+    {
+      "id": "reinforced-cyberlimb-upgrade",
+      "name": "Reinforced Cyberlimb Upgrade",
+      "type": "Cyberlimb",
+      "install": "Clinic",
+      "humanityLoss": "3 (1d6)",
+      "cost": 1000,
+      "description": "Cyberlimb Option. El miembro es inmune a Broken Leg (cyberleg) o Broken Arm (cyberarm).",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 21,
+      "booth": [
+        "B6"
+      ]
+    },
+    {
+      "id": "racerbracer",
+      "name": "RacerBracer",
+      "type": "Internal",
+      "install": "Hospital",
+      "humanityLoss": "7 (2d6)",
+      "cost": 500,
+      "description": "Internal Body Cyberware. Inmunidad a la Lesión Crítica Whiplash.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 22,
+      "booth": [
+        "B6"
+      ]
+    },
+    {
+      "id": "sponsored-cybereye",
+      "name": "Sponsored Cybereye",
+      "type": "Cyberoptics",
+      "install": "Clinic",
+      "humanityLoss": "7 (2d6)",
+      "cost": 50,
+      "slots": 2,
+      "description": "Cybereye de reemplazo con 2 slots y Chyron preinstalado (no removible). Anuncios cada hora de espera: -1 a Pruebas de visión hasta cerrarlo con una Acción.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 22,
+      "booth": [
+        "C3",
+        "E3"
+      ]
+    },
+    {
+      "id": "trauma-nanomatrix",
+      "name": "Trauma Response Nanomatrix",
+      "type": "Internal",
+      "install": "Hospital",
+      "humanityLoss": "7 (2d6)",
+      "cost": 1000,
+      "description": "Internal Body Cyberware. Requiere Skinweave o Subdermal Armor. 1 vez al día, como Acción, repara su SP al máximo; cada instalación extra suma 1 uso.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 22,
+      "booth": [
+        "F1"
+      ]
+    },
+    {
+      "id": "airhypo-cyberfinger",
+      "name": "Airhypo Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Airhypo oculto en el dedo.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 24,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "ballpoint-cyberfinger",
+      "name": "Ballpoint Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "0 (N/A)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Bolígrafo oculto en el dedo.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 24,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "bullet-storage-cyberfinger",
+      "name": "Bullet Storage Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Guarda 2 balas de cualquier munición sin Prueba.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 24,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "dartgun-cyberfinger",
+      "name": "Dartgun Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "7 (2d6)",
+      "cost": 500,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Dartgun exótica de 1 disparo oculta; sin Prueba de ocultación con guante.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 24,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "flashlight-cyberfinger",
+      "name": "Flashlight Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Linterna oculta en el dedo.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 24,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "homing-tracer-cyberfinger",
+      "name": "Homing Tracer Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 500,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Señala la dirección de su rastreador vinculado a hasta 1 milla. Rastreador de repuesto 50eb.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 25,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "laser-pointer-cyberfinger",
+      "name": "Laser Pointer Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Puntero láser. Con 4+ dedos, Acción: Resist Torture/Drugs DV13 o Damaged Eye 1 min a 25 m/yds; con 8, hasta ser tratado.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 25,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "lighter-cyberfinger",
+      "name": "Lighter Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Encendedor oculto en la punta.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 25,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "lockpick-cyberfinger",
+      "name": "Lockpick Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "2 (1d6/2)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Ganzúa y tensor para cerraduras no electrónicas con Pick Lock.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 25,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "microphone-cyberfinger",
+      "name": "Microphone Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "2 (1d6/2)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Micrófono conectado a un Agent u otro grabador.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 25,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "mini-air-supply-cyberfinger",
+      "name": "Mini Air Supply Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "2 (1d6/2)",
+      "cost": 500,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. 10 minutos de aire; recarga 1 hora del ambiente.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 26,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "one-shot-special-cyberfinger",
+      "name": "One Shot Special Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "7 (2d6)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Pistola Pesada Exótica de 1 disparo, admite munición no básica; sin Prueba de ocultación con guante.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 26,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "spray-paint-cyberfinger",
+      "name": "Spray Paint Cyber Finger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Mini bote de pintura de un color con boquilla.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 26,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "squirt-cyberfinger",
+      "name": "Squirt Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Dispensa líquidos (desinfectante, perfume...). Con ácido se destruye.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 26,
+      "booth": [
+        "A1",
+        "E3"
+      ]
+    },
+    {
+      "id": "standard-cyberfinger",
+      "name": "Standard Cyberfinger",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "0 (N/A)",
+      "cost": 20,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Cyberfinger sin características especiales.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 26,
+      "booth": [
+        "A1",
+        "C3"
+      ]
+    },
+    {
+      "id": "wirecutter-scissor-cyberfingers",
+      "name": "Wirecutter/Scissor Cyberfingers",
+      "type": "Cyberarm Option",
+      "install": "Mall",
+      "humanityLoss": "3 (1d6)",
+      "cost": 100,
+      "description": "Cyberfinger. Requiere un Modular Finger Cyberhand. Dos dedos con cuchillas retráctiles (cortacables/tijeras); arma Light Melee Poor Quality. Costo y HL se pagan una vez.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 26,
+      "booth": [
+        "A1"
+      ]
+    },
+    {
+      "id": "linear-frame-fuma-kotaro",
+      "name": "Fūma Kotarō Linear Frame",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "14 (4d6)",
+      "cost": 5000,
+      "description": "Linear Frame externo o interno. +2 a Stealth; cuchillas Excellent Quality (2 Heavy Melee, o 1 Light + 1 Very Heavy) sin Acción y ocultas. Sube BODY a 12 (nunca 13+). Externo: 2 Interface Plugs, se pone/quita con una Acción, no sube HP ni Death Save. Interno (Hospital): BODY 8, 2x Grafted Muscle y Bone Lace; es Borgware.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 52,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "linear-frame-lf-001-swat",
+      "name": "LF-001 SWAT Linear Frame",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "14 (4d6)",
+      "cost": 5000,
+      "description": "Linear Frame externo o interno. Elimina la penalización de movimiento al trepar y nadar. Sube BODY a 12 (nunca 13+). Externo: 2 Interface Plugs, se pone/quita con una Acción, no sube HP ni Death Save. Interno (Hospital): BODY 8, 2x Grafted Muscle y Bone Lace; es Borgware.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 53,
+      "booth": [
+        "B5"
+      ]
+    },
+    {
+      "id": "linear-frame-vermilion",
+      "name": "Vermilion Linear Frame",
+      "type": "Borgware",
+      "install": "Hospital",
+      "humanityLoss": "14 (4d6)",
+      "cost": 5000,
+      "description": "Linear Frame externo o interno. Elimina la penalización al saltar y opera como con Skate Feet pareados. Sube BODY a 12 (nunca 13+). Externo: 2 Interface Plugs, se pone/quita con una Acción, no sube HP ni Death Save. Interno (Hospital): BODY 8, 2x Grafted Muscle y Bone Lace; es Borgware.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 54,
+      "booth": [
+        "D2"
+      ]
+    },
+    {
+      "id": "linear-frame-el-f4-nt",
+      "name": "EL-F4-NT Linear Frame",
+      "type": "Borgware",
+      "install": "Mall",
+      "humanityLoss": "0 (N/A)",
+      "cost": 5000,
+      "description": "Linear Frame solo externo. Sube BODY a 12 (no 13+) sin subir HP ni Death Save; incluye 2 Techtools; sin Interface Plugs y se pone/quita con una Acción.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 55,
+      "booth": [
+        "B5"
+      ]
     }
   ],
   "drugs": [
@@ -4181,6 +6036,22 @@
       "sourcePage": 4,
       "era": "2045",
       "description": "Pharmaceutical from Hornet's Pharmacy: A Chemical Wonderland (p.4). No cost printed in the book (cost 0 = not priced)."
+    },
+    {
+      "id": "piranha-smash",
+      "name": "Piranha Smash",
+      "cost": 10,
+      "costTier": "Cheap",
+      "duration": "4 Hours",
+      "primaryEffect": "Euforia y ganas de fiesta: +2 a Dance, Contortionist, Conversation, Human Perception, Persuasion y Acting.",
+      "secondaryEffect": "Adicción (DV9): pérdida de interés en actividades normales, -2 a las mismas Skills y antojos que el jugador debe interpretar.",
+      "addictionDv": 9,
+      "description": "Smash mejorada por un Tech, menos adictiva y con sabor a lima. Solo la venden los Piranhas, y no a quien consideran doombas.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 4,
+      "booth": []
     }
   ],
   "gear": [
@@ -4696,76 +6567,6 @@
       "era": "2045"
     },
     {
-      "id": "makigai-maimai",
-      "name": "Makigai MaiMai",
-      "cost": 10000,
-      "costTier": "Luxury",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Ultra-compact two-seater city commuter car. 35 SDP, SP 10 armor."
-    },
-    {
-      "id": "yaiba-kusanagi",
-      "name": "Yaiba Kusanagi CT-3X",
-      "cost": 20000,
-      "costTier": "Super Luxury",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Iconic high-performance superbike. 30 SDP, top combat speed."
-    },
-    {
-      "id": "quadra-turbo-r",
-      "name": "Quadra Turbo-R V-Tech",
-      "cost": 40000,
-      "costTier": "Super Luxury",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Legendary American muscle sports coupe. 50 SDP, SP 12 armor."
-    },
-    {
-      "id": "militech-gorgon",
-      "name": "Militech Gorgon Security Van",
-      "cost": 50000,
-      "costTier": "Super Luxury",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Heavily armored tactical response van. 65 SDP, SP 18 armor, seats 8."
-    },
-    {
-      "id": "zetatech-aerovox-av4",
-      "name": "Zetatech AeroVox AV-4",
-      "cost": 100000,
-      "costTier": "Super Luxury",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Twin-turbine tactical aerodyne vehicle. 70 SDP, SP 15 armor, flight speed."
-    },
-    {
-      "id": "grundy-salvage-suit",
-      "name": "Grundy Salvage Suit",
-      "cost": 1000,
-      "costTier": "Very Expensive",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Deep-water salvage dive suit with oxygen rebreather and floodlights."
-    },
-    {
-      "id": "drink-master-3000",
-      "name": "Drink Master 3000",
-      "cost": 500,
-      "costTier": "Expensive",
-      "sourceBook": "black_chrome",
-      "sourceBookTitle": "Black Chrome Tech & Style Guide",
-      "era": "2045",
-      "description": "Portable robotic cocktail station providing perfect refreshments for Night Market gigs."
-    },
-    {
       "id": "suzumebachi-assassin-drone",
       "name": "Suzumebachi Assassin Drone",
       "cost": 5000,
@@ -4775,6 +6576,455 @@
       "sourceBookTitle": "Hornet's Pharmacy",
       "sourcePage": 5,
       "era": "2045"
+    },
+    {
+      "id": "masetto-holo-wear",
+      "name": "Masetto Holo-Wear",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Cuatro proyectores holográficos (tobillo, cuello, cintura, muñeca) que proyectan un atuendo elegido vía Agent; cambiar de atuendo es una Acción. Viene con 1 atuendo; extras 100eb c/u. Un EMP lo apaga 1 minuto.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 35,
+      "booth": [
+        "Pick-up or Browse at Booth A4",
+        "Pick-up or Browse at Booth D1"
+      ]
+    },
+    {
+      "id": "mechaman-smart-glove",
+      "name": "MechaMan Smart Glove",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Guante de moto de Tokyo Dynamics con Subdermal Grip preinstalado y 1 ranura extra para opción de Cyberarm/Cyberlimb. Ponerlo o quitarlo es una Acción; requiere Neural Link para el Grip; no se puede ocultar.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 37,
+      "booth": [
+        "Pick-up or Browse at Booth B4",
+        "Pick-up or Browse at Booth C6"
+      ]
+    },
+    {
+      "id": "shower-in-a-can",
+      "name": "S.I.C. (Shower-in-a-Can)",
+      "cost": 10,
+      "costTier": "Cheap",
+      "description": "Espuma de Biotechnica que desinfecta y desodoriza sin ducha. Un uso por lata.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 38,
+      "booth": [
+        "Pick-up or Browse at Booth C6"
+      ]
+    },
+    {
+      "id": "killstrom-banshee-microphone",
+      "name": "KillStrom Banshee Microphone",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Micrófono-diadema inalámbrico que filtra ruido y se enlaza al Agent. +2 a Play Instrument (Singing); el bono no se acumula con otros instrumentos.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 40,
+      "booth": [
+        "Pick-up or Browse at Booth C1",
+        "Pick-up or Browse at Booth E3"
+      ]
+    },
+    {
+      "id": "killstrom-sonic-boom-amp",
+      "name": "KillStrom Sonic Boom Amp",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Amplificador que con una Acción obliga a todos a 10 m/yd de un altavoz conectado a un Chequeo DV15 Resist Torture/Drugs; quien falla sufre Damaged Ear 1 minuto (sin daño extra). Requiere enchufe activo.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 40,
+      "booth": [
+        "Pick-up or Browse at Booth C1",
+        "Pick-up or Browse at Booth E3"
+      ]
+    },
+    {
+      "id": "killstrom-typhoid-speaker",
+      "name": "KillStrom Typhoid Speaker",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Altavoz cableado para el Sonic Boom Amp: sube +1 el DV del chequeo y +90 m/yd el alcance. Requiere enchufe activo.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 41,
+      "booth": [
+        "Pick-up or Browse at Booth C1",
+        "Pick-up or Browse at Booth E3"
+      ]
+    },
+    {
+      "id": "laser-light-electric-guitar",
+      "name": "Laser Light Electric Guitar",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Guitarra inalámbrica con láseres personalizables vía Agent. +1 a Play Instrument (Guitar) (no se acumula con otros instrumentos); cuenta como 1 instalación de Light Tattoo si se lleva a la vista.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 41,
+      "booth": [
+        "Pick-up or Browse at Booth C1",
+        "Pick-up or Browse at Booth E3"
+      ]
+    },
+    {
+      "id": "drink-master-3000",
+      "name": "The Drink Master 3000",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Unidad rodante de Hammered Industries que mezcla hasta 3,000 bebidas (incluida Smash) con 32 fluidos; se lleva como mochila. Sirve 10 bebidas antes de recargar con 100eb de insumos.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 42,
+      "booth": [
+        "Pick-up or Browse at Booth F4"
+      ]
+    },
+    {
+      "id": "hydrosubsidium-universal-aqualung",
+      "name": "Hydrosubsidium Universal Aqualung",
+      "cost": 5000,
+      "costTier": "Luxury",
+      "description": "Collar con filtros que extrae oxígeno del agua de mar; permite respirar bajo el agua a hasta 10 m/yd de la superficie.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 42,
+      "booth": [
+        "Pick-up or Browse at Booth D1"
+      ]
+    },
+    {
+      "id": "jeeves-executive-garment-bag",
+      "name": "Jeeves Executive Garment Bag",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Bolsa de Nu-Tek que limpia y repara una prenda de moda o armadura (no destruida del todo; no Luxury/Super Luxury) a la vez. El tiempo depende de la categoría de precio: Cheap/Everyday 1 h hasta Very Expensive 2 semanas.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 43,
+      "booth": [
+        "Pick-up or Browse at Booth D1",
+        "Pick-up or Browse at Booth E3"
+      ]
+    },
+    {
+      "id": "zetatech-porta-printer",
+      "name": "Zetatech Porta-Printer",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Impresora 3D en mochila: permite a un Tech usar su Expertise de Upgrade y Fabricación en cualquier lugar con herramientas de ensamblaje.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 43,
+      "booth": [
+        "Pick-up or Browse at Booth A3",
+        "Pick-up or Browse at Booth E3"
+      ]
+    },
+    {
+      "id": "chipvault-by-secsystems",
+      "name": "ChipVault by SecSystems",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Estuche del tamaño de una baraja con cerradura biométrica y blindaje EMP para 8 chips. Se abre con la llave biométrica o un Chequeo DV17 Electronics/Security Tech; bisagra vulnerable a Pick Lock DV10.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 44,
+      "booth": [
+        "Pick-up or Browse at Booth C2"
+      ]
+    },
+    {
+      "id": "doberman-500-marking-scent",
+      "name": "Doberman 500 Marking Scent",
+      "cost": 50,
+      "costTier": "Costly",
+      "description": "Munición especial para Air Pistol, sin daño: marca al objetivo con un olor 24 h. Los Doberman 500 ganan +4 a Tracking (otros rastreadores olfativos +2). Paquete de 12.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 44,
+      "booth": [
+        "Pick-up or Browse at Booth D2",
+        "Pick-up or Browse at Booth F4"
+      ]
+    },
+    {
+      "id": "ktech-doberman-500",
+      "name": "KTech Doberman 500",
+      "cost": 5000,
+      "costTier": "Luxury",
+      "description": "Dron de combate cuadrúpedo ligado a un Agent con modos Standby, Sentry y Tracking. No se puede contrarrestar con Electronics/Security Tech. Mordida como arma Exotic Very Heavy Melee; 48 h de energía.",
+      "notes": "Stats: 8 MOVE, 11 SP, 25 HP, Combat Number 10, Roaming Range 50 m/yd. Incluye Motion Detector y Olfactory Suite.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 45,
+      "booth": [
+        "Pick-up or Browse at Booth D2"
+      ]
+    },
+    {
+      "id": "rapideploy-sheath",
+      "name": "RapiDeploy Sheath",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Funda de Gambler Workshop para pistolas o armas cuerpo a cuerpo ligeras, de muñeca o espalda. +2 a Conceal/Reveal Object al ocultar un arma ocultable; si fuera a ser destruida queda intacta o solo destruida.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 47,
+      "booth": [
+        "Pick-up or Browse at Booth F4"
+      ]
+    },
+    {
+      "id": "streetcase-by-secsystems",
+      "name": "Streetcase by SecSystems",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Maletín ejecutivo con funda externa para Heavy Pistol (desenfundar sin Acción), ChipVault y Smoke Grenade incluidos, y espacio para laptop. Detonar el humo es una Acción. Puede alojar un ModFire 10x (no incluido) en modo Heavy Pistol.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 47,
+      "booth": [
+        "Pick-up or Browse at Booth C2",
+        "Pick-up or Browse at Booth D1"
+      ]
+    },
+    {
+      "id": "everest-venturewear-airwell-50",
+      "name": "Everest VentureWare AirWell 50",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Cilindro solar que condensa y filtra agua de la atmósfera: 0.5 L por cada 5 horas, suficiente para sostener a una persona pero no saciar la sed.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 48,
+      "booth": [
+        "Pick-up or Browse at Booth B2"
+      ]
+    },
+    {
+      "id": "everest-venturewear-one-touch-habitat",
+      "name": "Everest VentureWare One Touch Habitat",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Tienda que se arma sola con climatización. Protege de Exposure to Extreme Elements; dormir en ella cuenta como Wilderness (o Street en ciudad); más de 2 personas cuenta como Crammed. Armarla/desarmarla es una Acción.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 48,
+      "booth": [
+        "Pick-up or Browse at Booth B2"
+      ]
+    },
+    {
+      "id": "mr-biscuit-multi-food-processor",
+      "name": "Mr. Biscuit Multi-Food Processor",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Procesador que convierte materia orgánica en obleas nutritivas en 10 minutos. Un grupo de hasta 10 personas se mantiene sin pagar Lifestyle en zonas con Outskirts Threat Rating.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 49,
+      "booth": [
+        "Pick-up or Browse at Booth B2"
+      ]
+    },
+    {
+      "id": "petrochem-nitro-ultra9",
+      "name": "Petrochem Nitro Ultra9",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Bote de combustible que rellena el tanque de un vehículo como Acción. Durante 24 h el vehículo gana +5 MOVE de combate, pero el daño de 6d6 por embestida pasa a 12d6.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 49,
+      "booth": [
+        "Pick-up or Browse at Booth B1"
+      ]
+    },
+    {
+      "id": "worldsat-aerial-sphere",
+      "name": "WorldSat Aerial Sphere",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Globo con cable que da conexión a CitiNet en zonas remotas (hasta 50 millas de otra Sphere con conexión; acceso a 100 m/yd de la unidad de control). Montar o desmontar toma 1 hora; si se corta el cable (10 HP) se destruye.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 50,
+      "booth": [
+        "Pick-up or Browse at Booth B2"
+      ]
+    },
+    {
+      "id": "sovoil-lubricants",
+      "name": "SovOil Lubricants",
+      "cost": 10,
+      "costTier": "Cheap",
+      "description": "Lubricantes de petróleo de SovOil para uso médico, personal o industrial, todos en latas idénticas; leer la etiqueta.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 56,
+      "booth": [
+        "Pick-up or Browse at Booth A3",
+        "Pick-up or Browse at Booth B1",
+        "Pick-up or Browse at Booth C6",
+        "Pick-up or Browse at Booth F4"
+      ]
+    },
+    {
+      "id": "triti-fizz",
+      "name": "Triti-Fizz",
+      "cost": 10,
+      "costTier": "Cheap",
+      "description": "Refresco más popular de Norteamérica de Continental Brands, con muchos sabores y ediciones limitadas.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 124,
+      "booth": [
+        "Pick-up or Browse at Booth C6"
+      ]
+    },
+    {
+      "id": "digital-gladiator",
+      "name": "Digital Gladiator",
+      "cost": 20,
+      "costTier": "Everyday",
+      "description": "App (Agent): combate a muerte entre dos Gladiators (Solo Rank 4) enlazando dos Agents. El Agent del perdedor se destruye (con Internal Agent sufre Brain Injury).",
+      "notes": "Empresa: Segotari. Gladiator: Complete Package, 62 STAT, 86 Skill, 2,550eb, sin explosivos.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 12,
+      "booth": []
+    },
+    {
+      "id": "4tify",
+      "name": "4Tify",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "App (Agent): tras 5 min escaneando una cobertura a 1 m/yd, +1d6 al siguiente daño contra ella.",
+      "notes": "Empresa: SecSystems.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 13,
+      "booth": []
+    },
+    {
+      "id": "ncpd-crime-database",
+      "name": "NCPD Crime Database",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "App (Agent): sube fotos y, en 1 hora, informa de antecedentes, órdenes de captura o recompensas públicas. Requiere CitiNet; el NCPD recibe la foto y su metadata.",
+      "notes": "Empresa: NCPD.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 13,
+      "booth": []
+    },
+    {
+      "id": "trauma-team-medscan",
+      "name": "Trauma Team MedScan",
+      "cost": 20,
+      "costTier": "Everyday",
+      "description": "App (Agent): conecta con un especialista remoto de Trauma Team (requiere CitiNet). Por 100eb, +1 a First Aid/Paramedic para Stabilize o Quick Fix durante 1 h; por 500eb, +1 a Medical Tech/Surgery en un tratamiento de 4 h.",
+      "notes": "Empresa: Trauma Team North America. Gratis para suscriptores Executive.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 14,
+      "booth": []
+    },
+    {
+      "id": "ziggurat-city-database",
+      "name": "Ziggurat City Database",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "App (Agent): guía de una ciudad; +1 a Chequeos de Local Expert sobre sus comunidades y barrios. Cada ciudad se compra por separado.",
+      "notes": "Empresa: Ziggurat.",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 14,
+      "booth": []
+    },
+    {
+      "id": "solo-of-fortune-bodypillow",
+      "name": "Solo of Fortune Bodypillow",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Almohadas corporales con imágenes de Solos famosos de 2020 (Morgan Blackhand, Boa Boa Weyland, Adam Smasher). El modelo de Adam Smasher reduce en uno la capacidad de huéspedes de una vivienda.",
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Black Chrome+",
+      "era": "2045",
+      "sourcePage": 5,
+      "booth": []
+    },
+    {
+      "id": "arasaka-acid",
+      "name": "Arasaka Acid",
+      "cost": 100,
+      "costTier": "Premium",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 91,
+      "booth": [],
+      "description": "Fluido para la Arasaka Weeping Reaver Katana. Fluido (cánister de un uso) para el Weeping Reaver: la hoja ablanda la armadura en 2 en vez de 1."
+    },
+    {
+      "id": "arasaka-fire",
+      "name": "Arasaka Fire",
+      "cost": 100,
+      "costTier": "Premium",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 91,
+      "booth": [],
+      "description": "Fluido para la Arasaka Weeping Reaver Katana. Fluido (cánister de un uso) para el Weeping Reaver: si el daño atraviesa la armadura, prende al objetivo (2 HP al terminar su turno hasta que gaste una Acción en apagarse)."
+    },
+    {
+      "id": "arasaka-wound-salt",
+      "name": "Arasaka Wound Salt",
+      "cost": 100,
+      "costTier": "Premium",
+      "sourceBook": "black_chrome",
+      "sourceBookTitle": "Black Chrome Tech & Style Guide",
+      "era": "2045",
+      "sourcePage": 91,
+      "booth": [],
+      "description": "Fluido para la Arasaka Weeping Reaver Katana. Fluido (cánister de un uso) para el Weeping Reaver: si causa Foreign Object, se tira otra Lesión Crítica (no Foreign Object) que también se sufre, sin daño adicional."
     }
   ],
   "programs": [

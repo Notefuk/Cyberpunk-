@@ -108,6 +108,9 @@ export function mapWeaponSkillToKey(weaponSkillLabel: string, isAutofire?: boole
       return 'brawling';
     case 'martialarts':
       return 'martialArts';
+    // v5.12.0 (plan 26): granadas y armas arrojadizas de Black Chrome se lanzan con Athletics. [Claude Code · 2026-11-06]
+    case 'athletics':
+      return 'athletics';
     default:
       return 'handgun';
   }
