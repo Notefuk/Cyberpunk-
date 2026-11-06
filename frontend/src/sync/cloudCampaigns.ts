@@ -80,11 +80,13 @@ export function createCampaignController(host: CampaignHost) {
   // v5.11.0 (plan 25): una ficha de NPC no publica resumen de party (los jugadores no la ven). [Claude Code · 2026-11-05]
   const isNpc = (sheet: CharacterSheet | undefined) => sheet?.sheetKind === 'npc';
   const autoFailed = new Set<string>();
-  let serverListSeen = false;
 
   /** Plan 25: mis fichas de jugador sin campaña entran solas a la campaña donde soy jugador. */
   function autoAssignFree(): void {
-    if (stopped || !serverListSeen) return;
+    // v5.11.1: corre también con la lista del caché. Con la caché persistente, si el servidor no trae cambios
+    // no llega una segunda lectura "del servidor", así que esperarla dejaba sin asignar (se vio en prod).
+    // Si el caché está viejo (me echaron), la regla rechaza la asignación y no pasa nada. [Claude Code · 2026-11-06]
+    if (stopped) return;
     const st = cs();
     const campId = pickAutoCampaign(st.campaigns, uid, st.activeTableId);
     if (!campId) return;
@@ -213,11 +215,8 @@ export function createCampaignController(host: CampaignHost) {
           useCloudState.setState({ campaigns: list });
           syncPartySubs(list);
           reconcilePlayers();
-          if (!info.fromCache) {
-            cleanupOrphans(list);
-            serverListSeen = true;
-            autoAssignFree();
-          }
+          if (!info.fromCache) cleanupOrphans(list);
+          autoAssignFree();
         },
         (e) => setError('No se pudieron leer las campañas: ', e),
       );

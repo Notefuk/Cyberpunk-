@@ -117,6 +117,12 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.11.1] - 2026-11-06 (Las fichas de jugador entran solas a la campaña también en prod) [Claude Code · 2026-11-06]
+* **Category**: Mesa online (arreglo de la v5.11.0, plan 25).
+* **What Changed**: en prod, Dow Jones y Kessler (1swordhie) no entraban solas a la campaña. La campaña automática esperaba una lectura de la lista de campañas "confirmada por el servidor"; con la caché persistente de Firestore, si el servidor no trae cambios esa lectura no llega nunca. En el emulador no se veía porque la caché arrancaba vacía. Ahora corre con cualquier lectura de la lista; si el caché está viejo (por ejemplo, te echaron), la regla rechaza la asignación y no pasa nada. Liberar fichas de campañas viejas (`cleanupOrphans`) sigue esperando la lectura del servidor, como antes.
+* **Files Modified**: `sync/cloudCampaigns.ts`, `sync/__tests__/cloudCampaignsAuto.test.ts` (nuevo); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, tests (2 nuevos: con la lista solo del caché asigna las fichas de jugador libres y no las de NPC ni las que ya tienen campaña; no repite la asignación) y build.
+
 ### [v5.11.0] - 2026-11-05 (Fichas fijas en la nube y fichas de NPC) [Claude Code · 2026-11-05]
 * **Category**: Mesa online (plan 25, `docs/plans/plan25-fichas-fijas-y-npc.md`). Pedido de Giuliano: el GM no veía las fichas de sus jugadores si no las asignaban a mano; las fichas tienen que quedar fijas en la nube, y las de NPC separadas de las de jugador.
 * **What Changed**:
