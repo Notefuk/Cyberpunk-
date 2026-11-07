@@ -462,6 +462,73 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
     }
   },
 
+  {
+    // [Claude Code · 2026-11-06] v5.14.0 (plan 26): Economics 101 de Black Chrome (pp.125-130).
+    id: 'bc-economics-101',
+    title: 'Economics 101: conseguir cosas con un Fixer',
+    subtitle: 'Find a Fixer/Tech, cómo trabaja el Fixer, Night Markets y estilos de vida en detalle',
+    sourceBook: 'black_chrome',
+    sourceBookTitle: 'Black Chrome Tech & Style Guide',
+    era: '2045',
+    categoryBadge: 'ECONOMÍA // FIXERS',
+    introDescription:
+      'En el Time of the Red no alcanza con tener plata: para comprar algo caro hace falta alguien con acceso, casi siempre un Fixer (BC p.126). Black Chrome explica cómo se consigue, se trae y se cobra un ítem, y da una tabla con el DV para encontrar a un Fixer o Tech según el costo del ítem (BC p.129).',
+    howItWorksSteps: [
+      'Find a Fixer/Tech (BC p.129): si nadie del grupo conoce a un Fixer que lo consiga, se tira Streetwise contra el DV de la tabla según el costo del ítem. Es una guía: el GM decide si el ítem es fácil de conseguir, un punto de trama o una misión propia.',
+      'Si el grupo ya conoce a un Fixer (Lifepath, misiones anteriores), sirve; el GM decide si tiene tiempo y acceso (BC pp.126, 129).',
+      'Precio (BC p.126): el Fixer usa Operator, COOL + Trading + Rango de Operator + 1d10, contra COOL + Trading + 1d10 del cliente. Si gana, cobra con Haggle (Core p.159), +10%, más una tarifa. Se paga por adelantado y la entrega tarda alrededor de un mes.',
+      'Cómo lo consigue (BC pp.126-127): llama a su red, negocia con otro dueño o Fixer, soborna o contrata un equipo, y reserva carga en un transporte Nomad (Aldecaldos, Jodes, Thelas).',
+      'Un Tech también puede fabricarlo con Maker; comprarle directo al Tech te da la relación con él en vez del Fixer (BC p.128).',
+      'Night Markets (BC p.7 y pp.131-156): el GM arma el mercado con la tabla del Core p.338 y le suma los ítems de Black Chrome según el puesto (letra = mercado, número = puesto). Generador en FIXER DECK.'
+    ],
+    keyBenefits: [
+      'Da una tirada concreta (Streetwise) para que los personajes que no son Fixers consigan cosas caras.',
+      'Cada ítem de Black Chrome dice en qué puesto de qué Night Market se consigue.'
+    ],
+    drawbacksAndRisks: [
+      'Sin un contacto, un personaje que no es Fixer solo accede a ítems de 100eb o menos (ejemplo de BC p.126).',
+      'Se paga por adelantado y la entrega tarda: el Fixer puede no tener tiempo o pedir un favor.'
+    ],
+    referenceTable: {
+      headers: ['Costo del ítem', 'DV de Streetwise (BC p.129)'],
+      rows: [
+        ['500eb (Expensive)', 'DV15'],
+        ['1,000eb (Very Expensive)', 'DV17'],
+        ['5,000eb (Luxury)', 'DV21'],
+        ['10,000eb+ (Super Luxury)', 'DV24']
+      ]
+    }
+  },
+  {
+    id: 'bc-lifestyles-in-detail',
+    title: 'Lifestyles in Detail (Black Chrome)',
+    subtitle: 'Qué cubre por mes cada estilo de vida: comida, comunicaciones, entretenimiento y transporte',
+    sourceBook: 'black_chrome',
+    sourceBookTitle: 'Black Chrome Tech & Style Guide',
+    era: '2045',
+    categoryBadge: 'ECONOMÍA // ESTILO DE VIDA',
+    introDescription:
+      'El costo mensual de cada estilo de vida (Core p.377) cubre comida, comunicaciones, entretenimiento y transporte. Lo que gastes por encima sale de tu bolsillo (BC p.130).',
+    howItWorksSteps: [
+      'Kibble (100eb/mes): dos comidas de Kibble por día, cuenta de Agent, un entretenimiento de 20eb por mes, pase de transporte y un taxi por mes entre zonas seguras.',
+      'Generic Prepak (300eb/mes): Kibble y Generic Prepak, un mensaje a otra ciudad por semana, entretenimiento de 20eb semanal y un taxi semanal entre zonas seguras.',
+      'Good Prepak (600eb/mes): Generic y Good Prepak, mensajes diarios y una llamada semanal, entretenimiento diario y uno de 100eb por mes, taxi diario y un Compact Groundcar alquilado 24 horas por mes.',
+      'Fresh Food (1,500eb/mes): Good Prepak y comida fresca, mensajes ilimitados y llamadas diarias, entretenimiento diario, semanal y mensual de 500eb, taxi diario a cualquier zona y un Compact Groundcar 24 horas por semana.',
+      'Si dañás un vehículo alquilado, puede que no te alquilen más (BC p.130).'
+    ],
+    keyBenefits: ['El detalle también aparece en el creador de personajes, al elegir el estilo de vida.'],
+    drawbacksAndRisks: ['Lo que exceda lo cubierto se paga aparte.'],
+    referenceTable: {
+      headers: ['Estilo de vida', 'Costo (BC p.130)'],
+      rows: [
+        ['Kibble', '100eb/mes'],
+        ['Generic Prepak', '300eb/mes'],
+        ['Good Prepak', '600eb/mes'],
+        ['Fresh Food', '1,500eb/mes']
+      ]
+    }
+  },
+
   // --------------------------------------------------------------------------
   // 8. HARDENED ENEMIES & TACTICAL THREAT TIERS
   // --------------------------------------------------------------------------

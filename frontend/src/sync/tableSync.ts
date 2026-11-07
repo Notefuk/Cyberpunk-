@@ -128,7 +128,7 @@ function stopEncounterSync(): void {
   logPublisher?.flush();
   logPublisher = null;
   useTableLog.getState().set([]);
-  useTableReveals.setState({ handouts: [], net: null, adapter: null });
+  useTableReveals.setState({ handouts: [], net: null, market: null, adapter: null });
 }
 
 function whoAmI(uid: string) {
@@ -231,6 +231,8 @@ function startEncounterSync(campId: string, isGm: boolean): void {
     useTableReveals.setState({ adapter: reveals });
     logUnsubs.push(reveals.subscribeHandouts((handouts) => useTableReveals.setState({ handouts }), (e) => console.warn('[mesa] revelado:', e)));
     logUnsubs.push(reveals.subscribeNet((net) => useTableReveals.setState({ net }), (e) => console.warn('[mesa] NET revelado:', e)));
+    // v5.14.0 [Claude Code · 2026-11-06]: Night Market que muestra el GM.
+    logUnsubs.push(reveals.subscribeMarket((market) => useTableReveals.setState({ market }), (e) => console.warn('[mesa] mercado:', e)));
     // v5.3.0 (plan 20, B.1): secretos del GM de esta campaña. [Claude Code · 2026-10-28]
     if (isGm) {
       startGmSecrets({

@@ -3194,8 +3194,8 @@
       "era": "2045",
       "sourcePage": 28,
       "booth": [
-        "Pick-up or Browse at Booth E1",
-        "Pick-up or Browse at Booth F3"
+        "E1",
+        "F3"
       ]
     },
     {
@@ -3211,8 +3211,8 @@
       "era": "2045",
       "sourcePage": 29,
       "booth": [
-        "Pick-up or Browse at Booth B4",
-        "Pick-up or Browse at Booth F3"
+        "B4",
+        "F3"
       ]
     },
     {
@@ -3228,7 +3228,7 @@
       "era": "2045",
       "sourcePage": 29,
       "booth": [
-        "Pick-up or Browse at Booth F3"
+        "F3"
       ]
     },
     {
@@ -3244,7 +3244,7 @@
       "era": "2045",
       "sourcePage": 30,
       "booth": [
-        "Pick-up or Browse at Booth F3"
+        "F3"
       ]
     },
     {
@@ -3260,7 +3260,7 @@
       "era": "2045",
       "sourcePage": 31,
       "booth": [
-        "Pick-up or Browse at Booth E1"
+        "E1"
       ]
     },
     {
@@ -3276,7 +3276,7 @@
       "era": "2045",
       "sourcePage": 31,
       "booth": [
-        "Pick-up or Browse at Booth A4"
+        "A4"
       ]
     },
     {
@@ -3292,7 +3292,7 @@
       "era": "2045",
       "sourcePage": 32,
       "booth": [
-        "Pick-up or Browse at Booth E1"
+        "E1"
       ]
     },
     {
@@ -3308,8 +3308,8 @@
       "era": "2045",
       "sourcePage": 33,
       "booth": [
-        "Pick-up or Browse at Booth B4",
-        "Pick-up or Browse at Booth E1"
+        "B4",
+        "E1"
       ]
     },
     {
@@ -3325,7 +3325,7 @@
       "era": "2045",
       "sourcePage": 33,
       "booth": [
-        "Pick-up or Browse at Booth E1"
+        "E1"
       ]
     },
     {
@@ -3341,8 +3341,8 @@
       "era": "2045",
       "sourcePage": 33,
       "booth": [
-        "Pick-up or Browse at Booth E1",
-        "Pick-up or Browse at Booth F3"
+        "E1",
+        "F3"
       ]
     },
     {
@@ -3358,8 +3358,8 @@
       "era": "2045",
       "sourcePage": 34,
       "booth": [
-        "Pick-up or Browse at Booth D1",
-        "Pick-up or Browse at Booth E1"
+        "D1",
+        "E1"
       ]
     },
     {
@@ -3375,7 +3375,7 @@
       "era": "2045",
       "sourcePage": 35,
       "booth": [
-        "Pick-up or Browse at Booth E1"
+        "E1"
       ]
     },
     {
@@ -3391,8 +3391,8 @@
       "era": "2045",
       "sourcePage": 36,
       "booth": [
-        "Pick-up or Browse at Booth B4",
-        "Pick-up or Browse at Booth F3"
+        "B4",
+        "F3"
       ]
     },
     {
@@ -3408,8 +3408,8 @@
       "era": "2045",
       "sourcePage": 37,
       "booth": [
-        "Pick-up or Browse at Booth B4",
-        "Pick-up or Browse at Booth D1"
+        "B4",
+        "D1"
       ]
     },
     {
@@ -6588,8 +6588,8 @@
       "era": "2045",
       "sourcePage": 35,
       "booth": [
-        "Pick-up or Browse at Booth A4",
-        "Pick-up or Browse at Booth D1"
+        "A4",
+        "D1"
       ]
     },
     {
@@ -6603,8 +6603,8 @@
       "era": "2045",
       "sourcePage": 37,
       "booth": [
-        "Pick-up or Browse at Booth B4",
-        "Pick-up or Browse at Booth C6"
+        "B4",
+        "C6"
       ]
     },
     {
@@ -6618,7 +6618,7 @@
       "era": "2045",
       "sourcePage": 38,
       "booth": [
-        "Pick-up or Browse at Booth C6"
+        "C6"
       ]
     },
     {
@@ -6632,8 +6632,8 @@
       "era": "2045",
       "sourcePage": 40,
       "booth": [
-        "Pick-up or Browse at Booth C1",
-        "Pick-up or Browse at Booth E3"
+        "C1",
+        "E3"
       ]
     },
     {
@@ -6647,8 +6647,8 @@
       "era": "2045",
       "sourcePage": 40,
       "booth": [
-        "Pick-up or Browse at Booth C1",
-        "Pick-up or Browse at Booth E3"
+        "C1",
+        "E3"
       ]
     },
     {
@@ -6662,8 +6662,8 @@
       "era": "2045",
       "sourcePage": 41,
       "booth": [
-        "Pick-up or Browse at Booth C1",
-        "Pick-up or Browse at Booth E3"
+        "C1",
+        "E3"
       ]
     },
     {
@@ -6677,8 +6677,8 @@
       "era": "2045",
       "sourcePage": 41,
       "booth": [
-        "Pick-up or Browse at Booth C1",
-        "Pick-up or Browse at Booth E3"
+        "C1",
+        "E3"
       ]
     },
     {
@@ -6692,7 +6692,7 @@
       "era": "2045",
       "sourcePage": 42,
       "booth": [
-        "Pick-up or Browse at Booth F4"
+        "F4"
       ]
     },
     {
@@ -6706,7 +6706,7 @@
       "era": "2045",
       "sourcePage": 42,
       "booth": [
-        "Pick-up or Browse at Booth D1"
+        "D1"
       ]
     },
     {
@@ -6720,8 +6720,8 @@
       "era": "2045",
       "sourcePage": 43,
       "booth": [
-        "Pick-up or Browse at Booth D1",
-        "Pick-up or Browse at Booth E3"
+        "D1",
+        "E3"
       ]
     },
     {
@@ -6735,8 +6735,8 @@
       "era": "2045",
       "sourcePage": 43,
       "booth": [
-        "Pick-up or Browse at Booth A3",
-        "Pick-up or Browse at Booth E3"
+        "A3",
+        "E3"
       ]
     },
     {
@@ -6750,7 +6750,7 @@
       "era": "2045",
       "sourcePage": 44,
       "booth": [
-        "Pick-up or Browse at Booth C2"
+        "C2"
       ]
     },
     {
@@ -6764,8 +6764,8 @@
       "era": "2045",
       "sourcePage": 44,
       "booth": [
-        "Pick-up or Browse at Booth D2",
-        "Pick-up or Browse at Booth F4"
+        "D2",
+        "F4"
       ]
     },
     {
@@ -6780,7 +6780,7 @@
       "era": "2045",
       "sourcePage": 45,
       "booth": [
-        "Pick-up or Browse at Booth D2"
+        "D2"
       ]
     },
     {
@@ -6794,7 +6794,7 @@
       "era": "2045",
       "sourcePage": 47,
       "booth": [
-        "Pick-up or Browse at Booth F4"
+        "F4"
       ]
     },
     {
@@ -6808,8 +6808,8 @@
       "era": "2045",
       "sourcePage": 47,
       "booth": [
-        "Pick-up or Browse at Booth C2",
-        "Pick-up or Browse at Booth D1"
+        "C2",
+        "D1"
       ]
     },
     {
@@ -6823,7 +6823,7 @@
       "era": "2045",
       "sourcePage": 48,
       "booth": [
-        "Pick-up or Browse at Booth B2"
+        "B2"
       ]
     },
     {
@@ -6837,7 +6837,7 @@
       "era": "2045",
       "sourcePage": 48,
       "booth": [
-        "Pick-up or Browse at Booth B2"
+        "B2"
       ]
     },
     {
@@ -6851,7 +6851,7 @@
       "era": "2045",
       "sourcePage": 49,
       "booth": [
-        "Pick-up or Browse at Booth B2"
+        "B2"
       ]
     },
     {
@@ -6865,7 +6865,7 @@
       "era": "2045",
       "sourcePage": 49,
       "booth": [
-        "Pick-up or Browse at Booth B1"
+        "B1"
       ]
     },
     {
@@ -6879,7 +6879,7 @@
       "era": "2045",
       "sourcePage": 50,
       "booth": [
-        "Pick-up or Browse at Booth B2"
+        "B2"
       ]
     },
     {
@@ -6893,10 +6893,10 @@
       "era": "2045",
       "sourcePage": 56,
       "booth": [
-        "Pick-up or Browse at Booth A3",
-        "Pick-up or Browse at Booth B1",
-        "Pick-up or Browse at Booth C6",
-        "Pick-up or Browse at Booth F4"
+        "A3",
+        "B1",
+        "C6",
+        "F4"
       ]
     },
     {
@@ -6910,7 +6910,7 @@
       "era": "2045",
       "sourcePage": 124,
       "booth": [
-        "Pick-up or Browse at Booth C6"
+        "C6"
       ]
     },
     {

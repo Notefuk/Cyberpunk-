@@ -23,6 +23,8 @@ rules_version = '2';
 //   characters/{charId}.transferCode         el código activo de esa ficha (lo pone el dueño)
 // v5.11.0 (plan 25) [Claude Code · 2026-11-05]:
 //   characters/{charId}.sheetKind            'player' | 'npc' (sin el campo = jugador); el NPC no va a la party
+// v5.14.0 (plan 26) [Claude Code · 2026-11-06]:
+//   campaigns/{campId}/reveals/market        Night Market que el GM muestra a la mesa (title, source, sections)
 //   Las fichas no se borran, y una ficha de jugador queda en su campaña mientras su dueño sea miembro.
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -285,7 +287,14 @@ service cloud.firestore {
           && request.resource.data.archName is string && request.resource.data.archName.size() <= 120
           && request.resource.data.floors is list && request.resource.data.floors.size() <= 30
           && request.resource.data._ts == request.time;
-        allow create: if isGmOf(campId) && rid != 'net'
+        // v5.14.0 (plan 26): el Night Market que el GM muestra a la mesa. [Claude Code · 2026-11-06]
+        allow create, update: if isGmOf(campId) && rid == 'market'
+          && request.resource.data.keys().hasOnly(['title', 'source', 'sections', '_ts'])
+          && request.resource.data.title is string && request.resource.data.title.size() <= 120
+          && request.resource.data.source is string && request.resource.data.source.size() <= 120
+          && request.resource.data.sections is list && request.resource.data.sections.size() <= 12
+          && request.resource.data._ts == request.time;
+        allow create: if isGmOf(campId) && rid != 'net' && rid != 'market'
           && request.resource.data.keys().hasOnly(['id', 'kind', 'title', 'text', 'at', '_by'])
           && request.resource.data.id == rid
           && request.resource.data.kind == 'note'

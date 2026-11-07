@@ -6,7 +6,7 @@ import type { CompendiumCategory } from '../compendium/CompendiumView';
 // Carga perezosa: el Compendium sigue en su propio chunk, como en App.tsx.
 const CompendiumView = lazy(() => import('../compendium/CompendiumView').then((m) => ({ default: m.CompendiumView })));
 
-export const CompendiumShopModal: React.FC<{ initialCategory: CompendiumCategory; onClose: () => void }> = ({ initialCategory, onClose }) => {
+export const CompendiumShopModal: React.FC<{ initialCategory: CompendiumCategory; initialSearch?: string; onClose: () => void }> = ({ initialCategory, initialSearch, onClose }) => {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
@@ -25,7 +25,7 @@ export const CompendiumShopModal: React.FC<{ initialCategory: CompendiumCategory
         </div>
         <div className="p-2 sm:p-3">
           <Suspense fallback={<div className="p-6 text-center text-xs font-mono-code text-slate-400">Cargando el Compendium...</div>}>
-            <CompendiumView initialCategory={initialCategory} />
+            <CompendiumView initialCategory={initialCategory} initialSearch={initialSearch} />
           </Suspense>
         </div>
       </div>
