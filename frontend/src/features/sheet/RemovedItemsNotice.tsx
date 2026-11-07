@@ -32,13 +32,13 @@ export function RemovedItemsNotice({ sheet }: { sheet: CharacterSheet | undefine
         <span className="font-bold">Ítems que ya no están en el catálogo</span>
         <button type="button" onClick={dismiss} className="ml-auto text-[#94a3b8] hover:text-white" aria-label="Cerrar aviso">✕</button>
       </div>
-      <p>Esta ficha los tiene y los conserva, pero la app ya no los ofrece porque no salen de ningún libro oficial:</p>
+      <p>Esta ficha los tiene y los conserva, pero la app ya no los ofrece porque no salen de ningún libro oficial o tenían datos inventados:</p>
       <ul className="list-disc pl-5">
         {items.map((i) => (
           <li key={i.id}><strong>{i.name}</strong>: {i.reason}.</li>
         ))}
       </ul>
-      <p className="text-[#94a3b8]">Si querés seguir usándolos, quedan como ítems propios. El ciberware borrado ya no muestra sus datos: anotalo en NOTAS si lo necesitás.</p>
+      <p className="text-[#94a3b8]">Si querés seguir usándolos, quedan como ítems propios. El ciberware borrado ya no muestra sus datos: anotalo en NOTAS si lo necesitás. Los vehículos siguen en tu garaje con sus datos.</p>
     </div>
   );
 }

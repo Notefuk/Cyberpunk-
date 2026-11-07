@@ -11,9 +11,10 @@ import { FBC_13_BODIES, FBC_16_CYBERWARE } from './goingMetalFbcData';
 import { 
   NET_ARCHITECTURE_PRESETS, 
   QUICKHACKS_2077_CATALOG, 
-  VEHICLES_CATALOG, 
   ROLES_INTERACTIVE_GUIDES 
 } from './netAndRolesData';
+import { BLACK_CHROME_VEHICLES } from './blackChromeVehicles';
+import { CORE_VEHICLES } from './creation';
 
 // ============================================================================
 // 1. TIPOS PARA EL HISTORIAL DE VERSIONES (CHANGELOG)
@@ -1040,7 +1041,7 @@ export const SYSTEM_METRICS_SUMMARY: SystemMetricsSummary = {
   totalFbcBodies: FBC_13_BODIES.length,
   totalFbcCyberware: FBC_16_CYBERWARE.length,
   totalQuickhacks: QUICKHACKS_2077_CATALOG.length,
-  totalVehicles: VEHICLES_CATALOG.length,
+  totalVehicles: BLACK_CHROME_VEHICLES.length + CORE_VEHICLES.vehicles.length,
   totalNetPresets: NET_ARCHITECTURE_PRESETS.length,
   totalRoles: ROLES_INTERACTIVE_GUIDES.length
 };

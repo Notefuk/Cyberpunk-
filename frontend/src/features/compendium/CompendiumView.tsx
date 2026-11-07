@@ -7,6 +7,9 @@ import { RANGE_BRACKETS, WEAPON_RANGE_PROFILES, getWeaponProfileKey } from '../.
 import { getAutofireRulesSummary, parseHumanityLossAverage } from '../../engine/characterEngine';
 import { canInstallAnother, countInstalls } from '../../engine/cyberwareEffects';
 import { SOURCEBOOKS_CATALOG, EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
+import { VehicleCatalogList } from './VehicleCatalogList';
+import { BLACK_CHROME_VEHICLES } from '../../data/blackChromeVehicles';
+import { CORE_VEHICLES } from '../../data/creation';
 import {
   getWeaponClassAndRebuildInfo,
   getAmmoTypeTooltip as getAmmoTooltipInfo,
@@ -283,7 +286,7 @@ const CyberCategoryTooltip: React.FC<{
 
 // v5.8.0 (plan 23): `initialCategory` para abrirlo desde Street Lab en la categoría de donde viene. [Claude Code · 2026-10-30]
 export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory }> = ({ initialCategory = 'all' }) => {
-  const [compendiumMode, setCompendiumMode] = useState<'items' | 'systems'>('items');
+  const [compendiumMode, setCompendiumMode] = useState<'items' | 'vehicles' | 'systems'>('items'); // [Claude Code · 2026-11-06] v5.13.0: + vehículos
   const [selectedBookFilter, setSelectedBookFilter] = useState<SourceBookId | 'all'>('all');
   const [isBookSummaryExpanded, setIsBookSummaryExpanded] = useState<boolean>(true);
 
@@ -1174,7 +1177,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory }> 
       {/* =====================================================================
           CONMUTADOR PRINCIPAL DESTACADO: ITEMS (368) vs SISTEMAS Y REGLAS NUEVAS
       ===================================================================== */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-[#0c0f1a] p-1.5 rounded-xs border border-[#1e2337] shadow-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-[#0c0f1a] p-1.5 rounded-xs border border-[#1e2337] shadow-lg">
         <button
           onClick={() => setCompendiumMode('items')}
           className={`flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xs text-xs font-mono-code font-bold transition-all cursor-pointer chamfer-btn ${
@@ -1185,6 +1188,16 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory }> 
         >
           <Package className="w-4 h-4 text-[#38bdf8]" />
           <span>📦 CATÁLOGO MAESTRO DE ÍTEMS ({allCatalogItems.length} ÍTEMS POR MANUAL)</span>
+        </button>
+        <button
+          onClick={() => setCompendiumMode('vehicles')}
+          className={`flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xs text-xs font-mono-code font-bold transition-all cursor-pointer chamfer-btn ${
+            compendiumMode === 'vehicles'
+              ? 'bg-[#f97316]/20 text-[#f97316] border border-[#f97316] shadow-md shadow-orange-950/60'
+              : 'bg-[#12141f] text-slate-400 hover:text-slate-200 border border-[#20273a]'
+          }`}
+        >
+          <span>🚗 VEHÍCULOS ({BLACK_CHROME_VEHICLES.length + CORE_VEHICLES.vehicles.length}: CORE Y BLACK CHROME)</span>
         </button>
         <button
           onClick={() => setCompendiumMode('systems')}
@@ -2828,6 +2841,15 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory }> 
         </div>
       )}
         </>
+      ) : compendiumMode === 'vehicles' ? (
+        /* [Claude Code · 2026-11-06] v5.13.0: vehículos del Core (pp.189-191) y de Black Chrome (pp.58-84) */
+        <div className="bg-[#12141f] border border-[#262c3e] p-3 rounded-xs chamfer-card space-y-3">
+          <p className="text-[11px] font-mono-code text-[#94a3b8]">
+            Vehículos genéricos del Core (pp.189-191) y los 31 de Black Chrome (pp.58-84), que son vehículos del Core con mejoras de serie.
+            Para comprarlos o tomarlos del Family Motorpool del Nomad (Nomad Access, Black Chrome p.9), andá a NET, ROLES &amp; VEHÍCULOS.
+          </p>
+          <VehicleCatalogList includeCore />
+        </div>
       ) : (
         /* =====================================================================
             COMPENDIO DE SISTEMAS Y REGLAS NUEVAS (FBC / 2077 / DLCs)

@@ -40,13 +40,11 @@ import {
   QUICKHACKS_2077_CATALOG, 
   QUICKHACKING_OFFICIAL_RULES_GUIDE,
   ROLES_INTERACTIVE_GUIDES, 
-  VEHICLES_CATALOG, 
   generateRandomNetFloor,
   type NetFloor,
   type NetArchitecturePreset,
   type NetAction,
-  type Quickhack2077,
-  type VehicleSpec
+  type Quickhack2077
 } from '../../data/netAndRolesData';
 import {
   MARTIAL_ARTS_FORMS,
@@ -65,6 +63,9 @@ import {
 import { getInterfaceRank, netActionsForInterface, canUseQuickhacks, medicalTechLevel, getRoleRankInfo } from '../../engine/roleRules';
 import { SYNTHESIS_DV, SYNTHESIS_MATERIALS_EB, synthesisDoses, canSynthesize, rollMedicalCheck } from '../../engine/medicalRules';
 import { CORE_VEHICLES } from '../../data/creation';
+import { BLACK_CHROME_VEHICLES, type BlackChromeVehicle } from '../../data/blackChromeVehicles';
+import { bcVehicleToOwned, nomadCanTake } from '../../engine/vehicleCatalog';
+import { VehicleCatalogList } from '../compendium/VehicleCatalogList';
 import type { CoreVehicleEntry } from '../../data/creation/types';
 import { resolveSkillKey, normalizeCanonSkillName } from '../../data/characterCreationData';
 import { GameClockBar } from '../combat/GameClockBar';
@@ -545,23 +546,22 @@ export const NetAndRolesDeckView: React.FC = () => {
   const ownedVehicles = character.vehicles || [];
   const [vehicleManeuverLog, setVehicleManeuverLog] = useState<{ action: string; roll: number; text: string } | null>(null);
 
-  const handleBuyVehicle = (veh: VehicleSpec, isFreeNomad: boolean) => {
-    const instance: OwnedVehicle = {
-      instanceId: `veh-inst-${veh.id}-${Date.now()}`,
-      catalogId: veh.id,
-      name: veh.name,
-      category: veh.category === 'Moto' || veh.category === 'Coche' || veh.category === 'Furgón/Camión' ? 'land' : veh.category === 'Acuático' ? 'sea' : 'air',
-      maxSdp: veh.sdp,
-      currentSdp: veh.sdp,
-      armorSp: veh.armorSp,
-      seats: veh.seats,
-      combatSpeed: veh.combatSpeed,
-      narrativeSpeed: veh.narrativeSpeed,
-      upgrades: veh.upgrades,
-      mountedWeapons: veh.mountedWeapons || [],
-      notes: `Origen: ${veh.sourceBook.toUpperCase()} (${isFreeNomad ? 'Flota Nómada Gratuita' : 'Comprado'})`
-    };
-    addVehicleToCharacter(instance);
+  // [Claude Code · 2026-11-06] v5.13.0: vehículos de Black Chrome (pp.58-84). Comprar cobra su costo;
+  // el Nomad los toma gratis del Family Motorpool si su Nomad Access <= Rango de Moto (BC p.9).
+  const [bcVehicleMsg, setBcVehicleMsg] = useState<string | null>(null);
+  const handleBuyBcVehicle = (veh: BlackChromeVehicle) => {
+    if (!spendEurodollarsFor(character.id, veh.cost, `Compra de vehículo: ${veh.name} (Black Chrome p.${veh.sourcePage})`)) {
+      setBcVehicleMsg(`No alcanzan los €$ para ${veh.name} (${veh.cost.toLocaleString()} €$).`);
+      return;
+    }
+    addVehicleToCharacter(bcVehicleToOwned(veh, 'Comprado'));
+    setBcVehicleMsg(`${veh.name} comprado por ${veh.cost.toLocaleString()} €$.`);
+  };
+  const handleTakeBcFromMotorpool = (veh: BlackChromeVehicle) => {
+    const rank = character.role === 'Nomad' ? (character.roleRank || 0) : 0;
+    if (!nomadCanTake(veh, rank)) return;
+    addVehicleToCharacter(bcVehicleToOwned(veh, `Family Motorpool, Nomad Access ${veh.nomadAccess}`));
+    setBcVehicleMsg(`${veh.name} tomado del Family Motorpool sin costo, con sus mejoras (Nomad Access, Black Chrome p.9).`);
   };
 
   const handleVehicleManeuverRoll = (veh: OwnedVehicle) => {
@@ -3013,56 +3013,47 @@ export const NetAndRolesDeckView: React.FC = () => {
             </div>
           )}
 
-          {/* CATÁLOGO OFICIAL DE 14 VEHÍCULOS (COMPRA / NÓMADA MOTO) */}
+          {/* [Claude Code · 2026-11-06] v5.13.0: VEHÍCULOS DE BLACK CHROME (pp.58-84), con Nomad Access (p.9) */}
           <div className="bg-[#090b10] border border-[#1b2234] p-4 rounded-xs space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
               <h3 className="font-tech text-sm font-bold text-white uppercase">
-                CATÁLOGO DE CONCESIONARIO // VEHÍCULOS OFICIALES (CORE & BLACK CHROME)
+                VEHÍCULOS DE BLACK CHROME // CONCESIONARIO
               </h3>
               <span className="text-[10px] font-mono-code text-[#64748b]">
-                {VEHICLES_CATALOG.length} Modelos canónicos disponibles
+                {BLACK_CHROME_VEHICLES.length} vehículos • Black Chrome pp.58-84
               </span>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {VEHICLES_CATALOG.map(veh => (
-                <div key={veh.id} className="bg-[#10141f] border border-[#1b2336] p-3 rounded-xs space-y-2 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-tech text-xs font-bold text-white uppercase">{veh.name}</span>
-                      <span className="text-[9px] font-mono-code px-1.5 py-0.5 rounded-xs bg-[#1a2030] text-[#38bdf8] font-bold">
-                        {veh.category}
-                      </span>
-                    </div>
-                    <span className="text-[10px] font-mono-code text-[#f59e0b] block mt-0.5">
-                      {veh.cost.toLocaleString()} €$ • {veh.costTier}
-                    </span>
-                    <div className="text-[10px] font-mono-code text-[#94a3b8] space-y-0.5 mt-1.5">
-                      <div>SDP: <strong className="text-white">{veh.sdp}</strong> • SP: <strong className="text-white">{veh.armorSp}</strong> • Plazas: <strong className="text-white">{veh.seats}</strong></div>
-                      <div>Velocidad: {veh.combatSpeed} ({veh.narrativeSpeed})</div>
-                    </div>
-                    <p className="text-[10px] font-mono-code text-[#64748b] mt-1.5 line-clamp-2">{veh.description}</p>
-                  </div>
-
-                  <div className="flex items-center gap-2 pt-2 border-t border-[#1b2234]">
+            <p className="text-[10px] font-mono-code text-[#94a3b8]">
+              Cada uno es un vehículo del Core con mejoras de serie. Comprar descuenta el costo de tus €$.
+              {character.role === 'Nomad'
+                ? ` Nomad Access (Black Chrome p.9): cuando subís Moto y sumás un vehículo de serie al Family Motorpool, podés tomar uno con Nomad Access ${nomadMotoRank} o menos, con todas sus mejoras.`
+                : ' Los Nomad pueden tomarlos del Family Motorpool según su Nomad Access (Black Chrome p.9).'}
+            </p>
+            {bcVehicleMsg && (
+              <div className="text-[10px] font-mono-code text-[#f59e0b] border border-[#f59e0b]/30 bg-[#f59e0b]/5 px-2 py-1 rounded-xs">{bcVehicleMsg}</div>
+            )}
+            <VehicleCatalogList
+              renderActions={(veh) => (
+                <>
+                  <button
+                    onClick={() => handleBuyBcVehicle(veh)}
+                    className="flex-1 py-1 bg-[#1a2030] hover:bg-[#f59e0b] hover:text-black font-tech font-bold text-[10px] uppercase rounded-xs transition-colors cursor-pointer"
+                  >
+                    Comprar ({veh.cost.toLocaleString()} €$)
+                  </button>
+                  {character.role === 'Nomad' && (
                     <button
-                      onClick={() => handleBuyVehicle(veh, false)}
-                      className="flex-1 py-1 bg-[#1a2030] hover:bg-[#f59e0b] hover:text-black font-tech font-bold text-[10px] uppercase rounded-xs transition-colors cursor-pointer"
+                      onClick={() => handleTakeBcFromMotorpool(veh)}
+                      disabled={!nomadCanTake(veh, nomadMotoRank)}
+                      title={nomadCanTake(veh, nomadMotoRank) ? 'Gratis por Nomad Access (Black Chrome p.9)' : `Necesita Moto ${veh.nomadAccess ?? '—'}${veh.nomadAccess === null ? ' (no aplica Nomad Access)' : ''}`}
+                      className="flex-1 py-1 bg-[#f97316]/20 enabled:hover:bg-[#f97316] text-[#f97316] enabled:hover:text-black disabled:opacity-40 disabled:cursor-not-allowed font-tech font-bold text-[10px] uppercase rounded-xs transition-colors cursor-pointer"
                     >
-                      Comprar (€$)
+                      Family Motorpool (0 €$)
                     </button>
-                    {character.role === 'Nomad' && (
-                      <button
-                        onClick={() => handleBuyVehicle(veh, true)}
-                        className="flex-1 py-1 bg-[#f97316]/20 hover:bg-[#f97316] text-[#f97316] hover:text-black font-tech font-bold text-[10px] uppercase rounded-xs transition-colors cursor-pointer"
-                      >
-                        Moto Familiar (0 €$)
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+                  )}
+                </>
+              )}
+            />
           </div>
 
           {/* VEHÍCULOS GENÉRICOS DEL CORE (pp. 189-191) */}
