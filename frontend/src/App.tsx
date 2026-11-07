@@ -96,7 +96,7 @@ export default function App() {
     },
     {
       id: 'compendium',
-      label: 'MASTER COMPENDIUM // 272 ÍTEMS',
+      label: 'MASTER COMPENDIUM', // [Claude Code · 2026-11-06] sin número fijo: el conteo real está dentro del Compendium
       icon: <BookOpen className="w-4 h-4" />
     },
     {

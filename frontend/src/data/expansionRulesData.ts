@@ -423,39 +423,41 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
   // 7. VEHICLES, SDP & VEHICULAR COMBAT
   // --------------------------------------------------------------------------
   {
+    // [Claude Code · 2026-11-06] v5.13.0 (plan 26): reescrita con datos del libro; la versión anterior tenía vehículos inventados.
     id: 'vehicle-combat-sdp',
-    title: 'Vehículos, SDP y Combate Automovilístico (Core & Black Chrome)',
-    subtitle: 'Puntos de Daño Estructural, embestidas a alta velocidad y blindaje de carrocería',
+    title: 'Vehículos de Black Chrome y Nomad Access',
+    subtitle: 'Vehículos del Core con mejoras de serie, y cómo los suma el Nomad a su Family Motorpool',
     sourceBook: 'black_chrome',
     sourceBookTitle: 'Black Chrome Tech & Style Guide / Core Rulebook',
     era: 'both',
-    categoryBadge: 'COMBATE VEHICULAR // NÓMADAS',
+    categoryBadge: 'VEHÍCULOS // NÓMADAS',
     introDescription:
-      'En las autopistas y Badlands de Night City, tu vehículo es tu castillo blindado. Los vehículos no tienen Puntos de Golpe biológicos (HP), sino Puntos de Daño Estructural (SDP). Cuando el vehículo sufre daño por armas o colisiones, su blindaje de carrocería (SP) absorbe el impacto; el daño que penetra reduce los SDP hasta que el motor estalla o el vehículo queda inutilizado.',
+      'Black Chrome (pp.58-84) trae 31 vehículos: 8 aéreos y 23 terrestres. Cada uno es un vehículo genérico del Core (Core pp.189-191) con mejoras del Core ya instaladas (Core pp.163-165). Por ejemplo, el Dayton TDT 004 es un Helicopter con Heavy Chassis y dos Seating Upgrade. La tabla de BC pp.162-164 resume SDP, plazas, velocidad, costo y Nomad Access.',
     howItWorksSteps: [
-      'Paso 1 (Puntos de Daño Estructural - SDP): Cada vehículo posee un valor de SDP (de 30 en motos ligeras hasta 70 en aerodinos AV-4). Cuando los SDP llegan a 0, el vehículo queda inoperativo; a -10 explota violentamente.',
-      'Paso 2 (Blindaje de Carrocería y Ventanas): Los turismos tienen SP 10 o 15. Disparar a los pasajeros exige superar el SP de las ventanillas o blindaje del habitáculo.',
-      'Paso 3 (Embestidas - Ramming): Un conductor puede usar su acción para embestir a otro vehículo o peatón. El daño se calcula multiplicando los d6 según la velocidad del bólido (hasta 8d6 de daño por colisión a velocidad máxima).',
-      'Paso 4 (Maniobras Evasivas): Tiradas enfrentadas de Drive Land Vehicle contra la tirada de ataque del perseguidor para esquivar misiles o cerrar el paso.'
+      'Nomad Access (BC p.9): cuando el Nomad sube Moto y suma un vehículo de serie a su Family Motorpool (Core p.162), puede tomar uno con Nomad Access igual o menor a su Rango de Moto.',
+      'El vehículo llega con todas sus mejoras de serie, que no cuestan rangos de Moto. Salvo que se diga otra cosa, se le pueden agregar mejoras normalmente cuando Moto vuelve a subir (BC p.9).',
+      'Ejemplo del libro: con Moto 5, un Nomad puede tomar The Grundy (Nomad Access 4), que trae Armored Chassis, Heavy Chassis y Combat Plow. Al subir a Moto 6 puede sumarle un Vehicle Heavy Weapon Mount (Core p.164).',
+      'Armored Chassis blinda el vehículo a SP13 y Heavy Chassis suma +20 SDP (Core p.163); el SDP de la tabla de Black Chrome ya lo incluye.',
+      'Algunos son incompatibles con ciertas mejoras (por ejemplo, el SH-45 Patroller no admite Seating Upgrade). El Tanson JetBoy no tiene Nomad Access y se maniobra con Athletics.'
     ],
     keyBenefits: [
-      'Los vehículos ofrecen cobertura total con SP 10 a 20 para todos los ocupantes.',
-      'Permite montar armamento pesado militar (ametralladoras pesadas, lanzagranadas) en el techo.',
-      'Velocidad de escape inigualable para salir de zonas calientes antes de que llegue MaxTac.'
+      'Comprar uno en el garaje (NET, ROLES & VEHÍCULOS) descuenta su costo y lo agrega con sus mejoras.',
+      'Un Nomad con Moto suficiente lo toma gratis del Family Motorpool.',
+      'Cada vehículo dice en qué puesto de Night Market se consigue.'
     ],
     drawbacksAndRisks: [
-      'Las reparaciones de SDP son caras y requieren taller Tech especializado con piezas de repuesto.',
-      'Si un neumático o alerón es destruido (disparo apuntado a rueda), el DV de conducción se incrementa en +4.'
+      'Todos cuestan Super Luxury (15,000eb o más), salvo el JetBoy (1,000eb, Very Expensive).'
     ],
     referenceTable: {
-      headers: ['Vehículo Oficial', 'Tipo', 'SDP', 'SP Carrocería', 'Plazas', 'Coste (€$)'],
+      headers: ['Vehículo', 'Tipo base', 'Nomad Access', 'SDP', 'Plazas', 'Costo', 'Página'],
       rows: [
-        ['Yaiba Kusanagi CT-3X', 'Superbike de Carreras', '30 SDP', 'SP 5 (Sin techo)', '1-2', '20,000 €$'],
-        ['Makigai MaiMai', 'Coche Compacto Urbano', '35 SDP', 'SP 10', '2', '10,000 €$'],
-        ['Quadra Turbo-R V-Tech', 'Deportivo Clásico Muscle', '50 SDP', 'SP 12', '2', '40,000 €$'],
-        ['Nomad Armored Truck', 'Camioneta de Combate Clan', '60 SDP', 'SP 15', '4-6', '35,000 €$'],
-        ['Militech Gorgon Van', 'Furgoneta Blindada SWAT', '65 SDP', 'SP 18', '8', '50,000 €$'],
-        ['Zetatech AeroVox AV-4', 'Aerodino Táctico Aéreo', '70 SDP', 'SP 15', '6', '100,000 €$']
+        ['Tanson Bellhop', 'Gyrocopter', '1', '35', '1', '16,000eb', 'BC p.60'],
+        ['AmeriCar EconoCompact', 'Compact Groundcar', '1', '50', '3', '20,000eb', 'BC p.64'],
+        ['The Grundy', 'Compact Groundcar', '4', '70', '4', '41,000eb', 'BC p.68'],
+        ['Militech Gorgon Security Van', 'Compact Groundcar', '4', '50', '6', '37,000eb', 'BC p.73'],
+        ['Dayton TDT 004', 'Helicopter', '7', '80', '8', '43,000eb', 'BC p.59'],
+        ['Zetatech AeroVox', 'AV4', '8', '120', '6', '51,000eb', 'BC p.61'],
+        ['Street King Combat Vehicle', 'High Performance Groundcar', '10', '70', '6', '63,000eb', 'BC p.77']
       ]
     }
   },

@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.13.0',
+    date: '2026-11-06',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido canon',
+    title: 'Black Chrome II: vehículos y Nomad Access',
+    summary: 'Entran los 31 vehículos de Black Chrome, con sus mejoras de serie y su página. En el garaje se compran pagando su costo, y un Nomad puede tomar gratis del Family Motorpool los que tengan Nomad Access igual o menor a su Rango de Moto. Se borran los 14 vehículos inventados del catálogo viejo; si tenés uno, STREET LAB te avisa y lo conservás.',
+    highlights: [
+      '31 vehículos de Black Chrome (8 aéreos, 23 terrestres) en el garaje y en el Compendium, junto con los 14 genéricos del Core.',
+      'Nomad Access (Black Chrome p.9) en el Family Motorpool; comprar ahora descuenta los €$.',
+      'Regla de vehículos del Compendio reescrita con datos del libro.'
+    ],
+    filesTouched: ['frontend/src/data/blackChromeVehicles.ts', 'frontend/src/engine/vehicleCatalog.ts', 'frontend/src/features/compendium/VehicleCatalogList.tsx', 'frontend/src/features/netroles/NetAndRolesDeckView.tsx'],
+    metricsBadge: 'v5.13.0 • Canon • Black Chrome II'
+  },
+  {
     version: 'v5.12.0',
     date: '2026-11-06',
     author: 'Claude Code',
@@ -1559,6 +1575,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.13.0': true,
     'v5.12.0': true,
     'v5.11.1': true,
     'v5.11.0': true,

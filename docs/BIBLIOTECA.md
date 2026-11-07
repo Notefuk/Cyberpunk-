@@ -37,7 +37,7 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 |---|---|---|
 | Interface-RED-Volume-4 (Cyberfists of Fury) | ✅ | 27 formas de Martial Arts (v4.5.1) |
 | Danger-Gal-Dossier | 🟡 | Muchos datos cargados; plan 6 en pausa (v4.7.1 fichas y facciones, v4.7.2 New Gear) |
-| Black-Chrome-Tech-and-Style-Guide | 🟡 | Ítems completos (v5.12.0, sin vehículos); faltan vehículos (v5.13.0), Night Markets y Economics 101 (v5.14.0), plan 26 [Claude Code · 2026-11-06] |
+| Black-Chrome-Tech-and-Style-Guide | 🟡 | Ítems completos (v5.12.0) y los 31 vehículos con Nomad Access (v5.13.0); faltan Night Markets y Economics 101 (v5.14.0), plan 26 [Claude Code · 2026-11-06] |
 | CEMK-Edgerunners-Handbook-2077-Lore-Guide | 🟡 | Solo algunas citas |
 | Interface-RED-Volume-3 | 🟡 | Cargada la parte de Going Metal (cuerpos FBC); el resto, sin revisar |
 | Interface-RED-Volume-1 | ➖ | Fuera de alcance según `canon-audit/README.md` |
