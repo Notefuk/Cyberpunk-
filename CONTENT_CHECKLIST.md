@@ -329,6 +329,6 @@
 - [x] [Claude Code · 2026-10-21] Marcos Black Chrome (Vermilion, Fūma Kotarō). Hecho en v5.12.0 con los 4 Linear Frames de BC pp.51-56 [Claude Code · 2026-11-06].
 - [x] [Claude Code · 2026-11-06] Black Chrome I (v5.12.0, plan 26): todos los ítems de BC (sin vehículos) y de Black Chrome+, con página y puesto; 15 inventados borrados con aviso en la ficha (`docs/canon-audit/v5.12.0-black-chrome-items.md`).
 - [x] [Claude Code · 2026-11-06] Black Chrome II (v5.13.0): los 31 vehículos de BC (pp.58-84) con Nomad Access (p.9) en el garaje y el Compendium; borrado el `VEHICLES_CATALOG` inventado, con aviso (`docs/canon-audit/v5.13.0-black-chrome-vehicles.md`).
-- [ ] [Claude Code · 2026-11-06] Black Chrome III (v5.14.0): generador de Night Markets y Economics 101.
+- [x] [Claude Code · 2026-11-06] Black Chrome III (v5.14.0): generador de Night Market del Core (pp.338-339), los 6 mercados de BC (pp.131-156) con sus puestos, mostrar el mercado a la mesa, y Economics 101 (pp.125-130) (`docs/canon-audit/v5.14.0-night-markets.md`).
 - [ ] [Claude Code · 2026-10-21] HL de cada pieza del paquete como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad.
 - [ ] [Claude Code · 2026-10-21] Verificar dudas del libro: `packageHlAverage` impreso (Enforcer 53 vs p. 95 con 55) y precios del ejemplo Bazooka Joe.

@@ -117,6 +117,19 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.14.0] - 2026-11-06 (Black Chrome III: Night Markets y Economics 101) [Claude Code · 2026-11-06]
+* **Category**: Contenido canon y mesa online (plan 26, `docs/plans/plan26-black-chrome.md`, tercera y última versión).
+* **What Changed**:
+  * FIXER DECK tiene un generador de Night Market para el GM (`features/gm/NightMarketPanel.tsx`):
+    * **Al azar**, con el Night Market Generator del Core (pp.338-339): 1d6 dos veces para las categorías, 1d10 tipos por categoría y d100 en la columna, sin repetir. Se puede volver a tirar cada categoría y sumar los puestos de un mercado de Black Chrome (BC p.7) (`data/nightMarketTables.ts`, `engine/nightMarket.ts`).
+    * **Mercados de Black Chrome**: los 6 (A-F, pp.131-156) con su Fixer, dónde y cuándo se hacen, cómo se entra, seguridad y reglas propias, en resumen propio, y sus 29 puestos con los ítems que los citan (`data/blackChromeMarkets.ts`, `engine/blackChromeBooths.ts`).
+    * "Comprar" abre la tienda del Compendium con el ítem ya buscado; los vehículos se compran en el garaje.
+  * **Mostrar a la mesa**: con mesa online, el GM comparte el mercado (`campaigns/{c}/reveals/market`) y los jugadores lo ven en la pestaña de la mesa (`features/cloud/SharedMarketPanel.tsx`). Regla nueva en `firestore.rules`: solo el GM escribe, forma fija y topes (título 120, 12 secciones).
+  * **Economics 101** (BC pp.125-130) en el Compendio de sistemas: la tabla Find a Fixer/Tech (Streetwise DV15/17/21/24 por costo, p.129), cómo el Fixer consigue y cobra un ítem, y Lifestyles in Detail (p.130). El detalle de cada estilo de vida también aparece en el creador.
+  * Arreglo de la v5.12.0: 57 ítems guardaban el puesto como frase ("Pick-up or Browse at Booth A3") y no como código; quedan como "A3".
+* **Files Modified**: `data/nightMarketTables.ts`, `data/blackChromeMarkets.ts`, `engine/nightMarket.ts`, `engine/blackChromeBooths.ts`, `features/gm/NightMarketPanel.tsx`, `features/cloud/SharedMarketPanel.tsx` y `engine/__tests__/nightMarket.test.ts` (nuevos); `sync/tableReveals.ts`, `sync/tableSync.ts`, `firestore.rules` y su test; `features/gm/FixerDeckView.tsx`, `features/cloud/CampaignPanel.tsx`, `features/compendium/CompendiumView.tsx` y `features/sheet/CompendiumShopModal.tsx` (`initialSearch`); `data/expansionRulesData.ts`, `data/creation/housingOptions.ts`, `features/creator/steps/GearStep.tsx`; `data/core-rules.cprpack.json` (códigos de puesto); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 560 tests (10 nuevos: tabla d100 sin huecos, categorías distintas, tipos sin repetir y de la tabla, volver a tirar, 6 mercados con 29 puestos, todo puesto citado existe, ítems por puesto, categoría de precio, DV de Find a Fixer, estilos de vida, topes del mercado compartido), 50 tests de reglas (1 nuevo) y build. En local: mercado al azar, mercado F con sus puestos, "Comprar" abre la tienda con el ítem buscado; con el emulador, el GM lo muestra a la mesa, un jugador lo lee y no lo puede escribir, y se ve en la pestaña de la mesa.
+
 ### [v5.13.0] - 2026-11-06 (Black Chrome II: vehículos de Black Chrome y Nomad Access) [Claude Code · 2026-11-06]
 * **Category**: Contenido canon (plan 26, `docs/plans/plan26-black-chrome.md`, segunda de tres versiones).
 * **What Changed**:

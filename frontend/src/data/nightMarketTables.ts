@@ -20,7 +20,7 @@ export const NIGHT_MARKET_CATEGORIES: NightMarketCategory[] = [
   { id: 'weapons', roll: 3, name: 'Weapons and Armor', descriptionEs: 'Todo lo necesario para armar lío en la calle.' },
   {
     id: 'cyberware', roll: 4, name: 'Cyberware', descriptionEs: 'El mejor cybertech de la calle, probablemente ni robado ni cosechado.',
-    noteEs: 'Si sale una Opción, también está el ciberware base que necesita (por ejemplo, el Cybereye o el Neural Link). No se instala en el mercado: el vendedor te manda gratis a su Ripperdoc.',
+    noteEs: 'Si sale una Opción, también está el ciberware base que necesita (por ejemplo, el Cybereye o el Neural Processor, como dice el libro). No se instala en el mercado: el vendedor te manda gratis a su Ripperdoc.',
   },
   {
     id: 'clothing', roll: 5, name: 'Clothing and Fashionware', descriptionEs: 'La moda callejera del momento y algo de cromo para acompañar.',

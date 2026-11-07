@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.13.0`** (Black Chrome II: vehículos de Black Chrome y Nomad Access, plan 26) en `main` (PR #62), en la beta y en Firebase prod (solo hosting, sin reglas nuevas) [Claude Code · 2026-11-06]  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.14.0`** (Black Chrome III: Night Markets y Economics 101; cierra el plan 26) en `claude/v5.14.0-night-markets`, sin pushear; en `main`, la beta y Firebase prod está la v5.13.0 [Claude Code · 2026-11-06]  
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
 > **PLAN ACTIVO**: ninguno en curso. Plan 23 terminado y publicado (v5.8.0 y v5.9.0) [Claude Code · 2026-10-30]. En espera: plan 22 (Interface RED, Black Chrome y FBC). Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
