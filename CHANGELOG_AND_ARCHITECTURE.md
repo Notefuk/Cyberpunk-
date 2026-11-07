@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.13.0] - 2026-11-06 (Black Chrome II: vehículos de Black Chrome y Nomad Access) [Claude Code · 2026-11-06]
+* **Category**: Contenido canon (plan 26, `docs/plans/plan26-black-chrome.md`, segunda de tres versiones).
+* **What Changed**:
+  * Entran los 31 vehículos de *Black Chrome* (8 aéreos y 23 terrestres; tabla en pp.162-164, entradas en pp.58-84). Cada uno lleva tipo base del Core, Nomad Access, SDP, plazas, velocidades, costo, mejoras de serie, notas, página y puesto de Night Market (`data/blackChromeVehicles.ts`).
+  * Se borra el viejo `VEHICLES_CATALOG` (14 vehículos: 12 inventados, y el Gorgon y el AeroVox con datos inventados). STREET LAB avisa si el garaje tiene uno; el vehículo queda con sus datos.
+  * Garaje (NET, ROLES & VEHÍCULOS): "Comprar" descuenta el costo de los €$ (antes no cobraba). El Nomad puede tomar gratis del Family Motorpool los que tengan Nomad Access igual o menor a su Rango de Moto (BC p.9), con todas sus mejoras. Armored Chassis da SP13 (Core p.163) y las armas montadas pasan a `mountedWeapons` (`engine/vehicleCatalog.ts`).
+  * Compendium: modo nuevo VEHÍCULOS con los 14 genéricos del Core (pp.189-191) y los 31 de Black Chrome, con filtro por tipo y libro y buscador (`features/compendium/VehicleCatalogList.tsx`).
+  * La regla "Vehículos de Black Chrome y Nomad Access" del Compendio de sistemas se reescribe con datos del libro; la anterior tenía vehículos y valores inventados.
+  * La pestaña del Compendium ya no dice "272 ÍTEMS" (número fijo viejo).
+* **Files Modified**: `data/blackChromeVehicles.ts`, `engine/vehicleCatalog.ts`, `features/compendium/VehicleCatalogList.tsx` y `engine/__tests__/vehicleCatalog.test.ts` (nuevos); `data/netAndRolesData.ts` (sin `VEHICLES_CATALOG`), `data/removedCatalogItems.ts`, `data/expansionRulesData.ts`, `data/systemDocsAndChangelogData.ts`, `features/netroles/NetAndRolesDeckView.tsx`, `features/compendium/CompendiumView.tsx`, `features/sheet/RemovedItemsNotice.tsx`, `App.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 550 tests (9 nuevos: 31 vehículos 8/23 con página y puesto, mejoras de serie que existen en el Core, datos de la tabla, nada inventado en el catálogo, aviso por vehículo borrado, copia al garaje, armas montadas, Nomad Access por rango y JetBoy sin Nomad Access) y build. En local con un Nomad de Moto 4: The Grundy gratis del Motorpool (SP13 y sus mejoras), el TDT 004 bloqueado ("Necesita Moto 7") y comprado por 43,000 €$, aviso por un vehículo borrado y el modo VEHÍCULOS del Compendium; consola limpia.
+
 ### [v5.12.0] - 2026-11-06 (Black Chrome I: todos los ítems de Black Chrome y Black Chrome+) [Claude Code · 2026-11-06]
 * **Category**: Contenido canon (plan 26, `docs/plans/plan26-black-chrome.md`, primera de tres versiones).
 * **What Changed**:
