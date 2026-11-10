@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.14.1] - 2026-11-10 (Auditoría del plan 26: Family Motorpool con tope y arreglos chicos) [Claude Code · 2026-11-10]
+* **Category**: Arreglos de reglas y datos (auditoría del plan 26, `docs/canon-audit/v5.14.1-auditoria-plan26.md`).
+* **What Changed**:
+  * Family Motorpool: un vehículo gratis por rango de Moto (Core p.162; BC p.9), contando Core, Black Chrome y los viejos; antes no tenía límite. El garaje muestra cuántos quedan y avisa que una mejora cuenta como un vehículo menos.
+  * NPC al combate: las armas de Athletics (granadas, boomerang) usan DEX + Athletics.
+  * Explosivos que se colocan (5 de BC pp.87-90, skill Demolitions): la ficha y el HUD dicen que no se tiran para atacar, en vez de sumar Handgun.
+  * Los 3 fluidos de la Weeping Reaver se venden en el puesto D2 (BC p.91).
+  * Explicit Memory Stimulator (Chipware) y EL-F4-NT (solo externo): instalación "N/A" en vez de Mall.
+  * La auditoría de datos contra las listas de Black Chrome (pp.157-169) y Black Chrome+ no encontró faltantes, inventados ni diferencias de costo o página.
+* **Files Modified**: `engine/vehicleCatalog.ts`, `features/netroles/NetAndRolesDeckView.tsx`, `engine/npcEnemy.ts`, `engine/weaponAttackLines.ts`, `features/combat/CombatHudView.tsx`, `features/compendium/CompendiumView.tsx`, `data/core-rules.cprpack.json`; tests `engine/__tests__/placedExplosives.test.ts` (nuevo), `vehicleCatalog.test.ts`, `npcEnemy.test.ts`, `nightMarket.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 566 tests (6 nuevos) y build. En local, un Nomad de Moto 2 toma 2 vehículos gratis y el tercero queda bloqueado, también en la lista del Core.
+
 ### [v5.14.0] - 2026-11-06 (Black Chrome III: Night Markets y Economics 101) [Claude Code · 2026-11-06]
 * **Category**: Contenido canon y mesa online (plan 26, `docs/plans/plan26-black-chrome.md`, tercera y última versión).
 * **What Changed**:

@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { BLACK_CHROME_VEHICLES } from '../../data/blackChromeVehicles';
 import { CORE_VEHICLES } from '../../data/creation';
 import { REMOVED_CATALOG_ITEMS, removedItemsInSheet } from '../../data/removedCatalogItems';
-import { bcVehicleToOwned, nomadCanTake } from '../vehicleCatalog';
+import { bcVehicleToOwned, nomadCanTake, motorpoolSlotsLeft, motorpoolVehiclesTaken } from '../vehicleCatalog';
 import type { CharacterSheet } from '../../types/cyberpunk';
 
 const byId = (id: string) => {
@@ -73,6 +73,19 @@ describe('Nomad Access (BC p.9)', () => {
     expect(nomadCanTake(grundy, 4)).toBe(true);
     expect(nomadCanTake(grundy, 3)).toBe(false);
     expect(nomadCanTake(grundy, 0)).toBe(false);
+  });
+
+  // v5.14.1 [Claude Code · 2026-11-10]: un vehículo de serie (o una mejora) por cada rango de Moto (Core p.162).
+  it('un vehículo gratis por rango de Moto, contando Core, Black Chrome y los viejos', () => {
+    const bought = { notes: 'Origen: Black Chrome p.68 (Comprado)' };
+    const fromBc = { notes: 'Origen: Black Chrome p.68 (Family Motorpool, Nomad Access 4)' };
+    const fromCore = { notes: 'Origen: CORE p.190 (Family Motorpool, Core p.162)' };
+    const old = { notes: 'Origen: CORE (Flota Nómada Gratuita)' };
+    expect(motorpoolVehiclesTaken([bought, fromBc, fromCore, old, {}])).toBe(3);
+    expect(motorpoolSlotsLeft([fromBc, fromCore], 4)).toBe(2);
+    expect(motorpoolSlotsLeft([fromBc, fromCore, old, fromBc], 4)).toBe(0);
+    expect(motorpoolSlotsLeft([fromBc, fromCore, old, fromBc, fromBc], 4)).toBe(0);
+    expect(motorpoolSlotsLeft(undefined, 0)).toBe(0);
   });
 
   it('el Tanson JetBoy no tiene Nomad Access', () => {

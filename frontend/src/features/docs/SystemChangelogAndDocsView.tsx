@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.14.1',
+    date: '2026-11-10',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Arreglos',
+    title: 'Auditoría de Black Chrome: Family Motorpool con tope',
+    summary: 'Revisamos todo lo de Black Chrome contra el libro: no falta nada ni hay datos distintos. Se arreglan detalles: el Family Motorpool del Nomad da un vehículo gratis por rango de Moto (antes no tenía límite), los NPC tiran granadas con Athletics, los explosivos que se colocan ya no muestran una tirada de ataque y los fluidos de la Weeping Reaver aparecen en su puesto del Night Market.',
+    highlights: [
+      'Family Motorpool: un vehículo gratis por rango de Moto (Core p.162).',
+      'NPC con granadas: DEX + Athletics. Explosivos que se colocan: sin tirada de ataque.',
+      'Fluidos de la Weeping Reaver en el puesto D2; dos ciberware sin instalación en clínica.'
+    ],
+    filesTouched: ['frontend/src/engine/vehicleCatalog.ts', 'frontend/src/features/netroles/NetAndRolesDeckView.tsx', 'frontend/src/engine/npcEnemy.ts', 'frontend/src/engine/weaponAttackLines.ts'],
+    metricsBadge: 'v5.14.1 • Arreglos • Auditoría BC'
+  },
+  {
     version: 'v5.14.0',
     date: '2026-11-06',
     author: 'Claude Code',
@@ -1591,6 +1607,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.14.1': true,
     'v5.14.0': true,
     'v5.13.0': true,
     'v5.12.0': true,

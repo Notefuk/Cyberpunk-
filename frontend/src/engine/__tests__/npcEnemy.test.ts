@@ -24,4 +24,10 @@ describe('NPC al combate', () => {
     expect(weaponSkillBase(sheet, 'Handgun')).toBe(12);
     expect(weaponSkillBase(sheet, 'Melee Weapon')).toBe(9);
   });
+
+  // v5.14.1 [Claude Code · 2026-11-10]: granadas y arrojadizas de Black Chrome.
+  it('las armas de Athletics usan DEX + Athletics', () => {
+    const sheet = { ...base, stats: { ...base.stats, REF: 7, DEX: 6 }, skills: { ...base.skills, athletics: 4 } };
+    expect(weaponSkillBase(sheet, 'Athletics')).toBe(10);
+  });
 });

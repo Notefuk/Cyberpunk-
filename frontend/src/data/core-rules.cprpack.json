@@ -5164,7 +5164,7 @@
       "id": "explicit-memory-stimulator",
       "name": "Explicit Memory Stimulator",
       "type": "Neuralware",
-      "install": "Mall",
+      "install": "N/A",
       "humanityLoss": "3 (1d6)",
       "cost": 100,
       "description": "Chipware. Instalado en un Chipware Socket da +2 a las Pruebas de Concentración para recordar información.",
@@ -5738,7 +5738,7 @@
       "id": "linear-frame-el-f4-nt",
       "name": "EL-F4-NT Linear Frame",
       "type": "Borgware",
-      "install": "Mall",
+      "install": "N/A",
       "humanityLoss": "0 (N/A)",
       "cost": 5000,
       "description": "Linear Frame solo externo. Sube BODY a 12 (no 13+) sin subir HP ni Death Save; incluye 2 Techtools; sin Interface Plugs y se pone/quita con una Acción.",
@@ -6999,7 +6999,7 @@
       "sourceBookTitle": "Black Chrome Tech & Style Guide",
       "era": "2045",
       "sourcePage": 91,
-      "booth": [],
+      "booth": ["D2"],
       "description": "Fluido para la Arasaka Weeping Reaver Katana. Fluido (cánister de un uso) para el Weeping Reaver: la hoja ablanda la armadura en 2 en vez de 1."
     },
     {
@@ -7011,7 +7011,7 @@
       "sourceBookTitle": "Black Chrome Tech & Style Guide",
       "era": "2045",
       "sourcePage": 91,
-      "booth": [],
+      "booth": ["D2"],
       "description": "Fluido para la Arasaka Weeping Reaver Katana. Fluido (cánister de un uso) para el Weeping Reaver: si el daño atraviesa la armadura, prende al objetivo (2 HP al terminar su turno hasta que gaste una Acción en apagarse)."
     },
     {
@@ -7023,7 +7023,7 @@
       "sourceBookTitle": "Black Chrome Tech & Style Guide",
       "era": "2045",
       "sourcePage": 91,
-      "booth": [],
+      "booth": ["D2"],
       "description": "Fluido para la Arasaka Weeping Reaver Katana. Fluido (cánister de un uso) para el Weeping Reaver: si causa Foreign Object, se tira otra Lesión Crítica (no Foreign Object) que también se sufre, sin daño adicional."
     }
   ],

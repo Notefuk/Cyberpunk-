@@ -15,6 +15,8 @@ const WEAPON_SKILL: { match: RegExp; key: CombatSkillKey; stat: 'REF' | 'DEX' }[
   { match: /martial/i, key: 'martialArts', stat: 'DEX' },
   { match: /brawl/i, key: 'brawling', stat: 'DEX' },
   { match: /melee/i, key: 'meleeWeapon', stat: 'DEX' },
+  // v5.14.1 [Claude Code · 2026-11-10]: granadas y arrojadizas de Black Chrome (DEX + Athletics).
+  { match: /athletic/i, key: 'athletics', stat: 'DEX' },
 ];
 
 /** Base de ataque del arma: STAT + skill, como en la ficha. */

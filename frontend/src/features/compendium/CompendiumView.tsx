@@ -945,7 +945,8 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
               <span>•</span>
               <span>
                 Instalación requerida: <strong className="text-[#a855f7]">{item.install}</strong> (
-                {item.install === 'Mall' ? 'Clínica ambulatoria de centro comercial' :
+                {item.install === 'N/A' ? 'no se instala en una clínica' :
+                 item.install === 'Mall' ? 'Clínica ambulatoria de centro comercial' :
                  item.install === 'Clinic' ? 'Clínica médica especializada' :
                  'Hospital quirúrgico mayor'}
                 )

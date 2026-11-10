@@ -34,6 +34,8 @@ import {
   speedhealAmount
 } from '../../engine/characterEngine';
 import type { DeathSaveResult } from '../../engine/characterEngine';
+// v5.14.1 [Claude Code · 2026-11-10]: explosivos de Black Chrome que se colocan (no son tirada de ataque).
+import { isPlacedExplosive } from '../../engine/weaponAttackLines';
 import { 
   createInitialAttackRoll, 
   createDamageRoll,
@@ -5290,9 +5292,15 @@ export const CombatHudView: React.FC = () => {
                             }`}>
                               DV actual: {w.type === 'Melee' ? `Defensa ${meleeDefenseBase}+1d10` : currentDv !== null ? `DV ${currentDv}` : 'N/A'} ({selectedDistance})
                             </span>
-                            <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
-                              Base: +{netBaseWithLuck}{aimedPenalty > 0 ? ' (-8)' : ''}
-                            </span>
+                            {isPlacedExplosive(w) ? (
+                              <span className="bg-[#1f1a0f] border border-amber-500/40 text-amber-200 px-1.5 py-0.5 rounded-xs font-bold" title="Black Chrome pp.87-90">
+                                Explosivo que se coloca: no se tira para atacar (ver notas)
+                              </span>
+                            ) : (
+                              <span className="bg-[#121c18] border border-[#1d3b2b] text-[#10b981] px-1.5 py-0.5 rounded-xs font-bold">
+                                Base: +{netBaseWithLuck}{aimedPenalty > 0 ? ' (-8)' : ''}
+                              </span>
+                            )}
                           </div>
 
                           {/* Ranuras de Accesorios & Badges de Attachments */}
