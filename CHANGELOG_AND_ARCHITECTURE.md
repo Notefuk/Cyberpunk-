@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.15.0] - 2026-11-10 (Plan 27 I: cierre de FBC y ciberware de los Interface RED) [Claude Code · 2026-11-10]
+* **Category**: Reglas y catálogo (plan 27, `docs/plans/plan27-interface-red-fbc.md`; auditoría `docs/canon-audit/v5.15.0-fbc-y-ciberware-interface-red.md`).
+* **What Changed**:
+  * FBC: las piezas con HL del cuerpo habitado bajan el tope de terapia (2 cada una, 4 el borgware; Going Metal p.95, Core p.230). Volver a un cuerpo ya habitado no cobra el paquete y baja la Humanidad al máximo de ese cuerpo (p.94); la ficha guarda los cuerpos (`fbcState.inhabitedChassisIds`). El Biosystem se cobra una sola vez.
+  * 44 ciberware nuevos: Must Have Cyberware Deals (12, pp.2-4), The 12 Days of Cybermas (12, pp.3-5) y Exotics of 2045 de Interface RED Vol. 2 (17 paquetes de The Zoo y 3 implantes, pp.66-74). Los 5 repetidos (3 de Black Chrome, Appetite Controller y NeuTongue) no se duplican.
+  * Tienda del creador: pestaña "Paquetes Exotic (The Zoo)". Ripperdoc: los paquetes van en External; PerfectFit Cyberfoot y Romanova Cyberlegs en piernas; Sponsored Covering como cobertura.
+  * El Ripperdoc leía mal un HL fijo como "22" (lo tomaba como 1d6/2).
+  * DATA PACKS: las tarjetas de Going Metal y de Must Have (ahora con Cybermas) dicen lo que trae el libro.
+  * Notas de contradicciones del libro: Enforcer 53/55 y el precio y el tope del ejemplo de Bazooka Joe.
+* **Files Modified**: `engine/fbcTherapy.ts` (nuevo), `engine/characterEngine.ts`, `store/useCharacterStore.ts`, `types/cyberpunk.ts`, `features/cyberware/CyberwareRipperdocView.tsx`, `features/cyberware/ripperdocZones.tsx`, `features/creator/steps/GearStep.tsx`, `features/datapacks/DataPackManagerView.tsx`, `data/core-rules.cprpack.json`; tests `engine/__tests__/interfaceRedCatalog.test.ts` (nuevo), `rules.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 574 tests (8 nuevos) y build. En local, un FBC en un Enforcer que pasa a un Copernicus y vuelve con 70 de Humanidad queda en 52; el Compendium muestra los ítems nuevos con libro y página; consola limpia.
+
 ### [v5.14.1] - 2026-11-10 (Auditoría del plan 26: Family Motorpool con tope y arreglos chicos) [Claude Code · 2026-11-10]
 * **Category**: Arreglos de reglas y datos (auditoría del plan 26, `docs/canon-audit/v5.14.1-auditoria-plan26.md`).
 * **What Changed**:

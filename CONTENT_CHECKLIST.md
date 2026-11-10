@@ -177,6 +177,7 @@
   - [x] **Verificar/añadir el `New External Linear Frame` específico**: ya está como "Linear Frame Ω (Omega), External" en `data/goingMetalFbcData.ts` (Going Metal p.108) [Claude Code · 2026-11-10]
   - [x] **Verificar/añadir el `New Grenade Type`**: ya está como "CO2 Grenade" en `data/goingMetalFbcData.ts` (Going Metal p.105) [Claude Code · 2026-11-10]
   - [x] **Tope de terapia con las piezas del cuerpo y volver a un cuerpo viejo** (Going Metal pp.94-95): `engine/fbcTherapy.ts`, v5.15.0 [Claude Code · 2026-11-10]
+  - [x] **Ciberware de Interface RED**: Must Have Cyberware Deals (12), The 12 Days of Cybermas (12) y Exotics of 2045 (17 paquetes y 3 implantes, IR2 pp.66-74), v5.15.0 [Claude Code · 2026-11-10]
 
 ### 2. `NIGHT CITY 2045` (Interactive Atlas & Campaign Gazetteer — Planeado para Fase 5 / Premium Expansion)
 *Módulo integral de cartografía táctica urbana, geopolítica distrital y generador narrativo de misiones para Director de Juego y jugadores.*
