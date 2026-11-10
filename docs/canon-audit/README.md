@@ -18,4 +18,4 @@ Registro de canonización del plan 5: por cada libro, qué se perdió, qué se g
 | Black Chrome | Pendiente (plan 5) | — |
 | Errata v1.25 | Canon (v4.6.2) | [v4.6.2-farmacia-gunmas-errata.md](v4.6.2-farmacia-gunmas-errata.md) |
 | Core Rulebook, creación (pp. 40-119) + Easy Mode + CEMK (RB, Folios) | Datos canon (v4.8.1); wizard en v4.8.2 | [v4.8.1-creador.md](v4.8.1-creador.md), [discrepancias-cemk-core.md](discrepancias-cemk-core.md) |
-| Interface RED Vol. 1-3 | Fuera de alcance | — |
+| Interface RED Vol. 1-3 | En curso con el plan 27 (sin Elflines) [Claude Code · 2026-11-10] | [v5.15.0-fbc-y-ciberware-interface-red.md](v5.15.0-fbc-y-ciberware-interface-red.md) |

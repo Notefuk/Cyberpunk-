@@ -3,6 +3,7 @@ import coreData from '../../data/core-rules.cprpack.json';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { calculateTherapyMaxHumanity, getEffectiveBody } from '../../engine/characterEngine';
 import { canInstallAnother, countInstalls } from '../../engine/cyberwareEffects';
+import { activeFbcTherapyReduction, isReturningToBody } from '../../engine/fbcTherapy';
 import { 
   Cpu, 
   Activity, 
@@ -101,7 +102,8 @@ export function CyberwareRipperdocView() {
     activeChar.stats?.EMP || 5,
     (activeChar.installedCyberwareIds || []).map(
       (id) => (allCyberware as { id: string; humanityLoss?: string; type?: string }[]).find((cw) => cw.id === id) ?? {}
-    )
+    ),
+    activeFbcTherapyReduction(activeChar.fbcState)
   );
   const effectiveEmp = Math.max(0, Math.floor(currentHum / 10));
   const isPsychosisRisk = currentHum < 20;
@@ -185,7 +187,10 @@ export function CyberwareRipperdocView() {
 
   const handleActivateChassis = (body: FbcBody) => {
     const isAlreadyFbc = Boolean(activeChar.fbcState?.isFullBodyConversion);
-    const humanityCost = isAlreadyFbc ? body.packageHlAverage : BIOSYSTEM_HL_AVERAGE + body.packageHlAverage; // Going Metal p. 95
+    // Going Metal p. 95: el Biosystem se paga una sola vez (sigue instalado si se desacopló el cuerpo).
+    const hasBiosystem = (activeChar.installedCyberwareIds || []).includes('gm-biosystem');
+    const returning = isReturningToBody(activeChar.fbcState, body.id); // Going Metal p. 94
+    const humanityCost = returning ? 0 : (hasBiosystem ? 0 : BIOSYSTEM_HL_AVERAGE) + body.packageHlAverage;
     activateFullBodyConversion({
       id: body.id,
       name: body.name,
@@ -197,7 +202,9 @@ export function CyberwareRipperdocView() {
       immunities: FBC_IMMUNITIES
     });
     showToast(
-      isAlreadyFbc
+      returning
+        ? `🔄 Vuelves a tu cuerpo ${body.name}: sin pérdida del paquete; la Humanidad no pasa el máximo de ese cuerpo (Going Metal p.94).`
+        : isAlreadyFbc
         ? `🔄 Biopod acoplado exitosamente al chasis ${body.name} (-${humanityCost} HUM).`
         : `🦾 Conversión FBC completada con chasis ${body.name} (-${humanityCost} HUM por Biopod).`,
       'success'

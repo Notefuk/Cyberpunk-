@@ -54,7 +54,9 @@ const CYBER_GROUPS: Array<{ id: string; label: string; types: string[] }> = [
   { id: 'external', label: 'External (piel y cuerpo)', types: ['External'] },
   { id: 'fashion', label: 'Fashionware (estética)', types: ['Fashionware'] },
   { id: 'limbs', label: 'Cyberlimbs (brazos y piernas)', types: ['Cyberlimb', 'Cyberarm Option'] },
-  { id: 'borg', label: 'Borgware', types: ['Borgware'] }
+  { id: 'borg', label: 'Borgware', types: ['Borgware'] },
+  // v5.15.0 [Claude Code · 2026-11-10]: paquetes de The Zoo (Interface RED Vol. 2 pp.66-72).
+  { id: 'exotic', label: 'Paquetes Exotic (The Zoo)', types: ['Minor Bioexotic Package', 'Major Bioexotic Package', 'FantaForm Package'] }
 ];
 const GEAR_GROUPS: Array<{ id: string; label: string; test: (id: string) => boolean }> = [
   { id: 'all', label: 'Todo', test: () => true },

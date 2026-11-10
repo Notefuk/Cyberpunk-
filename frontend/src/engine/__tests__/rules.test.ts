@@ -26,6 +26,7 @@ import { CORE_ENEMIES } from '../../data/enemies/core';
 import { CEMK_ENEMIES } from '../../data/enemies/cemk';
 import { HARDENED_ENEMIES } from '../../data/enemies/hardened';
 import { portEnemyToCemk } from '../cemkPort';
+import { activeFbcTherapyReduction, expandPackagePieces, fbcPackageTherapyReduction, findFbcBody, humanityOnReturn, inhabitedChassisIds, isReturningToBody } from '../fbcTherapy';
 import pack from '../../data/core-rules.cprpack.json';
 import type { CharacterSheet } from '../../types/cyberpunk';
 
@@ -297,6 +298,31 @@ describe('Full Body Conversion (Going Metal pp. 94, 107-108)', () => {
   it('Borgware x2 baja 8 el tope de terapia', () => {
     const base = calculateTherapyMaxHumanity(6, []);
     expect(calculateTherapyMaxHumanity(6, [{ humanityLoss: '7', type: 'Borgware x2' }])).toBe(base - 8);
+  });
+  it('las piezas con HL del paquete bajan el tope de terapia: 2 cada una, 4 el borgware (p. 95)', () => {
+    const enforcer = findFbcBody('gm-enforcer')!;
+    // 11 piezas con HL; Heavy Subdermal Plating es borgware (p. 107): 10 x 2 + 4.
+    expect(expandPackagePieces(enforcer.cyberwareHl)).toHaveLength(11);
+    expect(fbcPackageTherapyReduction(enforcer)).toBe(24);
+    // "x2" cuenta dos piezas (Copernicus: Grapple Hand x2, etc.).
+    expect(expandPackagePieces(['Toolhand x2', 'Anti-Dazzle'])).toEqual(['Toolhand', 'Toolhand', 'Anti-Dazzle']);
+    expect(fbcPackageTherapyReduction({ cyberwareHl: ['Cyberarm x2'] })).toBe(4);
+  });
+  it('Bazooka Joe (EMP 8) en un Enforcer con Biosystem: tope 52 por las reglas (el ejemplo de p. 95 dice 50)', () => {
+    const state = { ...fbc(0)!, activeChassisId: 'gm-enforcer' };
+    const biosystem = { humanityLoss: '4d6 (14)', type: 'Borgware' };
+    expect(calculateTherapyMaxHumanity(8, [biosystem])).toBe(76); // "restore the maximum ... pushes Joe up to 76"
+    expect(calculateTherapyMaxHumanity(8, [biosystem], activeFbcTherapyReduction(state))).toBe(52);
+    expect(activeFbcTherapyReduction({ ...state, isFullBodyConversion: false })).toBe(0);
+  });
+  it('volver a un cuerpo ya habitado: sin HL del paquete y la Humanidad baja al máximo de ese cuerpo (p. 94)', () => {
+    const state = { ...fbc(0)!, activeChassisId: 'gm-enforcer', inhabitedChassisIds: ['gm-enforcer', 'gm-copernicus'] };
+    expect(isReturningToBody(state, 'gm-copernicus')).toBe(true);
+    expect(isReturningToBody(state, 'gm-dragoon')).toBe(false);
+    // Fichas de antes de v5.15.0: solo se conoce el último cuerpo.
+    expect(inhabitedChassisIds({ ...state, inhabitedChassisIds: undefined })).toEqual(['gm-enforcer']);
+    expect(humanityOnReturn(60, 52)).toBe(52);
+    expect(humanityOnReturn(40, 52)).toBe(40);
   });
 });
 

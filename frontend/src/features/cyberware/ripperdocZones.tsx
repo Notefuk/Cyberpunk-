@@ -11,6 +11,7 @@ import {
   Footprints
 } from 'lucide-react';
 import { getCyberwareCategoryTooltip } from '../../data/weaponAndCyberwareTooltips';
+import { parseHumanityLossAverage } from '../../engine/characterEngine';
 
 export interface CyberwareItemData {
   id: string;
@@ -211,6 +212,9 @@ export const ZONE_HOTSPOTS: Record<AnatomicalZoneKey, ZoneHotspot> = {
 
 export const LEG_CYBER_IDS = new Set([
   'cyberleg',
+  // v5.15.0: Must Have Cyberware Deals p.4 y The 12 Days of Cybermas p.5
+  'perfectfit-cyberfoot',
+  'wyzard-technologies-romanova-cyberlegs',
   'standard-foot',
   'grip-foot',
   'jump-booster',
@@ -221,6 +225,7 @@ export const LEG_CYBER_IDS = new Set([
 
 export const COVERING_CYBER_IDS = new Set([
   'hardened-shielding',
+  'sponsored-covering', // v5.15.0: Must Have Cyberware Deals p.4
   'plastic-covering',
   'realskinn-covering',
   'superchrome-covering'
@@ -232,7 +237,8 @@ export function itemMatchesZone(item: CyberwareItemData, zoneKey: AnatomicalZone
   if (zoneKey === 'cyberoptics') return item.type === 'Cyberoptics';
   if (zoneKey === 'cyberaudio') return item.type === 'Cyberaudio';
   if (zoneKey === 'internal') return item.type === 'Internal';
-  if (zoneKey === 'external') return item.type === 'External';
+  // v5.15.0: los paquetes Exotic de The Zoo (IR2 pp.66-72) cambian todo el cuerpo; van con External.
+  if (zoneKey === 'external') return item.type === 'External' || /(Bioexotic|FantaForm) Package$/.test(item.type);
   if (zoneKey === 'borgware') return item.type === 'Borgware' || item.type === 'Borgware x2';
   if (zoneKey === 'fashionware') return item.type === 'Fashionware';
   if (zoneKey === 'cyberlegs') {
@@ -252,9 +258,10 @@ export function parseHumanityLoss(hlStr: string, mode: 'average' | 'roll'): { am
   if (mode === 'average') {
     if (hlStr.includes('4d6') || hlStr.includes('(14)')) return { amount: 14, diceDesc: '4d6 (Promedio: 14)', rolls: [3, 4, 3, 4] };
     if (hlStr.includes('2d6') || hlStr.includes('(7)')) return { amount: 7, diceDesc: '2d6 (Promedio: 7)', rolls: [3, 4] };
-    if (hlStr.includes('1d6/2') || hlStr.startsWith('2')) return { amount: 2, diceDesc: '1d6/2 (Promedio: 2)', rolls: [2] };
+    // v5.15.0: "2 (1d6/2 ...)" sí; "22" (paquetes Exotic, IR2) no.
+    if (hlStr.includes('1d6/2') || /^2\b(?!\s*d)/.test(hlStr)) return { amount: 2, diceDesc: '1d6/2 (Promedio: 2)', rolls: [2] };
     if (hlStr.includes('1d6') || hlStr.includes('(3)')) return { amount: 3, diceDesc: '1d6 (Promedio: 3)', rolls: [3] };
-    const num = parseInt(hlStr.replace(/\D/g, ''), 10) || 7;
+    const num = parseHumanityLossAverage(hlStr);
     return { amount: num, diceDesc: `${num} HUM`, rolls: [num] };
   } else {
     if (hlStr.includes('4d6')) {
@@ -276,7 +283,9 @@ export function parseHumanityLoss(hlStr: string, mode: 'average' | 'roll'): { am
       const d = Math.floor(Math.random() * 6) + 1;
       return { amount: d, diceDesc: `1d6 [${d}]`, rolls: [d] };
     }
-    return { amount: 7, diceDesc: '7 HUM', rolls: [7] };
+    // HL fijo (paquetes Exotic de IR2: "22"): no se tira.
+    const fixed = parseHumanityLossAverage(hlStr);
+    return { amount: fixed, diceDesc: `${fixed} HUM`, rolls: [fixed] };
   }
 }
 

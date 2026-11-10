@@ -174,8 +174,10 @@
   - [x] **About FBCs Section**: Sección canónica explicativa en compendio sobre lore, conversión y biovainas.
   - [x] **Modo Interactivo FBC en Hoja de Personaje y Ripperdoc**: Conmutador para transformar un personaje activo en Full Body Conversion aplicando automáticamente sus reglas de chasis intercambiable, inmunidades y cálculo de Humanidad/Reparación.
 * **⏳ Pendiente de Cierre Going Metal**:
-  - [ ] **Verificar/añadir el `New External Linear Frame` específico**: Comprobar y dar de alta la variante canónica externa individualizada de Going Metal si no figura ya como Linear Frame independiente.
-  - [ ] **Verificar/añadir el `New Grenade Type`**: Comprobar y dar de alta el tipo específico de granada de Going Metal (Laser/Chaff o variante especializada) en el catálogo de arrojables.
+  - [x] **Verificar/añadir el `New External Linear Frame` específico**: ya está como "Linear Frame Ω (Omega), External" en `data/goingMetalFbcData.ts` (Going Metal p.108) [Claude Code · 2026-11-10]
+  - [x] **Verificar/añadir el `New Grenade Type`**: ya está como "CO2 Grenade" en `data/goingMetalFbcData.ts` (Going Metal p.105) [Claude Code · 2026-11-10]
+  - [x] **Tope de terapia con las piezas del cuerpo y volver a un cuerpo viejo** (Going Metal pp.94-95): `engine/fbcTherapy.ts`, v5.15.0 [Claude Code · 2026-11-10]
+  - [x] **Ciberware de Interface RED**: Must Have Cyberware Deals (12), The 12 Days of Cybermas (12) y Exotics of 2045 (17 paquetes y 3 implantes, IR2 pp.66-74), v5.15.0 [Claude Code · 2026-11-10]
 
 ### 2. `NIGHT CITY 2045` (Interactive Atlas & Campaign Gazetteer — Planeado para Fase 5 / Premium Expansion)
 *Módulo integral de cartografía táctica urbana, geopolítica distrital y generador narrativo de misiones para Director de Juego y jugadores.*

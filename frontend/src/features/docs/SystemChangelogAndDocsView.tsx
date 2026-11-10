@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.15.0',
+    date: '2026-11-10',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Reglas y catálogo',
+    title: 'Cuerpos FBC y 44 ciberware de los Interface RED',
+    summary: 'Un FBC ahora recupera Humanidad con terapia solo hasta donde le deja su cuerpo: cada pieza con Humanity Loss del cuerpo baja el tope. Si vuelve a un cuerpo que ya usó, no pierde otra vez la Humanidad del paquete. Y llegan 44 implantes nuevos: Must Have Cyberware Deals, The 12 Days of Cybermas y los paquetes de animales y fantasía de The Zoo (Interface RED Vol. 2).',
+    highlights: [
+      'FBC: tope de terapia con las piezas del cuerpo y vuelta a un cuerpo viejo (Going Metal pp.94-95).',
+      'Must Have Cyberware Deals (12) y The 12 Days of Cybermas (12).',
+      '17 paquetes Exotic de The Zoo y 3 implantes (Interface RED Vol. 2 pp.66-74), con su pestaña en la tienda.'
+    ],
+    filesTouched: ['frontend/src/engine/fbcTherapy.ts', 'frontend/src/store/useCharacterStore.ts', 'frontend/src/data/core-rules.cprpack.json', 'frontend/src/features/creator/steps/GearStep.tsx'],
+    metricsBadge: 'v5.15.0 • Plan 27 • FBC + ciberware'
+  },
+  {
     version: 'v5.14.1',
     date: '2026-11-10',
     author: 'Claude Code',
@@ -1607,6 +1623,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.15.0': true,
     'v5.14.1': true,
     'v5.14.0': true,
     'v5.13.0': true,

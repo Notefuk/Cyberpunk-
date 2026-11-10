@@ -468,11 +468,13 @@ export function speedhealAmount(body: number, will: number, currentHp: number, i
 
 // Core p. 230: cada ciberware instalado baja 2 la Humanidad máxima que se puede recuperar con terapia;
 // el borgware baja 4 y el ciberware de 0 Humanity Loss no la baja.
+// v5.15.0: `extraReduction` suma lo que bajan las piezas con HL del cuerpo FBC habitado (Going Metal p.95).
 export function calculateTherapyMaxHumanity(
   emp: number,
-  installed: { humanityLoss?: string | number; type?: string }[]
+  installed: { humanityLoss?: string | number; type?: string }[],
+  extraReduction = 0
 ): number {
-  let cap = emp * 10;
+  let cap = emp * 10 - Math.max(0, extraReduction);
   for (const cw of installed) {
     const hl = cw.humanityLoss === undefined ? 7 : parseHumanityLossAverage(String(cw.humanityLoss));
     if (hl === 0) continue;

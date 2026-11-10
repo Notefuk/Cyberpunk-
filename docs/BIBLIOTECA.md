@@ -17,10 +17,10 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | Estado | PDFs |
 |---|---|
-| ✅ Adaptado | 14 |
-| 🟡 A medias | 4 |
-| ⬜ Sin empezar | 34 |
-| ➖ No se adapta como datos | 27 |
+| ✅ Adaptado | 16 |
+| 🟡 A medias | 5 |
+| ⬜ Sin empezar | 32 |
+| ➖ No se adapta como datos | 26 |
 | **Total** | **79** |
 
 ## Core-Rules (3)
@@ -41,7 +41,7 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 | CEMK-Edgerunners-Handbook-2077-Lore-Guide | 🟡 | Solo algunas citas |
 | Interface-RED-Volume-3 | 🟡 | Cargada la parte de Going Metal (cuerpos FBC); el resto, sin revisar |
 | Interface-RED-Volume-1 | ➖ | Fuera de alcance según `canon-audit/README.md` |
-| Interface-RED-Volume-2 | ➖ | Fuera de alcance según `canon-audit/README.md` |
+| Interface-RED-Volume-2 | 🟡 | Exotics of 2045: 17 paquetes y 3 implantes (v5.15.0); el resto, en el plan 27 [Claude Code · 2026-11-10] |
 | Night-City-Gang-Guide | ⬜ | Pandillas de Night City |
 
 ## Going Metal (1, suelto en la raíz)
@@ -91,18 +91,18 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 | Hornets-Pharmacy-Chemical-Wonderland | ✅ | Drogas (v4.6.2) |
 | The-12-Days-of-Gunmas-v1.3 | ✅ | Armas (v4.6.2) |
 | The-12-Days-of-Gearmas-v1.01 | ⬜ | Equipo |
-| The-12-Days-of-Cybermas | ⬜ | Ciberware |
+| The-12-Days-of-Cybermas | ✅ | 12 ciberware (v5.15.0) [Claude Code · 2026-11-10] |
 | The-12-Days-of-REDmas | ⬜ | Varios |
 | The-12-Days-of-Vehiclemas-v1.0 | ⬜ | Vehículos |
 | The-12-Days-of-Cutiemas-Exotic-Pets | ⬜ | Mascotas exóticas |
 | Woodchippers-Garage-Explosive-Weapons | ⬜ | Explosivos; tarjeta en DATA PACKS sin contenido |
-| Must-Have-Cyberware-Deals | ⬜ | Ciberware; tarjeta en DATA PACKS sin contenido |
+| Must-Have-Cyberware-Deals | ✅ | 12 ciberware y su tarjeta en DATA PACKS (v5.15.0) [Claude Code · 2026-11-10] |
 | Midnight-with-the-Upload-New-Cyberdecks | ⬜ | Cyberdecks |
 | CEMK-DLC-02-Cyberware-Enhancements | ⬜ | Ciberware 2077 |
 | Black-Chrome-Plus-Bonus-Content | ✅ | 12 ítems y las guías de estilo (v5.12.0, plan 26) [Claude Code · 2026-11-06] |
 | Cyberchairs-New-Options-in-Mobility | ⬜ | Sillas de ruedas cyber |
 | Spinning-Your-Wheels-Bicycles-and-Skates | ⬜ | Bicis y patines |
-| The-Fast-and-the-Furriest-Biotechnica-Exotics | ⬜ | Exóticos de Biotechnica |
+| The-Fast-and-the-Furriest-Biotechnica-Exotics | ⬜ | Pregens con paquetes Exotic (Fin Diesel, Anne Bonny); los paquetes ya están por Interface RED Vol. 2 [Claude Code · 2026-11-10] |
 | Invented-Tech-Upgrades-Guide | ⬜ | Mejoras inventadas (Tech) |
 
 ### Reglas

@@ -152,17 +152,17 @@ const OFFICIAL_13_MODULES: OfficialModuleData[] = [
     accentColor: '#a855f7',
     icon: <Cpu className="w-4 h-4 text-[#a855f7]" />,
     whatItBringsSummary:
-      'El suplemento canónico definitivo de Full Body Conversions (FBC). Introduce 13 chasis completos de cyborgs de grado militar e industrial, 16 implantes y chasis exclusivos para borgs, reglas de Biopod (-14 HL) y tablas completas de mantenimiento y reparación.',
+      'Going Metal (pp.91-111): Full Body Conversions. 13 cuerpos FBC, 16 piezas de ciberware para borgs, el Biosystem (4d6 HL, 14 de promedio) y las reglas para vivir, repararse y cambiar de cuerpo.',
     keyHighlights: [
-      '13 Chasis FBC oficiales (Alpha Class, Samson, Dragoon, Aquarius, Spyder, etc.).',
-      '16 Piezas de Ciberware exclusivas para chasis cyborg.',
-      'Soporte vital Biopod (-14 de Humanidad fija).',
-      'Inmunidad completa a asfixia, sangrado y toxinas biológicas.'
+      '13 cuerpos FBC (Copernicus, Aquarius, Dragoon, Enforcer, Samson, Alpha Class, etc.; pp.96-104).',
+      '16 piezas de ciberware para FBC, la CO2 Grenade y el Linear Frame Ω (pp.104-109).',
+      'Biosystem: se paga una sola vez; el cuerpo cobra la Humanidad de su paquete (p.95).',
+      'Inmune a varias Heridas Críticas, venenos, drogas y radiación; no respira ni come (pp.94, 104).'
     ],
     mechanicsIntroduced: [
-      'Conversión FBC con chasis acoplables y desacoplables',
-      'DVs de reparación de chasis con Cybertech y Basic Tech',
-      'Blindaje integrado de SP 11 a SP 15 sin penalizadores'
+      'Conversión FBC y cambio de cuerpo (Cybertech o Surgery DV17, 4 horas; p.94)',
+      'Tope de terapia con las piezas con HL del cuerpo y vuelta a un cuerpo viejo (pp.94-95)',
+      'Blindaje del cuerpo de SP 7 a SP 15 (el Dragoon con penalizador de 2)'
     ],
     specificNavigation: {
       label: '🦾 Estación Ripperdoc & FBC',
@@ -312,23 +312,23 @@ const OFFICIAL_13_MODULES: OfficialModuleData[] = [
   },
   {
     id: 'must_have_deals',
-    title: 'Must Have Cyberware Deals (DLC Ripperdoc)',
+    title: 'Must Have Cyberware Deals y 12 Days of Cybermas (DLC Ripperdoc)',
     shortBadge: 'DEALS',
     era: '2045',
     version: 'v1.0.0',
-    sourcePdf: 'Must-Have-Cyberware-Deals.pdf',
+    sourcePdf: 'Must-Have-Cyberware-Deals_2022-06-29.pdf',
     accentColor: '#00f5d4',
     icon: <Sparkles className="w-4 h-4 text-[#00f5d4]" />,
     whatItBringsSummary:
-      'Paquetes económicos de ciberware y opciones reacondicionadas con descuentos de precio para personajes recién creados o presupuestos muy ajustados.',
+      'Dos DLC de ciberware nuevo (también en Interface RED Vol. 3). Must Have Cyberware Deals trae 12 implantes baratos y de la vida diaria (pp.2-4); The 12 Days of Cybermas, 12 implantes más caros y de combate (pp.3-5).',
     keyHighlights: [
-      'Packs promocionales de implantes básicos de clínica.',
-      'Variantes reacondicionadas con pequeñas particularidades cosméticas.',
-      'Guía de instalación económica en clínicas de distrito.'
+      'Must Have: Cyberpillow, Kill Display, Mood Eye, NeuTongue, PerfectFit Cyberfoot, Sponsored Covering y más.',
+      'Cybermas: ChainRipp, Kiroshi MonoVision, Poser Chip, Arc-Thrower Cyberarm, Romanova Cyberlegs y más.',
+      'Todos en la tienda y el Ripperdoc, con costo, Humanity Loss y página.'
     ],
     mechanicsIntroduced: [
-      'Ciberware reacondicionado con descuento de coste',
-      'Tiradas de mantenimiento post-instalación'
+      'Kill Display y las uñas de Lead cuentan como Light Tattoo para el +2 de Wardrobe and Style',
+      'Sponsored Covering paga 20eb por mes si cumplís con el sponsor'
     ],
     specificNavigation: {
       label: '🦾 Ir a Ripperdoc',
