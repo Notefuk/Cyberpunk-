@@ -1,6 +1,7 @@
 // v5.3.0 [Claude Code · 2026-10-28]: lo que el GM revela a la mesa (plan 20, B.2; decisión 4).
 //   campaigns/{c}/reveals/{id}  { id, kind: 'note', title, text, at, _by }   handouts (los lee la mesa, los crea el GM)
 //   campaigns/{c}/reveals/net   { archName, totalFloors, currentFloor, floors, forCharId?, _ts }   corrida NET compartida
+// v5.14.0 [Claude Code · 2026-11-06]: campaigns/{c}/reveals/market  { title, source, sections, _ts }  Night Market que el GM muestra
 // De los pisos NET solo van los desbloqueados y sus datos públicos: el HP, ATK y DEF del ICE nunca salen del GM.
 import { create } from 'zustand';
 import type { FirebaseHandles } from './firebaseClient';
@@ -11,6 +12,11 @@ export const HANDOUT_LIMIT = 10;
 export const HANDOUT_TITLE_MAX = 80;
 export const HANDOUT_TEXT_MAX = 2000;
 export const NET_REVEAL_MAX_FLOORS = 30;
+// v5.14.0 [Claude Code · 2026-11-06]: topes del Night Market compartido (también en firestore.rules).
+export const MARKET_TITLE_MAX = 120;
+export const MARKET_MAX_SECTIONS = 12;
+export const MARKET_MAX_ITEMS = 40;
+export const MARKET_ITEM_MAX = 200;
 
 export interface Handout {
   id: string;
@@ -68,6 +74,36 @@ export function parseNetReveal(data: Record<string, unknown> | null | undefined)
   return out;
 }
 
+/** Night Market que el GM le muestra a la mesa: secciones (categorías o puestos) con sus líneas. */
+export interface MarketReveal {
+  title: string;
+  source: string;
+  sections: { heading: string; items: string[] }[];
+}
+
+/** Recorta al tamaño que aceptan las reglas. */
+export function buildMarketReveal(m: MarketReveal): MarketReveal {
+  return {
+    title: cut(m.title.trim() || 'Night Market', MARKET_TITLE_MAX),
+    source: cut(m.source, MARKET_TITLE_MAX),
+    sections: m.sections.slice(0, MARKET_MAX_SECTIONS).map((sec) => ({
+      heading: cut(sec.heading, MARKET_TITLE_MAX),
+      items: sec.items.slice(0, MARKET_MAX_ITEMS).map((i) => cut(i, MARKET_ITEM_MAX)),
+    })),
+  };
+}
+
+export function parseMarketReveal(data: Record<string, unknown> | null | undefined): MarketReveal | null {
+  if (!data || typeof data.title !== 'string' || !Array.isArray(data.sections)) return null;
+  const sections = data.sections
+    .filter((x): x is Record<string, unknown> => !!x && typeof x === 'object')
+    .map((x) => ({
+      heading: String(x.heading ?? ''),
+      items: Array.isArray(x.items) ? x.items.map((i) => String(i)) : [],
+    }));
+  return { title: data.title, source: typeof data.source === 'string' ? data.source : '', sections };
+}
+
 export interface TableRevealsAdapter {
   subscribeHandouts(cb: (list: Handout[]) => void, onError?: (e: unknown) => void): () => void;
   subscribeNet(cb: (net: NetReveal | null) => void, onError?: (e: unknown) => void): () => void;
@@ -75,21 +111,28 @@ export interface TableRevealsAdapter {
   deleteHandout(id: string): Promise<void>;
   /** null: deja de compartir la corrida. */
   setNet(net: NetReveal | null): Promise<void>;
+  subscribeMarket(cb: (market: MarketReveal | null) => void, onError?: (e: unknown) => void): () => void;
+  /** null: deja de mostrar el mercado. */
+  setMarket(market: MarketReveal | null): Promise<void>;
 }
 
 /** Lo revelado en la mesa activa (en memoria). `adapter` existe mientras hay mesa. */
-export const useTableReveals = create<{ handouts: Handout[]; net: NetReveal | null; adapter: TableRevealsAdapter | null }>()(() => ({
+export const useTableReveals = create<{ handouts: Handout[]; net: NetReveal | null; market: MarketReveal | null; adapter: TableRevealsAdapter | null }>()(() => ({
   handouts: [],
   net: null,
+  market: null,
   adapter: null
 }));
 
-const cut = (s: string, n: number) => (s.length > n ? s.slice(0, n - 1) + '…' : s);
+function cut(s: string, n: number): string {
+  return s.length > n ? s.slice(0, n - 1) + '…' : s;
+}
 
 export function createTableRevealsRepo(h: FirebaseHandles, campId: string, uid: string): TableRevealsAdapter {
   const fs = h.fsSdk;
   const coll = () => fs.collection(h.db, 'campaigns', campId, 'reveals');
   const netRef = () => fs.doc(h.db, 'campaigns', campId, 'reveals', 'net');
+  const marketRef = () => fs.doc(h.db, 'campaigns', campId, 'reveals', 'market');
   return {
     subscribeHandouts(cb, onError) {
       // El documento 'net' no tiene 'at', así que esta consulta no lo trae.
@@ -125,6 +168,16 @@ export function createTableRevealsRepo(h: FirebaseHandles, campId: string, uid: 
         return;
       }
       await fs.setDoc(netRef(), { ...JSON.parse(JSON.stringify(net)), _ts: fs.serverTimestamp() });
+    },
+    subscribeMarket(cb, onError) {
+      return fs.onSnapshot(marketRef(), (snap) => cb(snap.exists() ? parseMarketReveal(snap.data() as Record<string, unknown>) : null), (err) => onError?.(err));
+    },
+    async setMarket(market) {
+      if (!market) {
+        await fs.deleteDoc(marketRef());
+        return;
+      }
+      await fs.setDoc(marketRef(), { ...buildMarketReveal(market), _ts: fs.serverTimestamp() });
     }
   };
 }

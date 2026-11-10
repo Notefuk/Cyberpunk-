@@ -29,13 +29,15 @@ export interface LifestyleOption {
   monthly: number;
   /** v5.7.0 [Claude Code · 2026-10-30]: qué te da ese estilo de vida (Core p.377). */
   descEs: string;
+  /** v5.14.0 [Claude Code · 2026-11-06]: qué cubre en detalle por mes (Black Chrome p.130, Lifestyles in Detail). */
+  detailBcEs?: string;
 }
 
 export const LIFESTYLE_OPTIONS: LifestyleOption[] = [
-  { name: 'Kibble', monthly: 100, descEs: 'Comida horrible, de la que no le darías a un perro que quieras. Una vez por mes podés ver una película o un braindance.' },
-  { name: 'Generic Prepak', monthly: 300, descEs: 'Comida bastante mejor que el kibble. Cada fin de semana podés salir a un buen bar o fiesta, o comer sentado en un buen restaurante.' },
-  { name: 'Good Prepak', monthly: 600, descEs: 'Comida como la de casi cualquier restaurante: artificial, pero sabe casi igual que la real. Salís a bares y restaurantes excelentes, y una vez por mes vas a un concierto en vivo o a un evento deportivo.' },
-  { name: 'Fresh Food', monthly: 1500, descEs: 'Comida real. Una vez por mes, si estás cansado y lejos de casa, te pagás un hotel cerca sin preocuparte. Vas a bares ejecutivos y una vez por mes comés en un restaurante de primer nivel.' }
+  { name: 'Kibble', monthly: 100, descEs: 'Comida horrible, de la que no le darías a un perro que quieras. Una vez por mes podés ver una película o un braindance.', detailBcEs: "Dos comidas de Kibble al día; cuenta de Agent (Data Pool, llamadas, textos); entretenimiento de 20eb (Everyday) una vez al mes; pase de transporte público y un taxi al mes entre zonas con Threat Level Moderate, Corporate o Executive." },
+  { name: 'Generic Prepak', monthly: 300, descEs: 'Comida bastante mejor que el kibble. Cada fin de semana podés salir a un buen bar o fiesta, o comer sentado en un buen restaurante.', detailBcEs: "Una comida de Kibble y dos de Generic Prepak al día; mensaje de texto a otra ciudad una vez por semana; entretenimiento de 20eb semanal; taxi semanal limitado a zonas Moderate, Corporate o Executive." },
+  { name: 'Good Prepak', monthly: 600, descEs: 'Comida como la de casi cualquier restaurante: artificial, pero sabe casi igual que la real. Salís a bares y restaurantes excelentes, y una vez por mes vas a un concierto en vivo o a un evento deportivo.', detailBcEs: "Una comida Generic Prepak y dos Good Prepak al día; texto a otra ciudad diario y llamada de voz de 10 minutos semanal; entretenimiento de 20eb diario y de 100eb (Premium) mensual; taxi diario limitado y alquiler mensual de un groundcar compacto por 24 horas (CP:R p.190)." },
+  { name: 'Fresh Food', monthly: 1500, descEs: 'Comida real. Una vez por mes, si estás cansado y lejos de casa, te pagás un hotel cerca sin preocuparte. Vas a bares ejecutivos y una vez por mes comés en un restaurante de primer nivel.', detailBcEs: "Una comida Good Prepak y dos de Fresh Food al día; textos ilimitados, llamada de voz de 10 min diaria y videollamada de 10 min semanal; entretenimiento de 50eb (Costly) diario, 100eb semanal y 500eb (Expensive) mensual; taxi diario a cualquier zona y groundcar compacto semanal por 24 horas." }
 ];
 
 /** Reglas del estilo de vida y la vivienda (Core pp.105, 377). */
@@ -49,3 +51,4 @@ export const LIFESTYLE_RULES: readonly string[] = [
 
 export const HOUSING_SOURCE = 'Core p.378';
 export const LIFESTYLE_SOURCE = 'Core p.377';
+export const LIFESTYLE_DETAIL_SOURCE = 'Black Chrome p.130';

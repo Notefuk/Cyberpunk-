@@ -6,7 +6,7 @@ import { FASHION_STYLE_GUIDE, FASHION_WHAT_FOR } from '../../../data/creation/fa
 import { parseHumanityLossAverage } from '../../../engine/characterEngine';
 import { deckSlotUse, effectiveUnitCost, needsFixer, neuroportCovers, priceTier, purchaseUnitCost, shopSourceLabel } from '../../../engine/creatorShop';
 import { WEAPON_ATTACHMENTS_CATALOG } from '../../../data/weaponAttachmentsAndTechData';
-import { HOUSING_OPTIONS, HOUSING_SOURCE, LIFESTYLE_OPTIONS, LIFESTYLE_RULES, LIFESTYLE_SOURCE } from '../../../data/creation/housingOptions';
+import { HOUSING_OPTIONS, HOUSING_SOURCE, LIFESTYLE_OPTIONS, LIFESTYLE_RULES, LIFESTYLE_SOURCE, LIFESTYLE_DETAIL_SOURCE } from '../../../data/creation/housingOptions';
 import {
   AMMO_CALIBERS,
   getFashionPrice,
@@ -705,6 +705,7 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
             {LIFESTYLE_OPTIONS.map((l) => (
               <li key={l.name}>
                 <b className="text-white">{l.name}</b> <span className="font-mono-code text-[10px] text-[#64748b]">{eb(l.monthly)}/mes</span>: {l.descEs}
+                {l.detailBcEs && <span className="block text-[#94a3b8]">En detalle ({LIFESTYLE_DETAIL_SOURCE}): {l.detailBcEs}</span>}
               </li>
             ))}
           </ul>

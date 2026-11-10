@@ -285,13 +285,14 @@ const CyberCategoryTooltip: React.FC<{
 };
 
 // v5.8.0 (plan 23): `initialCategory` para abrirlo desde Street Lab en la categoría de donde viene. [Claude Code · 2026-10-30]
-export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory }> = ({ initialCategory = 'all' }) => {
+// v5.14.0 (plan 26): `initialSearch` para abrirlo desde un Night Market con el ítem ya buscado. [Claude Code · 2026-11-06]
+export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; initialSearch?: string }> = ({ initialCategory = 'all', initialSearch = '' }) => {
   const [compendiumMode, setCompendiumMode] = useState<'items' | 'vehicles' | 'systems'>('items'); // [Claude Code · 2026-11-06] v5.13.0: + vehículos
   const [selectedBookFilter, setSelectedBookFilter] = useState<SourceBookId | 'all'>('all');
   const [isBookSummaryExpanded, setIsBookSummaryExpanded] = useState<boolean>(true);
 
   // Search & Filters for Items
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState<CompendiumCategory>(initialCategory);
   const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null);

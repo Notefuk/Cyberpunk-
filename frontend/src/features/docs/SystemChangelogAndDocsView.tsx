@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.14.0',
+    date: '2026-11-06',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido canon',
+    title: 'Black Chrome III: Night Markets y Economics 101',
+    summary: 'El GM tiene un generador de Night Market en FIXER DECK: al azar con las tablas del Core, o uno de los 6 mercados de Black Chrome con su Fixer, cómo se entra y qué vende cada puesto. Con mesa online se lo puede mostrar a los jugadores. Además, Economics 101: cuánto cuesta encontrar a un Fixer o Tech (Streetwise) y qué cubre cada estilo de vida.',
+    highlights: [
+      'Night Market al azar (Core pp.338-339), con opción de sumar los puestos de un mercado de Black Chrome.',
+      'Los 6 mercados de Black Chrome (A-F) con sus 29 puestos; "Comprar" abre la tienda con el ítem buscado.',
+      'Mostrar el mercado a la mesa; Economics 101 y Lifestyles in Detail en el Compendio y en el creador.'
+    ],
+    filesTouched: ['frontend/src/features/gm/NightMarketPanel.tsx', 'frontend/src/engine/nightMarket.ts', 'frontend/src/data/blackChromeMarkets.ts', 'frontend/src/sync/tableReveals.ts', 'frontend/firestore.rules'],
+    metricsBadge: 'v5.14.0 • Canon • Black Chrome III'
+  },
+  {
     version: 'v5.13.0',
     date: '2026-11-06',
     author: 'Claude Code',
@@ -1575,6 +1591,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.14.0': true,
     'v5.13.0': true,
     'v5.12.0': true,
     'v5.11.1': true,

@@ -9,6 +9,7 @@ import {
 } from '../../engine/characterEngine';
 import { useEncounterStore, orderedCombatants } from '../../store/encounterStore';
 import { EnemiesCompendiumPanel } from './EnemiesCompendiumPanel';
+import { NightMarketPanel } from './NightMarketPanel';
 import { GM_LOOT_TABLES } from '../../data/netAndRolesData';
 import { 
   Terminal, 
@@ -1480,6 +1481,9 @@ export function FixerDeckView() {
           </div>
         </div>
       </div>
+
+      {/* [Claude Code · 2026-11-06] v5.14.0: generador de Night Market (Core pp.338-339 y Black Chrome pp.131-156) */}
+      <NightMarketPanel />
 
       {/* 7. BIBLIOTECA MASIVA DE ENEMIGOS, GOONS Y JEFES (15 FACCIONES & 128 FICHAS) */}
       <EnemiesCompendiumPanel autoRollInitiative />

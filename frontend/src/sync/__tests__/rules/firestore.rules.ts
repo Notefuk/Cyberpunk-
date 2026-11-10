@@ -307,6 +307,22 @@ describe('campañas', () => {
     await assertSucceeds(getDoc(doc(db('alice'), 'campaigns/camp1/reveals/net')));
   });
 
+  // [Claude Code · 2026-11-06] v5.14.0 (plan 26): el Night Market que el GM muestra a la mesa.
+  it('revelado: el GM muestra un Night Market; la mesa lo lee y no lo escribe', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    const market = { title: 'Night Market', source: 'Core p.338', sections: [{ heading: 'Cyberware', items: ['Cybereye 100eb (Premium)'] }], _ts: serverTimestamp() };
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/market'), market));
+    await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/market'), { ...market, title: 'Otro mercado' }));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/reveals/market'), market));
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/market'), { ...market, precioReal: 1 }));
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/market'), { ...market, sections: Array.from({ length: 13 }, () => ({ heading: 'x', items: [] })) }));
+    // Un handout no puede usar el id 'market'.
+    await assertFails(setDoc(doc(db('gm'), 'campaigns/camp1/reveals/market'), { id: 'market', kind: 'note', title: 'x', text: 'y', at: serverTimestamp(), _by: 'gm' }));
+    await assertSucceeds(getDoc(doc(db('alice'), 'campaigns/camp1/reveals/market')));
+    await assertFails(getDoc(doc(db('carol'), 'campaigns/camp1/reveals/market')));
+    await assertSucceeds(deleteDoc(doc(db('gm'), 'campaigns/camp1/reveals/market')));
+  });
+
   // [Claude Code · 2026-10-27] v5.1.0 (plan 19): forma fija del log (id propio, hora del servidor, tamaños).
   const logEntry = (id: string, by: string, over: Record<string, unknown> = {}) => ({
     id, _by: by, at: serverTimestamp(), handle: 'Vex', kind: 'attack', label: 'Ataque: Heavy Pistol', total: 17, ...over,
