@@ -49,6 +49,7 @@ import {
 } from '../data/weaponAttachmentsAndTechData';
 
 import { FBC_16_CYBERWARE, FBC_IMMUNE_CRITICAL_INJURIES } from '../data/goingMetalFbcData';
+import { activeFbcTherapyReduction, humanityOnReturn, inhabitedChassisIds, isReturningToBody } from '../engine/fbcTherapy';
 import {
   APP_VERSION,
   CHARACTERS_SCHEMA_VERSION,
@@ -107,11 +108,17 @@ const PACK_CYBERWARE_BY_ID = new Map(
 function gainHumanityCapped(c: CharacterSheet, delta: number, installedIds = c.installedCyberwareIds): number {
   const current = c.currentHumanity;
   if (delta <= 0) return Math.max(0, current + delta);
-  const cap = calculateTherapyMaxHumanity(
-    c.stats.EMP,
-    installedIds.map((id) => PACK_CYBERWARE_BY_ID.get(id) ?? {})
-  );
+  const cap = therapyCapFor(c, installedIds);
   return Math.max(current, Math.min(cap, current + delta));
+}
+
+// v5.15.0: tope de terapia con el cuerpo FBC habitado (Going Metal p.95) o con otro cuerpo (al cambiar).
+function therapyCapFor(c: CharacterSheet, installedIds = c.installedCyberwareIds, fbc = c.fbcState): number {
+  return calculateTherapyMaxHumanity(
+    c.stats.EMP,
+    installedIds.map((id) => PACK_CYBERWARE_BY_ID.get(id) ?? {}),
+    activeFbcTherapyReduction(fbc)
+  );
 }
 
 // v4.9.4 Quita UNA copia (la última ocurrencia) de un id de ciberware.
@@ -2421,8 +2428,11 @@ export const useCharacterStore = create<CharacterStoreState>()(
             if (c.id !== state.activeCharacterId) return c;
 
             const wasAlreadyFbc = Boolean(c.fbcState?.isFullBodyConversion);
-            const humanityCost = chassis.humanityCost ?? 0;
-            const newHumanity = Math.max(0, (c.currentHumanity ?? 0) - humanityCost);
+            // Going Metal p.94: volver a un cuerpo ya habitado no cobra el paquete otra vez.
+            const returning = isReturningToBody(c.fbcState, chassis.id);
+            const humanityCost = returning ? 0 : chassis.humanityCost ?? 0;
+            let newHumanity = Math.max(0, (c.currentHumanity ?? 0) - humanityCost);
+            const inhabited = inhabitedChassisIds(c.fbcState);
 
 
             const newFbcState: ActiveFbcState = {
@@ -2435,6 +2445,7 @@ export const useCharacterStore = create<CharacterStoreState>()(
               armorPenalty: chassis.armorPenalty,
               baseArmorSp: chassis.baseArmorSp,
               immunities: chassis.immunities || [],
+              inhabitedChassisIds: inhabited.includes(chassis.id) ? inhabited : [...inhabited, chassis.id],
               // Al cambiar de chasis se conserva la armadura original de antes de la primera conversión.
               preFbcHeadArmor: wasAlreadyFbc ? c.fbcState?.preFbcHeadArmor : c.headArmor,
               preFbcBodyArmor: wasAlreadyFbc ? c.fbcState?.preFbcBodyArmor : c.bodyArmor
@@ -2476,6 +2487,8 @@ export const useCharacterStore = create<CharacterStoreState>()(
             const installedCyberwareIds = !wasAlreadyFbc && !(c.installedCyberwareIds || []).includes('gm-biosystem')
               ? [...(c.installedCyberwareIds || []), 'gm-biosystem']
               : c.installedCyberwareIds;
+            // Going Metal p.94: si la Humanidad supera el máximo por depresión en ese cuerpo, baja a ese máximo.
+            if (returning) newHumanity = humanityOnReturn(newHumanity, therapyCapFor(c, installedCyberwareIds, newFbcState));
 
             return {
               ...updatedCharTemp,

@@ -525,6 +525,8 @@ export interface ActiveFbcState {
   armorPenalty?: number;
   baseArmorSp: number;
   immunities: string[];
+  /** v5.15.0: cuerpos que ya habitó, para la regla de volver a un cuerpo viejo (Going Metal p.94). */
+  inhabitedChassisIds?: string[];
   /** Armadura que tenía el personaje antes de la conversión, para restaurarla al desactivar. */
   preFbcHeadArmor?: CharacterSheet['headArmor'];
   preFbcBodyArmor?: CharacterSheet['bodyArmor'];
