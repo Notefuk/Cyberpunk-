@@ -64,7 +64,7 @@ import { getInterfaceRank, netActionsForInterface, canUseQuickhacks, medicalTech
 import { SYNTHESIS_DV, SYNTHESIS_MATERIALS_EB, synthesisDoses, canSynthesize, rollMedicalCheck } from '../../engine/medicalRules';
 import { CORE_VEHICLES } from '../../data/creation';
 import { BLACK_CHROME_VEHICLES, type BlackChromeVehicle } from '../../data/blackChromeVehicles';
-import { bcVehicleToOwned, nomadCanTake } from '../../engine/vehicleCatalog';
+import { bcVehicleToOwned, nomadCanTake, motorpoolSlotsLeft, motorpoolVehiclesTaken } from '../../engine/vehicleCatalog';
 import { VehicleCatalogList } from '../compendium/VehicleCatalogList';
 import type { CoreVehicleEntry } from '../../data/creation/types';
 import { resolveSkillKey, normalizeCanonSkillName } from '../../data/characterCreationData';
@@ -559,7 +559,7 @@ export const NetAndRolesDeckView: React.FC = () => {
   };
   const handleTakeBcFromMotorpool = (veh: BlackChromeVehicle) => {
     const rank = character.role === 'Nomad' ? (character.roleRank || 0) : 0;
-    if (!nomadCanTake(veh, rank)) return;
+    if (!nomadCanTake(veh, rank) || motorpoolSlotsLeft(character.vehicles, rank) === 0) return;
     addVehicleToCharacter(bcVehicleToOwned(veh, `Family Motorpool, Nomad Access ${veh.nomadAccess}`));
     setBcVehicleMsg(`${veh.name} tomado del Family Motorpool sin costo, con sus mejoras (Nomad Access, Black Chrome p.9).`);
   };
@@ -598,8 +598,11 @@ export const NetAndRolesDeckView: React.FC = () => {
     ? getRoleRankInfo('Nomad', nomadMotoRank, '2077').tweaks2077
     : [];
 
+  // v5.14.1 [Claude Code · 2026-11-10]: un vehículo gratis por rango de Moto (Core p.162).
+  const motorpoolTaken = motorpoolVehiclesTaken(ownedVehicles);
+  const motorpoolLeft = motorpoolSlotsLeft(ownedVehicles, nomadMotoRank);
   const handleTakeFromMotorpool = (v: CoreVehicleEntry) => {
-    if (coreVehicleMinRooms(v) === null) return;
+    if (coreVehicleMinRooms(v) === null || motorpoolLeft === 0) return;
     addVehicleToCharacter(coreVehicleToOwned(v, 1, 'Family Motorpool, Core p.162'));
     setCoreVehicleMsg(`${v.name} tomado del motorpool familiar sin costo (Core p.162).`);
   };
@@ -2976,6 +2979,10 @@ export const NetAndRolesDeckView: React.FC = () => {
                 <h3 className="font-tech text-sm font-bold text-[#f97316] uppercase">Motorpool familiar (Moto {nomadMotoRank})</h3>
                 <span className="text-[10px] font-mono-code text-[#64748b]">Vehículos del Core hasta tu rango de Moto (Core p.162)</span>
               </div>
+              <p className="text-[10px] font-mono-code text-[#94a3b8]">
+                Cada vez que subís Moto sumás un vehículo de serie o una mejora (Core p.162): tomaste {motorpoolTaken} de {nomadMotoRank} vehículos gratis (Core y Black Chrome juntos).
+                {motorpoolLeft === 0 ? ' No te quedan.' : ` Te quedan ${motorpoolLeft}.`} Si usaste un rango en una mejora, tomá un vehículo menos.
+              </p>
               {nomadTweaks2077.length > 0 && (
                 <div className="text-[10px] font-mono-code text-amber-300 space-y-1">
                   {nomadTweaks2077.map((t, i) => (
@@ -2986,7 +2993,7 @@ export const NetAndRolesDeckView: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {CORE_VEHICLES.vehicles.map(v => {
                   const minRank = coreMotorpoolMinRank(v);
-                  const available = minRank <= nomadMotoRank && coreVehicleMinRooms(v) !== null;
+                  const available = minRank <= nomadMotoRank && coreVehicleMinRooms(v) !== null && motorpoolLeft > 0;
                   return (
                     <div key={v.name} className={`bg-[#10141f] border border-[#1b2336] p-3 rounded-xs space-y-1.5 ${available ? '' : 'opacity-50'}`}>
                       <div className="flex items-center justify-between">
@@ -3004,7 +3011,7 @@ export const NetAndRolesDeckView: React.FC = () => {
                           Tomar del motorpool
                         </button>
                       ) : (
-                        <div className="text-[10px] font-mono-code text-[#64748b]">Requiere Moto {minRank}</div>
+                        <div className="text-[10px] font-mono-code text-[#64748b]">{minRank > nomadMotoRank ? `Requiere Moto ${minRank}` : 'Ya tomaste un vehículo por cada rango de Moto'}</div>
                       )}
                     </div>
                   );
@@ -3044,8 +3051,8 @@ export const NetAndRolesDeckView: React.FC = () => {
                   {character.role === 'Nomad' && (
                     <button
                       onClick={() => handleTakeBcFromMotorpool(veh)}
-                      disabled={!nomadCanTake(veh, nomadMotoRank)}
-                      title={nomadCanTake(veh, nomadMotoRank) ? 'Gratis por Nomad Access (Black Chrome p.9)' : `Necesita Moto ${veh.nomadAccess ?? '—'}${veh.nomadAccess === null ? ' (no aplica Nomad Access)' : ''}`}
+                      disabled={!nomadCanTake(veh, nomadMotoRank) || motorpoolLeft === 0}
+                      title={!nomadCanTake(veh, nomadMotoRank) ? `Necesita Moto ${veh.nomadAccess ?? '—'}${veh.nomadAccess === null ? ' (no aplica Nomad Access)' : ''}` : motorpoolLeft === 0 ? 'Ya tomaste un vehículo por cada rango de Moto (Core p.162)' : `Gratis por Nomad Access (Black Chrome p.9). Te quedan ${motorpoolLeft}.`}
                       className="flex-1 py-1 bg-[#f97316]/20 enabled:hover:bg-[#f97316] text-[#f97316] enabled:hover:text-black disabled:opacity-40 disabled:cursor-not-allowed font-tech font-bold text-[10px] uppercase rounded-xs transition-colors cursor-pointer"
                     >
                       Family Motorpool (0 €$)

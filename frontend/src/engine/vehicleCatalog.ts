@@ -22,6 +22,22 @@ export function nomadCanTake(v: Pick<BlackChromeVehicle, 'nomadAccess'>, motoRan
   return v.nomadAccess !== null && motoRank > 0 && v.nomadAccess <= motoRank;
 }
 
+/**
+ * v5.14.1 [Claude Code · 2026-11-10]: cada vez que sube Moto, el Nomad suma UN vehículo de serie o UNA mejora
+ * al Family Motorpool (Core p.162; BC p.9). La app cuenta un vehículo gratis por rango de Moto
+ * (Core y Black Chrome juntos); las mejoras no se registran, así que si el jugador usó un rango en una mejora,
+ * le queda un vehículo menos.
+ */
+const MOTORPOOL_NOTE = /Family Motorpool|Flota Nómada Gratuita/i;
+
+export function motorpoolVehiclesTaken(vehicles: Pick<OwnedVehicle, 'notes'>[] | undefined): number {
+  return (vehicles ?? []).filter((v) => MOTORPOOL_NOTE.test(v.notes ?? '')).length;
+}
+
+export function motorpoolSlotsLeft(vehicles: Pick<OwnedVehicle, 'notes'>[] | undefined, motoRank: number): number {
+  return Math.max(0, motoRank - motorpoolVehiclesTaken(vehicles));
+}
+
 /** Copia un vehículo de Black Chrome al garaje, con sus mejoras de serie. */
 export function bcVehicleToOwned(v: BlackChromeVehicle, origin: string, now: number = Date.now()): OwnedVehicle {
   const notes = [`Origen: Black Chrome p.${v.sourcePage} (${origin})`, `${v.baseType}`, ...v.notes].join(' • ');

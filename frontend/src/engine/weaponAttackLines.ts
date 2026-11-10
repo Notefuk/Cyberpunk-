@@ -18,7 +18,22 @@ export interface WeaponAttackLines {
   skillKey: string;
 }
 
+/**
+ * v5.14.1 [Claude Code · 2026-11-10]: explosivos que se colocan (Black Chrome pp.87-90, skill "Demolitions").
+ * No se tira para atacar: se arman y detonan como dicen sus notas.
+ */
+export function isPlacedExplosive(weapon: Pick<WeaponItem, 'skill'>): boolean {
+  return (weapon.skill || '').toLowerCase().replace(/[^a-z]/g, '') === 'demolitions';
+}
+
 export function weaponAttackLines(sheet: CharacterSheet, weapon: WeaponItem): WeaponAttackLines {
+  if (isPlacedExplosive(weapon)) {
+    return {
+      single: 'Explosivo que se coloca: no se tira para atacar. Se arma y detona como dicen sus notas (Demolitions, Black Chrome).',
+      penalties: [],
+      skillKey: 'demolitions'
+    };
+  }
   const b = calculateWeaponAttackBreakdown(sheet, weapon);
   const melee = b.statKey === 'DEX';
   const minus = b.totalPenalty > 0 ? ` − ${b.totalPenalty}` : '';

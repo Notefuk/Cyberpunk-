@@ -82,6 +82,12 @@ describe('Night Markets de Black Chrome (pp.131-156)', () => {
     for (let i = 1; i < d2.length; i++) expect(d2[i].cost).toBeGreaterThanOrEqual(d2[i - 1].cost);
   });
 
+  // v5.14.1 [Claude Code · 2026-11-10]: los fluidos de la Weeping Reaver se venden con la katana (BC p.91, Booth D2).
+  it('los 3 fluidos de la Weeping Reaver están en el puesto D2', () => {
+    const d2 = itemsAtBooth('D2').map((i) => i.id);
+    for (const id of ['arasaka-acid', 'arasaka-fire', 'arasaka-wound-salt']) expect(d2).toContain(id);
+  });
+
   it('categoría de precio por costo (Core p.385)', () => {
     expect([10, 20, 50, 100, 500, 1000, 5000, 10000].map(costTierFor)).toEqual(['Cheap', 'Everyday', 'Costly', 'Premium', 'Expensive', 'Very Expensive', 'Luxury', 'Super Luxury']);
   });
