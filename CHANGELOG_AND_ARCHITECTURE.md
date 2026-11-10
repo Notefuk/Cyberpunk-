@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.16.0] - 2026-11-10 (Plan 27 II: armas, cyberdecks y equipo de los Interface RED) [Claude Code · 2026-11-10]
+* **Category**: Catálogo y reglas (plan 27; auditoría `docs/canon-audit/v5.16.0-equipo-interface-red.md`).
+* **What Changed**:
+  * 63 ítems nuevos: Woodchipper's Garage (12 armas, pp.3-6), Midnight with the Upload (15 cyberdecks y 11 Hardware, pp.3-7), 12 Days of Gearmas (12 ítems, IR4 pp.66-68), All About Drones (6, IR1 pp.59-63), Night City Weather (5, IR2 p.20) y Stickball (2, IR4 p.34).
+  * El Sternmeyer M-02 Heavy Rifle vuelve (Woodchipper p.5): el plan 26 lo había borrado por error.
+  * Los slots de los cyberdecks y del Hardware nuevos cuentan en la tienda del creador.
+  * El Militech Archimedes se dispara con Pilot Air Vehicle: la ficha y el HUD lo dicen, en vez de calcular Handgun.
+  * Old Guns Never Die (IR1 pp.3-4): conversión de armas de 2020 a RED en el Compendio de sistemas.
+  * DATA PACKS: las tarjetas de Woodchipper y Midnight dicen lo que trae el libro; se borra la de Toggle's Temple, que no existe.
+* **Files Modified**: `data/core-rules.cprpack.json`, `data/removedCatalogItems.ts`, `data/expansionRulesData.ts`, `engine/creatorShop.ts`, `engine/weaponAttackLines.ts`, `features/combat/CombatHudView.tsx`, `features/datapacks/DataPackManagerView.tsx`; test `engine/__tests__/interfaceRedCatalog.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 580 tests (6 nuevos) y build. En local, el Compendium muestra el Sternmeyer M-02 y el SGI Kerberos (11 slots); consola limpia.
+
 ### [v5.15.0] - 2026-11-10 (Plan 27 I: cierre de FBC y ciberware de los Interface RED) [Claude Code · 2026-11-10]
 * **Category**: Reglas y catálogo (plan 27, `docs/plans/plan27-interface-red-fbc.md`; auditoría `docs/canon-audit/v5.15.0-fbc-y-ciberware-interface-red.md`).
 * **What Changed**:

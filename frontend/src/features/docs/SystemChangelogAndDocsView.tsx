@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.16.0',
+    date: '2026-11-10',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Catálogo',
+    title: 'Armas explosivas, cyberdecks, drones y equipo de los Interface RED',
+    summary: 'Llegan 63 ítems: las 12 armas de Woodchipper\'s Garage (vuelve el Sternmeyer M-02), 15 cyberdecks y 11 piezas de Hardware de Midnight with the Upload, lo de 12 Days of Gearmas, 6 drones, equipo para el clima y para Stickball. Y la regla Old Guns Never Die para pasar armas de Cyberpunk 2020 a RED.',
+    highlights: [
+      "Woodchipper's Garage: 12 armas; el Militech Archimedes se dispara con Pilot Air Vehicle.",
+      'Midnight with the Upload: 15 cyberdecks y 11 Hardware, con sus slots en la tienda.',
+      'Gearmas, drones, clima, Stickball y Old Guns Never Die.'
+    ],
+    filesTouched: ['frontend/src/data/core-rules.cprpack.json', 'frontend/src/engine/creatorShop.ts', 'frontend/src/engine/weaponAttackLines.ts', 'frontend/src/data/expansionRulesData.ts'],
+    metricsBadge: 'v5.16.0 • Plan 27 • Equipo'
+  },
+  {
     version: 'v5.15.0',
     date: '2026-11-10',
     author: 'Claude Code',
@@ -1623,6 +1639,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.16.0': true,
     'v5.15.0': true,
     'v5.14.1': true,
     'v5.14.0': true,
