@@ -258,56 +258,29 @@ const OFFICIAL_13_MODULES: OfficialModuleData[] = [
   },
   {
     id: 'woodchipper',
-    title: "Woodchipper's Garage (DLC Vehículos & Garaje)",
-    shortBadge: 'GARAGE',
+    title: "Woodchipper's Garage (DLC Armas Explosivas)",
+    shortBadge: 'BOOM',
     era: '2045',
-    version: 'v1.0.0',
-    sourcePdf: 'Woodchippers-Garage-v1.0.pdf',
+    version: 'v1.01',
+    sourcePdf: 'Woodchippers-Garage-Explosive-Weapons-v1.01_2022-03-28.pdf',
     accentColor: '#f59e0b',
     icon: <Wrench className="w-4 h-4 text-[#f59e0b]" />,
     whatItBringsSummary:
-      'Guía técnica de tuneado y blindaje vehicular para mecánicos nómadas y Techs. Detalla mejoras de estructura, arietes de choque frontal, compartimentos ocultos y torretas montadas.',
+      'DLC de 12 armas exóticas de Heavy Weapons (también en Interface RED Vol. 3): lanzacohetes, lanzagranadas, una escopeta de batería, un arpón, un lanzallamas y el Sternmeyer M-02 Heavy Rifle (pp.3-6).',
     keyHighlights: [
-      'Mejoras de Puntos de Daño Estructural (SDP) para coches y motos.',
-      'Sistemas de escape con nitro y sobrealimentación.',
-      'Armamento montado en techo y parachoques reforzados.'
+      'Lanzacohetes: Enviro-launcher, Triple Threat, SDF-45 (2 cohetes por ataque), Archimedes (con Pilot Air Vehicle) y Towa Pocket Launcher.',
+      'Flare Gun, TearJerker, Nomad Air Cannon (líquidos), Militech Aegis (no letal) y UrbanTech Burst Flamethrower.',
+      'SlamDance Ballistic Harpoon y Sternmeyer M-02 (5d6, cargador de 80 trounds).'
     ],
     mechanicsIntroduced: [
-      'Mantenimiento y reparación de vehículos con Land Vehicle Tech',
-      'Blindaje modular desmontable'
+      'Armas que se disparan con una skill de piloto (Militech Archimedes)',
+      'Munición propia: tambor de 80 trounds del Sternmeyer (500eb)'
     ],
     specificNavigation: {
-      label: '🚗 Ir a Garaje Nómada',
-      targetTab: 'netroles',
+      label: '🔫 Ver Arsenal en Street Lab',
+      targetTab: 'sheet',
       icon: <Wrench className="w-3.5 h-3.5" />,
       color: 'bg-[#f59e0b]/20 hover:bg-[#f59e0b] text-[#f59e0b] hover:text-black border-[#f59e0b]/40 font-bold'
-    }
-  },
-  {
-    id: 'toggles_temple',
-    title: "Toggle's Temple (DLC Electrónica & Ciberware)",
-    shortBadge: 'TOGGLE',
-    era: '2045',
-    version: 'v1.0.0',
-    sourcePdf: 'Toggles-Temple-Tech-Guide.pdf',
-    accentColor: '#38bdf8',
-    icon: <Terminal className="w-4 h-4 text-[#38bdf8]" />,
-    whatItBringsSummary:
-      'Catálogo clandestino de electrónica de consumo modificada, agentes piratas y ciberware artesanal ensamblado en talleres de los bajos fondos de Watson.',
-    keyHighlights: [
-      'Agentes telefónicos con cifrado militar antirrastreo.',
-      'Escáneres de radio de espectro amplio.',
-      'Opciones de ciberware artesanal con menor coste en eurodólares.'
-    ],
-    mechanicsIntroduced: [
-      'Chequeos de intercepción de señales con Electronics/Security',
-      'Modificaciones de hardware callejero'
-    ],
-    specificNavigation: {
-      label: '🦾 Ir a Ripperdoc',
-      targetTab: 'cyberware',
-      icon: <Cpu className="w-3.5 h-3.5" />,
-      color: 'bg-[#38bdf8]/20 hover:bg-[#38bdf8] text-[#38bdf8] hover:text-black border-[#38bdf8]/40 font-bold'
     }
   },
   {
@@ -367,23 +340,23 @@ const OFFICIAL_13_MODULES: OfficialModuleData[] = [
   },
   {
     id: 'midnight_upload',
-    title: 'Midnight With The Upload (DLC Netrunning)',
+    title: 'Midnight with the Upload (DLC Cyberdecks)',
     shortBadge: 'UPLOAD',
     era: '2045',
     version: 'v1.0.0',
-    sourcePdf: 'Midnight-With-The-Upload.pdf',
+    sourcePdf: 'Midnight-with-the-Upload-New-Cyberdecks_2022-05-31.pdf',
     accentColor: '#6366f1',
     icon: <Terminal className="w-4 h-4 text-[#6366f1]" />,
     whatItBringsSummary:
-      'Suplemento táctico de Netrunning analógico de 2045. Contiene programas de intrusión ofensivos, nuevos Black ICE defensivos y reglas de generación de arquitecturas de red con pisos falsos.',
+      'DLC de Netrunning (también en Interface RED Vol. 3): 15 cyberdecks de Kirama, Microtech, Raven Microcybernetics, SGI y Zetatech, y 11 piezas de Hardware nuevas (pp.3-7). No trae programas nuevos.',
     keyHighlights: [
-      'Programas de ataque y defensa cibernética de última generación.',
-      'Variantes de Black ICE letal (Hellhound, Asp, Dragon).',
-      'Plantillas de subredes para instalaciones corporativas.'
+      'Cada deck tiene su regla: Jack Out seguro, Acciones NET extra o límites de Black ICE; algunos solo aceptan Programas o solo Hardware.',
+      'Decks de 20eb (Kirama Training) a 1.000eb, con 2 a 11 slots.',
+      'Hardware de 500eb: Aerie, Bushido Accelerator, Combat Recorder, Defense Sequencer, Swifty Clean y más.'
     ],
     mechanicsIntroduced: [
-      'Contramedidas anti-intrusión avanzadas',
-      'Rutinas de borrado automático de trazas'
+      'Los slots de cada deck y del Hardware cuentan en la tienda del creador',
+      'Se instalan en un Bodyweight Suit o en un Cyberarm'
     ],
     specificNavigation: {
       label: '🌐 Ver Netrunning 2045',

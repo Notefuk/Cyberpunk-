@@ -2,6 +2,10 @@
 import { describe, expect, it } from 'vitest';
 import pack from '../../data/core-rules.cprpack.json';
 import { parseHumanityLoss } from '../../features/cyberware/ripperdocZones';
+import { REMOVED_CATALOG_ITEMS } from '../../data/removedCatalogItems';
+import { CYBERDECK_SLOTS, HARDWARE_SLOTS, deckSlotUse } from '../creatorShop';
+import { pilotWeaponSkill, isPlacedExplosive } from '../weaponAttackLines';
+import { EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
 
 type Row = { id: string; name: string; type: string; humanityLoss: string; cost: number; sourceBook?: string; sourceBookTitle?: string; sourcePage?: number };
 const cyber = (pack as unknown as { cyberware: Row[] }).cyberware;
@@ -41,5 +45,56 @@ describe('Ciberware de Interface RED (plan 27, v5.15.0)', () => {
     expect(parseHumanityLoss('22', 'roll').amount).toBe(22);
     expect(parseHumanityLoss('2 (1d6/2 Round up)', 'average').amount).toBe(2);
     expect(parseHumanityLoss('7 (2d6)', 'average').amount).toBe(7);
+  });
+});
+
+type Any = { id: string; name: string; sourceBookTitle?: string; sourcePage?: number; skill?: string; damage?: string; standardMag?: number; cost: number };
+const P = pack as unknown as Record<string, Any[]>;
+const inBook = (cat: string, t: string) => P[cat].filter((i) => i.sourceBookTitle === t);
+
+describe('Armas, cyberdecks y equipo de Interface RED (plan 27, v5.16.0)', () => {
+  it("Woodchipper's Garage: 12 armas (pp.3-6); el Sternmeyer M-02 vuelve y ya no figura como borrado", () => {
+    expect(inBook('weapons', "Woodchipper's Garage")).toHaveLength(12);
+    const m02 = P.weapons.find((w) => w.id === 'sternmeyer-m02');
+    expect([m02?.damage, m02?.standardMag, m02?.cost, m02?.sourcePage]).toEqual(['5d6', 80, 1000, 5]);
+    expect(REMOVED_CATALOG_ITEMS.some((r) => r.id === 'sternmeyer-m02')).toBe(false);
+  });
+
+  it('Midnight with the Upload: 15 cyberdecks y 11 de Hardware con sus slots en la tienda (pp.3-7)', () => {
+    const items = inBook('gear', 'Midnight with the Upload');
+    expect(items.filter((i) => i.id.startsWith('cyberdeck-'))).toHaveLength(15);
+    expect(items.filter((i) => i.id.startsWith('hw-'))).toHaveLength(11);
+    expect(CYBERDECK_SLOTS['cyberdeck-sgi-technologies-kerberos']).toBe(11);
+    expect(HARDWARE_SLOTS['hw-bushido-accelerator']).toBe(2); // tabla de p.7
+    expect(CYBERDECK_SLOTS['cyberdeck-standard']).toBe(7); // los del Core siguen igual
+    const use = deckSlotUse([
+      { category: 'gear', catalogId: 'cyberdeck-sgi-technologies-kerberos', qty: 1 },
+      { category: 'programs', catalogId: 'eraser', qty: 10 },
+      { category: 'gear', catalogId: 'hw-aerie', qty: 1 }
+    ]);
+    expect(use.overflow).toBe(1);
+  });
+
+  it('12 Days of Gearmas (IR4 pp.66-68): 12 ítems en el catálogo; el Zonda Metrocar va con los vehículos', () => {
+    const all = ['gear', 'armor', 'cyberware', 'weapons'].flatMap((c) => inBook(c, 'Interface RED Volume 4'));
+    const gearmas = all.filter((i) => (i.sourcePage ?? 0) >= 66 && (i.sourcePage ?? 0) <= 68);
+    expect(gearmas).toHaveLength(12);
+  });
+
+  it('drones (IR1 pp.59-63), equipo de clima (IR2 p.20) y de Stickball (IR4 p.34)', () => {
+    expect(inBook('gear', 'Interface RED Volume 1')).toHaveLength(6);
+    expect(inBook('gear', 'Interface RED Volume 2').filter((i) => i.sourcePage === 20)).toHaveLength(5);
+    expect([...inBook('gear', 'Interface RED Volume 4'), ...inBook('weapons', 'Interface RED Volume 4')].filter((i) => i.sourcePage === 34)).toHaveLength(2);
+  });
+
+  it('el Militech Archimedes se dispara con Pilot Air Vehicle, no con Handgun (Woodchipper p.4)', () => {
+    const arch = P.weapons.find((w) => w.id === 'militech-archimedes')!;
+    expect(pilotWeaponSkill(arch as { skill: string })).toBe('Pilot Air Vehicle');
+    expect(pilotWeaponSkill({ skill: 'Heavy Weapons' })).toBeNull();
+    expect(isPlacedExplosive(arch as { skill: string })).toBe(false);
+  });
+
+  it('Old Guns Never Die está en el Compendio de sistemas (IR1 pp.3-4)', () => {
+    expect(EXPANSION_RULE_SYSTEMS.find((r) => r.id === 'old-guns-never-die')?.howItWorksSteps).toHaveLength(7);
   });
 });

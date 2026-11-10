@@ -567,5 +567,37 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
         ['Boss Legendario (Smasher)', '85 - 100+ HP', 'SP 18 - 20', 'Base 17 - 19', '5+ Suerte']
       ]
     }
+  },
+
+  // --------------------------------------------------------------------------
+  // 9. OLD GUNS NEVER DIE (Interface RED Vol. 1 pp.3-4) [Claude Code · 2026-11-10] v5.16.0
+  // --------------------------------------------------------------------------
+  {
+    id: 'old-guns-never-die',
+    title: 'Old Guns Never Die: armas de Cyberpunk 2020 en RED',
+    subtitle: 'Cómo pasar un arma de 2020 a las reglas de RED en 6 pasos',
+    sourceBook: 'interface_red',
+    sourceBookTitle: 'Interface RED Volume 1',
+    era: '2045',
+    categoryBadge: 'CONVERSIÓN // ARMAS',
+    introDescription:
+      'Para usar en RED un arma de Cyberpunk 2020 (Interface RED Vol. 1 pp.3-4). El arma toma el tipo de RED más parecido y sus números salen de ahí; la precisión y la confiabilidad de 2020 se convierten en calidad.',
+    howItWorksSteps: [
+      'Paso 0: si no dispara balas, cartuchos, explosivos ni flechas, o tiene reglas propias, es un arma Exótica. Se busca una parecida en RED o se acuerda con el GM.',
+      'Paso 1: se elige el tipo de arma de RED más parecido. De ahí salen el daño, el Autofire, el cargador, la munición, el ROF, las manos, el costo y si se puede ocultar.',
+      'Paso 2: la precisión (WA) se simplifica. WA -1 o menos pasa a 0, y WA +1 o más pasa a +1 (calidad Excelente).',
+      'Paso 3: si en 2020 era poco confiable (UR), en RED tiene Poor Reliability: con un fallo crítico se encasquilla y desatascarla cuesta una Acción.',
+      'Paso 4: la calidad se define así. Poor es Poor Reliability con WA 0; Standard es WA 0 sin Poor Reliability; Excellent es WA +1, aunque tenga Poor Reliability. Se vende como la calidad más alta que cumpla.',
+      'Paso 5: los accesorios de 2020 se cambian por los de RED. Si el cargador de 2020 era más grande que el estándar, se le pone Extended o Drum Magazine. Hay 3 ranuras; si necesita más, es Exótica. El Extended Magazine puede hacer que deje de ser ocultable.',
+      'Paso 6: el GM fija el costo final.'
+    ],
+    keyBenefits: [
+      'Ejemplo del libro: el Stolbovoy St-5 (5d6, 30 tiros, WA -1, 1.800eb en 2020) queda como Assault Rifle de RED con 5d6, ROF 1, cargador de 25, no ocultable y 500eb.',
+      'Su WA -1 pasa a 0 (calidad Standard). Con Smartgun Link (+500eb, 2 ranuras) y Extended Magazine (1 ranura, cargador de 35), el costo queda en 1.100eb.'
+    ],
+    drawbacksAndRisks: [
+      'Los números de 2020 no pasan tal cual: manda el tipo de arma de RED.',
+      'Un arma con más de 3 accesorios, o con reglas propias, pasa a ser Exótica y la decide el GM.'
+    ]
   }
 ];
