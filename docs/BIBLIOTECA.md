@@ -17,9 +17,9 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | Estado | PDFs |
 |---|---|
-| ✅ Adaptado | 21 |
+| ✅ Adaptado | 22 |
 | 🟡 A medias | 9 |
-| ⬜ Sin empezar | 24 |
+| ⬜ Sin empezar | 23 |
 | ➖ No se adapta como datos | 25 |
 | **Total** | **79** |
 
@@ -35,13 +35,13 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | PDF | Estado | Detalle |
 |---|---|---|
-| Interface-RED-Volume-4 (Cyberfists of Fury) | 🟡 | 27 formas de Martial Arts (v4.5.1); Gearmas y equipo de Stickball (v5.16.0); Zonda Metrocar y Punknaught (v5.17.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
+| Interface-RED-Volume-4 (Cyberfists of Fury) | 🟡 | 27 formas de Martial Arts (v4.5.1); Gearmas y equipo de Stickball (v5.16.0); Zonda Metrocar y Punknaught (v5.17.0); Corporate Conapts & Studio Apartments (v5.18.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
 | Danger-Gal-Dossier | 🟡 | Muchos datos cargados; plan 6 en pausa (v4.7.1 fichas y facciones, v4.7.2 New Gear) |
 | Black-Chrome-Tech-and-Style-Guide | ✅ | Ítems (v5.12.0), los 31 vehículos con Nomad Access (v5.13.0), los 6 Night Markets con sus puestos y Economics 101 (v5.14.0), plan 26 [Claude Code · 2026-11-06] |
 | CEMK-Edgerunners-Handbook-2077-Lore-Guide | 🟡 | Solo algunas citas |
 | Interface-RED-Volume-3 | 🟡 | Going Metal (FBC); Woodchipper y Midnight por sus DLC (v5.16.0); Spinning Your Wheels por su DLC (v5.17.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
 | Interface-RED-Volume-1 | 🟡 | Old Guns Never Die y 6 drones (v5.16.0); Cyberchairs (v5.17.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
-| Interface-RED-Volume-2 | 🟡 | Exotics of 2045: 17 paquetes y 3 implantes (v5.15.0); el resto, en el plan 27 [Claude Code · 2026-11-10] |
+| Interface-RED-Volume-2 | 🟡 | Exotics of 2045: 17 paquetes y 3 implantes (v5.15.0); equipo de clima (v5.16.0); Cargo Containers & Cube Hotels (v5.18.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
 | Night-City-Gang-Guide | ⬜ | Pandillas de Night City |
 
 ## Going Metal (1, suelto en la raíz)
@@ -115,7 +115,7 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 | Salvaging-Night-City-Downtime-Scavenging | ⬜ | Rescate de chatarra en downtime |
 | All-About-Agents-Smartphone-AI-Guide | ⬜ | Agents |
 | Your-New-Best-Friend-Fixers-and-Contacts | ⬜ | Contactos |
-| Cargo-Containers-and-Cube-Hotels | ⬜ | Vivienda barata |
+| Cargo-Containers-and-Cube-Hotels | ✅ | 10 Cube Hotels y 10 Cargo Containers con tirada 1d10 en el creador, muebles y accesorios, por Interface RED Vol. 2 pp.35-37 (v5.18.0) [Claude Code · 2026-11-11] |
 | Achievements-and-Loot-Boxes | ⬜ | Logros y cajas de botín |
 | Single-Player-Mode-Solo-Rules | ⬜ | Jugar solo |
 | Single-Player-Mode-Plus | ⬜ | Jugar solo, extra |

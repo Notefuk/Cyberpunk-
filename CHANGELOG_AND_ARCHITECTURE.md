@@ -117,6 +117,14 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.18.0] - 2026-11-11 (Plan 27 IV: vivienda de los Interface RED) [Claude Code · 2026-11-11]
+* **Category**: Creador y catálogo (plan 27; auditoría `docs/canon-audit/v5.18.0-vivienda-interface-red.md`).
+* **What Changed**:
+  * Creador: al elegir Cube Hotel, Cargo Container, Studio Apartment o Corporate Conapt aparece "¿Dónde?", con los 10 lugares con nombre del libro y un botón para tirar 1d10. El lugar llega a las notas de la ficha. Cube Hotels y Cargo Containers: Interface RED Vol. 2 pp.35-36; Corporate Conapts y Studio Apartments: Interface RED Vol. 4 pp.47-53.
+  * Catálogo: 17 muebles y accesorios. 3 juegos de muebles para Cargo Container y 5 accesorios (IR2 p.37); 3 juegos de muebles por ambiente y 6 accesorios, entre ellos el dron Zhirafa AN7-3TR con su NET Architecture (IR4 pp.51-52).
+* **Files Modified**: `data/creation/namedHousing.ts` (nuevo), `engine/characterCreation.ts` (`housingPlace`), `features/creator/steps/GearStep.tsx`, `data/core-rules.cprpack.json`; test `engine/__tests__/housingInterfaceRed.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 600 tests (6 nuevos) y build. En local: el creador muestra "¿Dónde?" para Cargo Container, la tirada da el lugar con su descripción y página, y al cambiar a Studio Apartment aparece su lista de 10; consola limpia.
+
 ### [v5.17.0] - 2026-11-11 (Plan 27 III: movilidad de los Interface RED) [Claude Code · 2026-11-11]
 * **Category**: Vehículos, catálogo y bestiario (plan 27; auditoría `docs/canon-audit/v5.17.0-movilidad-interface-red.md`).
 * **What Changed**:

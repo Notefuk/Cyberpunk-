@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.18.0',
+    date: '2026-11-11',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Creador',
+    title: 'Dónde vivís: Cube Hotels, Cargo Containers, Studio Apartments y Corporate Conapts con nombre',
+    summary: 'En el creador, después de elegir la vivienda, podés elegir o tirar 1d10 el lugar exacto: 10 Cube Hotels, 10 Cargo Containers, 10 Studio Apartments y 10 Corporate Conapts de Night City, cada uno con su barrio y su historia. Y 17 muebles y accesorios para la casa en la tienda, incluido un dron de limpieza con su propia NET Architecture.',
+    highlights: [
+      '40 viviendas con nombre y tirada 1d10 (Interface RED Vol. 2 y Vol. 4).',
+      'El lugar elegido queda en las notas de la ficha.',
+      '17 muebles y accesorios: juegos de muebles, caja fuerte, compartimento oculto, ducha Kendachi, dron Zhirafa AN7-3TR.'
+    ],
+    filesTouched: ['frontend/src/data/creation/namedHousing.ts', 'frontend/src/features/creator/steps/GearStep.tsx', 'frontend/src/engine/characterCreation.ts', 'frontend/src/data/core-rules.cprpack.json'],
+    metricsBadge: 'v5.18.0 • Plan 27 • Vivienda'
+  },
+  {
     version: 'v5.17.0',
     date: '2026-11-11',
     author: 'Claude Code',
@@ -1655,6 +1671,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.18.0': true,
     'v5.17.0': true,
     'v5.16.0': true,
     'v5.15.0': true,

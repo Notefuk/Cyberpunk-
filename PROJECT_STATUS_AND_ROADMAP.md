@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.17.0`** (plan 27 III: movilidad de los Interface RED) en `main` (PR #71) y Firebase prod; la beta sigue con la v5.16.0 hasta que GitHub Pages publique el build en cola [Claude Code · 2026-11-11]  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.18.0`** (plan 27 IV: vivienda de los Interface RED) en `claude/v5.18.0-vivienda`, sin pushear; en `main` y Firebase prod está la v5.17.0, y la beta sigue con la v5.16.0 por la caída de GitHub Pages [Claude Code · 2026-11-11]  
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
 > **PLAN ACTIVO**: ninguno en curso. Plan 23 terminado y publicado (v5.8.0 y v5.9.0) [Claude Code · 2026-10-30]. En espera: plan 22 (Interface RED, Black Chrome y FBC). Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
