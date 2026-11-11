@@ -599,5 +599,87 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
       'Los números de 2020 no pasan tal cual: manda el tipo de arma de RED.',
       'Un arma con más de 3 accesorios, o con reglas propias, pasa a ser Exótica y la decide el GM.'
     ]
+  },
+
+  // --------------------------------------------------------------------------
+  // 10. SPINNING YOUR WHEELS (DLC pp.3-7; también en Interface RED Vol. 3) [Claude Code · 2026-11-11] v5.17.0
+  // --------------------------------------------------------------------------
+  {
+    id: 'spinning-your-wheels',
+    title: 'Spinning Your Wheels: bicis, patines y skates',
+    subtitle: "La bici de Yang's Wheels como vehículo, sus 14 mejoras y los trucos",
+    sourceBook: 'dlc',
+    sourceBookTitle: 'Spinning Your Wheels',
+    era: '2045',
+    categoryBadge: 'VEHÍCULOS // MOVILIDAD',
+    introDescription:
+      'La bici es un vehículo (Core p.191) con SDP 15, un asiento y 100eb (Premium); su velocidad depende del BODY del ciclista (p.3). Está en el Compendium y se puede agregar al garaje. Los patines y el skate son equipo (p.5).',
+    howItWorksSteps: [
+      'Velocidad según BODY: menos de 4, 8 MOVE y 12 MPH; de 4 a 7, 10 MOVE y 20 MPH; 8 o más, 15 MOVE y 30 MPH. Con BODY 11 o más hace falta Reinforced Frame.',
+      'Se maneja con Athletics en vez de Drive Land Vehicle y se repara con Basic Tech. No se controla con Interface Plugs. Usás tu Iniciativa: no pasás al principio de la cola.',
+      'No se consigue ni se mejora con Moto, la habilidad de rol del Nomad.',
+      'Choque o embestida: 3d6 a la bici y al blanco, en vez de 6d6. El ciclista sufre Whiplash y sale despedido (Prone, Core p.169). Quien esquiva la embestida no puede caer encima de la bici.',
+      'A criterio del GM, hacer otra cosa mientras pedaleás (como disparar) puede ser Complex Task: -2 (Core p.130).',
+      'Cansancio (p.4): al final de un viaje largo, Endurance contra DV13 (1 hora), DV15 (3), DV17 (5) o DV21 (6 o más). Si falla, queda cansado el resto del día, como si hubiera dormido mal (Core p.130).',
+      'Mejoras (pp.4-5): una de cada tipo por bici. Están en la tabla de abajo.',
+      'Trucos (p.6), con Athletics: Swerve, Sharp Turn y Emergency Stop DV13; Bootleg Turn y Do a Jump DV17. Trucos de bici, patines y skate: Simple DV13, Advanced DV15 y Pro DV17.'
+    ],
+    keyBenefits: [
+      'Bici con Electric Pedal Assist y Enclosure: un auto chiquito para uno por 300eb (p.7).',
+      'Patines (50eb) y skate (50eb): +4 m/yds con la Acción Run; el skate, solo en suelo plano o en bajada (p.5).'
+    ],
+    drawbacksAndRisks: [
+      'Es más fácil de robar, cansa y lleva menos gente y carga que un auto (p.3).',
+      'Con patines puestos no podés usar las opciones de las piernas; ponerlos o sacarlos cuesta una Acción (p.5).'
+    ],
+    referenceTable: {
+      headers: ['Mejora', 'Efecto', 'Costo'],
+      rows: [
+        ['Bottle Dynamo', 'Carga una batería (como la de un Microwaver) con una hora de pedaleo.', '20eb (Everyday)'],
+        ['Bulletproof Glass', 'Thin Cover de 7 HP (Core p.182). Requiere Enclosure.', '50eb (Costly)'],
+        ['Cycle Armor', 'SP 7, también en las paredes del Enclosure. Requiere Reinforced Frame.', '100eb (Premium)'],
+        ['Electric Pedal Assist', 'Sube la velocidad narrativa al siguiente tramo de BODY (o +5 MPH en el más alto) y +4 a Endurance contra el cansancio.', '100eb (Premium)'],
+        ['Enclosure', 'Pasa a triciclo cerrado con fibra de vidrio y plástico. Incompatible con Folding Frame.', '100eb (Premium)'],
+        ['Extended Seat', 'Lleva un pasajero atrás (2 asientos).', '20eb (Everyday)'],
+        ['Folding Frame', 'Se pliega al tamaño de un maletín grande. Incompatible con Enclosure, Reinforced Frame y Smuggling Compartment.', '100eb (Premium)'],
+        ['Gun Mount', 'Soporte en el manubrio para Assault Rifle, Heavy SMG o Shotgun: dispara solo hacia adelante, sin mano libre; no se recarga en movimiento; montar o sacar el arma es una Acción.', '100eb (Premium)'],
+        ['Neon Lighting', 'Cuenta como un Light Tattoo para el +2 de Wardrobe & Style cerca de la bici.', '20eb (Everyday)'],
+        ['Reinforced Frame', '+5 SDP y permite BODY 11 o más. Incompatible con Folding Frame.', '100eb (Premium)'],
+        ['Security System', 'Electrificada desde el Agent: quien la agarre tira Resist Torture/Drugs DV13 o la suelta. Nano-VIN: Yang\'s Wheels te la devuelve si alguien intenta vendérsela.', '500eb (Expensive)'],
+        ['Smuggling Compartment', 'Hueco de 2,5 x 15 cm en el cuadro; encontrarlo es Conceal/Reveal Object DV17. Incompatible con Folding Frame.', '50eb (Costly)'],
+        ['Stunt Frame', '+2 a Athletics para maniobras en la bici.', '100eb (Premium)'],
+        ['Trailer', 'Remolque de 1,5 x 0,46 m; engancharlo o soltarlo es una Acción.', '50eb (Costly)']
+      ]
+    }
+  },
+
+  // --------------------------------------------------------------------------
+  // 11. CYBERCHAIRS (Interface RED Vol. 1 p.38; DLC pp.2-3) [Claude Code · 2026-11-11] v5.17.0
+  // --------------------------------------------------------------------------
+  {
+    id: 'cyberchairs',
+    title: 'Cyberchairs: sillas de Rocklin Augmentics',
+    subtitle: 'Mercurius y Spider: MOVE 5, todo movimiento y resistentes al EMP',
+    sourceBook: 'interface_red',
+    sourceBookTitle: 'Interface RED Volume 1',
+    era: '2045',
+    categoryBadge: 'MOVILIDAD // EQUIPO',
+    introDescription:
+      'Sillas de ruedas de Rocklin Augmentics, pensadas para la calle y para el combate (Interface RED Vol. 1 p.38). Están en la tienda como equipo: la Mercurius (100eb, Premium) y la Spider (1.000eb, Very Expensive).',
+    howItWorksSteps: [
+      'Se maneja con un Interface Plug, sin manos, o con una mano en el apoyabrazos, que no puede hacer otra cosa.',
+      'Mientras la manejás, tu MOVE pasa a 5 (menos la penalización de armadura) y tenés todas las opciones de movimiento: Run, Jump, Climb, Swim, Get Up.',
+      'Los ataques a la silla van a quien la maneja. Nadie te puede sacar de la silla mientras estés consciente.',
+      'Una Lesión Crítica que baje tu MOVE baja el de la silla. Quick Fix y Treatment se hacen sobre la silla, con las reglas de Lesiones Críticas y Cybertech (Core p.223).',
+      'Ni el EMP (como el pulso de un Microwaver) ni los efectos de Programas que no son Black ICE la inutilizan.'
+    ],
+    keyBenefits: [
+      'Mercurius: el modelo deportivo, el mismo del equipo de Murderball Night City Nuke. Sube escaleras sin penalización.',
+      'Spider: cuatro patas hidráulicas y 4 Option Slots para opciones de Cyberarm, Cyberleg o Cyberlimb. Cuentan como pareadas y cuestan lo mismo que en un Cyberlimb.'
+    ],
+    drawbacksAndRisks: [
+      'La Mercurius no admite opciones de ciberware.',
+      'Si la manejás con la mano, esa mano queda ocupada.'
+    ]
   }
 ];

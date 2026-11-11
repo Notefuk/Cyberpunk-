@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { NpcToEncounter } from './NpcToEncounter';
+import { PunknaughtBuilder } from './PunknaughtBuilder';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
 import { useGmSecretBinding } from '../../sync/gmSecrets';
 import { useGmAccess } from '../../store/gmAccess';
@@ -969,6 +970,9 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
           </>
         )}
       </div>
+
+      {/* v5.17.0 [Claude Code · 2026-11-11]: vehículo jefe de Interface RED Vol. 4 */}
+      <PunknaughtBuilder />
 
       {/* =====================================================================
           SECCIÓN 2: CATÁLOGO MASTER DE 44 ENEMIGOS, GOONS Y JEFES
