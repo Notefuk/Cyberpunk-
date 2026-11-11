@@ -1,0 +1,450 @@
+{
+  "intro": "El Datepath es un sistema para jugar primeras citas en Night City: sirve de prompt de rol y de generador de NPC menores. Se usa como actividad de downtime o entre sesiones, y le da a los personajes contactos nuevos (o una cita desastrosa) y ganchos de aventura para el GM.",
+  "stepsEs": [
+    "Paso 1: tirar 1d100 dos veces en la tabla Keywords para las dos palabras clave del perfil del match; ponerle un nombre de pila (p.3).",
+    "Paso 2: tirar par/impar y luego 1d10 en Where is Your Date? para la zona de la cita (p.4).",
+    "Paso 3: tirar 1d6 en la tabla de esa zona para saber qué cita es (p.4-11).",
+    "Paso 4: tirar 1d10 en How Does Your Date Go?: 1-4 cita buena, 5-8 cita rara, 9-10 plantón (p.11).",
+    "Paso 5: cita buena: 1d6 en Good Date Beginning, Middle y End; luego par/impar para One... Weird... Thing, y si sale impar 1d10 (p.11-13).",
+    "Paso 6: cita rara: 1d6 en Weird Date Beginning, Middle y End, y pasar a la reseña posterior (p.13-14).",
+    "Paso 7: reseña post-cita: par/impar para ver si quieren otra cita; si es par, 1d10 en Aftermath (1-8 te vuelven a contactar, 9-10 te ghostean) (p.15)."
+  ],
+  "tables": [
+    {
+      "id": "keywords", "title": "Keywords", "roll": "1d100 (x2)",
+      "rows": [
+        { "roll": "1-2", "textEs": "Adorable" },
+        { "roll": "3-4", "textEs": "Adventurous" },
+        { "roll": "5-6", "textEs": "Affectionate" },
+        { "roll": "7-8", "textEs": "Ambitious" },
+        { "roll": "9-10", "textEs": "Athlete" },
+        { "roll": "11-12", "textEs": "Baking" },
+        { "roll": "13-14", "textEs": "Brave" },
+        { "roll": "15-16", "textEs": "Caring" },
+        { "roll": "17-18", "textEs": "Charming" },
+        { "roll": "19-20", "textEs": "Cooking" },
+        { "roll": "21-22", "textEs": "Courageous" },
+        { "roll": "23-24", "textEs": "Creative" },
+        { "roll": "25-26", "textEs": "Drinking" },
+        { "roll": "27-28", "textEs": "Elflines Online" },
+        { "roll": "29-30", "textEs": "Exec" },
+        { "roll": "31-32", "textEs": "Fishing" },
+        { "roll": "33-34", "textEs": "Fixer" },
+        { "roll": "35-36", "textEs": "Foodie" },
+        { "roll": "37-38", "textEs": "Funny" },
+        { "roll": "39-40", "textEs": "Gardening" },
+        { "roll": "41-42", "textEs": "Hard Working" },
+        { "roll": "43-44", "textEs": "Hiking" },
+        { "roll": "45-46", "textEs": "Hopeful" },
+        { "roll": "47-48", "textEs": "Hunting" },
+        { "roll": "49-50", "textEs": "Independent" },
+        { "roll": "51-52", "textEs": "Insightful" },
+        { "roll": "53-54", "textEs": "Intelligent" },
+        { "roll": "55-56", "textEs": "Lawman" },
+        { "roll": "57-58", "textEs": "Loving" },
+        { "roll": "59-60", "textEs": "Loyal" },
+        { "roll": "61-62", "textEs": "Media" },
+        { "roll": "63-64", "textEs": "Medtech" },
+        { "roll": "65-66", "textEs": "Modest" },
+        { "roll": "67-68", "textEs": "Netrunner" },
+        { "roll": "69-70", "textEs": "Nomad" },
+        { "roll": "71-72", "textEs": "Optimistic" },
+        { "roll": "73-74", "textEs": "Passionate" },
+        { "roll": "75-76", "textEs": "Patient" },
+        { "roll": "77-78", "textEs": "Physically Fit" },
+        { "roll": "79-80", "textEs": "Quiet" },
+        { "roll": "81-82", "textEs": "Rational" },
+        { "roll": "83-84", "textEs": "Respectful" },
+        { "roll": "85-86", "textEs": "Rockerboy" },
+        { "roll": "87-88", "textEs": "Running" },
+        { "roll": "89-90", "textEs": "Solo" },
+        { "roll": "91-92", "textEs": "Spontaneous" },
+        { "roll": "93-94", "textEs": "Sports" },
+        { "roll": "95-96", "textEs": "Tabletop RPGs" },
+        { "roll": "97-98", "textEs": "Tech" },
+        { "roll": "99-100", "textEs": "Virtuous" }
+      ],
+      "dlcPage": 3
+    },
+    {
+      "id": "where-is-your-date-evens", "title": "Where is Your Date? (Evens)", "roll": "1d10",
+      "rows": [
+        { "roll": "1", "textEs": "Norcal Military Base" },
+        { "roll": "2", "textEs": "Watson Development" },
+        { "roll": "3", "textEs": "New Westbrook" },
+        { "roll": "4", "textEs": "Morro Rock" },
+        { "roll": "5", "textEs": "Executive Zone" },
+        { "roll": "6", "textEs": "Heywood Industrial Zone" },
+        { "roll": "7", "textEs": "Heywood (Santo Domingo)" },
+        { "roll": "8", "textEs": "Rancho Coronado" },
+        { "roll": "9", "textEs": "Outskirts" },
+        { "roll": "10", "textEs": "Reclaimed Perimeter" }
+      ],
+      "dlcPage": 4
+    },
+    {
+      "id": "where-is-your-date-odds", "title": "Where is Your Date? (Odds)", "roll": "1d10",
+      "rows": [
+        { "roll": "1", "textEs": "Little Europe" },
+        { "roll": "2", "textEs": "Upper Marina" },
+        { "roll": "3", "textEs": "University District" },
+        { "roll": "4", "textEs": "Little China" },
+        { "roll": "5", "textEs": "Old Japantown" },
+        { "roll": "6", "textEs": "The Glen" },
+        { "roll": "7", "textEs": "Old Combat Zone" },
+        { "roll": "8", "textEs": "South Night City" },
+        { "roll": "9", "textEs": "Hot Zone" },
+        { "roll": "10", "textEs": "Pacifica Playground" }
+      ],
+      "dlcPage": 4
+    },
+    {
+      "id": "norcal-military-base-date", "title": "NorCal Military Base Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Practicar tiro en el polígono para bajar los nervios." },
+        { "roll": "2", "textEs": "Un curso de cuerdas (rope course)." },
+        { "roll": "3", "textEs": "Comer en la base, donde la comida es bastante buena." },
+        { "roll": "4", "textEs": "Mirar juntos un ejercicio de entrenamiento en vivo." },
+        { "roll": "5", "textEs": "Ir al cine del teatro de la base." },
+        { "roll": "6", "textEs": "Una partida de paintball salvajísima." }
+      ],
+      "dlcPage": 4
+    },
+    {
+      "id": "watson-development-date", "title": "Watson Development Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Fiesta en el lobby sin terminar de una megaestructura en obra." },
+        { "roll": "2", "textEs": "Museo del Petróleo de SovOil." },
+        { "roll": "3", "textEs": "Picnic corporativo en un parque cerca de Watson Central Cubelife." },
+        { "roll": "4", "textEs": "Cita en un izakaya del distrito Kabuki." },
+        { "roll": "5", "textEs": "Sorpresa: te esperan en la entrada Watson del monorriel de alta seguridad." },
+        { "roll": "6", "textEs": "Manifestación del rockerboy local Lucius Rhyne." }
+      ],
+      "dlcPage": 5
+    },
+    {
+      "id": "new-westbrook-date", "title": "New Westbrook Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Ser público en vivo de un show de Network 54." },
+        { "roll": "2", "textEs": "Carrera de Skate Foot cerca de la Firestation #1." },
+        { "roll": "3", "textEs": "Gala de Rocklin Augmentics en su campus." },
+        { "roll": "4", "textEs": "Escalada en el acantilado bajo las oficinas de WorldSat." },
+        { "roll": "5", "textEs": "Cazar un food truck esquivo de la zona." },
+        { "roll": "6", "textEs": "Tomar algo en un Executive Bar." }
+      ],
+      "dlcPage": 5
+    },
+    {
+      "id": "morro-rock-date", "title": "Morro Rock Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Ver una prueba de las puertas de acero del Orbital Massdriver." },
+        { "roll": "2", "textEs": "El lugar perfecto para ver fuegos artificiales." },
+        { "roll": "3", "textEs": "Almuerzo en la cafetería de empleados del Orbital Air Massdriver." },
+        { "roll": "4", "textEs": "Dicen tener un bote amarrado en Morro Rock." },
+        { "roll": "5", "textEs": "Cita doble con alguien de su Family." },
+        { "roll": "6", "textEs": "Primera fila en una pelea clandestina en la obra del Massdriver." }
+      ],
+      "dlcPage": 5
+    },
+    {
+      "id": "executive-zone-date", "title": "Executive Zone Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Golf." },
+        { "roll": "2", "textEs": "Una ronda de tenis en cancha de pasto orgánico real." },
+        { "roll": "3", "textEs": "Brunch en el lugar favorito de la cita." },
+        { "roll": "4", "textEs": "Fiesta en la pileta de una mansión de Beaverville." },
+        { "roll": "5", "textEs": "Tragos en el lounge de negocios del Country Club." },
+        { "roll": "6", "textEs": "Fiesta de máscaras en la mansión de un Exec recién fallecido." }
+      ],
+      "dlcPage": 6
+    },
+    {
+      "id": "heywood-industrial-zone-date", "title": "Heywood Industrial Zone Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Te muestran su última obra de arte urbano." },
+        { "roll": "2", "textEs": "Laser tag en el Zhirafa Office Park." },
+        { "roll": "3", "textEs": "Un speakeasy hecho soldando contenedores de carga." },
+        { "roll": "4", "textEs": "Concierto de música industrial en zona industrial." },
+        { "roll": "5", "textEs": "Un teriyaki muy bueno donde siempre comen." },
+        { "roll": "6", "textEs": "Peleas de drones, pobres GRAF3s." }
+      ],
+      "dlcPage": 6
+    },
+    {
+      "id": "heywood-santo-domingo-date", "title": "Heywood (Santo Domingo) Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Se viene un festival callejero y todos van." },
+        { "roll": "2", "textEs": "Emborracharse con Smash en Metalstorm." },
+        { "roll": "3", "textEs": "Los Aldecaldos hacen un asado." },
+        { "roll": "4", "textEs": "Carrera de Roadbikes." },
+        { "roll": "5", "textEs": "El mole poblano de la abuela." },
+        { "roll": "6", "textEs": "Fiesta esta noche en East Cargo Village." }
+      ],
+      "dlcPage": 6
+    },
+    {
+      "id": "rancho-coronado-date", "title": "Rancho Coronado Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Desayuno en una casa de panqueques." },
+        { "roll": "2", "textEs": "Encuentro en el parque con su perro (totalmente real)." },
+        { "roll": "3", "textEs": "Un trago en su pub de barrio." },
+        { "roll": "4", "textEs": "Manicura y pedicura en el mercado del barrio." },
+        { "roll": "5", "textEs": "Una sesión de rol en vivo (LARP)." },
+        { "roll": "6", "textEs": "Asar salchichas en un cookout de la empresa." }
+      ],
+      "dlcPage": 7
+    },
+    {
+      "id": "outskirts-date", "title": "Outskirts Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Una caminata." },
+        { "roll": "2", "textEs": "Su Family les prestó un girocóptero." },
+        { "roll": "3", "textEs": "Buscar hongos, prometen que es divertido." },
+        { "roll": "4", "textEs": "Probar tiro con arco." },
+        { "roll": "5", "textEs": "Off-road por las tierras baldías." },
+        { "roll": "6", "textEs": "Dicen saber dónde hay una cascada secreta." }
+      ],
+      "dlcPage": 7
+    },
+    {
+      "id": "reclaimed-perimeter-date", "title": "Reclaimed Perimeter Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Bowling en un edificio abandonado." },
+        { "roll": "2", "textEs": "Espeleología urbana." },
+        { "roll": "3", "textEs": "Reunión con unos amigos de la cita." },
+        { "roll": "4", "textEs": "Disparar fuegos artificiales viejos a autos abandonados." },
+        { "roll": "5", "textEs": "Tacos en el camión de un amigo." },
+        { "roll": "6", "textEs": "Encuentro en el diner de toda la noche." }
+      ],
+      "dlcPage": 7
+    },
+    {
+      "id": "little-europe-date", "title": "Little Europe Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Clase de Cooking with Kibble en el Oasis Megamart." },
+        { "roll": "2", "textEs": "Rezar juntos en la iglesia Holy Angels." },
+        { "roll": "3", "textEs": "Noche salvaje en el Short Circuit." },
+        { "roll": "4", "textEs": "Carreras de karts rosa en las oficinas de Danger Gal." },
+        { "roll": "5", "textEs": "Una hermosa cena italiana." },
+        { "roll": "6", "textEs": "Copa de vino viendo la ciudad desde la azotea de Camden Court." }
+      ],
+      "dlcPage": 8
+    },
+    {
+      "id": "upper-marina-date", "title": "Upper Marina Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Partido en el estadio McCartney Field." },
+        { "roll": "2", "textEs": "Alquilar un jetski y recorrer la bahía." },
+        { "roll": "3", "textEs": "Conferencia de prensa o desfile de moda de Ziggurat." },
+        { "roll": "4", "textEs": "Pedir un Johnny Silverhand en el Afterlife." },
+        { "roll": "5", "textEs": "Día de turistas en el tranvía (no se romperá, probablemente)." },
+        { "roll": "6", "textEs": "Ir a pescar." }
+      ],
+      "dlcPage": 8
+    },
+    {
+      "id": "university-district-date", "title": "University District Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Fiesta salvaje fuera del campus, en el University Cargo Bay." },
+        { "roll": "2", "textEs": "Paseo por la naturaleza en Lake Park." },
+        { "roll": "3", "textEs": "Recorrer el museo vivo de Biotechnica en su greendome público." },
+        { "roll": "4", "textEs": "La cita quiere mostrarte su nuevo proyecto de investigación." },
+        { "roll": "5", "textEs": "Concurso grupal de comer: plato Mega Kibbledog por remeras." },
+        { "roll": "6", "textEs": "Concierto del departamento de música en el campus." }
+      ],
+      "dlcPage": 8
+    },
+    {
+      "id": "little-china-date", "title": "Little China Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Un trago en el Forlorn Hope." },
+        { "roll": "2", "textEs": "Mirar vidrieras y comer comida callejera." },
+        { "roll": "3", "textEs": "Masajes juntos." },
+        { "roll": "4", "textEs": "Ir a comprar ropa de segunda mano." },
+        { "roll": "5", "textEs": "Domingo a la mañana: dim sum." },
+        { "roll": "6", "textEs": "Ir juntos a un mercado nocturno." }
+      ],
+      "dlcPage": 9
+    },
+    {
+      "id": "old-japantown-date", "title": "Old Japantown Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Picnic con vista a la Hot Zone." },
+        { "roll": "2", "textEs": "Sushi de cinta transportadora (entre comillas)." },
+        { "roll": "3", "textEs": "Karaoke en un edificio todo de concreto, gran acústica." },
+        { "roll": "4", "textEs": "La cita quiere presentarte a su mejor amigo." },
+        { "roll": "5", "textEs": "Un gran desfile con mucho ambiente." },
+        { "roll": "6", "textEs": "El padre de la cita quiere conocerte." }
+      ],
+      "dlcPage": 9
+    },
+    {
+      "id": "the-glen-date", "title": "The Glen Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Ir de club al Club Atlantis." },
+        { "roll": "2", "textEs": "Tour guiado por el City Hall." },
+        { "roll": "3", "textEs": "Happy hour en un Excellent Bar." },
+        { "roll": "4", "textEs": "Conseguir pan fresco en una panadería local, todo real." },
+        { "roll": "5", "textEs": "Una recaudación de fondos política." },
+        { "roll": "6", "textEs": "Una noche de ópera." }
+      ],
+      "dlcPage": 9
+    },
+    {
+      "id": "old-combat-zone-date", "title": "Old Combat Zone Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "El Jessie James Kosher Deli vale el riesgo." },
+        { "roll": "2", "textEs": "Subir a una azotea abandonada para ver el paisaje." },
+        { "roll": "3", "textEs": "Disparar lanzagranadas a montones de escombros, románticamente." },
+        { "roll": "4", "textEs": "Cita de grafiti con tus propios aerosoles." },
+        { "roll": "5", "textEs": "Ayudar a desmalezar la huerta en la azotea de la cita." },
+        { "roll": "6", "textEs": "Pasar el rato en un shopping abandonado." }
+      ],
+      "dlcPage": 10
+    },
+    {
+      "id": "south-night-city-date", "title": "South Night City Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Almorzar después del turno de tatuaje de la cita." },
+        { "roll": "2", "textEs": "Tomar sol en la playa." },
+        { "roll": "3", "textEs": "Colarse en Playland by the Sea en bote." },
+        { "roll": "4", "textEs": "La cita te quiere presentar a toda la pandilla." },
+        { "roll": "5", "textEs": "Un trago en un bar bullicioso de Sea Nomads." },
+        { "roll": "6", "textEs": "Música en vivo en un gimnasio abandonado." }
+      ],
+      "dlcPage": 10
+    },
+    {
+      "id": "hot-zone-date", "title": "Hot Zone Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Tour histórico por las ruinas." },
+        { "roll": "2", "textEs": "Una noche salvaje en el Totentanz." },
+        { "roll": "3", "textEs": "Meterse a un viejo edificio corporativo." },
+        { "roll": "4", "textEs": "Ayudar a rescatar una pieza de tecnología clásica." },
+        { "roll": "5", "textEs": "Carrera callejera levemente radiactiva." },
+        { "roll": "6", "textEs": "Cenar MREs vencidos bajo el hermoso cielo rojo." }
+      ],
+      "dlcPage": 10
+    },
+    {
+      "id": "pacifica-playground-date", "title": "Pacifica Playground Date", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "La cita quiere compartir su braindance favorito." },
+        { "roll": "2", "textEs": "Picnic en el estacionamiento de Playland by the Sea." },
+        { "roll": "3", "textEs": "Tour tras bambalinas de la sala Holostravaganza de Playland." },
+        { "roll": "4", "textEs": "Cazar conchas (y casquillos) en la playa." },
+        { "roll": "5", "textEs": "Juegos y el Kibble Pineapple Madness de Playland." },
+        { "roll": "6", "textEs": "Picadas (drag racing) en el muelle." }
+      ],
+      "dlcPage": 11
+    },
+    {
+      "id": "how-does-your-date-go", "title": "How Does Your Date Go?", "roll": "1d10",
+      "rows": [
+        { "roll": "1-4", "textEs": "Cita buena: ir a Good Date Beginning." },
+        { "roll": "5-8", "textEs": "Cita rara: ir a Weird Date Beginning." },
+        { "roll": "9-10", "textEs": "Ghosteado: no aparece y nunca sabés por qué; reiniciar o dejar de salir un tiempo." }
+      ],
+      "dlcPage": 11
+    },
+    {
+      "id": "good-date-beginning", "title": "Good Date: Beginning", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Aprendés algo nuevo: tirar en Keywords hasta tener una palabra clave nueva." },
+        { "roll": "2", "textEs": "Cuenta de un amigo: tirar en Your Friends (CP:R p.51)." },
+        { "roll": "3", "textEs": "Cuenta su trabajo de Edgerunner: usar el Lifepath del Role (CP:R p.53)." },
+        { "roll": "4", "textEs": "Descubrís de inmediato algo en común." },
+        { "roll": "5", "textEs": "Tiene un rasgo positivo a elección que no se veía en el perfil." },
+        { "roll": "6", "textEs": "Es muy atractivo/a, posiblemente con bodysculpt." }
+      ],
+      "dlcPage": 11
+    },
+    {
+      "id": "good-date-middle", "title": "Good Date: Middle", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Aprendés algo nuevo: tirar en Keywords hasta tener una palabra clave nueva." },
+        { "roll": "2", "textEs": "Se queja de un enemigo: tirar en Your Enemies (CP:R p.51)." },
+        { "roll": "3", "textEs": "Cuenta una relación previa: 1d10, par terminó bien, impar tirar en Tragic Love Affairs (CP:R p.52)." },
+        { "roll": "4", "textEs": "Conocés su familia: tirar en Original Family Background (CP:R p.49)." },
+        { "roll": "5", "textEs": "Te sorprende con un regalo de 20eb (Everyday) a elección del GM." },
+        { "roll": "6", "textEs": "Se queda callado/a escuchándote hablar toda la cita." }
+      ],
+      "dlcPage": 12
+    },
+    {
+      "id": "good-date-end", "title": "Good Date: End", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Te confía su meta de vida: tirar en Your Life Goal (CP:R p.53)." },
+        { "roll": "2", "textEs": "Te da un consejo útil a elección del GM." },
+        { "roll": "3", "textEs": "Conocés sus valores: tirar en Motivations and Relationships (CP:R p.48)." },
+        { "roll": "4", "textEs": "Está muy interesado/a y quiere otra cita; saltear Another Date? y Aftermath." },
+        { "roll": "5", "textEs": "Un gran talento (elige el GM): Base 16 en la Skill correspondiente." },
+        { "roll": "6", "textEs": "La cita terminó demasiado pronto para aprender más." }
+      ],
+      "dlcPage": 12
+    },
+    {
+      "id": "good-date-one-weird-thing", "title": "Good Date: One... Weird... Thing", "roll": "Par/impar; si impar 1d10",
+      "rows": [
+        { "roll": "1", "textEs": "Comió de una forma extraña." },
+        { "roll": "2", "textEs": "Su padre o madre lo llamó dos veces durante la cita." },
+        { "roll": "3", "textEs": "Habló de su ex. Mucho." },
+        { "roll": "4", "textEs": "Ropa muy manchada y no le importó." },
+        { "roll": "5", "textEs": "Su Agent sonó varias veces durante la cita." },
+        { "roll": "6", "textEs": "No dejó propina." },
+        { "roll": "7", "textEs": "Mintió sobre un dato que aprendiste (elegís cuál)." },
+        { "roll": "8", "textEs": "Llegó media hora tarde." },
+        { "roll": "9", "textEs": "Te confundió con otra persona al principio." },
+        { "roll": "10", "textEs": "Se estaba recuperando de un balazo durante la cita." }
+      ],
+      "dlcPage": 13
+    },
+    {
+      "id": "weird-date-beginning", "title": "Weird Date: Beginning", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Cuenta tres romances trágicos recientes: tirar tres veces en Tragic Love Affairs (CP:R p.52)." },
+        { "roll": "2", "textEs": "No es la persona de las fotos del perfil." },
+        { "roll": "3", "textEs": "Trajo un amigo: tirar en Your Friends (CP:R p.51)." },
+        { "roll": "4", "textEs": "Lleva algo muy extraño, incluso para Night City." },
+        { "roll": "5", "textEs": "Afiliación a pandilla a elección del GM y viene con colores de gang." },
+        { "roll": "6", "textEs": "Mucha cibernética, una cantidad peligrosa; quizás echa chispas." }
+      ],
+      "dlcPage": 13
+    },
+    {
+      "id": "weird-date-middle", "title": "Weird Date: Middle", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Va al baño y no vuelve; empezar con otra cita o dejar de salir un tiempo." },
+        { "roll": "2", "textEs": "Arma una pelea y la termina rápido: Base 16 en Skill de combate a elección del GM." },
+        { "roll": "3", "textEs": "No aprendés nada: pasó la cita al teléfono con su Agent." },
+        { "roll": "4", "textEs": "Le gusta mucho el Smash, quizás también la Synthcoke." },
+        { "roll": "5", "textEs": "Cuenta tres enemigos odiados: tirar tres veces en Your Enemies (CP:R p.51)." },
+        { "roll": "6", "textEs": "Habla de su familia todo el tiempo: tirar en Family Background (CP:R p.49) y Family Crisis (CP:R p.50)." }
+      ],
+      "dlcPage": 14
+    },
+    {
+      "id": "weird-date-end", "title": "Weird Date: End", "roll": "1d6",
+      "rows": [
+        { "roll": "1", "textEs": "Está muy interesado/a y quiere otra cita; saltear Another Date? y Aftermath." },
+        { "roll": "2", "textEs": "Conocés sus valores: tirar en Motivations and Relationships (CP:R p.48)." },
+        { "roll": "3", "textEs": "Te muestra su amuleto de la suerte: tirar en Most Valued Possession (CP:R p.48)." },
+        { "roll": "4", "textEs": "Te da un consejo útil a elección del GM." },
+        { "roll": "5", "textEs": "Te regala 50eb (Costly) en Street Drugs y/o munición a elección del GM." },
+        { "roll": "6", "textEs": "La cita terminó demasiado pronto para aprender más." }
+      ],
+      "dlcPage": 14
+    }
+  ],
+  "otherRules": [
+    { "title": "Do They Say They Want Another Date?", "textEs": "Par/impar: si es par, quieren otra cita y prometen contactarte (ir a Aftermath); si es impar, te rechazan y hay que empezar con otra cita o dejar de salir un tiempo.", "dlcPage": 15 },
+    { "title": "Aftermath", "textEs": "1d10: 1-8 no te ghostean y te contactan de nuevo; 9-10 te ghostean y no volvés a saber de ellos sobre una segunda cita, aunque Night City es chica.", "dlcPage": 15 },
+    { "title": "The Start of a New Romance?", "textEs": "Lo que sigue lo deciden el jugador y el GM: la relación puede florecer o marchitarse.", "dlcPage": 15 },
+    { "title": "Keywords: nombre y ajustes", "textEs": "Después de las dos palabras clave, ponerle un nombre de pila al match; el GM puede cambiar, agregar o quitar Keywords según su campaña.", "dlcPage": 3 },
+    { "title": "Consecuencias para el GM", "textEs": "Más aliados o conocidos para los PJ significan más enemigos de segunda mano y más ganchos de aventura.", "dlcPage": 2 }
+  ],
+  "issues": [
+    "La tabla Keywords está partida en dos columnas en el PDF (1-50 y 51-100); se unificó en una sola.",
+    "Los rows de keywords llevan la palabra en inglés dentro de textEs (no hay traducción)."
+  ]
+}

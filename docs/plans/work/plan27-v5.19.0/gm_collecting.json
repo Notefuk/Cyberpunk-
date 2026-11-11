@@ -1,0 +1,258 @@
+{
+  "intro": "Collecting the Random reúne seis listas que salieron antes en redes de RTG: razones para usar Complementary Skill Checks, reskins de Roles, diez ideas de campaña, 90 combinaciones de multiclase, estilos de moda y veinte sabores de Kibble al azar. Solo la lista de Kibble es una tabla de dado (d100).",
+  "howToUseEs": [
+    "Complementary Skill Checks (CP:R p.130): permiten reintentar un Check fallado como un enfoque nuevo (p.2).",
+    "Una Skill complementaria muestra cómo ser bueno en una cosa influye en otra, por ejemplo Language (Italian) para Bribery (p.2).",
+    "Un Personaje puede ayudar a otro con su propio Check complementario, con +1 (p.2).",
+    "Muchas Skills se vuelven útiles: Wardrobe & Style o Personal Grooming en lo social, Business para Tactics (p.2).",
+    "Dan sabor: transforman 'tiro Melee Weapons' en una descripción de qué se está haciendo, por ejemplo con Weaponstech (p.2).",
+    "Reskin de Roles: se cambia el sabor de un Role y su Role Ability sin tocar reglas; el Lifepath puede necesitar ajustes (p.2-3).",
+    "Ideas de campaña: cada una trae cinco misiones posibles, aparte de los grupos de CP:R p.390-392 (p.3-5).",
+    "Multiclase: cada Role se combina con los otros nueve, con dos ejemplos por combinación (A/B y B/A) (p.6-12).",
+    "Moda: es una herramienta; la falta de la herramienta correcta da -2 (CP:R p.130) y Wardrobe & Style sirve de Skill complementaria (p.12-14).",
+    "Kibble: tirar 1d100 para saber el sabor de la bolsa que lleva un NPC (p.14)."
+  ],
+  "collections": [
+    {
+      "id": "complementary-skill-checks", "title": "Complementary Skill Checks", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Retry failed Skill Checks", "textEs": "Permiten reintentar con un enfoque nuevo." },
+        { "roll": "2", "name": "Being good at one thing impacts another", "textEs": "Una Skill ayuda a otra, ej. Language en Bribery." },
+        { "roll": "3", "name": "One Character can help another", "textEs": "Un PJ ayuda a otro con +1." },
+        { "roll": "4", "name": "Makes many Skills useful", "textEs": "Wardrobe, Grooming y Business ayudan en situaciones comunes." },
+        { "roll": "5", "name": "Flavor", "textEs": "Convierte el tiro en una descripción más rica." }
+      ],
+      "dlcPage": 2
+    },
+    {
+      "id": "reskinning-roles", "title": "Reskinning Roles", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Rockerboy to Grifter", "textEs": "Charismatic Impact sobre identidad de fachada." },
+        { "roll": "2", "name": "Solo to Athlete", "textEs": "Combat Awareness nacido en la arena deportiva." },
+        { "roll": "3", "name": "Netrunner to Thief", "textEs": "Infiltrar con Security Tech, Stealth e Interface." },
+        { "roll": "4", "name": "Tech to Cleaner", "textEs": "Hace desaparecer cuerpos y limpia escenas del crimen." },
+        { "roll": "5", "name": "Medtech to Agent", "textEs": "Cuida al cliente con drogas, ungüentos y apoyo emocional." },
+        { "roll": "6", "name": "Media to Private Investigator", "textEs": "Credibility como rumores y relatos que convencen." },
+        { "roll": "7", "name": "Exec to Mobster", "textEs": "La mafia paga casa y subordinados." },
+        { "roll": "8", "name": "Lawman to Ganger", "textEs": "Backup son miembros o gangs aliadas." },
+        { "roll": "9", "name": "Fixer to Spy", "textEs": "Operator es contactos y cobertura cultural." },
+        { "roll": "10", "name": "Nomad to Racer", "textEs": "Moto como acceso a la flota del equipo de carreras." }
+      ],
+      "dlcPage": 2
+    },
+    {
+      "id": "ten-punk-campaign-ideas", "title": "Ten Punk Campaign Ideas", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Guerrilla Gardeners", "textEs": "Cultivar comida propia contra la Corp." },
+        { "roll": "2", "name": "Family Legacy", "textEs": "Hermanos que quieren robar una herencia de Mister Kernaghan." },
+        { "roll": "3", "name": "Librarians", "textEs": "Recuperar libros para Nostradamus tras el Datakrash." },
+        { "roll": "4", "name": "Food Truck War", "textEs": "Ayudar a Aunt Andy a vender galletas en food truck." },
+        { "roll": "5", "name": "Do-Gooder Clinic", "textEs": "Equipo de una clínica comunitaria, From the Ember." },
+        { "roll": "6", "name": "Prankster Gang", "textEs": "Bromas a las élites, como hacer sangrar un edificio." },
+        { "roll": "7", "name": "Paracy(ber)cology", "textEs": "Show de Pop Media que investiga hechos paranormales." },
+        { "roll": "8", "name": "Sapience Liberation Front", "textEs": "Liberar clones e IAs del control corporativo." },
+        { "roll": "9", "name": "Mr. K's Collectors", "textEs": "Conseguir coleccionables para el Midnight Market de Mr. K." },
+        { "roll": "10", "name": "The Perfect Prison", "textEs": "El grupo despierta en un suburbio de ensueño sin saber por qué." }
+      ],
+      "dlcPage": 3
+    },
+    {
+      "id": "multiclassing-rockerboys", "title": "Multiclassing Ideas: Rockerboys", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Rockerboy/Solo - the Johnny Silverhand", "textEs": "" },
+        { "roll": "2", "name": "Rockerboy/Netrunner - the Virtual Prankster", "textEs": "" },
+        { "roll": "3", "name": "Rockerboy/Tech - the Musical Craftsman", "textEs": "" },
+        { "roll": "4", "name": "Rockerboy/Medtech - the Spiritual Healer", "textEs": "" },
+        { "roll": "5", "name": "Rockerboy/Media - the Influencer", "textEs": "" },
+        { "roll": "6", "name": "Rockerboy/Exec - the Producer", "textEs": "" },
+        { "roll": "7", "name": "Rockerboy/Lawman - the Mascot", "textEs": "" },
+        { "roll": "8", "name": "Rockerboy/Fixer - the Indie Networker", "textEs": "" },
+        { "roll": "9", "name": "Rockerboy/Nomad - the Singing Cowboy", "textEs": "" }
+      ],
+      "dlcPage": 6
+    },
+    {
+      "id": "multiclassing-solos", "title": "Multiclassing Ideas: Solos", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Solo/Rockerboy - the Eurosolo", "textEs": "" },
+        { "roll": "2", "name": "Solo/Netrunner - the Tomb Raider", "textEs": "" },
+        { "roll": "3", "name": "Solo/Tech - the Gun Crafter", "textEs": "" },
+        { "roll": "4", "name": "Solo/Medtech - the Field Medic", "textEs": "" },
+        { "roll": "5", "name": "Solo/Media - the War Correspondent", "textEs": "" },
+        { "roll": "6", "name": "Solo/Exec - the Revolutionary", "textEs": "" },
+        { "roll": "7", "name": "Solo/Lawman - the Bounty Hunter", "textEs": "" },
+        { "roll": "8", "name": "Solo/Fixer - the Arms Dealer", "textEs": "" },
+        { "roll": "9", "name": "Solo/Nomad - the Babysitter", "textEs": "" }
+      ],
+      "dlcPage": 6
+    },
+    {
+      "id": "multiclassing-netrunners", "title": "Multiclassing Ideas: Netrunners", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Netrunner/Rockerboy - the Drone Dancer", "textEs": "" },
+        { "roll": "2", "name": "Netrunner/Solo - the Lone Runner", "textEs": "" },
+        { "roll": "3", "name": "Netrunner/Tech - the Builder", "textEs": "" },
+        { "roll": "4", "name": "Netrunner/Medtech - the MedRaider", "textEs": "" },
+        { "roll": "5", "name": "Netrunner/Media - the Whistle Blower", "textEs": "" },
+        { "roll": "6", "name": "Netrunner/Exec - the Clonerunner", "textEs": "" },
+        { "roll": "7", "name": "Netrunner/Lawman - the NET-tective", "textEs": "" },
+        { "roll": "8", "name": "Netrunner/Fixer - the Information Broker", "textEs": "" },
+        { "roll": "9", "name": "Netrunner/Nomad - the Night Rider", "textEs": "" }
+      ],
+      "dlcPage": 7
+    },
+    {
+      "id": "multiclassing-techs", "title": "Multiclassing Ideas: Techs", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Tech/Rockerboy - the Educator", "textEs": "" },
+        { "roll": "2", "name": "Tech/Solo - the Boom Brigadier", "textEs": "" },
+        { "roll": "3", "name": "Tech/Netrunner - the Security Specialist", "textEs": "" },
+        { "roll": "4", "name": "Tech/Medtech - the Flipper Ripper", "textEs": "" },
+        { "roll": "5", "name": "Tech/Media - the Braindance Tuner", "textEs": "" },
+        { "roll": "6", "name": "Tech/Exec - the Disruptor", "textEs": "" },
+        { "roll": "7", "name": "Tech/Lawman - the CSI", "textEs": "" },
+        { "roll": "8", "name": "Tech/Fixer - the Tech Networker", "textEs": "" },
+        { "roll": "9", "name": "Tech/Nomad - the Restorer", "textEs": "" }
+      ],
+      "dlcPage": 7
+    },
+    {
+      "id": "multiclassing-medtechs", "title": "Multiclassing Ideas: Medtechs", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Medtech/Rockerboy - the Celebrity Doc", "textEs": "" },
+        { "roll": "2", "name": "Medtech/Solo - the Angel", "textEs": "" },
+        { "roll": "3", "name": "Medtech/Netrunner - the Biosculptor", "textEs": "" },
+        { "roll": "4", "name": "Medtech/Tech - the Bad Breaker", "textEs": "" },
+        { "roll": "5", "name": "Medtech/Media - the Secret Hunter", "textEs": "" },
+        { "roll": "6", "name": "Medtech/Exec - the Clinic Operator", "textEs": "" },
+        { "roll": "7", "name": "Medtech/Lawman - the Emergency Responder", "textEs": "" },
+        { "roll": "8", "name": "Medtech/Fixer - Doc Connection", "textEs": "" },
+        { "roll": "9", "name": "Medtech/Nomad - the Family Doctor", "textEs": "" }
+      ],
+      "dlcPage": 8
+    },
+    {
+      "id": "multiclassing-medias", "title": "Multiclassing Ideas: Medias", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Media/Rockerboy - the Documentarian", "textEs": "" },
+        { "roll": "2", "name": "Media/Solo - the Thompson", "textEs": "" },
+        { "roll": "3", "name": "Media/Netrunner - the Virtual Journalist", "textEs": "" },
+        { "roll": "4", "name": "Media/Tech - the Producer", "textEs": "" },
+        { "roll": "5", "name": "Media/Medtech - Storyteller", "textEs": "" },
+        { "roll": "6", "name": "Media/Exec - the Star Reporter", "textEs": "" },
+        { "roll": "7", "name": "Media/Lawman - the Embed", "textEs": "" },
+        { "roll": "8", "name": "Media/Fixer - the Independent Journalist", "textEs": "" },
+        { "roll": "9", "name": "Media/Nomad - the Wandering Eye", "textEs": "" }
+      ],
+      "dlcPage": 9
+    },
+    {
+      "id": "multiclassing-execs", "title": "Multiclassing Ideas: Execs", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Exec/Rockerboy - the Club Owner", "textEs": "" },
+        { "roll": "2", "name": "Exec/Solo - the Gang Leader", "textEs": "" },
+        { "roll": "3", "name": "Exec/Netrunner - the Corp Spy", "textEs": "" },
+        { "roll": "4", "name": "Exec/Tech - the Netwatch Agent", "textEs": "" },
+        { "roll": "5", "name": "Exec/Medtech - the Trauma Captain", "textEs": "" },
+        { "roll": "6", "name": "Exec/Media - the Anchor", "textEs": "" },
+        { "roll": "7", "name": "Exec/Lawman - the Negotiator", "textEs": "" },
+        { "roll": "8", "name": "Exec/Fixer - the Buyer", "textEs": "" },
+        { "roll": "9", "name": "Exec/Nomad - the Ambassador", "textEs": "" }
+      ],
+      "dlcPage": 9
+    },
+    {
+      "id": "multiclassing-lawmen", "title": "Multiclassing Ideas: Lawmen", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Lawman/Rockerboy - the Celebrity Bounty Hunter", "textEs": "" },
+        { "roll": "2", "name": "Lawman/Solo - the C-SWAT", "textEs": "" },
+        { "roll": "3", "name": "Lawman/Netrunner - the NET Cracker", "textEs": "" },
+        { "roll": "4", "name": "Lawman/Tech - the Quartermaster", "textEs": "" },
+        { "roll": "5", "name": "Lawman/Medtech - the Social Worker", "textEs": "" },
+        { "roll": "6", "name": "Lawman/Media - the Psychic Detective", "textEs": "" },
+        { "roll": "7", "name": "Lawman/Exec - the Senior Security", "textEs": "" },
+        { "roll": "8", "name": "Lawman/Fixer - the Evidence Clerk", "textEs": "" },
+        { "roll": "9", "name": "Lawman/Nomad - the Ranger", "textEs": "" }
+      ],
+      "dlcPage": 10
+    },
+    {
+      "id": "multiclassing-fixers", "title": "Multiclassing Ideas: Fixers", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Fixer/Rockerboy - the Old Guard", "textEs": "" },
+        { "roll": "2", "name": "Fixer/Solo - the Monarch", "textEs": "" },
+        { "roll": "3", "name": "Fixer/Netrunner - the Gamemaster", "textEs": "" },
+        { "roll": "4", "name": "Fixer/Tech - the Ultimate Mechanic", "textEs": "" },
+        { "roll": "5", "name": "Fixer/Medtech - the Dealer", "textEs": "" },
+        { "roll": "6", "name": "Fixer/Media - the Gossip Monger", "textEs": "" },
+        { "roll": "7", "name": "Fixer/Exec - the Bookie", "textEs": "" },
+        { "roll": "8", "name": "Fixer/Lawman - the Undercover", "textEs": "" },
+        { "roll": "9", "name": "Fixer/Nomad - the Organizer", "textEs": "" }
+      ],
+      "dlcPage": 11
+    },
+    {
+      "id": "multiclassing-nomads", "title": "Multiclassing Ideas: Nomads", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Nomad/Rockerboy - the Circus Performer", "textEs": "" },
+        { "roll": "2", "name": "Nomad/Solo - the Scout", "textEs": "" },
+        { "roll": "3", "name": "Nomad/Netrunner - the Cargo Hacker", "textEs": "" },
+        { "roll": "4", "name": "Nomad/Tech - the Acquisitions Specialist", "textEs": "" },
+        { "roll": "5", "name": "Nomad/Medtech - the Barber", "textEs": "" },
+        { "roll": "6", "name": "Nomad/Media - the Pirate", "textEs": "" },
+        { "roll": "7", "name": "Nomad/Exec - the Teacher", "textEs": "" },
+        { "roll": "8", "name": "Nomad/Lawman - the Hunter", "textEs": "" },
+        { "roll": "9", "name": "Nomad/Fixer - the Clerk", "textEs": "" }
+      ],
+      "dlcPage": 12
+    },
+    {
+      "id": "cyberpunk-red-fashion", "title": "Cyberpunk RED Fashion", "roll": "-",
+      "rows": [
+        { "roll": "1", "name": "Bag Lady Chic", "textEs": "Trapos reales; sirve de disfraz." },
+        { "roll": "2", "name": "Gang Colors", "textEs": "Ropa de pandilla; peligroso usarla sin ganarla." },
+        { "roll": "3", "name": "Generic Chic", "textEs": "Ropa básica para mezclarse con la multitud." },
+        { "roll": "4", "name": "Bohemian", "textEs": "Aire artístico y excéntrico." },
+        { "roll": "5", "name": "Leisurewear", "textEs": "Ropa cómoda y durable, casual." },
+        { "roll": "6", "name": "Nomad Leathers", "textEs": "Cuero y jeans, estilo Mad Max y Far West." },
+        { "roll": "7", "name": "Asia Pop", "textEs": "Moda juvenil, colorida, vista desde Corea y Japón." },
+        { "roll": "8", "name": "Urban Flash", "textEs": "Streetwear tecnológico con luces y pantallas." },
+        { "roll": "9", "name": "Businesswear", "textEs": "Traje y corbata; necesario para hacerse pasar por Corp." },
+        { "roll": "10", "name": "High Fashion", "textEs": "Diseñador exclusivo; te hace notar como blanco o como VIP." }
+      ],
+      "dlcPage": 12
+    },
+    {
+      "id": "random-kibble-flavors", "title": "Twenty Random Kibble Flavors", "roll": "1d100",
+      "rows": [
+        { "roll": "1-5", "name": "Fizzy", "textEs": "Burbujea en la lengua, es normal." },
+        { "roll": "6-10", "name": "Chili Lime", "textEs": "Ácido y picante." },
+        { "roll": "11-15", "name": "Protein Kibble", "textEs": "Para quienes levantan pesas." },
+        { "roll": "16-20", "name": "Kibble SportFlakes", "textEs": "Muy bueno, tapa los intestinos." },
+        { "roll": "21-25", "name": "Extra Fluffy Pancake", "textEs": "Se le agrega almíbar de Continental Brands." },
+        { "roll": "26-30", "name": "Kibble SportMix", "textEs": "El Kibble oficial del Night City Heat." },
+        { "roll": "31-35", "name": "Fruit Fantasy", "textEs": "La ensalada de frutas falsa más sólida." },
+        { "roll": "36-40", "name": "Popcorn", "textEs": "Con sabor original a manteca." },
+        { "roll": "41-45", "name": "Caramel Crunch Popcorn", "textEs": "Si entrecerrás los ojos parece real." },
+        { "roll": "46-50", "name": "Bacon Cheddar Dumpburger", "textEs": "Sorprendentemente popular." },
+        { "roll": "51-55", "name": "Kiwi", "textEs": "Probá los trópicos." },
+        { "roll": "56-60", "name": "Cheese", "textEs": "Brilla en la oscuridad, es normal." },
+        { "roll": "61-65", "name": "Lemon Ginger", "textEs": "Comer fino sin gastar de más." },
+        { "roll": "66-70", "name": "Aromatic Beef", "textEs": "Huele, pero no dicen a qué." },
+        { "roll": "71-75", "name": "Paprika", "textEs": "El Kibble más rojo." },
+        { "roll": "76-80", "name": "Pineapple Pizza", "textEs": "Piña en pizza en una bolsa de Kibble." },
+        { "roll": "81-85", "name": "Collagen Boost", "textEs": "Para darte un lifting." },
+        { "roll": "86-90", "name": "Kibble XXL", "textEs": "Trozos del tamaño de una pelota de golf." },
+        { "roll": "91-95", "name": "Mystery", "textEs": "Sabor desconocido, y seguirá así." },
+        { "roll": "96-100", "name": "Adobo", "textEs": "Finge tener ajo, vinagre y sal reales." }
+      ],
+      "dlcPage": 14
+    }
+  ],
+  "otherRules": [],
+  "issues": [
+    "Solo la lista de Kibble usa dado (1d100); las demás son listas sin tirada, se numeraron 1..N por orden del libro.",
+    "El texto de las 90 combinaciones de multiclase se omitió (textEs vacío); solo se guardó nombre en inglés y Role pareja.",
+    "Fashion in Play (p.13-14): regla de -2 por herramienta equivocada (CP:R p.130) resumida solo en howToUseEs."
+  ]
+}

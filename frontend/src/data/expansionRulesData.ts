@@ -681,5 +681,43 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
       'La Mercurius no admite opciones de ciberware.',
       'Si la manejás con la mano, esa mano queda ocupada.'
     ]
+  },
+
+  // --------------------------------------------------------------------------
+  // 12. STICKBALL (Interface RED Vol. 4 pp.32-35; DLC pp.2-5) [Claude Code · 2026-11-11] v5.19.0
+  // --------------------------------------------------------------------------
+  {
+    id: 'stickball',
+    title: 'Stickball: el deporte de combate de las bandas',
+    subtitle: 'Dos equipos de tres, palos con electroimán y tres bolas electrificadas',
+    sourceBook: 'interface_red',
+    sourceBookTitle: 'Interface RED Volume 4',
+    era: '2045',
+    categoryBadge: 'DEPORTE // COMBATE NO LETAL',
+    introDescription:
+      'El deporte callejero con el que las bandas de Night City arreglan sus problemas sin tiroteo (Interface RED Vol. 4 pp.32-35). Se juega como un combate, con Iniciativa, y el equipo (Stickball Stick y munición de goma) está en la tienda.',
+    howItWorksSteps: [
+      'La cancha (p.32): un tercero pinta con glow paint tres círculos (uno por equipo y uno neutral) con una bola en cada uno, y seis X de salida. Los obstáculos del lugar se quedan.',
+      'Reglas (p.32): 3 por equipo, sin cambios. Prohibido: vehículos a motor, munición de goma no sancionada y todo lo que cause Lesiones Críticas o baje a alguien de 1 HP. No hay tiempo: se juega con Iniciativa hasta que un equipo tiene las tres bolas en su círculo. Se pueden sacar bolas del círculo rival.',
+      'Pick Up (p.33): reemplaza medio ataque de ROF 2; levantás una bola a 2 m o menos con el palo o la mano. Con la mano: 3d6 directo a los HP, nunca por debajo de 1 (quedás Unconscious), también si empezás tu Turno con la bola en la mano.',
+      'Guarding (p.33): reemplaza medio ataque de ROF 2, con el palo. Athletics enfrentado contra alguien a 2 m o menos; si ganás, lo seguís hasta 2x tu MOVE. -2 a sus pases, a los pases que le hagan y a sus robos.',
+      'Passing/Shooting (p.33): reemplaza medio ataque de ROF 2. Athletics contra el DV de la tabla de abajo; a mano, hasta 24 m. Si fallás, el GM deja la bola en el suelo dentro de esa distancia.',
+      'Stealing (p.33): una Acción con el palo en la mano. Ataque de ROF 1 a 2 m o menos con cualquier arma y su skill, contra Athletics del que tiene la bola. Con Grab (Core p.177), además le hacés 3d6 a los HP.',
+      'Desafío (pp.33-34): después de un Facedown (Core p.194), el que gana o el que pierde puede pedir un partido en vez de Backing Down. No ir o negarse: -1 de Reputation al equipo. El ganador puede pedir un partido "escalado" con una condición extra (tabla 1d10 del libro): negarse cuesta -2 de Reputation a cada integrante.'
+    ],
+    keyBenefits: [
+      'Permitido siempre: Inline Skates, Skateboards y ciberware no letal (sobre todo Skate Feet). Se usa armadura salvo que se prohíba (p.34).',
+      'Armas populares: Microwaver, Acid Paintballs, Heavy Pistols con Stickball Sanctioned Rubber Ammunition, Smoke Grenades, Stun Batons y Stun Guns (p.34).',
+      'El Stickball Stick hace 1d6 más por cada bola cargada que lleve, hasta 3d6 (p.34).'
+    ],
+    drawbacksAndRisks: [
+      'Agarrar la bola con la mano duele: 3d6 a los HP.',
+      'Afuera no se interviene, salvo para sacar heridos; el partido no se detiene (p.32).',
+      'Tabla de pases: el texto del libro da DV 16 para 0-6 m y DV 15 para 7-12 m; así queda.'
+    ],
+    referenceTable: {
+      headers: ['Distancia (m/yds)', '0-6', '7-12', '13-25', '26-50', '51-100', '101-200', '201-400'],
+      rows: [['DV de Athletics', '16', '15', '15', '17', '20', '22', '25']]
+    }
   }
 ];
