@@ -187,8 +187,11 @@ function WeatherSection() {
 
   const rollWeather = () => {
     const d = parseDie(season.die)!;
-    const t = season.rows.find((r) => r.roll === String(rollDice(d)))!;
-    const c = season.rows.find((r) => r.roll === String(rollDice(d)))!;
+    // Dos tiradas separadas: una para la temperatura y otra para las condiciones (IR2 p.16).
+    const tRoll = String(rollDice(d));
+    const cRoll = String(rollDice(d));
+    const t = season.rows.find((r) => r.roll === tRoll)!;
+    const c = season.rows.find((r) => r.roll === cRoll)!;
     let text = `Temperatura: ${t.temperature}. Condiciones: ${c.conditions}.`;
     if (/Strange/i.test(c.conditions)) {
       const s = rollOnTable(STRANGE_WEATHER.rows, STRANGE_WEATHER.die);
