@@ -117,6 +117,20 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.19.0] - 2026-11-11 (Plan 27 V: pestaña Tablas del GM) [Claude Code · 2026-11-11]
+* **Category**: Herramientas del GM (plan 27; auditoría `docs/canon-audit/v5.19.0-tablas-del-gm.md`).
+* **What Changed**:
+  * Pestaña nueva "🎲 TABLAS DEL GM", solo para el GM (mismo filtro `canSeeGmOnly` que RED CHROME CARGO), con 5 secciones y botón de tirada en cada tabla:
+    * Logros y cajas de botín (Interface RED Vol. 4 pp.24-29): 30 logros para tildar por jugador o por Crew y las Mystery Boxes de Mr. Amaze (1d10 para la caja, 1d6 para el contenido).
+    * Clima de Night City (Interface RED Vol. 2 pp.16-19): tabla por estación (elige sola la del mes), Strange Weather y reglas de temperatura y lluvia; "Mostrar a la mesa" lo manda como handout.
+    * Digital Dating (DLC, también en IR3): 31 tablas del Datepath.
+    * Collecting the Random (DLC, también en IR3): 15 listas, entre ellas los sabores de Kibble (1d100).
+    * Salvaging Night City (DLC, también en IR3): dónde buscar, categorías, DV por valor y peligros.
+  * Stickball (Interface RED Vol. 4 pp.32-35) en el Compendio de sistemas, con la tabla de pases.
+  * Las tablas se generan con `scripts/gen_gm_tables.py` desde los JSON de `docs/plans/work/plan27-v5.19.0/`.
+* **Files Modified**: `App.tsx` (pestaña y `GM_ONLY_TABS`), `features/gmtables/GmTablesView.tsx` (nuevo), `engine/gmTables.ts` (nuevo), `data/gmTables/*.ts` (nuevos, generados), `data/expansionRulesData.ts`, `scripts/gen_gm_tables.py` (nuevo); test `engine/__tests__/gmTables.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 654 tests (54 nuevos: cada tabla cubre todo su dado) y build. En local: caja de botín elegida y abierta, 15 tiradas de clima de noviembre, las 5 secciones se dibujan; consola limpia.
+
 ### [v5.18.0] - 2026-11-11 (Plan 27 IV: vivienda de los Interface RED) [Claude Code · 2026-11-11]
 * **Category**: Creador y catálogo (plan 27; auditoría `docs/canon-audit/v5.18.0-vivienda-interface-red.md`).
 * **What Changed**:

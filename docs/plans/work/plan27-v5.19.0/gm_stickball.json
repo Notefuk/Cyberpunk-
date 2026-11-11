@@ -1,0 +1,128 @@
+{
+ "intro": "Stickball es el deporte callejero de las gangas de Night City: dos equipos de tres, palos con electroimán y bolas electrificadas, con armas no letales. Se usa para resolver conflictos sin tiroteo.",
+ "setupEs": [
+  "Un tercero pinta con glow paint tres círculos (un goal circle por equipo y uno neutral) con una bola en cada uno, y seis Xs como posiciones de inicio (p.2).",
+  "Los obstáculos del terreno se quedan y hay que sortearlos (p.2).",
+  "Sin timeouts ni tiempo límite; se juega como combate y empieza con Initiative (p.2-3).",
+  "Equipos de 3 en cancha, sin reemplazos; sin vehículos motorizados, sin Rubber Ammunition no sancionada, sin métodos que causen Critical Injuries ni bajen a alguien de 1 HP (p.2).",
+  "Quien está fuera no interfiere salvo para sacar heridos; el juego no para (p.2).",
+  "Gana el equipo que pone las tres bolas en su círculo; es válido sacar bolas del círculo rival (p.3)."
+ ],
+ "actions": [
+  {
+   "name": "Pick Up",
+   "textEs": "Acción que reemplaza la mitad de un Attack de 2 ROF: levantar una bola a hasta 2 m/yds con el Stick o la mano. Sin Stick: 3d6 directo a HP, nunca baja de 1 HP (Unconscious). Igual al empezar el Turn con la bola.",
+   "dlcPage": 3
+  },
+  {
+   "name": "Guarding",
+   "textEs": "Reemplaza la mitad de un Attack de 2 ROF con Stick: Contested Athletics contra objetivo a 2 m/yds. Si ganás, lo seguís hasta 2x MOVE; si hace un Trick, check al mismo DV o parás.",
+   "dlcPage": 3
+  },
+  {
+   "name": "Passing/Shooting",
+   "textEs": "Reemplaza la mitad de un Attack de 2 ROF: Athletics con DV según Range Table; a mano máximo 24 m/yds. Falla: la bola cae a criterio del GM. -2 si pasás Guarded o a un Guarded.",
+   "dlcPage": 3
+  },
+  {
+   "name": "Stealing",
+   "textEs": "Acción con Stick: Attack 1 ROF a 2 m/yds con cualquier arma y su Skill, opuesto a Athletics del objetivo; robás una bola. -2 si estás Guarded. Con Grab (CP:R p.177): 3d6 a HP.",
+   "dlcPage": 3
+  }
+ ],
+ "passingRangeTable": {
+  "headers": [
+   "0 to 6 m/yds",
+   "7 to 12 m/yds",
+   "13 to 25 m/yds",
+   "26 to 50 m/yds",
+   "51 to 100 m/yds",
+   "101 to 200 m/yds",
+   "201 to 400 m/yds"
+  ],
+  "rows": [
+   [
+    "DV16",
+    "DV15",
+    "DV15",
+    "DV17",
+    "DV20",
+    "DV22",
+    "DV25"
+   ]
+  ],
+  "dlcPage": 3
+ },
+ "escalationTable": {
+  "roll": "1d10",
+  "rows": [
+   {
+    "roll": "1",
+    "textEs": "Let's do this without armor."
+   },
+   {
+    "roll": "2",
+    "textEs": "You can't beat us on our home turf."
+   },
+   {
+    "roll": "3",
+    "textEs": "We're going to play in a restricted area."
+   },
+   {
+    "roll": "4",
+    "textEs": "You can have an extra player."
+   },
+   {
+    "roll": "5",
+    "textEs": "Why don't we make it interesting? 100eb."
+   },
+   {
+    "roll": "6",
+    "textEs": "We can beat you with one hand cuffed behind our backs."
+   },
+   {
+    "roll": "7",
+    "textEs": "Let's stream our match on the Data Pool."
+   },
+   {
+    "roll": "8",
+    "textEs": "Your best three, against my best three."
+   },
+   {
+    "roll": "9",
+    "textEs": "Let's play for something symbolic to your gang. Winner gets it as a trophy!"
+   },
+   {
+    "roll": "10",
+    "textEs": "Losing team shaves their heads and bodies."
+   }
+  ],
+  "dlcPage": 4
+ },
+ "otherRules": [
+  {
+   "title": "Making a Challenge",
+   "textEs": "Con un match pedido en un Facedown (CP:R p.194), violencia entre las partes antes del match es cobarde. Lo pide ganador o perdedor en vez de Backing Down (-2). Rechazar o no aparecer: -1 Reputation al equipo. Si lo interrumpen, se reprograma sin límite.",
+   "dlcPage": 3
+  },
+  {
+   "title": "Escalated Match",
+   "textEs": "El ganador del Facedown puede pedir un match escalado con condición adicional (tabla 1d10 si hace falta). Rechazar o no aparecer: -2 Reputation a cada integrante.",
+   "dlcPage": 4
+  },
+  {
+   "title": "Stickball Stick in play",
+   "textEs": "Durante el partido su daño sube 1d6 por bola electrificada cargada, hasta 3d6 máximo. Con Stick no se sufre la descarga al levantar bolas.",
+   "dlcPage": 4
+  },
+  {
+   "title": "Permitted gear",
+   "textEs": "Inline Skates, Skateboards y Cyberware no letal (sobre todo Skate Feet) siempre permitidos; armadura necesaria salvo que esté prohibida. Armas populares: Microwaver, Acid Paintballs, Heavy Handguns con Sanctioned Rubber Ammunition, Smoke Grenades, Stun Batons, Stun Guns.",
+   "dlcPage": 3
+  }
+ ],
+ "issues": [
+  "passingRangeTable: DVs 16,15,15,17,20,22,25 tal como salen del texto volcado; el 16 en 0-6 m/yds parece raro frente a 15 en 7-12, verificar contra el PDF.",
+  "En otherRules 'Stickball Stick in play' la frase 'sin descarga con Stick' se infiere de Pick Up (p.3), no de texto literal en p.4."
+ ]
+}

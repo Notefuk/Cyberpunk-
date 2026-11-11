@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.19.0',
+    date: '2026-11-11',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'GM',
+    title: 'Tablas del GM: logros, cajas de botín, clima, citas, colecciones y chatarra',
+    summary: 'Pestaña nueva solo para el GM, con las tablas de los Interface RED y sus DLC listas para tirar: 30 logros para tildar y las Mystery Boxes de Mr. Amaze, el clima de Night City por estación (y Strange Weather) que se puede mostrar a la mesa, el Datepath de Digital Dating, las listas de Collecting the Random y Salvaging Night City. Y las reglas de Stickball en el Compendio de sistemas.',
+    highlights: [
+      'Logros por jugador y cajas de botín con su tirada.',
+      'Clima del día según el mes, con Strange Weather y "Mostrar a la mesa".',
+      'Digital Dating, Collecting the Random, Salvaging y Stickball.'
+    ],
+    filesTouched: ['frontend/src/features/gmtables/GmTablesView.tsx', 'frontend/src/engine/gmTables.ts', 'frontend/src/data/gmTables/', 'frontend/src/App.tsx'],
+    metricsBadge: 'v5.19.0 • Plan 27 • GM'
+  },
+  {
     version: 'v5.18.0',
     date: '2026-11-11',
     author: 'Claude Code',
@@ -1671,6 +1687,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.19.0': true,
     'v5.18.0': true,
     'v5.17.0': true,
     'v5.16.0': true,

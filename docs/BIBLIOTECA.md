@@ -17,10 +17,10 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | Estado | PDFs |
 |---|---|
-| ✅ Adaptado | 22 |
-| 🟡 A medias | 9 |
-| ⬜ Sin empezar | 23 |
-| ➖ No se adapta como datos | 25 |
+| ✅ Adaptado | 28 |
+| 🟡 A medias | 7 |
+| ⬜ Sin empezar | 20 |
+| ➖ No se adapta como datos | 24 |
 | **Total** | **79** |
 
 ## Core-Rules (3)
@@ -35,13 +35,13 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | PDF | Estado | Detalle |
 |---|---|---|
-| Interface-RED-Volume-4 (Cyberfists of Fury) | 🟡 | 27 formas de Martial Arts (v4.5.1); Gearmas y equipo de Stickball (v5.16.0); Zonda Metrocar y Punknaught (v5.17.0); Corporate Conapts & Studio Apartments (v5.18.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
+| Interface-RED-Volume-4 (Cyberfists of Fury) | 🟡 | 27 formas de Martial Arts (v4.5.1); Gearmas y equipo de Stickball (v5.16.0); Zonda Metrocar y Punknaught (v5.17.0); Corporate Conapts & Studio Apartments (v5.18.0); Achievements and Loot Boxes y Stickball (v5.19.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
 | Danger-Gal-Dossier | 🟡 | Muchos datos cargados; plan 6 en pausa (v4.7.1 fichas y facciones, v4.7.2 New Gear) |
 | Black-Chrome-Tech-and-Style-Guide | ✅ | Ítems (v5.12.0), los 31 vehículos con Nomad Access (v5.13.0), los 6 Night Markets con sus puestos y Economics 101 (v5.14.0), plan 26 [Claude Code · 2026-11-06] |
 | CEMK-Edgerunners-Handbook-2077-Lore-Guide | 🟡 | Solo algunas citas |
-| Interface-RED-Volume-3 | 🟡 | Going Metal (FBC); Woodchipper y Midnight por sus DLC (v5.16.0); Spinning Your Wheels por su DLC (v5.17.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
+| Interface-RED-Volume-3 | 🟡 | Going Metal (FBC); Woodchipper y Midnight por sus DLC (v5.16.0); Spinning Your Wheels por su DLC (v5.17.0); Digital Dating, Collecting the Random y Salvaging por sus DLC (v5.19.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
 | Interface-RED-Volume-1 | 🟡 | Old Guns Never Die y 6 drones (v5.16.0); Cyberchairs (v5.17.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
-| Interface-RED-Volume-2 | 🟡 | Exotics of 2045: 17 paquetes y 3 implantes (v5.15.0); equipo de clima (v5.16.0); Cargo Containers & Cube Hotels (v5.18.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
+| Interface-RED-Volume-2 | 🟡 | Exotics of 2045: 17 paquetes y 3 implantes (v5.15.0); equipo de clima (v5.16.0); Cargo Containers & Cube Hotels (v5.18.0); tablas de Night City Weather (v5.19.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
 | Night-City-Gang-Guide | ⬜ | Pandillas de Night City |
 
 ## Going Metal (1, suelto en la raíz)
@@ -109,18 +109,18 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | PDF | Estado | Detalle |
 |---|---|---|
-| Night-City-Weather-Environmental-Rules | 🟡 | 5 ítems por Interface RED Vol. 2 (v5.16.0); las tablas, en la v5.19.0 [Claude Code · 2026-11-10] |
+| Night-City-Weather-Environmental-Rules | ✅ | 5 ítems (v5.16.0); tablas por estación, Strange Weather y temperatura en la pestaña Tablas del GM, por Interface RED Vol. 2 (v5.19.0) [Claude Code · 2026-11-11] |
 | Breaking-Your-Stuff-Gear-Durability-Rules | ⬜ | Durabilidad del equipo |
 | Going-Quiet-Stealth-and-Infiltration-Rules | ⬜ | Sigilo e infiltración |
-| Salvaging-Night-City-Downtime-Scavenging | ⬜ | Rescate de chatarra en downtime |
+| Salvaging-Night-City-Downtime-Scavenging | ✅ | En la pestaña Tablas del GM (v5.19.0) [Claude Code · 2026-11-11] |
 | All-About-Agents-Smartphone-AI-Guide | ⬜ | Agents |
 | Your-New-Best-Friend-Fixers-and-Contacts | ⬜ | Contactos |
 | Cargo-Containers-and-Cube-Hotels | ✅ | 10 Cube Hotels y 10 Cargo Containers con tirada 1d10 en el creador, muebles y accesorios, por Interface RED Vol. 2 pp.35-37 (v5.18.0) [Claude Code · 2026-11-11] |
-| Achievements-and-Loot-Boxes | ⬜ | Logros y cajas de botín |
+| Achievements-and-Loot-Boxes | ✅ | 30 logros y 10 cajas en la pestaña Tablas del GM, por Interface RED Vol. 4 (v5.19.0) [Claude Code · 2026-11-11] |
 | Single-Player-Mode-Solo-Rules | ⬜ | Jugar solo |
 | Single-Player-Mode-Plus | ⬜ | Jugar solo, extra |
-| Stickball-Combat-Sport | 🟡 | Equipo por Interface RED Vol. 4 (v5.16.0); las reglas, en la v5.19.0 [Claude Code · 2026-11-10] |
-| Digital-Dating-in-the-Dark-Future | ⬜ | Citas |
+| Stickball-Combat-Sport | ✅ | Equipo (v5.16.0) y reglas en el Compendio de sistemas (v5.19.0), por Interface RED Vol. 4 [Claude Code · 2026-11-11] |
+| Digital-Dating-in-the-Dark-Future | ✅ | Las 31 tablas del Datepath en la pestaña Tablas del GM (v5.19.0) [Claude Code · 2026-11-11] |
 | VA-11-Hall-A-Crossover-Mixing-Drinks | ⬜ | Tragos (crossover) |
 | Night-City-Tarot-Combat-Deck | ⬜ | Mazo de combate |
 
@@ -151,6 +151,6 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 |---|---|---|
 | Listen-Up-to-JonJonTheWise-GM-Advice | ➖ | Consejos |
 | Night-City-Hook-Book-Plot-Hooks | ➖ | Ganchos de aventura (se podría sumar como tabla al Fixer Deck) |
-| Collecting-the-Random-Ideas-and-Tables | ➖ | Tablas aleatorias (ídem) |
+| Collecting-the-Random-Ideas-and-Tables | ✅ | 15 listas en la pestaña Tablas del GM (v5.19.0); el plan 27 lo sumó al alcance [Claude Code · 2026-11-11] |
 | Tales-of-the-RED-Plus-Bonus-Content | ➖ | Extra de aventuras |
 
