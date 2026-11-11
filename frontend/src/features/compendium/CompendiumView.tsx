@@ -2848,7 +2848,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
         /* [Claude Code · 2026-11-06] v5.13.0: vehículos del Core (pp.189-191) y de Black Chrome (pp.58-84) */
         <div className="bg-[#12141f] border border-[#262c3e] p-3 rounded-xs chamfer-card space-y-3">
           <p className="text-[11px] font-mono-code text-[#94a3b8]">
-            Vehículos genéricos del Core (pp.189-191) y los 31 de Black Chrome (pp.58-84), que son vehículos del Core con mejoras de serie.
+            Vehículos genéricos del Core (pp.189-191), los 31 de Black Chrome (pp.58-84), que son vehículos del Core con mejoras de serie, y los de los Interface RED: la bici (Spinning Your Wheels p.3) y el Zonda Metrocar (Interface RED Vol. 4 p.68).
             Para comprarlos o tomarlos del Family Motorpool del Nomad (Nomad Access, Black Chrome p.9), andá a NET, ROLES &amp; VEHÍCULOS.
           </p>
           <VehicleCatalogList includeCore />

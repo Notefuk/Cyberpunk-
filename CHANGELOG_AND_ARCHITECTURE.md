@@ -117,6 +117,16 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.17.0] - 2026-11-11 (Plan 27 III: movilidad de los Interface RED) [Claude Code · 2026-11-11]
+* **Category**: Vehículos, catálogo y bestiario (plan 27; auditoría `docs/canon-audit/v5.17.0-movilidad-interface-red.md`).
+* **What Changed**:
+  * Vehículos nuevos en el Compendium y el garaje: la bici de Spinning Your Wheels (pp.3-7) y el Zonda Metrocar (Interface RED Vol. 4 p.68). El modo VEHÍCULOS filtra también por Interface RED.
+  * Equipo: Inline Skates y Skateboard (Spinning Your Wheels p.5); Mercurius y Spider Cyberchair (Interface RED Vol. 1 p.38).
+  * Compendio de sistemas: Spinning Your Wheels (reglas de la bici, cansancio, 14 mejoras y trucos) y Cyberchairs.
+  * Bestiario del GM: armador del Dreaded Punknaught (Interface RED Vol. 4 pp.38-44), con piezas, ficha, construcción, manejo y tabla de muerte.
+* **Files Modified**: `data/interfaceRedVehicles.ts` (nuevo), `data/blackChromeVehicles.ts` (`sourceTitle`), `engine/vehicleCatalog.ts`, `engine/punknaught.ts` (nuevo), `features/gm/PunknaughtBuilder.tsx` (nuevo), `features/gm/EnemiesCompendiumPanel.tsx`, `features/compendium/VehicleCatalogList.tsx`, `features/compendium/CompendiumView.tsx`, `features/netroles/NetAndRolesDeckView.tsx`, `data/expansionRulesData.ts`, `data/core-rules.cprpack.json`, `data/systemDocsAndChangelogData.ts`; test `engine/__tests__/mobilityCatalog.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 594 tests (14 nuevos) y build. En local: la bici se compra y entra al garaje con su origen; el Punknaught con un Extra Chassis y un motor da SDP 80, 30 asientos y 20 MOVE; consola limpia.
+
 ### [v5.16.0] - 2026-11-10 (Plan 27 II: armas, cyberdecks y equipo de los Interface RED) [Claude Code · 2026-11-10]
 * **Category**: Catálogo y reglas (plan 27; auditoría `docs/canon-audit/v5.16.0-equipo-interface-red.md`).
 * **What Changed**:
