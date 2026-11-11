@@ -14,6 +14,7 @@ import {
   ROLES_INTERACTIVE_GUIDES 
 } from './netAndRolesData';
 import { BLACK_CHROME_VEHICLES } from './blackChromeVehicles';
+import { INTERFACE_RED_VEHICLES } from './interfaceRedVehicles';
 import { CORE_VEHICLES } from './creation';
 
 // ============================================================================
@@ -1041,7 +1042,7 @@ export const SYSTEM_METRICS_SUMMARY: SystemMetricsSummary = {
   totalFbcBodies: FBC_13_BODIES.length,
   totalFbcCyberware: FBC_16_CYBERWARE.length,
   totalQuickhacks: QUICKHACKS_2077_CATALOG.length,
-  totalVehicles: BLACK_CHROME_VEHICLES.length + CORE_VEHICLES.vehicles.length,
+  totalVehicles: BLACK_CHROME_VEHICLES.length + INTERFACE_RED_VEHICLES.length + CORE_VEHICLES.vehicles.length,
   totalNetPresets: NET_ARCHITECTURE_PRESETS.length,
   totalRoles: ROLES_INTERACTIVE_GUIDES.length
 };

@@ -64,6 +64,7 @@ import { getInterfaceRank, netActionsForInterface, canUseQuickhacks, medicalTech
 import { SYNTHESIS_DV, SYNTHESIS_MATERIALS_EB, synthesisDoses, canSynthesize, rollMedicalCheck } from '../../engine/medicalRules';
 import { CORE_VEHICLES } from '../../data/creation';
 import { BLACK_CHROME_VEHICLES, type BlackChromeVehicle } from '../../data/blackChromeVehicles';
+import { INTERFACE_RED_VEHICLES } from '../../data/interfaceRedVehicles';
 import { bcVehicleToOwned, nomadCanTake, motorpoolSlotsLeft, motorpoolVehiclesTaken } from '../../engine/vehicleCatalog';
 import { VehicleCatalogList } from '../compendium/VehicleCatalogList';
 import type { CoreVehicleEntry } from '../../data/creation/types';
@@ -3024,10 +3025,10 @@ export const NetAndRolesDeckView: React.FC = () => {
           <div className="bg-[#090b10] border border-[#1b2234] p-4 rounded-xs space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
               <h3 className="font-tech text-sm font-bold text-white uppercase">
-                VEHÍCULOS DE BLACK CHROME // CONCESIONARIO
+                VEHÍCULOS DE BLACK CHROME E INTERFACE RED // CONCESIONARIO
               </h3>
               <span className="text-[10px] font-mono-code text-[#64748b]">
-                {BLACK_CHROME_VEHICLES.length} vehículos • Black Chrome pp.58-84
+                {BLACK_CHROME_VEHICLES.length + INTERFACE_RED_VEHICLES.length} vehículos • Black Chrome pp.58-84 • Interface RED
               </span>
             </div>
             <p className="text-[10px] font-mono-code text-[#94a3b8]">

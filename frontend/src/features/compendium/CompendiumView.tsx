@@ -9,6 +9,7 @@ import { canInstallAnother, countInstalls } from '../../engine/cyberwareEffects'
 import { SOURCEBOOKS_CATALOG, EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
 import { VehicleCatalogList } from './VehicleCatalogList';
 import { BLACK_CHROME_VEHICLES } from '../../data/blackChromeVehicles';
+import { INTERFACE_RED_VEHICLES } from '../../data/interfaceRedVehicles';
 import { CORE_VEHICLES } from '../../data/creation';
 import {
   getWeaponClassAndRebuildInfo,
@@ -1199,7 +1200,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
               : 'bg-[#12141f] text-slate-400 hover:text-slate-200 border border-[#20273a]'
           }`}
         >
-          <span>🚗 VEHÍCULOS ({BLACK_CHROME_VEHICLES.length + CORE_VEHICLES.vehicles.length}: CORE Y BLACK CHROME)</span>
+          <span>🚗 VEHÍCULOS ({BLACK_CHROME_VEHICLES.length + INTERFACE_RED_VEHICLES.length + CORE_VEHICLES.vehicles.length}: CORE, BLACK CHROME E INTERFACE RED)</span>
         </button>
         <button
           onClick={() => setCompendiumMode('systems')}
