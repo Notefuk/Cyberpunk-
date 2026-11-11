@@ -38,9 +38,9 @@ export function motorpoolSlotsLeft(vehicles: Pick<OwnedVehicle, 'notes'>[] | und
   return Math.max(0, motoRank - motorpoolVehiclesTaken(vehicles));
 }
 
-/** Copia un vehículo de Black Chrome al garaje, con sus mejoras de serie. */
+/** Copia un vehículo de Black Chrome (o de los Interface RED, v5.17.0) al garaje, con sus mejoras de serie. */
 export function bcVehicleToOwned(v: BlackChromeVehicle, origin: string, now: number = Date.now()): OwnedVehicle {
-  const notes = [`Origen: Black Chrome p.${v.sourcePage} (${origin})`, `${v.baseType}`, ...v.notes].join(' • ');
+  const notes = [`Origen: ${v.sourceTitle ?? 'Black Chrome'} p.${v.sourcePage} (${origin})`, `${v.baseType}`, ...v.notes].join(' • ');
   return {
     instanceId: `veh-inst-${v.id}-${now}`,
     catalogId: v.id,

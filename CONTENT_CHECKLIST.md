@@ -179,6 +179,7 @@
   - [x] **Tope de terapia con las piezas del cuerpo y volver a un cuerpo viejo** (Going Metal pp.94-95): `engine/fbcTherapy.ts`, v5.15.0 [Claude Code · 2026-11-10]
   - [x] **Ciberware de Interface RED**: Must Have Cyberware Deals (12), The 12 Days of Cybermas (12) y Exotics of 2045 (17 paquetes y 3 implantes, IR2 pp.66-74), v5.15.0 [Claude Code · 2026-11-10]
   - [x] **Equipo de Interface RED**: Woodchipper's Garage (12 armas, vuelve el Sternmeyer M-02), Midnight with the Upload (15 cyberdecks y 11 Hardware), 12 Days of Gearmas (12), 6 drones, equipo de clima y de Stickball, Old Guns Never Die, v5.16.0 [Claude Code · 2026-11-10]
+  - [x] **Movilidad de Interface RED**: la bici y el Zonda Metrocar en vehículos, patines, skate, Cyberchairs Mercurius y Spider, reglas de Spinning Your Wheels y Cyberchairs, armador del Dreaded Punknaught en el bestiario, v5.17.0 [Claude Code · 2026-11-11]
 
 ### 2. `NIGHT CITY 2045` (Interactive Atlas & Campaign Gazetteer — Planeado para Fase 5 / Premium Expansion)
 *Módulo integral de cartografía táctica urbana, geopolítica distrital y generador narrativo de misiones para Director de Juego y jugadores.*

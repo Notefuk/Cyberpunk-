@@ -17,9 +17,9 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | Estado | PDFs |
 |---|---|
-| ✅ Adaptado | 18 |
+| ✅ Adaptado | 21 |
 | 🟡 A medias | 9 |
-| ⬜ Sin empezar | 27 |
+| ⬜ Sin empezar | 24 |
 | ➖ No se adapta como datos | 25 |
 | **Total** | **79** |
 
@@ -35,12 +35,12 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | PDF | Estado | Detalle |
 |---|---|---|
-| Interface-RED-Volume-4 (Cyberfists of Fury) | 🟡 | 27 formas de Martial Arts (v4.5.1); Gearmas y equipo de Stickball (v5.16.0); el resto, en el plan 27 [Claude Code · 2026-11-10] |
+| Interface-RED-Volume-4 (Cyberfists of Fury) | 🟡 | 27 formas de Martial Arts (v4.5.1); Gearmas y equipo de Stickball (v5.16.0); Zonda Metrocar y Punknaught (v5.17.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
 | Danger-Gal-Dossier | 🟡 | Muchos datos cargados; plan 6 en pausa (v4.7.1 fichas y facciones, v4.7.2 New Gear) |
 | Black-Chrome-Tech-and-Style-Guide | ✅ | Ítems (v5.12.0), los 31 vehículos con Nomad Access (v5.13.0), los 6 Night Markets con sus puestos y Economics 101 (v5.14.0), plan 26 [Claude Code · 2026-11-06] |
 | CEMK-Edgerunners-Handbook-2077-Lore-Guide | 🟡 | Solo algunas citas |
-| Interface-RED-Volume-3 | 🟡 | Cargada la parte de Going Metal (cuerpos FBC); el resto, sin revisar |
-| Interface-RED-Volume-1 | 🟡 | Old Guns Never Die y 6 drones (v5.16.0); el resto, en el plan 27 [Claude Code · 2026-11-10] |
+| Interface-RED-Volume-3 | 🟡 | Going Metal (FBC); Woodchipper y Midnight por sus DLC (v5.16.0); Spinning Your Wheels por su DLC (v5.17.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
+| Interface-RED-Volume-1 | 🟡 | Old Guns Never Die y 6 drones (v5.16.0); Cyberchairs (v5.17.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
 | Interface-RED-Volume-2 | 🟡 | Exotics of 2045: 17 paquetes y 3 implantes (v5.15.0); el resto, en el plan 27 [Claude Code · 2026-11-10] |
 | Night-City-Gang-Guide | ⬜ | Pandillas de Night City |
 
@@ -90,7 +90,7 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 |---|---|---|
 | Hornets-Pharmacy-Chemical-Wonderland | ✅ | Drogas (v4.6.2) |
 | The-12-Days-of-Gunmas-v1.3 | ✅ | Armas (v4.6.2) |
-| The-12-Days-of-Gearmas-v1.01 | ✅ | 12 ítems por Interface RED Vol. 4 (v5.16.0); el Zonda Metrocar, en la v5.17.0 [Claude Code · 2026-11-10] |
+| The-12-Days-of-Gearmas-v1.01 | ✅ | 12 ítems por Interface RED Vol. 4 (v5.16.0) y el Zonda Metrocar en los vehículos (v5.17.0) [Claude Code · 2026-11-11] |
 | The-12-Days-of-Cybermas | ✅ | 12 ciberware (v5.15.0) [Claude Code · 2026-11-10] |
 | The-12-Days-of-REDmas | ⬜ | Varios |
 | The-12-Days-of-Vehiclemas-v1.0 | ⬜ | Vehículos |
@@ -100,8 +100,8 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 | Midnight-with-the-Upload-New-Cyberdecks | ✅ | 15 cyberdecks y 11 Hardware (v5.16.0) [Claude Code · 2026-11-10] |
 | CEMK-DLC-02-Cyberware-Enhancements | ⬜ | Ciberware 2077 |
 | Black-Chrome-Plus-Bonus-Content | ✅ | 12 ítems y las guías de estilo (v5.12.0, plan 26) [Claude Code · 2026-11-06] |
-| Cyberchairs-New-Options-in-Mobility | ⬜ | Sillas de ruedas cyber |
-| Spinning-Your-Wheels-Bicycles-and-Skates | ⬜ | Bicis y patines |
+| Cyberchairs-New-Options-in-Mobility | ✅ | Mercurius y Spider en la tienda y sus reglas, por Interface RED Vol. 1 p.38 (v5.17.0) [Claude Code · 2026-11-11] |
+| Spinning-Your-Wheels-Bicycles-and-Skates | ✅ | La bici en el garaje, patines, skate, mejoras y trucos (v5.17.0) [Claude Code · 2026-11-11] |
 | The-Fast-and-the-Furriest-Biotechnica-Exotics | ⬜ | Pregens con paquetes Exotic (Fin Diesel, Anne Bonny); los paquetes ya están por Interface RED Vol. 2 [Claude Code · 2026-11-10] |
 | Invented-Tech-Upgrades-Guide | ⬜ | Mejoras inventadas (Tech) |
 
@@ -131,7 +131,7 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 | Hardened-Mooks | ✅ | v4.7.0 |
 | Hardened-Lieutenants | ✅ | v4.7.0 |
 | Hardened-Mini-Bosses | ✅ | v4.7.0 |
-| Hardened-The-Dreaded-Punknaught-Boss-Vehicle | ⬜ | Quedó para después en la v4.7.0 y no se hizo |
+| Hardened-The-Dreaded-Punknaught-Boss-Vehicle | ✅ | Armador en el bestiario del GM, por Interface RED Vol. 4 pp.38-44 (v5.17.0) [Claude Code · 2026-11-11] |
 | Everyday-People-Civilian-NPCs | ⬜ | PNJ civiles |
 
 ### Elflines Online (juego dentro del juego)

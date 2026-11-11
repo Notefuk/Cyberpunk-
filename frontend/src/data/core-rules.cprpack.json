@@ -8433,6 +8433,51 @@
       "sourcePage": 6,
       "era": "2045",
       "slots": 2
+    },
+    {
+      "id": "syw-inline-skates",
+      "name": "Inline Skates",
+      "cost": 50,
+      "costTier": "Costly",
+      "description": "Patines en línea de Yang's Wheels. Suman 4 m/yds al moverte con la Acción Run. Ponerlos o sacarlos cuesta una Acción y, puestos, no podés usar las opciones guardadas en una pierna (Cyberleg o de carne). A criterio del GM, una tarea de piernas o equilibrio con los patines puestos puede ser Complex Task (-2, Core p.130). Trucos: Simple DV13, Advanced DV15, Pro DV17 (p.6).",
+      "sourcePage": 5,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Spinning Your Wheels",
+      "era": "2045"
+    },
+    {
+      "id": "syw-skateboard",
+      "name": "Skateboard",
+      "cost": 50,
+      "costTier": "Costly",
+      "description": "Skate de Yang's Wheels. Suma 4 m/yds al moverte con la Acción Run, en suelo plano o en bajada. A criterio del GM, una tarea de piernas o equilibrio arriba del skate puede ser Complex Task (-2, Core p.130). Trucos: Simple DV13, Advanced DV15, Pro DV17 (p.6).",
+      "sourcePage": 5,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Spinning Your Wheels",
+      "era": "2045"
+    },
+    {
+      "id": "ir1-mercurius-cyberchair",
+      "name": "Rocklin Augmentics Mercurius Cyberchair",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Silla de ruedas deportiva de Rocklin Augmentics; no admite opciones de ciberware. Se maneja con un Interface Plug o con una mano en el apoyabrazos (esa mano no hace otra cosa). Mientras la manejás: tu MOVE pasa a 5 (menos la penalización de armadura) y podés hacer todo movimiento (Run, Jump, Climb, Swim, Get Up); sube escaleras sin penalización; los ataques a la silla van a vos; no te pueden sacar de la silla mientras estés consciente. Una Lesión Crítica que baje tu MOVE baja el de la silla y se cura en la silla (Core p.223). EMP y efectos de Programas que no son Black ICE no la inutilizan.",
+      "sourcePage": 38,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 1",
+      "era": "2045"
+    },
+    {
+      "id": "ir1-spider-cyberchair",
+      "name": "Rocklin Augmentics Spider Cyberchair",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Silla tope de gama de Rocklin Augmentics, con cuatro patas hidráulicas. Se maneja con un Interface Plug o con una mano en el apoyabrazos (esa mano no hace otra cosa). Mientras la manejás: tu MOVE pasa a 5 (menos la penalización de armadura) y podés hacer todo movimiento; los ataques a la silla van a vos; no te pueden sacar de la silla mientras estés consciente. Una Lesión Crítica que baje tu MOVE baja el de la silla y se cura en la silla (Core p.223). Tiene 4 Option Slots para opciones de Cyberarm, Cyberleg o Cyberlimb, que cuentan como pareadas y cuestan lo mismo que en un Cyberlimb. Ni la silla ni sus opciones se inutilizan con EMP o con efectos de Programas que no son Black ICE.",
+      "slots": 4,
+      "sourcePage": 38,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 1",
+      "era": "2045"
     }
   ],
   "programs": [

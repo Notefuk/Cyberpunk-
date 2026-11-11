@@ -3,13 +3,14 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { BLACK_CHROME_VEHICLES, type BlackChromeVehicle } from '../../data/blackChromeVehicles';
 import { CORE_VEHICLES } from '../../data/creation';
+import { INTERFACE_RED_VEHICLES } from '../../data/interfaceRedVehicles';
 
 type ClassFilter = 'all' | 'air' | 'land' | 'sea';
-type BookFilter = 'all' | 'core' | 'bc';
+type BookFilter = 'all' | 'core' | 'bc' | 'ir';
 
 interface Row {
   key: string;
-  book: 'core' | 'bc';
+  book: 'core' | 'bc' | 'ir';
   name: string;
   company: string;
   vehicleClass: 'air' | 'land' | 'sea';
@@ -34,9 +35,10 @@ function countUpgrades(list: string[]): string[] {
   return [...counts.entries()].map(([u, n]) => (n > 1 ? `${u} x${n}` : u));
 }
 
-const BC_ROWS: Row[] = BLACK_CHROME_VEHICLES.map((v) => ({
+// v5.17.0 [Claude Code · 2026-11-11]: también los vehículos de los Interface RED (bici y Zonda Metrocar).
+const BC_ROWS: Row[] = [...BLACK_CHROME_VEHICLES, ...INTERFACE_RED_VEHICLES].map((v) => ({
   key: v.id,
-  book: 'bc',
+  book: v.sourceTitle ? 'ir' : 'bc',
   name: v.name,
   company: v.company,
   vehicleClass: v.vehicleClass,
@@ -49,7 +51,7 @@ const BC_ROWS: Row[] = BLACK_CHROME_VEHICLES.map((v) => ({
   costTier: v.priceCategory,
   upgrades: countUpgrades(v.upgrades),
   notes: v.notes,
-  page: `Black Chrome p.${v.sourcePage}`,
+  page: `${v.sourceTitle ?? 'Black Chrome'} p.${v.sourcePage}`,
   booth: v.booth,
   summary: v.summaryEs,
   bc: v,
@@ -79,7 +81,7 @@ const CLASS_LABEL: Record<Row['vehicleClass'], string> = { air: 'Aéreo', land: 
 
 export function VehicleCatalogList({ includeCore = false, renderActions }: {
   includeCore?: boolean;
-  /** Botones por vehículo de Black Chrome (garaje). Sin esto, la lista es de solo lectura. */
+  /** Botones por vehículo de Black Chrome o Interface RED (garaje). Sin esto, la lista es de solo lectura. */
   renderActions?: (veh: BlackChromeVehicle) => ReactNode;
 }) {
   const [cls, setCls] = useState<ClassFilter>('all');
@@ -91,7 +93,7 @@ export function VehicleCatalogList({ includeCore = false, renderActions }: {
     const needle = q.trim().toLowerCase();
     return all.filter((r) =>
       (cls === 'all' || r.vehicleClass === cls) &&
-      (!includeCore || book === 'all' || r.book === book) &&
+      (book === 'all' || r.book === book) &&
       (!needle || `${r.name} ${r.company} ${r.baseType}`.toLowerCase().includes(needle)));
   }, [includeCore, cls, book, q]);
 
@@ -112,9 +114,9 @@ export function VehicleCatalogList({ includeCore = false, renderActions }: {
             {c === 'all' ? 'Todos' : CLASS_LABEL[c]}
           </button>
         ))}
-        {includeCore && (['all', 'core', 'bc'] as BookFilter[]).map((b) => (
+        {(['all', ...(includeCore ? ['core'] as const : []), 'bc', 'ir'] as BookFilter[]).map((b) => (
           <button key={b} className={chip(book === b)} onClick={() => setBook(b)}>
-            {b === 'all' ? 'Todos los libros' : b === 'core' ? 'Core' : 'Black Chrome'}
+            {b === 'all' ? 'Todos los libros' : b === 'core' ? 'Core' : b === 'bc' ? 'Black Chrome' : 'Interface RED'}
           </button>
         ))}
         <span className="text-[10px] font-mono-code text-[#64748b]">{rows.length} vehículos</span>
@@ -131,7 +133,7 @@ export function VehicleCatalogList({ includeCore = false, renderActions }: {
                 </span>
               </div>
               <div className="text-[10px] font-mono-code text-[#64748b]">
-                {r.company}{r.book === 'bc' ? ` • ${r.baseType}` : ''} • {r.page}
+                {r.company}{r.book !== 'core' ? ` • ${r.baseType}` : ''} • {r.page}
               </div>
               <span className="text-[10px] font-mono-code text-[#f59e0b] block mt-0.5">
                 {r.cost.toLocaleString()} €$ • {r.costTier}
@@ -139,7 +141,7 @@ export function VehicleCatalogList({ includeCore = false, renderActions }: {
               <div className="text-[10px] font-mono-code text-[#94a3b8] space-y-0.5 mt-1.5">
                 <div>
                   SDP: <strong className="text-white">{r.sdp}</strong> • Plazas: <strong className="text-white">{r.seats}</strong> •{' '}
-                  {r.book === 'bc' ? 'Nomad Access' : ''} <strong className="text-[#f97316]">{r.nomadAccess}</strong>
+                  {r.book !== 'core' ? 'Nomad Access' : ''} <strong className="text-[#f97316]">{r.nomadAccess}</strong>
                 </div>
                 <div>Velocidad: {r.speed}</div>
                 {r.upgrades.length > 0 && <div>Mejoras: <span className="text-white">{r.upgrades.join(' • ')}</span></div>}

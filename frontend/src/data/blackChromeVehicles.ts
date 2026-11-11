@@ -25,6 +25,8 @@ export interface BlackChromeVehicle {
   sourcePage: number;
   /** Puestos de Night Market donde se vende (BC pp.131-156). */
   booth: string[];
+  /** v5.17.0 [Claude Code · 2026-11-11]: libro de origen si no es Black Chrome (vehículos de los Interface RED). */
+  sourceTitle?: string;
 }
 
 export const BLACK_CHROME_VEHICLES: BlackChromeVehicle[] = [

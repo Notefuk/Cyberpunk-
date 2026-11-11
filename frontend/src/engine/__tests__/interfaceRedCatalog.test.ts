@@ -82,7 +82,8 @@ describe('Armas, cyberdecks y equipo de Interface RED (plan 27, v5.16.0)', () =>
   });
 
   it('drones (IR1 pp.59-63), equipo de clima (IR2 p.20) y de Stickball (IR4 p.34)', () => {
-    expect(inBook('gear', 'Interface RED Volume 1')).toHaveLength(6);
+    // v5.17.0: las Cyberchairs (IR1 p.38) también son del Vol. 1; los drones son los de pp.59-63.
+    expect(inBook('gear', 'Interface RED Volume 1').filter((i) => (i.sourcePage ?? 0) >= 59 && (i.sourcePage ?? 0) <= 63)).toHaveLength(6);
     expect(inBook('gear', 'Interface RED Volume 2').filter((i) => i.sourcePage === 20)).toHaveLength(5);
     expect([...inBook('gear', 'Interface RED Volume 4'), ...inBook('weapons', 'Interface RED Volume 4')].filter((i) => i.sourcePage === 34)).toHaveLength(2);
   });

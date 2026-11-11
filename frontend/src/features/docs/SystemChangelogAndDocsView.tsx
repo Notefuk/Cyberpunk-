@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.17.0',
+    date: '2026-11-11',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Vehículos',
+    title: 'Bicis, patines, Cyberchairs, Zonda Metrocar y el Dreaded Punknaught',
+    summary: 'Llega la movilidad de los Interface RED: la bici de Yang\'s Wheels con sus mejoras y trucos, patines y skate, las Cyberchairs Mercurius y Spider, el Zonda Metrocar y, en el bestiario del GM, un armador del Dreaded Punknaught.',
+    highlights: [
+      'Bici y Zonda Metrocar en el Compendium y el garaje, con filtro por Interface RED.',
+      'Patines, skate y Cyberchairs en la tienda; sus reglas, en el Compendio de sistemas.',
+      'Punknaught: elegís las piezas y sale la ficha, el DV de construcción y la tabla de muerte.'
+    ],
+    filesTouched: ['frontend/src/data/interfaceRedVehicles.ts', 'frontend/src/engine/punknaught.ts', 'frontend/src/features/gm/PunknaughtBuilder.tsx', 'frontend/src/data/expansionRulesData.ts'],
+    metricsBadge: 'v5.17.0 • Plan 27 • Movilidad'
+  },
+  {
     version: 'v5.16.0',
     date: '2026-11-10',
     author: 'Claude Code',
@@ -1639,6 +1655,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.17.0': true,
     'v5.16.0': true,
     'v5.15.0': true,
     'v5.14.1': true,
