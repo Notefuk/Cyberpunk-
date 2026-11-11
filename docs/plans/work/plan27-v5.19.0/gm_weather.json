@@ -1,0 +1,269 @@
+{
+ "intro": "Guía del clima inestable de Night City tras el cambio climático y la 4th Corporate War: niebla, lluvia ácida, lluvia de sangre y vientos radiactivos. Sirve para ambientar y, si se quiere, para meter modificadores mecánicos en acciones al aire libre.",
+ "howToUseEs": [
+  "Para el clima del día se tira dos veces en la tabla del mes: una por Temperature y otra por Current Conditions (p.2).",
+  "Con un 6 en Current Conditions se tira dos veces en Strange Weather (1d10): una por la condición y otra por la duración (p.2).",
+  "El GM puede elegir en vez de tirar, y re-tirar un nuevo Current Condition cuando termina o durante un evento extraño (p.3)."
+ ],
+ "seasons": [
+  {
+   "id": "dec-feb",
+   "title": "Weather: December to February",
+   "roll": "1d6",
+   "rows": [
+    {
+     "roll": "1",
+     "name": "Clear",
+     "effectEs": "Temperature: Cold (Around 35°F/2°C)"
+    },
+    {
+     "roll": "2",
+     "name": "Light Rain/Sleet",
+     "effectEs": "Temperature: Cold (Around 40°F/4°C)"
+    },
+    {
+     "roll": "3",
+     "name": "Overcast",
+     "effectEs": "Temperature: Cold (Around 40°F/4°C)"
+    },
+    {
+     "roll": "4",
+     "name": "Overcast",
+     "effectEs": "Temperature: Cool (Around 50°F/10°C)"
+    },
+    {
+     "roll": "5",
+     "name": "Heavy Rain/Sleet",
+     "effectEs": "Temperature: Cool (Around 50°F/10°C)"
+    },
+    {
+     "roll": "6",
+     "name": "Strange (go to Strange Weather)",
+     "effectEs": "Temperature: Cool (Around 60°F/15°C)"
+    }
+   ],
+   "dlcPage": 3
+  },
+  {
+   "id": "mar-may",
+   "title": "Weather: March to May",
+   "roll": "1d6",
+   "rows": [
+    {
+     "roll": "1",
+     "name": "Clear",
+     "effectEs": "Temperature: Cold (Around 40°F/4°C)"
+    },
+    {
+     "roll": "2",
+     "name": "Light Rain",
+     "effectEs": "Temperature: Cool (Around 50°F/10°C)"
+    },
+    {
+     "roll": "3",
+     "name": "Overcast",
+     "effectEs": "Temperature: Cool (Around 50°F/10°C)"
+    },
+    {
+     "roll": "4",
+     "name": "Light Rain",
+     "effectEs": "Temperature: Cool (Around 50°F/10°C)"
+    },
+    {
+     "roll": "5",
+     "name": "Heavy Rain",
+     "effectEs": "Temperature: Warm (Around 60°F/15°C)"
+    },
+    {
+     "roll": "6",
+     "name": "Strange (go to Strange Weather)",
+     "effectEs": "Temperature: Warm (Around 70°F/21°C)"
+    }
+   ],
+   "dlcPage": 3
+  },
+  {
+   "id": "jun-aug",
+   "title": "Weather: June to August",
+   "roll": "1d6",
+   "rows": [
+    {
+     "roll": "1",
+     "name": "Light Rain",
+     "effectEs": "Temperature: Warm (Around 60°F/15°C)"
+    },
+    {
+     "roll": "2",
+     "name": "Clear",
+     "effectEs": "Temperature: Warm (Around 70°F/21°C)"
+    },
+    {
+     "roll": "3",
+     "name": "Overcast",
+     "effectEs": "Temperature: Warm (Around 70°F/21°C)"
+    },
+    {
+     "roll": "4",
+     "name": "Overcast",
+     "effectEs": "Temperature: Hot (Around 80°F/27°C)"
+    },
+    {
+     "roll": "5",
+     "name": "Clear",
+     "effectEs": "Temperature: Hot (Around 80°F/27°C)"
+    },
+    {
+     "roll": "6",
+     "name": "Strange (go to Strange Weather)",
+     "effectEs": "Temperature: Hot (Around 90°F/32°C)"
+    }
+   ],
+   "dlcPage": 3
+  },
+  {
+   "id": "sep-nov",
+   "title": "Weather: September to November",
+   "roll": "1d6",
+   "rows": [
+    {
+     "roll": "1",
+     "name": "Light Rain/Sleet",
+     "effectEs": "Temperature: Cool (Around 40°F/4°C)"
+    },
+    {
+     "roll": "2",
+     "name": "Clear",
+     "effectEs": "Temperature: Warm (Around 60°F/15°C)"
+    },
+    {
+     "roll": "3",
+     "name": "Overcast",
+     "effectEs": "Temperature: Warm (Around 60°F/15°C)"
+    },
+    {
+     "roll": "4",
+     "name": "Overcast",
+     "effectEs": "Temperature: Warm (Around 60°F/15°C)"
+    },
+    {
+     "roll": "5",
+     "name": "Clear",
+     "effectEs": "Temperature: Warm (Around 70°F/21°C)"
+    },
+    {
+     "roll": "6",
+     "name": "Strange (go to Strange Weather)",
+     "effectEs": "Temperature: Hot (Around 80°F/27°C)"
+    }
+   ],
+   "dlcPage": 3
+  }
+ ],
+ "strangeWeather": {
+  "roll": "1d10",
+  "rows": [
+   {
+    "roll": "1",
+    "name": "Radioactive Windstorm",
+    "effectEs": "Dura 1d6 x 10 minutos. Sin Radiation Suit o similar: expuesto a radiación alta (CP:R p.181). Ráfagas a criterio del GM, duran 1d6 Rounds (p.5)."
+   },
+   {
+    "roll": "2",
+    "name": "Ash Storm",
+    "effectEs": "Dura 1d6 x 10 minutos. Más de 1 min sin Nasal Filters/Anti-Smog Mask: como Vial of Poison (CP:R p.355) y Foreign Object Critical Injury sin Bonus Damage, no tratable dentro. GM puede aplicar -2 a checks (p.4)."
+   },
+   {
+    "roll": "3",
+    "name": "Flooding",
+    "effectEs": "Dura 1d6 días. Calles con pocos centímetros de agua; subsuelo se inunda. Vadear zona muy inundada usa 'other form of movement' (CP:R p.169) (p.5)."
+   },
+   {
+    "roll": "4",
+    "name": "Blood Rain",
+    "effectEs": "Dura 1d6 horas. Tirar 1d6: 1-3 actúa como Acid Rain; 4-6 una vez por minuto, sin protección, como Vial of Biotoxin (CP:R p.355). GM puede aplicar -1 a checks (p.4)."
+   },
+   {
+    "roll": "5",
+    "name": "Acid Rain",
+    "effectEs": "Dura 1d6 horas. Por cada minuto completo sin protección, se ablanda 1 SP de toda la armadura puesta (p.4)."
+   },
+   {
+    "roll": "6",
+    "name": "Deadly Thunderstorm",
+    "effectEs": "Dura 1d6 x 10 minutos. Cada 10 min tirar 1d6: 1-3 rayo lejano; 4-6 cae en lo más alto cercano. Impactado: 6d6 daño al cuerpo y efecto flashbang (CP:R p.346). GM puede aplicar -2 (p.5)."
+   },
+   {
+    "roll": "7",
+    "name": "Inversion Smog",
+    "effectEs": "Dura 1d6 días. Más de 1 min sin Nasal Filters/Anti-Smog Mask: como Vial of Poison (CP:R p.355). GM puede aplicar -4 a checks (p.5)."
+   },
+   {
+    "roll": "8",
+    "name": "Cold Snap (if Temperature Cool or Cold) OR Heat Wave (if Temperature Warm or Hot)",
+    "effectEs": "Dura 1d6 días. Cold Snap: bajo cero, reemplaza la Temperature, aplica Exposure (CP:R p.181), hielo negro, -2 sobre hielo a criterio GM. Heat Wave: reemplaza Temperature, Exposure, Armor Penalty a REF/DEX/MOVE +2 (p.4-5)."
+   },
+   {
+    "roll": "9",
+    "name": "Dust Storm",
+    "effectEs": "Dura 1d6 x 10 minutos. Más de 5 min sin Nasal Filters/Anti-Smog Mask: Foreign Object Critical Injury sin Bonus Damage, no tratable dentro. GM puede aplicar -2 a checks (p.5)."
+   },
+   {
+    "roll": "10",
+    "name": "Blackout",
+    "effectEs": "Dura 1d6 días. Sin electricidad, CitiNet ni comunicaciones en la zona sin generador; no se llama ni se conecta al Data Pool. Zona: 1d10 cuadras si es al azar (p.4)."
+   }
+  ],
+  "dlcPage": 3
+ },
+ "temperature": [
+  {
+   "name": "Cold Temperature",
+   "range": "Around 35-40°F (2-4°C)",
+   "effectEs": "Bajo la tolerancia normal; sin ropa adecuada se sufre daño por Exposure (CP:R p.181).",
+   "dlcPage": 4
+  },
+  {
+   "name": "Cool/Warm Temperature",
+   "range": "Cool: 40-60°F (4-15°C); Warm: 60-70°F (15-21°C)",
+   "effectEs": "Clima cómodo; sin efecto mecánico.",
+   "dlcPage": 4
+  },
+  {
+   "name": "Hot Temperature",
+   "range": "Around 80-90°F (27-32°C)",
+   "effectEs": "Todo Armor Penalty previo a REF, DEX y MOVE aumenta en 1 (ej. -2 pasa a -3).",
+   "dlcPage": 4
+  }
+ ],
+ "otherRules": [
+  {
+   "title": "Heavy Rain/Sleet",
+   "textEs": "Superficies resbalosas y poca visibilidad; GM puede aplicar -2 a checks apropiados, incluidos Perception y ataques a distancia.",
+   "dlcPage": 5
+  },
+  {
+   "title": "Light Rain/Sleet",
+   "textEs": "No reduce visibilidad pero resbala; GM puede aplicar -1 a checks como Athletics para trepar o Drive Land Vehicle.",
+   "dlcPage": 5
+  },
+  {
+   "title": "Cold Snap",
+   "textEs": "Reemplaza Temperature, aplica Exposure (CP:R p.181), hielo negro; -2 a criterio GM en checks sobre hielo.",
+   "dlcPage": 4
+  },
+  {
+   "title": "Heat Wave",
+   "textEs": "Reemplaza Temperature, aplica Exposure (CP:R p.181) y suma +2 al Armor Penalty de REF/DEX/MOVE (ej. -2 pasa a -4).",
+   "dlcPage": 5
+  },
+  {
+   "title": "Foreign Object (Ash/Dust Storm)",
+   "textEs": "Ejemplo: DV13 Resist Torture/Drugs como Vial of Poison (2d6 a HP); con la Critical Injury, 5 daño a HP al moverse más de 4 m/yds por Turn.",
+   "dlcPage": 4
+  }
+ ],
+ "issues": [
+  "Tablas de estación: 'name' guarda Current Conditions y la Temperature va en effectEs; los efectos mecánicos de cada condición están en strangeWeather/otherRules.",
+  "Temperature.range de Cool/Warm/Hot derivado de las tablas de estación, no dado explícitamente en el libro (el texto de p.2 cita medias de low 40s a low 90s)."
+ ]
+}

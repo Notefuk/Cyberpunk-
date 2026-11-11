@@ -1,0 +1,169 @@
+{
+ "intro": "Actividad de downtime: se rebusca chatarra en zonas de ruinas para conseguir equipo usable o vendible. Hace falta conocimiento, un tech toolkit y forma de acarrear lo hallado, y es peligroso por el entorno y la gente.",
+ "howItWorksEs": [
+  "Un intento de salvaging lleva una semana y no puede hacerse en días con otra actividad de downtime (p.4)",
+  "Paso 1: elegir categoría de bienes; si se acepta lo que salga, tirar 1d6 en Salvage Categories (p.4)",
+  "Paso 2: Basic Tech Skill Check; cuanto más alto, más worth; el DV depende de si se busca categoría específica o 'Take What You Can Find' (p.5)",
+  "Un Critical Failure (1 en el 1d10) va al Paso 2a: tirar en Perils of Salvaging (p.5)",
+  "Paso 3: elegir bienes de la categoría cuyo Cost sume el worth logrado; el worth sobrante se pierde (p.5)",
+  "Los ítems salvados quedan Destroyed y se reparan con la Tech Skill apropiada (CP:R p.140) (p.5)",
+  "Ejemplo: Torch saca 3 (General Gear), total 25 vence DV 24 y obtiene 500eb de ítems (p.5)"
+ ],
+ "locations": [
+  {
+   "name": "The Hot Zone",
+   "dv": "",
+   "textEs": "Enorme pila de ruinas circular en el centro de la ciudad; mucha tecnología rota, pero scavvers y zonas radiactivas.",
+   "dlcPage": 3
+  },
+  {
+   "name": "Combat Zones",
+   "dv": "",
+   "textEs": "South Night City, Old Combat Zone, Old Japantown y Little China; lo bueno ya fue rebuscado, con suerte hay algún hallazgo.",
+   "dlcPage": 3
+  },
+  {
+   "name": "Scrapyards",
+   "dv": "",
+   "textEs": "Basura de demoliciones lista para saquear, pero con seguridad corporativa que dispara primero.",
+   "dlcPage": 3
+  },
+  {
+   "name": "The Perimeter",
+   "dv": "",
+   "textEs": "Bordes de la ciudad y Badlands: pueblos, estaciones, moteles y fábricas abandonadas; se negocia con Nomads, no hay gangs.",
+   "dlcPage": 4
+  }
+ ],
+ "categories": [
+  {
+   "name": "Cyberware",
+   "dv": "",
+   "textEs": "Resultado 1 en 1d6 de Salvage Categories (sin DV propio; el DV depende del worth).",
+   "dlcPage": 4
+  },
+  {
+   "name": "Weapons",
+   "dv": "",
+   "textEs": "Resultado 2 en 1d6 de Salvage Categories (sin DV propio; el DV depende del worth).",
+   "dlcPage": 4
+  },
+  {
+   "name": "General Gear",
+   "dv": "",
+   "textEs": "Resultado 3 en 1d6 de Salvage Categories (sin DV propio; el DV depende del worth).",
+   "dlcPage": 4
+  },
+  {
+   "name": "General Gear",
+   "dv": "",
+   "textEs": "Resultado 4 en 1d6 de Salvage Categories (sin DV propio; el DV depende del worth).",
+   "dlcPage": 4
+  },
+  {
+   "name": "Armor",
+   "dv": "",
+   "textEs": "Resultado 5 en 1d6 de Salvage Categories (sin DV propio; el DV depende del worth).",
+   "dlcPage": 4
+  },
+  {
+   "name": "Cyberdecks and Programs",
+   "dv": "",
+   "textEs": "Resultado 6 en 1d6 de Salvage Categories (sin DV propio; el DV depende del worth).",
+   "dlcPage": 4
+  }
+ ],
+ "worth": [
+  {
+   "roll": "10eb",
+   "textEs": "Take What You Can Find DV 9; Specific Category DV 13"
+  },
+  {
+   "roll": "20eb",
+   "textEs": "Take What You Can Find DV 13; Specific Category DV 15"
+  },
+  {
+   "roll": "50eb",
+   "textEs": "Take What You Can Find DV 15; Specific Category DV 17"
+  },
+  {
+   "roll": "100eb",
+   "textEs": "Take What You Can Find DV 17; Specific Category DV 21"
+  },
+  {
+   "roll": "500eb",
+   "textEs": "Take What You Can Find DV 24; Specific Category DV 29"
+  },
+  {
+   "roll": "1000eb",
+   "textEs": "Take What You Can Find DV 29; Specific Category N/A"
+  }
+ ],
+ "worthRoll": "Basic Tech Skill Check",
+ "worthPage": 5,
+ "perils": [
+  {
+   "roll": "1",
+   "textEs": "Se derrumba una estructura: 6d6 de daño (reducido por armadura) y una Critical Injury (tabla Body, CP:R p.221)."
+  },
+  {
+   "roll": "2",
+   "textEs": "Tiroteo: 6d6 de daño (reducido por armadura)."
+  },
+  {
+   "roll": "3",
+   "textEs": "Exposición a High Level Radiation (CP:R p.181) por 1d10 rondas; un Radiation Suit lo anula."
+  },
+  {
+   "roll": "4",
+   "textEs": "Caés 30 m/yds por colapso del suelo: 6d6 de daño salvo Grapple Hand/Gun o agarrarse del borde (CP:R p.181)."
+  },
+  {
+   "roll": "5",
+   "textEs": "Bolsa de gas tóxico (como Vial of Biotoxin, CP:R p.355) por 1 ronda; Anti-Smog Breathing Mask u oxígeno lo anula."
+  },
+  {
+   "roll": "6",
+   "textEs": "Tocás un cable vivo y te electrocutás 1 ronda (CP:R p.180)."
+  }
+ ],
+ "perilsRoll": "1d6",
+ "perilsPage": 5,
+ "otherTables": [
+  {
+   "title": "Salvage Categories",
+   "roll": "1d6",
+   "rows": [
+    {
+     "roll": "1",
+     "textEs": "Cyberware"
+    },
+    {
+     "roll": "2",
+     "textEs": "Weapons"
+    },
+    {
+     "roll": "3",
+     "textEs": "General Gear"
+    },
+    {
+     "roll": "4",
+     "textEs": "General Gear"
+    },
+    {
+     "roll": "5",
+     "textEs": "Armor"
+    },
+    {
+     "roll": "6",
+     "textEs": "Cyberdecks and Programs"
+    }
+   ],
+   "dlcPage": 4
+  }
+ ],
+ "issues": [
+  "Las categorías no tienen DV propio en el texto; dv vacío.",
+  "El worth se resolvió como filas por monto con ambos DV en textEs."
+ ]
+}

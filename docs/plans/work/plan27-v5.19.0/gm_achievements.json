@@ -1,0 +1,577 @@
+{
+  "intro": "Subsistema opcional que mezcla sorpresa y suerte. La Crew gana Achievements una sola vez cada uno, cuando un PJ cumple el requisito según el GM. Cada logro se canjea por un reroll de d10 o por una Mystery Box de Mr. Amaze.",
+  "rules": [
+    "Cada Achievement se gana una sola vez por Crew, la primera vez que un PJ (o a veces el jugador) cumple el requisito, a criterio del GM (p.2)",
+    "Se canjea en cualquier momento, sin Action, por decisión unánime del grupo (p.2)",
+    "Opción 1: rerollear un d10 de un jugador ya tirado y quedarse con el mayor; antes de que el GM anuncie el resultado y nunca en Death Saves (p.2)",
+    "Opción 2: recibir una Mystery Box; tirar 1d10 en The Table of Mystery para elegir caja (p.2)",
+    "Abrir la caja es una Action; se tira 1d6 en la tabla de esa caja para ver el contenido (p.2)",
+    "Las armas vienen Fully Loaded con la munición que el GM quiera (p.2)",
+    "La caja aparece sin ruido a 10 m/yds de un Edgerunner, donde nadie de la Crew la observe, incluso en el vacío (p.2)",
+    "Ítems con asterisco (*) son de Black Chrome; sin ese libro, reemplazar por ítem de valor equivalente (p.2, p.5)",
+    "Para cajas propias: los precios del contenido siguen el patrón 50, 100, 100, 100, 100, 500 y las armas vienen cargadas (p.5)"
+  ],
+  "achievements": [
+    {
+      "name": "15 Minutes of Fame",
+      "conditionEs": "Llegar a Reputación nivel 7.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Bad Day",
+      "conditionEs": "Sobrevivir a un combate donde la Crew recibe 3 o más Critical Injuries; todos deben sobrevivir.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Chamber 36",
+      "conditionEs": "Derrotar a un enemigo en combate singular con Martial Arts de base 18+, usando solo Brawling, Evasion, Melee Weapon y Martial Arts.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Chippin' In",
+      "conditionEs": "Instalar cyberware con Humanity Loss en un PJ sin cyberware (su primer cyberware).",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Clotheshorse",
+      "conditionEs": "Conseguir una prenda de cada estilo de moda del libro base.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Dirty Duck",
+      "conditionEs": "Bañarse en una bañera llena con al menos 100,000eb en efectivo.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Double Kill",
+      "conditionEs": "Matar a más de un enemigo con un solo explosivo.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Flatlined",
+      "conditionEs": "Hacer un funeral para un PJ muerto.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Gamer",
+      "conditionEs": "Completar una mazmorra en Elflines Online sin que muera ningún elfo del grupo.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Going Dark",
+      "conditionEs": "Completar un trabajo Typical o Dangerous sin una sola Ronda de combate.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Ground Zero",
+      "conditionEs": "Pararse en las ruinas de las Arasaka Towers.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "The Happiest Place",
+      "conditionEs": "Subirse a la montaña rusa de Playland by the Sea y sobrevivir.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "High Life",
+      "conditionEs": "Que todo el grupo compre un Fresh Food Lifestyle en el mismo mes.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Inner Peace",
+      "conditionEs": "Recuperar al menos 14 puntos de Humanity con Therapy en una o más sesiones.",
+      "rewardEs": "",
+      "dlcPage": 3
+    },
+    {
+      "name": "Investment",
+      "conditionEs": "Comprar un ítem Luxury o Super Luxury en un Night Market o Midnight Market.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Longshot",
+      "conditionEs": "Matar a un enemigo con un headshot de sniper rifle a 800 m/yds.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Night City Legend",
+      "conditionEs": "Llegar a nivel 10 en una Skill, rango 10 en un Role Ability, o en Reputation.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "One is the Loneliest #",
+      "conditionEs": "Terminar una pelea con exactamente 1 HP.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Payday",
+      "conditionEs": "Completar y cobrar un Dangerous Job.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Perfect Attendance",
+      "conditionEs": "Que todos los jugadores lleguen a horario tres sesiones seguidas.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Input/Output",
+      "conditionEs": "Tener una cita en Night City.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Pub Crawl",
+      "conditionEs": "Comprar y tomar una bebida en un bar de cada distrito de Night City.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Self-Improvement",
+      "conditionEs": "Cursar o auditar un curso en Night City University.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Strange Weather",
+      "conditionEs": "Sobrevivir un combate al aire libre durante un evento climático raro (Blood Rain, Acid Rain, Sandstorm).",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "The Edge",
+      "conditionEs": "Llegar a Empathy 1 o menos después de la creación, por instalar cyberware.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Totaled",
+      "conditionEs": "Destruir un vehículo de un miembro de la Crew o de su familia Nomad.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Trophy Hunter",
+      "conditionEs": "Juntar un ítem distintivo de cada facción: Bozos, Inquisitors, Maelstrom, Piranhas, Red Chrome Legion, Tyger Claws, NCPD, Trauma Team y Danger Gal.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Vengeance",
+      "conditionEs": "Matar al personaje directamente responsable de la muerte de un PJ.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "Road Warrior",
+      "conditionEs": "Sobrevivir una misión en los Badlands fuera de Night City.",
+      "rewardEs": "",
+      "dlcPage": 4
+    },
+    {
+      "name": "VIP",
+      "conditionEs": "Ser invitado a un Midnight Market.",
+      "rewardEs": "",
+      "dlcPage": 4
+    }
+  ],
+  "lootBoxTable": {
+    "roll": "1d10",
+    "rows": [
+      {
+        "roll": "1",
+        "box": "A box bound tightly in rope",
+        "contentsEs": "Tirar 1d6: 1 Rope x2, each 60 m/yards; 2 Virtuality Goggles; 3 Grapple Gun; 4 Vial of Poison; 5 Urban Flash Jewelry; 6 Cybermatrix Gang Jazzler (12 Days of Cybermas DLC)",
+        "dlcPage": 5
+      },
+      {
+        "roll": "2",
+        "box": "A box covered in chipped paint",
+        "contentsEs": "Tirar 1d6: 1 Teargas Grenade; 2 Fully Loaded GunMart Smart Special*; 3 Bicycle (Spinning Your Wheels DLC); 4 Flare Gun and a Road Flare (Woodchipper's Garage DLC); 5 Bulletproof Shield; 6 Fully Loaded Militech Crusher (12 Days of Gunmas DLC)",
+        "dlcPage": 5
+      },
+      {
+        "roll": "3",
+        "box": "A box dripping wet with fluid",
+        "contentsEs": "Tirar 1d6: 1 Can of Smash x5; 2 Airhypo loaded with Black Lace; 3 Bodyweight AutoInjector (Hornet's Pharmacy DLC); 4 Everest VentureWare AirWell 50*; 5 Poison Grenade; 6 T-R4 Detonator Fluid*",
+        "dlcPage": 5
+      },
+      {
+        "roll": "4",
+        "box": "A box freezing cold to the touch",
+        "contentsEs": "Tirar 1d6: 1 Bohemian Mirrorshades; 2 Street Viper Riding Suit*; 3 Two Sponsored Cybereyes*; 4 SkidRow Trench*; 5 Airhypo loaded with Prime Time (Hornet's Pharmacy DLC); 6 Laser Light Street Jacket*",
+        "dlcPage": 5
+      },
+      {
+        "roll": "5",
+        "box": "A box handsomely gift wrapped",
+        "contentsEs": "Tirar 1d6: 1 Binoculars; 2 Light Armorjack Body; 3 Excellent Quality Medium Pistol; 4 Video Camera; 5 NeuTongue (Must Have Cyberware Deals DLC); 6 Reflex Co-Processor*",
+        "dlcPage": 5
+      },
+      {
+        "roll": "6",
+        "box": "A box marked with a lime green X",
+        "contentsEs": "Tirar 1d6: 1 A boxed copy of Elflines Online; 2 Two Disposable Cell Phones; 3 Modular Finger Cyberhand*; 4 Leisurewear Jewelry; 5 Agent; 6 Smart Glasses",
+        "dlcPage": 5
+      },
+      {
+        "roll": "7",
+        "box": "A box melted out of shape",
+        "contentsEs": "Tirar 1d6: 1 Scavenged Armor Body (Black Chrome+ DLC); 2 Incendiary Grenade; 3 Neo-Soviet Cyberarm*; 4 Fully loaded Stolbovoy ST-5 Assault Rifle (12 Days of Gunmas DLC); 5 Fully Loaded Everest VentureWare SurvivalMaster (Black Chrome+ DLC); 6 Fully Loaded Flamethrower",
+        "dlcPage": 5
+      },
+      {
+        "roll": "8",
+        "box": "A box sealed with a lipstick kiss",
+        "contentsEs": "Tirar 1d6: 1 Light Melee Weapon; 2 Mr. Studd™ Sexual Implant; 3 Shuriken Tornado Grenade*; 4 Asia Pop Footwear; 5 Two Businesswear Tops; 6 White Hornet Tanto*",
+        "dlcPage": 5
+      },
+      {
+        "roll": "9",
+        "box": "A box reeking of oil",
+        "contentsEs": "Tirar 1d6: 1 Fully Loaded GunMart Bubba Buster*; 2 Fully Loaded Overlord Handcannon*; 3 Nomad Leathers Footwear; 4 Fully Loaded Poor Quality Sniper Rifle; 5 Sniping Scope; 6 Smartgun Link",
+        "dlcPage": 5
+      },
+      {
+        "roll": "10",
+        "box": "A box showing signs of repair",
+        "contentsEs": "Tirar 1d6: 1 Utility Tomahawk*; 2 Holo Projector Palm (Must Have Cyberware Deals DLC); 3 Techtool; 4 Audio Recorder; 5 Armor Piercing Grenade; 6 Techscanner Cyberware",
+        "dlcPage": 5
+      }
+    ]
+  },
+  "otherTables": [
+    {
+      "title": "Inside the Box: A box bound tightly in rope",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "Rope x2, each 60 m/yards"
+        },
+        {
+          "roll": "2",
+          "textEs": "Virtuality Goggles"
+        },
+        {
+          "roll": "3",
+          "textEs": "Grapple Gun"
+        },
+        {
+          "roll": "4",
+          "textEs": "Vial of Poison"
+        },
+        {
+          "roll": "5",
+          "textEs": "Urban Flash Jewelry"
+        },
+        {
+          "roll": "6",
+          "textEs": "Cybermatrix Gang Jazzler (12 Days of Cybermas DLC)"
+        }
+      ],
+      "dlcPage": 5
+    },
+    {
+      "title": "Inside the Box: A box covered in chipped paint",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "Teargas Grenade"
+        },
+        {
+          "roll": "2",
+          "textEs": "Fully Loaded GunMart Smart Special*"
+        },
+        {
+          "roll": "3",
+          "textEs": "Bicycle (Spinning Your Wheels DLC)"
+        },
+        {
+          "roll": "4",
+          "textEs": "Flare Gun and a Road Flare (Woodchipper's Garage DLC)"
+        },
+        {
+          "roll": "5",
+          "textEs": "Bulletproof Shield"
+        },
+        {
+          "roll": "6",
+          "textEs": "Fully Loaded Militech Crusher (12 Days of Gunmas DLC)"
+        }
+      ],
+      "dlcPage": 5
+    },
+    {
+      "title": "Inside the Box: A box dripping wet with fluid",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "Can of Smash x5"
+        },
+        {
+          "roll": "2",
+          "textEs": "Airhypo loaded with Black Lace"
+        },
+        {
+          "roll": "3",
+          "textEs": "Bodyweight AutoInjector (Hornet's Pharmacy DLC)"
+        },
+        {
+          "roll": "4",
+          "textEs": "Everest VentureWare AirWell 50*"
+        },
+        {
+          "roll": "5",
+          "textEs": "Poison Grenade"
+        },
+        {
+          "roll": "6",
+          "textEs": "T-R4 Detonator Fluid*"
+        }
+      ],
+      "dlcPage": 5
+    },
+    {
+      "title": "Inside the Box: A box freezing cold to the touch",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "Bohemian Mirrorshades"
+        },
+        {
+          "roll": "2",
+          "textEs": "Street Viper Riding Suit*"
+        },
+        {
+          "roll": "3",
+          "textEs": "Two Sponsored Cybereyes*"
+        },
+        {
+          "roll": "4",
+          "textEs": "SkidRow Trench*"
+        },
+        {
+          "roll": "5",
+          "textEs": "Airhypo loaded with Prime Time (Hornet's Pharmacy DLC)"
+        },
+        {
+          "roll": "6",
+          "textEs": "Laser Light Street Jacket*"
+        }
+      ],
+      "dlcPage": 5
+    },
+    {
+      "title": "Inside the Box: A box handsomely gift wrapped",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "Binoculars"
+        },
+        {
+          "roll": "2",
+          "textEs": "Light Armorjack Body"
+        },
+        {
+          "roll": "3",
+          "textEs": "Excellent Quality Medium Pistol"
+        },
+        {
+          "roll": "4",
+          "textEs": "Video Camera"
+        },
+        {
+          "roll": "5",
+          "textEs": "NeuTongue (Must Have Cyberware Deals DLC)"
+        },
+        {
+          "roll": "6",
+          "textEs": "Reflex Co-Processor*"
+        }
+      ],
+      "dlcPage": 5
+    },
+    {
+      "title": "Inside the Box: A box marked with a lime green X",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "A boxed copy of Elflines Online"
+        },
+        {
+          "roll": "2",
+          "textEs": "Two Disposable Cell Phones"
+        },
+        {
+          "roll": "3",
+          "textEs": "Modular Finger Cyberhand*"
+        },
+        {
+          "roll": "4",
+          "textEs": "Leisurewear Jewelry"
+        },
+        {
+          "roll": "5",
+          "textEs": "Agent"
+        },
+        {
+          "roll": "6",
+          "textEs": "Smart Glasses"
+        }
+      ],
+      "dlcPage": 6
+    },
+    {
+      "title": "Inside the Box: A box melted out of shape",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "Scavenged Armor Body (Black Chrome+ DLC)"
+        },
+        {
+          "roll": "2",
+          "textEs": "Incendiary Grenade"
+        },
+        {
+          "roll": "3",
+          "textEs": "Neo-Soviet Cyberarm*"
+        },
+        {
+          "roll": "4",
+          "textEs": "Fully loaded Stolbovoy ST-5 Assault Rifle (12 Days of Gunmas DLC)"
+        },
+        {
+          "roll": "5",
+          "textEs": "Fully Loaded Everest VentureWare SurvivalMaster (Black Chrome+ DLC)"
+        },
+        {
+          "roll": "6",
+          "textEs": "Fully Loaded Flamethrower"
+        }
+      ],
+      "dlcPage": 6
+    },
+    {
+      "title": "Inside the Box: A box sealed with a lipstick kiss",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "Light Melee Weapon"
+        },
+        {
+          "roll": "2",
+          "textEs": "Mr. Studd™ Sexual Implant"
+        },
+        {
+          "roll": "3",
+          "textEs": "Shuriken Tornado Grenade*"
+        },
+        {
+          "roll": "4",
+          "textEs": "Asia Pop Footwear"
+        },
+        {
+          "roll": "5",
+          "textEs": "Two Businesswear Tops"
+        },
+        {
+          "roll": "6",
+          "textEs": "White Hornet Tanto*"
+        }
+      ],
+      "dlcPage": 6
+    },
+    {
+      "title": "Inside the Box: A box reeking of oil",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "Fully Loaded GunMart Bubba Buster*"
+        },
+        {
+          "roll": "2",
+          "textEs": "Fully Loaded Overlord Handcannon*"
+        },
+        {
+          "roll": "3",
+          "textEs": "Nomad Leathers Footwear"
+        },
+        {
+          "roll": "4",
+          "textEs": "Fully Loaded Poor Quality Sniper Rifle"
+        },
+        {
+          "roll": "5",
+          "textEs": "Sniping Scope"
+        },
+        {
+          "roll": "6",
+          "textEs": "Smartgun Link"
+        }
+      ],
+      "dlcPage": 6
+    },
+    {
+      "title": "Inside the Box: A box showing signs of repair",
+      "roll": "1d6",
+      "rows": [
+        {
+          "roll": "1",
+          "textEs": "Utility Tomahawk*"
+        },
+        {
+          "roll": "2",
+          "textEs": "Holo Projector Palm (Must Have Cyberware Deals DLC)"
+        },
+        {
+          "roll": "3",
+          "textEs": "Techtool"
+        },
+        {
+          "roll": "4",
+          "textEs": "Audio Recorder"
+        },
+        {
+          "roll": "5",
+          "textEs": "Armor Piercing Grenade"
+        },
+        {
+          "roll": "6",
+          "textEs": "Techscanner Cyberware"
+        }
+      ],
+      "dlcPage": 6
+    }
+  ],
+  "issues": [
+    "En el volcado de texto las columnas de logros y condiciones están separadas; la asignación nombre-condición se infirió por semántica y orden, no por posición explícita (p.3-4). Revisar: Night City Legend, One is the Loneliest #, Input/Output, Investment, VIP.",
+    "Ningún logro lista recompensa propia; rewardEs vacío (canje común)."
+  ]
+}
