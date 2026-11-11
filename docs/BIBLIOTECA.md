@@ -17,10 +17,10 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | Estado | PDFs |
 |---|---|
-| ✅ Adaptado | 16 |
-| 🟡 A medias | 5 |
-| ⬜ Sin empezar | 32 |
-| ➖ No se adapta como datos | 26 |
+| ✅ Adaptado | 18 |
+| 🟡 A medias | 9 |
+| ⬜ Sin empezar | 27 |
+| ➖ No se adapta como datos | 25 |
 | **Total** | **79** |
 
 ## Core-Rules (3)
@@ -35,12 +35,12 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | PDF | Estado | Detalle |
 |---|---|---|
-| Interface-RED-Volume-4 (Cyberfists of Fury) | ✅ | 27 formas de Martial Arts (v4.5.1) |
+| Interface-RED-Volume-4 (Cyberfists of Fury) | 🟡 | 27 formas de Martial Arts (v4.5.1); Gearmas y equipo de Stickball (v5.16.0); el resto, en el plan 27 [Claude Code · 2026-11-10] |
 | Danger-Gal-Dossier | 🟡 | Muchos datos cargados; plan 6 en pausa (v4.7.1 fichas y facciones, v4.7.2 New Gear) |
 | Black-Chrome-Tech-and-Style-Guide | ✅ | Ítems (v5.12.0), los 31 vehículos con Nomad Access (v5.13.0), los 6 Night Markets con sus puestos y Economics 101 (v5.14.0), plan 26 [Claude Code · 2026-11-06] |
 | CEMK-Edgerunners-Handbook-2077-Lore-Guide | 🟡 | Solo algunas citas |
 | Interface-RED-Volume-3 | 🟡 | Cargada la parte de Going Metal (cuerpos FBC); el resto, sin revisar |
-| Interface-RED-Volume-1 | ➖ | Fuera de alcance según `canon-audit/README.md` |
+| Interface-RED-Volume-1 | 🟡 | Old Guns Never Die y 6 drones (v5.16.0); el resto, en el plan 27 [Claude Code · 2026-11-10] |
 | Interface-RED-Volume-2 | 🟡 | Exotics of 2045: 17 paquetes y 3 implantes (v5.15.0); el resto, en el plan 27 [Claude Code · 2026-11-10] |
 | Night-City-Gang-Guide | ⬜ | Pandillas de Night City |
 
@@ -90,14 +90,14 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 |---|---|---|
 | Hornets-Pharmacy-Chemical-Wonderland | ✅ | Drogas (v4.6.2) |
 | The-12-Days-of-Gunmas-v1.3 | ✅ | Armas (v4.6.2) |
-| The-12-Days-of-Gearmas-v1.01 | ⬜ | Equipo |
+| The-12-Days-of-Gearmas-v1.01 | ✅ | 12 ítems por Interface RED Vol. 4 (v5.16.0); el Zonda Metrocar, en la v5.17.0 [Claude Code · 2026-11-10] |
 | The-12-Days-of-Cybermas | ✅ | 12 ciberware (v5.15.0) [Claude Code · 2026-11-10] |
 | The-12-Days-of-REDmas | ⬜ | Varios |
 | The-12-Days-of-Vehiclemas-v1.0 | ⬜ | Vehículos |
 | The-12-Days-of-Cutiemas-Exotic-Pets | ⬜ | Mascotas exóticas |
-| Woodchippers-Garage-Explosive-Weapons | ⬜ | Explosivos; tarjeta en DATA PACKS sin contenido |
+| Woodchippers-Garage-Explosive-Weapons | ✅ | 12 armas y su tarjeta en DATA PACKS (v5.16.0) [Claude Code · 2026-11-10] |
 | Must-Have-Cyberware-Deals | ✅ | 12 ciberware y su tarjeta en DATA PACKS (v5.15.0) [Claude Code · 2026-11-10] |
-| Midnight-with-the-Upload-New-Cyberdecks | ⬜ | Cyberdecks |
+| Midnight-with-the-Upload-New-Cyberdecks | ✅ | 15 cyberdecks y 11 Hardware (v5.16.0) [Claude Code · 2026-11-10] |
 | CEMK-DLC-02-Cyberware-Enhancements | ⬜ | Ciberware 2077 |
 | Black-Chrome-Plus-Bonus-Content | ✅ | 12 ítems y las guías de estilo (v5.12.0, plan 26) [Claude Code · 2026-11-06] |
 | Cyberchairs-New-Options-in-Mobility | ⬜ | Sillas de ruedas cyber |
@@ -109,7 +109,7 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | PDF | Estado | Detalle |
 |---|---|---|
-| Night-City-Weather-Environmental-Rules | ⬜ | Clima |
+| Night-City-Weather-Environmental-Rules | 🟡 | 5 ítems por Interface RED Vol. 2 (v5.16.0); las tablas, en la v5.19.0 [Claude Code · 2026-11-10] |
 | Breaking-Your-Stuff-Gear-Durability-Rules | ⬜ | Durabilidad del equipo |
 | Going-Quiet-Stealth-and-Infiltration-Rules | ⬜ | Sigilo e infiltración |
 | Salvaging-Night-City-Downtime-Scavenging | ⬜ | Rescate de chatarra en downtime |
@@ -119,7 +119,7 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 | Achievements-and-Loot-Boxes | ⬜ | Logros y cajas de botín |
 | Single-Player-Mode-Solo-Rules | ⬜ | Jugar solo |
 | Single-Player-Mode-Plus | ⬜ | Jugar solo, extra |
-| Stickball-Combat-Sport | ⬜ | Deporte |
+| Stickball-Combat-Sport | 🟡 | Equipo por Interface RED Vol. 4 (v5.16.0); las reglas, en la v5.19.0 [Claude Code · 2026-11-10] |
 | Digital-Dating-in-the-Dark-Future | ⬜ | Citas |
 | VA-11-Hall-A-Crossover-Mixing-Drinks | ⬜ | Tragos (crossover) |
 | Night-City-Tarot-Combat-Deck | ⬜ | Mazo de combate |

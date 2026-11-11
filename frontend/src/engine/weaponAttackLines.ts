@@ -26,7 +26,24 @@ export function isPlacedExplosive(weapon: Pick<WeaponItem, 'skill'>): boolean {
   return (weapon.skill || '').toLowerCase().replace(/[^a-z]/g, '') === 'demolitions';
 }
 
+/**
+ * v5.16.0 [Claude Code · 2026-11-10]: armas que se disparan con una skill de piloto, como el Militech Archimedes
+ * (Pilot Air Vehicle, Woodchipper's Garage p.4). No usan Handgun: se devuelve el nombre de la skill.
+ */
+export function pilotWeaponSkill(weapon: Pick<WeaponItem, 'skill'>): string | null {
+  const s = (weapon.skill || '').trim();
+  return /^pilot\b/i.test(s) ? s : null;
+}
+
 export function weaponAttackLines(sheet: CharacterSheet, weapon: WeaponItem): WeaponAttackLines {
+  const pilot = pilotWeaponSkill(weapon);
+  if (pilot) {
+    return {
+      single: `Se dispara con REF + ${pilot}, no con una skill de armas (ver notas).`,
+      penalties: [],
+      skillKey: 'pilot'
+    };
+  }
   if (isPlacedExplosive(weapon)) {
     return {
       single: 'Explosivo que se coloca: no se tira para atacar. Se arma y detona como dicen sus notas (Demolitions, Black Chrome).',

@@ -4,6 +4,15 @@
 // - La etiqueta de origen dice libro y página cuando el pack la trae.
 
 import { WEAPON_ATTACHMENTS_CATALOG, type WeaponAttachment } from '../data/weaponAttachmentsAndTechData';
+import coreRulesPack from '../data/core-rules.cprpack.json';
+
+// v5.16.0 [Claude Code · 2026-11-10]: los decks y el Hardware de otros libros (Midnight with the Upload) traen `slots` en el pack.
+const packSlots = (prefix: string): Record<string, number> =>
+  Object.fromEntries(
+    (coreRulesPack.gear as Array<{ id: string; slots?: number }>)
+      .filter((g) => g.id.startsWith(prefix) && typeof g.slots === 'number')
+      .map((g) => [g.id, g.slots as number])
+  );
 
 /** Ítems del catálogo que ya vienen en el Neuroport (CEMK RB p.36), con la pieza que los cubre. */
 export const NEUROPORT_INCLUDED: Record<string, string> = {
@@ -26,7 +35,8 @@ export function neuroportCovers(catalogId: string, era: string | null | undefine
 export const CYBERDECK_SLOTS: Record<string, number> = {
   'cyberdeck-poor': 5,
   'cyberdeck-standard': 7,
-  'cyberdeck-excellent': 9
+  'cyberdeck-excellent': 9,
+  ...packSlots('cyberdeck-')
 };
 
 /** Slots que ocupa cada pieza de Hardware del Core (p.208). */
@@ -36,7 +46,8 @@ export const HARDWARE_SLOTS: Record<string, number> = {
   'hw-hardened-circuitry': 1,
   'hw-insulated-wiring': 1,
   'hw-krash-barrier': 2,
-  'hw-range-upgrade': 1
+  'hw-range-upgrade': 1,
+  ...packSlots('hw-')
 };
 
 export const BODYWEIGHT_SUIT_ID = 'bodyweight-suit';

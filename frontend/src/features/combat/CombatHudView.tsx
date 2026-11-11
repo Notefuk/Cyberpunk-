@@ -35,7 +35,7 @@ import {
 } from '../../engine/characterEngine';
 import type { DeathSaveResult } from '../../engine/characterEngine';
 // v5.14.1 [Claude Code · 2026-11-10]: explosivos de Black Chrome que se colocan (no son tirada de ataque).
-import { isPlacedExplosive } from '../../engine/weaponAttackLines';
+import { isPlacedExplosive, pilotWeaponSkill } from '../../engine/weaponAttackLines';
 import { 
   createInitialAttackRoll, 
   createDamageRoll,
@@ -5292,7 +5292,11 @@ export const CombatHudView: React.FC = () => {
                             }`}>
                               DV actual: {w.type === 'Melee' ? `Defensa ${meleeDefenseBase}+1d10` : currentDv !== null ? `DV ${currentDv}` : 'N/A'} ({selectedDistance})
                             </span>
-                            {isPlacedExplosive(w) ? (
+                            {pilotWeaponSkill(w) ? (
+                              <span className="bg-[#1f1a0f] border border-amber-500/40 text-amber-200 px-1.5 py-0.5 rounded-xs font-bold" title="Woodchipper's Garage">
+                                Se dispara con REF + {pilotWeaponSkill(w)} (ver notas)
+                              </span>
+                            ) : isPlacedExplosive(w) ? (
                               <span className="bg-[#1f1a0f] border border-amber-500/40 text-amber-200 px-1.5 py-0.5 rounded-xs font-bold" title="Black Chrome pp.87-90">
                                 Explosivo que se coloca: no se tira para atacar (ver notas)
                               </span>

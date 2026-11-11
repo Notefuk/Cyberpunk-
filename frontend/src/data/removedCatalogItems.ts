@@ -10,7 +10,6 @@ export interface RemovedCatalogItem {
 }
 
 export const REMOVED_CATALOG_ITEMS: RemovedCatalogItem[] = [
-  { id: "sternmeyer-m02", name: "Sternmeyer M-02 Heavy Rifle", category: 'weapons', reason: "no está en el libro (el de Black Chrome es el Sternmeyer M-04)" },
   { id: "borg-assault-rifle", name: "Borg Assault Rifle", category: 'weapons', reason: "no está en ningún libro" },
   { id: "tsunami-rasetsu", name: "Tsunami Arms Rasetsu", category: 'weapons', reason: "no está en ningún libro" },
   { id: "slamdance-hyper-hammer", name: "SlamDance Hyper-Hammer", category: 'weapons', reason: "no está en ningún libro" },
