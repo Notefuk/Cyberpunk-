@@ -8478,6 +8478,193 @@
       "sourceBook": "interface_red",
       "sourceBookTitle": "Interface RED Volume 1",
       "era": "2045"
+    },
+    {
+      "id": "home-second-hand-special",
+      "name": "Second-hand Special (furniture set)",
+      "cost": 50,
+      "costTier": "Costly",
+      "description": "Muebles mínimos para un Cargo Container: catre, mesa plegable, cajones de plástico sobre ladrillos y un sillón con manchas. Cama, escritorio con silla, cómoda y sillón; el microondas, la heladera y la pileta vienen fijos.",
+      "sourcePage": 37,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 2",
+      "era": "2045"
+    },
+    {
+      "id": "home-cargo-container-chic",
+      "name": "Cargo Container Chic (furniture set)",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Los muebles más baratos que se pueden comprar, como los de los dormitorios de la NCU. Es el juego con el que viene la mayoría de los Cargo Containers; si lo rompés, el dueño no lo repone.",
+      "sourcePage": 37,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 2",
+      "era": "2045"
+    },
+    {
+      "id": "home-a-touch-of-luxury",
+      "name": "A Touch of Luxury (furniture set)",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Uno de los Cargo Containers más lindos de la comunidad: buena cama, muebles que parecen de madera, sillón cómodo y algo de arte. Ojo, que las bandas lo notan.",
+      "sourcePage": 37,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 2",
+      "era": "2045"
+    },
+    {
+      "id": "home-koff-popper",
+      "name": "Continental Brands Koff Popper",
+      "cost": 50,
+      "costTier": "Costly",
+      "description": "Termo que hace 237 ml de algo parecido al café con una pastilla Koff Pop y agua, en menos de un minuto. Los Koff Pops se compran en Oasis a 10eb (Cheap) el paquete de 10 y vienen con el estilo de vida Kibble; el termo, no.",
+      "sourcePage": 37,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 2",
+      "era": "2045"
+    },
+    {
+      "id": "home-fire-safe",
+      "name": "Fire Safe",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Caja fuerte ignífuga de 30 cm de lado, con manija. Cuenta como Thick Steel (50 HP); abrir la cerradura es Pick Lock DV15. Se la pueden llevar entera.",
+      "sourcePage": 37,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 2",
+      "era": "2045"
+    },
+    {
+      "id": "home-hidden-compartment",
+      "name": "Hidden Compartment",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Compartimento de 15 x 30 x 7,5 cm escondido en la cama, el escritorio o la cómoda. Encontrarlo es Conceal/Reveal Object DV15.",
+      "sourcePage": 37,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 2",
+      "era": "2045"
+    },
+    {
+      "id": "home-smart-vanity",
+      "name": "Smart Vanity",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Tocador con cajones y espejo digital iluminado que se sincroniza con tu Agent y te muestra en tiempo real con otros peinados y maquillajes.",
+      "sourcePage": 37,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 2",
+      "era": "2045"
+    },
+    {
+      "id": "home-wall-art",
+      "name": "Wall Art",
+      "cost": 20,
+      "costTier": "Everyday",
+      "description": "Una lámina grande impresa en un marco de plástico: un Monet o perros jugando al póker, cuesta lo mismo.",
+      "sourcePage": 37,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 2",
+      "era": "2045"
+    },
+    {
+      "id": "home-creative-couture",
+      "name": "Creative Couture (furniture set, per room)",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Lo mínimo para un Studio Apartment o un Corporate Conapt, por ambiente: camas de excedente militar, escritorio de una venta de la NCU y estantes de cajones de Kibble.",
+      "sourcePage": 51,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 4",
+      "era": "2045"
+    },
+    {
+      "id": "home-apartment-affability",
+      "name": "Apartment Affability (furniture set, per room)",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Muebles para armar con llave Allen, pero cada ambiente tiene lo que necesita. Es el juego con el que vienen la mayoría de los Conapts y Studio Apartments; el dueño no lo repone y te cobra si lo vendés.",
+      "sourcePage": 51,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 4",
+      "era": "2045"
+    },
+    {
+      "id": "home-desirous-decoration",
+      "name": "Desirous Decoration (furniture set, per room)",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Cama con respaldo, sillón de verdad, electrodomésticos que no echan chispas y algunas obras originales de artistas locales, que hasta pueden ser una inversión.",
+      "sourcePage": 51,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 4",
+      "era": "2045"
+    },
+    {
+      "id": "home-real-instant-coffee",
+      "name": "Continental Brands Real Instant Coffee",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Ladrillo al vacío de 450 g de café instantáneo hecho con granos de verdad: alcanza para 24 tazas.",
+      "sourcePage": 51,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 4",
+      "era": "2045"
+    },
+    {
+      "id": "home-smartoven",
+      "name": "Continental Brands SmartOven",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Horno robot con 20 sabores que cocina Kibble caliente con un botón; se recarga una vez al mes (el Kibble viene con el estilo de vida Kibble, y que te lo carguen, con los demás). No mejora el estilo de vida, pero el Kibble sabe un poco mejor.",
+      "sourcePage": 51,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 4",
+      "era": "2045"
+    },
+    {
+      "id": "home-ktech-soundproofing",
+      "name": "K-Tech All-Purpose Soundproofing Solution (per room)",
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "description": "Paneles aislantes en las paredes de un ambiente: no se puede escuchar a través de ellos sin Amplified Hearing o algo parecido. El técnico llega tarde y espera 20eb (Everyday) de propina.",
+      "sourcePage": 52,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 4",
+      "era": "2045"
+    },
+    {
+      "id": "home-kendachi-pressuretech",
+      "name": "Kendachi PressureTech Shower Head",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Ducha a presión de corte de cristal: en el máximo hace 1 de daño cada 20 minutos a quien no tenga armadura ni Skinweave, Subdermal Armor o similar.",
+      "sourcePage": 52,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 4",
+      "era": "2045"
+    },
+    {
+      "id": "home-virtual-barbeque",
+      "name": "Virtual Barbeque by Segotari",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Videojuego multijugador de parrilla con clases virtuales. No enseña a hacer asado, pero nacieron muchas amistades entre Execs jugándolo.",
+      "sourcePage": 52,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 4",
+      "era": "2045"
+    },
+    {
+      "id": "home-zhirafa-an7-3tr",
+      "name": "Zhirafa AN7-3TR",
+      "cost": 5000,
+      "costTier": "Luxury",
+      "description": "Dron de limpieza cúbico de 1 m con cuatro patas: aspiradora, brazos manipuladores (ROF 2, 1d6), cepillo y rociador; 4 MOVE y 15 HP. Su base de carga tiene una NET Architecture propia (Tech Upgraded: menos pisos): REZ 15, Interface 3, 2 NET Actions, C# 14, Demon Imp; piso 1 Password DV6, piso 2 Control Node del dron. Contrarrestarlo: Electronics/Security Tech DV9, 5 minutos.",
+      "sourcePage": 52,
+      "sourceBook": "interface_red",
+      "sourceBookTitle": "Interface RED Volume 4",
+      "era": "2045"
     }
   ],
   "programs": [
