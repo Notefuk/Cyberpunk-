@@ -23,6 +23,7 @@ import { MARTIAL_ARTS_FORMS } from '../data/cyberfistsMartialArtsData';
 import { applyFolioAllocation } from '../data/folioRoleAllocations';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, calculateMaxHumanity, parseHumanityLossAverage } from './characterEngine';
 import { cyberwareStatBonus } from './cyberwareEffects';
+import { namedHousingFor } from '../data/creation/namedHousing';
 import { deckSlotUse, needsFixer, neuroportCovers, purchaseUnitCost } from './creatorShop';
 import type {
   CharacterEra,
@@ -115,6 +116,8 @@ export interface CreatorDraft {
   /** v5.5.0 (plan 21): vivienda y lifestyle elegidos (Core pp.105, 377-378); texto propio permitido. */
   housing?: string;
   lifestyle?: string;
+  /** v5.18.0 [Claude Code · 2026-11-11]: lugar con nombre de esa vivienda (Interface RED Vol. 2 pp.35-36, Vol. 4 pp.47-53). */
+  housingPlace?: string;
   /** v5.4.0 (plan 21): reparto de la habilidad de rol hecho en el creador (Maker, Core pp.147-148; Medicine, Core pp.149-150). */
   makerAllocation?: { field: number; upgrade: number; fabrication: number; invention: number };
   medicineAllocation?: { surgery: number; pharmaceuticals: number; cryosystem: number; knownPharmaceuticals?: string[] };
@@ -1399,10 +1402,13 @@ export function buildCharacterSheetFromDraft(draft: CreatorDraft, nowId?: string
   const h = CORE_GEAR_SKILLS.housing;
   // v5.5.0: si eligió otra vivienda o estilo de vida (Core pp.377-378), va eso; el primer mes sigue pagado (Core p.105). [Claude Code · 2026-10-29]
   const chosenHousing = draft.housing?.trim();
-  if (chosenHousing || draft.lifestyle) {
+  if (chosenHousing || draft.lifestyle || draft.housingPlace) {
     const home = chosenHousing || (role === 'Exec' ? h.exec.housing : h.default.housing);
     const life = draft.lifestyle || (role === 'Exec' ? h.exec.lifestyle : h.default.lifestyle);
-    notes.push(`Vivienda inicial: ${home}, estilo de vida ${life}; el primer mes viene pagado (Core p.105), después alquiler y estilo de vida según Core pp.377-378.`);
+    // v5.18.0 [Claude Code · 2026-11-11]: el lugar con nombre, si eligió uno de esa vivienda.
+    const place = namedHousingFor(home).find((p) => p.name === draft.housingPlace);
+    const where = place ? ` (${place.name}, ${place.district}; ${place.source})` : '';
+    notes.push(`Vivienda inicial: ${home}${where}, estilo de vida ${life}; el primer mes viene pagado (Core p.105), después alquiler y estilo de vida según Core pp.377-378.`);
   } else if (role === 'Exec') {
     notes.push(`Vivienda inicial: ${h.exec.housing} (${h.exec.location}), estilo ${h.exec.lifestyle}; sin renta este mes, ${h.exec.lifestyleMonthly} €$ el día 1 de cada mes.`);
   } else {

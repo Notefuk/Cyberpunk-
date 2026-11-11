@@ -7,6 +7,7 @@ import { parseHumanityLossAverage } from '../../../engine/characterEngine';
 import { deckSlotUse, effectiveUnitCost, needsFixer, neuroportCovers, priceTier, purchaseUnitCost, shopSourceLabel } from '../../../engine/creatorShop';
 import { WEAPON_ATTACHMENTS_CATALOG } from '../../../data/weaponAttachmentsAndTechData';
 import { HOUSING_OPTIONS, HOUSING_SOURCE, LIFESTYLE_OPTIONS, LIFESTYLE_RULES, LIFESTYLE_SOURCE, LIFESTYLE_DETAIL_SOURCE } from '../../../data/creation/housingOptions';
+import { namedHousingFor, rollNamedHousing } from '../../../data/creation/namedHousing';
 import {
   AMMO_CALIBERS,
   getFashionPrice,
@@ -220,6 +221,8 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
   const housingValue = draft.housing ?? defaultHousing;
   const housingOption = HOUSING_OPTIONS.find((h) => h.name === housingValue);
   const housingIsCustom = !housingOption;
+  const places = namedHousingFor(housingValue);
+  const place = places.find((p) => p.name === draft.housingPlace);
   const lifestyleValue = draft.lifestyle ?? (role === 'Exec' ? 'Good Prepak' : 'Kibble');
   const roc = CORE_GEAR_SKILLS.runningOutOfCash;
 
@@ -693,6 +696,43 @@ export const GearStep: React.FC<StepProps> = ({ draft, update }) => {
           />
         )}
         {housingOption?.note && <p className="text-[11px] text-[#94a3b8] mt-1">{housingOption.note}</p>}
+        {/* v5.18.0 [Claude Code · 2026-11-11]: lugar con nombre y tirada 1d10 (Interface RED Vol. 2 pp.35-36, Vol. 4 pp.47-53). */}
+        {places.length > 0 && (
+          <div className="mt-2 space-y-1">
+            <div className="flex flex-wrap items-end gap-2">
+              <label className="text-[11px] text-[#cbd5e1] flex-1 min-w-[220px]">
+                ¿Dónde? ({places[0].source.replace(/ p\..*$/, '')})
+                <select
+                  className={`${SELECT_CLS} block w-full min-h-[40px]`}
+                  value={place?.name ?? ''}
+                  onChange={(e) => update((d) => ({ ...d, housingPlace: e.target.value || undefined }))}
+                >
+                  <option value="">Sin elegir</option>
+                  {places.map((p) => (
+                    <option key={p.name} value={p.name}>
+                      {p.roll}. {p.name} · {p.district}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                type="button"
+                className="px-3 min-h-[40px] bg-[#1a2030] hover:bg-[#22d3ee] hover:text-black text-[11px] font-bold rounded-xs cursor-pointer"
+                onClick={() => {
+                  const r = rollNamedHousing(housingValue);
+                  if (r) update((d) => ({ ...d, housingPlace: r.name }));
+                }}
+              >
+                🎲 Tirar 1d10
+              </button>
+            </div>
+            {place && (
+              <p className="text-[11px] text-[#cbd5e1]">
+                <b className="text-white">{place.roll}. {place.name}</b> ({place.district}, marca {place.marker} del mapa; {place.source}): {place.descEs}
+              </p>
+            )}
+          </div>
+        )}
         {(() => {
           const life = LIFESTYLE_OPTIONS.find((l) => l.name === lifestyleValue);
           return life && (
