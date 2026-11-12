@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-12] v5.23.0 publicada (main ce818bc, reglas dev y prod, beta y prod); plan 28 cerrado
+**Última actualización**: [Claude Code · 2026-11-12] v5.24.0 (Autofire y supresión de un actor) terminada; falta push, PR y publicar
 
 **Versión de la app**: v5.22.0 en `main` @ 1feacac (PR #82), en la beta (gh-pages c1faf19, `index-Bo35K1XF.js`) y en Firebase prod (`index-9QyHIP8x.js`), con las reglas de `gm/actors` en dev y prod.
 
@@ -21,8 +21,8 @@
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
-- Nada en curso. Plan 28 (modo GM) cerrado con la v5.23.0: `main` ce818bc (PR #84), reglas `rollRequests` y `gm/playerNotes` en dev y prod, beta gh-pages 4c71a50 (`index-n6zHQRcs.js`), prod `index-d1XW7yMO.js`; las dos cargan con la consola limpia.
-  - Pendiente posible: autofire y supresión en el ataque de un actor (quedaron fuera del plan 28).
+- **v5.24.0** (rama `claude/v5.24.0-autofire`), a cargo de Claude Code. Autofire (Core p.173) y supresión (Core p.174) en el ataque de un enemigo del Modo GM. tsc, 694 tests y build pasan; probada en local sin mesa. Sin cambios de reglas de Firestore.
+  - Falta (cada paso con OK de Giuliano): push y PR, merge, beta y prod, y el PR de docs.
 
 ## Último trabajo terminado
 - [Claude Code · 2026-11-12] v5.21.0 (plan 28 I): pestaña MODO GM (PR #79), publicada en la beta y en prod.
