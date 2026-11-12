@@ -19,6 +19,7 @@ import { RulesCheatSheetDrawer } from './features/rules/RulesCheatSheetDrawer';
 import { PersistenceBanner } from './components/PersistenceBanner';
 import { CloudStatusChip } from './components/CloudStatusChip';
 import { useAuthStore } from './sync/authStore';
+import { useRollRequests } from './sync/rollRequests';
 import { initCloudSync } from './sync/cloudCharacters';
 import { startTableSync } from './sync/tableSync';
 import { initGmActorsSync } from './store/gmActorsStore';
@@ -26,6 +27,8 @@ import { captureInviteFromUrl } from './sync/inviteLink';
 import { canSeeGmOnly, useGmAccess } from './store/gmAccess';
 
 // Cada vista se carga al abrir su pestaña para no meter toda la app en un solo bundle.
+// v5.23.0 (plan 28): aviso de tirada pedida por el GM; se carga solo cuando hay un pedido para mí. [Claude Code · 2026-11-12]
+const RollRequestPrompt = lazy(() => import('./features/gmmode/RollRequestPrompt'));
 const CombatHudView = lazy(() => import('./features/combat/CombatHudView').then((m) => ({ default: m.CombatHudView })));
 const StreetLabView = lazy(() => import('./features/sheet/StreetLabView').then((m) => ({ default: m.StreetLabView })));
 const CharacterCreatorWizard = lazy(() => import('./features/creator/CharacterCreatorWizard').then((m) => ({ default: m.CharacterCreatorWizard })));
@@ -56,6 +59,8 @@ export default function App() {
     if (!gmOnlyVisible && GM_ONLY_TABS.includes(activeTab)) setActiveTab('combat');
   }, [gmOnlyVisible, activeTab]);
 
+  const myUid = useAuthStore((s) => s.user?.uid);
+  const hasRollRequest = useRollRequests((s) => !!myUid && s.requests.some((r) => r.status === 'pending' && r.targetUid === myUid));
   // [Claude Code · 2026-10-24] v5.0.0 (plan 16): si ya había entrado a la nube, retoma la sesión.
   useEffect(() => { initCloudSync(); startTableSync(); initGmActorsSync(); void useAuthStore.getState().initAuth(); }, []);
 
@@ -186,6 +191,7 @@ export default function App() {
 
       {/* Contenedor Principal de Vistas Modulares */}
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+        {hasRollRequest && <Suspense fallback={null}><RollRequestPrompt /></Suspense>}
         <Suspense fallback={<div className="font-mono-code text-xs text-[#64748b] p-4">Cargando módulo...</div>}>
         {activeTab === 'combat' && <CombatHudView />}
         {activeTab === 'sheet' && <StreetLabView />}

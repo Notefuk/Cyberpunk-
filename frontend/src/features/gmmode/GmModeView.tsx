@@ -9,6 +9,7 @@ import { buildGmPlayerCard, rollInitiativeForAll, type GmPlayerCard } from '../.
 import { GmTargetDialog } from '../gm/GmTargetDialog';
 import type { PartySummary } from '../../sync/partySummary';
 import { ActorsColumn, EnemyRow } from './GmActorsPanels';
+import { RollRequestsPanel } from './RollRequestsPanel';
 
 const card = 'bg-[#0f1219] border border-[#1e2334] rounded-xs p-3 space-y-2';
 const small = 'text-[11px] font-mono-code text-[#94a3b8]';
@@ -138,6 +139,12 @@ export function GmModeView() {
               ) : null
             )}
           </div>
+          {/* v5.23.0 (plan 28): pedir tiradas, solo con mesa online. [Claude Code · 2026-11-12] */}
+          {online && (
+            <RollRequestsPanel
+              targets={players.map((p) => ({ id: p.id, handle: p.sheet?.handle ?? p.summary?.handle ?? '', ownerUid: p.summary?.ownerUid }))}
+            />
+          )}
         </section>
 
         <section className="space-y-2">

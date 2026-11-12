@@ -12,11 +12,14 @@ import { useGameClockStore, setClockPublisher, ownCharacterIds } from '../store/
 import { useEncounterStore, pcCombatantId } from '../store/encounterStore';
 import { getFirebase } from './firebaseClient';
 import { createEncounterRepo, createTableLogRepo } from './encounterRepo';
-import { createTableLogPublisher, gmActionToLog, useTableLog, TABLE_LOG_KEEP, type TableLogPublisher } from './tableLog';
+import { createTableLogPublisher, gmActionToLog, rollToLog, useTableLog, TABLE_LOG_KEEP, type TableLogPublisher } from './tableLog';
 import type { DeathSaveResult } from '../engine/characterEngine';
 import { createEncounterSync, type EncounterAdapter, type EncounterSync } from './encounterSync';
 import { startGmSecrets, stopGmSecrets, createGmSecretsRepo, GM_SECRET_LOCAL_KEYS, type GmSecretKind } from './gmSecrets';
 import { createTableRevealsRepo, useTableReveals } from './tableReveals';
+import { createRollRequestsRepo, useRollRequests } from './rollRequests';
+import { ROLL_REQUEST_KEEP } from '../engine/rollRequest';
+import type { RollEntry } from '../types/cyberpunk';
 
 export interface ActiveTable {
   table: CampaignDoc | null;
@@ -129,6 +132,7 @@ function stopEncounterSync(): void {
   logPublisher = null;
   useTableLog.getState().set([]);
   useTableReveals.setState({ handouts: [], net: null, market: null, adapter: null });
+  useRollRequests.setState({ requests: [], adapter: null });
 }
 
 function whoAmI(uid: string) {
@@ -195,6 +199,13 @@ export function publishGmAction(a: { targetCharId: string; targetHandle: string;
   logPublisher.publishEntry(gmActionToLog(a, { uid }));
 }
 
+/** v5.23.0 (plan 28): tirada pedida por el GM; va al log a nombre del PJ que tiró (puede no ser la ficha activa). [Claude Code · 2026-11-12] */
+export function publishRollFor(entry: RollEntry, charId: string, handle: string): void {
+  const uid = useAuthStore.getState().user?.uid;
+  if (!uid || !logPublisher) return;
+  logPublisher.publishEntry(rollToLog(entry, { uid, charId, handle }));
+}
+
 export function hasTableLog(): boolean {
   return logPublisher !== null;
 }
@@ -233,6 +244,11 @@ function startEncounterSync(campId: string, isGm: boolean): void {
     logUnsubs.push(reveals.subscribeNet((net) => useTableReveals.setState({ net }), (e) => console.warn('[mesa] NET revelado:', e)));
     // v5.14.0 [Claude Code · 2026-11-06]: Night Market que muestra el GM.
     logUnsubs.push(reveals.subscribeMarket((market) => useTableReveals.setState({ market }), (e) => console.warn('[mesa] mercado:', e)));
+    // v5.23.0 (plan 28): pedidos de tirada (el GM ve los últimos 20; el jugador, los suyos). [Claude Code · 2026-11-12]
+    const rolls = createRollRequestsRepo(h, campId, uid, isGm);
+    useRollRequests.setState({ adapter: rolls });
+    logUnsubs.push(rolls.subscribe((requests) => useRollRequests.setState({ requests }), (e) => console.warn('[mesa] pedidos de tirada:', e)));
+    if (isGm) void rolls.trim(ROLL_REQUEST_KEEP).catch((e) => console.warn('[mesa] recorte de pedidos:', e));
     // v5.3.0 (plan 20, B.1): secretos del GM de esta campaña. [Claude Code · 2026-10-28]
     if (isGm) {
       startGmSecrets({
