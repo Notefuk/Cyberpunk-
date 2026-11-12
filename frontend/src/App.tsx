@@ -11,7 +11,7 @@ import {
   Train,
   FileText,
   Users,
-  Dices
+  Dices, SlidersHorizontal
 } from 'lucide-react';
 import { useCharacterStore } from './store/useCharacterStore';
 import { TopHudBar } from './features/layout/TopHudBar';
@@ -37,12 +37,13 @@ const CloudTableView = lazy(() => import('./features/cloud/CloudTableView').then
 const NetAndRolesDeckView = lazy(() => import('./features/netroles/NetAndRolesDeckView').then((m) => ({ default: m.NetAndRolesDeckView })));
 const RedChromeCargoView = lazy(() => import('./features/oneshot/RedChromeCargoView').then((m) => ({ default: m.RedChromeCargoView })));
 // v5.19.0 [Claude Code · 2026-11-11]: tablas del GM de los Interface RED (plan 27).
+const GmModeView = lazy(() => import('./features/gmmode/GmModeView').then((m) => ({ default: m.GmModeView })));
 const GmTablesView = lazy(() => import('./features/gmtables/GmTablesView').then((m) => ({ default: m.GmTablesView })));
 const SystemChangelogAndDocsView = lazy(() => import('./features/docs/SystemChangelogAndDocsView').then((m) => ({ default: m.SystemChangelogAndDocsView })));
 
-type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'mesa' | 'oneshot' | 'gmtables' | 'creator' | 'docs';
+type TabKey = 'combat' | 'sheet' | 'cyberware' | 'netroles' | 'compendium' | 'packs' | 'gm' | 'mesa' | 'oneshot' | 'gmtables' | 'gmmode' | 'creator' | 'docs';
 /** Pestañas que solo ve el GM (canSeeGmOnly). */
-const GM_ONLY_TABS: TabKey[] = ['oneshot', 'gmtables'];
+const GM_ONLY_TABS: TabKey[] = ['oneshot', 'gmtables', 'gmmode'];
 
 export default function App() {
   // [Claude Code · 2026-10-24] Plan 18: con un link ?unirse=… se abre directo la pestaña MESA.
@@ -125,6 +126,12 @@ export default function App() {
       icon: <Train className="w-4 h-4 text-red-500" />
     },
     {
+      // v5.21.0 (plan 28): panel del GM. [Claude Code · 2026-11-12]
+      id: 'gmmode',
+      label: '🎛️ MODO GM',
+      icon: <SlidersHorizontal className="w-4 h-4 text-cyan-400" />
+    },
+    {
       id: 'gmtables',
       label: '🎲 TABLAS DEL GM',
       icon: <Dices className="w-4 h-4 text-cyan-400" />
@@ -182,6 +189,7 @@ export default function App() {
         {activeTab === 'combat' && <CombatHudView />}
         {activeTab === 'sheet' && <StreetLabView />}
         {activeTab === 'gmtables' && gmOnlyVisible && <GmTablesView />}
+        {activeTab === 'gmmode' && gmOnlyVisible && <GmModeView />}
         {activeTab === 'creator' && (
           <CharacterCreatorWizard
             onClose={() => setActiveTab('sheet')}

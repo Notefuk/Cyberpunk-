@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.21.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'GM',
+    title: 'Modo GM: todos los jugadores de un vistazo',
+    summary: 'Pestaña nueva solo para el GM. Muestra una tarjeta por jugador con HP, SP, Suerte, Humanidad, plata, el arma en mano con sus balas y las condiciones; al tocarla se abre el diálogo para aplicarle daño, críticas o plata. Al lado está el encuentro, con un botón para tirar la iniciativa de todos.',
+    highlights: [
+      'Tarjetas de jugador con lo importante para el combate.',
+      'Iniciativa de todos con un botón (REF + 1d10).',
+      'Primera parte del plan 28; siguen los actores guardados y pedir tiradas.'
+    ],
+    filesTouched: ['frontend/src/features/gmmode/GmModeView.tsx', 'frontend/src/engine/gmMode.ts', 'frontend/src/App.tsx'],
+    metricsBadge: 'v5.21.0 • Plan 28 • GM'
+  },
+  {
     version: 'v5.20.0',
     date: '2026-11-11',
     author: 'Claude Code',
@@ -1703,6 +1719,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.21.0': true,
     'v5.20.0': true,
     'v5.19.0': true,
     'v5.18.0': true,

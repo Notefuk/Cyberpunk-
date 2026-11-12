@@ -117,6 +117,17 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.21.0] - 2026-11-12 (Plan 28 I: pestaña MODO GM) [Claude Code · 2026-11-12]
+* **Category**: Herramientas del GM (plan 28, `docs/plans/plan28-modo-gm.md`).
+* **What Changed**:
+  * Pestaña nueva "🎛️ MODO GM", solo para el GM (`GM_ONLY_TABS`).
+  * Tarjeta por jugador: HP con su barra y estado de heridas, SP de cabeza y cuerpo, Suerte, Humanidad, plata, arma en mano con balas y reserva, condiciones y críticas. Un clic abre el diálogo del GM (daño, críticas, condiciones, plata).
+  * Con mesa salen los jugadores de la party; sin mesa, las fichas de jugador del navegador.
+  * Encuentro con el orden de iniciativa y el botón "Iniciativa de todos" (REF + 1d10, Core p.168). En la mesa, la iniciativa de cada jugador la sigue tirando su dispositivo.
+  * Desvío del plan: las tarjetas salen de la ficha completa que el GM ya tiene cargada, así que `PartySummary` no cambia.
+* **Files Modified**: `features/gmmode/GmModeView.tsx` (nuevo), `engine/gmMode.ts` (nuevo), `App.tsx`; test `engine/__tests__/gmMode.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 667 tests (4 nuevos) y build. En local sin mesa: las 7 tarjetas, la iniciativa de todos y el diálogo del GM; consola limpia.
+
 ### [v5.20.0] - 2026-11-11 (Plan 27 VI: pregens, PNJ, NET y aventuras; cierre del plan 27) [Claude Code · 2026-11-11]
 * **Category**: Contenido canon (plan 27; auditoría `docs/canon-audit/v5.20.0-pregens-pnj-interface-red.md`).
 * **What Changed**:
