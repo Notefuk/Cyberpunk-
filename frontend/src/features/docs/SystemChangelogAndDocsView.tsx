@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.20.0',
+    date: '2026-11-11',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Canon',
+    title: 'Pregens de Single Shot, PNJ, NET y aventuras de Halloween',
+    summary: 'Las 10 pregens del Single Shot Pack (Interface RED Vol. 1) se eligen en el creador, con el Neuroport de CEMK ya instalado. El NET suma 8 arquitecturas nuevas y el bestiario 13 PNJ de la Jumpstart Kit Conversion Guide y de Halloween Screamsheets, cuyas 3 aventuras están en Tablas del GM. Hardened revisado contra Interface RED Vol. 2. Con esto se cierra el plan 27.',
+    highlights: [
+      '10 pregens jugables con Neuroport, una por rol.',
+      '8 arquitecturas NET y 13 PNJ nuevos.',
+      'Aventuras de Halloween para el GM y tarjeta Hardened corregida.'
+    ],
+    filesTouched: ['frontend/src/data/characterCreationData.ts', 'frontend/src/data/netArchitecturesInterfaceRed.ts', 'data/enemies-src/interface-red.json', 'frontend/src/data/gmTables/halloween.ts'],
+    metricsBadge: 'v5.20.0 • Plan 27 • Canon'
+  },
+  {
     version: 'v5.19.0',
     date: '2026-11-11',
     author: 'Claude Code',
@@ -1687,6 +1703,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.20.0': true,
     'v5.19.0': true,
     'v5.18.0': true,
     'v5.17.0': true,

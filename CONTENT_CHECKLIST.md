@@ -182,6 +182,7 @@
   - [x] **Movilidad de Interface RED**: la bici y el Zonda Metrocar en vehículos, patines, skate, Cyberchairs Mercurius y Spider, reglas de Spinning Your Wheels y Cyberchairs, armador del Dreaded Punknaught en el bestiario, v5.17.0 [Claude Code · 2026-11-11]
   - [x] **Vivienda de Interface RED**: 40 viviendas con nombre y tirada 1d10 en el creador (Cube Hotels, Cargo Containers, Studio Apartments y Corporate Conapts) y 17 muebles y accesorios, v5.18.0 [Claude Code · 2026-11-11]
   - [x] **Tablas del GM de Interface RED**: logros y cajas de botín, clima (estaciones, Strange Weather, temperatura), Digital Dating, Collecting the Random, Salvaging Night City y reglas de Stickball, v5.19.0 [Claude Code · 2026-11-11]
+  - [x] **Pregens, PNJ y NET de Interface RED**: 10 pregens del Single Shot Pack con Neuroport, 8 arquitecturas NET, 13 PNJ (Jumpstart y Halloween), 3 aventuras de Halloween y Hardened revisado contra IR2, v5.20.0 [Claude Code · 2026-11-11]
 
 ### 2. `NIGHT CITY 2045` (Interactive Atlas & Campaign Gazetteer — Planeado para Fase 5 / Premium Expansion)
 *Módulo integral de cartografía táctica urbana, geopolítica distrital y generador narrativo de misiones para Director de Juego y jugadores.*

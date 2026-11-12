@@ -52,7 +52,7 @@ describe('PNJ de Interface RED', () => {
     expect(r.deathSave).toBe(7);
   });
 
-  it('Hardened: siguen siendo 16 y se suma el Brawling que imprime IR2 (pp.11-13)', () => {
+  it('Hardened: siguen siendo 16 y se suma el Brawling que imprime IR2 (pp.12 y 14)', () => {
     expect(HARDENED_ENEMIES).toHaveLength(16);
     const siege = HARDENED_ENEMIES.find((e) => e.id === 'hardened-security-officer-siege')!;
     expect(siege.weapons.some((w) => w.name === 'Brawling' && w.damage === '3d6')).toBe(true);

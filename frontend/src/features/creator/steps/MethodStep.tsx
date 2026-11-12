@@ -32,7 +32,7 @@ const METHODS: MethodInfo[] = [
     label: 'Pregen del Easy Mode',
     eras: ['2045'],
     page: 'Core Easy Mode',
-    text: 'Uno de los 5 personajes prearmados del Core, listo para jugar.',
+    text: 'Uno de los 5 personajes prearmados del Core o de los 10 del Single Shot Pack (Interface RED Vol. 1, con Neuroport de CEMK), listo para jugar.',
     badge: 'Core RED'
   },
   {

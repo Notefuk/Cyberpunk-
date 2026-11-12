@@ -486,7 +486,7 @@ export const HARDENED_ENEMIES: EnemySheet[] = [
         "damage": "1d6",
         "rof": 2,
         "mag": 0,
-        "notes": "Interface RED Vol. 2 p.11 lo imprime como ataque · ROF/cargador según tabla Core p.176",
+        "notes": "Interface RED Vol. 2 p.12 lo imprime como ataque · ROF/cargador según tabla Core p.176",
         "skill": "Brawling"
       }
     ],
@@ -614,7 +614,7 @@ export const HARDENED_ENEMIES: EnemySheet[] = [
         "damage": "1d6",
         "rof": 2,
         "mag": 0,
-        "notes": "Interface RED Vol. 2 p.11 lo imprime como ataque · ROF/cargador según tabla Core p.176",
+        "notes": "Interface RED Vol. 2 p.12 lo imprime como ataque · ROF/cargador según tabla Core p.176",
         "skill": "Brawling"
       }
     ],
@@ -1118,7 +1118,7 @@ export const HARDENED_ENEMIES: EnemySheet[] = [
         "damage": "3d6",
         "rof": 2,
         "mag": 0,
-        "notes": "Interface RED Vol. 2 p.13 lo imprime como ataque · ROF/cargador según tabla Core p.176",
+        "notes": "Interface RED Vol. 2 p.14 lo imprime como ataque · ROF/cargador según tabla Core p.176",
         "skill": "Brawling"
       }
     ],
