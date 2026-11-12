@@ -7,7 +7,8 @@ import { X } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useEncounterStore } from '../../store/encounterStore';
 import { useRulesSettingsStore } from '../../store/rulesSettingsStore';
-import { calculateIncomingImpact, planImpactEffects, type IncomingAttackType, type IncomingImpactInput } from '../../engine/combatEngine';
+import type { IncomingAttackType } from '../../engine/combatEngine';
+import { applyHitToPc, pcImpactInput, previewPcImpact } from './gmDamage';
 import { calculateMaxHp, getEffectiveBody } from '../../engine/characterEngine';
 import { HEAD_CRITICAL_INJURIES, BODY_CRITICAL_INJURIES } from '../../data/criticalInjuries';
 import { CEMK_CRITICAL_INJURIES } from '../../data/creation';
@@ -66,32 +67,16 @@ export const GmTargetDialog: React.FC<{ charId: string; onClose: () => void }> =
   }
 
   const st = useCharacterStore.getState;
-  const hpNow = () => st().characters.find((c) => c.id === charId)?.currentHp ?? 0;
   const maxHp = calculateMaxHp(getEffectiveBody(char), char.stats.WILL);
-  const input: IncomingImpactInput = {
-    damage,
-    location,
-    attackType,
-    isCritical,
-    passExcess: false,
-    headSp: char.headArmor?.currentSp ?? 0,
-    bodySp: char.bodyArmor?.currentSp ?? 0,
-    shieldSdp: 0,
-    // Core p. 188: Cracked Skull multiplica x3 los Ataques Apuntados a la cabeza.
-    hasCrackedSkull: char.activeInjuries.some((i) => !i.isTreated && i.name.includes('Cracked Skull'))
-  };
-  const impact = calculateIncomingImpact(input);
-  const spBefore = location === 'head' ? input.headSp : input.bodySp;
+  // v5.23.0 (plan 28): el cálculo y la aplicación están en gmDamage.ts (también los usa el ataque de un actor). [Claude Code · 2026-11-12]
+  const hit = { damage, location, attackType, isCritical };
+  const input = pcImpactInput(char, hit);
+  const impact = previewPcImpact(char, hit);
   const where = location === 'head' ? 'cabeza' : 'cuerpo';
 
   const applyDamage = () => {
-    const hpBefore = char.currentHp;
-    const injuries = st().applyImpactTo(charId, planImpactEffects(input, impact, impact.hpLoss, hpBefore < 1));
-    const hpAfter = hpNow();
-    const parts = [`SP ${spBefore}→${spBefore - impact.spAblation}`, `HP ${hpBefore}→${hpAfter}`];
-    if (injuries.length) parts.push(`herida: ${injuries.map((i) => i.name).join(', ')} (Core pp.187-188)`);
-    publishGmAction({ targetCharId: charId, targetHandle: char.handle, label: `daño ${damage} en ${where}${isCritical ? ' (crítico)' : ''}`, detail: parts.join(' · '), total: damage });
-    done(`Aplicado: ${parts.join(' · ')}`);
+    const summary = applyHitToPc(charId, hit, `daño ${damage} en ${where}${isCritical ? ' (crítico)' : ''}`);
+    if (summary) done(`Aplicado: ${summary}`);
   };
 
   const critNames = criticalTable === 'cemk'

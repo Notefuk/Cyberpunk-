@@ -10,7 +10,7 @@ const small = 'text-[11px] font-mono-code text-[#94a3b8]';
 const input = 'bg-[#0a0d14] border border-[#262b3c] text-[12px] font-mono-code text-white px-2 py-1 rounded-xs min-w-0';
 const btn = 'font-tech text-[11px] uppercase px-2 py-1 border border-[#262b3c] text-[#cbd5e1] hover:border-[#22d3ee] hover:text-[#22d3ee] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
 
-// Core p.130: DV de referencia (Simple 9, Everyday 13, Difficult 15, Professional 17, Heroic 21, Incredible 24, Legendary 29).
+// Core p.129: DV de referencia (Simple 9, Everyday 13, Difficult 15, Professional 17, Heroic 21, Incredible 24, Legendary 29).
 const DV_PRESETS = [9, 13, 15, 17, 21, 24, 29];
 
 export interface RequestTarget {
