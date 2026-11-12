@@ -299,13 +299,19 @@ export interface WeaponItem {
   rebuild2077?: 'standard' | 'power' | 'smart' | 'tech';
   /** v5.12.0 (plan 26): puestos del Night Market donde se vende (Black Chrome, "Booth B1"). [Claude Code · 2026-11-06] */
   booth?: string[];
+  /** v5.25.0 (plan 30): tabla de rango propia, clave de WEAPON_RANGE_PROFILES (ej. 'ir5_battle_rifle', IR5 p.113). [Claude Code · 2026-11-12] */
+  rangeTable?: string;
 }
 
 export interface ArmorItem {
   id: string;
   name: string;
   sp: number;
+  /** Penalización de armadura a REF (y a DEX y MOVE si no traen la suya). */
   penalty: number;
+  /** v5.25.0 (plan 30): Metalgear de IR5 p.123 penaliza distinto a DEX y MOVE. [Claude Code · 2026-11-12] */
+  penaltyDex?: number;
+  penaltyMove?: number;
   cost: number;
   costTier?: string;
   description?: string;
@@ -589,6 +595,9 @@ export interface CharacterSheet {
     maxSp: number;
     currentSp: number;
     penalty: number;
+    /** v5.25.0: penalización propia a DEX y MOVE (Metalgear de IR5 p.123). */
+    penaltyDex?: number;
+    penaltyMove?: number;
     techUpgradedSp?: boolean;
   };
   bodyArmor: {
@@ -596,6 +605,9 @@ export interface CharacterSheet {
     maxSp: number;
     currentSp: number;
     penalty: number;
+    /** v5.25.0: penalización propia a DEX y MOVE (Metalgear de IR5 p.123). */
+    penaltyDex?: number;
+    penaltyMove?: number;
     techUpgradedSp?: boolean;
   };
   skills: Record<CombatSkillKey, number>;

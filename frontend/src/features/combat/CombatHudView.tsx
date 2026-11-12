@@ -16,7 +16,7 @@ import { HandoutNotice } from '../cloud/HandoutsPanel';
 import { 
   RANGE_BRACKETS, 
   WEAPON_RANGE_PROFILES, 
-  getWeaponProfileKey 
+  getWeaponRangeProfile 
 } from '../../data/rangeTables';
 import { 
   getAutofireRulesSummary, 
@@ -1783,9 +1783,7 @@ export const CombatHudView: React.FC = () => {
   // Helper: DV for weapon & distance
   const getDvForWeapon = (weapon: WeaponItem, distance: string, isAuto: boolean): number | null => {
     if (weapon.type === 'Melee') return 13;
-    const profileKey = getWeaponProfileKey(weapon.name, weapon.type);
-    if (!profileKey) return 15;
-    const profile = WEAPON_RANGE_PROFILES[profileKey];
+    const profile = getWeaponRangeProfile(weapon);
     if (!profile) return 15;
     if (isAuto && profile.autofireDvs) {
       return profile.autofireDvs[distance] ?? null;
@@ -5195,8 +5193,7 @@ export const CombatHudView: React.FC = () => {
                   : parseInt((selectedDistance as string)?.match(/\d+/)?.[0] || '0', 10);
                 const breakdown = calculateWeaponAttackBreakdown(activeChar, w, isAuto, distMeters);
                 const currentDv = getDvForWeapon(w, selectedDistance, isAuto);
-                const profileKey = getWeaponProfileKey(w.name, w.type);
-                const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
+                const profile = getWeaponRangeProfile(w);
                 const placeholderType = getItemPlaceholderType(w);
                 const isOutOfAmmo = isRanged && (w.currentMag ?? 0) <= 0;
                 const aimedPenalty = aimedShotTarget !== 'none' ? 8 : 0;

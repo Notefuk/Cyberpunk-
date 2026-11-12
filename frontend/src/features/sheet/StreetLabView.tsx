@@ -5,6 +5,7 @@ import { useCloudState } from '../../sync/cloudState';
 import { 
   calculateMaxHp, 
   calculateSeriouslyWoundedThreshold, 
+  armorStatPenalty,
   calculateMaxHumanity,
   calculateWeaponAttackBreakdown,
   getEffectiveEmp,
@@ -424,10 +425,8 @@ export const StreetLabView: React.FC = () => {
   // Calculate active penalties per stat
   const getStatPenalty = (stat: StatKey): number => {
     let pen = 0;
-    if (stat === 'REF' || stat === 'DEX' || stat === 'MOVE') {
-      const headPen = Math.abs(activeChar?.headArmor?.penalty ?? 0);
-      const bodyPen = Math.abs(activeChar?.bodyArmor?.penalty ?? 0);
-      pen += Math.max(headPen, bodyPen);
+    if ((stat === 'REF' || stat === 'DEX' || stat === 'MOVE') && activeChar) {
+      pen += armorStatPenalty(activeChar, stat);
     }
     activeChar?.activeInjuries?.forEach((inj) => {
       if (!inj.isTreated && inj.modifiers?.statPenalties?.[stat]) {

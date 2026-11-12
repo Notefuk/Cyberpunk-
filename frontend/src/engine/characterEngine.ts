@@ -9,6 +9,7 @@ import type {
 import { SKILL_METADATA } from '../types/cyberpunk';
 import { calculateWeaponAttachmentBonuses } from '../data/weaponAttachmentsAndTechData';
 import { cyberwareStatBonus } from './cyberwareEffects';
+import { parseAutofireMode } from '../data/rangeTables';
 
 export function calculateMaxHp(body: number, will: number): number {
   return 10 + 5 * Math.ceil((body + will) / 2);
@@ -166,9 +167,7 @@ export function calculateWeaponAttackBreakdown(
   const penaltyBreakdown: string[] = [];
 
   // 1. Penalizador de Armadura (Afecta a REF y DEX; se toma el mayor entre cabeza y cuerpo)
-  const headPen = Math.abs(character.headArmor?.penalty ?? 0);
-  const bodyPen = Math.abs(character.bodyArmor?.penalty ?? 0);
-  const armorPenalty = (statKey === 'REF' || statKey === 'DEX') ? Math.max(headPen, bodyPen) : 0;
+  const armorPenalty = statKey === 'REF' || statKey === 'DEX' ? armorStatPenalty(character, statKey) : 0;
   if (armorPenalty > 0) {
     penaltyBreakdown.push(`[Armadura] Penalizador de blindaje: -${armorPenalty}`);
   }
@@ -257,15 +256,25 @@ export function calculateWeaponAttackBreakdown(
   };
 }
 
+/**
+ * Penalización de armadura a REF, DEX o MOVE: la mayor entre cabeza y cuerpo, como ya hacía la app. El Metalgear de
+ * IR5 p.123 trae una propia para DEX y MOVE; si no la trae, vale la de REF. [Claude Code · 2026-11-12]
+ */
+export function armorStatPenalty(character: Pick<CharacterSheet, 'headArmor' | 'bodyArmor'>, stat: 'REF' | 'DEX' | 'MOVE'): number {
+  const of = (a: CharacterSheet['headArmor'] | undefined) => {
+    if (!a) return 0;
+    const v = stat === 'DEX' ? (a.penaltyDex ?? a.penalty) : stat === 'MOVE' ? (a.penaltyMove ?? a.penalty) : a.penalty;
+    return Math.abs(v ?? 0);
+  };
+  return Math.max(of(character.headArmor), of(character.bodyArmor));
+}
+
 export function getEffectiveMove(character: CharacterSheet): number {
   const isFbc = Boolean(character.fbcState?.isFullBodyConversion);
   const baseMove = isFbc
     ? Math.max(character.stats?.MOVE ?? 0, character.fbcState?.statFloor ?? 0)
     : (character.stats?.MOVE ?? 0);
-  let penalty = 0;
-  const headPen = Math.abs(character.headArmor?.penalty ?? 0);
-  const bodyPen = Math.abs(character.bodyArmor?.penalty ?? 0);
-  penalty += Math.max(headPen, bodyPen);
+  let penalty = armorStatPenalty(character, 'MOVE');
 
   // Core p. 186: Mortally Wounded da -6 a MOVE (mínimo 1).
   if (!isFbc && isMortallyWounded(character.currentHp ?? 0)) {
@@ -299,8 +308,12 @@ export function getAutofireRulesSummary(weapon: WeaponItem): AutofireRulesSummar
   if (typeof weapon.autofireMaxMult === 'number' && weapon.autofireMaxMult > 0) {
     maxMultiplier = weapon.autofireMaxMult;
   } else if (weapon.altFireModes) {
+    // v5.25.0: también "Autofire (Machine Gun 5)" (IR5 p.115).
+    const parsed = parseAutofireMode(weapon.altFireModes);
     const match = weapon.altFireModes.match(/Autofire(?:\s*\(([0-9]+)\))?/i);
-    if (match) {
+    if (parsed) {
+      maxMultiplier = parsed.max;
+    } else if (match) {
       maxMultiplier = match[1] ? parseInt(match[1], 10) : 3;
     }
   } else if ((weapon.skill || '').toLowerCase() === 'autofire') {

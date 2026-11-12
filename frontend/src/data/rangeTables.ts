@@ -172,3 +172,88 @@ export function getWeaponProfileKey(weaponName: string, weaponType: string): str
   if (lower.includes('rocket')) return 'rocket_launcher';
   return 'pistol'; // default fallback
 }
+
+/**
+ * v5.25.0 (plan 30): tablas expandidas de Solo of Fortune 2045, Interface RED Vol. 5 p.113
+ * ("Expanded Single Shot DVs based on Range"). Solo las usan las armas que traen `rangeTable` en el pack;
+ * las armas del Core siguen con su tabla (Core p.173). [Claude Code · 2026-11-12]
+ */
+const IR5_SINGLE_SHOT: Record<string, [string, (number | null)[]]> = {
+  snubnose_pistol: ['Snubnose Pistol', [12, 14, 20, 26, 35, null, null, null]],
+  pistol: ['Pistol', [13, 15, 20, 25, 30, 35, null, null]],
+  long_barrel_pistol: ['Long Barrel Pistol', [15, 13, 14, 19, 20, 22, 30, null]],
+  subcompact_smg: ['Subcompact SMG', [13, 13, 14, 21, 27, 30, null, null]],
+  smg: ['SMG', [15, 13, 15, 20, 25, 25, 30, null]],
+  short_barrel_shotgun: ['Short Barrel Shotgun', [12, 14, 23, 27, 32, null, null, null]],
+  shotgun: ['Shotgun', [13, 15, 20, 25, 30, 35, null, null]],
+  long_barrel_shotgun: ['Long Barrel Shotgun', [14, 16, 15, 18, 25, 28, null, null]],
+  carbine: ['Carbine', [16, 15, 13, 15, 20, 25, 30, null]],
+  assault_rifle: ['Assault Rifle', [17, 16, 15, 13, 15, 20, 25, 30]],
+  battle_rifle: ['Battle Rifle', [18, 16, 16, 14, 14, 19, 24, 29]],
+  marksman_rifle: ['Marksman Rifle', [20, 18, 17, 15, 14, 18, 21, 27]],
+  scout_rifle: ['Scout Rifle', [21, 20, 19, 18, 17, 17, 19, 24]],
+  sniper_rifle: ['Sniper Rifle', [30, 25, 25, 20, 15, 16, 17, 20]],
+  anti_materiel_rifle: ['Anti-materiel Rifle', [30, 30, 28, 22, 15, 15, 16, 17]],
+  shortbow: ['Shortbow', [13, 14, 16, 21, 22, null, null, null]],
+  bow: ['Bow', [15, 13, 15, 17, 20, 22, null, null]],
+  longbow: ['Longbow', [17, 15, 13, 15, 17, 20, 22, null]],
+  grenade_launcher: ['Grenade Launcher', [16, 15, 15, 17, 20, 22, 25, null]],
+  rocket_launcher: ['Rocket Launcher', [17, 16, 15, 15, 20, 20, 25, 30]],
+  missile_launcher: ['Missile Launcher', [30, 25, 25, 20, 17, 20, 20, 20]],
+};
+
+/** IR5 p.113, "Expanded Autofire DVs based on Range" (0 a 100 m). SMG y Assault Rifle son los del Core p.173. */
+export type AutofireTableId = 'machine_pistol' | 'smg' | 'assault_rifle' | 'machine_gun';
+export const AUTOFIRE_TABLES: Record<AutofireTableId, { name: string; dvs: number[] }> = {
+  machine_pistol: { name: 'Machine Pistol', dvs: [17, 20, 22, 27, 30] },
+  smg: { name: 'SMG', dvs: [20, 17, 20, 25, 30] },
+  assault_rifle: { name: 'Assault Rifle', dvs: [22, 20, 17, 20, 25] },
+  machine_gun: { name: 'Machine Gun', dvs: [21, 18, 18, 19, 25] },
+};
+
+for (const [key, [name, dvs]] of Object.entries(IR5_SINGLE_SHOT)) {
+  WEAPON_RANGE_PROFILES[`ir5_${key}`] = {
+    name: `${name} (IR5 p.113)`,
+    dvs: Object.fromEntries(RANGE_BRACKETS.map((b, i) => [b.range, dvs[i] ?? null])),
+  };
+}
+
+/** Lee "Autofire (Machine Gun 5)", "Autofire (SMG 4)" o "Autofire (4)" (Core). */
+export function parseAutofireMode(altFireModes: string | undefined): { table: AutofireTableId | null; max: number } | null {
+  const m = /Autofire\s*\((?:\s*(Machine Pistol|Machine Gun|SMG|Assault Rifle)\s*)?(\d+)\)/i.exec(altFireModes ?? '');
+  if (!m) return null;
+  const label = (m[1] ?? '').toLowerCase();
+  const table: AutofireTableId | null =
+    label === 'machine pistol' ? 'machine_pistol'
+    : label === 'machine gun' ? 'machine_gun'
+    : label === 'smg' ? 'smg'
+    : label === 'assault rifle' ? 'assault_rifle'
+    : null;
+  return { table, max: Number(m[2]) };
+}
+
+interface RangeWeaponLike {
+  name: string;
+  type: string;
+  rangeTable?: string;
+  altFireModes?: string;
+}
+
+/**
+ * Tabla de rango de un arma: la que trae en `rangeTable` (IR5) o la del Core por el nombre. Si el arma dice
+ * qué fila de Autofire usa (IR5 p.115: Machine Pistol, SMG, Assault Rifle, Machine Gun), esa reemplaza a la del perfil.
+ */
+export function getWeaponRangeProfile(weapon: RangeWeaponLike): WeaponRangeProfile | null {
+  if (weapon.type === 'Melee') return null;
+  const key = weapon.rangeTable && WEAPON_RANGE_PROFILES[weapon.rangeTable] ? weapon.rangeTable : getWeaponProfileKey(weapon.name, weapon.type);
+  const base = key ? WEAPON_RANGE_PROFILES[key] : null;
+  if (!base) return null;
+  const auto = parseAutofireMode(weapon.altFireModes);
+  if (!auto?.table) return base;
+  const table = AUTOFIRE_TABLES[auto.table];
+  return {
+    ...base,
+    autofireDvs: Object.fromEntries(RANGE_BRACKETS.slice(0, 5).map((b, i) => [b.range, table.dvs[i]])),
+    autofireMaxMultiplier: auto.max,
+  };
+}

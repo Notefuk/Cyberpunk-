@@ -4,6 +4,7 @@
 // Daño: los d6 del arma; dos o más 6 = Herida Crítica y +5 directo a HP, que suma calculateIncomingImpact (Core p.187).
 // Funciones puras; aplicar el daño a la ficha está en features/gm/gmDamage.ts.
 import { rollCheckD10, beatsDv } from './combatEngine';
+import { parseAutofireMode } from '../data/rangeTables';
 
 export const AIMED_HEAD_PENALTY = 8;
 
@@ -50,18 +51,23 @@ export function rollActorAttack(input: ActorAttackInput, rng: () => number = Mat
 /** Core p.173: Autofire y Suppressive Fire gastan 10 balas; con menos de 10 en el cargador no se pueden usar. */
 export const AUTOFIRE_BULLETS = 10;
 
-export type AutofireClass = 'smg' | 'ar';
+/** v5.25.0: 'mp' (Machine Pistol) y 'mg' (Machine Gun) son de IR5 p.113. */
+export type AutofireClass = 'smg' | 'ar' | 'mp' | 'mg';
 
 /** Core p.173, "Autofire DVs based on Range". Más de 100 m: no hay entrada. */
 export const AUTOFIRE_BANDS = ['0 a 6 m', '7 a 12 m', '13 a 25 m', '26 a 50 m', '51 a 100 m'] as const;
 export const AUTOFIRE_DV: Record<AutofireClass, readonly number[]> = {
   smg: [20, 17, 20, 25, 30],
   ar: [22, 20, 17, 20, 25],
+  mp: [17, 20, 22, 27, 30],
+  mg: [21, 18, 18, 19, 25],
 };
 
 interface WeaponLike {
   name: string;
   notes?: string;
+  /** "Autofire (Machine Gun 5)" (IR5 p.115) o "Autofire (4)" (Core). */
+  altFireModes?: string;
 }
 
 /**
@@ -69,6 +75,8 @@ interface WeaponLike {
  * SMG 3 y Assault Rifle 4 (Core p.173). null: el arma no tiene Autofire.
  */
 export function autofireMax(w: WeaponLike): number | null {
+  const mode = parseAutofireMode(w.altFireModes);
+  if (mode) return mode.max;
   const m = /autofire\s*x\s*(\d+)/i.exec(w.notes ?? '');
   if (m) return Number(m[1]);
   if (/\bSMG\b|submachine/i.test(w.name)) return 3;
@@ -78,6 +86,8 @@ export function autofireMax(w: WeaponLike): number | null {
 
 /** Qué fila de la tabla de Autofire usa: por el nombre, y si no lo dice, x3 es SMG y x4 o más es Assault Rifle. */
 export function autofireClass(w: WeaponLike, max: number): AutofireClass {
+  const table = parseAutofireMode(w.altFireModes)?.table;
+  if (table) return ({ machine_pistol: 'mp', smg: 'smg', assault_rifle: 'ar', machine_gun: 'mg' } as const)[table];
   if (/\bSMG\b|submachine/i.test(w.name)) return 'smg';
   if (/assault rifle/i.test(w.name)) return 'ar';
   return max <= 3 ? 'smg' : 'ar';

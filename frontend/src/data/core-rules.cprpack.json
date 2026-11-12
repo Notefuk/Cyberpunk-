@@ -7212,7 +7212,7 @@
     {
       "id": "ir5-sycust-cyberspine",
       "name": "Sycust Cyberspine",
-      "type": "Internal Body Cyberware",
+      "type": "Internal",
       "install": "Hospital",
       "humanityLoss": "7 (2d6)",
       "cost": 1000,

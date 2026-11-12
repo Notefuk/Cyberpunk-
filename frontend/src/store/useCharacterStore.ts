@@ -1560,7 +1560,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
                   name: `${armor.name} (Head)`,
                   maxSp: armor.sp,
                   currentSp: armor.sp,
-                  penalty: armor.penalty
+                  penalty: armor.penalty,
+                  ...(armor.penaltyDex !== undefined ? { penaltyDex: armor.penaltyDex } : {}),
+                  ...(armor.penaltyMove !== undefined ? { penaltyMove: armor.penaltyMove } : {})
                 }
               : c.headArmor;
 
@@ -1569,7 +1571,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
                   name: `${armor.name} (Body)`,
                   maxSp: armor.sp,
                   currentSp: armor.sp,
-                  penalty: armor.penalty
+                  penalty: armor.penalty,
+                  ...(armor.penaltyDex !== undefined ? { penaltyDex: armor.penaltyDex } : {}),
+                  ...(armor.penaltyMove !== undefined ? { penaltyMove: armor.penaltyMove } : {})
                 }
               : c.bodyArmor;
 
@@ -2074,7 +2078,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
                   name: `${item.name} (Head)`,
                   maxSp: item.sp,
                   currentSp: item.sp,
-                  penalty: item.penalty
+                  penalty: item.penalty,
+                  ...(item.penaltyDex !== undefined ? { penaltyDex: item.penaltyDex } : {}),
+                  ...(item.penaltyMove !== undefined ? { penaltyMove: item.penaltyMove } : {})
                 };
               }
               if (armorLocation === 'body' || armorLocation === 'both') {
@@ -2082,7 +2088,9 @@ export const useCharacterStore = create<CharacterStoreState>()(
                   name: `${item.name} (Body)`,
                   maxSp: item.sp,
                   currentSp: item.sp,
-                  penalty: item.penalty
+                  penalty: item.penalty,
+                  ...(item.penaltyDex !== undefined ? { penaltyDex: item.penaltyDex } : {}),
+                  ...(item.penaltyMove !== undefined ? { penaltyMove: item.penaltyMove } : {})
                 };
               }
             } else if (category === 'cyberware' && autoEquip !== false) {

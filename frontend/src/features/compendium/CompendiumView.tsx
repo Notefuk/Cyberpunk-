@@ -3,7 +3,7 @@ import coreData from '../../data/core-rules.cprpack.json';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
 import type { WeaponItem, ArmorItem } from '../../types/cyberpunk';
-import { RANGE_BRACKETS, WEAPON_RANGE_PROFILES, getWeaponProfileKey } from '../../data/rangeTables';
+import { RANGE_BRACKETS, getWeaponRangeProfile } from '../../data/rangeTables';
 import { getAutofireRulesSummary, parseHumanityLossAverage } from '../../engine/characterEngine';
 import { canInstallAnother, countInstalls } from '../../engine/cyberwareEffects';
 import { SOURCEBOOKS_CATALOG, EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
@@ -605,8 +605,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
   const renderItemDetails = (item: any, category: CompendiumCategory) => {
     if (category === 'weapons') {
       const isMelee = item.type === 'Melee' || !item.standardMag;
-      const profileKey = getWeaponProfileKey(item.name, item.type);
-      const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
+      const profile = getWeaponRangeProfile(item);
       const autofireRules = getAutofireRulesSummary(item as WeaponItem);
       const weaponInfo = getWeaponClassAndRebuildInfo(item);
 
