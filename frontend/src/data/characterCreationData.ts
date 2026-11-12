@@ -1,6 +1,7 @@
 import { CEMK_CREATION, CORE_GEAR_SKILLS, CORE_ROLE_TABLES, CORE_ROLES } from './creation';
 import type { CoreRoleName, PackageGearItem } from './creation';
 import pack from './core-rules.cprpack.json';
+import SINGLE_SHOT_PREGENS from './creation/singleShotPack.json';
 import { SKILL_METADATA } from '../types/cyberpunk';
 import type {
   CharacterDebt,
@@ -1296,6 +1297,12 @@ export interface PregenTemplate {
   cyberwareIds: string[];
   eurodollars: number;
   lifepath: CharacterLifepath;
+  /** Humanidad impresa en la ficha (Single Shot Pack). Si falta se estima por el ciberware. [Claude Code · 2026-11-11] */
+  humanity?: number;
+  /** Neuroport de CEMK instalado (decisión del plan 27 para las pregens de Single Shot). */
+  hasNeuroport?: boolean;
+  /** Libro de la pregen para la etiqueta del creador. */
+  bookLabel?: string;
 }
 
 export const PREGEN_TEMPLATES: PregenTemplate[] = [];
@@ -1317,7 +1324,7 @@ export function buildCharacterSheetFromPregen(pregen: PregenTemplate): Character
     stats: { ...pregen.stats },
     currentHp: hp,
     currentLuck: pregen.stats.LUCK,
-    currentHumanity: Math.max(10, maxHumanity - pregen.cyberwareIds.length * 4),
+    currentHumanity: pregen.humanity ?? Math.max(10, maxHumanity - pregen.cyberwareIds.length * 4),
     headArmor: { ...pregen.headArmor },
     bodyArmor: { ...pregen.bodyArmor },
     skills: { ...pregen.skills },
@@ -1340,7 +1347,7 @@ export function buildCharacterSheetFromPregen(pregen: PregenTemplate): Character
     roleAbilityName: ROLES_CATALOG.find(r => r.name.toLowerCase() === pregen.role.toLowerCase())?.roleAbility || 'Role Ability',
     generalSkills: { ...pregen.generalSkills },
     fashionBudgetRemaining: 800,
-    hasNeuroport: pregen.era === '2077',
+    hasNeuroport: pregen.hasNeuroport ?? pregen.era === '2077',
     lifepath: { ...pregen.lifepath }
   };
 }
@@ -1400,7 +1407,7 @@ export const normalizeCanonSkillName = (name: string): string =>
     .toLowerCase()
     // Core pp. 86-87: "Electronics/Security Tech (x2)" marca el doble de nivel; "(choose 1)" es la especialización a elegir.
     .replace(/\s*\(x2\)\s*$/, '')
-    .replace(/\s*\(choose 1\)\s*$/, '')
+    .replace(/\s*\(choose (?:1|specialty)\)\s*$/, '') // IR1 Single Shot: 'Science (Choose Specialty)'
     .replace(/&/g, 'and')
     .replace(/\s+/g, ' ')
     .trim();
@@ -1636,6 +1643,124 @@ function buildCanonPregens(): PregenTemplate[] {
   });
 }
 
+// ============================================================================
+// Single Shot Pack (Interface RED Vol. 1 pp.10-31). [Claude Code · 2026-11-11] v5.20.0, plan 27.
+// Fichas Streetrat sin Lifepath (IR1 p.10). Por decisión del plan 27 llevan el Neuroport de CEMK,
+// que no cuesta Humanidad (CEMK RB p.25), así que la Humanidad queda la impresa en la ficha.
+// ============================================================================
+interface SingleShotPregen {
+  handle: string;
+  role: string;
+  sheetPage: number;
+  abilityPage: number;
+  stats: Record<StatKey, number>;
+  humanity: number;
+  skills: Array<{ name: string; level: number }>;
+  weapons: Array<{ name: string; dmg: string | null; ammo: number | null; rof: number | null; notes: string }>;
+  armor: Record<'head' | 'body', { name: string; sp: number; penalty: number }>;
+  cyberware: Array<{ name: string }>;
+  gear: Array<{ name: string }>;
+  roleAbility: { name: string; rank: number; summaryEs: string };
+  clothing: string;
+  cash: number;
+}
+
+const SINGLE_SHOT_NEUROPORT_ID = 'cw-cemk-neuroport';
+
+const EMPTY_COMBAT_SKILLS: Record<CombatSkillKey, number> = {
+  handgun: 0, shoulderArms: 0, autofire: 0, heavyWeapons: 0, archery: 0, meleeWeapon: 0, brawling: 0, martialArts: 0,
+  evasion: 0, athletics: 0, firstAid: 0, paramedic: 0, cybertech: 0, perception: 0, concentration: 0, resistTortureDrugs: 0
+};
+
+const emptyPregenLifepath = (): CharacterLifepath => ({
+  culturalRegion: '', personality: '', clothingStyle: '', hairstyle: '', affectation: '', valueMost: '',
+  feelAboutPeople: '', valuedPerson: '', valuedPossession: '', familyBackground: '', childhoodEnvironment: '',
+  familyCrisis: '', friends: [], tragicLoveAffairs: [], enemies: [], roleLifepath: {}, lifeGoal: ''
+});
+
+// Grafías de las fichas de Single Shot que difieren del nombre del Core.
+const SINGLE_SHOT_CYBER_ALIASES: Record<string, string> = {
+  'Tech Hair': 'Techhair',
+  'Shift Tacs': 'Shift Tacts',
+  'Toxin Binder': 'Toxin Binders'
+};
+
+function singleShotCyberwareId(rawName: string): string | undefined {
+  const name = SINGLE_SHOT_CYBER_ALIASES[rawName] ?? rawName;
+  const mapped = CANON_CYBERWARE_IDS[name];
+  if (mapped) return mapped;
+  const cyber = (pack as unknown as { cyberware: Array<{ id: string; name: string }> }).cyberware;
+  return cyber.find((c) => c.name.toLowerCase() === name.toLowerCase())?.id;
+}
+
+function buildSingleShotPregens(): PregenTemplate[] {
+  const packWeapons = (pack as unknown as { weapons: CanonPackWeapon[] }).weapons;
+  return (SINGLE_SHOT_PREGENS as unknown as SingleShotPregen[]).map((sp) => {
+    const stats = {} as Record<StatKey, number>;
+    for (const k of CANON_STAT_KEYS) stats[k] = sp.stats[k];
+    const split = splitCanonSkills(sp.skills.map((sk) => ({ name: sk.name, level: sk.level })));
+    const skills: Record<CombatSkillKey, number> = { ...EMPTY_COMBAT_SKILLS, ...split.combat };
+    const handleSlug = canonSlug(sp.handle);
+    const weapons: EquippedWeapon[] = sp.weapons.filter((w) => w.dmg !== null).map((w, idx) => {
+      const cat = packWeapons.find((c) => c.name === w.name);
+      const ammoType = cat?.ammoType && cat.ammoType !== 'N/A' ? cat.ammoType : undefined;
+      return {
+        id: cat?.id ?? canonSlug(w.name),
+        instanceId: `wep-ss-${handleSlug}-${idx}`,
+        name: w.name,
+        type: cat?.type ?? (w.ammo === null ? 'Melee' : 'Ranged'),
+        skill: cat?.skill ?? (w.ammo === null ? 'Melee Weapon' : 'Handgun'),
+        damage: w.dmg ?? '',
+        rof: w.rof ?? 1,
+        hands: cat?.hands ?? 1,
+        concealable: cat?.concealable ?? false,
+        cost: cat?.cost ?? 0,
+        standardMag: w.ammo ?? undefined,
+        currentMag: w.ammo ?? 0,
+        ammoType,
+        loadedAmmoType: ammoType ? 'Basic' : '',
+        inHand: idx === 0,
+        notes: w.notes
+      };
+    });
+    const cyberwareIds: string[] = [SINGLE_SHOT_NEUROPORT_ID];
+    for (const c of sp.cyberware) {
+      const id = singleShotCyberwareId(c.name);
+      if (id && !cyberwareIds.includes(id)) cyberwareIds.push(id);
+    }
+    return {
+      id: `pregen-ss-${handleSlug}`,
+      handle: sp.handle,
+      role: sp.role,
+      roleRank: sp.roleAbility.rank,
+      era: '2045',
+      avatarIcon: 'shield',
+      sourceBadge: `Interface RED Vol. 1 · Single Shot Pack p.${sp.sheetPage}`,
+      bioSummary: `${sp.role} del Single Shot Pack (IR1 p.${sp.sheetPage}).`,
+      whatYouGet: [
+        `Habilidad de rol ${sp.roleAbility.name} ${sp.roleAbility.rank}: ${sp.roleAbility.summaryEs} (IR1 p.${sp.abilityPage}).`,
+        `Armas: ${sp.weapons.map((w) => `${w.name} (${w.dmg})`).join(', ')}.`,
+        `Ciberware: Neuroport de CEMK (incluido, 0 HL, CEMK RB p.25); ${sp.cyberware.map((c) => c.name).join(', ')}.`,
+        `Equipo: ${sp.gear.map((g) => g.name).join(', ')}.`,
+        `Ropa: ${sp.clothing}`,
+        'Sin Lifepath: la ficha no lo trae (IR1 p.10).'
+      ],
+      stats,
+      skills,
+      generalSkills: split.general,
+      weapons,
+      headArmor: { name: `${sp.armor.head.name} (Head)`, maxSp: sp.armor.head.sp, currentSp: sp.armor.head.sp, penalty: sp.armor.head.penalty },
+      bodyArmor: { name: `${sp.armor.body.name} (Body)`, maxSp: sp.armor.body.sp, currentSp: sp.armor.body.sp, penalty: sp.armor.body.penalty },
+      cyberwareIds,
+      eurodollars: sp.cash,
+      lifepath: emptyPregenLifepath(),
+      humanity: sp.humanity,
+      hasNeuroport: true,
+      bookLabel: 'Interface RED'
+    };
+  });
+}
+
 function applyCanonRoleData(): void {
   for (const role of ROLES_CATALOG) {
     const bookName = CANON_ROLE_BOOK_NAME[role.id];
@@ -1684,6 +1809,8 @@ function applyCanonRoleData(): void {
 
   // Pregens canon del Easy Mode (reemplazan a las inventadas).
   PREGEN_TEMPLATES.push(...buildCanonPregens());
+  // Single Shot Pack (Interface RED Vol. 1 pp.10-31), con el Neuroport de CEMK (plan 27). [Claude Code · 2026-11-11]
+  PREGEN_TEMPLATES.push(...buildSingleShotPregens());
 }
 
 applyCanonRoleData();

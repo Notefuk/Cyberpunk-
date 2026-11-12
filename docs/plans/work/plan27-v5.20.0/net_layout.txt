@@ -1,0 +1,189 @@
+=== PDF 33
+SINGLE SHOT PACK
+et Architecture: starter drone rig
+N
+Drone piloting can be an exciting hobby... or an excellent way to beef up an Edgerunner crew’s firepower. This
+bring their new electronic friend with them wherever they go.
+Demons Installed: 1 Imp
+Cost: Floor x3 (3,000eb), Password DV6 (500eb), Control Node DV6 (500eb), Black ICE: Raven (50eb), Demon:
+Imp (1,000eb), Defense: Mini Air Drone (5,000eb) • Total  |  : 10,050eb
+Floor  |  DV
+Password
+1  |  6
+Floor  |  DV
+Black ICE: Raven
+2  |  —
+Floor  |  DV
+Control Node: Mini Air Drone
+3  |  6
+et Architecture: conapt security
+N
+Just because you’re paranoid doesn’t mean they aren’t out to get you. Successful Edgerunners often set up simple
+Architecture configuration might also be found in bars, Nomad camps, and other locations where cost or porta-
+bility are a factor.
+Demons Installed: 1 Imp
+Cost: Floor x3 (3,000eb), Password DV6 (500eb), Control Node DV6 (500eb), Black ICE: Wisp (50eb), Demon:
+Imp (1,000eb), Defense: Ground Drone (10,000eb) • Total  |  : 15,050eb
+Floor  |  DV
+Password
+1  |  6
+Floor  |  DV
+Black ICE: Wisp
+2  |  —
+Floor  |  DV
+Control Node: Ground Drone
+3  |  6
+32
+=== PDF 34
+SINGLE SHOT PACK
+et Architecture: Oasis security
+N
+Most Continental Brands Oasis stores implement a NET Architecture designed to automate their security and
+reduce the possibility of employee theft. This NET Architecture build also works well for small warehouses, executive
+apartments,  low level Night Markets, and large transport vehicles such as cargo trains.
+Demons Installed: 1 Imp
+Cost: Floor x5 (5,000eb), Password DV6 (500eb), Control Node DV8 x2 (2,000eb), Password DV8  (1,000eb),
+Black Ice: Hellhound (500eb), Demon: Imp (1,000eb), Defense: Camera x2 (1,000eb), Defense: Automated
+Turret (5,000eb) • Total  |  : 16,000eb
+Floor  |  DV
+Password
+1  |  6
+Floor  |  Control Node: Observation Cameras  |  DV
+2  |  (1 inside, 1 outside)  |  8
+Floor  |  DV
+Password
+3  |  8
+Floor  |  DV
+Black ICE: Hellhound
+4  |  —
+Floor  |  Control Node: Automated Turret  |  DV
+5  |  (located inside store)  |  8
+33
+=== PDF 35
+SINGLE SHOT PACK
+et Architecture: CLinic security
+N
+This NET Architecture is the sort a clinic or other small business might employ in Night City to keep out unwanted
+visitors. It assumes a two-story operation, with a lobby and offices on the bottom floor and more sensitive areas,
+such as surgery, patient recovery, or CEO offices on the top floor.
+Demons Installed: 1 Imp
+Cost: Floor x6 (6,000eb), Password DV6 x2 (1,000eb), Control Node DV6  (500eb), File DV6 (500eb), Control
+Node DV8 (1,000eb), Black ICE: Wisp (50eb), Demon: Imp (1,000eb), Defense: Camera x2 (1,000eb), Defense:
+Sleep Gas Elevator (5,000eb) • Total  |  : 16,050eb
+Floor  |  DV
+Password
+1  |  6
+Floor  |  Control Node: Observation Cameras  |  DV
+2  |  (1 outside, 1 inside elevator)  |  6
+Floor  |  DV
+File: Appointment schedule or similar data
+3  |  6
+Floor  |  DV
+Password
+4  |  6
+Floor  |  DV
+Black ICE: Wisp
+5  |  —
+Floor  |  Control Node: Sleep Gas Elevator  |  DV
+6  |  (located inside elevator)  |  8
+34
+=== PDF 37
+SINGLE SHOT PACK
+et Architecture: vault
+N
+This NET Architecture is designed for use by those who want to keep their secrets and treasures safe.
+Demons Installed: 1 Balron
+Cost: (Does not include cost of vault door) Floor x9 (45,000eb), Password DV10 (5,000eb), File DV6 (500eb),
+Control Node DV8 (1,000eb), Control Node DV10 x2 (10,000eb), File DV10 (5,000eb), File DV12 (10,000eb),
+Black ICE: Hellhound x2 (2,000eb), Black ICE: Killer (1,000eb), Black ICE: Scorpion (200eb), Demon: Balron
+(10,000eb), Defense: Camera x2 (1,000eb), Defense: Blood Swarm (10,000eb) • Total  |  : 100,700eb
+Floor  |  DV
+Password
+1  |  10
+Floor  |  DV
+File: Vault content manifest
+2  |  6
+Floor  |  DV
+Control Node: Observation Cameras
+3  |  (1 outside vault, 1 inside vault)  |  8
+Floor  |  DV
+Black ICE: Hellhound•Killer
+4  |  —
+Floor  |  DV
+Control Node: Vault Door
+5  |  10
+Floor  |  Control Node: Automated Blood Swarm  |  DV
+6  |  (located inside vault)  |  10
+Floor  |  DV
+Black ICE: Hellhound•Scorpion
+7  |  —
+Floor  |  DV
+File: Sensitive Data
+8  |  10
+Floor  |  DV
+File: Very Sensitive Data
+9  |  12
+36
+=== PDF 31
+JUMPSTART KIT CONVERSION GUIDE
+name  |  ten gallon  |  Seriously  |  20  |  HP
+wounded
+role  |  lawman (BackuP  |  4)  |  Death  |  6  |  40
+save
+STATS
+INT  |  5  |  REF  |  8  |  DEX  |  6  |  TECH  |  6  |  COOL  |  4  |  WILL  |  6  |  MOVE  |  5  |  BODY  |  6  |  EMP  |  4
+weapons  |  armor
+aSSault r ifle w/ infrareD nightvision scope  |  ROF1  |  5d6  |  la  |  rmorjack (Head)  |  SP 11
+Stun Baton  |  rof2  |  3d6  |  la  |  rmorjack (Body)  |  SP 11
+skill bases
+Animal Handling 10•Athletics 8•Brawling 12•Concentration 8•Conversation 6•Criminology 10•Deduction 10
+Drive Land Vehicle 14•Education 7•Evasion 8•First Aid 8•Handgun 14•Human Perception 6
+Land Vehicle Tech 12•Language (English) 9•Language (Spanish) 9•Language (Streetslang) 7
+Local Expert (Your Home) 7•Perception 11•Persuasion 6•Pilot Air Vehicle 11•Riding 12•Shoulder Arms 14
+Stealth 8•Tracking 8
+GEAR
+Rifle Ammo x25•Agent•Grapple Gun•Smart Glasses w/ Targeting Scope and TeleOptics
+cyberware
+None
+Ten Gallon is a Hardened Lieutenant.
+et Architecture: Apartment buildingne tarchit e ctur e apartmentbuildingne tarchit
+N
+Use this NET Architecture for The Apartment.
+Floor  |  DV
+Password
+1  |  8
+Floor  |  DV
+Control Node: Fire Alarm, Sprinklers
+2  |  8
+Floor  |  DV
+Control Node: Elevators
+3  |  8
+Floor  |  DV
+Control Node: Lights
+4  |  8
+30
+=== PDF 32
+JUMPSTART KIT CONVERSION GUIDE
+et Architecture: dorothy's private netne tarchit e ctur edorothysprivat ene t
+N
+Use this NET Architecture for Definitely Not Kansas.
+Floor  |  DV
+Password
+1  |  8
+Floor  |  DV
+File: Turn Back Last Warning
+2  |  8
+Floor  |  DV
+Black ICE: Hellhound
+3  |  Custom Icon: Lion  |  —
+Floor  |  DV
+4  |  Control Node: Cameras  |  8
+Floor  |  DV
+Password
+5  |  8
+Floor  |  DV
+Black ICE: Hellhound
+6  |  Custom Icon: Terrier  |  —
+Floor  |  DV
+7  |  Control Node: Projector, Speaker, Dorothy's Microphone  |  8
+31

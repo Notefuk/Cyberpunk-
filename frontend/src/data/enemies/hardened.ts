@@ -456,6 +456,12 @@ export const HARDENED_ENEMIES: EnemySheet[] = [
         "rof": 1
       },
       {
+        "label": "Brawling",
+        "totalBase": 6,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
         "label": "Evasion",
         "totalBase": 10
       },
@@ -473,6 +479,15 @@ export const HARDENED_ENEMIES: EnemySheet[] = [
         "mag": 8,
         "notes": "Pistol Ammo · ROF/cargador según tabla Core p.94",
         "skill": "Handgun"
+      },
+      {
+        "name": "Brawling",
+        "skillBase": 6,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Interface RED Vol. 2 p.11 lo imprime como ataque · ROF/cargador según tabla Core p.176",
+        "skill": "Brawling"
       }
     ],
     "cyberware": [
@@ -569,6 +584,12 @@ export const HARDENED_ENEMIES: EnemySheet[] = [
         "rof": 1
       },
       {
+        "label": "Brawling",
+        "totalBase": 6,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
         "label": "Evasion",
         "totalBase": 10
       },
@@ -586,6 +607,15 @@ export const HARDENED_ENEMIES: EnemySheet[] = [
         "mag": 8,
         "notes": "Pistol Ammo · ROF/cargador según tabla Core p.94",
         "skill": "Handgun"
+      },
+      {
+        "name": "Brawling",
+        "skillBase": 6,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Interface RED Vol. 2 p.11 lo imprime como ataque · ROF/cargador según tabla Core p.176",
+        "skill": "Brawling"
       }
     ],
     "cyberware": [
@@ -1050,6 +1080,12 @@ export const HARDENED_ENEMIES: EnemySheet[] = [
         "rof": 0
       },
       {
+        "label": "Brawling",
+        "totalBase": 12,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
         "label": "Evasion",
         "totalBase": 10
       },
@@ -1075,6 +1111,15 @@ export const HARDENED_ENEMIES: EnemySheet[] = [
         "rof": 0,
         "mag": 0,
         "notes": "Escudo listado en equipo especial, sin dano impreso · Escudo: no ataca"
+      },
+      {
+        "name": "Brawling",
+        "skillBase": 12,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Interface RED Vol. 2 p.13 lo imprime como ataque · ROF/cargador según tabla Core p.176",
+        "skill": "Brawling"
       }
     ],
     "cyberware": [

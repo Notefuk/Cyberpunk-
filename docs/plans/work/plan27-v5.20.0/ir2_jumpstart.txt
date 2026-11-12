@@ -1,0 +1,653 @@
+
+=== PDF p23 ===
+22
+JUMPSTART KIT CONVERSION GUIDE
+H
+old On What Is This?
+holdonwhatisthis
+This, dear reader, is a guide to running all the mis -
+sions included in the Cyberpunk RED Jumpstart 
+Kit using the full rules found in the Cyberpunk RED 
+core rulebook. But think of it as an expansion for the 
+Jumpstart Kit , too, because we also re-balanced 
+these missions to fit into the start of a full core rulebook 
+campaign, instead of their previous incarnation as a 
+series of quick Jumpstart oneshots. That includes sta-
+tistics for every named character in The Apartment 
+just in case they need to show up later. Good luck in 
+there, GM!
+James HuttJames Hutt
+Mayor of Balance TownMayor of Balance Town
+T
+he Apartment
+theapartmenttheapartmenttheap
+GM Tip : A connection between the PCs and the 
+building makes The Apartment a more satisfying 
+adventure. One of the best ways to accomplish this 
+is by letting them decorate their apartments. Not only 
+does it help them slip into the minds of their Characters 
+(“What would my Character’s place look like?”), it 
+helps them invest in the well-being of the building. 
+So, during session zero, surf over to an appropriate 
+website, grab a blank piece of paper, and start doing 
+some interior decorating.
+INTRODuCTION
+Unlike in the Jumpstart Kit , a Player Character 
+shouldn't own the building. We recommend Doctor 
+George Carver as the owner instead. There’s also a 
+change to the way starting housing works if you begin 
+a campaign with The Adventure. 
+Instead of starting out of Character Generation with 
+a Shipping Container, each of the Player Characters 
+rents a Studio Apartment ( see cP:R pg. 379 )in 
+the building from Dr. Carver for 1,500eb a month 
+and rent has already been paid for the first month. 
+Any Exec starts the campaign with both this Studio 
+Apartment and the Corporate Conapt from their Role 
+Ability. Should the PCs prevent the destruction of the 
+building at the hands of WorldSat, Dr. Carver will 
+comp them their next month’s rent and patch them up 
+should they get seriously injured while defending it.
+PaRT ONE
+We recommend you introduce all the potential neigh-
+bors instead of selecting them.
+For Gina Zepada, Rico Robinson, Molly Anderson, 
+Dr. George Carver, and Grant Jung (aka Royal), use 
+the statistics provided (see page 25). For the other four 
+members of the Anderson Family, use the Boosterganger 
+statblock (see cP:R pg. 412 ), but lose the Rippers. 
+We’ve also provided a statblock for Rex Royale, but it 
+probably won’t be necessary in this mission.
+GM Tip: You could run this as a single scene, maybe 
+as a poker party on the building’s roof, but you might 
+build a better bond by running several small, quick 
+scenes. Some possibilities: Helping Gina carry her 
+groceries up to her apartment, acting as security at 
+one of Rico’s gigs, helping one of the Andersons out 
+of a jam, getting patched up by Dr. Carver after a 
+job goes south, and sharing a beer at the local bar 
+with Royal.
+PaRT TWO
+For the man behind the easel, use the Bodyguard (see 
+cP:R pg. 412), but lose the Shotgun and give him a 
+MultiOptic mount loaded with five cybereyes. Your 
+choice of options. For his security detail, use 2 Security 
+Operatives (see cP:R pg. 413 ) and a Bodyguard 
+(see cP:R pg. 412 ). If the man behind the easel is 
+captured or unable to escape, WorldSat sends 6 
+Security Operatives ( see cP:R pg. 413 ) wearing 
+Light Armorjack to secure him.
+GM Tip : The neighborhood the building sits in is 
+known as a One Block (as in “One Block from the 
+Combat Zone”). Good locations include the southern 
+border of the University District, close to the Glen or 
+the western border of the Glen. If you want to add a 
+little spice, put it on the southern border of the Upper 
+Marina right next to the Old Med Center. The PCs will 
+have the Little China Combat Zone on one side and 
+the Hot Zone on the other.
+PaRT THREE
+To keep things spicy, WorldSat should undertake two 
+separate strategies instead of just one as noted in the 
+Jumpstart Kit. We recommend you choose WorldSat's 
+strategies based on the Roles at your table.
+=== PDF p24 ===
+23
+JUMPSTART KIT CONVERSION GUIDE
+▶ Where There's Smoke ◀
+Seeing through the fake firefighters costumes is a 
+DV15 Perception or Human Perception Check.
+Defusing the bombs is a DV13 Demolitions Check. If 
+one of the bombs explodes, treat it as an Armor Piercing 
+Grenade (see cP:R pg. 345). For the firefighters, use 
+Security Operatives (see cP:R pg. 413), but give them 
+Heavy Melee Weapons to represent their fire axes and 
+add Melee Weapons 10 to their Skill Bases.
+▶ Unknown Caller ◀
+Instead of wanting to talk to the building owner, 
+the unknown caller wants to talk to a Fixer, Exec, 
+or a Character with the highest COOL on the crew. 
+Streamline's strike team consists of himself and Security 
+Operatives ( see cP:R pg. 413 ) wearing Light 
+Armorjack. Add Autofire 12 to their Skill Bases. Use 
+the statblock provided (see page 25) for Streamline. 
+Spotting him before he gives away his position is a 
+DV17 Perception Check. If you want to use Streamline 
+as a future antagonist in your campaign, he can 
+escape easily by either never using his zipline, or by 
+jumping out the window using his cyberlegs to absorb 
+the fall.
+▶ It's Just Business ◀
+Use the Security Operative ( see cP:R pg. 413 ) for 
+the lone ambushers, but give them Light Armorjack. The 
+neighbor's statistics are provided (see page 25). Don't 
+have Grant Jung (aka Royal) betray the crew unless 
+there is a Solo present. Dr. Carver shouldn't betray them 
+since they are defending his building.
+▶ Hack Attack ◀
+For Crunch's strike team, use Security Operatives (see 
+cP:R pg. 413). For Crunch herself, use the statblock 
+provided at the end of this guide. For the apartment 
+building's NET Architecture, use the version provided 
+at the end of the document. Dr Carver will give the 
+Netrunner his password if asked, but it cannot assist 
+the Netrunner, as the elevator maintenance people 
+came by last week and accidentally reset the pass -
+word to the factory default while re-connecting the 
+elevator to the NET Architecture. The factory default 
+password can be found with creative roleplaying and 
+a DV13 in an applicable Skill.
+CONCLusION
+No changes needed here, other than that Dr. Carver 
+will let them off the hook for rent next month if the 
+building is still standing and will patch them up for 
+free should they need it after the mission. Precious 
+Cargo is a great Screamsheet to use as a follow up, 
+but Wood Pirates from the core rulebook is another 
+fantastic choice, especially if the building ends up 
+destroyed.
+T
+he Screamsheets
+thescreamshe etsthescreamshe ets
+GM Tip : Assuming they save the building in The 
+Apartment , word will get around about the 
+ordeal. That’s good enough to boost the PCs to 
+a Reputation of 3 and catch the attention of Rex, 
+who can broker deals to get them other jobs like 
+Precious Cargo .
+PRECIOus CaRGO
+Instead of offering the characters a stake, the Fixer 
+offers each character 1,000eb, the standard rate 
+for a typical job. They’ll also offer to loan the crew a 
+Roadbike (see cP:R pg. 190) for use during the job. 
+It doesn't need to survive the job, but the Fixer offers 
+them a bonus of 500eb to split amongst themselves 
+if it does. 
+The Fixer will still offer minor concessions if 
+haggled with successfully (their COOL + Trading + 
+Operator is 14 unless you already have a specific 
+Fixer’s statblock to use), such as an additional loaned 
+Roadbike or doubling the bonus if the bike comes 
+back unharmed. The Fixer will punish betrayal by 
+hiring a pair of assassins to attack when they least 
+expect it. Put Streamline and Crunch (or other NPCs 
+using their statblocks) up to the task. Their stats are 
+provided (see page 25 ).
+During the job, 2 Security Operatives ( see cP:R 
+pg. 413) are driving the Compact Groundcar ( see 
+cP:R pg. 190 ), which has the Armored Chassis 
+upgrade, giving it SP13. The car is escorted by an 
+Outrider (see cP:R pg. 415 ) on a Roadbike ( see 
+cP:R pg. 190 ). Should the crew forget to disable 
+the tracker in either vehicle within an hour, they will 
+encounter two more Outriders on Roadbikes.
+=== PDF p25 ===
+24
+JUMPSTART KIT CONVERSION GUIDE
+JusT LIkE REaL
+Instead of 300eb, the NCPD pays 500eb per person 
+for this job. A DV13 Electronics/Security Tech Check 
+will determine the Segotari RUSH Revolution systems 
+are malfunction-free. Officer Lantz's gift in the simula-
+tion is an Excellent Quality Rocket Launcher (CP:R pg. 
+341) loaded with a single rocket. For the 9 average 
+police academy students in the simulation use Local 
+Beat Cops, as generated by the Lawman's Backup 
+Role Ability (CP:R pg. 158). 
+During the raid at the end of the simulation, equip 
+them with Bulletproof Shields ( CP:R pg. 351 ). Ten 
+Gallon is in a Gyrocopter ( CP:R pg. 191 ) with an 
+Armored Chassis, giving it SP13. For Ten Gallon, use 
+the statblock provided ( see page 28). A statblock 
+for Officer Lantz has also been provided in case it is 
+needed (see page 28).
+DEFINITELY NOT kaNsas
+Biotechnica is willing to pay each player 2000eb 
+on delivery of the drugs, and will offer no payment 
+upfront. Treat each of the four packs of C-9 the 
+Characters receive as an Armor Piercing Grenade 
+(CP:R pg.  345 ) should they explode. A DV13 
+Demolitions Check can remove the second receiver 
+in each of the C9 packs. A DV17 Perception Check 
+is required to notice the shadow, a Security Officer 
+(CP:R pg. 415) with a Sniper Rifle. 
+For the Yellow Brick Road gang, use Boostergangers 
+(CP:R pg. 412) for the scarecrows, and Bodyguards 
+(CP:R pg. 412 ) with Skin Weave (SP7) instead of 
+Kevlar® for the tin men. For Dorothy, use the statblock 
+provided at the end of this guide. A DV15 Athletics 
+Check allows a Character to escape the building 
+before the roof collapses. Should the roof collapse 
+on a Character, it deals 8d6 damage. For Dorothy's 
+Private NET Architecture, use the version provided at 
+the end of this document.
+If using Emerald City as a Street Drug, use the fol -
+lowing rules.
+ ▶ EMERaLD CITY
+Cost per Dose: 100eb (Premium)
+Primary Effect
+• Lasts 8 Hours.
+• For the duration of the Primary Effect, the user 
+ignores the effects of the Seriously Wounded 
+Wound State.
+• For the duration of the Primary Effect, The GM 
+will occasionally tell you that you are experi -
+encing hallucinations. While hallucinating you 
+may not be able to tell friend from foe. Do your 
+best to roleplay accordingly.
+Secondary Effect (DV15)
+• If the user wasn't already addicted to Emerald 
+City, they are now. While addicted, the GM 
+will occasionally tell you that you are expe -
+riencing hallucinations, although you can 
+tell friend from foe. Do your best to roleplay 
+accordingly.
+BY ALEXANDER DUDAR
+=== PDF p26 ===
+25
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP8 6 5 7 5 7 5 4 3
+ STATS
+ weapons  armor
+ skill bases
+cruncH
+netrunner (interface 4)
+20
+4 40
+HeaVy PiStol ROF2 3d6
+Brawling rof2 1d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Accounting 1 2•Athletics 1 1•Brawling 7•Bureaucracy 1 2•Concentration 9•Conversation 5•Drive Land Vehicle 10 
+Education 10•Electronics/Security Tech 1 3•Evasion 1 1•First Aid 1 1•Forgery 1 3•Handgun 1 2•Human Perception 
+5 Language (Finnish) 1 2•Language (Streetslang) 10•Library Search 1 4•Local Expert (Your Home) 10•Perception 10 
+Persuasion 7•Pick Lock 1 3•Stealth 1 1
+ GEAR
+Heavy Pistol Ammo x20•Cyberdeck w/ Insulated Wiring•Virtuality Goggles. Programs: Armor•DeckKrash
+Hellbolt x2•Shield•Sword
+ cyberware
+Neural Link w/ Interface Plugs
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP6 6 4 8 7 5 4 5 6
+ STATS
+ weapons  armor
+ skill bases
+dorotHy
+tecH (maker 4:                         )
+18
+5 35
+Very HeaVy PiStol ROF1 4d6
+Brawling rof2 2d6
+SuBdermal (Head) SP 1 1
+SuBdermal (Body) SP 1 1
+Acting 1 3•Air Vehicle Tech 10•Athletics 6•Basic Tech 10•Brawling 6•Concentration 7•Conversation 8
+Cybertech 10•Education 8•Electronics/Security Tech 16•Evasion 10•First Aid 1 4•Handgun 1 2
+Human Perception 8•Land Vehicle Tech 10•Language (Italian) 10•Language (Streetslang) 8
+Local Expert (Your Home) 8•Library Search 1 4•Perception 8•Personal Grooming 1 5•Persuasion 1 3•Sea Vehicle Tech 10 
+Stealth 6•Streetwise 9•Wardrobe & Style 1 7•Weaponstech 10
+ GEAR
+Very Heavy Pistol Ammo x8•Agent•High Fashion Footwear•Techscanner•Tech Bag
+ cyberware
+Biomonitor•Chemskin•Light Tattoo x3•Subdermal Armor•Techhair
+Fabrication Expertise 4
+Field Expertise 4
+JUMPSTART KIT CONVERSION GUIDE
+Crunch and Dorothy are both Lieutenants.
+=== PDF p27 ===
+26
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP8 6 5 8 4 6 5 5 4
+ STATS
+ weapons  armor
+ skill bases
+dr. george carVer 20
+5 40
+HeaVy PiStol ROF2 3d6
+Stun gun rof2 3d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Air Vehicle Tech 1 2•Athletics 1 1•Brawling 7•Concentration 8•Conversation 6•Cybertech 1 4•Deduction 1 2
+Education 10•Electronics/Security Tech 1 4•Evasion 1 1•First Aid 10•Handgun 1 2•Human Perception 6
+Language (English) 1 2•Language (Streetslang) 10•Library Search 10•Local Expert (Your Home) 10•Paramedic 1 4 
+Perception 10•Persuasion 6•Pilot Air Vehicle 10•Stealth 7
+ GEAR
+Expansive Heavy Pistol Ammo x10•Agent•Medtech Bag
+ cyberware
+Nasal Filters•Tool Hand
+Medtech (Medicine 2: Surgery Base 12)
+Tech (Maker 2: Fabrication Expertise 2, Field Expertise 2)
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP8 7 4 5 5 6 6 4 7
+ STATS
+ weapons  armor
+ skill bases
+gina ZePPada 18
+4 35
+Very HeaVy PiStol ROF1 4d6
+SHotgun rof1 5d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Acting 9•Animal Handling 1 4•Athletics 6•Brawling 6•Concentration 8•Conversation 9•Education 10
+Evasion 10•First Aid 1 1•Forgery 1 1•Gamble 1 2•Handgun 1 1•Human Perception 9•Language (Education) 1 2
+Language (Spanish) 1 2•Language (Streetslang) 10•Library Search 10•Local Expert (Your Home) 1 2•Perception 10 
+Persuasion 7•Resist Torture/Drugs 10•Riding 1 1•Shoulder Arms 1 3•Stealth 6•Tracking 1 2•Wilderness Survival 1 2
+ GEAR
+Very Heavy Pistol Ammo x40•Shotgun Ammo x40•Agent•Roadbike w/ Bulletproof Glass x2 and NOS
+ cyberware
+Biomonitor•Techhair
+nomad (moto 4)
+JUMPSTART KIT CONVERSION GUIDE
+Dr. George Carver and Gina Zeppada are both Lieutenants.
+=== PDF p28 ===
+27
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP7 8(6) 8(6) 3 4 6 6(4) 6 4
+ STATS
+ weapons  armor
+ skill bases
+royal (grant jung) 20
+6 40
+Very HeaVy PiStol ROF1 4d6
+aSSault rifle w/ Drum magazine rof1 5d6
+H armorjack (Head) SP 1 3
+H armorjack (Body) SP 1 3
+Athletics 1 4 (1 2)•Autofire 1 4 (1 2)•Brawling 1 4 (1 2)•Concentration 8•Conversation 6•Education 9
+Evasion 1 4 (1 2)•First Aid 9•Gamble 4•Handgun 1 4 (1 2)•Human Perception 6•Language (Korean) 1 1
+Language (Streetslang) 9•Local Expert 9•Perception 1 3•Persuasion 6•Shoulder Arms 1 4 (1 2)•Stealth 1 4 (1 2)
+Tactics 1 1•Tracking 1 1
+ GEAR
+Rifle Ammo x45•Very Heavy Pistol Ammo x8•Agent
+ cyberware
+Techhair
+Solo (comBat awareneSS 4)
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP7 5 8 5 6 7 6 4 4
+ STATS
+ weapons  armor
+ skill bases
+molly anderSon 20
+4 40
+Brawling ROF2 1d6
+ligHt melee weaPon rof2 1d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Athletics 1 4•Brawling 1 4•Concentration 9•Conversation 6•Demolitions 10•Education 9•Endurance 1 3
+Evasion 1 4•First Aid 7•Human Perception 10•Language (English) 1 1•Language (German) 1 1
+Language (Streetslang) 1 3•Local Expert (Your Home) 1 3•Perception 9•Persuasion 8•Pick Lock 1 1•Stealth 10
+Streetwise 10•Trading 1 2
+ GEAR
+Incendiary Grenade x2•Smoke Grenade x2•Disposable Cell Phone
+ cyberware
+Cyberarm w/ Realskinn™ Covering•Cyberleg x2 w/ Realskinn™ Covering•Light Tattoo x2
+fixer (oPerator 4)
+JUMPSTART KIT CONVERSION GUIDE
+Royal is a Hardened Lieutenant. Molly is a Lieutenant.
+=== PDF p29 ===
+28
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP7 4 8 4 5 6 5 7 5
+ STATS
+ weapons  armor
+ skill bases
+officer lantZ 23
+7 45
+Very HeaVy PiStol ROF1 4d6
+martial artS rof2 3d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Acting 7•Athletics 10•Brawling 1 4•Concentration 8•Conversation 7•Criminology 1 3•Deduction 9
+Drive Land Vehicle 10•Education 9•Evasion 1 4•First Aid 6•Handgun 10•Human Perception 7•Interrogation 1 1 
+Language (English) 1 1•Language (French) 9•Language (Streetslang) 9•Library Search 9•Local Expert (Your Home) 
+9, Martial Arts (Judo) 1 4•Perception 9•Persuasion 7•Play Instrument (Singing) 10•Resist Torture/Drugs 8•Riding 10 
+Stealth 10•Tracking 9•Wardrobe & Style 7
+ GEAR
+Armor Piercing Very Heavy Pistol Ammo x8•Agent
+ cyberware
+Audiovox•Enhanced Antibodies•Toxin Binders
+lawman (BackuP 4)
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP7 7 7 4 8 6 4 6 6
+ STATS
+ weapons  armor
+ skill bases
+rex royale 20
+6 40
+excellent Quality HeaVy PiStol ROF2 3d6
+kendacHi mono-tHree rof1 4d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Athletics 9•Brawling 1 3•Bribery 1 2•Conceal/Reveal Object 1 3•Concentration 8•Conversation 8•Education 9 
+Evasion 1 3•First Aid 6•Gamble 1 3•Handgun 1 3•Human Perception 8•Language (Chinese) 1 1
+Language (English) 1 1•Language (Italian) 1 1•Language (Japanese) 1 1•Language (Korean) 1 1
+Language (Russian) 1 1•Language (Streetslang) 9•Language (Spanish) 1 1•Local Expert (South Night City) 1 3
+Local Expert (University District) 1 3•Local Expert (Your Home) 1 3•Melee Weapons 16•Perception 9•Persuasion 1 4 
+Resist Torture/Drugs 10•Stealth 9•Streetwise 1 4•Trading 16•Wardrobe & Style 10
+ GEAR
+Armor Piercing Very Heavy Pistol Ammo x16•Smoke Grenade x2•Agent•Disposable Cell Phone x2
+Smart Glasses w/ Low Light/Infrared/UV
+ cyberware
+None
+fixer (oPerator 8)
+JUMPSTART KIT CONVERSION GUIDE
+Officer Lantz is a Hardened Lieutenant. Rex Royale is a Mini-Boss.
+=== PDF p30 ===
+29
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP6 4 6 7 7 5 4 6 6
+ STATS
+ weapons  armor
+ skill bases
+rico rico (rico roBinSon) 23
+7 45
+HeaVy melee weaPon ROF2 3d6
+Brawling rof2 2d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Acting 1 1•Athletics 8•Brawling 8•Bribery 1 1•Composition 1 2•Concentration 7•Conversation 8•Dance 1 2
+Education 8•Evasion 1 2•First Aid 9•Human Perception 8•Language (English) 10•Language (Spanish) 10
+Language (Streetslang) 8•Library Search 8•Local Expert (Your Home) 1 2•Melee Weapons 1 2•Perception 8
+Persuasion 9•Pick Pocket 1 1•Play Instrument (Guitar) 1 3•Stealth 8•Streetwise 1 3•Wardrobe & Style 1 5
+ GEAR
+Agent•Electric Guitar•Pocket Amplifier
+ cyberware
+Cyberaudio Suite w/ Audio Recorder
+rockerBoy (cHariSmatic imPact 4)
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP4 7 8 4 4 5 8 7 2
+ STATS
+ weapons  armor
+ skill bases
+Streamline 20
+7 40
+aSSault rifle ROF1 5d6
+wolVerS rof2 3d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Acting 10•Athletics 1 4•Brawling 1 4•Bureaucracy 8•Concentration 7•Contortionist 1 4•Conversation 4
+Education 6•Evasion 1 4•First Aid 6•Human Perception 4•Language (Russian) 8•Language (Streetslang) 6
+Local Expert (Your Home) 6•Melee Weapons 1 4•Perception 10•Persuasion 6•Resist Torture/Drugs 1 1
+Shoulder Arms 1 3•Stealth 1 4•Tactics 10
+ GEAR
+Rifle Ammunition x1 5•Agent•Grapple Gun
+ cyberware
+Cybereye w/ Targeting Scope•Cyberleg x2•Wolvers
+Solo (comBat awareneSS 4)
+JUMPSTART KIT CONVERSION GUIDE
+Rico Rico is a Lieutenant. Streamline is a Hardened Lieutenant.
+=== PDF p31 ===
+30
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP5 8 6 6 4 6 5 6 4
+ STATS
+ weapons  armor
+ skill bases
+ten gallon 20
+6 40
+aSSault rifle w/ infrareD nightvision scope ROF1 5d6
+Stun Baton rof2 3d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Animal Handling 10•Athletics 8•Brawling 1 2•Concentration 8•Conversation 6•Criminology 10•Deduction 10 
+Drive Land Vehicle 1 4•Education 7•Evasion 8•First Aid 8•Handgun 1 4•Human Perception 6
+Land Vehicle Tech 1 2•Language (English) 9•Language (Spanish) 9•Language (Streetslang) 7
+Local Expert (Your Home) 7•Perception 1 1•Persuasion 6•Pilot Air Vehicle 1 1•Riding 1 2•Shoulder Arms 1 4
+Stealth 8•Tracking 8
+ GEAR
+Rifle Ammo x25•Agent•Grapple Gun•Smart Glasses w/ Targeting Scope and TeleOptics
+ cyberware
+None
+lawman (BackuP 4)
+JUMPSTART KIT CONVERSION GUIDE
+N
+et Architecture: Apartment building
+netarchitectureapartmentbuildingnetarchit
+Use this NET Architecture for The Apartment.
+Floor
+1
+2
+3
+Floor
+Floor
+DV
+DV
+DV
+8
+8
+Password
+Control Node: Elevators 
+Control Node: Fire Alarm, Sprinklers
+4
+Floor DV
+8
+Control Node: Lights 
+8
+Ten Gallon is a Hardened Lieutenant.
+=== PDF p32 ===
+31
+JUMPSTART KIT CONVERSION GUIDE
+N
+et Architecture: dorothy's private net
+netarchitecturedorothysprivatenet
+Use this NET Architecture for Definitely Not Kansas.
+Floor
+1
+2
+3
+4
+6
+Floor
+Floor
+Floor
+Floor
+DV
+DV
+DV
+DV
+DV
+8
+8
+Password
+Black ICE: Hellhound 
+Custom Icon: Lion
+Control Node: Cameras
+5
+Floor DV
+8
+File: Turn Back Last Warning
+Password
+7
+Floor DV
+8
+—
+Black ICE: Hellhound 
+Custom Icon: Terrier —
+8
+Control Node: Projector, Speaker, Dorothy's Microphone
+=== PDF p33 ===
+Ride AnywhereRide Anywhere
+ang's Wheelsang's Wheels
+=== PDF p34 ===
+33
+cargo containerscargo containers
+& cube hotels& cube hotels
+BY ADRIAN MARC
+Writing and Design by James Hutt and J Gray
+Editing by Carol Darnell •Art Direction by Winterjaye Kovach •Cartography by J Gray
+Business Management by Lisa Pondsmith •Layout by J Gray

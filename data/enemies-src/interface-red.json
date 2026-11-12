@@ -1,0 +1,1552 @@
+{
+ "book": "Interface RED (Vol. 2: Jumpstart Kit Conversion Guide; Vol. 4: Halloween Screamsheets)",
+ "pdf": "Sourcebooks/Interface-RED/Cyberpunk-RED-Interface-RED-Volume-2_2023-03-05.pdf | Sourcebooks/Interface-RED/Cyberpunk-RED-Interface-RED-Volume-4.pdf",
+ "pageConvention": "Pagina impresa = pagina del PDF - 1 (Vol. 2 y Vol. 4).",
+ "npcs": [
+  {
+   "id": "ir2-crunch",
+   "name": "Crunch",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 25,
+   "tier": "lieutenant",
+   "faction": "",
+   "role": "Netrunner",
+   "roleAbility": {
+    "name": "Interface",
+    "rank": 4
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 8,
+    "REF": 6,
+    "DEX": 5,
+    "TECH": 7,
+    "COOL": 5,
+    "WILL": 7,
+    "LUCK": null,
+    "MOVE": 5,
+    "BODY": 4,
+    "EMP": 3
+   },
+   "statsArmorModified": null,
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 4,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Heavy Pistol",
+     "skill": "Handgun",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": "Heavy Pistol Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    },
+    {
+     "name": "Brawling",
+     "skill": "Brawling",
+     "skillBase": 7,
+     "damage": "1d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Listado como arma en el libro"
+    }
+   ],
+   "skillBases": {
+    "Accounting": 12,
+    "Athletics": 11,
+    "Brawling": 7,
+    "Bureaucracy": 12,
+    "Concentration": 9,
+    "Conversation": 5,
+    "Drive Land Vehicle": 10,
+    "Education": 10,
+    "Electronics/Security Tech": 13,
+    "Evasion": 11,
+    "First Aid": 11,
+    "Forgery": 13,
+    "Handgun": 12,
+    "Human Perception": 5,
+    "Language (Finnish)": 12,
+    "Language (Streetslang)": 10,
+    "Library Search": 14,
+    "Local Expert (Your Home)": 10,
+    "Perception": 10,
+    "Persuasion": 7,
+    "Pick Lock": 13,
+    "Stealth": 11
+   },
+   "cyberware": [
+    "Neural Link w/ Interface Plugs"
+   ],
+   "gear": [
+    "Heavy Pistol Ammo x20",
+    "Cyberdeck w/ Insulated Wiring",
+    "Virtuality Goggles"
+   ],
+   "isNetrunner": true,
+   "interfaceRank": 4,
+   "cyberdeckPrograms": [
+    "Armor",
+    "DeckKrash",
+    "Hellbolt x2",
+    "Shield",
+    "Sword"
+   ],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Netrunner con Interface 4 y un cyberdeck con Insulated Wiring; programas: Armor, DeckKrash, Hellbolt x2, Shield y Sword."
+   ],
+   "lore": "Netrunner que lidera el equipo de ataque en la mision Hack Attack del Jumpstart Kit; tambien puede usarse como asesina contratada por un Fixer traicionado.",
+   "doubts": [
+    "La fila de stats no trae LUCK; orden impreso INT REF DEX TECH COOL WILL MOVE BODY EMP (LUCK = null). HP=40 y Death Save=4 concuerdan con la formula.",
+    "El libro lista 'Neural Link w/ Interface Plugs' como cyberware; 'Level'/'Rep' no se imprimen.",
+    "Armadura impresa como 'L Armorjack'; interpretada como Light Armorjack (SP 11).",
+    "El libro indica 'Crunch and Dorothy are both Lieutenants' (tier tomado de ahi).",
+    "El cargador de las armas no se imprime (mag = null)."
+   ]
+  },
+  {
+   "id": "ir2-dorothy",
+   "name": "Dorothy",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 25,
+   "tier": "lieutenant",
+   "faction": "",
+   "role": "Tech",
+   "roleAbility": {
+    "name": "Maker",
+    "rank": 4
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 6,
+    "REF": 6,
+    "DEX": 4,
+    "TECH": 8,
+    "COOL": 7,
+    "WILL": 5,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 5,
+    "EMP": 6
+   },
+   "statsArmorModified": null,
+   "hp": 35,
+   "seriouslyWounded": 18,
+   "deathSave": 5,
+   "armor": {
+    "name": "Subdermal Armor",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Very Heavy Pistol",
+     "skill": "Handgun",
+     "skillBase": 12,
+     "damage": "4d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Very Heavy Pistol Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    },
+    {
+     "name": "Brawling",
+     "skill": "Brawling",
+     "skillBase": 6,
+     "damage": "2d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Listado como arma en el libro"
+    }
+   ],
+   "skillBases": {
+    "Acting": 13,
+    "Air Vehicle Tech": 10,
+    "Athletics": 6,
+    "Basic Tech": 10,
+    "Brawling": 6,
+    "Concentration": 7,
+    "Conversation": 8,
+    "Cybertech": 10,
+    "Education": 8,
+    "Electronics/Security Tech": 16,
+    "Evasion": 10,
+    "First Aid": 14,
+    "Handgun": 12,
+    "Human Perception": 8,
+    "Land Vehicle Tech": 10,
+    "Language (Italian)": 10,
+    "Language (Streetslang)": 8,
+    "Local Expert (Your Home)": 8,
+    "Library Search": 14,
+    "Perception": 8,
+    "Personal Grooming": 15,
+    "Persuasion": 13,
+    "Sea Vehicle Tech": 10,
+    "Stealth": 6,
+    "Streetwise": 9,
+    "Wardrobe & Style": 17,
+    "Weaponstech": 10
+   },
+   "cyberware": [
+    "Biomonitor",
+    "Chemskin",
+    "Light Tattoo x3",
+    "Subdermal Armor",
+    "Techhair"
+   ],
+   "gear": [
+    "Very Heavy Pistol Ammo x8",
+    "Agent",
+    "High Fashion Footwear",
+    "Techscanner",
+    "Tech Bag"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Maker 4: Fabrication Expertise 4 y Field Expertise 4."
+   ],
+   "lore": "Lider de la banda Yellow Brick Road en la mision Definitely Not Kansas; su Private NET Architecture se usa en esa mision.",
+   "doubts": [
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). HP=35 y Death Save=5 concuerdan.",
+    "Armadura impresa como 'Subdermal (Head/Body) SP 11'; corresponde al cyberware Subdermal Armor.",
+    "La linea de rol se extrajo como 'tech (maker 4: )' con 'Fabrication Expertise 4 / Field Expertise 4' separados; se asumio que son las opciones de Maker 4.",
+    "El libro indica 'Crunch and Dorothy are both Lieutenants'."
+   ]
+  },
+  {
+   "id": "ir2-dr-george-carver",
+   "name": "Dr. George Carver",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 26,
+   "tier": "lieutenant",
+   "faction": "",
+   "role": "Medtech",
+   "roleAbility": {
+    "name": "Medicine",
+    "rank": 2
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 8,
+    "REF": 6,
+    "DEX": 5,
+    "TECH": 8,
+    "COOL": 4,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 5,
+    "BODY": 5,
+    "EMP": 4
+   },
+   "statsArmorModified": null,
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 5,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Heavy Pistol",
+     "skill": "Handgun",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": "Expansive Heavy Pistol Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    },
+    {
+     "name": "Stun Gun",
+     "skill": "",
+     "skillBase": null,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "El libro no indica la habilidad del arma"
+    }
+   ],
+   "skillBases": {
+    "Air Vehicle Tech": 12,
+    "Athletics": 11,
+    "Brawling": 7,
+    "Concentration": 8,
+    "Conversation": 6,
+    "Cybertech": 14,
+    "Deduction": 12,
+    "Education": 10,
+    "Electronics/Security Tech": 14,
+    "Evasion": 11,
+    "First Aid": 10,
+    "Handgun": 12,
+    "Human Perception": 6,
+    "Language (English)": 12,
+    "Language (Streetslang)": 10,
+    "Library Search": 10,
+    "Local Expert (Your Home)": 10,
+    "Paramedic": 14,
+    "Perception": 10,
+    "Persuasion": 6,
+    "Pilot Air Vehicle": 10,
+    "Stealth": 7
+   },
+   "cyberware": [
+    "Nasal Filters",
+    "Tool Hand"
+   ],
+   "gear": [
+    "Expansive Heavy Pistol Ammo x10",
+    "Agent",
+    "Medtech Bag"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Medtech: Medicine 2 (Surgery base 12).",
+    "Tambien figura como Tech: Maker 2 (Fabrication Expertise 2, Field Expertise 2)."
+   ],
+   "lore": "Dueno recomendado del edificio de The Apartment; si los PJ lo defienden les perdona el alquiler del mes siguiente y los cura gratis.",
+   "doubts": [
+    "El bloque imprime dos lineas de rol: 'Medtech (Medicine 2: Surgery Base 12)' y 'Tech (Maker 2: Fabrication Expertise 2, Field Expertise 2)'; se tomo Medtech como rol principal y Tech en specialRules.",
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). HP=40 y Death Save=5 concuerdan.",
+    "El libro escribe 'Expansive Heavy Pistol Ammo' (probablemente Expansive); se dejo tal cual.",
+    "La habilidad del 'Stun Gun' no se imprime; skill vacio.",
+    "El libro indica 'Dr. George Carver and Gina Zeppada are both Lieutenants'."
+   ]
+  },
+  {
+   "id": "ir2-gina-zepada",
+   "name": "Gina Zepada",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 26,
+   "tier": "lieutenant",
+   "faction": "",
+   "role": "Nomad",
+   "roleAbility": {
+    "name": "Moto",
+    "rank": 4
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 8,
+    "REF": 7,
+    "DEX": 4,
+    "TECH": 5,
+    "COOL": 5,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 6,
+    "BODY": 4,
+    "EMP": 7
+   },
+   "statsArmorModified": null,
+   "hp": 35,
+   "seriouslyWounded": 18,
+   "deathSave": 4,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Very Heavy Pistol",
+     "skill": "Handgun",
+     "skillBase": 11,
+     "damage": "4d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Very Heavy Pistol Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    },
+    {
+     "name": "Shotgun",
+     "skill": "Shoulder Arms",
+     "skillBase": 13,
+     "damage": "5d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Shotgun Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    }
+   ],
+   "skillBases": {
+    "Acting": 9,
+    "Animal Handling": 14,
+    "Athletics": 6,
+    "Brawling": 6,
+    "Concentration": 8,
+    "Conversation": 9,
+    "Education": 10,
+    "Evasion": 10,
+    "First Aid": 11,
+    "Forgery": 11,
+    "Gamble": 12,
+    "Handgun": 11,
+    "Human Perception": 9,
+    "Language (Education)": 12,
+    "Language (Spanish)": 12,
+    "Language (Streetslang)": 10,
+    "Library Search": 10,
+    "Local Expert (Your Home)": 12,
+    "Perception": 10,
+    "Persuasion": 7,
+    "Resist Torture/Drugs": 10,
+    "Riding": 11,
+    "Shoulder Arms": 13,
+    "Stealth": 6,
+    "Tracking": 12,
+    "Wilderness Survival": 12
+   },
+   "cyberware": [
+    "Biomonitor",
+    "Techhair"
+   ],
+   "gear": [
+    "Very Heavy Pistol Ammo x40",
+    "Shotgun Ammo x40",
+    "Agent",
+    "Roadbike w/ Bulletproof Glass x2 and NOS"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Nomad: Moto 4."
+   ],
+   "lore": "Vecina del edificio de The Apartment, con estadisticas provistas por si se necesita; puede presentarse como parte de los vecinos de los PJ.",
+   "doubts": [
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). HP=35 y Death Save=4 concuerdan.",
+    "El libro imprime 'Language (Education) 12'; se dejo tal cual (posible errata del libro).",
+    "La linea de rol 'Nomad (Moto 4)' aparece tras el bloque; atribuida a Gina por orden de aparicion.",
+    "El libro indica 'Dr. George Carver and Gina Zeppada are both Lieutenants' (nombre escrito 'Zeppada' en ese texto)."
+   ]
+  },
+  {
+   "id": "ir2-royal-grant-jung",
+   "name": "Royal (Grant Jung)",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 27,
+   "tier": "hardened_lieutenant",
+   "faction": "",
+   "role": "Solo",
+   "roleAbility": {
+    "name": "Combat Awareness",
+    "rank": 4
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 7,
+    "REF": 8,
+    "DEX": 8,
+    "TECH": 3,
+    "COOL": 4,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 6,
+    "BODY": 6,
+    "EMP": 4
+   },
+   "statsArmorModified": {
+    "REF": 6,
+    "DEX": 6,
+    "MOVE": 4
+   },
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 6,
+   "armor": {
+    "name": "Heavy Armorjack",
+    "headSp": 13,
+    "bodySp": 13,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": "REF, DEX y MOVE reducidos (valores entre parentesis del libro: REF 6, DEX 6, MOVE 4)"
+   },
+   "weapons": [
+    {
+     "name": "Very Heavy Pistol",
+     "skill": "Handgun",
+     "skillBase": 14,
+     "damage": "4d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Very Heavy Pistol Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Handgun 12 con armadura puesta"
+    },
+    {
+     "name": "Assault Rifle w/ Drum Magazine",
+     "skill": "Shoulder Arms",
+     "skillBase": 14,
+     "damage": "5d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Rifle Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Shoulder Arms 12 con armadura puesta"
+    }
+   ],
+   "skillBases": {
+    "Athletics": 14,
+    "Autofire": 14,
+    "Brawling": 14,
+    "Concentration": 8,
+    "Conversation": 6,
+    "Education": 9,
+    "Evasion": 14,
+    "First Aid": 9,
+    "Gamble": 4,
+    "Handgun": 14,
+    "Human Perception": 6,
+    "Language (Korean)": 11,
+    "Language (Streetslang)": 9,
+    "Local Expert": 9,
+    "Perception": 13,
+    "Persuasion": 6,
+    "Shoulder Arms": 14,
+    "Stealth": 14,
+    "Tactics": 11,
+    "Tracking": 11
+   },
+   "cyberware": [
+    "Techhair"
+   ],
+   "gear": [
+    "Rifle Ammo x45",
+    "Very Heavy Pistol Ammo x8",
+    "Agent"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Con la armadura puesta: REF 6, DEX 6 y MOVE 4; Athletics, Autofire, Brawling, Evasion, Handgun, Shoulder Arms y Stealth bajan de 14 a 12.",
+    "Solo: Combat Awareness 4.",
+    "Segun la mision It's Just Business, solo debe traicionar a los PJ si hay un Solo presente."
+   ],
+   "lore": "Vecino Grant Jung, conocido como Royal, en The Apartment; puede traicionar al equipo si hay un Solo en la mesa.",
+   "doubts": [
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). Los valores entre parentesis (REF 6, DEX 6, MOVE 4) se guardaron en statsArmorModified. HP=40 y Death Save=6 concuerdan.",
+    "Armadura impresa como 'H Armorjack SP 13'; interpretada como Heavy Armorjack.",
+    "Las habilidades con parentesis (14(12)) se guardaron con el valor base 14; el valor con armadura (12) esta en specialRules y notas.",
+    "El libro indica 'Royal is a Hardened Lieutenant'.",
+    "El nombre 'Local Expert' se imprime sin '(Your Home)' para este PNJ."
+   ]
+  },
+  {
+   "id": "ir2-molly-anderson",
+   "name": "Molly Anderson",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 27,
+   "tier": "lieutenant",
+   "faction": "",
+   "role": "Fixer",
+   "roleAbility": {
+    "name": "Operator",
+    "rank": 4
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 7,
+    "REF": 5,
+    "DEX": 8,
+    "TECH": 5,
+    "COOL": 6,
+    "WILL": 7,
+    "LUCK": null,
+    "MOVE": 6,
+    "BODY": 4,
+    "EMP": 4
+   },
+   "statsArmorModified": null,
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 4,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Brawling",
+     "skill": "Brawling",
+     "skillBase": 14,
+     "damage": "1d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Listado como arma en el libro"
+    },
+    {
+     "name": "Light Melee Weapon",
+     "skill": "",
+     "skillBase": null,
+     "damage": "1d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "El libro no lista la habilidad Melee Weapons para este PNJ"
+    }
+   ],
+   "skillBases": {
+    "Athletics": 14,
+    "Brawling": 14,
+    "Concentration": 9,
+    "Conversation": 6,
+    "Demolitions": 10,
+    "Education": 9,
+    "Endurance": 13,
+    "Evasion": 14,
+    "First Aid": 7,
+    "Human Perception": 10,
+    "Language (English)": 11,
+    "Language (German)": 11,
+    "Language (Streetslang)": 13,
+    "Local Expert (Your Home)": 13,
+    "Perception": 9,
+    "Persuasion": 8,
+    "Pick Lock": 11,
+    "Stealth": 10,
+    "Streetwise": 10,
+    "Trading": 12
+   },
+   "cyberware": [
+    "Cyberarm w/ Realskinn Covering",
+    "Cyberleg x2 w/ Realskinn Covering",
+    "Light Tattoo x2"
+   ],
+   "gear": [
+    "Incendiary Grenade x2",
+    "Smoke Grenade x2",
+    "Disposable Cell Phone"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Fixer: Operator 4."
+   ],
+   "lore": "Miembro de la familia Anderson, vecina en The Apartment, con estadisticas propias por si reaparece despues.",
+   "doubts": [
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). HP=40 y Death Save=4 concuerdan.",
+    "El libro imprime 'Realskinn(TM) Covering'; se omitio el simbolo de marca.",
+    "La habilidad del 'Light Melee Weapon' no se imprime (no hay Melee Weapons en sus skill bases).",
+    "El libro indica 'Molly is a Lieutenant'."
+   ]
+  },
+  {
+   "id": "ir2-officer-lantz",
+   "name": "Officer Lantz",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 28,
+   "tier": "hardened_lieutenant",
+   "faction": "NCPD",
+   "role": "Lawman",
+   "roleAbility": {
+    "name": "Backup",
+    "rank": 4
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 7,
+    "REF": 4,
+    "DEX": 8,
+    "TECH": 4,
+    "COOL": 5,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 5,
+    "BODY": 7,
+    "EMP": 5
+   },
+   "statsArmorModified": null,
+   "hp": 45,
+   "seriouslyWounded": 23,
+   "deathSave": 7,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Very Heavy Pistol",
+     "skill": "Handgun",
+     "skillBase": 10,
+     "damage": "4d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Armor Piercing Very Heavy Pistol Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    },
+    {
+     "name": "Martial Arts",
+     "skill": "Martial Arts (Judo)",
+     "skillBase": 14,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Listado como arma en el libro"
+    }
+   ],
+   "skillBases": {
+    "Acting": 7,
+    "Athletics": 10,
+    "Brawling": 14,
+    "Concentration": 8,
+    "Conversation": 7,
+    "Criminology": 13,
+    "Deduction": 9,
+    "Drive Land Vehicle": 10,
+    "Education": 9,
+    "Evasion": 14,
+    "First Aid": 6,
+    "Handgun": 10,
+    "Human Perception": 7,
+    "Interrogation": 11,
+    "Language (English)": 11,
+    "Language (French)": 9,
+    "Language (Streetslang)": 9,
+    "Library Search": 9,
+    "Local Expert (Your Home)": 9,
+    "Martial Arts (Judo)": 14,
+    "Perception": 9,
+    "Persuasion": 7,
+    "Play Instrument (Singing)": 10,
+    "Resist Torture/Drugs": 8,
+    "Riding": 10,
+    "Stealth": 10,
+    "Tracking": 9,
+    "Wardrobe & Style": 7
+   },
+   "cyberware": [
+    "Audiovox",
+    "Enhanced Antibodies",
+    "Toxin Binders"
+   ],
+   "gear": [
+    "Armor Piercing Very Heavy Pistol Ammo x8",
+    "Agent"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Lawman: Backup 4."
+   ],
+   "lore": "Oficial de policia que entrega un lanzacohetes en la simulacion de la mision Just Like Real; su ficha se incluye por si hace falta.",
+   "doubts": [
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). HP=45 y Death Save=7 concuerdan.",
+    "Faction 'NCPD' inferida del texto de la mision ('the NCPD pays...'), no impresa en el bloque.",
+    "El libro indica 'Officer Lantz is a Hardened Lieutenant'.",
+    "El libro imprime 'Martial Arts (Judo)' y el arma 'Martial Arts' con ROF 2 3d6."
+   ]
+  },
+  {
+   "id": "ir2-rex-royale",
+   "name": "Rex Royale",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 28,
+   "tier": "mini_boss",
+   "faction": "",
+   "role": "Fixer",
+   "roleAbility": {
+    "name": "Operator",
+    "rank": 8
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 7,
+    "REF": 7,
+    "DEX": 7,
+    "TECH": 4,
+    "COOL": 8,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 6,
+    "EMP": 6
+   },
+   "statsArmorModified": null,
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 6,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Heavy Pistol",
+     "skill": "Handgun",
+     "skillBase": 13,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": "Excellent",
+     "weaponType2077": null,
+     "notes": ""
+    },
+    {
+     "name": "Kendachi Mono-Three",
+     "skill": "",
+     "skillBase": null,
+     "damage": "4d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Armor Piercing Very Heavy Pistol Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "El libro no indica la habilidad; la municion AP Very Heavy Pistol de su equipo sugiere pistola muy pesada (inferido)"
+    }
+   ],
+   "skillBases": {
+    "Athletics": 9,
+    "Brawling": 13,
+    "Bribery": 12,
+    "Conceal/Reveal Object": 13,
+    "Concentration": 8,
+    "Conversation": 8,
+    "Education": 9,
+    "Evasion": 13,
+    "First Aid": 6,
+    "Gamble": 13,
+    "Handgun": 13,
+    "Human Perception": 8,
+    "Language (Chinese)": 11,
+    "Language (English)": 11,
+    "Language (Italian)": 11,
+    "Language (Japanese)": 11,
+    "Language (Korean)": 11,
+    "Language (Russian)": 11,
+    "Language (Streetslang)": 9,
+    "Language (Spanish)": 11,
+    "Local Expert (South Night City)": 13,
+    "Local Expert (University District)": 13,
+    "Local Expert (Your Home)": 13,
+    "Melee Weapons": 16,
+    "Perception": 9,
+    "Persuasion": 14,
+    "Resist Torture/Drugs": 10,
+    "Stealth": 9,
+    "Streetwise": 14,
+    "Trading": 16,
+    "Wardrobe & Style": 10
+   },
+   "cyberware": [],
+   "gear": [
+    "Armor Piercing Very Heavy Pistol Ammo x16",
+    "Smoke Grenade x2",
+    "Agent",
+    "Disposable Cell Phone x2",
+    "Smart Glasses w/ Low Light/Infrared/UV"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Fixer: Operator 8."
+   ],
+   "lore": "Fixer que puede darles trabajos a los PJ (como Precious Cargo) tras salvar el edificio; el libro dice que probablemente no haga falta su ficha en la primera mision.",
+   "doubts": [
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). HP=40 y Death Save=6 concuerdan.",
+    "El libro indica 'Rex Royale is a Mini-Boss'.",
+    "El cyberware se imprime como 'None' (lista vacia).",
+    "Las dos armas: 'Excellent Quality Heavy Pistol ROF2 3d6' y 'Kendachi Mono-Three ROF1 4d6'; el libro no dice la habilidad ni la municion del Mono-Three (ammo es inferido del equipo).",
+    "Los idiomas se dejan en el orden impreso (Spanish tras Streetslang)."
+   ]
+  },
+  {
+   "id": "ir2-rico-robinson",
+   "name": "Rico Rico (Rico Robinson)",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 29,
+   "tier": "lieutenant",
+   "faction": "",
+   "role": "Rockerboy",
+   "roleAbility": {
+    "name": "Charismatic Impact",
+    "rank": 4
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 6,
+    "REF": 4,
+    "DEX": 6,
+    "TECH": 7,
+    "COOL": 7,
+    "WILL": 5,
+    "LUCK": null,
+    "MOVE": 4,
+    "BODY": 6,
+    "EMP": 6
+   },
+   "statsArmorModified": null,
+   "hp": 45,
+   "seriouslyWounded": 23,
+   "deathSave": 7,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Heavy Melee Weapon",
+     "skill": "Melee Weapons",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    },
+    {
+     "name": "Brawling",
+     "skill": "Brawling",
+     "skillBase": 8,
+     "damage": "2d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Listado como arma en el libro"
+    }
+   ],
+   "skillBases": {
+    "Acting": 11,
+    "Athletics": 8,
+    "Brawling": 8,
+    "Bribery": 11,
+    "Composition": 12,
+    "Concentration": 7,
+    "Conversation": 8,
+    "Dance": 12,
+    "Education": 8,
+    "Evasion": 12,
+    "First Aid": 9,
+    "Human Perception": 8,
+    "Language (English)": 10,
+    "Language (Spanish)": 10,
+    "Language (Streetslang)": 8,
+    "Library Search": 8,
+    "Local Expert (Your Home)": 12,
+    "Melee Weapons": 12,
+    "Perception": 8,
+    "Persuasion": 9,
+    "Pick Pocket": 11,
+    "Play Instrument (Guitar)": 13,
+    "Stealth": 8,
+    "Streetwise": 13,
+    "Wardrobe & Style": 15
+   },
+   "cyberware": [
+    "Cyberaudio Suite w/ Audio Recorder"
+   ],
+   "gear": [
+    "Agent",
+    "Electric Guitar",
+    "Pocket Amplifier"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Rockerboy: Charismatic Impact 4."
+   ],
+   "lore": "Vecino rockero Rico Robinson en The Apartment; una idea de escena es hacerles de seguridad en uno de sus conciertos.",
+   "doubts": [
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). El libro imprime HP 45, Seriously Wounded 23 y Death Save 7, pero con BODY 6 y WILL 5 la formula da HP 40 y Death Save 6; se dejo lo que imprime el libro (posible errata del libro o de la extraccion).",
+    "El libro indica 'Rico Rico is a Lieutenant'.",
+    "El nombre en el bloque es 'Rico Rico (Rico Robinson)'."
+   ]
+  },
+  {
+   "id": "ir2-streamline",
+   "name": "Streamline",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 29,
+   "tier": "hardened_lieutenant",
+   "faction": "",
+   "role": "Solo",
+   "roleAbility": {
+    "name": "Combat Awareness",
+    "rank": 4
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 4,
+    "REF": 7,
+    "DEX": 8,
+    "TECH": 4,
+    "COOL": 4,
+    "WILL": 5,
+    "LUCK": null,
+    "MOVE": 8,
+    "BODY": 7,
+    "EMP": 2
+   },
+   "statsArmorModified": null,
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 7,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Assault Rifle",
+     "skill": "Shoulder Arms",
+     "skillBase": 13,
+     "damage": "5d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Rifle Ammunition",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    },
+    {
+     "name": "Wolvers",
+     "skill": "",
+     "skillBase": null,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Cyberware; el libro no indica la habilidad"
+    }
+   ],
+   "skillBases": {
+    "Acting": 10,
+    "Athletics": 14,
+    "Brawling": 14,
+    "Bureaucracy": 8,
+    "Concentration": 7,
+    "Contortionist": 14,
+    "Conversation": 4,
+    "Education": 6,
+    "Evasion": 14,
+    "First Aid": 6,
+    "Human Perception": 4,
+    "Language (Russian)": 8,
+    "Language (Streetslang)": 6,
+    "Local Expert (Your Home)": 6,
+    "Melee Weapons": 14,
+    "Perception": 10,
+    "Persuasion": 6,
+    "Resist Torture/Drugs": 11,
+    "Shoulder Arms": 13,
+    "Stealth": 14,
+    "Tactics": 10
+   },
+   "cyberware": [
+    "Cybereye w/ Targeting Scope",
+    "Cyberleg x2",
+    "Wolvers"
+   ],
+   "gear": [
+    "Rifle Ammunition x15",
+    "Agent",
+    "Grapple Gun"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Solo: Combat Awareness 4.",
+    "Segun la mision Unknown Caller, dirige un equipo de Security Operatives con Light Armorjack; puede escapar sin usar su tirolesa o saltando por la ventana y absorbiendo la caida con las cyberlegs."
+   ],
+   "lore": "Francotirador que lidera el equipo de ataque en Unknown Caller; puede reutilizarse como antagonista futuro o como asesino contratado por un Fixer traicionado.",
+   "doubts": [
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). HP=40 y Death Save=7 concuerdan.",
+    "'Rifle Ammunition x1 5' en la extraccion leido como x15.",
+    "El libro indica 'Streamline is a Hardened Lieutenant'.",
+    "La habilidad de las Wolvers no se imprime; skill vacio."
+   ]
+  },
+  {
+   "id": "ir2-ten-gallon",
+   "name": "Ten Gallon",
+   "subtitle": "Jumpstart Kit Conversion Guide",
+   "book": "Interface RED Volume 2",
+   "sourcePage": 30,
+   "tier": "hardened_lieutenant",
+   "faction": "",
+   "role": "Lawman",
+   "roleAbility": {
+    "name": "Backup",
+    "rank": 4
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 5,
+    "REF": 8,
+    "DEX": 6,
+    "TECH": 6,
+    "COOL": 4,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 5,
+    "BODY": 6,
+    "EMP": 4
+   },
+   "statsArmorModified": null,
+   "hp": 40,
+   "seriouslyWounded": 20,
+   "deathSave": 6,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Assault Rifle w/ Infrared Nightvision Scope",
+     "skill": "Shoulder Arms",
+     "skillBase": 14,
+     "damage": "5d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Rifle Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    },
+    {
+     "name": "Stun Baton",
+     "skill": "",
+     "skillBase": null,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "El libro no indica la habilidad"
+    }
+   ],
+   "skillBases": {
+    "Animal Handling": 10,
+    "Athletics": 8,
+    "Brawling": 12,
+    "Concentration": 8,
+    "Conversation": 6,
+    "Criminology": 10,
+    "Deduction": 10,
+    "Drive Land Vehicle": 14,
+    "Education": 7,
+    "Evasion": 8,
+    "First Aid": 8,
+    "Handgun": 14,
+    "Human Perception": 6,
+    "Land Vehicle Tech": 12,
+    "Language (English)": 9,
+    "Language (Spanish)": 9,
+    "Language (Streetslang)": 7,
+    "Local Expert (Your Home)": 7,
+    "Perception": 11,
+    "Persuasion": 6,
+    "Pilot Air Vehicle": 11,
+    "Riding": 12,
+    "Shoulder Arms": 14,
+    "Stealth": 8,
+    "Tracking": 8
+   },
+   "cyberware": [],
+   "gear": [
+    "Rifle Ammo x25",
+    "Agent",
+    "Grapple Gun",
+    "Smart Glasses w/ Targeting Scope and TeleOptics"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Lawman: Backup 4.",
+    "Segun la mision Just Like Real, va en un Gyrocopter con Armored Chassis (SP13)."
+   ],
+   "lore": "Policia que vuela un girocoptero blindado durante la simulacion final de la mision Just Like Real.",
+   "doubts": [
+    "Orden de stats: INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK). HP=40 y Death Save=6 concuerdan.",
+    "Faction vacio: el bloque no la imprime (la mision lo vincula con el NCPD).",
+    "El cyberware se imprime como 'None' (lista vacia).",
+    "El libro indica 'Ten Gallon is a Hardened Lieutenant'.",
+    "La habilidad del Stun Baton no se imprime; skill vacio."
+   ]
+  },
+  {
+   "id": "ir4-philharmonic-vampyre",
+   "book": "Interface RED Volume 4",
+   "name": "Philharmonic Vampyre",
+   "subtitle": "Halloween Screamsheets (Rep 0)",
+   "sourcePage": 60,
+   "tier": "mook",
+   "faction": "Philharmonic Vampyres",
+   "role": "",
+   "roleAbility": null,
+   "level": null,
+   "rep": 0,
+   "stats": {
+    "INT": 6,
+    "REF": 6,
+    "DEX": 5,
+    "TECH": 4,
+    "COOL": 6,
+    "WILL": 6,
+    "LUCK": null,
+    "MOVE": 7,
+    "BODY": 2,
+    "EMP": 7
+   },
+   "statsArmorModified": null,
+   "hp": 30,
+   "seriouslyWounded": 15,
+   "deathSave": 2,
+   "armor": {
+    "name": "Leathers",
+    "headSp": 4,
+    "bodySp": 4,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Vampyres",
+     "skill": "Melee Weapon",
+     "skillBase": 12,
+     "damage": "1d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Nombre del arma ilegible/ambiguo en la extraccion (aparece como 'Vampyres') Vampyres: ciberware de colmillos (Core p.115)."
+    },
+    {
+     "name": "Heavy Pistol",
+     "skill": "Handgun",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": "Rubber Bullets",
+     "quality": "Poor",
+     "weaponType2077": null,
+     "notes": "Equipo del libro: Rubber Bullets x8"
+    }
+   ],
+   "skillBases": {
+    "Acting": 10,
+    "Athletics": 7,
+    "Brawling": 7,
+    "Concentration": 7,
+    "Conversation": 9,
+    "Dance": 8,
+    "Education": 11,
+    "Evasion": 7,
+    "First Aid": 6,
+    "Handgun": 12,
+    "Human Perception": 9,
+    "Language (Native)": 10,
+    "Language (Streetslang)": 8,
+    "Local Expert (University District)": 8,
+    "Melee Weapon": 12,
+    "Perception": 8,
+    "Personal Grooming": 10,
+    "Persuasion": 10,
+    "Stealth": 10,
+    "Streetwise": 9,
+    "Wardrobe & Style": 10
+   },
+   "cyberware": [
+    "Nasal Filters",
+    "Shift Tacts",
+    "Techhair"
+   ],
+   "gear": [
+    "Rubber Bullets x8",
+    "Disposable Cellphone",
+    "Any props needed for pranks"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "En la aventura hay Crew x3 Vampyres; priorizan el caos sobre pelear y solo se defienden si alguien dispara.",
+    "Huyen y se reagrupan tras dos compañeros sometidos o detenidos."
+   ],
+   "lore": "Miembros de los Philharmonic Vampyres, banda gótica y bromista que revienta fiestas de Halloween con travesuras sin ánimo de herir.",
+   "doubts": [
+    "Stats en el orden impreso INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK); HP 30 = 10+5*ceil((2+6)/2) y Death Save 2 = BODY: coinciden con lo impreso.",
+    "El libro no da tier: se asigno mook por Rep 0, sin Role y HP 30.",
+    "La primera arma aparece como 'Vampyres (C#: 12) ROF2 1d6': nombre y skill inciertos; skillBase 12 viene del C# impreso (Handgun 12 y Melee Weapon 12 coinciden).",
+    "La Heavy Pistol dice 'Poor Quality'; la municion se asigno a Rubber Bullets x8 por la lista de equipo.",
+    "Dígitos partidos verificados (ej. '1 1' = 11, '1 2' = 12)."
+   ]
+  },
+  {
+   "id": "ir4-laura-june-maybach",
+   "book": "Interface RED Volume 4",
+   "name": "Laura June Maybach",
+   "subtitle": "Halloween Screamsheets",
+   "sourcePage": 64,
+   "tier": "lieutenant",
+   "faction": "",
+   "role": "Medtech",
+   "roleAbility": {
+    "name": "Medicine",
+    "rank": 2
+   },
+   "level": null,
+   "rep": null,
+   "stats": {
+    "INT": 5,
+    "REF": 8,
+    "DEX": 6,
+    "TECH": 7,
+    "COOL": 4,
+    "WILL": 4,
+    "LUCK": null,
+    "MOVE": 6,
+    "BODY": 5,
+    "EMP": 0
+   },
+   "statsArmorModified": null,
+   "hp": 35,
+   "seriouslyWounded": 18,
+   "deathSave": 5,
+   "armor": {
+    "name": "Light Armorjack",
+    "headSp": 11,
+    "bodySp": 11,
+    "headSpVsMelee": null,
+    "bodySpVsMelee": null,
+    "penalty": null
+   },
+   "weapons": [
+    {
+     "name": "Popup Flamethrower",
+     "skill": "Heavy Weapons",
+     "skillBase": 14,
+     "damage": "3d6",
+     "rof": 1,
+     "mag": null,
+     "ammo": "Incendiary Shotgun Shells",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Cyberbrazo (Cyberarm w/Popup Flamethrower); munición asignada por el equipo listado"
+    },
+    {
+     "name": "Heavy Pistol",
+     "skill": "Handgun",
+     "skillBase": 14,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": "Heavy Pistol Ammo",
+     "quality": null,
+     "weaponType2077": null,
+     "notes": ""
+    }
+   ],
+   "skillBases": {
+    "Athletics": 11,
+    "Basic Tech": 9,
+    "Brawling": 10,
+    "Concentration": 8,
+    "Conversation": 2,
+    "Cybertech": 9,
+    "Education": 10,
+    "Evasion": 14,
+    "First Aid": 9,
+    "Handgun": 14,
+    "Heavy Weapons": 14,
+    "Human Perception": 2,
+    "Language (English)": 7,
+    "Language (Streetslang)": 7,
+    "Local Expert (Watson)": 7,
+    "Paramedic": 9,
+    "Perception": 7,
+    "Persuasion": 6,
+    "Resist Torture/Drugs": 12,
+    "Stealth": 10,
+    "Surgery": 11
+   },
+   "cyberware": [
+    "Cyberaudio Suite w/ Level Dampners",
+    "Cybereye x2 w/ Anti-Dazzle x2",
+    "Cyberarm w/Popup Flamethrower",
+    "Nasal Filters"
+   ],
+   "gear": [
+    "Incendiary Shotgun Shells x8",
+    "Heavy Pistol Ammo x16",
+    "Incendiary Grenade x1",
+    "Flashbang Grenade x1",
+    "Agent"
+   ],
+   "isNetrunner": false,
+   "interfaceRank": null,
+   "cyberdeckPrograms": [],
+   "hasNeuroport": null,
+   "selfIce": null,
+   "quickhacks": [],
+   "specialRules": [
+    "Habilidad de rol Medtech: Medicine 2 (Surgery 2).",
+    "En la aventura ataca a la Crew en North Cargo Village por considerarlos rivales por el afecto de TSpooks."
+   ],
+   "lore": "Ex-cyberpsycho y ex-Medtech de Savage Docs, tras años de terapia se obsesiona con la influencer TSpooks; creó el falso hombre lobo para impulsar su carrera.",
+   "doubts": [
+    "Stats en el orden impreso INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK); HP 35 = 10+5*ceil((5+4)/2) y Death Save 5 = BODY: coinciden con lo impreso.",
+    "El libro no da tier ni Rep: lieutenant es una asignación razonable (HP 35, jefa final de la aventura).",
+    "Municion del Popup Flamethrower inferida de 'Incendiary Shotgun Shells x8' en el equipo; el libro no la vincula explícitamente. El skill Heavy Weapons 14 se deduce de C# 14 impreso.",
+    "El libro escribe 'Laura June Maybach' pero una vez 'Laura Jane Maybach' (parece errata).",
+    "Dígitos partidos verificados (ej. 'SP 1 1' = 11, 'Athletics 1 1' = 11, 'Evasion 1 4' = 14, 'Resist Torture/Drugs 1 2' = 12, 'Surgery 1 1' = 11)."
+   ]
+  }
+ ]
+}

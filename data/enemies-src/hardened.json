@@ -475,6 +475,18 @@
      "quality": null,
      "weaponType2077": null,
      "notes": ""
+    },
+    {
+     "name": "Brawling",
+     "skill": "Brawling",
+     "skillBase": 6,
+     "damage": "1d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Interface RED Vol. 2 p.11 lo imprime como ataque"
     }
    ],
    "skillBases": {
@@ -537,7 +549,8 @@
     "El libro no imprime ROF ni cargador de las armas (rof/mag = null).",
     "El libro no detalla modelo, slots ni Attack/Defense del Cyberdeck; solo lista programas.",
     "Municion impresa 'Pistol Ammo x50' aunque el arma es Very Heavy Pistol.",
-    "El titulo del PNJ aparece tras el bloque; atribucion por orden de pagina (dos bloques identicos salvo programas)."
+    "El titulo del PNJ aparece tras el bloque; atribucion por orden de pagina (dos bloques identicos salvo programas).",
+    "[Claude Code · 2026-11-11] Revisado contra Interface RED Vol. 2: se suma el ataque de Brawling que IR2 imprime. Lo demás queda como en el DLC; ver docs/canon-audit/v5.20.0."
    ]
   },
   {
@@ -590,6 +603,18 @@
      "quality": null,
      "weaponType2077": null,
      "notes": ""
+    },
+    {
+     "name": "Brawling",
+     "skill": "Brawling",
+     "skillBase": 6,
+     "damage": "1d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Interface RED Vol. 2 p.11 lo imprime como ataque"
     }
    ],
    "skillBases": {
@@ -651,7 +676,8 @@
     "El libro no imprime ROF ni cargador de las armas (rof/mag = null).",
     "El libro no detalla modelo, slots ni Attack/Defense del Cyberdeck; solo lista programas.",
     "Municion impresa 'Pistol Ammo x50' aunque el arma es Very Heavy Pistol.",
-    "El titulo del PNJ aparece tras el bloque; atribucion por orden de pagina (dos bloques identicos salvo programas)."
+    "El titulo del PNJ aparece tras el bloque; atribucion por orden de pagina (dos bloques identicos salvo programas).",
+    "[Claude Code · 2026-11-11] Revisado contra Interface RED Vol. 2: se suma el ataque de Brawling que IR2 imprime. Lo demás queda como en el DLC; ver docs/canon-audit/v5.20.0."
    ]
   },
   {
@@ -1083,6 +1109,18 @@
      "quality": null,
      "weaponType2077": null,
      "notes": "Escudo listado en equipo especial, sin dano impreso"
+    },
+    {
+     "name": "Brawling",
+     "skill": "Brawling",
+     "skillBase": 12,
+     "damage": "3d6",
+     "rof": 2,
+     "mag": null,
+     "ammo": null,
+     "quality": null,
+     "weaponType2077": null,
+     "notes": "Interface RED Vol. 2 p.13 lo imprime como ataque"
     }
    ],
    "skillBases": {
@@ -1140,7 +1178,8 @@
     "El libro escribe 'Language (Streetwise)' en lugar de Streetslang; se conserva como impreso.",
     "skillBases guarda los valores sin parentesis (sin penalizacion).",
     "Que Heavy Armorjack impone -2 REF/DEX/MOVE se deduce de los valores entre parentesis del bloque.",
-    "Heavy SMG: habilidad Autofire inferida; Bulletproof Shield es equipo especial, no arma impresa."
+    "Heavy SMG: habilidad Autofire inferida; Bulletproof Shield es equipo especial, no arma impresa.",
+    "[Claude Code · 2026-11-11] Revisado contra Interface RED Vol. 2: se suma el ataque de Brawling que IR2 imprime. Lo demás queda como en el DLC; ver docs/canon-audit/v5.20.0."
    ]
   },
   {

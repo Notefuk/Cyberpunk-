@@ -1,6 +1,7 @@
 import { CORE_ENEMIES } from './enemies/core';
 import { CEMK_ENEMIES } from './enemies/cemk';
 import { HARDENED_ENEMIES } from './enemies/hardened';
+import { INTERFACE_RED_ENEMIES } from './enemies/interface-red';
 import { portEnemyToCemk } from '../engine/cemkPort';
 import type {
   CharacterEra,
@@ -265,6 +266,8 @@ export const ENEMIES_CATALOG: EnemySheet[] = [
   ...CORE_ENEMIES,
   ...CEMK_ENEMIES,
   ...HARDENED_ENEMIES,
+  // Interface RED Vol. 2 (Jumpstart) y Vol. 4 (Halloween), plan 27 v5.20.0. [Claude Code · 2026-11-11]
+  ...INTERFACE_RED_ENEMIES,
 
   // --------------------------------------------------------------------------
   // 4. DANGER GAL DOSSIER (2045 Danger Gal)

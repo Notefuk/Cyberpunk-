@@ -204,7 +204,7 @@ export const MethodStep: React.FC<StepProps> = ({ draft, update }) => {
       )}
 
       {draft.method === 'easy_pregen' && (
-        <Panel title="Pregens del Easy Mode">
+        <Panel title="Pregens del Easy Mode (Core) y del Single Shot Pack (Interface RED Vol. 1)">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {PREGEN_TEMPLATES.map((p) => {
               const selected = draft.pregenId === p.id;
@@ -220,9 +220,9 @@ export const MethodStep: React.FC<StepProps> = ({ draft, update }) => {
                 >
                   <div className="flex items-center gap-2">
                     <span className="font-tech font-bold text-white uppercase">{p.handle}</span>
-                    <SourceBadge book="Core RED" />
+                    <SourceBadge book={p.bookLabel ?? 'Core RED'} />
                   </div>
-                  <p className="text-[11px] font-mono-code text-[#10b981]">{p.role}</p>
+                  <p className="text-[11px] font-mono-code text-[#10b981]">{p.role}{p.hasNeuroport ? ' · Neuroport CEMK' : ''}</p>
                   <p className="text-xs text-[#94a3b8] mt-1">{p.bioSummary}</p>
                 </button>
               );
