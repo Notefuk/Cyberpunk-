@@ -11,7 +11,7 @@
 
 **Versión de la app**: v5.45.0 en `main` @ 5cfa798, en la beta (gh-pages 5da88db) y en Firebase prod (hosting `index-C1snalmV.js`; reglas sin cambios) [Claude Code · 2026-11-20].
 
-**Plan activo**: ninguno. La v5.45.0 es una tarea chica sin plan. Lo próximo es el plan 34 (equipo, vehículos y faltantes del Night Market Index) [Claude Code · 2026-11-20].
+**Plan activo**: plan 29, extensión de Owlbear para coberturas (`docs/plans/plan29-owlbear-coberturas.md`), aprobado el 2026-11-20; v5.46.0 (cobertura canon en la app) en curso en `claude/plan29-owlbear-coberturas`, worktree `C:\Users\TeseoHeracles\cpr-wt-plan29` [Claude Code · 2026-11-20]. Después sigue el plan 34 (equipo, vehículos y faltantes del Night Market Index).
 
 ## Traspaso
 - Cierra: [Claude Code · 2026-11-13]
