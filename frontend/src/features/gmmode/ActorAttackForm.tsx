@@ -8,6 +8,7 @@ import { rollActorAttack, AIMED_HEAD_PENALTY } from '../../engine/actorAttack';
 import type { IncomingAttackType } from '../../engine/combatEngine';
 import { applyHitToPc } from '../gm/gmDamage';
 import { publishGmAction } from '../../sync/tableSync';
+import type { EnemyWeaponProfile } from '../../data/enemiesCatalog';
 
 const small = 'text-[11px] font-mono-code text-[#94a3b8]';
 const mini = 'font-mono-code text-[10px] px-1.5 py-0.5 border border-[#262b3c] text-[#cbd5e1] hover:border-[#22d3ee] hover:text-[#22d3ee] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
@@ -25,18 +26,29 @@ export interface AttackTarget {
   handle: string;
 }
 
+/** Las armas de la ficha; el goon rápido del Fixer (sin ficha) ataca con su base y su daño, sin cargador. */
+function attackWeapons(e: NonNullable<EncounterCombatant['enemy']>): EnemyWeaponProfile[] {
+  if (e.weapons.length > 0) return e.weapons;
+  if (e.quick) return [{ name: 'Ataque', skillBase: e.quick.atkBase, damage: e.quick.damageDice, rof: 1, mag: 0 }];
+  return [];
+}
+
+const defaultType = (w: EnemyWeaponProfile | undefined, quick: boolean): IncomingAttackType => ((w?.mag ?? 0) > 0 || quick ? 'standard' : 'melee');
+
 export function ActorAttackForm({ c, targets }: { c: EncounterCombatant; targets: AttackTarget[] }) {
   const e = c.enemy!;
+  const weapons = attackWeapons(e);
+  const quick = e.weapons.length === 0 && !!e.quick;
   const [weaponIdx, setWeaponIdx] = useState(0);
   const [targetId, setTargetId] = useState(targets[0]?.id ?? '');
   const [dv, setDv] = useState(15);
   const [aimedHead, setAimedHead] = useState(false);
-  const w = e.weapons[weaponIdx];
+  const w = weapons[weaponIdx];
   const ranged = (w?.mag ?? 0) > 0;
-  const [attackType, setAttackType] = useState<IncomingAttackType>(ranged ? 'standard' : 'melee');
+  const [attackType, setAttackType] = useState<IncomingAttackType>(defaultType(w, quick));
   const [result, setResult] = useState('');
 
-  if (e.weapons.length === 0) return null;
+  if (!w) return null;
   if (targets.length === 0) return <p className={small}>Para atacar, sumá a los jugadores al encuentro (⚡ Iniciativa de todos).</p>;
 
   const ammoNow = e.ammo?.[weaponIdx]?.current ?? w.mag;
@@ -44,7 +56,7 @@ export function ActorAttackForm({ c, targets }: { c: EncounterCombatant; targets
 
   const pickWeapon = (i: number) => {
     setWeaponIdx(i);
-    setAttackType((e.weapons[i]?.mag ?? 0) > 0 ? 'standard' : 'melee');
+    setAttackType(defaultType(weapons[i], quick));
   };
 
   const attack = () => {
@@ -76,7 +88,7 @@ export function ActorAttackForm({ c, targets }: { c: EncounterCombatant; targets
       <div className="flex flex-wrap gap-1 items-center">
         <span className={small}>⚔️ Atacar</span>
         <select className={`${field} max-w-[9rem]`} value={weaponIdx} onChange={(ev) => pickWeapon(Number(ev.target.value))} aria-label="Arma">
-          {e.weapons.map((x, i) => <option key={`${x.name}-${i}`} value={i}>{x.name} (+{x.skillBase}, {x.damage})</option>)}
+          {weapons.map((x, i) => <option key={`${x.name}-${i}`} value={i}>{x.name} (+{x.skillBase}, {x.damage})</option>)}
         </select>
         <span className={small}>a</span>
         <select className={`${field} max-w-[8rem]`} value={target.id} onChange={(ev) => setTargetId(ev.target.value)} aria-label="Objetivo">
@@ -85,7 +97,7 @@ export function ActorAttackForm({ c, targets }: { c: EncounterCombatant; targets
       </div>
       <div className="flex flex-wrap gap-1 items-center">
         <span className={small}>DV</span>
-        <input type="number" min={0} max={60} className={`${field} w-12`} value={dv} onChange={(ev) => setDv(Number(ev.target.value) || 0)} aria-label="DV" />
+        <input type="number" min={0} max={60} className={`${field} w-12`} value={dv} onChange={(ev) => setDv(Math.max(0, Math.min(60, Number(ev.target.value) || 0)))} aria-label="DV" />
         <select className={`${field} max-w-[9rem]`} value={attackType} onChange={(ev) => setAttackType(ev.target.value as IncomingAttackType)} aria-label="Tipo de ataque">
           {ATTACK_TYPES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
         </select>

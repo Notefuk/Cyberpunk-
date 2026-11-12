@@ -79,7 +79,7 @@ export function RollRequestsPanel({ targets }: { targets: RequestTarget[] }) {
         <select className={input} value={skill} onChange={(e) => setSkill(e.target.value)} aria-label="Skill">
           {skills.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
-        <input className={`${input} w-16`} type="number" min={0} max={ROLL_REQUEST_DV_MAX} value={dv} onChange={(e) => setDv(Number(e.target.value) || 0)} aria-label="DV" />
+        <input className={`${input} w-16`} type="number" min={0} max={ROLL_REQUEST_DV_MAX} value={dv} onChange={(e) => setDv(Math.max(0, Math.min(ROLL_REQUEST_DV_MAX, Number(e.target.value) || 0)))} aria-label="DV" />
       </div>
       <div className="flex flex-wrap gap-1">
         {DV_PRESETS.map((v) => (
