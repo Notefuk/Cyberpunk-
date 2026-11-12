@@ -117,6 +117,20 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.25.0] - 2026-11-12 (Plan 30 I: arsenal de Solo of Fortune 2045) [Claude Code · 2026-11-12]
+* **Category**: Contenido canon. Primera versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.105-147; página impresa = PDF − 1).
+* **What Changed**:
+  * **Catálogo** (`sourceBookTitle` "Interface RED Volume 5", cada ítem con su página):
+    * 13 armas: Neo Rapid Assault 16, Takanami SMG, Chaingun "Victoria", Dawnmaker AMR, Midnight Assault HB, MK.27 LMG, Mountain Goat, BMG-500 Silver, Helix Citrus, Scatter Ratter y "Deathwind" Railgun (pp.116-119), Stickybomb Launcher (p.122) y "Big Boomer" (p.123). También el Tsunami Arms Type-18-S, reimpreso en la p.143.
+    * 8 attachments (pp.111-115), entre ellos Range Table Modification, Pistol Autosear, Shotgun Automatic Control Group y SMG Cyclic Internals.
+    * 12 municiones y explosivos: 7 municiones (pp.120-121), C9 Charge, C9 Kill Switch y Mini C9 (pp.121-122), Arrowhypo y Airburst (pp.126-127).
+    * Light, Hybrid y Heavy Metalgear (p.123); Authorization Handshake Port, Thermal Decoy y Multihypo (pp.122-126); las 8 drogas de Combat Chemistry (pp.127-129) y el Sycust Cyberspine (reimpreso en la p.143).
+  * **Tablas de rango expandidas (p.113)**: las 21 de tiro único y las 4 de Autofire (Machine Pistol, SMG, Assault Rifle y Machine Gun). Las usan solo las armas que traen `rangeTable`; las del Core siguen con su tabla (Core p.173). La ficha, el HUD de combate y el Compendio leen la tabla con `getWeaponRangeProfile`.
+  * **Autofire nuevo**: "Autofire (Machine Gun 5)" y "Autofire (Machine Pistol 4)" (p.115) se leen para el tope y la fila de DV, también en el ataque de un enemigo en Modo GM. La clase Machine Gun aparece en la clasificación del arma.
+  * **Metalgear con penalización por stat (p.123)**: la armadura puede traer una penalización propia a DEX y MOVE (Heavy: -4 REF, -5 DEX, -5 MOVE); la de REF sigue siendo `penalty`. Las armaduras del Core no cambian.
+* **Files Modified**: `data/core-rules.cprpack.json`, `data/rangeTables.ts` (tablas IR5, `parseAutofireMode`, `getWeaponRangeProfile`), `engine/actorAttack.ts`, `engine/characterEngine.ts` (`armorStatPenalty`), `types/cyberpunk.ts` (`rangeTable`, `penaltyDex`, `penaltyMove`), `store/useCharacterStore.ts`, `data/weaponAndCyberwareTooltips.ts`, `features/combat/CombatHudView.tsx`, `features/compendium/CompendiumView.tsx`, `features/sheet/StreetLabView.tsx`; test `engine/__tests__/ir5Catalog.test.ts` (incluye el conteo de Going Metal: 13 cuerpos y 20 piezas de ciberware); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 707 tests (13 nuevos) y build. En el navegador, el Compendio muestra la Midnight Assault HB como Machine Gun, con la tabla de Marksman Rifle y Autofire de Machine Gun hasta x5. El Heavy Metalgear muestra "REF -4 / DEX -5 / MOVE -5", y equipado baja MOVE de 7 a 2. Consola limpia.
+
 ### [v5.24.0] - 2026-11-12 (Modo GM: Autofire y supresión de un actor) [Claude Code · 2026-11-12]
 * **Category**: Herramientas del GM. Sigue al plan 28, que había dejado afuera el fuego automático y la supresión.
 * **What Changed**:

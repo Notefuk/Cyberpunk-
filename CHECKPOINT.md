@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-12] Modo GM probado online en la beta (v5.23.0 y v5.24.0)
+**Última actualización**: [Claude Code · 2026-11-12] v5.25.0 (plan 30 I, arsenal de Solo of Fortune) terminada en claude/plan30-v5.25.0, sin pushear
 
 **Versión de la app**: v5.22.0 en `main` @ 1feacac (PR #82), en la beta (gh-pages c1faf19, `index-Bo35K1XF.js`) y en Firebase prod (`index-9QyHIP8x.js`), con las reglas de `gm/actors` en dev y prod.
 
@@ -21,13 +21,10 @@
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
-- Nada en curso. v5.24.0 (Autofire y supresión de un actor, Core pp.173-174) en `main` 842d280 (PR #86), beta gh-pages e4e15c6 (`index-DvHFwbRw.js`) y prod (`index-DTjgcv7v.js`); las dos cargan con la consola limpia. Sin cambios de reglas.
-  - [Claude Code · 2026-11-12] Probado online en la beta (Firebase dev), campaña "Prueba Claude", con un GM y un jugador en dos perfiles de Chrome. Todo pasó con la consola limpia:
-    - Pedir tirada (Perception DV 15): el aviso llegó al jugador y el resultado, al log.
-    - Ataque simple de un actor: daño con SP y balas gastadas.
-    - Autofire (Security Officer contra KIWI, tope x4) y supresión (3 PJ se cubren).
-    - Dar ítem, notas privadas y actor guardado tras recargar.
-    - Datos de prueba limpiados. Quedan las entradas del log, el movimiento "Del GM" de Doc Varela y Hardpoint y KIWI en el encuentro.
+- [Claude Code · 2026-11-12] **Plan 30** (`docs/plans/plan30-solo-of-fortune-acpa.md`): Solo of Fortune 2045, Interface RED Vol. 5 pp.105-147 (PDF `Sourcebooks/Interface-RED/ilide.info-interface-5-pr_…pdf`, página impresa = PDF − 1).
+  - Hecho: v5.25.0 en la rama `claude/plan30-v5.25.0` (sin pushear). Arsenal en el pack, tablas de rango y Autofire de IR5 p.113, Metalgear con penalización por stat. tsc, 707 tests y build pasan; probado en local con la consola limpia.
+  - Siguiente: push y PR de la v5.25.0 (con OK). Después, v5.26.0: `data/acpaData.ts` y `engine/acpa.ts` con frames, shells, tunings y las 10 ACPA (IR5 pp.133-142) y el armador en el Compendio. Luego v5.27.0 (el PJ pilotea) y v5.28.0 (enemigos en ACPA).
+  - Desvíos: el pack de `data/` en la raíz quedó viejo desde la v5.3.2 y no se toca. El número 29 de plan lo tiene la sesión de Owlbear.
 
 ## Último trabajo terminado
 - [Claude Code · 2026-11-12] v5.21.0 (plan 28 I): pestaña MODO GM (PR #79), publicada en la beta y en prod.

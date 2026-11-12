@@ -45,6 +45,14 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
+
+/** v5.25.0: el Metalgear de IR5 p.123 penaliza distinto a REF, DEX y MOVE. [Claude Code · 2026-11-12] */
+function armorPenaltyLabel(a: { penalty: number; penaltyDex?: number; penaltyMove?: number }): string {
+  const dex = a.penaltyDex ?? a.penalty;
+  const move = a.penaltyMove ?? a.penalty;
+  return dex === a.penalty && move === a.penalty ? String(a.penalty) : `REF ${a.penalty} / DEX ${dex} / MOVE ${move}`;
+}
+
 export type CompendiumCategory = 
   | 'all' 
   | 'weapons' 
@@ -1694,7 +1702,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
                           <TacticalTooltip term="SP">SP {armor.sp}</TacticalTooltip>
                         </span>
                         <span className={`px-1.5 py-0.2 rounded-xs border ${armor.penalty < 0 ? 'bg-[#f43f5e]/15 text-[#f43f5e] border-[#f43f5e]/30 font-bold' : 'bg-[#181b2a] text-[#10b981] border-[#262c3e]'}`}>
-                          Pen: {armor.penalty}
+                          Pen: {armorPenaltyLabel(armor)}
                         </span>
                         <span className="px-1.5 py-0.2 bg-[#181b2a] text-[#64748b] rounded-xs border border-[#262c3e]">
                           {armor.costTier}
@@ -2410,7 +2418,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
                             <TacticalTooltip term="SP">SP {a.sp}</TacticalTooltip>
                           </span>
                           <span className={a.penalty < 0 ? 'text-[#f43f5e] mr-2 font-bold' : 'text-[#10b981] mr-2'}>
-                            Pen: {a.penalty}
+                            Pen: {armorPenaltyLabel(a)}
                           </span>
                         </td>
                         <td className="py-1.5 px-2 text-right text-[#f59e0b] font-bold">

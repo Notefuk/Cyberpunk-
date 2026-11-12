@@ -88,6 +88,11 @@ export function getWeaponClassAndRebuildInfo(weapon: any): WeaponClassAndRebuild
     weaponClass = 'Martial Arts Form';
     weaponClassTooltip =
       'Forma de Artes Marciales (ROF 2). Daño según BODY (1d6 a 4d6). A diferencia de Brawling, ¡las Artes Marciales ignoran el 50% del blindaje SP del defensor! Permite maniobras especiales únicas de cada estilo.';
+  } else if (notes.startsWith('machine gun')) {
+    // v5.25.0 (plan 30): categoría nueva de Solo of Fortune 2045 (IR5 p.115). [Claude Code · 2026-11-12]
+    weaponClass = 'Machine Gun';
+    weaponClassTooltip =
+      'Ametralladora (Interface RED Vol. 5 p.115). Categoría nueva sin versión genérica: cada una es única. Usa munición de Assault Rifle salvo que diga otra cosa y acepta attachments como un Assault Rifle. Su Autofire usa la fila Machine Gun (o la que indique) de la tabla expandida de IR5 p.113.';
   } else if (name.includes('shotgun') || name.includes('satara') || name.includes('carnage') || name.includes('zhuo') || notes.includes('slug') || notes.includes('shell')) {
     weaponClass = 'Shotgun';
     weaponClassTooltip =
@@ -96,7 +101,7 @@ export function getWeaponClassAndRebuildInfo(weapon: any): WeaponClassAndRebuild
     weaponClass = 'Sniper Rifle';
     weaponClassTooltip =
       'Fusil de Francotirador (Shoulder Arms, 2 manos, 5d6 de daño, ROF 1). Alcance óptimo devastador a 51-100m (DV 15) y 101-200m (DV 16). No ocultable. Muchas variantes requieren acción de cerrojo o trípode.';
-  } else if (name.includes('masamune') || name.includes('assault') || notes.includes('autofire (x4)') || notes.includes('autofire (x3)')) {
+  } else if (name.includes('masamune') || name.includes('assault') || notes.startsWith('assault rifle') || notes.includes('autofire (x4)') || notes.includes('autofire (x3)')) {
     weaponClass = 'Assault Rifle';
     weaponClassTooltip =
       'Fusil de Asalto (Shoulder Arms, 2 manos, 5d6 de daño, ROF 1). Dispone de modo de Fuego Automático (Autofire x4 con habilidad Autofire consumiendo 10 balas). Alcance óptimo a 26-50m (DV 13).';
@@ -116,7 +121,7 @@ export function getWeaponClassAndRebuildInfo(weapon: any): WeaponClassAndRebuild
     weaponClass = 'Medium Pistol';
     weaponClassTooltip =
       'Pistola Media (Handgun, 1 mano, 2d6 de daño, ROF 2). Ocultable. Arma de defensa personal ligera y común en el mercado negro (ej. Budget Arms C-13, Dai Lung).';
-  } else if (name.includes('rocket') || name.includes('grenade') || name.includes('missile')) {
+  } else if (name.includes('rocket') || name.includes('grenade') || name.includes('missile') || notes.startsWith('grenade launcher')) {
     weaponClass = 'Heavy Weapon';
     weaponClassTooltip =
       'Arma Pesada de Destrucción Masiva (Heavy Weapons, 6d6 a 8d6 de daño explosivo en área de 10x10m). Requiere 2 manos y munición costosa antiblindaje.';

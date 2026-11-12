@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.25.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Solo of Fortune 2045: el arsenal pesado',
+    summary: 'Llega el arsenal de Solo of Fortune 2045 (Interface RED Vol. 5): ametralladoras, el railgun Deathwind, escopetas y pistolas automáticas, accesorios, munición especial, cargas C9, Metalgear liviano, híbrido y pesado, señuelos térmicos y las drogas de Combat Chemistry. Las armas nuevas usan las tablas de rango expandidas del libro y el Autofire de Machine Gun y Machine Pistol.',
+    highlights: [
+      '13 armas, 8 accesorios y 12 municiones y explosivos (IR5 pp.111-127).',
+      'Tablas de rango expandidas y Autofire de Machine Gun y Machine Pistol (IR5 p.113).',
+      'Metalgear con penalización distinta a REF, DEX y MOVE (IR5 p.123).'
+    ],
+    filesTouched: ['frontend/src/data/core-rules.cprpack.json', 'frontend/src/data/rangeTables.ts', 'frontend/src/engine/characterEngine.ts'],
+    metricsBadge: 'v5.25.0 • Solo of Fortune • IR5 pp.111-143'
+  },
+  {
     version: 'v5.24.0',
     date: '2026-11-12',
     author: 'Claude Code',
@@ -1767,6 +1783,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.25.0': true,
     'v5.24.0': true,
     'v5.23.0': true,
     'v5.22.0': true,

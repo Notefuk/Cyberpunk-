@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.24.0`** (Modo GM: Autofire y supresión de un actor) en `main` (PR #86), la beta y Firebase prod [Claude Code · 2026-11-12]  
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.25.0`** (Plan 30 I: arsenal de Solo of Fortune 2045) en `claude/plan30-v5.25.0`, sin pushear; en `main`, la beta y Firebase prod está la v5.24.0 [Claude Code · 2026-11-12]  
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
 > **PLAN ACTIVO**: ninguno en curso. Plan 23 terminado y publicado (v5.8.0 y v5.9.0) [Claude Code · 2026-10-30]. En espera: plan 22 (Interface RED, Black Chrome y FBC). Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
