@@ -535,36 +535,34 @@ export const EXPANSION_RULE_SYSTEMS: ExpansionRuleSystem[] = [
   {
     id: 'hardened-enemies',
     title: 'Enemigos Endurecidos y Niveles de Amenaza (Hardened Enemies DLC)',
-    subtitle: 'Cómo escalar el desafío para mesas de juego veteranas con pools de Suerte y blindajes pesados',
+    subtitle: 'Mooks, Lieutenants y Mini Bosses para una Crew optimizada para el combate',
     sourceBook: 'dlc',
     sourceBookTitle: 'Hardened Enemies DLC',
     era: 'both',
     categoryBadge: 'DISEÑO DE ENCUENTROS // GM CONSOLE',
     introDescription:
-      'Cuando los jugadores adquieren mejor ciberware, armas excelentes y armaduras SP 11+, los guardias y pandilleros comunes del Core Book dejan de ser una amenaza creíble. El sistema de Enemigos Endurecidos (Hardened Enemies) proporciona plantillas tácticas balanceadas con bases de combate de 13 a 17, armaduras Heavy Armorjack, pools de Suerte propios e implantes de reflejos para mantener la tensión letal en la mesa.',
+      'Hardened quiere decir "optimizado para combate". Son versiones de los Mooks, Lieutenants y Mini Bosses del Core pensadas para una Crew de personajes optimizados para el combate: los desafían sin cambiar la economía del juego ni sumar más enemigos al encuentro (Hardened Lieutenants p.2). Las 16 fichas están en el bestiario.',
     howItWorksSteps: [
-      'Paso 1 (Diagnóstico de Amenaza): Si los personajes de la mesa tienen REF 8 y esquivan balas, o portan armas que infligen 5d6+, el GM debe sustituir a los Mooks básicos por sus variantes Hardened.',
-      'Paso 2 (Mejoras Tácticas de los Hardened): Los enemigos Hardened disponen de blindajes de SP 11 a 15, bases de ataque superiores (+13 o +15) y cargadores con munición especial (Perforante o Expansiva).',
-      'Paso 3 (Pools de Suerte de Enemigo): A diferencia de los esbirros comunes, los tenientes y mini-jefes Hardened tienen entre 1 y 4 puntos de Suerte que el GM puede gastar para forzar impactos o resistir tiradas de muerte.',
-      'Paso 4 (Tácticas de Escuadra): Los Hardened aprovechan coberturas, usan Fuego de Supresión y granadas Flashbang para desorganizar al grupo antes de asaltar.'
+      'Paso 1 (¿La Crew es Hardened?): un PJ es Hardened si cumple alguno de estos criterios: REF 8 con Evasion 6 o más; atacar con Stat + Skill + Mod de 15 o más; WILL + BODY de 16 o más; un arma de valor Luxury o más; DEX 8 con MOVE 8; Autofire o Martial Arts 6 o más; Solo de rango 4 o más. La Crew es Hardened solo si todos sus PJ lo son (Hardened Lieutenants p.2).',
+      'Paso 2 (Hardened Mooks): reemplazan a los Mooks del Core a razón de 1 por Edgerunner. Contra una Crew con PJ que no son de combate, usalos de a poco, mezclados con Mooks comunes (Hardened Mooks p.2).',
+      'Paso 3 (Hardened Lieutenants): reemplazan a los Lieutenants del Core (CP:R p.414) a razón de 1 cada 2 Edgerunners, y solo contra una Crew Hardened (Hardened Lieutenants p.2).',
+      'Paso 4 (Hardened Mini Bosses): reemplazan a los Mini Bosses del Core (CP:R p.414) a razón de 1 cada 3 Edgerunners. Son más letales: no encadenes varios en un mismo trabajo (Hardened Mini Bosses p.2).',
+      'Paso 5 (Más picante): cada DLC trae una tabla 1d10 para complicar el encuentro (Mook Encounter Complication) o ascender al Mini Boss (Mini Promotion).'
     ],
     keyBenefits: [
-      'Garantiza que los combates sigan siendo emocionantes, letales y tácticamente profundos.',
-      'Evita que los jugadores con personajes optimizados arrasen los encuentros sin esfuerzo.',
-      'Permite al GM modular la dificultad escena por escena con precisión militar.'
+      'Desafían a una Crew optimizada sin sumar enemigos ni cambiar la economía: el botín es parecido al de los PNJ del Core (Hardened Mooks p.2).',
+      'Las mismas fichas también están en Interface RED Vol. 2 (Mooks y Lieutenants) y Vol. 3 (Mini Bosses).'
     ],
     drawbacksAndRisks: [
-      'Alto riesgo de muerte para personajes heridos o que no utilicen coberturas correctamente.',
-      'Exige mayor atención del GM al gestionar los puntos de suerte y la munición especial de los enemigos.'
+      'Contra una Crew que no es Hardened, el material Hardened probablemente mate a los PJ que no lo son (Hardened Lieutenants p.2).',
+      'Varios Mini Bosses Hardened seguidos en un mismo trabajo terminan en funeral (Hardened Mini Bosses p.2).'
     ],
     referenceTable: {
-      headers: ['Nivel de Amenaza', 'HP Promedio', 'SP Típico', 'Bases de Ataque', 'Pool Suerte'],
+      headers: ['Nivel', 'Cuántos', 'HP', 'SP (cuerpo)', 'Base de su mejor arma', 'Fuente'],
       rows: [
-        ['Mook Básico (Core)', '20 - 30 HP', 'SP 4 - 7', 'Base 9 - 11', '0 Suerte'],
-        ['Hardened Mook (DLC)', '35 - 45 HP', 'SP 11 - 13', 'Base 13 - 14', '1 Suerte'],
-        ['Hardened Lieutenant', '45 - 55 HP', 'SP 13 - 15', 'Base 14 - 16', '2 - 3 Suerte'],
-        ['Mini-Boss / Cyberpsycho', '55 - 75 HP', 'SP 13 - 15', 'Base 15 - 17', '3 - 4 Suerte'],
-        ['Boss Legendario (Smasher)', '85 - 100+ HP', 'SP 18 - 20', 'Base 17 - 19', '5+ Suerte']
+        ['Hardened Mook (4 fichas)', '1 por Edgerunner', '25 - 40', '4 - 11', '12 - 13', 'Hardened Mooks pp.2-4'],
+        ['Hardened Lieutenant (6 fichas)', '1 cada 2 Edgerunners', '40', '11 - 13', '12 - 14', 'Hardened Lieutenants pp.4-6'],
+        ['Hardened Mini Boss (6 fichas)', '1 cada 3 Edgerunners', '45 - 60', '11', '16', 'Hardened Mini Bosses pp.3-5']
       ]
     }
   },
