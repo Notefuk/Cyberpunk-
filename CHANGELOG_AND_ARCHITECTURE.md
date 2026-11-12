@@ -117,6 +117,24 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.24.0] - 2026-11-12 (Modo GM: Autofire y supresión de un actor) [Claude Code · 2026-11-12]
+* **Category**: Herramientas del GM. Sigue al plan 28, que había dejado afuera el fuego automático y la supresión.
+* **What Changed**:
+  * En el ataque de un enemigo del encuentro, las armas con Autofire suman un selector de modo: Tiro simple, Autofire xN y Supresión. El tope sale de "Autofire xN" en la ficha o, si no figura, SMG x3 y Assault Rifle x4 (Core p.173).
+  * **Autofire (Core p.173)**:
+    * Gasta 10 balas y no se puede con menos de 10 en el cargador.
+    * Tira REF + Autofire + 1d10 contra la tabla de DV de Autofire por distancia (SMG 20/17/20/25/30, Assault Rifle 22/20/17/20/25), elegida en un selector.
+    * Si impacta, el daño es 2d6 × lo que superó el DV, hasta el tope del arma, y entra a la ficha del jugador con su SP. Dos 6 = Herida Crítica.
+    * No se puede apuntar. Si el jugador tiene REF 8+ y esquiva, el GM pone su tirada como DV.
+  * **Supresión (Core p.174)**:
+    * Gasta 10 balas.
+    * El GM marca a los jugadores a pie, a 25 m, sin cobertura y a la vista. Cada uno tira WILL + Concentration + 1d10 con su ficha (con la penalización por heridas, Core p.187) contra el REF + Autofire + 1d10 del enemigo.
+    * El empate lo gana el que resiste (CEMK p.5). El que falla usa su próximo Move para cubrirse.
+    * Cada resultado va al log de la mesa.
+  * La base REF + Autofire sale de la ficha (`skillBases.Autofire` o "Autofire base N" en las notas del arma) y se puede corregir a mano. Si la ficha no la trae, lo avisa.
+* **Files Modified**: `engine/actorAttack.ts` (Autofire y supresión), `features/gmmode/ActorAttackForm.tsx`; test `engine/__tests__/autofire.test.ts` (incluye el ejemplo del libro: 21 contra DV 17 con un Assault Rifle, 2d6 = 10 × 4 = 40); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 694 tests (6 nuevos) y build. Sin cambios de reglas de Firestore. En local sin mesa, con un Security Officer (Assault Rifle, Autofire 12): Autofire 14 contra DV 17 falla y gasta 10 balas; contra DV 5 sale 19, el multiplicador queda en el tope de x4 y hace 32 de daño a Insurance (SP 11→10, HP 40→19). Con 5 balas se bloquea. La supresión tira 21: seis PJ se cubren y Connect resiste con 21 (empate). Consola limpia.
+
 ### [v5.23.0] - 2026-11-12 (Plan 28 III: pedir tiradas, atacar con un actor, dar ítems y notas) [Claude Code · 2026-11-12]
 * **Category**: Herramientas del GM y mesa online (plan 28, `docs/plans/plan28-modo-gm.md`). Cierra el plan 28.
 * **What Changed**:

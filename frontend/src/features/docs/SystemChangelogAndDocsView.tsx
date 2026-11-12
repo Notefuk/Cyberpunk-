@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.24.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'GM',
+    title: 'Modo GM: Autofire y supresión de los enemigos',
+    summary: 'Los enemigos con SMG o rifle de asalto ahora pueden disparar en Autofire (10 balas, tabla de DV propia, 2d6 por lo que superó el DV hasta x3 o x4) y hacer fuego de supresión: cada jugador marcado tira WILL + Concentration con su ficha y, si pierde, tiene que usar su próximo movimiento para cubrirse.',
+    highlights: [
+      'Autofire: 10 balas, tabla de DV por distancia y daño 2d6 × lo que superó el DV (Core p.173).',
+      'Supresión: WILL + Concentration de cada jugador contra REF + Autofire del enemigo (Core p.174).',
+      'La base de Autofire sale de la ficha del enemigo y se puede corregir.'
+    ],
+    filesTouched: ['frontend/src/engine/actorAttack.ts', 'frontend/src/features/gmmode/ActorAttackForm.tsx'],
+    metricsBadge: 'v5.24.0 • Modo GM • Core pp.173-174'
+  },
+  {
     version: 'v5.23.0',
     date: '2026-11-12',
     author: 'Claude Code',
@@ -1751,6 +1767,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.24.0': true,
     'v5.23.0': true,
     'v5.22.0': true,
     'v5.21.0': true,
