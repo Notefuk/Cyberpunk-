@@ -8,6 +8,7 @@ import { useEncounterStore, orderedCombatants } from '../../store/encounterStore
 import { buildGmPlayerCard, rollInitiativeForAll, type GmPlayerCard } from '../../engine/gmMode';
 import { GmTargetDialog } from '../gm/GmTargetDialog';
 import type { PartySummary } from '../../sync/partySummary';
+import { ActorsColumn, EnemyRow } from './GmActorsPanels';
 
 const card = 'bg-[#0f1219] border border-[#1e2334] rounded-xs p-3 space-y-2';
 const small = 'text-[11px] font-mono-code text-[#94a3b8]';
@@ -124,11 +125,11 @@ export function GmModeView() {
         </p>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-3 gap-4">
         <section className="space-y-2">
           <h3 className="font-tech text-sm font-bold text-[#22d3ee] uppercase">Jugadores ({players.length})</h3>
           {players.length === 0 && <p className={small}>No hay jugadores todavía.</p>}
-          <div className="grid sm:grid-cols-2 gap-2">
+          <div className="grid gap-2">
             {players.map((p) =>
               p.sheet ? (
                 <PlayerCard key={p.id} c={buildGmPlayerCard(p.sheet)} onOpen={() => setTargetId(p.id)} />
@@ -150,7 +151,9 @@ export function GmModeView() {
           <div className={card}>
             {combatants.length === 0 && <p className={small}>No hay nadie en el encuentro. Los enemigos se suman desde el bestiario.</p>}
             <ol className="space-y-1">
-              {combatants.map((c) => (
+              {combatants.map((c) => c.enemy ? (
+                <EnemyRow key={c.id} c={c} active={current?.id === c.id} />
+              ) : (
                 <li key={c.id} className={`flex justify-between gap-2 text-[12px] font-mono-code px-1 ${current?.id === c.id ? 'bg-[#22d3ee]/10 text-white' : 'text-[#cbd5e1]'}`}>
                   <span>
                     {current?.id === c.id ? '▶ ' : ''}
@@ -158,14 +161,16 @@ export function GmModeView() {
                     {c.name}
                   </span>
                   <span className="text-[#94a3b8]">
-                    {c.enemy ? `HP ${c.enemy.currentHp}/${c.enemy.maxHp} · ` : ''}
                     Init {c.initiative ?? '—'}
                   </span>
                 </li>
               ))}
             </ol>
           </div>
+          <p className={small}>Tocá un enemigo para ver sus balas y heridas. "Sacar del combate" lo deja guardado en Actores.</p>
         </section>
+
+        <ActorsColumn />
       </div>
 
       {targetId && <GmTargetDialog charId={targetId} onClose={() => setTargetId(null)} />}

@@ -7,6 +7,7 @@ import { persist } from 'zustand/middleware';
 import type { EnemySheet, ThreatTier, EnemyCombatBase, EnemyWeaponProfile } from '../data/enemiesCatalog';
 import type { StatKey, CharacterEra } from '../types/cyberpunk';
 import { useCombatStore } from './useCombatStore';
+import { defaultAmmo, reloadAmmo, spendAmmo } from '../engine/gmActors';
 
 export const ENCOUNTER_STORAGE_KEY = 'cpr_encounter_v1';
 export const LEGACY_ENCOUNTER_KEY = 'cpr_active_encounter_v1';
@@ -34,6 +35,12 @@ export interface EncounterEnemy {
   specialRules: string[];
   /** Goons rápidos del Fixer (presets y a mano): ataque base y daño, sin ficha del catálogo. */
   quick?: { atkBase: number; damageDice: string; notes?: string };
+  /** v5.22.0 (plan 28): actor guardado del que sale este enemigo (store/gmActorsStore.ts). [Claude Code · 2026-11-12] */
+  actorId?: string;
+  /** v5.22.0: balas por arma, en el orden de `weapons` (cargador y reserva). Sin el campo, cargadores llenos. */
+  ammo?: { current: number; reserve: number }[];
+  /** v5.22.0: heridas críticas (nombres de la tabla, Core pp.187-188). */
+  injuries?: string[];
 }
 
 export interface EncounterCombatant {
@@ -110,6 +117,14 @@ export interface EncounterData {
 interface EncounterState extends EncounterData {
   addEnemyFromCatalog: (sheet: EnemySheet, count?: number) => string[];
   addQuickEnemy: (input: QuickEnemyInput) => string;
+  /** v5.22.0: agrega un enemigo ya armado (lo usa el actor guardado al volver al combate). */
+  addEnemy: (enemy: EncounterEnemy) => string;
+  /** v5.22.0: balas y heridas del enemigo. */
+  spendEnemyAmmo: (id: string, weaponIdx: number, n: number) => void;
+  reloadEnemyWeapon: (id: string, weaponIdx: number) => void;
+  setEnemyReserve: (id: string, weaponIdx: number, reserve: number) => void;
+  addEnemyInjury: (id: string, name: string) => void;
+  removeEnemyInjury: (id: string, idx: number) => void;
   addPc: (charId: string, name: string, ownerUid?: string) => string;
   setInitiative: (id: string, initiative: number | null) => void;
   adjustEnemyHp: (id: string, delta: number) => void;
@@ -178,6 +193,36 @@ export function enemyFromSheet(sheet: EnemySheet, name: string, instanceId: stri
   };
 }
 
+/** Goon rápido del Fixer (sin ficha del catálogo). */
+export function quickEnemy(input: QuickEnemyInput, instanceId: string): EncounterEnemy {
+  return {
+    instanceId,
+    catalogId: '',
+    name: input.name,
+    subtitle: '',
+    faction: '',
+    threatTier: input.threatTier ?? 'mook',
+    era: '2045' as CharacterEra,
+    role: '',
+    currentHp: input.hp,
+    maxHp: input.hp,
+    currentHeadSp: input.sp,
+    maxHeadSp: input.sp,
+    currentBodySp: input.sp,
+    maxBodySp: input.sp,
+    initiative: null,
+    stats: {} as Record<StatKey, number>,
+    weapons: [],
+    combatBases: [],
+    specialRules: [],
+    quick: { atkBase: input.atkBase, damageDice: input.damageDice, notes: input.notes }
+  };
+}
+
+export function newEnemyInstanceId(prefix: string): string {
+  return newEnemyId(prefix);
+}
+
 function enemyCombatant(enemy: EncounterEnemy): EncounterCombatant {
   return { id: enemy.instanceId, kind: 'enemy', name: enemy.name, initiative: enemy.initiative, enemy };
 }
@@ -244,31 +289,38 @@ export const useEncounterStore = create<EncounterState>()(
 
       addQuickEnemy: (input) => {
         const id = newEnemyId('goon');
-        const enemy: EncounterEnemy = {
-          instanceId: id,
-          catalogId: '',
-          name: input.name,
-          subtitle: '',
-          faction: '',
-          threatTier: input.threatTier ?? 'mook',
-          era: '2045' as CharacterEra,
-          role: '',
-          currentHp: input.hp,
-          maxHp: input.hp,
-          currentHeadSp: input.sp,
-          maxHeadSp: input.sp,
-          currentBodySp: input.sp,
-          maxBodySp: input.sp,
-          initiative: null,
-          stats: {} as Record<StatKey, number>,
-          weapons: [],
-          combatBases: [],
-          specialRules: [],
-          quick: { atkBase: input.atkBase, damageDice: input.damageDice, notes: input.notes }
-        };
+        const enemy = quickEnemy(input, id);
         set((s) => withCombatants(s, [...s.combatants, enemyCombatant(enemy)]));
         return id;
       },
+
+      addEnemy: (enemy) => {
+        set((s) => withCombatants(s, [...s.combatants.filter((c) => c.id !== enemy.instanceId), enemyCombatant(enemy)]));
+        return enemy.instanceId;
+      },
+
+      spendEnemyAmmo: (id, weaponIdx, n) =>
+        set((s) => ({ combatants: mapEnemy(s, id, (e) => ({ ...e, ammo: spendAmmo(e.ammo ?? defaultAmmo(e), weaponIdx, n) })) })),
+
+      // Core p.169, Reload: llena el cargador con la reserva.
+      reloadEnemyWeapon: (id, weaponIdx) =>
+        set((s) => ({
+          combatants: mapEnemy(s, id, (e) => ({ ...e, ammo: reloadAmmo(e.ammo ?? defaultAmmo(e), weaponIdx, e.weapons[weaponIdx]?.mag ?? 0) }))
+        })),
+
+      setEnemyReserve: (id, weaponIdx, reserve) =>
+        set((s) => ({
+          combatants: mapEnemy(s, id, (e) => ({
+            ...e,
+            ammo: (e.ammo ?? defaultAmmo(e)).map((a, i) => (i === weaponIdx ? { ...a, reserve: Math.max(0, Math.round(reserve)) } : a))
+          }))
+        })),
+
+      addEnemyInjury: (id, name) =>
+        set((s) => ({ combatants: mapEnemy(s, id, (e) => ({ ...e, injuries: [...(e.injuries ?? []), name] })) })),
+
+      removeEnemyInjury: (id, idx) =>
+        set((s) => ({ combatants: mapEnemy(s, id, (e) => ({ ...e, injuries: (e.injuries ?? []).filter((_, i) => i !== idx) })) })),
 
       addPc: (charId, name, ownerUid) => {
         const id = pcCombatantId(charId);

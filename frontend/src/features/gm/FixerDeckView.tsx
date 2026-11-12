@@ -8,6 +8,7 @@ import {
   getEffectiveBody
 } from '../../engine/characterEngine';
 import { useEncounterStore, orderedCombatants } from '../../store/encounterStore';
+import { spawnQuickActor } from '../gmmode/actorSpawn';
 import { EnemiesCompendiumPanel } from './EnemiesCompendiumPanel';
 import { NightMarketPanel } from './NightMarketPanel';
 import { GM_LOOT_TABLES } from '../../data/netAndRolesData';
@@ -353,12 +354,10 @@ export function FixerDeckView() {
   const handleAddGoon = (preset: GoonPreset) => {
     const d10 = rollD10();
     const refEstimate = Math.max(4, preset.atkBase - 6);
-    const goonNumber = combatants.filter((c) => c.name.startsWith(preset.name)).length + 1;
-
-    const name = `${preset.name} #${goonNumber}`;
     const initiative = d10 + refEstimate;
-    const id = useEncounterStore.getState().addQuickEnemy({
-      name,
+    // v5.22.0 (plan 28): cada goon queda guardado como actor ("Ganger 1", "Ganger 2"…). [Claude Code · 2026-11-12]
+    const id = spawnQuickActor({
+      name: preset.name,
       hp: preset.hp,
       sp: preset.sp,
       atkBase: preset.atkBase,
@@ -366,6 +365,7 @@ export function FixerDeckView() {
       notes: `${preset.notes} • Init: 1d10(${d10})+${refEstimate}`
     });
     useEncounterStore.getState().setInitiative(id, initiative);
+    const name = useEncounterStore.getState().combatants.find((c) => c.id === id)?.name ?? preset.name;
 
     showFeedback(`Spawned ${name} con Iniciativa ${initiative}.`);
   };
@@ -374,7 +374,7 @@ export function FixerDeckView() {
     const d10 = rollD10();
     const refEstimate = Math.max(4, customGoonForm.atkBase - 6);
     const initiative = d10 + refEstimate;
-    const id = useEncounterStore.getState().addQuickEnemy({
+    const id = spawnQuickActor({
       name: customGoonForm.name,
       hp: customGoonForm.hp,
       sp: customGoonForm.sp,
