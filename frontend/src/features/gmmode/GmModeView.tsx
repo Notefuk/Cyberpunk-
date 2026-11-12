@@ -126,7 +126,7 @@ export function GmModeView() {
         <h2 className="font-tech text-base font-bold text-white uppercase tracking-wider">🎛️ Modo GM</h2>
         <p className={small}>
           {online ? `Mesa: ${table?.name}. ` : 'Sin mesa online: se muestran las fichas de jugador de este navegador. '}
-          Tocá un jugador para aplicarle daño, condiciones, críticas o plata.
+          Tocá un jugador para aplicarle daño, condiciones, críticas o plata, darle un ítem o anotar algo privado.
         </p>
       </div>
 

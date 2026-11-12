@@ -598,17 +598,17 @@ describe('pedidos de tirada', () => {
     await assertSucceeds(deleteDoc(doc(gm, 'campaigns/camp1/rollRequests/r1')));
   });
 
-  it('notas por jugador: solo el GM, como mapa y con tope', async () => {
+  it('notas por jugador: solo el GM, como lista y con tope', async () => {
     await seed(['campaigns', 'camp1'], camp);
     const gm = db('gm');
-    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/playerNotes'), { items: { c1: 'Le debe plata a Rogue' }, _ts: serverTimestamp() }));
+    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/playerNotes'), { items: [{ charId: 'c1', text: 'Le debe plata a Rogue' }], _ts: serverTimestamp() }));
     await assertFails(getDoc(doc(db('alice'), 'campaigns/camp1/gm/playerNotes')));
     await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/gm/playerNotes'), { items: {}, _ts: serverTimestamp() }));
-    const many = Object.fromEntries(Array.from({ length: 101 }, (_, i) => ['c' + i, 'x']));
+    const many = Array.from({ length: 101 }, (_, i) => ({ charId: 'c' + i, text: 'x' }));
     await env.withSecurityRulesDisabled(async (ctx) => {
-      await setDoc(doc(ctx.firestore() as unknown as Firestore, 'campaigns/camp1/gm/playerNotes'), { items: {}, _ts: new Date(0) });
+      await setDoc(doc(ctx.firestore() as unknown as Firestore, 'campaigns/camp1/gm/playerNotes'), { items: [], _ts: new Date(0) });
     });
     await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/playerNotes'), { items: many, _ts: serverTimestamp() }));
-    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/playerNotes'), { items: ['c1'], _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/playerNotes'), { items: { c1: 'x' }, _ts: serverTimestamp() }));
   });
 });

@@ -249,7 +249,7 @@ service cloud.firestore {
         allow read, delete: if isGmOf(campId);
         allow create, update: if isGmOf(campId)
           // v5.22.0 (plan 28): 'actors', los actores guardados del GM (hasta 200). [Claude Code · 2026-11-12]
-          // v5.23.0 (plan 28): 'playerNotes', notas privadas del GM por jugador (mapa charId -> texto). [Claude Code · 2026-11-12]
+          // v5.23.0 (plan 28): 'playerNotes', notas privadas del GM por jugador (lista de { charId, text }). [Claude Code · 2026-11-12]
           && docId in ['notes', 'npcs', 'net', 'actors', 'playerNotes']
           && request.resource.data._ts == request.time
           && (resource == null || request.time > resource.data._ts + duration.value(1, 's'))
@@ -262,7 +262,7 @@ service cloud.firestore {
           && (docId != 'actors' || (request.resource.data.keys().hasOnly(['items', '_ts'])
               && request.resource.data.items is list && request.resource.data.items.size() <= 200))
           && (docId != 'playerNotes' || (request.resource.data.keys().hasOnly(['items', '_ts'])
-              && request.resource.data.items is map && request.resource.data.items.size() <= 100));
+              && request.resource.data.items is list && request.resource.data.items.size() <= 100));
       }
 
       // v5.23.0 (plan 28): el GM le pide una tirada a un jugador; el jugador tira con su ficha y deja el resultado. [Claude Code · 2026-11-12]

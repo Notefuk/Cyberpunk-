@@ -3,6 +3,7 @@
 //   campaigns/{c}/gm/npcs   { items, _ts }     NPCs propios (cpr_custom_npcs_v1)
 //   campaigns/{c}/gm/net    { items, _ts }     arquitecturas NET (cpr_custom_net_arch_v1)
 //   campaigns/{c}/gm/actors { items, _ts }     actores guardados del GM (cpr_gm_actors_v1), v5.22.0
+//   campaigns/{c}/gm/playerNotes { items, _ts } notas del GM por jugador, [{ charId, text }] (cpr_gm_player_notes_v1), v5.23.0
 // Solo los lee y escribe el GM de esa campaña. Con mesa activa de GM, las pantallas leen y escriben acá; si no, su
 // clave local como siempre. Si el documento no existe y hay datos locales, se copian la primera vez.
 // Se sube 1,5 s después de dejar de escribir (máximo 5 s; plan 17, línea 84).
@@ -11,14 +12,16 @@ import { create } from 'zustand';
 import { debounce, type Debounced } from '../utils/debounce';
 import type { FirebaseHandles } from './firebaseClient';
 
-export type GmSecretKind = 'notes' | 'npcs' | 'net' | 'actors';
+export type GmSecretKind = 'notes' | 'npcs' | 'net' | 'actors' | 'playerNotes';
 // v5.22.0 (plan 28): actores guardados del GM (store/gmActorsStore.ts). [Claude Code · 2026-11-12]
-export const GM_SECRET_KINDS: GmSecretKind[] = ['notes', 'npcs', 'net', 'actors'];
+// v5.23.0 (plan 28): notas privadas por jugador (store/gmPlayerNotesStore.ts). [Claude Code · 2026-11-12]
+export const GM_SECRET_KINDS: GmSecretKind[] = ['notes', 'npcs', 'net', 'actors', 'playerNotes'];
 export const GM_SECRET_LOCAL_KEYS: Record<GmSecretKind, string> = {
   notes: 'cpr_gm_secret_notes_v1',
   npcs: 'cpr_custom_npcs_v1',
   net: 'cpr_custom_net_arch_v1',
   actors: 'cpr_gm_actors_v1',
+  playerNotes: 'cpr_gm_player_notes_v1',
 };
 export const GM_SECRET_SAVE_MS = 1500;
 export const GM_SECRET_MAX_WAIT_MS = 5000;
@@ -68,7 +71,7 @@ export function startGmSecrets(opts: {
   current = { adapter, unsubs: [], savers };
   useGmSecrets.setState({ campId: opts.campId, campName: opts.campName, values: {}, notice: null });
   const copied: string[] = [];
-  const LABEL: Record<GmSecretKind, string> = { notes: 'notas', npcs: 'NPCs', net: 'NET', actors: 'actores' };
+  const LABEL: Record<GmSecretKind, string> = { notes: 'notas', npcs: 'NPCs', net: 'NET', actors: 'actores', playerNotes: 'notas por jugador' };
 
   for (const kind of GM_SECRET_KINDS) {
     current.unsubs.push(adapter.subscribe(kind, (data, meta) => {

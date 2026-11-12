@@ -1,7 +1,7 @@
 // v5.2.0 (plan 20, decisión 1) [Claude Code · 2026-10-28]: el GM actúa sobre la ficha de un PJ de su mesa.
 // Daño con la armadura del jugador (SP, ablación, cabeza x2, crítica), heridas críticas, condiciones, Humanidad y €$.
 // La ficha del jugador ya está en useCharacterStore (la party la carga) y se sincroniza sola; cada acción va al log de la mesa.
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useCharacterStore } from '../../store/useCharacterStore';
@@ -9,20 +9,26 @@ import { useEncounterStore } from '../../store/encounterStore';
 import { useRulesSettingsStore } from '../../store/rulesSettingsStore';
 import type { IncomingAttackType } from '../../engine/combatEngine';
 import { applyHitToPc, pcImpactInput, previewPcImpact } from './gmDamage';
+import { PlayerNotesEditor } from './PlayerNotesEditor';
+
+// v5.23.0 (plan 28): dar ítems (trae el catálogo entero, se carga al abrir la pestaña) y notas por jugador. [Claude Code · 2026-11-12]
+const GiveItemPanel = lazy(() => import('./GiveItemPanel'));
 import { calculateMaxHp, getEffectiveBody } from '../../engine/characterEngine';
 import { HEAD_CRITICAL_INJURIES, BODY_CRITICAL_INJURIES } from '../../data/criticalInjuries';
 import { CEMK_CRITICAL_INJURIES } from '../../data/creation';
 import { CONDITIONS } from '../../data/conditions';
 import { publishGmAction } from '../../sync/tableSync';
 
-type Tab = 'damage' | 'crit' | 'cond' | 'humanity' | 'eddies';
+type Tab = 'damage' | 'crit' | 'cond' | 'humanity' | 'eddies' | 'item' | 'notes';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'damage', label: 'Daño' },
   { id: 'crit', label: 'Crítica' },
   { id: 'cond', label: 'Condiciones' },
   { id: 'humanity', label: 'Humanidad' },
-  { id: 'eddies', label: '€$' }
+  { id: 'eddies', label: '€$' },
+  { id: 'item', label: 'Dar ítem' },
+  { id: 'notes', label: 'Notas' }
 ];
 
 const ATTACK_TYPES: { id: IncomingAttackType; label: string }[] = [
@@ -210,6 +216,14 @@ export const GmTargetDialog: React.FC<{ charId: string; onClose: () => void }> =
           <button type="button" onClick={applyEddies} disabled={!eddiesDelta} className={`${btn} border-[#293b5d] text-emerald-200`}>Aplicar</button>
         </div>
       )}
+
+      {tab === 'item' && (
+        <Suspense fallback={<p className="font-mono-code text-xs text-slate-400">Cargando el catálogo…</p>}>
+          <GiveItemPanel charId={charId} onDone={done} />
+        </Suspense>
+      )}
+
+      {tab === 'notes' && <PlayerNotesEditor charId={charId} />}
 
       {feedback && <p className="font-mono-code text-[11px] text-amber-300">{feedback}</p>}
     </Shell>
