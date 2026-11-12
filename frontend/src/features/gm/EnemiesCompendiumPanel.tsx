@@ -5,6 +5,7 @@ import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
 import { useGmSecretBinding } from '../../sync/gmSecrets';
 import { useGmAccess } from '../../store/gmAccess';
 import { useEncounterStore, encounterEnemies, type EncounterEnemy } from '../../store/encounterStore';
+import { spawnActorsFromSheet } from '../gmmode/actorSpawn';
 import { 
   ENEMIES_CATALOG, 
   DANGER_GAL_15_FACTIONS,
@@ -442,7 +443,8 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
   // SPAWN LOGIC
   // --------------------------------------------------------------------------
   const spawnEnemy = (enemy: EnemySheet, count = 1) => {
-    const ids = useEncounterStore.getState().addEnemyFromCatalog(enemy, count);
+    // v5.22.0 (plan 28): cada spawn queda guardado como actor del GM. [Claude Code · 2026-11-12]
+    const ids = spawnActorsFromSheet(enemy, count);
     setIsEncounterSectionOpen(true);
     showFeedback(`⚔️ Añadido(s) ${count}x "${enemy.name}" al Encuentro Activo.`);
 

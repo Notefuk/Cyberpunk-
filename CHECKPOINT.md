@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-12] Cierre de sesión. v5.21.0 publicada (main, beta y prod); sigue v5.22.0 del plan 28. Checkpoint comprimido: la historia vieja está en el CHANGELOG.
+**Última actualización**: [Claude Code · 2026-11-12] v5.22.0 terminada en `claude/v5.22.0-actores`, sin pushear.
 
 **Versión de la app**: v5.21.0 en `main` @ 59b0cd7 (PR #79 y docs PR #80), en la beta (gh-pages 6926a95, `index-Nr9qDac7.js`) y en Firebase prod (`index-D_BnqWI3.js`). Las reglas de Firestore no cambiaron desde la v5.14.0.
 
@@ -21,12 +21,12 @@
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
-- [Claude Code · 2026-11-12] **Plan 28 (modo GM)**:
-  - v5.21.0 publicada: pestaña 🎛️ MODO GM, con tarjetas de jugador (`features/gmmode/GmModeView.tsx`, `engine/gmMode.ts`) e iniciativa de todos.
-    - Desvío: las tarjetas salen de la ficha completa que el GM ya tiene cargada, no de `PartySummary`.
-    - No probado con mesa online.
-  - Falta la v5.22.0: actores guardados, con reglas nuevas.
-  - Falta la v5.23.0: pedir tiradas, atacar con un actor, dar ítems y notas, con reglas nuevas.
+- [Claude Code · 2026-11-12] **Plan 28, v5.22.0 terminada** en `claude/v5.22.0-actores`, sin pushear:
+  - Actores guardados con HP, SP, balas y heridas: `engine/gmActors.ts`, `store/gmActorsStore.ts`, `features/gmmode/actorSpawn.ts`, `features/gmmode/GmActorsPanels.tsx`.
+  - Regla nueva `campaigns/{c}/gm/actors` en `frontend/firestore.rules`: hay que desplegarla (dev y prod) con OK aparte antes del hosting.
+  - tsc, 673 tests, 50 de reglas y build OK. Probado en local sin mesa.
+  - No probado: con mesa en el navegador (emulador); tampoco la v5.21.0.
+  - Próximo: con OK, push, PR y merge; después reglas y hosting en prod y la beta. Luego v5.23.0.
 
 ## Último trabajo terminado
 - [Claude Code · 2026-11-12] v5.21.0 (plan 28 I): pestaña MODO GM (PR #79), publicada en la beta y en prod.

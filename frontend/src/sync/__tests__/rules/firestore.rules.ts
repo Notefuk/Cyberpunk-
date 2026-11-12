@@ -286,6 +286,10 @@ describe('campañas', () => {
     await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/npcs'), { items: Array.from({ length: 201 }, (_, i) => ({ id: 'n' + i })), _ts: serverTimestamp() }));
     await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/npcs'), { items: [{ id: 'n1', name: 'Fixer' }], _ts: serverTimestamp() }));
     await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/net'), { items: Array.from({ length: 51 }, (_, i) => ({ id: 'a' + i })), _ts: serverTimestamp() }));
+    // v5.22.0 (plan 28): actores guardados, solo el GM y hasta 200. [Claude Code · 2026-11-12]
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/actors'), { items: Array.from({ length: 201 }, (_, i) => ({ id: 'act' + i })), _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/gm/actors'), { items: [], _ts: serverTimestamp() }));
+    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/actors'), { items: [{ id: 'act1', name: 'Guardia 1' }], _ts: serverTimestamp() }));
     await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/net'), { items: [], _ts: serverTimestamp() }));
   });
 

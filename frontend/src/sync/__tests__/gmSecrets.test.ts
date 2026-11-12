@@ -23,7 +23,7 @@ function fakeCloud(initial: Partial<Record<GmSecretKind, unknown>> = {}) {
   return { adapter, saves, remote };
 }
 
-const local: Record<GmSecretKind, unknown> = { notes: 'notas viejas', npcs: [{ id: 'custom-npc-1' }], net: [] };
+const local: Record<GmSecretKind, unknown> = { notes: 'notas viejas', npcs: [{ id: 'custom-npc-1' }], net: [], actors: [] };
 
 beforeEach(() => vi.useFakeTimers());
 afterEach(() => {
@@ -36,7 +36,7 @@ describe('secretos del GM', () => {
     const cloud = fakeCloud();
     startGmSecrets({ campId: 'c1', campName: 'Mesa', adapter: cloud.adapter, readLocal: (k) => local[k] });
     expect(cloud.saves.map((s) => s.kind)).toEqual(['notes', 'npcs']);
-    expect(useGmSecrets.getState().values).toEqual({ notes: 'notas viejas', npcs: [{ id: 'custom-npc-1' }], net: [] });
+    expect(useGmSecrets.getState().values).toEqual({ notes: 'notas viejas', npcs: [{ id: 'custom-npc-1' }], net: [], actors: [] });
     expect(useGmSecrets.getState().notice).toContain('Mesa');
   });
 

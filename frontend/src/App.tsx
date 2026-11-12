@@ -21,6 +21,7 @@ import { CloudStatusChip } from './components/CloudStatusChip';
 import { useAuthStore } from './sync/authStore';
 import { initCloudSync } from './sync/cloudCharacters';
 import { startTableSync } from './sync/tableSync';
+import { initGmActorsSync } from './store/gmActorsStore';
 import { captureInviteFromUrl } from './sync/inviteLink';
 import { canSeeGmOnly, useGmAccess } from './store/gmAccess';
 
@@ -56,7 +57,7 @@ export default function App() {
   }, [gmOnlyVisible, activeTab]);
 
   // [Claude Code · 2026-10-24] v5.0.0 (plan 16): si ya había entrado a la nube, retoma la sesión.
-  useEffect(() => { initCloudSync(); startTableSync(); void useAuthStore.getState().initAuth(); }, []);
+  useEffect(() => { initCloudSync(); startTableSync(); initGmActorsSync(); void useAuthStore.getState().initAuth(); }, []);
 
   const themeConfig = {
     neo_red: {
