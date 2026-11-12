@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-12] v5.23.0 en curso, pasos 2-4 hechos (tiradas, ataque, ítems y notas)
+**Última actualización**: [Claude Code · 2026-11-12] v5.23.0 terminada en código y probada online; falta push, PR, reglas y publicar
 
 **Versión de la app**: v5.22.0 en `main` @ 1feacac (PR #82), en la beta (gh-pages c1faf19, `index-Bo35K1XF.js`) y en Firebase prod (`index-9QyHIP8x.js`), con las reglas de `gm/actors` en dev y prod.
 
@@ -21,9 +21,8 @@
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
-- **v5.23.0** (plan 28, rama `claude/v5.23.0-tiradas`), a cargo de Claude Code.
-  - Hecho: pedir tiradas (`rollRequests`), atacar con un actor (`ActorAttackForm`, daño en `features/gm/gmDamage.ts`), dar ítem (pestaña de `GmTargetDialog`, `gmGiveItemTo`) y notas por jugador (`gm/playerNotes`, lista `{charId,text}`). tsc, 688 tests, 52 de reglas y build pasan.
-  - Falta: prueba online en el emulador (GM + jugador), cierre de versión y docs. Reglas nuevas sin desplegar.
+- **v5.23.0** (plan 28, último paso; rama `claude/v5.23.0-tiradas`), a cargo de Claude Code. Terminada: pedir tiradas, atacar con un actor, dar ítem y notas por jugador. tsc, 688 tests, 52 de reglas y build pasan; probada online con el emulador (GM en `localhost`, jugador en `player.localhost`).
+  - Falta (cada paso con OK de Giuliano): push y PR, merge, desplegar las reglas (`rollRequests` y `gm/playerNotes`) en dev y prod **antes** del hosting, beta y prod, y el PR de docs. Con eso se cierra el plan 28.
 
 ## Último trabajo terminado
 - [Claude Code · 2026-11-12] v5.21.0 (plan 28 I): pestaña MODO GM (PR #79), publicada en la beta y en prod.
