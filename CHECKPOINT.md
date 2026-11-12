@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-12] v5.24.0 publicada (main 842d280, beta y prod)
+**Última actualización**: [Claude Code · 2026-11-12] Modo GM probado online en la beta (v5.23.0 y v5.24.0)
 
 **Versión de la app**: v5.22.0 en `main` @ 1feacac (PR #82), en la beta (gh-pages c1faf19, `index-Bo35K1XF.js`) y en Firebase prod (`index-9QyHIP8x.js`), con las reglas de `gm/actors` en dev y prod.
 
@@ -22,7 +22,12 @@
 
 ## En curso (a cargo)
 - Nada en curso. v5.24.0 (Autofire y supresión de un actor, Core pp.173-174) en `main` 842d280 (PR #86), beta gh-pages e4e15c6 (`index-DvHFwbRw.js`) y prod (`index-DTjgcv7v.js`); las dos cargan con la consola limpia. Sin cambios de reglas.
-  - Sin probar: Autofire y supresión con una mesa online (usan el mismo daño y log que el ataque simple, probado online en la v5.23.0).
+  - [Claude Code · 2026-11-12] Probado online en la beta (Firebase dev), campaña "Prueba Claude", con un GM y un jugador en dos perfiles de Chrome. Todo pasó con la consola limpia:
+    - Pedir tirada (Perception DV 15): el aviso llegó al jugador y el resultado, al log.
+    - Ataque simple de un actor: daño con SP y balas gastadas.
+    - Autofire (Security Officer contra KIWI, tope x4) y supresión (3 PJ se cubren).
+    - Dar ítem, notas privadas y actor guardado tras recargar.
+    - Datos de prueba limpiados. Quedan las entradas del log, el movimiento "Del GM" de Doc Varela y Hardpoint y KIWI en el encuentro.
 
 ## Último trabajo terminado
 - [Claude Code · 2026-11-12] v5.21.0 (plan 28 I): pestaña MODO GM (PR #79), publicada en la beta y en prod.
