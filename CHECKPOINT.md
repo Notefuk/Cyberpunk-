@@ -7,9 +7,9 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-12] v5.22.0 terminada en `claude/v5.22.0-actores`, sin pushear.
+**Última actualización**: [Claude Code · 2026-11-12] v5.22.0 publicada (main, reglas, beta y prod); sigue v5.23.0.
 
-**Versión de la app**: v5.21.0 en `main` @ 59b0cd7 (PR #79 y docs PR #80), en la beta (gh-pages 6926a95, `index-Nr9qDac7.js`) y en Firebase prod (`index-D_BnqWI3.js`). Las reglas de Firestore no cambiaron desde la v5.14.0.
+**Versión de la app**: v5.22.0 en `main` @ 1feacac (PR #82), en la beta (gh-pages c1faf19, `index-Bo35K1XF.js`) y en Firebase prod (`index-9QyHIP8x.js`), con las reglas de `gm/actors` en dev y prod.
 
 **Plan activo**: plan 28, modo GM (`docs/plans/plan28-modo-gm.md`), versiones v5.21.0 a v5.23.0.
 
@@ -21,12 +21,12 @@
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
-- [Claude Code · 2026-11-12] **Plan 28, v5.22.0 terminada** en `claude/v5.22.0-actores`, sin pushear:
-  - Actores guardados con HP, SP, balas y heridas: `engine/gmActors.ts`, `store/gmActorsStore.ts`, `features/gmmode/actorSpawn.ts`, `features/gmmode/GmActorsPanels.tsx`.
-  - Regla nueva `campaigns/{c}/gm/actors` en `frontend/firestore.rules`: hay que desplegarla (dev y prod) con OK aparte antes del hosting.
-  - tsc, 673 tests, 50 de reglas y build OK. Probado en local sin mesa.
-  - No probado: con mesa en el navegador (emulador); tampoco la v5.21.0.
-  - Próximo: con OK, push, PR y merge; después reglas y hosting en prod y la beta. Luego v5.23.0.
+- [Claude Code · 2026-11-12] **Plan 28, v5.22.0 publicada**:
+  - `main` 1feacac (PR #82).
+  - Reglas de Firestore (`gm/actors`) en dev y prod.
+  - Beta: gh-pages c1faf19 (`index-Bo35K1XF.js`). Prod: hosting `index-9QyHIP8x.js`, consola limpia.
+  - No probado con mesa online: ni v5.21.0 ni v5.22.0.
+  - Próximo: v5.23.0 (pedir tiradas, atacar con un actor, dar ítems y notas por jugador), con reglas nuevas (`rollRequests`, `gm/playerNotes`).
 
 ## Último trabajo terminado
 - [Claude Code · 2026-11-12] v5.21.0 (plan 28 I): pestaña MODO GM (PR #79), publicada en la beta y en prod.
