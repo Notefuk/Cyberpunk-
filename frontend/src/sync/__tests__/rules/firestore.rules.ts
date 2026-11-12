@@ -564,3 +564,51 @@ describe('fichas fijas y NPC (plan 25)', () => {
     await assertSucceeds(getDoc(doc(db('gm'), 'characters/npc1')));
   });
 });
+
+// [Claude Code · 2026-11-12] v5.23.0 (plan 28): pedir tiradas y notas del GM por jugador.
+describe('pedidos de tirada', () => {
+  const req = (id: string, over: Record<string, unknown> = {}) => ({
+    id, _by: 'gm', at: serverTimestamp(), targetCharId: 'c1', targetUid: 'alice', targetHandle: 'Vex',
+    skill: 'Perception', dv: 15, note: '', status: 'pending', ...over,
+  });
+  const result = { total: 18, d10: 7, stat: 'INT', statVal: 6, skillVal: 5, penalty: 0 };
+
+  it('el GM pide; el destinatario lee y responde una vez; los demás no', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    const gm = db('gm');
+    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/rollRequests/r1'), req('r1')));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/rollRequests/r2'), req('r2', { _by: 'alice' })));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/rollRequests/r3'), req('r3', { targetUid: 'carol' })));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/rollRequests/r4'), req('r4', { dv: 99 })));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/rollRequests/r5'), req('r5', { status: 'done' })));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/rollRequests/r6'), req('r6', { extra: 1 })));
+    // Lectura: el GM y el destinatario; otro jugador no.
+    await assertSucceeds(getDoc(doc(db('alice'), 'campaigns/camp1/rollRequests/r1')));
+    await assertFails(getDoc(doc(db('bob'), 'campaigns/camp1/rollRequests/r1')));
+    await assertSucceeds(getDocs(query(collection(db('alice'), 'campaigns/camp1/rollRequests'), where('targetUid', '==', 'alice'))));
+    await assertFails(getDocs(collection(db('alice'), 'campaigns/camp1/rollRequests')));
+    // Respuesta: solo status y result, solo el destinatario, solo una vez.
+    await assertFails(updateDoc(doc(db('bob'), 'campaigns/camp1/rollRequests/r1'), { status: 'done', result }));
+    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1/rollRequests/r1'), { status: 'done', result, dv: 5 }));
+    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1/rollRequests/r1'), { status: 'done', result: { ...result, trampa: 1 } }));
+    await assertSucceeds(updateDoc(doc(db('alice'), 'campaigns/camp1/rollRequests/r1'), { status: 'done', result }));
+    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1/rollRequests/r1'), { status: 'done', result: { ...result, total: 30 } }));
+    // Cancelar o limpiar: solo el GM.
+    await assertFails(deleteDoc(doc(db('alice'), 'campaigns/camp1/rollRequests/r1')));
+    await assertSucceeds(deleteDoc(doc(gm, 'campaigns/camp1/rollRequests/r1')));
+  });
+
+  it('notas por jugador: solo el GM, como mapa y con tope', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    const gm = db('gm');
+    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/playerNotes'), { items: { c1: 'Le debe plata a Rogue' }, _ts: serverTimestamp() }));
+    await assertFails(getDoc(doc(db('alice'), 'campaigns/camp1/gm/playerNotes')));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/gm/playerNotes'), { items: {}, _ts: serverTimestamp() }));
+    const many = Object.fromEntries(Array.from({ length: 101 }, (_, i) => ['c' + i, 'x']));
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore() as unknown as Firestore, 'campaigns/camp1/gm/playerNotes'), { items: {}, _ts: new Date(0) });
+    });
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/playerNotes'), { items: many, _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/playerNotes'), { items: ['c1'], _ts: serverTimestamp() }));
+  });
+});
