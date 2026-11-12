@@ -64,6 +64,7 @@ import {
   safeCharacterStorage
 } from './persistence';
 import { capIpLog } from '../engine/ipLedger';
+import { addToInventory, type GiveItem } from '../engine/gmGive';
 
 // v4.9.1 [Claude Code · 2026-10-22] Aplica un movimiento de IP a la ficha y lo registra en ipLog.
 function appendIpLog(c: CharacterSheet, kind: IpLogKind, delta: number, reason: string): CharacterSheet {
@@ -462,6 +463,8 @@ export interface CharacterStoreState {
     }
   ) => void;
   gmPayAllCharacters: (conceptOrAmount: string | number, amountOrConcept?: number | string) => void;
+  /** v5.23.0 (plan 28): el GM le da un ítem a la ficha de un jugador (al inventario, con un movimiento a nombre del GM). [Claude Code · 2026-11-12] */
+  gmGiveItemTo: (characterId: string, item: GiveItem, quantity: number) => boolean;
   createCharacterFromWizard: (sheet: CharacterSheet) => void;
   updateCharacterLifepath: (partial: Partial<CharacterLifepath>) => void;
   updateCharacterDebt: (debt: CharacterDebt | undefined) => void;
@@ -2204,6 +2207,28 @@ export const useCharacterStore = create<CharacterStoreState>()(
             };
           })
         }));
+      },
+
+      gmGiveItemTo: (characterId, item, quantity) => {
+        if (!get().characters.some((c) => c.id === characterId)) return false;
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== characterId) return c;
+            const newTx: EurodollarTransaction = {
+              id: `tx-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+              timestamp: new Date().toISOString(),
+              concept: `Del GM: ${item.name}${quantity > 1 ? ` x${quantity}` : ''}`,
+              amount: 0,
+              balanceAfter: c.eurodollars ?? 0
+            };
+            return {
+              ...c,
+              inventory: addToInventory(c.inventory || [], item, quantity),
+              transactions: [newTx, ...(c.transactions || [])].slice(0, 50)
+            };
+          })
+        }));
+        return true;
       },
 
       gmUpdateCharacterVitals: (characterId, patch) => {

@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.23.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'GM',
+    title: 'Modo GM: pedir tiradas, atacar con un actor, dar ítems y notas',
+    summary: 'Con mesa online, el GM le pide una tirada a uno o varios jugadores (skill, DV y nota): al jugador le aparece un aviso con el botón Tirar, tira con su ficha y el resultado vuelve al GM y al log. Los enemigos del encuentro atacan a un jugador: gastan bala, tiran contra el DV y el daño entra a la ficha con su armadura. Desde el diálogo del jugador, el GM le da ítems del catálogo y le anota cosas que solo ve él.',
+    highlights: [
+      'Pedir tirada: STAT + skill + 1d10, con heridas y crítico (Core p.130, p.187).',
+      'Atacar con un actor: balas, Aimed Shot a la cabeza (−8) y daño con SP (Core pp.170, 186-188).',
+      'Dar ítem al inventario y notas privadas por jugador.'
+    ],
+    filesTouched: ['frontend/src/sync/rollRequests.ts', 'frontend/src/features/gmmode/RollRequestsPanel.tsx', 'frontend/src/features/gmmode/ActorAttackForm.tsx', 'frontend/src/features/gm/GiveItemPanel.tsx', 'frontend/firestore.rules'],
+    metricsBadge: 'v5.23.0 • Plan 28 • GM'
+  },
+  {
     version: 'v5.22.0',
     date: '2026-11-12',
     author: 'Claude Code',
@@ -1735,6 +1751,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.23.0': true,
     'v5.22.0': true,
     'v5.21.0': true,
     'v5.20.0': true,

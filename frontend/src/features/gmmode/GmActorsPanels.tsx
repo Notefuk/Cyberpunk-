@@ -5,6 +5,7 @@ import { useGmActors, deleteActor, patchActor } from '../../store/gmActorsStore'
 import { HEAD_CRITICAL_INJURIES, BODY_CRITICAL_INJURIES } from '../../data/criticalInjuries';
 import { bringActorBack, duplicateActor, healActor, actorSheet } from './actorSpawn';
 import type { GmActor } from '../../engine/gmActors';
+import { ActorAttackForm, type AttackTarget } from './ActorAttackForm';
 
 const small = 'text-[11px] font-mono-code text-[#94a3b8]';
 const mini = 'font-mono-code text-[10px] px-1.5 py-0.5 border border-[#262b3c] text-[#cbd5e1] hover:border-[#22d3ee] hover:text-[#22d3ee] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
@@ -16,7 +17,7 @@ const INJURY_NAMES = [
 ];
 
 /** Enemigo del encuentro: HP, balas por arma (gastar y recargar, Core p.169) y heridas críticas (Core pp.187-188). */
-export function EnemyRow({ c, active }: { c: EncounterCombatant; active: boolean }) {
+export function EnemyRow({ c, active, targets = [] }: { c: EncounterCombatant; active: boolean; targets?: AttackTarget[] }) {
   const [open, setOpen] = useState(false);
   const [injury, setInjury] = useState('');
   const st = useEncounterStore.getState;
@@ -72,6 +73,8 @@ export function EnemyRow({ c, active }: { c: EncounterCombatant; active: boolean
             </select>
             <button type="button" className={mini} disabled={!injury} onClick={() => { st().addEnemyInjury(c.id, injury); setInjury(''); }}>Agregar</button>
           </div>
+          {/* v5.23.0 (plan 28): atacar a un jugador con este enemigo. [Claude Code · 2026-11-12] */}
+          <ActorAttackForm c={c} targets={targets} />
         </div>
       )}
     </li>

@@ -9,6 +9,7 @@ import { buildGmPlayerCard, rollInitiativeForAll, type GmPlayerCard } from '../.
 import { GmTargetDialog } from '../gm/GmTargetDialog';
 import type { PartySummary } from '../../sync/partySummary';
 import { ActorsColumn, EnemyRow } from './GmActorsPanels';
+import { RollRequestsPanel } from './RollRequestsPanel';
 
 const card = 'bg-[#0f1219] border border-[#1e2334] rounded-xs p-3 space-y-2';
 const small = 'text-[11px] font-mono-code text-[#94a3b8]';
@@ -94,6 +95,10 @@ export function GmModeView() {
   }, [online, party, characters]);
 
   const combatants = orderedCombatants(encounter);
+  // v5.23.0 (plan 28): los enemigos atacan a jugadores con la ficha cargada que estén en el encuentro. [Claude Code · 2026-11-12]
+  const attackTargets = combatants
+    .filter((c) => c.kind === 'pc' && c.charId && characters.some((ch) => ch.id === c.charId))
+    .map((c) => ({ id: c.charId!, handle: characters.find((ch) => ch.id === c.charId)?.handle ?? c.name }));
   const current = combatants[encounter.turnIndex];
 
   // Core p.168: REF + 1d10 para todos. En la mesa, la iniciativa del jugador la tira su dispositivo:
@@ -121,7 +126,7 @@ export function GmModeView() {
         <h2 className="font-tech text-base font-bold text-white uppercase tracking-wider">🎛️ Modo GM</h2>
         <p className={small}>
           {online ? `Mesa: ${table?.name}. ` : 'Sin mesa online: se muestran las fichas de jugador de este navegador. '}
-          Tocá un jugador para aplicarle daño, condiciones, críticas o plata.
+          Tocá un jugador para aplicarle daño, condiciones, críticas o plata, darle un ítem o anotar algo privado.
         </p>
       </div>
 
@@ -138,6 +143,12 @@ export function GmModeView() {
               ) : null
             )}
           </div>
+          {/* v5.23.0 (plan 28): pedir tiradas, solo con mesa online. [Claude Code · 2026-11-12] */}
+          {online && (
+            <RollRequestsPanel
+              targets={players.map((p) => ({ id: p.id, handle: p.sheet?.handle ?? p.summary?.handle ?? '', ownerUid: p.summary?.ownerUid }))}
+            />
+          )}
         </section>
 
         <section className="space-y-2">
@@ -152,7 +163,7 @@ export function GmModeView() {
             {combatants.length === 0 && <p className={small}>No hay nadie en el encuentro. Los enemigos se suman desde el bestiario.</p>}
             <ol className="space-y-1">
               {combatants.map((c) => c.enemy ? (
-                <EnemyRow key={c.id} c={c} active={current?.id === c.id} />
+                <EnemyRow key={c.id} c={c} active={current?.id === c.id} targets={attackTargets} />
               ) : (
                 <li key={c.id} className={`flex justify-between gap-2 text-[12px] font-mono-code px-1 ${current?.id === c.id ? 'bg-[#22d3ee]/10 text-white' : 'text-[#cbd5e1]'}`}>
                   <span>
