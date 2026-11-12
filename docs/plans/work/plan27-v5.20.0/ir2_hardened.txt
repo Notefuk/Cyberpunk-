@@ -1,0 +1,529 @@
+
+=== PDF p2 ===
+1
+Interface RED volume 2 is the second compilation book of Cyberpunk RED DLCs — free monthly online content for the 
+game you can find by scanning or clicking the QR code below. The DLCs have been reedited and polished, hot and fresh for 
+your table, with a brand new article thrown in to sweeten the deal. Since the Cyberpunk RED Core Book was released in 
+2020, we’ve been adding new content to the game in this manner on a monthly basis — so much so that it’s getting hard to 
+keep it all straight. That’s a good problem to have, but it’s also why the Interface RED series exists — to compile it all in one 
+easy-to-access place, preserving it in amber for the future. 
+This volume, we’ve got eight spicy articles for your reading pleasure:
+• Hardened Mooks and Hardened Lieutenants : The first two levels of opponents from the Cyberpunk RED Core
+Book get upgraded to provide a challenge to combat-optimized crews.
+• Night City Weather : Learn how to defend yourself from the Night City weather forecast using new gear, and how to
+incorporate weather into your campaign.
+• Jumpstart Kit Conversion Guide : With our conversion guide, The Apartment and the Screamsheets of the
+Cyberpunk Jumpstart Kit  become totally compatible with Cyberpunk RED .
+• Cargo Containers & Cube Hotels : You’ll visit ten Cargo Containers and ten Cube Hotels spread all across Night
+City here. Do you live there, choomba, or perhaps, do your enemies?
+• Daeric Sylar's Guide to ELO: A guide to leveling your Elf to Max Rank on Elflines Online, Night City’s most popular
+MMO. Every Dungeon and Raid of the popular MMO is detailed, including new Elflines monsters and new loot.
+• The 12 Days of Gunmas: Twelve fan favorite weapons from Cyberpunk 2020 are updated to Cyberpunk RED,
+leaked by the notorious Netrunner S.A.N.T.A for the Techs of Night City to reproduce.
+• Exotics of 2045: This volume’s exclusive article brings Exotics — a 2020 fan favorite — into Cyberpunk RED. Read
+the fine print carefully before you book a stay at The Zoo — or don’t. Biotechnica doesn’t care.
+We’re not gonna stop — the Free DLCs are just going to keep coming. Keep your appetite up, and keep a look out for the 
+monthly drops at rtalsoriangames.com. I hope you enjoy this second volume of Interface RED twice as much as we enjoyed 
+making it for you. But I'll settle for half.
+Good Hunting,
+James Hutt
+Senior Game Designer  
+& Mayor of Balance Town
+Writing and Design by James Hutt, J Gray, and Mike Pondsmith •Project Management by  J Gray
+Editing by Carol Darnell •Business Management  by Lisa Pondsmith •Art Direction  by Winterjaye Kovach
+Cover Illustration by Bad Moon Art Studio
+Illustration  by 3 Bit Studio, Adrian Marc, Alexander Dudar, Angelina Stroganova, Anselm Zielonka, Bad Moon 
+Art Studios, Claudio Pozas, Kai Carpenter, Neil Branquinho, Pedram Mohammadi,  Richard Bagnall, Robson Michel, 
+Sebastian Szmyd, and Stanislov Sherbakov
+Cartography by J Gray and Jon Abbiss
+Layout and Page Design by J Gray
+CAST AND CREW
+=== PDF p3 ===
+2
+Hardened Mooks .............................................3
+Hardened Lieutenants......................................9
+Night City Weather ........................................1 5
+Jumpstart Kit Conversion Guide ...................21
+Cargo Containers & Cube Hotels .................33
+Daeric Sylar's Guide to ELO ..........................39
+The 12 Days of Gunmas .................................57
+Exotics of 2045 ...............................................65
+contents
+CR3071 • ISBN 978-1-95091 1-30-1 • Version 1.0  
+Copyright  © 2023 by R. Talsorian Games, Inc., Cyberpunk is a registered trademark of 
+CD Projekt Red S.A. All rights reserved under the Universal Copyrights Convention. All 
+situations, governments, and people herein are fictional. Any similarities portrayed herein 
+without satiric intent are strictly coincidental.
+=== PDF p4 ===
+hardened Mookshardened Mooks
+break glass in case of powergamingbreak glass in case of powergaming
+BY SEBASTIAN SZMYD
+3
+Writing and Design by James Hutt
+Editing by Carol Darnell •Art Direction by Winterjaye Kovach
+Business Management by Lisa Pondsmith •Layout by J Gray
+=== PDF p5 ===
+Welcome, Gamemaster. Is your party full of bullet-dodging, explosive-chucking, head-shotting death merchants? If 
+you've found that the Mooks from Cyberpunk RED core rulebook are failing to challenge your powergamers, and 
+you don't want to increase the size of your encounters to compensate, you've come to the right place. Let's take these 
+Mooks to the gym. It's time for them to get Hardened.
+Hardened Mooks are balanced when used as replacements for the Mooks in the Cyberpunk RED core rulebook... but only 
+if your party is full of combat-optimized Characters, and at a rate of one per Edgerunner. They are also economically balanced 
+to have similar loot. Against a crew including any non-combat-optimized characters, they should be used sparingly, sprinkled 
+in with regular Mooks from the Cyberpunk RED core rulebook. These NPCs are not designed to wipe the floor with PCs, but 
+instead to challenge them while allowing them to still feel like the combat badasses they wanted to roleplay.
+Try them out in your game and see how your Players respond. If they still need it spicier, roll on the table below to 
+add additional challenge to your Mook encounter.
+1d10 Mook Encounter Complication
+1 One Mook is firing incendiary ammunition (see cP:R page 346), but only has 10 rounds.
+2 Add 2 additional Mooks to the encounter at the start of the second Round.
+3 Two Mooks are currently experiencing the primary effect of Black Lace (see cP:R page 227).
+4 One Mook has an Armor Piercing Grenade (see cP:R page 345) and a Athletics Skill Base of 12.
+5 One Mook is wearing Heavy Armorjack (SP13) Body Armor. Increase their REF, DEX, and MOVE by 2 (before calculating the Armor Penalty).
+6 The Mooks are unusually organized. One Mook has a Tactics Skill Base of 13, and a Smoke Grenade (see cP:R page 347).
+7 Add an additional Mook of a different type to the encounter.
+8 Add 2 Mooks to the encounter. Give each a Critical Injury to the head.
+9 Add 1 additional Mook to the encounter at the start of Rounds 2, 3, and 4.
+10 One Mook has an SMG, no sense of self preservation, an Autofire Skill Base of 16, and no head armor.
+4
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP4 6 6 2 4 4 5 7 3
+ STATS
+ weapons  armor
+ skill bases
+Hardened Bodyguard
+none
+20
+7 40
+Poor Quality SHotgun ROF1 5d6
+Brawling ROF2 3d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Athletics 9•Brawling 1 3•Concentration 6•Conversation 5•Drive Land Vehicle 10•Education 6•Endurance 9
+Evasion 8•First Aid 4•Human Perception 5•Interrogation 6•Language (Native) 8•Language (Streetslang) 6
+Local Expert (Your Home) 6•Perception 10•Persuasion 6•Resist Torture/Drugs 8•Shoulder Arms 10•Stealth 8
+ GEAR
+Slug Ammo x25•Radio Communicator
+ cyberware
+None
+HARDENED MOOKS
+=== PDF p6 ===
+Another sneaky trick you can use for customizing your Mooks is to write each of them a single line of canned 
+dialogue for combat in advance. Even if they don't end up saying the line, and it would be kinda cheesy if 
+they all did, it will help take roleplaying weight off your shoulders while you do the hard work of presenting an 
+interesting combat scene. A Mook with the line "I'll hold them off!" is going to feel different to your players than 
+"This one looks full of parts..." or "Melvin, get your ass in here!". 
+Never let them forget that they are killing people, even Mooks. Especially when they deserve it.
+5
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP4 6 5 2 4 4 6 4 3
+ STATS
+ weapons  armor
+ skill bases
+Hardened BooSterganger
+none
+15
+4 30
+Poor Quality Very HeaVy PiStol ROF1 4d6
+wolVerS ROF2 3d6
+leatHer (Head) SP 4
+leatHer (Body) SP 4
+Athletics 9•Brawling 9•Conceal/Reveal Object 6•Concentration 8•Conversation 5•Drive Land Vehicle 10  
+Education 6•Endurance 6•Evasion 7•First Aid 4•Handgun 1 2•Human Perception 5•Interrogation 6 
+Language (Native) 8•Language (Streetslang) 6•Local Expert (Your Home) 6•Melee Weapon 1 2•Perception 8 
+Persuasion 6•Resist Torture/Drugs 8•Stealth 7 
+ GEAR
+Very Heavy Pistol Ammo x30•Black Lace x1•Disposable Cellphone
+ cyberware
+Techhair•Wolvers
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP6 6 6 4 3 3 5 3 3
+ STATS
+ weapons  armor
+ skill bases
+Hardened road ganger
+none
+15
+4 30
+Poor Quality Very HeaVy PiStol ROF1 4d6
+Poor Quality HeaVy melee weaPon ROF2 4d6
+keVlar® (Head) SP 7
+keVlar®  (Body) SP 7
+Athletics 8•Brawling 8•Concentration 5•Conversation 6•Drive Land Vehicle 1 2•Education 8•Endurance 5
+Evasion 1 1•First Aid 6•Handgun 10•Human Perception 5•Land Vehicle Tech 10•Language (Native) 10
+Language (Streetslang) 8•Local Expert (Your Home) 8•Melee Weapon 1 2•Perception 10•Persuasion 5•Stealth 8 
+Tracking 10•Wilderness Survival 8 
+ GEAR
+Very Heacy Pistol Ammo x20•Flashlight•Rope
+ cyberware
+Neural Link w/ Interface Plugs
+HARDENED MOOKS
+=== PDF p7 ===
+BY NEIL BRANQUINHO
+6
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP5 7 4 2 2 3 4 5 3
+ STATS
+ weapons  armor
+ skill bases
+Hardened Security oPeratiVe
+none
+15
+5 30
+Poor Quality aSSault rifle ROF1 5d6
+Poor Quality Very HeaVy PiStol ROF2 4d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Athletics 8•Autofire 1 4•Brawling 8•Concentration 7•Conversation 5•Education 7•Evasion 6•First Aid 4
+Handgun 1 2•Human Perception 5•Interrogation 6•Language (Native) 9•Language (Streetslang) 7
+Local Expert (Your Home) 7•Melee Weapon 6•Perception 8•Persuasion 4•Resist Torture/Drugs 8
+Shoulder Arms 1 2•Stealth 6
+ GEAR
+Rifle Ammo x40•Very Heavy Pistol Ammo x20•Radio Communicator
+ cyberware
+None
+HARDENED MOOKS
+=== PDF p8 ===
+7
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP
+ STATS
+ weapons  armor
+ skill bases
+ GEAR
+ cyberware
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP
+ STATS
+ weapons  armor
+ skill bases
+ GEAR
+ cyberware
+HARDENED MOOKS
+MAKE YOUR OWN MOOKS!
+=== PDF p9 ===
+8
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP
+ STATS
+ weapons  armor
+ skill bases
+ GEAR
+ cyberware
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP
+ STATS
+ weapons  armor
+ skill bases
+ GEAR
+ cyberware
+HARDENED MOOKS
+MAKE YOUR OWN MOOKS!
+=== PDF p10 ===
+hardened LIEUTENANTShardened LIEUTENANTS
+break glass in case of powergamingbreak glass in case of powergaming
+BY PEDRAM MOHAMMADI
+Writing and Design by James Hutt
+Editing by Carol Darnell •Art Direction by Winterjaye Kovach
+Business Management by Lisa Pondsmith •Layout by J Gray
+9
+=== PDF p11 ===
+10
+HARDENED LIEUTENANTS
+Welcome Gamemaster to the second in the Hardened series. In this issue, we'll give the Cyberpunk RED core 
+rulebook's Lieutenants the Hardened treatment. But first, we have to make some clarifications:
+WHaT Is HaRDENED?
+Hardened is a prefix that means “combat-optimized”. It defines a tier of play that is designed to provide adequate 
+challenge to combat-optimized characters while still letting them be combat badasses, all without disrupting 
+game economy or scaling up the number of enemy combatants in an encounter.
+WHaT Is a HaRDENED CREW?
+A Hardened Crew is a crew filled with Hardened Player Characters. If even one member of a crew isn't 
+considered Hardened, you don't have a Hardened Crew and need to be careful: Hardened material 
+will likely cause the death of your Non-Hardened Characters.
+WHaT Is a HaRDENED CHaRaCTER?
+A Player Character is considered Hardened when they meet any of the following criteria:
+• A REF of 8 combined with a Dodge Skill of 6 or higher.
+• Ability to attack with Stat + Skill + Mod of 15 higher.
+• WILL + BODY of 16 or Higher.
+• Owns a Weapon with a value of Luxury or higher.
+• A DEX of 8 combined with a MOVE of 8.
+• Autofire or Martial Arts Skill of 6 or higher.
+• Solo Rank 4 or higher.
+HaRDENED LIEuTENaNTs
+The following Hardened Lieutenants are balanced when used as replacements for the Lieutenants in the 
+Cyberpunk RED core rulebook (See CP:R page 414), but only against a Hardened Crew (see above), and 
+at a rate of one per two Edgerunners. 
+For a classic mixed encounter, one Hardened Lieutenant is worth two Hardened Mooks. These NPCs are not 
+designed to wipe the floor with a Hardened Crew, but instead to challenge them while allowing them to still feel 
+like the combat badasses they want to roleplay. 
+Unlike with Hardened Mooks who can be mixed in sparingly against 
+Non-Hardened Crews with minimal balance issues, fielding Hardened 
+Lieutenants against Non-Hardened Crews is a recipe for a Character funeral.
+=== PDF p12 ===
+11
+HARDENED LIEUTENANTS
+HaRDENED LIEuTENaNT TaCTICs
+If you want to add an additional garnish to your Hardened Lieutenant encounter, roll on the table below to 
+determine their tactics:
+1d10 Hardened Lieutenant Tactics
+1 Lieutenant and their allies ambush the party (see cP:R page 399).
+2 Lieutenant is grappling a human shield (see cP:R page 184).
+3 Lieutenant orders their allies to focus on a particular player.
+4 Lieutenant orders their allies to charge wildly at the party.
+5 Lieutenant is in a highly defensible position, making use of cover.
+6 Lieutenant has First Aid and Paramedic Skill Bases of 14 each.
+7
+Lieutenant has rigged an Armor-Piercing Grenade (see cP:R page 345) as a trap before the combat, somewhere on the field. Noticing 
+it requires a DV15 Perception Skill Check. Disarming it requires a DV9 Demolitions Skill Check. The grenade goes off if any Character moves 
+into the square in which it is hidden.
+8 Lieutenant has done extensive research into the combat capabilities of the party.
+9 Lieutenant has a COOL of 6, a Reputation of 2, and attempts a Facedown. (see cP:R page 194) either before combat begins or right at the beginning.
+10 Lieutenant has a Tactics Skill Base of 16 and is in command.
+BY RICHARD BAGNALL
+=== PDF p13 ===
+12
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP7 5 4 7 4 7 5 4 4
+ STATS
+ weapons  armor
+ skill bases
+Hardened netrunner (anti-PerSonnel)
+netrunner (interface 4)
+20
+4 40
+Very HeaVy PiStol ROF1 4d6
+Brawling rof2 1d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Athletics 9•Basic Tech 1 3•Brawling 6•Conceal/Reveal Object 1 1•Concentration 1 1•Conversation 6
+Cryptography 1 1•Deduction 1 1•Education 1 2•Electronics/Security Tech 1 1•Evasion 10•First Aid 9•Forgery 1 3
+Handgun 1 2•Human Perception 6•Language (Native) 1 1•Language (Streetslang) 9•Library Search 1 3
+Local Expert (GM's Choice) 1 3•Local Expert (Your Home) 9•Perception 1 1•Persuasion 6•Pick Lock 1 1
+Resist Torture/Drugs 9•Stealth 1 2•Tactics 1 2
+ GEAR
+Very Heavy Pistol Ammo x50•Cyberdeck•Flashlight•Virtuality Goggles. Programs: Armor x2•Banhammer
+DeckKrash•Hellbolt x2•Shield
+ cyberware
+Neural Link w/ Interface Plugs
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP7 5 4 7 4 7 5 4 4
+ STATS
+ weapons  armor
+ skill bases
+Hardened netrunner (anti-Program)
+netrunner (interface 4)
+20
+4 40
+Very HeaVy PiStol ROF1 4d6
+Brawling rof2 1d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Athletics 9•Basic Tech 1 3•Brawling 6•Conceal/Reveal Object 1 1•Concentration 1 1•Conversation 6
+Cryptography 1 1•Deduction 1 1•Education 1 2•Electronics/Security Tech 1 1•Evasion 10•First Aid 9•Forgery 1 3
+Handgun 1 2•Human Perception 6•Language (Native) 1 1•Language (Streetslang) 9•Library Search 1 3
+Local Expert (GM's Choice) 1 3•Local Expert (Your Home) 9•Perception 1 1•Persuasion 6•Pick Lock 1 1
+Resist Torture/Drugs 9•Stealth 1 2•Tactics 1 2
+ GEAR
+Very Heavy Pistol Ammo x50•Cyberdeck•Flashlight•Virtuality Goggles. Programs: Armor•Killler
+Speedy Gonzalvez x2•Sword x2
+ cyberware
+Neural Link w/ Interface Plugs
+HARDENED LIEUTENANTS
+=== PDF p14 ===
+13
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP3 8 6 5 4 5 6 6 4
+ STATS
+ weapons  armor
+ skill bases
+Hardened reclaimer cHief (ligHtning)
+none
+20
+4 40
+HeaVy melee weaPon ROF2 3d6
+SHotgun rof1 5d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Athletics 1 2•Basic Tech 9•Brawling 8•Conceal/Reveal Object 5•Concentration 7•Conversation 6•Deduction 7 
+Demolitions 7•Drive Land Vehicle 1 2•Education 5•Electronics/Security Tech 9•Endurance 1 1•Evasion 1 2
+First Aid 7•Human Perception 6•Land Vehicle Tech 7•Language (Native) 7•Language (Streetslang) 5
+Local Expert (Your Home) 5•Melee Weapon 1 4•Paramedic 7•Perception 8•Persuasion 6•Pick Lock 7
+Resist Torture/Drugs 10•Shoulder Arms 1 4•Stealth 10•Tactics 10•Weaponstech 9•Wilderness Survival 7
+ GEAR
+Slug Ammo x25•Agent•Radio Communicator•Tent and Camping Equipment
+ cyberware
+Neural Link w/ Kerenzikov
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP3 6 6 5 4 5 4 6 4
+ STATS
+ weapons  armor
+ skill bases
+Hardened reclaimer cHief (tHunder)
+none
+20
+6 40
+HeaVy melee weaPon ROF2 3d6
+Very HeaVy PiStol rof1 4d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Athletics 1 2•Basic Tech 9•Brawling 8,•Conceal/Reveal Object 5•Concentration 7•Conversation 6•Deduction 7
+Demolitions 1 2•Drive Land Vehicle 10•Education 5•Electronics/Security Tech 9•Endurance 1 1•Evasion 1 2
+First Aid 7•Handgun 1 4•Heavy Weapons 1 2•Human Perception 6•Land Vehicle Tech 7•Language (Native) 7
+Language (Streetslang) 5•Local Expert (Your Home) 5•Melee Weapon 1 4•Paramedic 7•Perception 8•Persuasion 6
+Pick Lock 7•Resist Torture/Drugs 10•Stealth 10•Tactics 10•Weaponstech 9•Wilderness Survival 7
+ GEAR
+Very Heavy Pistol Ammo x25•Agent•Radio Communicator•Tent and Camping Equipment
+ cyberware
+Cyberarm w/Popup Grenade Launcher (AP Grenade x1•Smoke Grenade x1)
+PoPuP grenade launcHer rof1 6d6
+HARDENED LIEUTENANTS
+Both Lightning and Thunder make great commanders for Hardened Mooks.  
+While Lightning can lead their Mooks from the front, Thunder is designed to support theirs from the back.
+=== PDF p15 ===
+14
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP5 8 6 4 6 5 6 7 5
+ STATS
+ weapons  armor
+ skill bases
+Hardened Security officer (raid)
+none
+20
+7 40
+aSSault rifle ROF1 5d6
+underBarrel SHotgun rof1 5d6
+l armorjack (Head) SP 1 1
+l armorjack (Body) SP 1 1
+Athletics 1 2•Autofire 1 2•Brawling 1 2•Concentration 7•Conversation 6•Deduction 7•Drive Land Vehicle 1 2
+Education 7•Evasion 10•First Aid 6•Handgun 1 2•Human Perception 6•Interrogation 8•Language (Native) 9
+Language (Streetwise) 7•Local Expert (Your Home) 7•Perception 7•Persuasion 8•Resist Torture/Drugs 10
+Shoulder Arms 1 2•Stealth 8•Tactics 1 2
+ GEAR
+Rifle Ammo x50•Expansive Slug Ammo x2•Flashbang Grenade x1•Agent•Flashlight•Grapple Gun
+Radio Communicator
+ cyberware
+Cyberleg x2
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+INT REF DEX TECH COOL WILL MOVE BODY EMP5 8(6) 6(4) 4 6 5 6(4) 7 4
+ STATS
+ weapons  armor
+ skill bases
+Hardened Security officer (Seige)
+none
+20
+7 40
+HeaVy Smg ROF1 3d6
+Brawling rof2 3d6
+H armorjack (Head) SP 1 3
+H armorjack (Body) SP 1 3
+Athletics 1 2 (10)•Autofire 1 4 (1 2)•Brawling 1 2 (10)•Concentration 7•Conversation 6•Deduction 7
+Drive Land Vehicle 1 2 (10)•Education 7•Evasion 10 (8)•First Aid 6•Handgun 1 2 (10)•Human Perception 6
+Interrogation 8•Language (Native) 9•Language (Streetwise) 7•Local Expert (Your Home) 7•Perception 7
+Persuasion 8•Resist Torture/Drugs 10•Stealth 8 (6)•Tactics 1 2
+ GEAR
+Heavy Pistol Ammo x80•Teargas Grenade x2•Agent•Bulletproof Shield•Flashlight•Grapple Gun•Handcuffs x2
+Radio Communicator
+ cyberware
+Cybereyes x2•Nasal Filters
+HARDENED LIEUTENANTS
+Raid and Seige are great at tactical combat revolving around area-based objectives.  
+They would be perfect for combat in an indoor area with lots of interesting cover and terrain.  
+Bonus points for fountains and skylights.

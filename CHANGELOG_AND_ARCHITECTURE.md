@@ -117,6 +117,19 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.20.0] - 2026-11-11 (Plan 27 VI: pregens, PNJ, NET y aventuras; cierre del plan 27) [Claude Code · 2026-11-11]
+* **Category**: Contenido canon (plan 27; auditoría `docs/canon-audit/v5.20.0-pregens-pnj-interface-red.md`).
+* **What Changed**:
+  * Single Shot Pack (Interface RED Vol. 1 pp.10-31): las 10 pregens, una por rol, en el método "Pregen del Easy Mode" del creador, con el Neuroport de CEMK instalado (0 HL, CEMK RB p.25) y la Humanidad impresa en cada ficha.
+  * 8 arquitecturas NET nuevas en el NET: 6 del Single Shot Pack (IR1 pp.32-36) y 2 de la Jumpstart Kit Conversion Guide (IR2 pp.30-31). Los Black ICE llevan sus stats del Core (pp.206-207).
+  * 13 PNJ al bestiario: 11 de la Jumpstart Kit Conversion Guide (IR2 pp.25-30) y 2 de Halloween Screamsheets (IR4).
+  * Las 3 aventuras de Halloween Screamsheets (IR4 pp.56-65) como referencia del GM, en la pestaña Tablas del GM.
+  * Hardened revisado contra IR2: se suma el Brawling que IR2 imprime a 3 fichas; las erratas de IR2 quedan anotadas en la auditoría.
+  * La tarjeta Hardened del Compendio de sistemas tenía rangos inventados (pools de Suerte, "Boss Legendario (Smasher)"): ahora trae los criterios y las proporciones de los 3 DLC.
+  * Cierre del plan 27: Interface RED 1-4 en ✅ en la Biblioteca (sin Elflines) y el plan 22 queda cerrado.
+* **Files Modified**: `data/characterCreationData.ts` (pregens de Single Shot), `data/creation/singleShotPack.json` (nuevo), `data/netArchitecturesInterfaceRed.ts` (nuevo), `data/netAndRolesData.ts`, `data/enemies-src/interface-red.json` (nuevo), `data/enemies-src/hardened.json`, `scripts/gen_enemies.py`, `data/enemies/interface-red.ts` (generado), `data/enemiesCatalog.ts`, `data/gmTables/halloween.ts` (nuevo), `features/gmtables/GmTablesView.tsx`, `features/creator/steps/MethodStep.tsx`, `data/expansionRulesData.ts`; test `engine/__tests__/interfaceRedPregensNpcs.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 663 tests (9 nuevos) y build. En local: Grease elegida en el creador (HP 35, Humanidad 44, 500eb, Neuroport) y la sección de Halloween; consola limpia.
+
 ### [v5.19.0] - 2026-11-11 (Plan 27 V: pestaña Tablas del GM) [Claude Code · 2026-11-11]
 * **Category**: Herramientas del GM (plan 27; auditoría `docs/canon-audit/v5.19.0-tablas-del-gm.md`).
 * **What Changed**:

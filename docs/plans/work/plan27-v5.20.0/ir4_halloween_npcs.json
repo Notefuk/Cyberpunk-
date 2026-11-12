@@ -1,0 +1,241 @@
+{
+  "book": "Interface RED Volume 4",
+  "pdf": "Sourcebooks/Interface-RED/Cyberpunk-RED-Interface-RED-Volume-4.pdf",
+  "pageConvention": "Pagina impresa = pagina del PDF - 1",
+  "npcs": [
+    {
+      "id": "ir4-philharmonic-vampyre",
+      "book": "Interface RED Volume 4",
+      "name": "Philharmonic Vampyre",
+      "subtitle": "Halloween Screamsheets (Rep 0)",
+      "sourcePage": 60,
+      "tier": "mook",
+      "faction": "Philharmonic Vampyres",
+      "role": "",
+      "roleAbility": null,
+      "level": null,
+      "rep": 0,
+      "stats": {
+        "INT": 6,
+        "REF": 6,
+        "DEX": 5,
+        "TECH": 4,
+        "COOL": 6,
+        "WILL": 6,
+        "LUCK": null,
+        "MOVE": 7,
+        "BODY": 2,
+        "EMP": 7
+      },
+      "statsArmorModified": null,
+      "hp": 30,
+      "seriouslyWounded": 15,
+      "deathSave": 2,
+      "armor": {
+        "name": "Leathers",
+        "headSp": 4,
+        "bodySp": 4,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Vampyres",
+          "skill": "Melee Weapon",
+          "skillBase": 12,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Nombre del arma ilegible/ambiguo en la extraccion (aparece como 'Vampyres') Vampyres: ciberware de colmillos (Core p.115)."
+        },
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 12,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": "Rubber Bullets",
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": "Equipo del libro: Rubber Bullets x8"
+        }
+      ],
+      "skillBases": {
+        "Acting": 10,
+        "Athletics": 7,
+        "Brawling": 7,
+        "Concentration": 7,
+        "Conversation": 9,
+        "Dance": 8,
+        "Education": 11,
+        "Evasion": 7,
+        "First Aid": 6,
+        "Handgun": 12,
+        "Human Perception": 9,
+        "Language (Native)": 10,
+        "Language (Streetslang)": 8,
+        "Local Expert (University District)": 8,
+        "Melee Weapon": 12,
+        "Perception": 8,
+        "Personal Grooming": 10,
+        "Persuasion": 10,
+        "Stealth": 10,
+        "Streetwise": 9,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Nasal Filters",
+        "Shift Tacts",
+        "Techhair"
+      ],
+      "gear": [
+        "Rubber Bullets x8",
+        "Disposable Cellphone",
+        "Any props needed for pranks"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "En la aventura hay Crew x3 Vampyres; priorizan el caos sobre pelear y solo se defienden si alguien dispara.",
+        "Huyen y se reagrupan tras dos compañeros sometidos o detenidos."
+      ],
+      "lore": "Miembros de los Philharmonic Vampyres, banda gótica y bromista que revienta fiestas de Halloween con travesuras sin ánimo de herir.",
+      "doubts": [
+        "Stats en el orden impreso INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK); HP 30 = 10+5*ceil((2+6)/2) y Death Save 2 = BODY: coinciden con lo impreso.",
+        "El libro no da tier: se asigno mook por Rep 0, sin Role y HP 30.",
+        "La primera arma aparece como 'Vampyres (C#: 12) ROF2 1d6': nombre y skill inciertos; skillBase 12 viene del C# impreso (Handgun 12 y Melee Weapon 12 coinciden).",
+        "La Heavy Pistol dice 'Poor Quality'; la municion se asigno a Rubber Bullets x8 por la lista de equipo.",
+        "Dígitos partidos verificados (ej. '1 1' = 11, '1 2' = 12)."
+      ]
+    },
+    {
+      "id": "ir4-laura-june-maybach",
+      "book": "Interface RED Volume 4",
+      "name": "Laura June Maybach",
+      "subtitle": "Halloween Screamsheets",
+      "sourcePage": 64,
+      "tier": "lieutenant",
+      "faction": "",
+      "role": "Medtech",
+      "roleAbility": {
+        "name": "Medicine",
+        "rank": 2
+      },
+      "level": null,
+      "rep": null,
+      "stats": {
+        "INT": 5,
+        "REF": 8,
+        "DEX": 6,
+        "TECH": 7,
+        "COOL": 4,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 5,
+        "EMP": 0
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Light Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Popup Flamethrower",
+          "skill": "Heavy Weapons",
+          "skillBase": 14,
+          "damage": "3d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": "Incendiary Shotgun Shells",
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Cyberbrazo (Cyberarm w/Popup Flamethrower); munición asignada por el equipo listado"
+        },
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 14,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": "Heavy Pistol Ammo",
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 11,
+        "Basic Tech": 9,
+        "Brawling": 10,
+        "Concentration": 8,
+        "Conversation": 2,
+        "Cybertech": 9,
+        "Education": 10,
+        "Evasion": 14,
+        "First Aid": 9,
+        "Handgun": 14,
+        "Heavy Weapons": 14,
+        "Human Perception": 2,
+        "Language (English)": 7,
+        "Language (Streetslang)": 7,
+        "Local Expert (Watson)": 7,
+        "Paramedic": 9,
+        "Perception": 7,
+        "Persuasion": 6,
+        "Resist Torture/Drugs": 12,
+        "Stealth": 10,
+        "Surgery": 11
+      },
+      "cyberware": [
+        "Cyberaudio Suite w/ Level Dampners",
+        "Cybereye x2 w/ Anti-Dazzle x2",
+        "Cyberarm w/Popup Flamethrower",
+        "Nasal Filters"
+      ],
+      "gear": [
+        "Incendiary Shotgun Shells x8",
+        "Heavy Pistol Ammo x16",
+        "Incendiary Grenade x1",
+        "Flashbang Grenade x1",
+        "Agent"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Medtech: Medicine 2 (Surgery 2).",
+        "En la aventura ataca a la Crew en North Cargo Village por considerarlos rivales por el afecto de TSpooks."
+      ],
+      "lore": "Ex-cyberpsycho y ex-Medtech de Savage Docs, tras años de terapia se obsesiona con la influencer TSpooks; creó el falso hombre lobo para impulsar su carrera.",
+      "doubts": [
+        "Stats en el orden impreso INT REF DEX TECH COOL WILL MOVE BODY EMP (sin LUCK); HP 35 = 10+5*ceil((5+4)/2) y Death Save 5 = BODY: coinciden con lo impreso.",
+        "El libro no da tier ni Rep: lieutenant es una asignación razonable (HP 35, jefa final de la aventura).",
+        "Municion del Popup Flamethrower inferida de 'Incendiary Shotgun Shells x8' en el equipo; el libro no la vincula explícitamente. El skill Heavy Weapons 14 se deduce de C# 14 impreso.",
+        "El libro escribe 'Laura June Maybach' pero una vez 'Laura Jane Maybach' (parece errata).",
+        "Dígitos partidos verificados (ej. 'SP 1 1' = 11, 'Athletics 1 1' = 11, 'Evasion 1 4' = 14, 'Resist Torture/Drugs 1 2' = 12, 'Surgery 1 1' = 11)."
+      ]
+    }
+  ]
+}

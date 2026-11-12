@@ -1,0 +1,1377 @@
+
+=== PDF p11 ===
+10
+Two of your Players called out sick and you’re in the middle of a pretty big heist. You can’t keep it going with who you 
+have left at your table, so you decide to run a one-shot. The only problem is, the Players you have left are coming 
+straight to your place after you get out of work and if you sit down to do chargen you won’t have time to play!
+We’ve got you covered!
+In this Single Shot Pack , you’ll find ten pregenerated Cyberpunk RED characters, made using the Streetrat 
+character generation method, ready to play right out of the box. Each comes complete with a cheat sheet on how 
+their Role Ability works. The only thing we haven’t done is roll up a Lifepath. We’ll leave it up to you how important 
+that is for your one-shot.
+We’re also including six premade NET Architectures for you to use. You’ll find them at the back of the packet. 
+They’re designed to be plug and play, so feel free to use them if you want to give your Netrunner a virtual land -
+scape to play in or if you need inspiration for what kind of defenses a place has.
+u
+sing the Pregens as NPCs
+usingthepregensasnpcsusingtheL
+The ten pregens in the Single Shot Pack also make good NPCs! If you’re using the Mook/Lieutenant/Mini Boss 
+standard we set up on page 399 of the Cyberpunk RED core rulebook, they each count as a Lieutenant.
+R
+eading the pregen character sheets
+re eadingthepregenchaarctersghe ets
+There’s a lot of information packed into these single page Character Sheets, especially if your Players are new to 
+Cyberpunk RED. Feel free to give them this guide to help them navigate the terrain.
+This block contains a portrait of your Character, their Handle (the name they’re known by on The Street), 
+and their Role (akin to a class in other games).
+Beneath the Handle and Role, you’ll find your Statistics (aka STATS). These 10 values: Intelligence (INT), 
+Reflexes (REF), Dexterity (DEX), Technique (TECH), Cool (COOL), Willpower (WILL), Luck (LUCK), Move 
+(MOVE), Body (BOD), and Empathy (EMP). You might notice Luck is formatted a little differently That’s 
+because Luck represents a pool of points you can spend during the session to improve your chances 
+at success. Empathy is similarly divided because installed cyberware can lower it below its maximum.
+This row contains Derived Statistics calculated based on your STATS. Hits represents your health. You 
+start off with a number of Hit Points equal to the value on the right. If you are damaged, you subtract 
+the damage from your current value (written in on the left). If your current Hit Point total equals or drops 
+below your Seriously Wounded value, you will suffer a penalty to all Actions. If your Hit Points drop 
+below 1, your GM will direct you to make a Death Save. Humanity is a measure of how well you interact 
+with other people. The value on the right is the maximum, determined by your Empathy STAT and the 
+value on the left is your current Empathy, which is lowered due to having cyberware installed. When 
+your Humanity is lowered, your Empathy also goes down.
+Each Role has a unique Role Ability. You start with your Role Ability at Rank 4. Every pregen in this 
+packet has more information about their Role Ability included on a separate sheet.
+When it comes time to see if you succeed or fail at an Action, you make a Skill Check. Skill Checks are 
+made by rolling 1d10 and adding a Skill’s Level and the value of its corresponding STAT. To make this 
+easy, we’ve already added the STAT + Skill for each Skill on your sheet and listed it in the Total column. 
+Each pregen in this packet possesses 20 Skills. Some, like First Aid, are possessed by all Characters. 
+Others, like Autofire, are only on some sheets. If you want to take an Action with a Skill you don’t have 
+Levels in, ask your GM what the appropriate STAT would be, then roll 1d10 and add that value.
+1
+2
+3
+4
+5
+SINGLE SHOT PACK
+=== PDF p12 ===
+11
+Your Armor is divided into body (taking the form of clothing, jackets, vests, and the like) and head (some 
+sort of helmet or hood). Every piece of armor has Stopping Power (SP). When you are hit in the head or 
+torso, you subtract your armor’s SP from the damage rolled. Any damage remaining after you subtract 
+armor SP is removed from your current Hit Points value. Heavier armor can give you a penalty when 
+performing some Actions.
+Your weapons are tools designed for hurting and breaking. When you hit with a weapon, roll the number 
+of d6s listed under DMG and add them up to determine how much damage you do. Guns have an 
+Ammo Count. Once you shoot that many bullets, your gun can’t shoot anymore until you reload. All 
+weapons have a ROF (Rate of Fire). This determines how many Attack Checks you can make as part 
+of a single Action. And there are usually notes on a weapon to tell you more about it. Ask your GM for 
+more data.
+Cyberware is technology surgically implanted into your body to improve how it functions. All cyber -
+ware has a type. You can only have a certain number of slots in your body for each type. Some 
+types, like cyberaudio and neuralware, have a “foundational cyberware” component. For example, 
+a Cyberaudio Suite does little on its own, but it allows you to install additional cyberware attachments 
+such as a Voice Stress Analyzer. Don’t worry too much about all this unless you’re playing long term 
+and want additional cyberware installed. In this section, you’ll also find notes explaining what it is 
+your cyberware does.
+Finally, we come to Your Stuff. Here you’ll find what clothing you own (so you know what sort of style 
+you’ve got going on), how much cash you have on hand (listed as a number of Eurobucks [eb]), and a 
+selection of items you carry around with notes on what they do.
+1
+3
+2
+4
+5
+6 7
+8
+9
+6
+7
+8
+9
+SINGLE SHOT PACK
+=== PDF p13 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+Forty Rockerboy
+5 6 7 5 7
+8 5 7 3 7
+40 20 3 61
+Weapon DMG Ammo ROF Notes
+Heavy Melee Weapon 3d6 — 2 2 handed, not concealable
+Very Heavy Pistol 4d6 8 1 not concealable. Mags: 7
+Tear Gas Grenade x2 Anyone w/ meat eyes must beat a Resist/Torture Drugs Check DV1 3 
+or get the Damaged Eye Critical Injury for the next minute.
+Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Athletics 7 2 9
+Brawling 7 6 13
+Composition 5 6 11
+Concentration 8 2 10
+Conversation 6 2 8
+Education 5 2 7
+Evasion 7 6 13
+First Aid 5 6 11
+Handgun 6 6 12
+Human Perception 6 6 12
+Skill STAT LVL TOTAL
+Language (Streetslang) 5 2 7
+Local Expert (Your Home) 5 4 9
+Melee Weapon 7 6 13
+Perception 5 2 7
+Personal Grooming 7 4 + 1 12
+Persuasion 7 6 13
+Play Instrument 5 6 11
+Stealth 7 2 9
+Streetwise 7 6 13
+Wardrobe & Style 7 4 11
+Name Type Notes
+Cyberaudio Suite Cyberaudio Three slots for options.
+Audio Recorder Cyberaudio Takes up cyberaudio option slot. Record audio to Memory Chip or paired Agent.
+Tech Hair Fashionware Color/light emitting hair. Can change length. W/chemskin grants +2 Personal Grooming (included)
+Chemskin Fashionware Can change skin color. W/tech hair grants +2 Personal Grooming (included)
+Agent Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks.
+Musical Instrument Player’s choice.
+Pocket Amp Can support up to 2 instruments.
+Laptop Computer Laptop computer.
+Radio Scanner/Music Player Link to Data Pool to listen to music or scan and play local radio bandwidths.
+Vid Camera Can store up to 1 2 hours of video and audio in inserted Memory Chip.
+Glow Paint x 5 Glow in the dark spraypaint. Various colors.
+Charismatic Impact 4
+Generic Chic: Jacket, Jewelry x3, Top. Leisurewear: 
+Footwear, Jewelry, Shades. Urbanflash: Pants, Top.
+6
+70
+500eb
+=== PDF p14 ===
+ ▶Player:
+R
+ockerboy
+If you live to rock, this is where you belong. As a Rockerboy, you’re one of the street poets, the social conscience, and 
+the rebels of the Time of the Red. With the advent of digital porta-studios and garage music mastering, every Rockerboy 
+with a message can take it to The Street, put it in the record stores, bounce it off the comsats. Sometimes, your message 
+isn’t something the Corporations or the government wants to hear. Sometimes what you say is going to get right in the 
+faces of the powerful people who really want to run this world. But you don’t care, because as a Rockerboy, you know 
+it’s your place to challenge authority, whether in straight-out protest songs that tell it like it is, playing kick-ass rock n’ 
+roll to get the people away from the TV sets and into The Streets, firing up the crowd with speeches, or composing 
+fiery writings that shape the minds and hearts of millions.
+R
+ole Ability: Charismatic Impact (Rank 4)
+Assuming you aren’t in combat, you can make people who aren’t currently your fan into fans (unless they actively 
+dislike you) by rolling Charismatic Impact + 1d10 vs a DV8 for a Single person, DV10 for a Small Group of up to 6, 
+or DV12 for a Huge group.
+When a Rockerboy wants to make use of their Charismatic Impact on a fan or group of fans, the GM uses the table 
+below to determine if the favor is something within the powers of their Charismatic Impact given their current Role 
+Ability Rank. If it isn’t, the rocker automatically fails. If it is, the group size determines the DV against which the rocker 
+must roll Charismatic Impact + 1d10. If they succeed, the fan or group of fans puts their best effort toward the favor the 
+Rocker asked for. If they fail, the Rocker can’t ask for the same favor again from those fans for a week.
+Venues You Can Play Single Fan  (DV8) Small Group of Fans (DV10) Huge Group of Fans (DV1 2)
+Well known clubs (but not the hottest 
+ones)
+Rockerboy can convince the fan to 
+do major favors such as buy them 
+meals, give them rides, introduce 
+them to important people, sleep with 
+them.
+Group will happily hang out with 
+Rockerboy and provide the party 
+favors for free.
+Fans will buy the Rockerboy’s merch 
+and music.
+=== PDF p15 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+Grease Fixer
+8 7 5 5 6
+7 7 5 3 6
+35 18 3 44
+Weapon DMG Ammo ROF Notes
+Light Melee Weapon 1d6 — 2 1 handed, concealable
+Heavy Pistol 3d6 8 2 concealable. Mags:  13
+Very Heavy Pistol 4d6 8 1 not concealable. Mags:  13
+Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Athletics 5 2 7
+Brawling 5 2 7
+Bribery 6 6 12
+Business 8 6 14
+Concentration 7 2 9
+Conversation 4 6 10
+Education 8 2 10
+Evasion 5 6 11
+First Aid 5 2 7
+Forgery 5 6 11
+Skill STAT LVL TOTAL
+Handgun 7 6 13
+Human Perception 4 6 + 2 12
+Language (Streetslang) 8 4 12
+Local Expert (Your Home) 8 6 14
+Perception 8 2 10
+Persuasion 6 4 10
+Pick Lock 5 4 9
+Stealth 5 2 7
+Streetwise 6 6 12
+Trading 6 6 12
+Name Type Notes
+Cyberaudio Suite Cyberaudio Three slots for options.
+Internal Agent Cyberaudio Grants +2 to Library Search Checks. Audio only. Can output video to paired screen.
+Voice Stress Analyzer Cyberaudio Grants +2 to Human Perception (included) and Interrogation Checks.
+Subdermal Pocket External 2 x 4 inch hidden pocket w/ RealSkinn zipper. Anything inside is auto concealed.
+Agent Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks.
+Bug Detector Beeps within 2 meters of a tap, bug, or other listening device.
+Disposable Cellphone x2 Burner phone you can use and throw away.
+Laptop Computer Laptop computer.
+Operator 4
+Generic Chic: Contacts, Jewelry. Leisurewear: Foot-
+wear, Jewelry, Mirrorshades. Urbanflash: Pants, Top.
+4
+60
+500eb
+=== PDF p16 ===
+ ▶Player:
+F
+ixer
+You realized fast that you weren’t ever going to get a Corporate job or be tough enough to be a Solo. But you always 
+knew you had a knack for figuring out what other people wanted, and how to get it for them. For a price, of course. 
+Now your deals have moved past the nickel-and-dime stuff into the big time. Maybe you move illegal weapons over 
+the border, or steal and resell medical supplies. Perhaps you’re a skill broker acting as an agent for high-priced Solos 
+and ‘Runners, or even hiring a whole Nomad pack to back a client’s contracts. You buy and sell favors like an old-style 
+Mafia godfather. You have connections into all kinds of businesses, deals, and political groups. You use your contacts 
+and allies as part of a vast web of intrigue and coercion. Fixers know how to get things on the black market and are 
+adept at navigating the complex social customs of the Street, where hundreds of cultures and economic levels collide. 
+Fixers maintain vast webs of contacts and clients.
+R
+ole Ability: Operator (Rank 4)
+• Contacts represents who the Fixer can reach out to source goods, favors, or information. The Fixer will still have 
+to pay for these, of course.
+• Reach is the highest price category of items that a fixer can always source, and if they can use their influence to 
+gather other fixers into creating a Night Market, which makes all price categories of items available for a short time.
+• Haggle is the ability of the Fixer to strike a deal. When haggling with a person, you roll COOL + Trading Skill + 
+Your Operator Rank + 1d10 against their COOL + Trading Skill + Their Operator Rank (if they are a Fixer) + 1d10. 
+If you succeed, you are able to make one deal of your Operator Rank or lower that is shown on the table below. 
+Only one Fixer deal can be made per transaction.
+• Grease represents the Fixer’s ability to blend into the many cultures on and off the Street; ability to know the 
+language, social codes and status marks for each group or culture.
+Contacts Reach Haggle Grease
+Local honcho, gang-lord, local 
+neighborhood leadership. City gang 
+honcho, minor politician, Corp Exec, 
+well known person in the neighbor-
+hood.
+You can always find a place to source 
+up to Expensive items for your clients 
+on a piece-by-piece basis, even if 
+they are otherwise unavailable.
+If successful, you can get 10% more or 
+less than market price when buying 
+or selling. OR
+If successful, when you buy 5 or more 
+of the same item, you can get one 
+more of that item for free.
+You know how to get along well with at 
+least one other culture (South Asian, 
+Western European, Middle Eastern, 
+etc) in your area as well as a single 
+language you don’t already know 
+associated with that culture at a skill 
+of +4.
+=== PDF p17 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+Mover  Solo
+7 7 6 5 7
+6 6 7 7 5
+45 23 7 36
+Weapon DMG Ammo ROF Notes
+Heavy Melee Weapon 3d6 — 2 2 handed, not concealable
+Assault Rifle 5d6 25 1 autofire, not concealable. Mags: 3
+Very Heavy Pistol 4d6 8 1 not concealable. Mags: 8
+Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Athletics 6 2 8
+Autofire 7 6 13
+Brawling 6 2 8
+Concentration 6 2 8
+Conversation 3 2 5
+Education 7 2 9
+Evasion 6 6 12
+First Aid 5 6 11
+Handgun 7 6 13
+Human Perception 3 2 5
+Skill STAT LVL TOTAL
+Interrogation 7 6 13
+Language (Streetslang) 7 2 9
+Local Expert (Your Home) 7 2 9
+Melee Weapon 6 6 12
+Perception 7 6 13
+Persuasion 7 2 9
+Resist Torture/Drugs 6 6 12
+Shoulder Arms 7 6 13
+Stealth 6 2 8
+Tactics 7 6 13
+Name Type Notes
+Biomonitor Fashionware Subdermal implant. Generates a readout of vitals. Can be linked to your Agent.
+Neural Link Neuralware Wired artificial nervous system. Five option slots.
+Sandevistan Speedware Neuralware Can be activated as an action to provide +3 Initiative for 1 minute. 1 hour cool down.
+Agent Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks.
+Combat Awareness 4
+Leisurewear: Footwear x 2, Jacket x 3, Mirrorshades, 
+Pants x 2, Tops x 2
+3
+50
+500eb
+=== PDF p18 ===
+ ▶Player:
+S
+olo
+Whether as a freelance guard and killer-for-hire, or as one of the Corporate cybersoldiers who enforce business 
+deals and the Company’s “black operations,” you’re one of the elite fighting machines of the Time of the Red. Most 
+Solos put in military time during the 4th Corporate War, in a Corporate army, or in one of the government’s current 
+“police actions” around the country. 
+R
+ole Ability: Combat Awareness (Rank 4)
+When combat begins, anytime outside of combat, or in combat with an Action, a Solo may divide the total number 
+of points they have in their Combat Awareness Role Ability among the following abilities. If a Solo chooses not to 
+change their point assignments, their previous ones persist. Activating some of these abilities will cost the Solo more 
+points than others:
+• Damage Deflection: For 2 points, decrease the first damage you take this round by 1; For 4 points, decrease 
+the first damage you take this round by 2. Your armor is still ablated if any damage got through your armor before 
+this reduction.
+• Fumble Recovery: For 4 points, you ignore Critical Failures (1s) you roll while attacking. These rolls are still 
+treated as 1, however.
+• Initiative Reaction: Each point adds a +1 to Initiative Checks made.
+• Precision Attack: For 3 points, you add a +1 to any attacks made.
+• Spot Weakness: Each point adds a +1 to the damage (before armor) of your first successful attack in a round.
+• Threat Detection: Each point adds a +1 to any Perception Checks made.
+Threat 
+Detection
+Initiative
+Reaction
+Precision
+Attack
+Spot
+Weakness
+Damage
+Deflection
+Fumble
+Recovery
+=== PDF p19 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+Racer  Nomad
+7 6 8 4 6
+6 6 5 6 5
+40 20 6 36
+Weapon DMG Ammo ROF Notes
+Heavy Melee Weapon 3d6 — 2 2 handed, not concealable
+Very Heavy Pistol 4d6 8 1 not concealable. Mags:  13
+Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Animal Handling 7 6 13
+Athletics 8 2 10
+Brawling 8 6 14
+Concentration 6 2 8
+Conversation 3 2 5
+Drive Land Vehicle 6 6 + 4 16
+Education 7 2 9
+Evasion 8 6 14
+First Aid 4 6 10
+Handgun 6 6 12
+Skill STAT LVL TOTAL
+Human Perception 3 2 5
+Language (Streetslang) 7 2 9
+Local Expert (Your Home) 7 2 9
+Melee Weapon 8 6 14
+Perception 7 4 11
+Persuasion 6 2 8
+Stealth 8 6 14
+Tracking 7 6 13
+Trading 6 6 12
+Wilderness Survival 7 6 13
+Name Type Notes
+Neural Link Neuralware Wired artificial nervous system. Five option slots.
+Interface Plugs Neuralware Allows you to plug into machines, including some vehicles.
+Agent Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks.
+Binoculars x2 magnification.
+Flashlight 100m/y long beam. 10 hours per charge.
+Grapple Gun Can fire as an Action to attach to any thick cover up to 30m/y away. Negates MOVE penalty while climbing.
+Radio Communicator x2 Earpiece radio. 1 mile range.
+Rope 60 m/y nylon rope. Holds 600 pounds/360kg.
+Techtool All in one pocket tool.
+Moto 4
+Nomad Leathers: Pants, Top, Jacket, Footwear
+3
+50
+500eb
+=== PDF p20 ===
+ ▶Player:
+N
+omad
+Years ago, the Corps drove your family off the farm. They rolled in, took over the land, and put rent-a-cops all over the 
+place. But that was before the War. You were loners, homeless, until you created a Nomad Pack of nearly two-hundred 
+members. Back then, your Pack was crammed into a huge, ragtag fleet of cars, vans, buses, and RVs roaming the 
+freeways looking for supplies, odd jobs, and spare parts in a fragmented world. The Pack was your home—it had 
+teachers, Medtechs, leaders, and mechanics—a virtual town on wheels in which everyone was related by marriage 
+or kinship. But in the Time of the Red, your Nomad Pack has evolved. Your knowledge of roadcraft—of how to get 
+between the safezones over the savage highways has allowed you to become the masters of getting people, supplies, 
+and materials to a world that desperately needs them.
+R
+ole Ability: MOTO (Rank 4)
+A Nomad adds their Moto Rank to any vehicle operation (already added to Drive Land Vehicle)  
+or vehicle repair  Skill Check they make. In addition, your Nomad has possession of the following vehicle, loaned to 
+them from their Nomad Family motor pool.
+ ▶ Vehicle Type  ▶ DescripTion
+ ▶ sDp
+ ▶ combaT speeD ▶ seaTs
+out of ▶ narraTiVe speeD
+Upgrade Effect
+Seating Upgrade Adds 2 extra seats to the vehicle.
+Heavy Chassis Adds 20 SDP and a heavy tow cable to the vehicle.
+Housing Capacity Transforms the vehicle into a RV with sleeping area for 1, toilet, shower and small kitchen.
+Compact Ground Car Common CHOOH2 powered car.
+6 20 100 MPH 70
+=== PDF p21 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+Redeye Netrunner
+6 6 6 7 8
+4 7 7 6 6
+35 18 6 46
+Weapon DMG Ammo ROF Notes
+Very Heavy Pistol 4d6 8 1 not concealable. Mags: 4Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Athletics 6 2 8
+Brawling 6 2 8
+Concentration 4 2 6
+Conversation 4 2 6
+Education 6 6 12
+Evasion 6 6 12
+First Aid 7 2 9
+Human Perception 4 2 6
+Language (Streetslang) 6 2 8
+Local Expert (Your Home) 6 2 8
+Skill STAT LVL TOTAL
+Perception 6 2 8
+Persuasion 8 2 10
+Stealth 6 6 12
+Basic Tech 7 6 13
+Conceal/Reveal Object 6 6 12
+Cryptography 6 6 12
+Cybertech 7 6 13
+Electronics/Security Tech 7 6 13
+Handgun 6 6 12
+Library Search 6 6 12
+Name Type Notes
+Neural Link Neuralware Wired artificial nervous system. Five option slots.
+Interface Plugs Neuralware Allows you to plug into machines, including some vehicles.
+Shift Tacs Fashionware Color/pattern changing lens implanted into the eye.
+Agent Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks.
+Cyberdeck Modular platform that Programs and Hardware are installed on for the purposes of Netrunning.
+Virtuality Goggles Headset that projects cyberspace imagery over your view of the world.
+Interface 4
+4
+60
+500eb
+Generic Chic: Top x10. Leisurewear: Footwear x2, 
+Jewelry, Pants x2. Urbanflash: Jacket.
+=== PDF p22 ===
+ ▶Player:
+N
+etrunner
+You’re a brain-burning computer hacker and master of the Post-NET cyberverse in the Time of the Red. As an electronic 
+wraith, you slip into the “hardest” mainframe systems with ease: stealing, trading, and selling their deepest secrets at 
+will. The Black ICE may still kill you in the end, but until the ride runs out, you’ll be there, bare-brained and headfirst 
+in the New NET.
+R
+ole Ability: Interface (Rank 4)
+A Netrunner’s Interface Role Ability allows them to Netrun and gives them access to a suite of Abilities. To take an 
+action or attack in the NET roll:
+Your Interface Rank + Program Bonus or ATK + 1d10
+ ▶ Deck  ▶ program/harDware sloTs
+Program ATK DEF REZ Effect
+Armor 0 0 7 Lowers all Brain dmg by 4 while rezzed. Only 1 copy can run at a time. Each copy can only be used once per netrun.
+See Ya 0 0 7 Increases all Pathfinder Checks by +2 while rezzed.
+Sword 1 0 0 3d6 REZ to Black ICE. 2d6 REZ to non-Black ICE programs.
+Vrizzbolt 1 0 0 1d6 Brain dmg direct to enemy Netrunner & lowers their total Net Actions on their next turn by 1.
+Worm 0 0 7 Increases Backdoor Checks by +2 while rezzed.
+Redeye’s Cyberdeck 7
+Interface Ability Effect
+Backdoor Allows the Netrunner to break through Passwords and other obstructions in the Architecture.
+Cloak The ability to hide your actions in the Architecture before you leave.
+Control The ability to control things that are attached to the Architecture.
+Eye-Dee Allows the Netrunner to know what a found piece of data is and its value.
+Pathfinder Allows the Netrunner to learn the “map” of the Architecture.
+Scanner Find out the locations of systems in an area.
+Slide Allows the Netrunner to slip away from one Black ICE that is following them.
+Virus Allows the Netrunner to leave a custom virus at the very core of the Architecture.
+Zap A basic Netrunner attack that works against both Programs and other Netrunners.
+=== PDF p23 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+Torch Tech
+7 5 6 3
+3 7 6 6 7
+35 18 6 58
+Weapon DMG Ammo ROF Notes
+Shotgun 5d6 4 1 not concealable. Mags: 25 shell
+Flashbang Grenade Anyone hit must beat a Resist/Torture Drugs Check DV1 5 or get the  
+Damaged Eye and Damaged Ear Critical Injuries for the next minute.
+Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Athletics 5 2 7
+Basic Tech 6 6 12
+Brawling 5 2 7
+Concentration 3 2 5
+Conversation 5 2 7
+Cybertech 6 6 12
+Education 8 6 14
+Electronics/Security Tech 6 6 12
+Evasion 5 6 11
+First Aid 6 6 12
+Skill STAT LVL TOTAL
+Human Perception 5 2 7
+Land Vehicle Tech 6 6 12
+Language (Streetslang) 8 2 10
+Local Expert (Your Home) 8 2 10
+Perception 8 2 10
+Persuasion 3 2 5
+Science (Choose Specialty) 8 6 14
+Shoulder Arms 7 6 13
+Stealth 5 2 7
+Weaponstech 6 6 12
+Name Type Notes
+Cybereye Cyberoptics Left eye. 3 option slots.
+MicroOptics Cyberoptics Built-in microscope. 400x magnification.
+Tool Hand Cyberlimb Full collection of tools built into the hand.
+Skinwatch Fashionware Subdermal LED. Shows time and date through the skin.
+Agent Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks.
+Anti-Smog Breathing Mask Filters out atmospheric particles.
+Disposable Cellphone Burner phone you can use and throw away.
+Duct Tape x5 Duct tape. Perfect for fixing anything.
+Flashlight 100m/y long beam. 10 hours per charge.
+Road Flare x6 Lights up a 100m area for 1 hour. One use each.
+Tech Bag Tool bag. Useful for most tech based repairs.
+Maker 4
+5
+70
+500eb
+Generic Chic: Pants x8, Tops x10. Leisurewear: Foot-
+wear x2.
+8
+=== PDF p24 ===
+ ▶Player:
+T
+ech
+You can’t leave anything alone—if it sits near you for more than five minutes, you’ve disassembled it and made it into 
+something new. You’ve always got at least two screwdrivers and a wrench in your pockets. Computer down? No 
+problem. Hydrogen burner out in your Metrocar? No problem. Can’t get the video to run or your interface glitching? 
+No problem. You make your living building, fixing, and modifying—a crucial occupation in a technological world 
+recovering from a War that broke the back of the supply chain. 
+R
+ole Ability: Maker (Rank 4)
+ ▶ FielD experTise
+Add your Rank in this Specialty to any Basic Tech or Cybertech Skill Check you make for any Non-Maker  
+Specialty purpose. Additionally, as long as you have at least one rank in this specialty, instead of attempting a lengthy 
+full repair, you can elect to instead temporarily repair your target (at the same DV of a typical repair for the item) to 
+perfect condition as an Action (with full SP and HP, if applicable). You add your rank in Field Expertise to this roll. 
+This jury-rigging holds for 10 minutes for each rank you have in this specialty.
+ ▶ UpgraDe experTise
+To upgrade an item, you roll TECH + the Tech Skill that the item is typically repaired with + your rank in this specialty 
++ 1d10. The Tech must purchase materials of the same price category of the item being upgraded, which installing 
+the upgrade consumes. Upgrades include:
+• Lower the humanity loss of Non-Borgware Cyberware by 1d6 if it’s typical humanity loss would be 2d6 or greater.
+• Increase the number slots of the type an item already has for options, attachments, Programs/Hardware, etc by one.
+• Simplify the item, halving the time it takes to make any future full repair to the item.
+• Grant a typically non-concealable one-handed weapon the ability to be concealed.
+• Increase an Average Quality Weapon to an Excellent Quality Weapon.
+• Grant a weapon attachment slot to an Exotic Weapon.
+• Allow an Exotic Weapon to fire one variety of Exotic Ammunition of its ammunition type.
+• Increase an item’s SP by one, but only if it had any to begin with.
+• Upgrade a vehicle with an upgrade that only requires a Nomad Role Ability Rank of one.
+ ▶ FabricaTion experTise
+To make an item, you roll TECH + the Tech Skill that the item is typically repaired with + your rank in this specialty 
++ 1d10. The Tech must purchase materials of one price category lower than the price category of the item being 
+fabricated.
+Field
+Expertise
+Upgrade
+Expertise
+Fabrication 
+Expertise4 2 2
+=== PDF p25 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+Redtail Medtech
+5 5 8 5
+5 6 6 5 6
+35 18 5 48
+Weapon DMG Ammo ROF Notes
+Assault Rifle 5d6 25 1 autofire; not concealable; Mags: 4
+Smoke Grenade x2 Obscures a 10m/yd x 10m/yd area with smoke for one minute. Penalty for 
+performing most actions obscured by smoke is -4.
+Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Athletics 5 2 7
+Basic Tech 8 6 14
+Brawling 5 2 7
+Concentration 5 2 7
+Conversation 4 6 10
+Cybertech 8 4 12
+Deduction 8 6 14
+Education 8 6 14
+Evasion 5 6 11
+First Aid 8 2 10
+Skill STAT LVL TOTAL
+Human Perception 4 6 10
+Language (Streetslang) 8 2 10
+Local Expert (Your Home) 8 2 10
+Paramedic 8 6 14
+Perception 8 2 10
+Persuasion 5 2 7
+Resist Torture/Drugs 5 4 9
+Science (Choose Specialty) 8 6 14
+Shoulder Arms 5 6 11
+Stealth 5 2 7
+Name Type Notes
+Cybereye Cyberoptics Left eye. 3 option slots.
+TeleOptics Cyberoptics See in detail up to 800m away. +1 bonus when attacking over 5 1m away using a single shot.
+Nasal Filters Internal User immune to toxic fumes and inhaled poisons.
+Biomonitor Fashionware Subdermal implant. Generates a constant LED readout of vitals.
+Agent Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks.
+Airhypo Drug injection device. Using it to inject a drug is an Action.
+Flashlight 100m/y beam. Lasts up to 10 hours on a charge.
+Glow Paint Glowing spraypaint.
+Medtech Bag Full selection of tools needed for medical purposes.
+Bulletproof Shield Portable cover with 10 HP.
+Medicine 4
+4
+60
+500eb
+Generic Chic: Jacket x3. Leisurewear: Footwear, Pants 
+x3, Tops x5. Urban Flash: Glasses
+8
+=== PDF p26 ===
+ ▶Player:
+Medtech:
+Pharmaceuticals 2Surgery
+Medtech:
+CryoOp
+1
+1
+Skill STAT LVL TOTAL
+Medical Tech 8 3 11
+Surgery 8 2 10
+M
+edTech
+You’re an artist, and the human body is your canvas. You’ve got the best tools the Time of the Red can offer, and you 
+know how to use them. If you’re lucky, you got to attend one of the real med schools scattered around the wreck of 
+the Old United States. And after the War, military hospitals were everywhere and the few doctors on the war front 
+needed helping hands to hold down screaming patients and splice cyberware back together. So, maybe you learned 
+that way.
+R
+ole Ability: Medicine (Rank 4)
+ ▶ sUrgery
+For every point you allocate to Surgery, you gain 2 points in the Surgery Skill. The Surgery Skill is the TECH Skill used 
+to treat the most severe Critical Injuries, as well as implant cyberware, and is only available to Medtechs.
+ ▶ meDical Tech: pharmaceUTical
+For every point you allocate to Medical Tech (Pharmaceuticals), you gain 1 point in the Medical Tech Skill. The 
+Medical Tech Skill is the TECH Skill used to operate, understand, and repair medical machinery.  You can also 
+synthesize the drugs Speeheal and Stim w/ a DV13 Medical Tech check. You can synthesize 3 doses of one of those 
+drugs in one hour at a cost of 200eb. Applying a dose requires an Action and an airhypo. 
+• Speedheal: A target that isn’t Mortally Wounded immediately heals an amount of HP equal to their BODY + 
+WILL. Can only be used once per day per person.
+• Stim: The target can ignore penalties from being Seriously Wounded for one hour. Can only be used once 
+per day per person.
+ ▶ meDical Tech: cryosysTem operaTion
+For every point you allocate to Medical Tech (Cryosystem Operation), you gain 1 point in the Medical Tech Skill. 
+The Medical Tech Skill is the TECH Skill used to operate, understand, and repair medical machinery.  You also own 
+and know how to operate 1 Cryopump. A Cryopump is a briefcase sized tool containing a bodybag hooked up to a 
+powerful pump. Once willing/unconscious targets have been placed into the bag and hooked up to the pump as an 
+Action, the pump forces a hyper-cooled chemical fluid into the bag. While in stasis, targets are unconscious and no 
+longer roll any death saves for up to a week as long as they remain inside the bag and the bag has at least 1HP. 
+=== PDF p27 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+24/7 Media
+5 5 4 8
+7 6 7 5 8
+40 20 5 70
+Weapon DMG Ammo ROF Notes
+Heavy Pistol 3d6 8 2 concealable. Mags: 7Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Athletics 5 2 7
+Brawling 5 2 7
+Bribery 8 6 14
+Composition 7 6 13
+Concentration 7 2 9
+Conversation 7 6 13
+Deduction 7 6 13
+Education 7 2 9
+Evasion 5 6 11
+First Aid 4 2 6
+Skill STAT LVL TOTAL
+Handgun 5 6 11
+Human Perception 7 6 13
+Language (Streetslang) 7 2 9
+Library Search 7 4 11
+Lip Reading 7 4 11
+Local Expert (Your Home) 7 6 13
+Perception 7 6 13
+Persuasion 8 6 14
+Photography/Film 4 4 8
+Stealth 5 2 7
+Name Type Notes
+Cyberaudio Suite Cyberaudio 3 slots for options.
+Amplified Hearing Cyberaudio +2 to Perception Checks involving hearing.
+Light Tattoo Fashionware Subdermal tattoo installation. Glows.
+Agent Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks.
+Audio Recorder Records up to 24 hours of audio on a Memory Chip.
+Binoculars Good for looking at distances. x2 magnification.
+Grapple Gun Can fire as an Action to attach to any thick cover up to 30m/y away. Negates MOVE penalty while climbing.
+Radio Scanner/Music Player Link to Data Pool to listen to music or scan and play local radio bandwidths.
+Scrambler/Descrambler Used to scramble or, with the right keys, descramble communications.
+Video Camera Records up to 1 2 hours of audio and video on a Memory Chip.
+Credibility 4
+7
+80
+500eb
+Generic Chic: Footwear, Pants, Top. Leisurewear:  
+Jacket. Urban Flash: Mirrorshades.
+7
+=== PDF p28 ===
+ ▶Player:
+Access/Sources Audience Believability Impact
+Local honcho, gang-lord, local 
+neighborhood leadership. City gang 
+honcho, minor politician, Corp Exec, 
+well known person in the neighbor-
+hood.
+Well-known contributor for a local 
+Screamsheet or Data Pool.
+3 out of 10 chance the audience buys 
+it.
+Change created by a story/scoop has 
+a direct effect; local small time bad 
+guys get arrested or thrown out of 
+powe;, justice gets served.
+M
+edia
+You’ve got a vidlink and a press pass, and you’re not afraid to use them. You’re a city-wide figure, seen nightly all 
+over the Data Pool in the Time of the Red. It’s not like the old days, when you had a major Mediacorp behind you; this 
+time, you’ve gotta depend on your fans, your contacts, and your own reputation. But it’s harder for these new Corps 
+to make you disappear. So when you dig down for the dirt and slime the corrupt officials and Corporate lapdogs 
+try to cover up, you can dig deep. 
+R
+ole Ability: Credibility (Rank 4)
+ ▶ rUmors
+Assuming you aren’t entirely off-grid, at least twice per week the GM will secretly roll Your Credibility Rank + 1d10 
+and give you rumors based on the result. The Media can also find rumors by hitting the street during gameplay using 
+relevant Skills like Library Search, Conversation, or Interrogation using a STAT + Skill + 1d10 Check.
+ ▶ pUblishing sTories
+A Media’s main ability is publishing stories. Your Credibility Rank determines what access you have to sources, how 
+large your audience is, how likely your audience is to believe your work, and what impact a story could have.
+• Access/Sources represents those you can reasonably get in touch with/interview or otherwise gain information 
+from.
+• Audience is how many people your stories or exposes can reach.
+• Believability is how well your story or expose goes over with your audience. The higher your Credibility, 
+the more likely people will believe something you have written or broadcast. You will roll 1d10 based on your 
+Believability when you publish a story and any time you want to find out whether an individual (or a group of 
+individuals) believe your story. If your story contains even a single piece of verifiable evidence that is easily 
+understood by the masses, the chance your audience will believe it is 1 higher. If it contains more than four distinct 
+verifiable pieces of hard evidence, the chance your audience will believe it is 2 higher. These two bonuses stack 
+with each other. 
+• Impact is how much change any individual story or revelation you publish has on your audience. For example, 
+a story about an unfair economic practice at the incremental level might just get a few local bosses to change 
+their practices. But at higher levels of Credibility, your expose may cause entire Megacorps to fall. Your GM will 
+handle this. Once you publish a story/scoop you cannot publish another story on the same exact topic unless 
+you have new information to add to the conversation.
+=== PDF p29 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+Suri “Cavalry” Navarro Lawman
+6 5 5 7
+8 5 6 7 4
+50 25 7 30
+Weapon DMG Ammo ROF Notes
+Assault Rifle 5d6 25 1 autofire; not concealable; Mags: 4
+Heavy Pistol 3d6 8 2 concealable. Mags: 4
+Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Athletics 5 2 7
+Autofire 6 6 12
+Brawling 5 6 11
+Concentration 8 2 10
+Conversation 3 6 9
+Criminology 7 6 13
+Deduction 7 6 13
+Education 7 2 9
+Evasion 5 6 11
+First Aid 5 2 7
+Skill STAT LVL TOTAL
+Handgun 6 6 12
+Human Perception 3 2 5
+Interrogation 7 6 13
+Language (Streetslang) 7 2 9
+Local Expert (Your Home) 7 2 9
+Perception 7 2 9
+Persuasion 7 2 9
+Shoulder Arms 6 6 12
+Stealth 5 2 7
+Tracking 7 6 13
+Name Type Notes
+Hidden Holster External Holster built into the body. Can store a concealable weapon.
+Subdermal Pocket External 2 x 4 inch hidden pocket w/ RealSkinn zipper. Anything inside is auto concealed.
+Agent Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks.
+Flashlight 100m/y beam. Lasts 10 hours on a charge.
+Handcuffs x2 Restraints. Can be broken by anyone with a BODY 10.
+Radio Communicator Earpiece communication device. 1 mile range.
+Road Flare x10 Lights 100m/y area for 1 hour. One use.
+Bulletproof Shield Portable cover with 10 HP.
+Backup 4
+3
+40
+500eb
+Generic Chic: Footwear, Pants, Top. Leisurewear:  
+Jacket. Urban Flash: Mirrorshades.
+7
+=== PDF p30 ===
+ ▶Player:
+ ▶ backUp Type  ▶ DescripTion
+ ▶ sp ▶ combaT #  ▶ hp
+Armed with Heavy Pistols (3D6 DMG, ROF 2) and wearing Kevlar® (SP7)
+Local Beat Cops 4 cops. Arrive in 2 compact groundcars. 
+10 7 25
+ ▶ moV e  & bo Dy
+5
+L
+awman
+There used to be a big City Force, but most of the Old Guard in NCPD have been thrown out on their own to keep 
+what peace they can. The ones who remain still take the Badge seriously; they work to keep people safe and make 
+some kind of stand against chaos. Even if you’d rather just walk a beat, if you’re a professional Lawman of any stripe, 
+you’re stuck carrying high-caliber weapons, most of them full-auto types, wearing a Kevlar® vest that’ll stop 850ft/
+lbs. per square inch—and often you’re still outgunned and outflanked. Half the gangs were cybered up to begin with: 
+super speed, super reflexes, could see in the dark, carried weapons in their arms...and that was before the War and 
+the Fall of the Towers pumped a metric ton of milspec cybertech into the Night Markets. The other half of the guys 
+on The Street are freelance Corporate mercs who used to have jobs during the War; hired to enforce Corp armies 
+disbanded by the New United States’ goon squads. Now they’re the goon squads and you’re trying to keep them 
+under control too.
+R
+ole Ability: backup (Rank 4)
+When in danger, you can call on Backup in the form of Beat Cops (or their local equivalent) . As an Action, you 
+attempt to roll equal or lower than your Backup Rank on a d10 to get someone to respond to your call. If you abuse 
+this, your Boss will throw you off the force or fine you.
+After someone responds to your call, you roll a d6 to find out in how many rounds your backup will arrive on the 
+scene. If you roll a 6 on this roll, instead of your typical backup, the backup that arrives will be of the next highest 
+level of backup, unless you are Rank 10, in which case two separate backup groups will arrive. If nobody responds 
+to your call, you can always try your backup call again next turn.
+=== PDF p31 ===
+ ▶ Player:
+ ▶ Handle  ▶ role
+ ▶ Hits  ▶ seriously Wounded  ▶ deatH save  ▶ Humanity
+ ▶ Penalty aPPlies to reF ,deX & move
+luCK ▶ luCK ▶ Will  ▶ move  ▶ Body  ▶ emP
+ ▶ Cool ▶ teCH ▶ deX ▶ reF ▶ int
+SKILLS  ▶ role aBility
+WEAPONS & ARMOR
+Penalty aPPlies to DeX, ReF & MoV e
+out oF
+out oF
+out oF
+out oF
+ ▶ Penalty aPPlies to reF ,deX & moveCYBERWARE
+ ▶ Penalty aPPlies to reF ,deX & moveYOUR STUFF  ▶ ClotHing  ▶ CasH
+Chanda Mishra Exec
+7 7 3 6
+7 6 5 5 7
+40 20 5 58
+Weapon DMG Ammo ROF Notes
+Very Heavy Pistol 4d6 8 1 not concealable. Mags: 7Armor SP Penalty
+Head: Light Armorjack 11 0
+Body: Light Armorjack 11 0
+Skill STAT LVL TOTAL
+Accounting 5 6 11
+Athletics 7 2 9
+Brawling 7 2 9
+Bureaucracy 5 6 11
+Business 5 6 11
+Concentration 7 2 9
+Conversation 5 6 11
+Deduction 5 6 11
+Education 5 6 11
+Evasion 7 6 13
+Skill STAT LVL TOTAL
+First Aid 3 2 5
+Handgun 7 6 13
+Human Perception 5 6 11
+Language (Streetslang) 5 2 7
+Lip Reading 5 6 11
+Local Expert (Your Home) 5 2 7
+Perception 7 2 9
+Personal Grooming 6 4 10
+Persuasion 6 6 12
+Stealth 7 2 9
+Name Type Notes
+Toxin Binder Internal +2 to Resist Torture/Drugs Checks.
+Cyberaudio Suite Cyberaudio 3 slots for options.
+Internal Agent Cyberaudio Grants +2 to Library Search Checks. Audio only. Can output video to paired screen.
+Biomonitor Fashionware Subdermal implant. Generates a constant LED readout of vitals.
+Radio Communicator x4 Earpiece communication device. 1 mile range.
+Scrambler/Descrambler Used to scramble or, with the right keys, descramble communications.
+Teamwork 4
+5
+70
+500eb
+Businesswear: Footwear, Jacket, Pants, Mirrorshades, 
+Top. Leisurewear: Jewelry x2.
+5
+=== PDF p32 ===
+ ▶Player:
+ ▶  Team member Driver
+ ▶ hiTs  ▶ serioUsly woUnDeD  ▶ DeaTh saVe
+ ▶ will  ▶ moV e  ▶ boDy  ▶ emp
+ ▶ cool ▶ Tech ▶ Dex ▶ reF ▶ inT
+out of
+8 6 4
+5 6 5
+35 18
+5
+5
+ ▶  skill (sTaT + skill alreaDy calcUlaTeD)
+Athletics +8, Brawling +10, Concentration +7 , Conversation +7 ,  
+Drive Land Vehicle +1 4, Education +7 , Endurance +9, Evasion +10, 
+First Aid +6, Handgun +1 4, Human Perception +7 , Land Vehicle 
+Tech +8, Language (Streetslang) +7 , Local Expert (Your Home) +7 , 
+Perception +7 , Persuasion +8, Pilot Air Vehicle +1 2,  
+Pilot Sea Vehicle 1 2, Sea Vehicle Tech +8, Stealth +10, Tracking +9
+ ▶  cyberware
+Cyberaudio Suite, Radar/Sonar Implant, Internal Agent, Homing 
+Tracer, Radar Detector
+ ▶  gear
+Light Armorjack (SP 1 1), Very Heavy Pistol (4d6 DMG, ROF 1),  
+Compact Ground Car w/ Seating Upgrade
+ ▶  Team member Netrunner
+ ▶ hiTs  ▶ serioUsly woUnDeD  ▶ DeaTh saVe
+ ▶ will  ▶ moV e  ▶ boDy  ▶ emp
+ ▶ cool ▶ Tech ▶ Dex ▶ reF ▶ inT
+out of
+7 6 6 4
+7 4 4
+40 20
+8
+4
+ ▶  skill (sTaT + skill alreaDy calcUlaTeD)
+Interface +2, Athletics +8, Basic Tech +10, Brawling +8, Concentration 
++9, Conversation +6, Cryptography +1 2, Cybertech +10, Education 
++1 2, Electronics/Security +10, Evasion +8, First Aid +8, Forgery +10, 
+Handgun +1 1, Human Perception +6, Language (Streetslang) +10, 
+Library Search +1 2, Perception +10, Persuasion +6, Stealth +10
+ ▶  cyberware
+Neural Link, Chipware Socket, Pain Editor, Interface Plugs, Cybereyes 
+w/ Virtuality
+ ▶  gear
+Light Armorjack (SP 1 1), Very Heavy Pistol (4d6 DMG, ROF 1),  
+Cyberdeck (7 slots|Sword, Sword, Killer, Worm, Worm, Armor)
+ ▶ loyalTy 4
+ ▶ loyalTy 4
+E
+xec
+Things changed when the largest Megacorps on the planet got into a major war that was equal to anything any real 
+national governments could have thrown down. Your life as a junior executive is anything but easy. There are those 
+underneath you who’d kill for a shot at your job. Literally. There are those over you who’d kill to keep you out of their 
+jobs. Literally. And they’re not kidding about the killing—every up-and-comer in the Corporation has their own Team 
+of Solos and Netrunners to cover important pet projects.
+R
+ole Ability: Teamwork (Rank 4)
+Loyalty is a shifting stat possessed by team members; an Exec must (during every game session) do things to promote Loy-
+alty and not lose it. When a task is given to a Team member by the Exec, the GM must roll 1d6 under the Team member’s 
+current Loyalty. If the check is failed, the Team Member may refuse or botch the assignment or otherwise turn on the Exec.Choose either the Driver or Netrunner to be your team member.
+6
+5
+4
+=== PDF p33 ===
+32
+N
+et Architecture: conapt security
+Just because you’re paranoid doesn’t mean they aren’t out to get you. Successful Edgerunners often set up simple 
+NET Architectures in their conapts to cause trouble when unwanted intruders pay an unscheduled visit! This 
+Architecture configuration might also be found in bars, Nomad camps, and other locations where cost or porta -
+bility are a factor.
+Demons Installed: 1 Imp
+Cost: Floor x3 (3,000eb), Password DV6 (500eb), Control Node DV6 (500eb), Black ICE: Wisp (50eb), Demon: 
+Imp (1,000eb), Defense: Ground Drone (10,000eb) • Total: 15,050eb
+Floor
+1
+2
+3
+Floor
+Floor
+DV
+DV
+DV
+6
+—
+6
+Password
+Black ICE: Wisp
+Control Node: Ground Drone
+N
+et Architecture: starter drone rig
+Drone piloting can be an exciting hobby... or an excellent way to beef up an Edgerunner crew’s firepower. This 
+NET Architecture fits neatly into a backpack, making it perfect starter rig for any Night City resident looking to 
+bring their new electronic friend with them wherever they go.
+Demons Installed: 1 Imp
+Cost: Floor x3 (3,000eb), Password DV6 (500eb), Control Node DV6 (500eb), Black ICE: Raven (50eb), Demon: 
+Imp (1,000eb), Defense: Mini Air Drone (5,000eb) • Total: 10,050eb
+Floor
+1
+2
+3
+Floor
+Floor
+DV
+DV
+DV
+6
+—
+6
+Password
+Control Node: Mini Air Drone 
+Black ICE: Raven
+SINGLE SHOT PACK
+=== PDF p34 ===
+33
+N
+et Architecture: Oasis security
+Most Continental Brands Oasis stores implement a NET Architecture designed to automate their security and 
+reduce the possibility of employee theft. This NET Architecture build also works well for small warehouses, executive 
+apartments,  low level Night Markets, and large transport vehicles such as cargo trains.
+Demons Installed: 1 Imp
+Cost: Floor x5 (5,000eb), Password DV6 (500eb), Control Node DV8 x2 (2,000eb), Password DV8  (1,000eb), 
+Black Ice: Hellhound (500eb), Demon: Imp (1,000eb), Defense: Camera x2 (1,000eb), Defense: Automated 
+Turret (5,000eb) • Total: 16,000eb
+Floor
+1
+2
+3
+4
+5
+Floor
+Floor
+Floor
+Floor
+DV
+DV
+DV
+DV
+DV
+6
+8
+8
+—
+8
+Password
+Control Node: Observation Cameras  
+(1 inside, 1 outside)
+Password
+Black ICE: Hellhound
+Control Node: Automated Turret  
+(located inside store)
+SINGLE SHOT PACK
+=== PDF p35 ===
+34
+N
+et Architecture: CLinic security
+This NET Architecture is the sort a clinic or other small business might employ in Night City to keep out unwanted 
+visitors. It assumes a two-story operation, with a lobby and offices on the bottom floor and more sensitive areas, 
+such as surgery, patient recovery, or CEO offices on the top floor.
+Demons Installed: 1 Imp
+Cost: Floor x6 (6,000eb), Password DV6 x2 (1,000eb), Control Node DV6  (500eb), File DV6 (500eb), Control 
+Node DV8 (1,000eb), Black ICE: Wisp (50eb), Demon: Imp (1,000eb), Defense: Camera x2 (1,000eb), Defense: 
+Sleep Gas Elevator (5,000eb) • Total: 16,050eb
+Floor
+1
+2
+3
+4
+6
+Floor
+Floor
+Floor
+Floor
+DV
+DV
+DV
+DV
+DV
+6
+6
+6
+6
+8
+Password
+Control Node: Observation Cameras  
+(1 outside, 1 inside elevator)
+Password
+Control Node: Sleep Gas Elevator  
+(located inside elevator)
+5
+Floor DV
+—
+File: Appointment schedule or similar data
+Black ICE: Wisp
+SINGLE SHOT PACK
+=== PDF p36 ===
+35
+N
+et Architecture: small corp facility
+Not every Corp facility is a large, sprawling campus or starscraper. Corps often use smaller facilities for 
+research, axillary offices, or to establish an initial presence in a district or city. These facilities often use a single 
+NET Architecture rather than building several based around functions or clusters of floors. This build assumes 
+a five- floor facility.
+Demons Installed: 1 Imp, 1 Efreet
+Cost: (Does not include cost of cleaning drones)  Floor x10 (50,000eb), Password DV8 x2 (2,000eb), File DV8 
+(1,000eb), Control Node DV6 (500eb), Password DV10 (5,000eb), Control Node DV10 x2 (10,000eb), Black 
+ICE: Raven (50eb), Black ICE: Hellhound (500eb), Black ICE: Kraken (1,000eb), Demon: Imp (1,000eb), Demon: 
+Efreet (5,000eb), Defense: Camera x5 (2,500eb), Defense: Large Air Drone (10,000eb) • Total: 88,550eb
+Floor
+1
+2
+3
+Floor
+Floor
+DV
+DV
+DV
+8
+8
+8
+Password
+File: Appointment schedule or similar data 
+1a
+Floor DV
+8
+Password
+1b
+Floor DV
+10
+Password
+2a
+Floor DV
+— 2b
+Floor DV
+—
+3a
+Floor DV
+6 3b
+Floor DV
+10
+4b
+Floor DV
+10
+Black ICE: Raven
+Black ICE: 
+Hellhound
+Control Node: 
+Cleaning Drones
+Black ICE: Kraken
+Control Node: 
+Cameras (1/floor)
+Control Node:  
+Large Air Drone
+SINGLE SHOT PACK
+=== PDF p37 ===
+36
+N
+et Architecture: vault
+This NET Architecture is designed for use by those who want to keep their secrets and treasures safe.
+Demons Installed: 1 Balron
+Cost: (Does not include cost of vault door) Floor x9 (45,000eb), Password DV10 (5,000eb), File DV6 (500eb), 
+Control Node DV8 (1,000eb), Control Node DV10 x2 (10,000eb), File DV10 (5,000eb), File DV12 (10,000eb), 
+Black ICE: Hellhound x2 (2,000eb), Black ICE: Killer (1,000eb), Black ICE: Scorpion (200eb), Demon: Balron 
+(10,000eb), Defense: Camera x2 (1,000eb), Defense: Blood Swarm (10,000eb) • Total: 100,700eb
+Floor
+1
+2
+3
+4
+6
+Floor
+Floor
+Floor
+Floor
+DV
+DV
+DV
+DV
+DV
+10
+6
+8
+—
+10
+Password
+Control Node: Observation Cameras  
+(1 outside vault, 1 inside vault)
+Black ICE: Hellhound • Killer
+Control Node: Automated Blood Swarm 
+(located inside vault)
+5
+Floor DV
+10
+File: Vault content manifest
+Control Node: Vault Door
+7
+Floor DV
+—
+8
+Floor DV
+10
+9
+Floor DV
+12
+File: Sensitive Data
+Black ICE: Hellhound • Scorpion
+File: Very Sensitive Data
+SINGLE SHOT PACK
+=== PDF p38 ===
+cyberchairscyberchairs
+new options in mobility new options in mobility 
+BY ADRIAN MARC
+37
+Writing and Design by Mike Pondsmith, James Hutt, Cody Pondsmith, and Sara Thompson
+Editing by M a t t  C l i c k•Art Direction by Jaye Kovach
+Business Management by Lisa Pondsmith •Layout by J Gray
+Copyright  © 2021 by R. Talsorian Games, Inc., Cyberpunk is a registered trademark of CD Projekt Red S.A. All rights reserved under the Universal Copyrights Convention.  
+All situations, governments, and people herein are fictional. Any similarities portrayed herein without satiric intent are strictly coincidental.

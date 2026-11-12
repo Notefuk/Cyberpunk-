@@ -1,0 +1,152 @@
+[
+  {
+    "source": "IR1",
+    "name": "Conapt Security",
+    "page": 32,
+    "difficulty": null,
+    "dvPrinted": null,
+    "floors": [
+      {"floorNumber": 1, "type": "Password", "name": "Password DV6", "dv": 6, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 2, "type": "Black ICE", "name": "Black ICE: Wisp", "dv": null, "iceType": "Wisp", "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 3, "type": "Control Node", "name": "Control Node: Ground Drone DV6", "dv": 6, "iceType": null, "rewardOrDevice": "Ground Drone", "branch": null}
+    ],
+    "notesEs": "Arquitectura simple para conapts, bares o campamentos nomadas donde importan el costo o la portabilidad; controla un dron terrestre. Demons instalados: 1 Imp. Costo total 15,050eb.",
+    "doubts": []
+  },
+  {
+    "source": "IR1",
+    "name": "Starter Drone Rig",
+    "page": 32,
+    "difficulty": null,
+    "dvPrinted": null,
+    "floors": [
+      {"floorNumber": 1, "type": "Password", "name": "Password DV6", "dv": 6, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 2, "type": "Black ICE", "name": "Black ICE: Raven", "dv": null, "iceType": "Raven", "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 3, "type": "Control Node", "name": "Control Node: Mini Air Drone DV6", "dv": 6, "iceType": null, "rewardOrDevice": "Mini Air Drone", "branch": null}
+    ],
+    "notesEs": "Rig basico de piloto de drones que cabe en una mochila; controla un mini dron aereo. Demons instalados: 1 Imp. Costo total 10,050eb.",
+    "doubts": [
+      "El orden de las etiquetas en la extraccion es Password, Control Node, Black ICE, pero los DV son 6, —, 6; como el Control Node cuesta DV6 y el Black ICE no tiene DV, se asigno piso 2 = Raven y piso 3 = Control Node (inferido por DV, igual que Conapt Security)."
+    ]
+  },
+  {
+    "source": "IR1",
+    "name": "Oasis Security",
+    "page": 33,
+    "difficulty": null,
+    "dvPrinted": null,
+    "floors": [
+      {"floorNumber": 1, "type": "Password", "name": "Password DV6", "dv": 6, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 2, "type": "Control Node", "name": "Control Node: Observation Cameras DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Observation Cameras (1 inside, 1 outside)", "branch": null},
+      {"floorNumber": 3, "type": "Password", "name": "Password DV8", "dv": 8, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 4, "type": "Black ICE", "name": "Black ICE: Hellhound", "dv": null, "iceType": "Hellhound", "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 5, "type": "Control Node", "name": "Control Node: Automated Turret DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Automated Turret (located inside store)", "branch": null}
+    ],
+    "notesEs": "Seguridad automatizada de tiendas Oasis de Continental Brands; sirve tambien para bodegas pequenas, apartamentos ejecutivos, Night Markets bajos y vehiculos de carga. Demons instalados: 1 Imp. Costo total 16,000eb.",
+    "doubts": []
+  },
+  {
+    "source": "IR1",
+    "name": "Clinic Security",
+    "page": 34,
+    "difficulty": null,
+    "dvPrinted": null,
+    "floors": [
+      {"floorNumber": 1, "type": "Password", "name": "Password DV6", "dv": 6, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 2, "type": "Control Node", "name": "Control Node: Observation Cameras DV6", "dv": 6, "iceType": null, "rewardOrDevice": "Observation Cameras (1 outside, 1 inside elevator)", "branch": null},
+      {"floorNumber": 3, "type": "Password", "name": "Password DV6", "dv": 6, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 4, "type": "File", "name": "File DV6", "dv": 6, "iceType": null, "rewardOrDevice": "Appointment schedule or similar data", "branch": null},
+      {"floorNumber": 5, "type": "Black ICE", "name": "Black ICE: Wisp", "dv": null, "iceType": "Wisp", "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 6, "type": "Control Node", "name": "Control Node: Sleep Gas Elevator DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Sleep Gas Elevator (located inside elevator)", "branch": null}
+    ],
+    "notesEs": "Seguridad para clinicas o negocios pequenos de dos plantas (lobby y oficinas abajo, zonas sensibles arriba); incluye ascensor con gas somnifero. Demons instalados: 1 Imp. Costo total 16,050eb.",
+    "doubts": [
+      "El texto extraido pierde el diseno: los DV de los pisos 1,2,3,4,6 son 6,6,6,6,8 y el piso 5 es '—'. Las etiquetas aparecen desordenadas; File (DV6 por costo) se asigno al piso 4, Wisp al 5 y Sleep Gas (DV8 por costo) al 6. El orden Password/Control Node/File de los pisos 1-4 es inferido."
+    ]
+  },
+  {
+    "source": "IR1",
+    "name": "Small Corp Facility",
+    "page": 35,
+    "difficulty": null,
+    "dvPrinted": null,
+    "floors": [
+      {"floorNumber": 1, "type": "Password", "name": "Password DV8", "dv": 8, "iceType": null, "rewardOrDevice": null, "branch": "tronco, piso 1"},
+      {"floorNumber": 2, "type": "File", "name": "File DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Appointment schedule or similar data", "branch": "tronco, piso 2"},
+      {"floorNumber": 3, "type": "Black ICE", "name": "Black ICE: Raven", "dv": null, "iceType": "Raven", "rewardOrDevice": null, "branch": "tronco, piso 3"},
+      {"floorNumber": 4, "type": "Password", "name": "Password DV8", "dv": 8, "iceType": null, "rewardOrDevice": null, "branch": "rama A, piso 1a"},
+      {"floorNumber": 5, "type": "Black ICE", "name": "Black ICE: Hellhound", "dv": null, "iceType": "Hellhound", "rewardOrDevice": null, "branch": "rama A, piso 2a"},
+      {"floorNumber": 6, "type": "Control Node", "name": "Control Node: Cleaning Drones DV6", "dv": 6, "iceType": null, "rewardOrDevice": "Cleaning Drones", "branch": "rama A, piso 3a"},
+      {"floorNumber": 7, "type": "Password", "name": "Password DV10", "dv": 10, "iceType": null, "rewardOrDevice": null, "branch": "rama B, piso 1b"},
+      {"floorNumber": 8, "type": "Black ICE", "name": "Black ICE: Kraken", "dv": null, "iceType": "Kraken", "rewardOrDevice": null, "branch": "rama B, piso 2b"},
+      {"floorNumber": 9, "type": "Control Node", "name": "Control Node: Cameras DV10", "dv": 10, "iceType": null, "rewardOrDevice": "Cameras (1/floor)", "branch": "rama B, piso 3b"},
+      {"floorNumber": 10, "type": "Control Node", "name": "Control Node: Large Air Drone DV10", "dv": 10, "iceType": null, "rewardOrDevice": "Large Air Drone", "branch": "rama B, piso 4b"}
+    ],
+    "notesEs": "Instalacion corporativa pequena de cinco plantas con una sola arquitectura NET de 10 pisos con dos ramas (A y B). Demons instalados: 1 Imp y 1 Efreet; el costo no incluye los drones de limpieza. Costo total 88,550eb.",
+    "doubts": [
+      "Estructura de ramas ilegible en la extraccion: aparecen pisos 1,2,3 (DV 8 8 8) y luego 1a,1b,2a,2b,3a,3b,4b (10 pisos en total, coincide con 'Floor x10'). floorNumber 1-10 es secuencial mio; las etiquetas del libro estan en 'branch'. No se sabe como se conectan tronco y ramas (ni por que no hay 4a).",
+      "El tronco muestra DV '8 8 8' pero el costo solo da Password DV8 x2 + File DV8 (3 DV8 en total, y uno ya es 1a). Se asigno tronco = Password, File, Black ICE: Raven por conteo de costos y orden de etiquetas; el orden File/Raven dentro del tronco (pisos 2 y 3) es inferido y el DV del piso 3 se dejo null.",
+      "Asignacion de Hellhound (2a), Cleaning Drones (3a), Kraken (2b), Cameras (3b) y Large Air Drone (4b) inferida por orden de etiquetas, DV y costos (Control Node DV6 x1, DV10 x2)."
+    ]
+  },
+  {
+    "source": "IR1",
+    "name": "Vault",
+    "page": 36,
+    "difficulty": null,
+    "dvPrinted": null,
+    "floors": [
+      {"floorNumber": 1, "type": "Password", "name": "Password DV10", "dv": 10, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 2, "type": "File", "name": "File DV6", "dv": 6, "iceType": null, "rewardOrDevice": "Vault content manifest", "branch": null},
+      {"floorNumber": 3, "type": "Control Node", "name": "Control Node: Observation Cameras DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Observation Cameras (1 outside vault, 1 inside vault)", "branch": null},
+      {"floorNumber": 4, "type": "Black ICE", "name": "Black ICE: Hellhound + Killer", "dv": null, "iceType": "Hellhound + Killer", "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 5, "type": "Control Node", "name": "Control Node: Vault Door DV10", "dv": 10, "iceType": null, "rewardOrDevice": "Vault Door", "branch": null},
+      {"floorNumber": 6, "type": "Control Node", "name": "Control Node: Automated Blood Swarm DV10", "dv": 10, "iceType": null, "rewardOrDevice": "Automated Blood Swarm (located inside vault)", "branch": null},
+      {"floorNumber": 7, "type": "Black ICE", "name": "Black ICE: Hellhound + Scorpion", "dv": null, "iceType": "Hellhound + Scorpion", "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 8, "type": "File", "name": "File DV10", "dv": 10, "iceType": null, "rewardOrDevice": "Sensitive Data", "branch": null},
+      {"floorNumber": 9, "type": "File", "name": "File DV12", "dv": 12, "iceType": null, "rewardOrDevice": "Very Sensitive Data", "branch": null}
+    ],
+    "notesEs": "Arquitectura para proteger secretos y tesoros: nueve pisos con camaras, puerta de boveda y un enjambre de sangre automatizado, y datos sensibles al fondo. Demons instalados: 1 Balron; el costo no incluye la puerta de la boveda. Costo total 100,700eb.",
+    "doubts": [
+      "Las etiquetas de los pisos 1-6 salen desordenadas en la extraccion; se asignaron cruzando los DV (10,6,8,—,DV10 en piso 5,10 en piso 6) con el costo: File DV6 = manifiesto (piso 2), Control Node DV8 = camaras (piso 3), Control Node DV10 x2 = Vault Door (piso 5) y Blood Swarm (piso 6). La posicion de Vault Door (5) vs Blood Swarm (6) es inferida por la logica 'dentro de la boveda'."
+    ]
+  },
+  {
+    "source": "IR2",
+    "name": "Apartment Building",
+    "page": 30,
+    "difficulty": null,
+    "dvPrinted": null,
+    "floors": [
+      {"floorNumber": 1, "type": "Password", "name": "Password DV8", "dv": 8, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 2, "type": "Control Node", "name": "Control Node: Elevators DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Elevators", "branch": null},
+      {"floorNumber": 3, "type": "Control Node", "name": "Control Node: Fire Alarm, Sprinklers DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Fire Alarm, Sprinklers", "branch": null},
+      {"floorNumber": 4, "type": "Control Node", "name": "Control Node: Lights DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Lights", "branch": null}
+    ],
+    "notesEs": "NET Architecture del edificio de la aventura The Apartment (mision Hack Attack). El Dr. Carver da su password pero no sirve: el default de fabrica se halla con roleplay creativo y un DV13 en una Skill aplicable.",
+    "doubts": [
+      "La extraccion solo muestra dos '8' junto a los pisos 1-3 y otros dos sueltos (piso 4 y uno final); se asumio DV8 en los cuatro pisos y el orden de etiquetas como orden de pisos."
+    ]
+  },
+  {
+    "source": "IR2",
+    "name": "Dorothy's Private NET",
+    "page": 31,
+    "difficulty": null,
+    "dvPrinted": null,
+    "floors": [
+      {"floorNumber": 1, "type": "Password", "name": "Password DV8", "dv": 8, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 2, "type": "Black ICE", "name": "Black ICE: Hellhound + Custom Icon: Lion", "dv": null, "iceType": "Hellhound + Lion", "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 3, "type": "Control Node", "name": "Control Node: Cameras DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Cameras", "branch": null},
+      {"floorNumber": 4, "type": "File", "name": "File: Turn Back Last Warning DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Turn Back Last Warning", "branch": null},
+      {"floorNumber": 5, "type": "Password", "name": "Password DV8", "dv": 8, "iceType": null, "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 6, "type": "Black ICE", "name": "Black ICE: Hellhound + Custom Icon: Terrier", "dv": null, "iceType": "Hellhound + Terrier", "rewardOrDevice": null, "branch": null},
+      {"floorNumber": 7, "type": "Control Node", "name": "Control Node: Projector, Speaker, Dorothy's Microphone DV8", "dv": 8, "iceType": null, "rewardOrDevice": "Projector, Speaker, Dorothy's Microphone", "branch": null}
+    ],
+    "notesEs": "NET Architecture privada de Dorothy para la mision Definitely Not Kansas; el ICE usa iconos personalizados (Lion y Terrier) junto a Hellhound y el nodo final controla proyector, parlante y microfono (el Mago de Oz).",
+    "doubts": [
+      "Texto con DV desordenados: floor 1-4 y 6 muestran '8 8' y floores 5 y 7 muestran '8'; se asumio DV8 en Password/Control Node/File y sin DV en los ICE (— por posicion). El orden de los pisos 4 (File) y 5 (Password) se infirio por el orden de las etiquetas.",
+      "No queda claro si 'Custom Icon: Lion/Terrier' son ICE adicionales en el mismo piso que Hellhound; se registraron como tal en el nombre del piso."
+    ]
+  }
+]

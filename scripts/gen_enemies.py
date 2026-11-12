@@ -76,6 +76,8 @@ BOOK_SPECS = {
     'core': dict(const='CORE_ENEMIES', sourceBook='core', era='2045', fmt='red'),
     'cemk': dict(const='CEMK_ENEMIES', sourceBook='cemk_2077', era='2077', fmt='cemk'),
     'hardened': dict(const='HARDENED_ENEMIES', sourceBook='dlc', era='2045', fmt='red'),
+    # [Claude Code · 2026-11-11] v5.20.0: PNJ de Interface RED Vol. 2 (Jumpstart) y Vol. 4 (Halloween).
+    'interface-red': dict(const='INTERFACE_RED_ENEMIES', sourceBook='interface_red', era='2045', fmt='red'),
 }
 
 
@@ -89,6 +91,8 @@ def book_title(book_key, npc):
         if 'Jacket' in b:
             return 'Cyberpunk Edgerunners Mission Kit — Jacket'
         raise ValueError('CEMK sin book reconocible: ' + npc['id'])
+    if book_key == 'interface-red':
+        return npc['book']
     sub = npc.get('subtitle') or ''
     for t in ('Hardened Mooks', 'Hardened Lieutenants', 'Hardened Mini-Bosses'):
         if sub.startswith(t):

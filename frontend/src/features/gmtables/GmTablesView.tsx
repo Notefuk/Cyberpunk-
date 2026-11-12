@@ -31,8 +31,10 @@ import {
 } from '../../data/gmTables/salvaging';
 import { DATING_INTRO, DATING_STEPS, DATING_TABLES, DATING_RULES } from '../../data/gmTables/dating';
 import { COLLECTING_INTRO, COLLECTING_HOW_TO, COLLECTIONS } from '../../data/gmTables/collecting';
+import { HALLOWEEN_ADVENTURES } from '../../data/gmTables/halloween';
+import { ENEMIES_CATALOG } from '../../data/enemiesCatalog';
 
-type Section = 'achievements' | 'weather' | 'dating' | 'collecting' | 'salvaging';
+type Section = 'achievements' | 'weather' | 'dating' | 'collecting' | 'salvaging' | 'halloween';
 
 const SECTIONS: { id: Section; label: string }[] = [
   { id: 'achievements', label: '🏆 Logros y cajas' },
@@ -40,6 +42,7 @@ const SECTIONS: { id: Section; label: string }[] = [
   { id: 'dating', label: '💘 Digital Dating' },
   { id: 'collecting', label: '🗃️ Collecting the Random' },
   { id: 'salvaging', label: '🔧 Salvaging' },
+  { id: 'halloween', label: '🎃 Halloween Screamsheets' },
 ];
 
 const card = 'chamfer-card bg-[#0e1017] border border-[#202538] p-4 space-y-3';
@@ -305,6 +308,31 @@ function SalvagingSection() {
   );
 }
 
+// v5.20.0 (plan 27): las 3 aventuras de Halloween Screamsheets como referencia del GM. [Claude Code · 2026-11-11]
+function HalloweenSection() {
+  return (
+    <div className="space-y-4">
+      <div className={card}>
+        <p className="text-[12px] text-[#cbd5e1]">Tres aventuras cortas de Halloween, armadas como screamsheets. Resúmenes para el GM; los PNJ con ficha están en el bestiario.</p>
+        <Source s="Interface RED Vol. 4 pp.56-65" />
+      </div>
+      {HALLOWEEN_ADVENTURES.map((a) => (
+        <div key={a.id} className={card}>
+          <h3 className="font-tech text-sm font-bold text-white uppercase">{a.title} <Source s={`IR4 pp.${a.pages}`} /></h3>
+          <p className={small}><b className="text-white">Gancho:</b> {a.hookEs}</p>
+          <p className={small}><b className="text-white">Cómo arranca:</b> {a.setupEs}</p>
+          <ol className="list-decimal pl-5 space-y-0.5">{a.scenesEs.map((sc) => <li key={sc} className={small}>{sc}</li>)}</ol>
+          {a.rulesEs.length > 0 && <ul className="list-disc pl-5 space-y-0.5">{a.rulesEs.map((r) => <li key={r} className={small}>{r}</li>)}</ul>}
+          {a.rewardsEs && <p className={small}><b className="text-white">Pago:</b> {a.rewardsEs}</p>}
+          {a.npcIds.length > 0 && (
+            <p className={small}><b className="text-white">PNJ en el bestiario:</b> {a.npcIds.map((id) => ENEMIES_CATALOG.find((e) => e.id === id)?.name ?? id).join(', ')}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function GmTablesView() {
   const [section, setSection] = useStoredState<Section>('cpr_gm_tables_section_v1', 'achievements');
   return (
@@ -327,6 +355,7 @@ export function GmTablesView() {
       )}
       {section === 'collecting' && <TablesSection intro={COLLECTING_INTRO} steps={COLLECTING_HOW_TO} tables={COLLECTIONS} />}
       {section === 'salvaging' && <SalvagingSection />}
+      {section === 'halloween' && <HalloweenSection />}
     </div>
   );
 }

@@ -1,0 +1,2417 @@
+[
+ {
+  "handle": "Forty",
+  "role": "Rockerboy",
+  "sheetPage": 12,
+  "abilityPage": 13,
+  "stats": {
+   "INT": 5,
+   "REF": 6,
+   "DEX": 7,
+   "TECH": 5,
+   "COOL": 7,
+   "WILL": 8,
+   "LUCK": 5,
+   "MOVE": 7,
+   "BODY": 3,
+   "EMP": 7
+  },
+  "empCurrent": 6,
+  "hp": 40,
+  "seriouslyWounded": 20,
+  "deathSave": 3,
+  "humanity": 61,
+  "skills": [
+   {
+    "name": "Athletics",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Brawling",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Composition",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Concentration",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Conversation",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Education",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Evasion",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "First Aid",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Handgun",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Human Perception",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 5,
+    "level": 4,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Melee Weapon",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Perception",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Personal Grooming",
+    "stat": 7,
+    "level": 4,
+    "bonus": 1,
+    "total": 12
+   },
+   {
+    "name": "Persuasion",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Play Instrument",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Stealth",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Streetwise",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Wardrobe & Style",
+    "stat": 7,
+    "level": 4,
+    "bonus": 0,
+    "total": 11
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Heavy Melee Weapon",
+    "dmg": "3d6",
+    "ammo": null,
+    "rof": 2,
+    "notes": "2 handed, not concealable"
+   },
+   {
+    "name": "Very Heavy Pistol",
+    "dmg": "4d6",
+    "ammo": 8,
+    "rof": 1,
+    "notes": "not concealable. Mags: 7"
+   },
+   {
+    "name": "Tear Gas Grenade x2",
+    "dmg": null,
+    "ammo": null,
+    "rof": null,
+    "notes": "Anyone w/ meat eyes must beat a Resist/Torture Drugs Check DV13 or get the Damaged Eye Critical Injury for the next minute."
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Cyberaudio Suite",
+    "type": "Cyberaudio",
+    "notes": "Three slots for options."
+   },
+   {
+    "name": "Audio Recorder",
+    "type": "Cyberaudio",
+    "notes": "Takes up cyberaudio option slot. Record audio to Memory Chip or paired Agent."
+   },
+   {
+    "name": "Tech Hair",
+    "type": "Fashionware",
+    "notes": "Color/light emitting hair. Can change length. W/chemskin grants +2 Personal Grooming (included)"
+   },
+   {
+    "name": "Chemskin",
+    "type": "Fashionware",
+    "notes": "Can change skin color. W/tech hair grants +2 Personal Grooming (included)"
+   }
+  ],
+  "gear": [
+   {
+    "name": "Agent",
+    "notes": "Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks."
+   },
+   {
+    "name": "Musical Instrument",
+    "notes": "Player’s choice."
+   },
+   {
+    "name": "Pocket Amp",
+    "notes": "Can support up to 2 instruments."
+   },
+   {
+    "name": "Laptop Computer",
+    "notes": "Laptop computer."
+   },
+   {
+    "name": "Radio Scanner/Music Player",
+    "notes": "Link to Data Pool to listen to music or scan and play local radio bandwidths."
+   },
+   {
+    "name": "Vid Camera",
+    "notes": "Can store up to 12 hours of video and audio in inserted Memory Chip."
+   },
+   {
+    "name": "Glow Paint x 5",
+    "notes": "Glow in the dark spraypaint. Various colors."
+   }
+  ],
+  "roleAbility": {
+   "name": "Charismatic Impact",
+   "rank": 4,
+   "summaryEs": "Fuera de combate, tirás Charismatic Impact + 1d10 contra DV8 (una persona), DV10 (grupo pequeño de hasta 6) o DV12 (grupo enorme) para convertir gente en fans. Luego, según tu rango y el lugar donde tocás, podés pedirle favores a los fans con otra tirada del mismo tipo; si fallás no podés pedir el mismo favor por una semana."
+  },
+  "clothing": "Generic Chic: Jacket, Jewelry x3, Top. Leisurewear: Footwear, Jewelry, Shades. Urbanflash: Pants, Top.",
+  "cash": 500
+ },
+ {
+  "handle": "Grease",
+  "role": "Fixer",
+  "sheetPage": 14,
+  "abilityPage": 15,
+  "stats": {
+   "INT": 8,
+   "REF": 7,
+   "DEX": 5,
+   "TECH": 5,
+   "COOL": 6,
+   "WILL": 7,
+   "LUCK": 7,
+   "MOVE": 5,
+   "BODY": 3,
+   "EMP": 6
+  },
+  "empCurrent": 4,
+  "hp": 35,
+  "seriouslyWounded": 18,
+  "deathSave": 3,
+  "humanity": 44,
+  "skills": [
+   {
+    "name": "Athletics",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Brawling",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Bribery",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Business",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Concentration",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Conversation",
+    "stat": 4,
+    "level": 6,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Education",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Evasion",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "First Aid",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Forgery",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Handgun",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Human Perception",
+    "stat": 4,
+    "level": 6,
+    "bonus": 2,
+    "total": 12
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 8,
+    "level": 4,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Perception",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Persuasion",
+    "stat": 6,
+    "level": 4,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Pick Lock",
+    "stat": 5,
+    "level": 4,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Stealth",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Streetwise",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Trading",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Light Melee Weapon",
+    "dmg": "1d6",
+    "ammo": null,
+    "rof": 2,
+    "notes": "1 handed, concealable"
+   },
+   {
+    "name": "Heavy Pistol",
+    "dmg": "3d6",
+    "ammo": 8,
+    "rof": 2,
+    "notes": "concealable. Mags: 13"
+   },
+   {
+    "name": "Very Heavy Pistol",
+    "dmg": "4d6",
+    "ammo": 8,
+    "rof": 1,
+    "notes": "not concealable. Mags: 13"
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Cyberaudio Suite",
+    "type": "Cyberaudio",
+    "notes": "Three slots for options."
+   },
+   {
+    "name": "Internal Agent",
+    "type": "Cyberaudio",
+    "notes": "Grants +2 to Library Search Checks. Audio only. Can output video to paired screen."
+   },
+   {
+    "name": "Voice Stress Analyzer",
+    "type": "Cyberaudio",
+    "notes": "Grants +2 to Human Perception (included) and Interrogation Checks."
+   },
+   {
+    "name": "Subdermal Pocket",
+    "type": "External",
+    "notes": "2 x 4 inch hidden pocket w/ RealSkinn zipper. Anything inside is auto concealed."
+   }
+  ],
+  "gear": [
+   {
+    "name": "Agent",
+    "notes": "Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks."
+   },
+   {
+    "name": "Bug Detector",
+    "notes": "Beeps within 2 meters of a tap, bug, or other listening device."
+   },
+   {
+    "name": "Disposable Cellphone x2",
+    "notes": "Burner phone you can use and throw away."
+   },
+   {
+    "name": "Laptop Computer",
+    "notes": "Laptop computer."
+   }
+  ],
+  "roleAbility": {
+   "name": "Operator",
+   "rank": 4,
+   "summaryEs": "El Fixer tiene Contacts (a quién puede acudir por bienes, favores o info, pagando), Reach (categoría de precio más alta que siempre puede conseguir y Night Market), Haggle (tirada COOL + Trading + rango + 1d10 contra la otra parte para cerrar un trato de su rango o menor, p.ej. 10% mejor precio) y Grease (moverse entre culturas y lenguajes)."
+  },
+  "clothing": "Generic Chic: Contacts, Jewelry. Leisurewear: Footwear, Jewelry, Mirrorshades. Urbanflash: Pants, Top.",
+  "cash": 500
+ },
+ {
+  "handle": "Mover",
+  "role": "Solo",
+  "sheetPage": 16,
+  "abilityPage": 17,
+  "stats": {
+   "INT": 7,
+   "REF": 7,
+   "DEX": 6,
+   "TECH": 5,
+   "COOL": 7,
+   "WILL": 6,
+   "LUCK": 6,
+   "MOVE": 7,
+   "BODY": 7,
+   "EMP": 5
+  },
+  "empCurrent": 3,
+  "hp": 45,
+  "seriouslyWounded": 23,
+  "deathSave": 7,
+  "humanity": 36,
+  "skills": [
+   {
+    "name": "Athletics",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Autofire",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Brawling",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Concentration",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Conversation",
+    "stat": 3,
+    "level": 2,
+    "bonus": 0,
+    "total": 5
+   },
+   {
+    "name": "Education",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Evasion",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "First Aid",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Handgun",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Human Perception",
+    "stat": 3,
+    "level": 2,
+    "bonus": 0,
+    "total": 5
+   },
+   {
+    "name": "Interrogation",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Melee Weapon",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Perception",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Persuasion",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Resist Torture/Drugs",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Shoulder Arms",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Stealth",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Tactics",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Heavy Melee Weapon",
+    "dmg": "3d6",
+    "ammo": null,
+    "rof": 2,
+    "notes": "2 handed, not concealable"
+   },
+   {
+    "name": "Assault Rifle",
+    "dmg": "5d6",
+    "ammo": 25,
+    "rof": 1,
+    "notes": "autofire, not concealable. Mags: 3"
+   },
+   {
+    "name": "Very Heavy Pistol",
+    "dmg": "4d6",
+    "ammo": 8,
+    "rof": 1,
+    "notes": "not concealable. Mags: 8"
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Biomonitor",
+    "type": "Fashionware",
+    "notes": "Subdermal implant. Generates a readout of vitals. Can be linked to your Agent."
+   },
+   {
+    "name": "Neural Link",
+    "type": "Neuralware",
+    "notes": "Wired artificial nervous system. Five option slots."
+   },
+   {
+    "name": "Sandevistan Speedware",
+    "type": "Neuralware",
+    "notes": "Can be activated as an action to provide +3 Initiative for 1 minute. 1 hour cool down."
+   }
+  ],
+  "gear": [
+   {
+    "name": "Agent",
+    "notes": "Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks."
+   }
+  ],
+  "roleAbility": {
+   "name": "Combat Awareness",
+   "rank": 4,
+   "summaryEs": "Al empezar el combate o con una Acción, el Solo reparte sus puntos de Combat Awareness entre habilidades: Damage Deflection (2 pts reduce 1 el primer daño de la ronda, 4 pts reducen 2), Fumble Recovery (4 pts ignora 1s al atacar), Initiative Reaction (+1 Iniciativa por punto), Precision Attack (3 pts dan +1 a ataques), Spot Weakness (+1 daño por punto al primer ataque exitoso de la ronda) y Threat Detection (+1 Perception por punto). Si no cambia la asignación, persiste la anterior."
+  },
+  "clothing": "Leisurewear: Footwear x 2, Jacket x 3, Mirrorshades, Pants x 2, Tops x 2",
+  "cash": 500
+ },
+ {
+  "handle": "Racer",
+  "role": "Nomad",
+  "sheetPage": 18,
+  "abilityPage": 19,
+  "stats": {
+   "INT": 7,
+   "REF": 6,
+   "DEX": 8,
+   "TECH": 4,
+   "COOL": 6,
+   "WILL": 6,
+   "LUCK": 6,
+   "MOVE": 5,
+   "BODY": 6,
+   "EMP": 5
+  },
+  "empCurrent": 3,
+  "hp": 40,
+  "seriouslyWounded": 20,
+  "deathSave": 6,
+  "humanity": 36,
+  "skills": [
+   {
+    "name": "Animal Handling",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Athletics",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Brawling",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Concentration",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Conversation",
+    "stat": 3,
+    "level": 2,
+    "bonus": 0,
+    "total": 5
+   },
+   {
+    "name": "Drive Land Vehicle",
+    "stat": 6,
+    "level": 6,
+    "bonus": 4,
+    "total": 16
+   },
+   {
+    "name": "Education",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Evasion",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "First Aid",
+    "stat": 4,
+    "level": 6,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Handgun",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Human Perception",
+    "stat": 3,
+    "level": 2,
+    "bonus": 0,
+    "total": 5
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Melee Weapon",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Perception",
+    "stat": 7,
+    "level": 4,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Persuasion",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Stealth",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Tracking",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Trading",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Wilderness Survival",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Heavy Melee Weapon",
+    "dmg": "3d6",
+    "ammo": null,
+    "rof": 2,
+    "notes": "2 handed, not concealable"
+   },
+   {
+    "name": "Very Heavy Pistol",
+    "dmg": "4d6",
+    "ammo": 8,
+    "rof": 1,
+    "notes": "not concealable. Mags: 13"
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Neural Link",
+    "type": "Neuralware",
+    "notes": "Wired artificial nervous system. Five option slots."
+   },
+   {
+    "name": "Interface Plugs",
+    "type": "Neuralware",
+    "notes": "Allows you to plug into machines, including some vehicles."
+   }
+  ],
+  "gear": [
+   {
+    "name": "Agent",
+    "notes": "Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks."
+   },
+   {
+    "name": "Binoculars",
+    "notes": "x2 magnification."
+   },
+   {
+    "name": "Flashlight",
+    "notes": "100m/y long beam. 10 hours per charge."
+   },
+   {
+    "name": "Grapple Gun",
+    "notes": "Can fire as an Action to attach to any thick cover up to 30m/y away. Negates MOVE penalty while climbing."
+   },
+   {
+    "name": "Radio Communicator x2",
+    "notes": "Earpiece radio. 1 mile range."
+   },
+   {
+    "name": "Rope",
+    "notes": "60 m/y nylon rope. Holds 600 pounds/360kg."
+   },
+   {
+    "name": "Techtool",
+    "notes": "All in one pocket tool."
+   }
+  ],
+  "roleAbility": {
+   "name": "Moto",
+   "rank": 4,
+   "summaryEs": "El Nomad suma su rango de Moto a cualquier tirada de operar o reparar vehículos (ya sumado en Drive Land Vehicle). Además dispone de un vehículo prestado por el motor pool de su familia Nomad (Compact Ground Car, movido por CHOOH2) y puede mejorarlo con upgrades según su rango (Seating Upgrade, Heavy Chassis, Housing Capacity)."
+  },
+  "clothing": "Nomad Leathers: Pants, Top, Jacket, Footwear",
+  "cash": 500
+ },
+ {
+  "handle": "Redeye",
+  "role": "Netrunner",
+  "sheetPage": 20,
+  "abilityPage": 21,
+  "stats": {
+   "INT": 6,
+   "REF": 6,
+   "DEX": 6,
+   "TECH": 7,
+   "COOL": 8,
+   "WILL": 4,
+   "LUCK": 7,
+   "MOVE": 7,
+   "BODY": 6,
+   "EMP": 6
+  },
+  "empCurrent": 4,
+  "hp": 35,
+  "seriouslyWounded": 18,
+  "deathSave": 6,
+  "humanity": 46,
+  "skills": [
+   {
+    "name": "Athletics",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Brawling",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Concentration",
+    "stat": 4,
+    "level": 2,
+    "bonus": 0,
+    "total": 6
+   },
+   {
+    "name": "Conversation",
+    "stat": 4,
+    "level": 2,
+    "bonus": 0,
+    "total": 6
+   },
+   {
+    "name": "Education",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Evasion",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "First Aid",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Human Perception",
+    "stat": 4,
+    "level": 2,
+    "bonus": 0,
+    "total": 6
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Perception",
+    "stat": 6,
+    "level": 2,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Persuasion",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Stealth",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Basic Tech",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Conceal/Reveal Object",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Cryptography",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Cybertech",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Electronics/Security Tech",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Handgun",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Library Search",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Very Heavy Pistol",
+    "dmg": "4d6",
+    "ammo": 8,
+    "rof": 1,
+    "notes": "not concealable. Mags: 4"
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Neural Link",
+    "type": "Neuralware",
+    "notes": "Wired artificial nervous system. Five option slots."
+   },
+   {
+    "name": "Interface Plugs",
+    "type": "Neuralware",
+    "notes": "Allows you to plug into machines, including some vehicles."
+   },
+   {
+    "name": "Shift Tacs",
+    "type": "Fashionware",
+    "notes": "Color/pattern changing lens implanted into the eye."
+   }
+  ],
+  "gear": [
+   {
+    "name": "Agent",
+    "notes": "Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks."
+   },
+   {
+    "name": "Cyberdeck",
+    "notes": "Modular platform that Programs and Hardware are installed on for the purposes of Netrunning. Redeye's Cyberdeck, 7 slots: Armor (ATK0 DEF0 REZ7), See Ya (0 0 7), Sword (1 0 0), Vrizzbolt (1 0 0), Worm (0 0 7)."
+   },
+   {
+    "name": "Virtuality Goggles",
+    "notes": "Headset that projects cyberspace imagery over your view of the world."
+   }
+  ],
+  "roleAbility": {
+   "name": "Interface",
+   "rank": 4,
+   "summaryEs": "Permite netrunnear y da acceso a las Interface Abilities (Backdoor, Cloak, Control, Eye-Dee, Pathfinder, Scanner, Slide, Virus, Zap). Para actuar o atacar en la NET se tira Rango de Interface + bonus o ATK del programa + 1d10; el deck tiene ranuras de programas/hardware."
+  },
+  "clothing": "Generic Chic: Top x10. Leisurewear: Footwear x2, Jewelry, Pants x2. Urbanflash: Jacket.",
+  "cash": 500
+ },
+ {
+  "handle": "Torch",
+  "role": "Tech",
+  "sheetPage": 22,
+  "abilityPage": 23,
+  "stats": {
+   "INT": 8,
+   "REF": 7,
+   "DEX": 5,
+   "TECH": 6,
+   "COOL": 3,
+   "WILL": 3,
+   "LUCK": 7,
+   "MOVE": 6,
+   "BODY": 6,
+   "EMP": 7
+  },
+  "empCurrent": 5,
+  "hp": 35,
+  "seriouslyWounded": 18,
+  "deathSave": 6,
+  "humanity": 58,
+  "skills": [
+   {
+    "name": "Athletics",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Basic Tech",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Brawling",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Concentration",
+    "stat": 3,
+    "level": 2,
+    "bonus": 0,
+    "total": 5
+   },
+   {
+    "name": "Conversation",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Cybertech",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Education",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Electronics/Security Tech",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Evasion",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "First Aid",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Human Perception",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Land Vehicle Tech",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Perception",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Persuasion",
+    "stat": 3,
+    "level": 2,
+    "bonus": 0,
+    "total": 5
+   },
+   {
+    "name": "Science (Choose Specialty)",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Shoulder Arms",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Stealth",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Weaponstech",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Shotgun",
+    "dmg": "5d6",
+    "ammo": 4,
+    "rof": 1,
+    "notes": "not concealable. Mags: 25 shell"
+   },
+   {
+    "name": "Flashbang Grenade",
+    "dmg": null,
+    "ammo": null,
+    "rof": null,
+    "notes": "Anyone hit must beat a Resist/Torture Drugs Check DV15 or get the Damaged Eye and Damaged Ear Critical Injuries for the next minute."
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Cybereye",
+    "type": "Cyberoptics",
+    "notes": "Left eye. 3 option slots."
+   },
+   {
+    "name": "MicroOptics",
+    "type": "Cyberoptics",
+    "notes": "Built-in microscope. 400x magnification."
+   },
+   {
+    "name": "Tool Hand",
+    "type": "Cyberlimb",
+    "notes": "Full collection of tools built into the hand."
+   },
+   {
+    "name": "Skinwatch",
+    "type": "Fashionware",
+    "notes": "Subdermal LED. Shows time and date through the skin."
+   }
+  ],
+  "gear": [
+   {
+    "name": "Agent",
+    "notes": "Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks."
+   },
+   {
+    "name": "Anti-Smog Breathing Mask",
+    "notes": "Filters out atmospheric particles."
+   },
+   {
+    "name": "Disposable Cellphone",
+    "notes": "Burner phone you can use and throw away."
+   },
+   {
+    "name": "Duct Tape x5",
+    "notes": "Duct tape. Perfect for fixing anything."
+   },
+   {
+    "name": "Flashlight",
+    "notes": "100m/y long beam. 10 hours per charge."
+   },
+   {
+    "name": "Road Flare x6",
+    "notes": "Lights up a 100m area for 1 hour. One use each."
+   },
+   {
+    "name": "Tech Bag",
+    "notes": "Tool bag. Useful for most tech based repairs."
+   }
+  ],
+  "roleAbility": {
+   "name": "Maker",
+   "rank": 4,
+   "summaryEs": "El Tech reparte su rango (4) entre tres especialidades: Field Expertise (suma su rango a Basic Tech/Cybertech para fines no-Maker y permite reparaciones temporales a condición perfecta como Acción, 10 min por rango), Upgrade Expertise (mejorar objetos con TECH + skill + rango + 1d10) y Fabrication Expertise (fabricar objetos con materiales de una categoría de precio menor). Rangos en la ficha: 4 / 2 / 2."
+  },
+  "clothing": "Generic Chic: Pants x8, Tops x10. Leisurewear: Footwear x2.",
+  "cash": 500
+ },
+ {
+  "handle": "Redtail",
+  "role": "Medtech",
+  "sheetPage": 24,
+  "abilityPage": 25,
+  "stats": {
+   "INT": 8,
+   "REF": 5,
+   "DEX": 5,
+   "TECH": 8,
+   "COOL": 5,
+   "WILL": 5,
+   "LUCK": 6,
+   "MOVE": 6,
+   "BODY": 5,
+   "EMP": 6
+  },
+  "empCurrent": 4,
+  "hp": 35,
+  "seriouslyWounded": 18,
+  "deathSave": 5,
+  "humanity": 48,
+  "skills": [
+   {
+    "name": "Athletics",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Basic Tech",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Brawling",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Concentration",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Conversation",
+    "stat": 4,
+    "level": 6,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Cybertech",
+    "stat": 8,
+    "level": 4,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Deduction",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Education",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Evasion",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "First Aid",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Human Perception",
+    "stat": 4,
+    "level": 6,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Paramedic",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Perception",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Persuasion",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Resist Torture/Drugs",
+    "stat": 5,
+    "level": 4,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Science (Choose Specialty)",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Shoulder Arms",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Stealth",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Assault Rifle",
+    "dmg": "5d6",
+    "ammo": 25,
+    "rof": 1,
+    "notes": "autofire; not concealable; Mags: 4"
+   },
+   {
+    "name": "Smoke Grenade x2",
+    "dmg": null,
+    "ammo": null,
+    "rof": null,
+    "notes": "Obscures a 10m/yd x 10m/yd area with smoke for one minute. Penalty for performing most actions obscured by smoke is -4."
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Cybereye",
+    "type": "Cyberoptics",
+    "notes": "Left eye. 3 option slots."
+   },
+   {
+    "name": "TeleOptics",
+    "type": "Cyberoptics",
+    "notes": "See in detail up to 800m away. +1 bonus when attacking over 51m away using a single shot."
+   },
+   {
+    "name": "Nasal Filters",
+    "type": "Internal",
+    "notes": "User immune to toxic fumes and inhaled poisons."
+   },
+   {
+    "name": "Biomonitor",
+    "type": "Fashionware",
+    "notes": "Subdermal implant. Generates a constant LED readout of vitals."
+   }
+  ],
+  "gear": [
+   {
+    "name": "Agent",
+    "notes": "Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks."
+   },
+   {
+    "name": "Airhypo",
+    "notes": "Drug injection device. Using it to inject a drug is an Action."
+   },
+   {
+    "name": "Flashlight",
+    "notes": "100m/y beam. Lasts up to 10 hours on a charge."
+   },
+   {
+    "name": "Glow Paint",
+    "notes": "Glowing spraypaint."
+   },
+   {
+    "name": "Medtech Bag",
+    "notes": "Full selection of tools needed for medical purposes."
+   },
+   {
+    "name": "Bulletproof Shield",
+    "notes": "Portable cover with 10 HP."
+   }
+  ],
+  "roleAbility": {
+   "name": "Medicine",
+   "rank": 4,
+   "summaryEs": "El Medtech reparte su rango entre Surgery (cada punto da 2 en la skill Surgery, para heridas críticas graves e implantar ciberware), Medical Tech: Pharmaceutical (cada punto da 1 en Medical Tech; permite sintetizar Speedheal y Stim con DV13, 3 dosis por hora a 200eb) y Medical Tech: Cryosystem Operation (cada punto da 1 en Medical Tech; incluye una Cryopump que pone a objetivos en estasis).",
+   "specialties": [
+    {
+     "name": "Medical Tech",
+     "level": 3
+    },
+    {
+     "name": "Surgery",
+     "level": 2
+    }
+   ]
+  },
+  "clothing": "Generic Chic: Jacket x3. Leisurewear: Footwear, Pants x3, Tops x5. Urban Flash: Glasses",
+  "cash": 500
+ },
+ {
+  "handle": "24/7",
+  "role": "Media",
+  "sheetPage": 26,
+  "abilityPage": 27,
+  "stats": {
+   "INT": 7,
+   "REF": 5,
+   "DEX": 5,
+   "TECH": 4,
+   "COOL": 8,
+   "WILL": 7,
+   "LUCK": 6,
+   "MOVE": 7,
+   "BODY": 5,
+   "EMP": 8
+  },
+  "empCurrent": 7,
+  "hp": 40,
+  "seriouslyWounded": 20,
+  "deathSave": 5,
+  "humanity": 70,
+  "skills": [
+   {
+    "name": "Athletics",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Brawling",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Bribery",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Composition",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Concentration",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Conversation",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Deduction",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Education",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Evasion",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "First Aid",
+    "stat": 4,
+    "level": 2,
+    "bonus": 0,
+    "total": 6
+   },
+   {
+    "name": "Handgun",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Human Perception",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Library Search",
+    "stat": 7,
+    "level": 4,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Lip Reading",
+    "stat": 7,
+    "level": 4,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Perception",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Persuasion",
+    "stat": 8,
+    "level": 6,
+    "bonus": 0,
+    "total": 14
+   },
+   {
+    "name": "Photography/Film",
+    "stat": 4,
+    "level": 4,
+    "bonus": 0,
+    "total": 8
+   },
+   {
+    "name": "Stealth",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Heavy Pistol",
+    "dmg": "3d6",
+    "ammo": 8,
+    "rof": 2,
+    "notes": "concealable. Mags: 7"
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Cyberaudio Suite",
+    "type": "Cyberaudio",
+    "notes": "3 slots for options."
+   },
+   {
+    "name": "Amplified Hearing",
+    "type": "Cyberaudio",
+    "notes": "+2 to Perception Checks involving hearing."
+   },
+   {
+    "name": "Light Tattoo",
+    "type": "Fashionware",
+    "notes": "Subdermal tattoo installation. Glows."
+   }
+  ],
+  "gear": [
+   {
+    "name": "Agent",
+    "notes": "Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks."
+   },
+   {
+    "name": "Audio Recorder",
+    "notes": "Records up to 24 hours of audio on a Memory Chip."
+   },
+   {
+    "name": "Binoculars",
+    "notes": "Good for looking at distances. x2 magnification."
+   },
+   {
+    "name": "Grapple Gun",
+    "notes": "Can fire as an Action to attach to any thick cover up to 30m/y away. Negates MOVE penalty while climbing."
+   },
+   {
+    "name": "Radio Scanner/Music Player",
+    "notes": "Link to Data Pool to listen to music or scan and play local radio bandwidths."
+   },
+   {
+    "name": "Scrambler/Descrambler",
+    "notes": "Used to scramble or, with the right keys, descramble communications."
+   },
+   {
+    "name": "Video Camera",
+    "notes": "Records up to 12 hours of audio and video on a Memory Chip."
+   }
+  ],
+  "roleAbility": {
+   "name": "Credibility",
+   "rank": 4,
+   "summaryEs": "Al menos dos veces por semana el GM tira en secreto Credibility + 1d10 y da rumores según el resultado. El rango determina el acceso a fuentes, el tamaño de audiencia, la probabilidad de que la audiencia crea la historia (1d10; +1 con una prueba verificable, +2 adicional con más de cuatro) y el impacto de lo que publica; no se puede publicar dos veces sobre el mismo tema sin información nueva."
+  },
+  "clothing": "Generic Chic: Footwear, Pants, Top. Leisurewear: Jacket. Urban Flash: Mirrorshades.",
+  "cash": 500
+ },
+ {
+  "handle": "Suri \"Cavalry\" Navarro",
+  "role": "Lawman",
+  "sheetPage": 28,
+  "abilityPage": 29,
+  "stats": {
+   "INT": 7,
+   "REF": 6,
+   "DEX": 5,
+   "TECH": 5,
+   "COOL": 7,
+   "WILL": 8,
+   "LUCK": 5,
+   "MOVE": 6,
+   "BODY": 7,
+   "EMP": 4
+  },
+  "empCurrent": 3,
+  "hp": 50,
+  "seriouslyWounded": 25,
+  "deathSave": 7,
+  "humanity": 30,
+  "skills": [
+   {
+    "name": "Athletics",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Autofire",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Brawling",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Concentration",
+    "stat": 8,
+    "level": 2,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Conversation",
+    "stat": 3,
+    "level": 6,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Criminology",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Deduction",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Education",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Evasion",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "First Aid",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Handgun",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Human Perception",
+    "stat": 3,
+    "level": 2,
+    "bonus": 0,
+    "total": 5
+   },
+   {
+    "name": "Interrogation",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Perception",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Persuasion",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Shoulder Arms",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Stealth",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Tracking",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Assault Rifle",
+    "dmg": "5d6",
+    "ammo": 25,
+    "rof": 1,
+    "notes": "autofire; not concealable; Mags: 4"
+   },
+   {
+    "name": "Heavy Pistol",
+    "dmg": "3d6",
+    "ammo": 8,
+    "rof": 2,
+    "notes": "concealable. Mags: 4"
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Hidden Holster",
+    "type": "External",
+    "notes": "Holster built into the body. Can store a concealable weapon."
+   },
+   {
+    "name": "Subdermal Pocket",
+    "type": "External",
+    "notes": "2 x 4 inch hidden pocket w/ RealSkinn zipper. Anything inside is auto concealed."
+   }
+  ],
+  "gear": [
+   {
+    "name": "Agent",
+    "notes": "Self-adaptive AI powered smartphone that learns your patterns. Grants +2 of Library Search Checks."
+   },
+   {
+    "name": "Flashlight",
+    "notes": "100m/y beam. Lasts 10 hours on a charge."
+   },
+   {
+    "name": "Handcuffs x2",
+    "notes": "Restraints. Can be broken by anyone with a BODY 10."
+   },
+   {
+    "name": "Radio Communicator",
+    "notes": "Earpiece communication device. 1 mile range."
+   },
+   {
+    "name": "Road Flare x10",
+    "notes": "Lights 100m/y area for 1 hour. One use."
+   },
+   {
+    "name": "Bulletproof Shield",
+    "notes": "Portable cover with 10 HP."
+   }
+  ],
+  "roleAbility": {
+   "name": "Backup",
+   "rank": 4,
+   "summaryEs": "Como Acción, el Lawman tira 1d10 y si saca igual o menos que su rango de Backup responde alguien a su llamada (abusar puede costarle el puesto); luego un d6 indica en cuántas rondas llega, y con un 6 llega el siguiente nivel de refuerzo. A rango 4 el refuerzo es Local Beat Cops: 4 policías en 2 autos compactos, con Heavy Pistols (3d6, ROF 2) y Kevlar (SP7), combat # 10, HP 25, MOVE 5 y BODY 7 (extracción: '10 7 25' y '5')."
+  },
+  "clothing": "Generic Chic: Footwear, Pants, Top. Leisurewear: Jacket. Urban Flash: Mirrorshades.",
+  "cash": 500
+ },
+ {
+  "handle": "Chanda Mishra",
+  "role": "Exec",
+  "sheetPage": 30,
+  "abilityPage": 31,
+  "stats": {
+   "INT": 5,
+   "REF": 7,
+   "DEX": 7,
+   "TECH": 3,
+   "COOL": 6,
+   "WILL": 7,
+   "LUCK": 6,
+   "MOVE": 5,
+   "BODY": 5,
+   "EMP": 7
+  },
+  "empCurrent": 5,
+  "hp": 40,
+  "seriouslyWounded": 20,
+  "deathSave": 5,
+  "humanity": 58,
+  "skills": [
+   {
+    "name": "Accounting",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Athletics",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Brawling",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Bureaucracy",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Business",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Concentration",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Conversation",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Deduction",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Education",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Evasion",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "First Aid",
+    "stat": 3,
+    "level": 2,
+    "bonus": 0,
+    "total": 5
+   },
+   {
+    "name": "Handgun",
+    "stat": 7,
+    "level": 6,
+    "bonus": 0,
+    "total": 13
+   },
+   {
+    "name": "Human Perception",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Language (Streetslang)",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Lip Reading",
+    "stat": 5,
+    "level": 6,
+    "bonus": 0,
+    "total": 11
+   },
+   {
+    "name": "Local Expert (Your Home)",
+    "stat": 5,
+    "level": 2,
+    "bonus": 0,
+    "total": 7
+   },
+   {
+    "name": "Perception",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   },
+   {
+    "name": "Personal Grooming",
+    "stat": 6,
+    "level": 4,
+    "bonus": 0,
+    "total": 10
+   },
+   {
+    "name": "Persuasion",
+    "stat": 6,
+    "level": 6,
+    "bonus": 0,
+    "total": 12
+   },
+   {
+    "name": "Stealth",
+    "stat": 7,
+    "level": 2,
+    "bonus": 0,
+    "total": 9
+   }
+  ],
+  "weapons": [
+   {
+    "name": "Very Heavy Pistol",
+    "dmg": "4d6",
+    "ammo": 8,
+    "rof": 1,
+    "notes": "not concealable. Mags: 7"
+   }
+  ],
+  "armor": {
+   "head": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   },
+   "body": {
+    "name": "Light Armorjack",
+    "sp": 11,
+    "penalty": 0
+   }
+  },
+  "cyberware": [
+   {
+    "name": "Toxin Binder",
+    "type": "Internal",
+    "notes": "+2 to Resist Torture/Drugs Checks."
+   },
+   {
+    "name": "Cyberaudio Suite",
+    "type": "Cyberaudio",
+    "notes": "3 slots for options."
+   },
+   {
+    "name": "Internal Agent",
+    "type": "Cyberaudio",
+    "notes": "Grants +2 to Library Search Checks. Audio only. Can output video to paired screen."
+   },
+   {
+    "name": "Biomonitor",
+    "type": "Fashionware",
+    "notes": "Subdermal implant. Generates a constant LED readout of vitals."
+   }
+  ],
+  "gear": [
+   {
+    "name": "Radio Communicator x4",
+    "notes": "Earpiece communication device. 1 mile range."
+   },
+   {
+    "name": "Scrambler/Descrambler",
+    "notes": "Used to scramble or, with the right keys, descramble communications."
+   }
+  ],
+  "roleAbility": {
+   "name": "Teamwork",
+   "rank": 4,
+   "summaryEs": "El Exec elige como miembro de equipo a un Driver o a un Netrunner (cada uno con su propia ficha reducida y Loyalty 4). Loyalty cambia: el Exec debe promoverla cada sesión; cuando le da una tarea a un miembro, el GM tira 1d6 por debajo de su Loyalty actual y si falla puede negarse, arruinar la tarea o volverse contra el Exec."
+  },
+  "clothing": "Businesswear: Footwear, Jacket, Pants, Mirrorshades, Top. Leisurewear: Jewelry x2.",
+  "cash": 500
+ }
+]

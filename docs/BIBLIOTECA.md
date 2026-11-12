@@ -17,10 +17,10 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | Estado | PDFs |
 |---|---|
-| ✅ Adaptado | 28 |
-| 🟡 A medias | 7 |
-| ⬜ Sin empezar | 20 |
-| ➖ No se adapta como datos | 24 |
+| ✅ Adaptado | 35 |
+| 🟡 A medias | 3 |
+| ⬜ Sin empezar | 19 |
+| ➖ No se adapta como datos | 22 |
 | **Total** | **79** |
 
 ## Core-Rules (3)
@@ -35,13 +35,13 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 
 | PDF | Estado | Detalle |
 |---|---|---|
-| Interface-RED-Volume-4 (Cyberfists of Fury) | 🟡 | 27 formas de Martial Arts (v4.5.1); Gearmas y equipo de Stickball (v5.16.0); Zonda Metrocar y Punknaught (v5.17.0); Corporate Conapts & Studio Apartments (v5.18.0); Achievements and Loot Boxes y Stickball (v5.19.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
+| Interface-RED-Volume-4 (Cyberfists of Fury) | ✅ | 27 formas de Martial Arts (v4.5.1); Gearmas y equipo de Stickball (v5.16.0); Zonda Metrocar y Punknaught (v5.17.0); Corporate Conapts & Studio Apartments (v5.18.0); Achievements and Loot Boxes y Stickball (v5.19.0); Halloween Screamsheets (v5.20.0). Plan 27 cerrado [Claude Code · 2026-11-11] |
 | Danger-Gal-Dossier | 🟡 | Muchos datos cargados; plan 6 en pausa (v4.7.1 fichas y facciones, v4.7.2 New Gear) |
 | Black-Chrome-Tech-and-Style-Guide | ✅ | Ítems (v5.12.0), los 31 vehículos con Nomad Access (v5.13.0), los 6 Night Markets con sus puestos y Economics 101 (v5.14.0), plan 26 [Claude Code · 2026-11-06] |
 | CEMK-Edgerunners-Handbook-2077-Lore-Guide | 🟡 | Solo algunas citas |
-| Interface-RED-Volume-3 | 🟡 | Going Metal (FBC); Woodchipper y Midnight por sus DLC (v5.16.0); Spinning Your Wheels por su DLC (v5.17.0); Digital Dating, Collecting the Random y Salvaging por sus DLC (v5.19.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
-| Interface-RED-Volume-1 | 🟡 | Old Guns Never Die y 6 drones (v5.16.0); Cyberchairs (v5.17.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
-| Interface-RED-Volume-2 | 🟡 | Exotics of 2045: 17 paquetes y 3 implantes (v5.15.0); equipo de clima (v5.16.0); Cargo Containers & Cube Hotels (v5.18.0); tablas de Night City Weather (v5.19.0); el resto, en el plan 27 [Claude Code · 2026-11-11] |
+| Interface-RED-Volume-3 | ✅ | Going Metal (FBC); Woodchipper y Midnight por sus DLC (v5.16.0); Spinning Your Wheels por su DLC (v5.17.0); Digital Dating, Collecting the Random y Salvaging por sus DLC (v5.19.0); Hardened Mini Bosses (v4.7.0). Plan 27 cerrado; Elflines queda afuera [Claude Code · 2026-11-11] |
+| Interface-RED-Volume-1 | ✅ | Old Guns Never Die y 6 drones (v5.16.0); Cyberchairs (v5.17.0); Single Shot Pack: 10 pregens y 6 NET (v5.20.0). Plan 27 cerrado [Claude Code · 2026-11-11] |
+| Interface-RED-Volume-2 | ✅ | Exotics of 2045: 17 paquetes y 3 implantes (v5.15.0); equipo de clima (v5.16.0); Cargo Containers & Cube Hotels (v5.18.0); tablas de Night City Weather (v5.19.0); Hardened revisado y Jumpstart Kit Conversion Guide: 11 PNJ y 2 NET (v5.20.0). Plan 27 cerrado [Claude Code · 2026-11-11] |
 | Night-City-Gang-Guide | ⬜ | Pandillas de Night City |
 
 ## Going Metal (1, suelto en la raíz)
@@ -59,12 +59,12 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 | CEMK-Edgerunners-Character-Folios-11x17 | ✅ | Mismo contenido que la versión Letter |
 | Cyberpunk-RED-Data-Pack-Booklet | ⬜ | Material de referencia extra; sin revisar |
 | Old-Guns-Never-Die-CP2020-Conversion | ⬜ | Armas viejas de Cyberpunk 2020 convertidas a RED |
-| Single-Shot-Pack-Pregens-and-NET-Architectures | ⬜ | Pregens y arquitecturas NET |
+| Single-Shot-Pack-Pregens-and-NET-Architectures | ✅ | 10 pregens con Neuroport en el creador y 6 NET, por Interface RED Vol. 1 (v5.20.0) [Claude Code · 2026-11-11] |
 | CEMK-Introduction-Sheet | ➖ | Hoja de presentación |
 | CEMK-Printable-Standee-Token-Sheet | ➖ | Tokens para imprimir |
 | CEMK-Tactical-Battle-Maps | ➖ | Mapas |
 | Scripting-the-Game-GM-Narrative-Guide | ➖ | Consejos para el GM |
-| Jumpstart-Kit-Conversion-Guide | ➖ | Kit de inicio viejo (pre-Core) |
+| Jumpstart-Kit-Conversion-Guide | ✅ | 11 PNJ al bestiario y 2 NET, por Interface RED Vol. 2 (v5.20.0) [Claude Code · 2026-11-11] |
 | Jumpstart-Kit-Pregen-Characters-DFD | ➖ | Kit de inicio viejo |
 | Jumpstart-Kit-Pregen-Characters-HSG | ➖ | Kit de inicio viejo |
 | Jumpstart-Kit-The-Apartment-Battle-Map | ➖ | Mapa del kit viejo |
@@ -79,7 +79,7 @@ Lista de todos los manuales y complementos de la carpeta `C:\Users\TeseoHeracles
 | CEMK-The-Jacket-Mission-Adventure | ➖ | Aventura |
 | Tales-of-the-RED-Hope-Reborn-Campaign | ➖ | Campaña |
 | Tales-of-the-RED-Street-Stories-v1.1 | ➖ | Aventuras cortas |
-| Halloween-Screamsheets-Horror-Missions | ➖ | Aventuras |
+| Halloween-Screamsheets-Horror-Missions | ✅ | 3 aventuras en Tablas del GM y 2 PNJ al bestiario, por Interface RED Vol. 4 (v5.20.0) [Claude Code · 2026-11-11] |
 | So-You-Missed-Gen-Con-Tournament-Missions | ➖ | Aventuras |
 
 ## DLC-Supplements (45)

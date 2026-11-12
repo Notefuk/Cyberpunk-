@@ -541,10 +541,10 @@ describe('Enemigos canon v4.7.0', () => {
     }
   });
 
-  it('ids únicos en ENEMIES_CATALOG y sin entradas interface_red', () => {
+  it('ids únicos en ENEMIES_CATALOG; los de interface_red son solo los PNJ canon de IR2/IR4 (v5.20.0)', () => {
     const ids = ENEMIES_CATALOG.map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ENEMIES_CATALOG.some((e) => e.sourceBook === 'interface_red')).toBe(false);
+    expect(ENEMIES_CATALOG.filter((e) => e.sourceBook === 'interface_red').every((e) => /^ir[24]-/.test(e.id) && typeof e.sourcePage === 'number')).toBe(true);
   });
 
   it('Boosterganger Core: BODY 2 y Death Save 2 (Errata v1.25 p. 412)', () => {

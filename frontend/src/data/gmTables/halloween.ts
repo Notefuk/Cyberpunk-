@@ -1,0 +1,94 @@
+// [Claude Code · 2026-11-11] v5.20.0 (plan 27): Halloween Screamsheets (Interface RED Vol. 4 pp.56-65).
+// Resúmenes propios en español para el GM. Fuente: docs/plans/work/plan27-v5.20.0/ir4_halloween_adventures.json.
+// La segunda aventura no tiene título propio en el libro: se usa el lugar donde ocurre.
+export interface GmAdventure {
+  id: string;
+  title: string;
+  pages: string;
+  hookEs: string;
+  setupEs: string;
+  scenesEs: string[];
+  rulesEs: string[];
+  rewardsEs: string | null;
+  npcIds: string[];
+}
+
+export const HALLOWEEN_ADVENTURES: GmAdventure[] = [
+  {
+    "id": "ir4-the-haunted-vendit",
+    "title": "The Haunted Vendit",
+    "pages": "57-58",
+    "hookEs": "Una Vendit pirata con la librea de Continental Brands recorre el campus de Night City University vendiendo refrescos Triti-Fizz que la corporación niega haber fabricado. La máquina anda sola y ataca a quien intente apagarla. Los Edgerunners deben encontrarla, desactivarla o destruirla.",
+    "setupEs": "Juliana \"Jules\" Snapdragon, Exec del departamento Mobile Disbursement Contractor Control de Continental Brands, contacta a la Crew a través de uno de sus Fixers habituales. Quiere que entreguen los restos del hardware para analizarlos y ofrece un bonus si identifican o capturan a quien soltó la máquina. Niega todo rumor de fantasmas, IA rebelde o campaña de marketing guerrilla.",
+    "scenesEs": [
+      "La Crew mantiene una vigilancia con sus Agents: los estudiantes fotografían la Vendit y publican su ubicación en un Garden Patch comunitario. Es buen momento para comedia o encuentros aleatorios mientras siempre llegan tarde a la máquina.",
+      "Cerca de medianoche llega la notificación: la Vendit está en el callejón estrecho entre el Humanities Building y el Schumaker Hall of Performing Arts, quieta, con daños de fundición causados por su propio lanzallamas. Se mantiene calmada mientras nadie sea violento y deja comprar refrescos con eurobucks en efectivo.",
+      "Si alguien prueba un refresco se tira 1d100 para saber el sabor: Elderflower Cooler, New England Apple, Piña Colada o Mystery Medley. Todos están deliciosos y las latas son plateadas, lisas y sin logos.",
+      "Si la Crew ataca, se tira Iniciativa pero se interrumpe el primer Turno: llega jadeando Stefan Eklund, doctorando de Ingeniería de NCU, creador de la máquina, y explica que la Vendit huyó cuando intentó abrirla para revisar el biochip tras haberse defendido de un técnico de Vendit.",
+      "La Vendit insulta a Eklund y a la Crew por su pantalla y altavoces (o suplica por su vida y la de sus hijos, los refrescos, si el GM prefiere drama). Hay que detenerla para cobrar.",
+      "Tras el combate, Snapdragon coordina el desmontaje de los restos. Si la Crew entrega a Eklund, simplemente desaparece sin dejar rastro. Continental Brands anuncia después una promoción 'Roaming Vendit Treasure Hunt' con 'New Improved Portavendits', empezando en el campus de NCU."
+    ],
+    "rulesEs": [
+      "The Haunted Vendit: Vendit con ruedas controlada por un sistema de IA bioeléctrico; equipada con Soda Dispenser y Flamethrower (CP:R p.348).",
+      "Trigger: ataca si es amenazada.",
+      "Datos: 10 MOVE, 7 SP, 25 HP, Combat Number 14. Puede moverse por todo el campus de NCU. No puede ser contrarrestada (Cannot be countered).",
+      "Cada refresco cuesta 5eb (solo moneda física). Tirada 1d100 de sabor: 1-25 Elderflower Cooler, 26-50 New England Apple, 51-75 Piña Colada, 76-100 Mystery Medley.",
+      "Referencias del libro: Continental Brands CP:R p.269, Vendits CP:R p.330, The Garden CP:R p.280.",
+      "Stefan Eklund y Jules Snapdragon no tienen ficha propia en el libro; la Vendit no tiene bloque de stats de PNJ (solo el bloque de datos anterior)."
+    ],
+    "rewardsEs": "El libro no da una cifra de pago: es un trabajo 'dulce' bien pagado por Continental Brands, con bonus si se identifica o captura a quien liberó la Vendit.",
+    "npcIds": []
+  },
+  {
+    "id": "ir4-philharmonic-vampyres-at-the-carnival",
+    "title": "Halloween Carnival at the Boneyard",
+    "pages": "60-61",
+    "hookEs": "Los Philharmonic Vampyres están reventando eventos de Halloween por la ciudad. Los Sinful Adams, a punto de abrir su Boneyard para el carnaval anual, contratan a la Crew como seguridad extra con una condición: usar la mínima fuerza posible. Se trata de una persecución tipo paintball por todo el carnaval.",
+    "setupEs": "Ophelia, líder de guerra de los Sinful Adams, ofrece el trabajo. Quiere a los Vampyres capturados, si es posible, para exhibirlos en un cepo (pillory) ante el público; nada de granadas ni de provocar una estampida. Ella estará ocupada con los combates del Ring of Wrath.",
+    "scenesEs": [
+      "Ophelia entrega a la Crew maquillaje gótico acorde a la fecha, bridas (zip ties), balas de goma si hacen falta y una 'boo box' (walkie-talkie).",
+      "Hay tantos Vampyres como el tamaño de la Crew multiplicado por tres (ej.: 4 Edgerunners, 12 Vampyres). Atacan cada punto de interés en grupos de 3 a 6 y huyen si la cosa se complica.",
+      "Los Vampyres priorizan causar caos sobre pelear, hasta que alguien dispara: entonces se defienden. Tras ser sometidos o detenidos dos de los suyos, se retiran, se reagrupan e invaden otro punto. Mientras la cosa sea poco violenta, los asistentes lo toman como espectáculo.",
+      "La Crew puede perseguirlos de evento en evento o recibir avisos de los Sinful Adams por la boo box. El GM tira en la Location Table (1d10) para decidir el siguiente punto atacado, repitiendo la tirada cuando haga falta.",
+      "Los Sinful Adams se llevan a los Vampyres sometidos y los dejan en fila en el cepo del centro del Boneyard.",
+      "Ophelia agradece y paga a la Crew y entrega un cubo de candy Kibble por Edgerunner."
+    ],
+    "rulesEs": [
+      "Cantidad de Philharmonic Vampyres = tamaño de la Crew x 3.",
+      "Ataques en grupos de 3 a 6; se retiran tras dos Vampyres sometidos o detenidos.",
+      "Location Table 1d10: 1 The Tent of Lust, 2 The Blood Bath, 3 The Gaming Ground, 4 The DIY Goth Contest, 5 Gluttonous Ghouls' Grotto, 6 The Restrooms, 7 The Haunted House, 8 The Dead Dance Floor, 9 Employees Only, 10 The Jack o' Lantern Pit.",
+      "Equipo prestado: maquillaje gótico, zip ties, balas de goma (si se necesitan) y boo box (walkie-talkie). Granadas prohibidas.",
+      "Referencia: Philharmonic Vampyres en CP:R p.309; Sinful Adams y el Boneyard aparecieron en el Data pack de CP:R."
+    ],
+    "rewardsEs": "Pago no cuantificado en el libro, más un cubo de candy Kibble por Edgerunner.",
+    "npcIds": [
+      "ir4-philharmonic-vampyre"
+    ]
+  },
+  {
+    "id": "ir4-werewolf-in-watson",
+    "title": "TSpooks' Terror, Episode 21: Werewolf in Watson",
+    "pages": "63-64",
+    "hookEs": "Un supuesto hombre lobo ha aterrorizado Watson hasta que lo mataron a tiros. La forense adjunta Leila Amani descubre que era un hombre con bodysculpt, un veterano sin hogar, y sospecha que hay algo detrás. Pide a la Crew que investigue el caso.",
+    "setupEs": "Leila Amani recibe a los personajes en la morgue del Precinct #3 (CP:R p.312). La víctima, Kieran \"Keen\" MacLennan, ex-Militech y veterano de la 4th Corporate War, tenía las cuerdas vocales reemplazadas por un Audiovox que solo emite gruñidos y aullidos, y habría muerto por infecciones por cirugía chapucera. Amani les pasa un chip con pistas y les pagará con fondos discrecionales de la morgue si resuelven el caso.",
+    "scenesEs": [
+      "TSpooks (Tabitha Evanovich), Rockerboy influencer de lo paranormal que trabaja de custodia en el Megabuilding H10, los cita pasada la medianoche en el Oasis de H10. Entrega el video sin editar, dice que la fuente fue un suscriptor llamado LJM y quiere un seguimiento para desmentir el engaño.",
+      "Segunda pista: la gogang Dragula Racers, en su garaje The Obituary cerca del muelle. Al mencionar a Amani entran; su líder Frankie Sparks (prima de Amani) dice que MacLennan nunca fue miembro y que expulsaron a la Medtech 'Sparkle Skull' (Laura Maybach) por gastar fondos en tarjetas de regalo de Oasis para una influencer.",
+      "Investigando a Laura June Maybach: ex-cyberpsycho con años de terapia, antigua empleada de Savage Docs, que obsesionada con el Media TrueGrime intentó replicar un asesinato en serie para subir sus ratings; fue descubierta y condenada a retiro de cyberware y terapia.",
+      "Si no deducen la conexión, se permite un Deduction Check: LJM es Laura June Maybach, la expulsaron por las tarjetas de Oasis que TSpooks tiene, el video del hombre lobo es lo más visto de TSpooks, y Maybach es Medtech de un ripperdoc, mala en su trabajo, como muestran las infecciones de MacLennan. Si no lo logran, Amani se lo dice por Agent y da la última dirección.",
+      "Cubelife (Watson Central Cubelife, un Cube Hotel): un Pick Lock Check abre la puerta; dentro hay una Medtech Bag, herramientas con sangre seca, fotos de TSpooks en las paredes (incluso una con la Crew en el Oasis) y un mapa de Night City con North Cargo Village en New Westbrook marcado como 'TSpooks' place'.",
+      "Si no van enseguida, TSpooks los llama en pánico: cree que la siguen y está encerrada en su contenedor. Al llegar, Maybach, ahora con cyberware nuevo, los ataca considerándolos rivales por el afecto de TSpooks.",
+      "Al terminar, Amani paga a la Crew y TSpooks les da un shout-out en su siguiente video."
+    ],
+    "rulesEs": [
+      "Deduction Check DV 13 para unir las pistas sobre Laura June Maybach y TSpooks.",
+      "Pick Lock Check DV 9 para abrir la puerta del cubo de Maybach.",
+      "Laura June Maybach (jefa final) tiene ficha propia en la salida de PNJ, con Medtech: Medicine 2 (Surgery 2), Popup Flamethrower y Heavy Pistol.",
+      "Referencias: morgue del Precinct #3 en CP:R p.312."
+    ],
+    "rewardsEs": "Pago de la forense Amani con fondos discrecionales de la morgue (sin cifra en el libro) y un shout-out de TSpooks en su siguiente video.",
+    "npcIds": [
+      "ir4-laura-june-maybach"
+    ]
+  }
+];

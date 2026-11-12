@@ -55,8 +55,10 @@ describe('Datos canon de creación', () => {
   });
 
   it('Core RED Easy Mode pp.37-45: PREGEN_TEMPLATES son las 5 pregens canon y ninguna de las inventadas', () => {
-    expect(PREGEN_TEMPLATES).toHaveLength(5);
-    for (const p of PREGEN_TEMPLATES) {
+    // v5.20.0: + 10 del Single Shot Pack (IR1), con id pregen-ss-*.
+    const easy = PREGEN_TEMPLATES.filter((p) => !p.id.startsWith('pregen-ss-'));
+    expect(easy).toHaveLength(5);
+    for (const p of easy) {
       expect(p.id.startsWith('pregen-easy-')).toBe(true);
       expect(p.sourceBadge).toContain('Easy Mode');
     }

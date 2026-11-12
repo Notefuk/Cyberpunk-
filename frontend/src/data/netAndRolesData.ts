@@ -1,4 +1,5 @@
 import { buildRoleGuides } from './roleProgression';
+import { INTERFACE_RED_NET_PRESETS } from './netArchitecturesInterfaceRed';
 /**
  * NET ARCHITECTURES, 2077 QUICKHACKS, ROLES & VEHICLES DATA CATALOG
  * Fase 3 Deep Systems: Netrunning 2045, Quickhacking 2077, 10 Role Guides, 14 Vehicles, GM Loot & Portraits
@@ -338,8 +339,23 @@ export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
       { floorNumber: 4, type: 'File', name: 'Manifiesto de Carga y Rutas de Contrabando', dv: 10, rewardOrDevice: 'Ubicación de alijos en el desierto' },
       { floorNumber: 5, type: 'Control Node', name: 'Lanzacohetes Montado en Camión Líder', dv: 10, rewardOrDevice: 'Disparo de cohetes tácticos' }
     ]
-  }
+  },
+  // Interface RED Vol. 1-2 (plan 27, v5.20.0). [Claude Code · 2026-11-11]
+  ...INTERFACE_RED_NET_PRESETS.map(withBlackIceStats)
 ];
+
+/** Completa PER/SPD/ATK/DEF/REZ de un piso de Black ICE simple con la tabla de Core pp.206-207. */
+function withBlackIceStats(preset: NetArchitecturePreset): NetArchitecturePreset {
+  return {
+    ...preset,
+    floors: preset.floors.map((f) => {
+      const st = f.type === 'Black ICE' && f.iceType ? BLACK_ICE_STATS[f.iceType] : undefined;
+      if (!st) return f;
+      const statLine = `PER ${st.per}, SPD ${st.spd}, ATK ${st.atk}, DEF ${st.def}, REZ ${st.rez} (Core pp.206-207)`;
+      return { ...f, iceHp: st.rez, iceAtk: st.atk, iceDef: st.def, rewardOrDevice: f.rewardOrDevice ? `${f.rewardOrDevice} · ${statLine}` : statLine };
+    })
+  };
+}
 
 // Helper para generar pisos procedurales
 export function generateRandomNetFloor(floorNumber: number, difficulty: 'easy' | 'medium' | 'hard'): NetFloor {

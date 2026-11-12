@@ -1,0 +1,766 @@
+
+=== PDF p56 ===
+55A (NICE) Studio Apartment in Night City
+BY NEIL BRANQUINHO
+Writing and Design by Melissa Wong •Editing by Carol Darnell •Additional Art by J Gray & Misael “Gio” Manning 
+Art Direction by Winterjaye Kovach •Business Management by Lisa Pondsmith •Layout by J Gray
+halloween halloween screamscreamsheetssheets
+three spooky shorts for three spooky shorts for cyberpunk redcyberpunk red
+=== PDF p57 ===
+1 2:00 AM
+GOSSIP OPINION weather tech
+lifestyle local business world
+Haunted Vendit Haunts NCU Campus
+by Lindsey Tabor
+Students at Night City University have been surprised and 
+delighted by what some describe as a “popup Vendit expe-
+rience.” Over the past week, a Continental Brands Triti-Fizz 
+Vendit has appeared at various campus locations overnight, 
+offering flavors not found in the Continental Brands catalog. 
+While some students on the campus are enthused about 
+potentially being part of a Continental Brands test audience, 
+the Corporation itself disavows all knowledge of the Vendit 
+and has officially discouraged customers from consuming any 
+sodas from what they call “an illegally hacked device.”
+Link: Fizz Fans, the Triti-Fizz Enthusiasts Garden Patch
+Link: Continental Brands Triti-Fizz Garden Patch
+Like A Rainbow On My Tongue
+by The Phantom Gourmand
+Heya, foodies of Night City! This is your choombette Phanty, 
+and I’ve been lurking around Night City U the past few 
+days, trying to track down the new hotness in cybertown. 
+Yup, I’m talking about the roaming Vendit on campus! Some 
+students have been mapping its location and posting it on the 
+Data Pool so that everyone can try some of the new flavors 
+Continental Brands is testing out on the campus. One of our 
+subscribers, Shiree, hooked this critic up, so I took a side trip 
+with her to the Black Box Theatre building to see it. The Vendit 
+looks like a regular old Triti-Fizz machine circa 2043, but yup, 
+it sells a variety of Triti-Fizz flavors not available anywhere 
+else! 
+When Shiree and I found the machine, it sold four flavors out 
+of unmarked cans: Elderflower Cooler, New England Apple, 
+Piña Colada, and Mystery Medley. 
+Those flavors, choombs! Wow! I got to taste a real apple at 
+a wedding once, and the New England Apple soda tastes 
+almost exactly like one! It was like a tart, juicy rainbow on my 
+tongue. I especially loved the Mystery Medley, which was, 
+I think, a mix of melon and mint flavors with a faint medicine 
+note. Very refreshing! The Elderflower Cooler was delicately 
+floral with a hint of acid, quite a good harmony, but I almost 
+feel that the intense carbonation of Triti-Fizz stifles the taste 
+a bit. The Piña Colada was too pineapple-y for me. I don’t 
+know about you, but I think Piña Colada isn’t Piña Colada 
+unless it possesses a nice bouquet of suntan lotion. I have no 
+idea how long this testing period will last, so if you want to 
+try these limited sodas, come to the NCU campus and hunt 
+for the roaming Vendit!
+Link: Roaming Vendit Locations (Updated Hourly)
+Link: Continental Brands Triti-Fizz Garden Patch
+The Fizz-Fans Newsletter
+by Continental Brands
+Loyal consumers, you will be pleased to know we are extend-
+ing the Golden Can Sweepstakes due to popular demand! 
+As any true Triti-Fizz fan knows, there is a single can of Lucky 
+Oil Triti-Fizz in Night City with a gold star inside the can. 
+The lucky customer who finds that gold star wins an official 
+week-long trip to our state-of-the-art headquarters in Tulsa, 
+Oklahoma. The trip includes a tour through our sparkling Triti-
+Fizz factory, where our lucky winner will spend five minutes in 
+the presence of the Kibble Queen herself, our CEO, Elizabeth 
+Forsythe, and help make the magic by working on the Triti-
+Fizz production line!* Don’t fret if you don’t find the gold star, 
+though! There are other cans of Lucky Oil Triti-Fizz in Night 
+City marked with a rainbow of star colors that can be turned 
+in for other sweet Triti-Fizz rewards, up to and including a 
+lovely Triti-Fizz cooler or a free can of Triti-Fizz! 
+Incidentally, we must also respond to the spurious rumors of 
+clandestine flavor testing on the Night City University campus. 
+Continental Brands has nothing to do with the purported 
+“roaming Vendit” and all Vendit stocking contractors serving 
+the campus have been fined and strongly cautioned against 
+allowing future misrepresentation of our intellectual and 
+physical property. As loyal consumers, you are reminded to 
+avoid illegitimate merchandise, especially when our beloved 
+Continental Brands identity is being abused by vandals.
+*No compensation will be given in exchange for labor performed.
+Link: Golden Can Sweepstakes Garden Patch
+Like a R ainbow on You r Tongue!Like a R ainbow on You r Tongue!
+=== PDF p58 ===
+57
+HALLOWEEN SCREAMSHEETS
+▶ Player Information ◀
+Juliana “Jules” Snapdragon, an Exec working in the 
+Mobile Disbursement Contractor Control department of 
+Continental Brands, contacts the Crew via one of their 
+regular Fixers for a “sweet” paying gig (pun intended). An 
+unlicensed Vendit painted in Continental Brands livery has 
+popped up on the Night City University campus, selling 
+bootleg sodas. Continental Brands has fined and censured 
+their NCU mobile disbursement contractor, but they claim 
+to be neither behind the rogue Vendit nor to know who 
+is. Intelligence gathered indicates the unlicensed Vendit 
+is someone else’s creation and attacks anyone trying to 
+disable it. And the fun part is that it appears to be wan-
+dering around campus on its own accord!
+This is where the Crew comes in, being better equipped 
+than someone who took the Continental Brands Vendit 
+service training seminar — the Edgerunners are to find, 
+disable, or destroy the rogue Vendit, and turn over what 
+hardware remains to Continental Brands for analysis. 
+There will be a bonus if they also identify or capture 
+whoever unleashed the renegade vending machine.
+Ms. Snapdragon vehemently denies all rumors regarding 
+the machine, including those suggesting it is a guerrilla 
+marketing campaign by Continental Brands or, more 
+absurdly, those involving the Vendit being haunted by 
+either a ghost or a rogue AI.
+▶ Gamemaster Notes ◀
+The roaming haunted Vendit is the brainchild of NCU 
+Engineering doctoral student Stefan Eklund, a specialist 
+in bio-electrical programming. A curious sort, he decided 
+it would be seasonally appropriate to take the bio-organic 
+neurochip developed by his academic advisor Doctor 
+Ailene Hope, and run a little Trick-or-Treat-prank with it. 
+The base chip came from the fabrications lab Stefan works 
+at as part of his responsibilities as a doctoral student and 
+contains altered neurons from a rat cell line Doctor Hope 
+developed as part of a post-doctoral research project 
+for Biotechnica. Stefan acquired a damaged Vendit from 
+a scrap dealer, retrofitted it with wheels and an electric 
+motor for locomotion, and bribed some art majors to copy 
+the Continental Brands livery paint job to trick consumers 
+into believing it was the real deal and not a potentially 
+poison-dispensing knock-off
+Stefan sourced the sodas from his mother’s garage — she 
+tried to start a pop-up soda brand in Night City, but her 
+nascent Neocorp was acquired in a hostile takeover by 
+Continental Brands due to a claim of trademark infringe-
+ment. Any sharp-eyed Edgerunner who looks at one of the 
+cans will notice they’re shiny silver and blank — no logos 
+or trade dress painted on.  She still has several hundred 
+dust-covered sample cans of soda sitting around in plastic 
+crates. She has not noticed Stefan’s appropriation of the 
+samples.
+Filled with soda, Stefan’s creation set off to sell delicious 
+drinks across campus and collect data on how well a rat 
+neuron-driven neurochip can control a relatively complex 
+machine performing multiple tasks. The experiment was 
+useful and festive all at the same time!
+Crew members wondering how they’re going to search 
+for a possibly sapient, potentially angry, and theoreti-
+cally haunted Vendit selling rogue sodas to thirsty NCU 
+denizens need not worry — the students at NCU are so 
+enthused at the idea of becoming a test audience for 
+limited Triti-Fizz soda flavors that they have begun pho-
+tographing the Vendit when they find it and posting its 
+location to a communal Haunted Vendit Garden Patch, 
+so their fellow flavor-hounds can search it down and buy 
+a drink. All the Crew needs to maintain their stakeout is 
+to keep their Agents online and look up the latest loca-
+tion updates. This is a good chance for comedy and/or 
+random encounters as the Crew runs around campus, 
+always just missing the Vendit.
+Eventually, close to midnight, they’ll receive an update 
+notification from the Garden Patch on their Agents: the 
+Vendit has appeared in the narrow concourse between 
+the Humanities Building and the Schumaker Hall of 
+Performing Arts. It is still there when the Edgerunners 
+wander up, standing perfectly still like any other Vendit, if 
+slightly the worse for wear, with some melt damage from 
+its own flamethrower. It remains still and calm so long as 
+the Edgerunners don’t engage it with violent intentions. 
+Heck, the Vendit allows them to buy sodas from it if they 
+feel like shoving a few Eurobucks (only 5eb per, but 
+physical currency only) in the slot. Any Edgerunner trying 
+one of the bootleg sodas will notice they are absolutely 
+delicious. Much tastier than most of the current Triti-Fizz 
+flavors, in fact! If the Players want to know which flavor 
+their Character is drinking, roll 1d100. On a 1 to 25 they 
+get Elderflower Cooler, on a 26 to 50 New England 
+Apple, 51 to 75 Piña Colada, and 76 to 100 they get the 
+Mystery Medley.
+If the Crew Attacks the Vendit, have the Players roll 
+Initiative but interrupt the first Edgerunner’s Turn as Stefan 
+Eklund, almost-PhD, runs up panting and breathless, 
+having chased the Vendit from its last location on the other 
+end of the campus to its present spot. Eklund looks like a 
+standard pale, lab-dwelling nerd, but he’s no fool. He has 
+visited the Vendit several times to restock it and download 
+For more 
+information 
+on Continental 
+Brands, see 
+CP:R page 
+269
+To learn more 
+about Vendits, 
+see CP:R 
+page 330
+For more 
+information 
+about The 
+Garden see 
+CP:R page 
+280
+
+=== PDF p59 ===
+58
+HALLOWEEN SCREAMSHEETS
+data based on its performance. The visible damage from 
+an earlier need to defend itself against a Vendit technician 
+alarmed Stefan, and he attempted to open the machine 
+up to check if the biochip had been compromised by 
+the altercation. The Vendit, sensing imminent shutdown, 
+fled. Eklund will explain all this to the characters between 
+wheezing gasps.
+At this point, the Vendit uses its built-in display screen and 
+speakers to hurl scathing insults, both visual and audio, at 
+Eklund and the Crew. Dramatically inclined Gamemasters 
+may instead insert pleas for existence as the Vendit begs 
+for its right to live and share its children (the soda) with 
+the world. Nevertheless, this renegade dispenser of liquid 
+confections must be stopped if the Crew wishes to be paid. 
+Once the fight ends, the Crew can contact Jules 
+Snapdragon, who will arrange for the remnants of the 
+haunted Vendit to be disassembled and studied. The 
+Edgerunners may choose to detain Eklund and turn him 
+over to Ms. Snapdragon — at which point he simply van-
+ishes, never to be seen again. Coincidentally, Continental 
+Brands announces a new “Roaming Vendit Treasure Hunt” 
+in the coming months, promising limited flavors and prize-
+marked cans to anyone who can chase down their “New 
+Improved Portavendits!” The first location to be graced 
+with the promotion happens to be the NCU campus.
+ ▶ The haunTeD venDiT
+Description
+A “Continental Brands” Vendit on wheels, driven by a bio-electrical Artificial 
+Intelligence system. 
+Equipped with:
+• Soda Dispenser
+• Flamethrower (see CP:R page 348)
+Trigger
+At Attacks if Attacks if Threatened threatened.
+Data
+10 MOVE • 7 SP • 25 HP
+Combat Number: 14
+Can move anywhere on NCU Campus
+Cannot be countered
+
+=== PDF p60 ===
+1 2:00 AM
+GOSSIP OPINION weather tech
+lifestyle local business world
+Spook Up at Ghostglobe Halloween
+by Ghostglobe Halloween
+It’s the most wonderful time of the year again, choombs, 
+and where better to search for the perfect spooky-season 
+look than at Ghostglobe Halloween? Our crew of itinerant 
+stitchers and bodysculpting Medtechs have a fresh new array 
+of striking looks on offer this year! From retro-fashionable 
+bolt-shaped skinplants to dazzling new Gothelle nano-glitter 
+chemskin hues, we bring it all to the streets in our mobile clinic 
+trailers! 
+This year Ghostglobe Halloween is proud to announce a 
+joint collaboration with the confection chefs at Night City’s 
+premiere treat maker, BonBon’s. These six charming Patisserie 
+Fairy designs are based on a limited-time Halloween treat 
+available at BonBon’s. The six costumes are Apple Candy 
+Kibble, Pumpkibble Parfait, Express-no Cake, Mochi Iced 
+Creme, Pon Pon Donut, and Boo Bundt Kibble Cake. Each 
+costume has been artfully designed in the atelier of our 
+beloved Gothic Lolita stylist, k.naoko!
+Link: Ghostglobe Halloween Garden Patch
+Link: BonBon’s Garden Patch
+Trick or Treat with the Sinful Adams!
+by Gomez of the Sinful Adams
+Once again, we arrive at the most lovely and sorrowful time of 
+the year, fellow lost souls. Yes, I speak of the autumnal festivi-
+ties of Halloween, where all of Night City adopts our refined 
+aesthetic for too brief a time. Best of all, in my humble opinion, 
+are the little ones, who embrace the monstrous and outcast 
+through their many delightful costumes! And, of course, we 
+celebrate with them! 
+Every year we of the Sinful Adams rejoice in the shortening 
+days and lengthening nights by offering a veritable carnival 
+of petty sins in our Boneyard home. This year our carnival 
+theme is the Seven Deadly Sins. Want to know how we will 
+offer you such delicious debauchery? Read on, dear friend! 
+To celebrate Lust, we present fire-breathers and contortion-
+ists demonstrating many clever shivers of the flesh. We will 
+further tease your senses with the sepulchral strains of our 
+very own band, the Harrowers. We delight in Greed with 
+various carnival games — bob for robotic bats and win a 
+toy, or try your luck at the coconut shy for a pack of Coconut 
+Kibble. For Wrath and Pride, we feature a variety of nonlethal 
+fights where challengers may face Ophelia, our extended 
+family’s sorrowful avatar of violence. Exercise your Envy with 
+our DIY Goth Fashion contest, or sate your Sloth in our custom 
+Virtuality parlor. And to celebrate Gluttony with our favorite 
+little ghouls and ghosts, we are giving free candy Kibble 
+packs to every visitor under the age of eighteen. As always, 
+we charge no admission for our yearly Halloween carnival. 
+Visitors of all ages are welcome, as long as you do not disturb 
+the dead! Come and be haunted by us, at the Garden of Rest!
+Link: Vampyres Ruin Halloween
+Link: Sinful Adams Garden Patch
+Vampyres Ruin Halloween
+by Ziggy “Front” Page
+The children of Night City were left crying after an organized 
+Halloween party at Playland by the Sea was flash-mobbed 
+by members of the Philharmonic Vampyres, who proceeded 
+to subvert the event for unknown reasons. According to wit-
+nesses, park security was either unwilling or unable to eject 
+the party crashers violently due to the many small children 
+present, even when the Vampyres began taunting the kiddies 
+for, witnesses quote,  “an unrefined aesthetic and clumsy 
+play-acting with no depth or understanding of the tortured 
+demonic souls belonging to the night’s twisted creatures.” 
+While none of the attendees were harmed, many were 
+frightened by the party crashers, and several children had 
+pieces of their costumes torn off, only to have packets of 
+candy Kibble shoved into their hands in a strange form of 
+compensation. Several parents were on the verge of violent 
+retaliation when the Vampyres halted their cruelty, as though 
+signaled, then left en masse.
+Link: Playland by the Sea Garden Patch
+Link: Philharmonic Vampyres Garden Patch
+Little Detective • Big Gun
+The bad guys never see us coming.
+Link: Danger Gal
+=== PDF p61 ===
+60
+HALLOWEEN SCREAMSHEETS
+▶ Player Information ◀
+The Philharmonic Vampyres, known for both their gothic 
+stylings and mischievous pranks, have been crashing 
+Halloween events this year. This does not please the goth 
+poser gang known as the Sinful Adams, who are about 
+to open their turf, the graveyard-turned-shanty town, the 
+Boneyard, to visitors for their annual Halloween Carnival. 
+The Sinful Adams’ war-leader, Ophelia, offers the Crew 
+a gig as additional event security with a specific caveat 
+— they are to use as little force as possible to drive the 
+Vampyres away. The goth gang does not wish to see 
+their event transformed into a stampeding riot. Grenades 
+are right out! Ophelia asks the Vampyres be captured, if 
+possible, so that the Sinful Adams can put them on display 
+in a pillory to entertain the masses.
+To aid in their mission, the goth gang will provide the 
+Edgerunners with seasonally appropriate goth makeovers, 
+zip ties, rubber bullets (if needed), and a “boo box” (a 
+walkie-talkie). Ophelia cannot personally aid the Crew, as 
+she will be busy with the fight bouts for the Ring of Wrath, 
+but she has every confidence in their abilities.
+▶ Gamemaster Notes ◀
+Treat this defensive exercise as something akin to a paint-
+ball match. There are several points of interest spread 
+throughout the Boneyard. Fortunately, the Philharmonic 
+Vampyre faction planning to crash this party is not numer-
+ous enough to swarm all of them simultaneously. Instead, 
+they will disrupt each event in groups of 3 to 6 and flee, 
+should things become untenable. 
+This means that the Edgerunners will be chasing them 
+merrily through the Sinful Adams’ Carnival up until they 
+are all subdued. Note, so long as things remain relatively 
+non-violent, the event attendees will consider this enter-
+tainment instead of a potential reason to scream and flee.
+A number of Philharmonic Vampyres equal to the Crew’s 
+size times three (i.e., if there are 4 Edgerunners, there are 
+12 Vampyres) are attending the Halloween Carnival as 
+part of their extended season of pranks, but they have no 
+desire to injure or kill anyone. The Vampyres will priori-
+tize causing mayhem over fighting, right up until a Crew 
+member starts shooting, at which point they will defend 
+themselves. They will flee and regroup with their fellows 
+after two of their own are subdued or detained and then 
+try to invade another point of interest. The Crew can chase 
+the Vampyres from event to event, but they’ll also be noti-
+fied by a member of the Sinful Adams via the boo box if 
+any miscreants are spotted.
+Roll on the Location Table to determine which location the 
+Vampyres hit next, re-rolling as needed. 
+Once a Vampyre is subdued, members of the Sinful 
+Adams will step in to carry off the miscreant. No doubt the 
+sight of the captive Vampyres pilloried in a row at the very 
+center of the Boneyard will keep party-goers entertained 
+for hours to come. 
+In any case, Ophelia thanks the Crew sincerely for their 
+efforts and sends them home with their well-deserved 
+payment, as well as one bucket-full of candy Kibble per 
+Edgerunner.
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+inT ref Dex Tech cool will move BoDy emP6 6 5 4 6 6 7 2 7
+ STATS
+ weapons  armor
+ skill bases
+PhiLhaRmonic vamPyRe (Rep 0)
+none
+15
+2 30
+vamPyRes (c#: 1 2) ROF2 1d6
+PooR QuaLity heavy PistoL (c#: 1 2) ROF2 3d6
+LeatheRs (heaD) SP 4
+LeatheRs (BoDy) SP 4
+Acting 10•Athletics 7•Brawling 7•Concentration 7•Conversation 9•Dance 8•Education 1 1•Evasion 7•First Aid 6
+Handgun 1 2•Human Perception 9•Language (Native) 10•Language (Streetslang) 8•Local Expert (University District) 8
+Melee Weapon 1 2•Perception 8•Personal Grooming 10•Persuasion 10•Stealth 10 Streetwise 9•Wardrobe & Style 10
+ GEAR
+Rubber Bullets x8•Disposable Cellphone•Any props needed for pranks
+ cyberware
+Nasal Filters•Shift Tacts•Techhair
+You can learn 
+more about the 
+Philharmonic 
+Vampyres 
+on CP:R 
+Page 
+309
+The Sinful 
+Adams and 
+the Boneyard 
+first appeared 
+in the CP:R 
+Data 
+pack
+
+=== PDF p62 ===
+61
+HALLOWEEN SCREAMSHEETS
+ ▶ locaTion TaBle
+1d10 Location Description
+1 The Tent of Lust
+A gaudily-decorated tent with family-friendly, if somewhat risqué contortionists, 
+fire-breathers, and dancers gyrating to droning gothpunk music. The Vampyres 
+crashing the tent will parody the acts therein with bad mime-ing and must be 
+driven out.
+2 The Blood Bath
+An antique claw-footed bathtub that’s been plugged and coated with food-
+safe resin, full of nonalcoholic “blood” punch. The Vampyres will attempt to 
+dive into the punch, miming the backstroke once they are successfully in the tub. 
+This year’s punch is particularly good. Make sure it doesn’t get wasted.
+3 The Gaming Ground
+Various Sinful Adams tend to non-rigged versions of carnival games, such 
+as a shooting booth and the coconut shy. There’s even a lovingly refurbished 
+Whack-a-Mole console (with the moles dressed up as zombies). The gate -
+crashing Vampyres will try to steal all the prizes on display. Yes, even the 
+meter-long, goth, unicorn plushie. Save the Gothicorn!
+4 The DIY Goth Contest
+There is a catwalk erected so contestants may display their DIY goth costumes. 
+The Philharmonic Vampyres will make straight for the catwalk and walk exag -
+geratedly across it, knocking actual contestants out of the way until stopped. 
+Teach them a lesson.
+5 Gluttonous Ghouls’ Grotto
+A fake cave made of recycled pallets and spray-foam insulation packed end 
+to end with Halloween candy Kibble buckets, which the Sinful Adams are 
+handing out to visitors under eighteen. Animatronic bats flit around on strings 
+for ambiance. The Vampyres will grab as much candy as they can, taunting the 
+children cruelly as they do so. Save the candy, save the children. 
+6 The Restrooms
+A row of porta-johns provided for the relief of visitors and Sinful Adams alike. 
+The Vampyres will attempt to tip the blocky cubicles over, prioritizing occupied 
+ones. Halt the deluge of sewage.
+7 The Haunted House
+A deconsecrated chapel from when the Boneyard was a Garden of Rest, this 
+modest building serves as the Sinful Adams’ meeting hall. For the carnival, it 
+has been renovated into a spooky haunted house. Gibbets forged out of scrap 
+metal contain zombie actors who reach out and groan at unsuspecting visitors. 
+The Vampyres will try to burst in through the back door and turn the lights on, 
+ruining the effect. 
+8 The Dead Dance Floor
+This large, dimly-lit tent has a small stage in it. On the stage, a DJ and the Sinful 
+Adams’ house band, the Harrowers, take turns entertaining crowds of slowly 
+swaying goth dancers. The dancers are especially careful not to tangle their 
+facial and body piercings in others’ fishnet attire. One of the invading Vampyres 
+will attempt to drown out the band by playing classical music on a portable 
+amp with their Agent. This will start a volume war.
+9 Employees Only
+This large tent serves as a dressing room where a Sinful Adams costume crew 
+helps performers don their outfits for the festival. The marauding Vampyres will 
+barge in and attempt to rip pasties and prosthetics off the performers.
+10 The Jack o’ Lantern Pit
+A large plastic above-ground swimming pool padded at the bottom and filled 
+with little plastic balls painted like Jack o’ Lanterns for visitors to dive into. You 
+don’t want to know what the Vampyres have planned here. Stop them.
+=== PDF p63 ===
+1 2:00 AM
+GOSSIP OPINION weather tech
+lifestyle local
+ business world
+TSpooks’ Terror, Episode 21:  
+Werewolf in Watson
+by TSpooks, transcription by LJM
+“Evenin’, choombattas, this is TSpooks with the latest on the 
+paranormal in Night City. Some Spooky Spotters have been 
+lighting up my Agent lately with juicy vidclips of the Watson 
+Werewolf. Well, I had to go in and check it out myself, and 
+I promise all you paranormal phans won’t be disappointed! 
+Remember to subscribe and watch this vid all the way to the 
+end!”
+“But first, a word from my sponsor. You know that seeing is 
+believing when it comes to reports of the spooky and strange. 
+That’s why I installed Kiroshi’s Eyecam X in my cybereyes to 
+record everything I encounter while exploring the dark and 
+surreal. Yup, all the footage on this show was shot using my 
+Kiroshi Eyecam X eyes, and I’ve never seen better quality! 
+Now if you’re interested in recording your own paranormal 
+encounters, head over to the Kiroshi Garden Patch and enter 
+the code TSP00KY to get a 5% off coupon you can bring to 
+any certified Kiroshi installer. That’s TSP00KY for a premium 
+discount in the next 6 hours! Now back to the show.”
+“As I was saying, seeing is believing, so I went down to 
+Watson for a little look-see, and you won’t believe what I 
+ran into! It was big. It was hairy! And being an expert on all 
+things weird, I know it was absolutely not just a BioExotic out 
+for a stroll on the town!”
+Link: TSpooks Vidcast Transcript: Episode 21 (Pt 2)
+Werewolf Terror Ends in Shooting
+by Lane Viron
+Reports of werewolf sightings around the Watson District 
+culminated in a shooting early this morning. Witness Jacky 
+Hall states: “I was heading out for my shift at Militech Urban 
+Avenger when I heard the pop-pop of gunshots. This is a 
+nicer neighborhood, so I wasn’t carrying more than a pistol! 
+I crouched down behind a low wall and caught a glimpse of 
+something huge and furry hitting the ground.” As of this report, 
+the scene of the shooting remains cordoned off, with the body 
+hidden mostly by a pop-up forensics tent. NCPD Assistant 
+Coroner Leila Amani declined to comment further.
+Link: City Police Precinct #3 Garden Patch
+Link: Werewolf Terror Grips Watson
+Watson Weekly Op/Ed 
+There’s No Such Thing as Werewolves
+by Tamby Strong
+Say it with me, doombas: there’s no such thing as were -
+wolves. Elsewise, we’d have found one already. In a world 
+full of cameras, Agents, and Garden Patches, something as 
+blatantly different as a lycanthrope couldn’t be kept secret. 
+No, this recent panic in Watson is probably some delinquent 
+poserganger with too many muscle grafts doing a Halloween 
+biosculpt for what the young people call Spooky Season. 
+It’s a load of hogwash, is what it is. I’m not exactly one of 
+those Inquisition types, given that Mrs. Strong didn’t exactly 
+come by her curves the old-fashioned way, if you get what 
+I mean. Seriously, it’s not as though she had to twist my arm 
+when she said she wanted to have the figure of Velvet Lux! 
+Who would refuse to pay for that?! But I draw the line at 
+stepping outside of the human species!
+Seriously, anyone deluded enough to have themselves 
+sculpted into some kind of monstrosity shouldn’t be shocked 
+when they get shot at by normal people.
+All opinions expressed are those of the writer and do 
+not reflect the opinions of the Watson Weekly, its staff, or 
+stakeholders.
+Link: Watson Weekly Op/Eds sorted by date
+Protect Yourself from Werewolves  
+with the Gunmart Special!
+=== PDF p64 ===
+63
+HALLOWEEN SCREAMSHEETS
+▶ Player Information ◀
+Assistant Coroner Leila Amani meets the characters at the 
+Precinct #3 morgue (see CP:R page 312). She’s clutching 
+a large mug of Koff Pop in her hand as she stands next to 
+a slab holding a vast body under a sheet. Werewolf sight-
+ings have plagued the Watson District for the past week, 
+but they ended in the shooting of one supposed monster 
+early this morning by off-duty SovOil security personnel.
+Amani’s autopsy findings are concerning — the Watson 
+Werewolf is no werewolf, merely a body-sculpted looka-
+like. DNA testing has identified him as Kieran “Keen” 
+MacLennan, formerly of Militech and now one of many 
+unhoused 4th Corporate War veterans. Mr. MacLennan’s 
+vocal chords were replaced by an Audiovox designed to 
+emit only growls and howls, and the bodysculpting and 
+implantation work was so careless he would have died 
+of the multiple infections he had contracted had he not 
+been shot. According to a preliminary investigation, Mr. 
+MacLennan had no connection to any known poser gang 
+or BioExotic group.
+As the NCPD is extremely overworked and no one can 
+pay further investigation fees on Mr. MacLennan’s behalf, 
+Amani has been pressured to file this as an accidental 
+shooting. However, her instincts tell her something is 
+wrong. She passes the Crew a memory chip loaded with 
+leads and asks them to follow up as she has several more 
+autopsies to perform today. She will pay them out of the 
+morgue’s discretionary funds if they can solve this case.
+▶ Gamemaster Notes ◀
+First on the list is contact information for a Night City influ-
+encer specializing in “paranormal reporting,” a Rockerboy 
+known as TSpooks (Tabitha Evanovich). TSpooks was the 
+first to post a video of the “Watson Werewolf” online after 
+the initial rumors began. When contacted, Evanovich 
+notes she’s free to talk after midnight as she works second 
+shift as a custodian at Megabuilding H10.
+TSpooks meets the Crew at the confection counter of an 
+Oasis inside H10. As she talks, she munches on a Kibble 
+Koff Pop Sundae: a nauseating concoction of puffed 
+Kibble, ersatz coffee, and hydrogenated oil creme. 
+Spooks mentions she loves them and has a load of Oasis 
+gift cards to buy them with, thanks to an anonymous 
+donation from a fan. Getting down to business, she turns 
+over a chip containing the unedited footage of the Watson 
+Werewolf and tells the Edgerunners that her interest in the 
+paranormal is real. The werewolf story is, she says, her 
+highest-rated video, but she doesn’t want to build her 
+career on a lie. She intends to post a follow-up video 
+explaining the hoax and asks the Crew to inform her of 
+the details once they know more.
+The footage is pretty much what it claims to be: roughly 
+a minute’s worth of a tall, werewolf-like being stumbling 
+through an alley, growling and howling. If asked how she 
+learned about it, she says one of her subscribers, known 
+only as LJM, sent her the tip on where to be and when to 
+be there. She has no idea who LJM is.
+Second on Amani’s list of leads is a small gogang: The 
+Dragula Racers. Largely harmless, the Dragula Racers 
+specialize in two things: monster-themed bodysculpts 
+and hot-rod racing in their souped-up hearse. While they 
+are not suspects, the gang could point the Crew toward a 
+few dodgy bodysculpting businesses — none of them are 
+behind this incident, however. The Dragula Racers can be 
+found at any time at their gang hangout, a garage near 
+the waterfront that they call The Obituary. Amani’s notes 
+on the Dragula Racers indicate they’ll talk to the Crew if 
+her name is mentioned.
+There is a rusty buzzer mounted by the security gate 
+blocking the Obituary’s entrance. The Crew’s buzz is 
+answered by a hung-over woman who unlocks the gate 
+once they give Amani’s name.
+Upstairs, the Edgerunners are greeted by a small, pallid 
+woman wearing skull-and-crossbone pajamas. She is 
+Frankie Sparks, the Dragula Racers’s leader, who is willing 
+to talk to the Crew because Amani is her cousin. Frankie’s 
+white-streaked Techhair is shaped in an enormous bouf-
+fant beehive, but the effect is ruined by it having been slept 
+on and not yet programmed for the day. Surgical steel bolt 
+skinplants stick out of her neck.
+Frankie Sparks confirms over a shot of a noxious sub-
+stance she calls “hair of the dog” that the Dragula Racers 
+never inducted MacLennan into the gang, and they have 
+no missing “werewolf” members. She also notes they 
+recently ejected one of their members, a Medtech known 
+as Sparkle Skull, after she spent gang funds on Oasis gift 
+cards for some Garden Patch influencer instead of buying 
+medical supplies. Frankie has no idea where Sparkle Skull 
+is now but suggests Amani could look her up in the NCPD 
+database under her real name, Laura Maybach.
+The Crew can follow up with Assistant Coroner Amani 
+via Agent, and she promises to look up the name “Laura 
+Maybach” in the NCPD database. They can also do 
+some research on their own via the Data Pool. Either 
+way, they soon learn Laura June Maybach is a former 
+cyberpsycho with several years of therapy behind her. A 
+news story from several years ago indicates she devel-
+oped an obsession with a Media named TrueGrime, 
+running a paranormal-tinted true crime Garden Patch with 
+the same name, whose ratings were floundering. To “help” 
+TrueGrime, Maybach attempted to duplicate a serial 
+
+=== PDF p65 ===
+64
+HALLOWEEN SCREAMSHEETS
+killing as depicted in one of his highest-rated videos. Since 
+the serial killer was dead, Maybach hoped a new killing 
+with the same modus operandi would spark questions and 
+drive up TrueGrime’s ratings. Fortunately, Maybach’s plan 
+was discovered by a colleague at Savage Docs, where 
+she worked, and they turned her into the NCPD. In a news 
+article, the colleague in question said Maybach leaving 
+was “no big loss” since she was “a shit Medtech anyway.” 
+Since she only planned on committing a crime but did not 
+get the chance to go through with it, Maybach was sen-
+tenced to cyberware removal and incarceration therapy 
+instead of a harsher punishment. She was released after 
+the completion of her therapy. The object of her affection, 
+TrueGrime, died in a building collapse last year.
+If the Players haven’t made a connection between Laura 
+Jane Maybach and TSpooks, allow them to make a DV 
+13 Deduction Check to put the pieces together — TSpooks 
+received word of the werewolf footage from a subscriber 
+known as LJM (Laura June Maybach); Maybach was 
+booted out of the Dragula Racers for spending gang 
+money on Oasis gift cards, which TSpooks has a load of 
+thanks to “a fan sending them anonymously.”; Maybach 
+plotted to revive TrueGrime’s career by recreating a killing 
+from one of his most popular videos, and the werewolf 
+story is now TSpooks’ highest-rated video, boosting her 
+career; Maybach is a Medtech who used to work at 
+Savage Docs, a Ripperdoc clinic and was apparently 
+bad at her job while Mr. MacLennan, the “werewolf” 
+was subject to infections due to poorly accomplished 
+bodysculpting and cyberware implantation. 
+If, for some reason, the Crew can’t figure out Maybach is 
+the culprit behind all this, Amani can and will tell them via 
+Agent. Either way, she’ll give them Maybach’s last known 
+address at the Watson Central Cubelife, a Cube Hotel. 
+A DV 9 Pick Lock Check will open the door. Inside, the 
+Crew finds a Medtech Bag, tools coated in dry blood, 
+and photos of TSpooks plastered all over the walls, clearly 
+taken from a distance. There’s even one of her with the 
+Crew at the Oasis! Tucked under a thin pillow is a map 
+of Night City with a location, the North Cargo Village in 
+New Westbrook, circled and marked  “TSpooks’ place.”
+If the Crew doesn’t think to immediately travel to the North 
+Cargo Village to check on TSpooks, she calls them in a 
+panic. She believes she’s being followed! She’s locked 
+herself inside her cargo container and is begging the Crew 
+to come help.
+When they arrivew, the Crew is accosted by Maybach, 
+who has clearly been making up for lost time by implant-
+ing new cyberware. In the absence of her old obsession, 
+Maybach has glomped onto TSpooks. She created the 
+fake werewolf and leaked the information to TSpooks to 
+boost the paranormal influencer’s career and came here 
+to confess her undying loyalty. As shown by the photos 
+in her cube, Maybach has been following TSpooks ever 
+since the werewolf incident and so saw the Crew talking 
+to her. Considering them rivals for TSpooks’ affection, she 
+attacks.
+Upon completing the gig and rescuing TSpooks, the Crew 
+will receive payment from Amani and a shout-out from 
+TSpooks in her next video.
+name
+        
+role
+Seriously
+wounded
+Death
+save
+HP
+inT ref Dex Tech cool will move BoDy emP5 8 6 7 4 4 6 5 0
+ STATS
+ weapons  armor
+ skill bases
+LauRa June mayBach
+meDtech: meDicine 2 (Surgery 2)
+18
+5 35
+PoPuP FLamethRoweR (c#: 1 4) ROF1 3d6
+heavy PistoL (c#: 1 4) ROF2 3d6
+L aRmoRJack (heaD) SP 1 1
+L aRmoRJack (BoDy) SP 1 1
+Athletics 1 1•Basic Tech 9•Brawling 10•Concentration 8•Conversation 2•Cybertech 9•Education 10•Evasion 1 4 
+First Aid 9•Handgun 1 4•Heavy Weapons 1 4•Human Perception 2•Language (English) 7•Language (Streetslang) 7 
+Local Expert (Watson) 7•Paramedic 9•Perception 7•Persuasion 6•Resist Torture/Drugs 1 2•Stealth 10•Surgery 1 1
+ GEAR
+Incendiary Shotgun Shells x8•Heavy Pistol Ammo x16•Incendiary Grenade x1•Flashbang Grenade x1•Agent
+ cyberware
+Cyberaudio Suite w/ Level Dampners•Cybereye x2 w/ Anti-Dazzle x2•Cyberarm w/Popup Flamethrower•Nasal Filters
+
+=== PDF p66 ===
+65
+the 12 days of GEARMAs the 12 days of GEARMAs 
+a a cyberpunk redcyberpunk red holiday Tradition holiday Tradition
+BY JOEL CHAIM HOLTZMAN
+Writing and Design by James Hutt and J Gray •Editing by Carol Darnell 
+Based on Work and Art by the many designers and artists of Cyberpunk 2020 
+Art Direction by Winterjaye Kovach •Business Management by Lisa Pondsmith •Layout by J Gray
