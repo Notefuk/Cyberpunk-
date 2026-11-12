@@ -117,6 +117,19 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.22.0] - 2026-11-12 (Plan 28 II: actores guardados) [Claude Code · 2026-11-12]
+* **Category**: Herramientas del GM (plan 28, `docs/plans/plan28-modo-gm.md`).
+* **What Changed**:
+  * Actores como en Foundry: cada enemigo que se spawnea (bestiario, PNJ propio o goon del Fixer) queda guardado con su nombre numerado ("Guardia 1", "Guardia 2"), su HP, SP, balas y heridas críticas.
+  * El encuentro manda mientras el enemigo pelea: cada cambio se copia al actor. "Sacar del combate" lo deja guardado tal cual; "Traer al combate" lo devuelve igual.
+  * Columna Actores en MODO GM: búsqueda, filtro (todos, en combate, guardados), Traer al combate, Duplicar (uno nuevo y sano), Curar a tope (HP y SP al máximo, sin heridas, recarga con la reserva), Borrar y notas por actor.
+  * En el encuentro, cada enemigo muestra sus balas por arma (−1, −10 para Autofire, Recargar con la reserva, Core p.169) y sus heridas críticas (tabla de Core pp.187-188).
+  * Sin mesa se guardan en el navegador (`cpr_gm_actors_v1`); con mesa de GM, en `campaigns/{c}/gm/actors`, que solo ve el GM (hasta 200). La primera vez se copian los del navegador.
+  * Desvío del plan: los actores van en un documento de la capa de secretos del GM (como las notas y los PNJ propios), no en una subcolección.
+  * Reserva inicial de cada arma: 3 cargadores, la convención que ya usaba la app al pasar un PNJ a ficha.
+* **Files Modified**: `engine/gmActors.ts`, `store/gmActorsStore.ts`, `features/gmmode/actorSpawn.ts`, `features/gmmode/GmActorsPanels.tsx` (nuevos); `store/encounterStore.ts` (`actorId`, `ammo`, `injuries`, `quickEnemy`), `sync/gmSecrets.ts` (tipo `actors`), `features/gmmode/GmModeView.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`, `features/gm/FixerDeckView.tsx`, `App.tsx`, `firestore.rules`; tests `engine/__tests__/gmActors.test.ts`, `sync/__tests__/gmSecrets.test.ts`, reglas; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 673 tests (6 nuevos), 50 tests de reglas en el emulador y build. En local sin mesa: 2 guardias desde el Fixer, uno herido (−6 HP y Broken Arm), sacado del combate, página recargada y traído de vuelta igual; consola limpia.
+
 ### [v5.21.0] - 2026-11-12 (Plan 28 I: pestaña MODO GM) [Claude Code · 2026-11-12]
 * **Category**: Herramientas del GM (plan 28, `docs/plans/plan28-modo-gm.md`).
 * **What Changed**:

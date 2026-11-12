@@ -66,7 +66,7 @@ export function EnemyRow({ c, active }: { c: EncounterCombatant; active: boolean
                 {inj} ✕
               </button>
             ))}
-            <select className={field} value={injury} onChange={(ev) => setInjury(ev.target.value)}>
+            <select className={`${field} max-w-[12rem]`} value={injury} onChange={(ev) => setInjury(ev.target.value)}>
               <option value="">+ Herida crítica…</option>
               {INJURY_NAMES.map((n) => <option key={n} value={n}>{n}</option>)}
             </select>

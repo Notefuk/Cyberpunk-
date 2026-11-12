@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.22.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'GM',
+    title: 'Actores guardados: los enemigos quedan como los dejaste',
+    summary: 'Cada enemigo que spawneás queda guardado como actor, numerado (Guardia 1, Guardia 2) y con su HP, SP, balas y heridas. Si lo sacás del combate queda igual, y lo podés traer de vuelta, duplicar, curar o borrar desde la columna Actores del Modo GM. En el encuentro se ven las balas de cada arma, con recarga, y sus heridas críticas. Con mesa se guardan en la campaña y solo los ve el GM.',
+    highlights: [
+      'Todo spawn queda guardado con su estado.',
+      'Balas por arma con recarga, y heridas críticas del enemigo.',
+      'Traer al combate, duplicar, curar a tope y notas por actor.'
+    ],
+    filesTouched: ['frontend/src/store/gmActorsStore.ts', 'frontend/src/engine/gmActors.ts', 'frontend/src/features/gmmode/GmActorsPanels.tsx', 'frontend/firestore.rules'],
+    metricsBadge: 'v5.22.0 • Plan 28 • GM'
+  },
+  {
     version: 'v5.21.0',
     date: '2026-11-12',
     author: 'Claude Code',
@@ -1719,6 +1735,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.22.0': true,
     'v5.21.0': true,
     'v5.20.0': true,
     'v5.19.0': true,
