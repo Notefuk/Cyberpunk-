@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.31.0] - 2026-11-13 (Plan 31 III: durabilidad y mantenimiento, "Breaking Your Stuff") [Claude Code · 2026-11-13]
+* **Category**: Reglas opcionales del Interface RED Vol. 5 (pp.3-12) en la ficha.
+* **What Changed**:
+  * **Panel "Mantenimiento y estado del equipo"** en ARSENAL & BLINDAJE, con todo el equipo: armas, armadura, ciberware, mochila y vehículos. En el Ripperdoc aparece el mismo panel, solo con el ciberware.
+  * **Estado por ítem** (`CharacterSheet.itemDurability`, con la clave de `engine/itemNames.ts`): Damaged (IR5 p.4), Destroyed y Destroyed Beyond Repair (Core p.140).
+  * **Mantenimiento** (pp.5-7): el Lifestyle del mes (`CharacterSheet.lifestyle`) lo cubre si alcanza el de la tabla Maintenance Basics; si no, hay una tirada mensual con la Skill de Maintenance Skills, la DV y el tiempo. Los Roles: Tech +1 en todo; Solo y Lawman en armas y armaduras; Netrunner en cyberdecks; Media y Rockerboy en su equipo de Rol; Exec, Medtech y Nomad quedan exentos con su equipo de Rol (se marca por ítem). Mantener quita Damaged y la falla en curso.
+  * **Fallas** (pp.8-12): las 11 tablas de 1d6 traducidas (`data/malfunctionTables.ts`). Cada ítem va a su tabla (el ciberware según su tipo) y se puede tirar en otra. La falla queda en el ítem con su duración, hasta que el jugador la termina. Jury rig del Maker: 10 minutos por punto de Field Expertise.
+  * **Reventa** (p.5): el valor de venta o de materiales baja una Categoría si está Damaged y dos si está Destroyed; Beyond Repair no vale nada.
+  * El ciberware de los Folios CEMK (`cw-cemk-…`) se busca por nombre para sacar su costo y su tabla.
+* **Files Modified**: nuevos `data/malfunctionTables.ts`, `engine/maintenance.ts`, `engine/durabilityItems.ts`, `features/sheet/DurabilityPanel.tsx` y el test `engine/__tests__/maintenance.test.ts` (9 tests); `types/cyberpunk.ts`, `store/useCharacterStore.ts` (`setItemDurability`, `setLifestyle`), `features/sheet/StreetLabView.tsx`, `features/cyberware/CyberwareRipperdocView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 766 tests y build. En el navegador, con Hardpoint (Solo) y Lifestyle Kibble: la Masamune (1000eb) pide Good Prepak y una tirada de Weaponstech DV17. Marcada Damaged, salió la falla 6 de armas y la tirada de mantenimiento falló (15 contra DV17). La armadura se mantiene sola con el +1 del Solo. En el Ripperdoc aparecen los 3 implantes. Todo se limpió después; consola limpia.
+
 ### [v5.30.0] - 2026-11-13 (Plan 31 II: generadores del GM del Interface RED Vol. 5) [Claude Code · 2026-11-13]
 * **Category**: Herramientas del GM. Tres pestañas nuevas en TABLAS DEL GM.
 * **What Changed**:

@@ -697,6 +697,22 @@ export interface CharacterSheet {
   favoriteSkills?: string[];
   /** v5.8.0 (plan 23): nombre propio de cada ítem, por clave de ejemplar (ver `engine/itemNames.ts`). Solo cambia lo que se muestra. [Claude Code · 2026-10-30] */
   itemNicknames?: Record<string, ItemNickname>;
+  /** v5.31.0 (plan 31): Lifestyle del mes, para el mantenimiento automático (Core p.377; IR5 p.7). [Claude Code · 2026-11-13] */
+  lifestyle?: string;
+  /** v5.31.0 (plan 31): estado y fallas de cada ítem, con la clave de `engine/itemNames.ts` (IR5 pp.4-12). [Claude Code · 2026-11-13] */
+  itemDurability?: Record<string, ItemDurability>;
+}
+
+/** v5.31.0 (plan 31): durabilidad de un ítem ("Breaking Your Stuff", IR5 pp.4-12). [Claude Code · 2026-11-13] */
+export interface ItemDurability {
+  /** Destroyed y Destroyed Beyond Repair son del Core (p.140); Damaged, de IR5 p.4. */
+  condition?: 'damaged' | 'destroyed' | 'beyond_repair';
+  /** Falla en curso (IR5 pp.8-12). */
+  malfunction?: { table: string; roll: number; text: string; duration: string };
+  /** Equipo de Rol: exento para Exec, Medtech y Nomad; +1 de Lifestyle para Media y Rockerboy (IR5 p.6). */
+  roleGear?: boolean;
+  /** Última vez que se mantuvo (texto libre). */
+  lastMaintained?: string;
 }
 
 /** v5.8.0 (plan 23): apodo de un ítem. `original` es el nombre del libro cuando se puso. [Claude Code · 2026-10-30] */

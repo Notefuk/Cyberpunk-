@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-13] v5.30.0 (plan 31 II, generadores del GM del IR5) terminada en `claude/plan31-v5.30.0`, sin pushear
+**Última actualización**: [Claude Code · 2026-11-13] v5.31.0 (plan 31 III, durabilidad y mantenimiento) terminada en `claude/plan31-v5.31.0`, sin pushear
 
 **Versión de la app**: v5.28.0 en `main` @ f302cc2, en la beta (gh-pages b6de981, `index-2YHbmQt4.js`) y en Firebase prod (`index-B4WS36A5.js`). [Claude Code · 2026-11-13]
 
@@ -22,9 +22,9 @@
 
 ## En curso (a cargo)
 - [Claude Code · 2026-11-13] **Plan 31** (`docs/plans/plan31-interface-red-5-resto.md`): resto del Interface RED Vol. 5 (PDF `Sourcebooks/Interface-RED/ilide.info-interface-5-pr_…pdf`, página impresa = índice del PDF en base 0).
-  - Hecho: v5.29.0 (101 ítems de Toggle's Temple, Agents, REDmas, derby y cyberpets; calidad, ranuras y attachments de fábrica) y v5.30.0 (pestañas Screamsheet, Gunpath y Referencias IR5 en TABLAS DEL GM), en `claude/plan31-v5.30.0` (sale de `claude/plan31-v5.29.0`), sin pushear. tsc, 757 tests y build pasan; probado en local.
-  - Siguiente: v5.31.0, durabilidad (Breaking Your Stuff, IR5 pp.3-12): `condition` por ítem, `engine/maintenance.ts`, las 11 tablas de fallas y la reventa. Después v5.32.0 a v5.34.0 según el plan.
-  - Desvíos: el pack de `data/` en la raíz quedó viejo desde la v5.3.2 y no se toca. El Hiring Hall trae 13 avisos, no 14. Gunpath: el GM elige cuántos attachments (el libro no lo dice) y se vuelven a tirar repetidos y no elegibles.
+  - Hecho: v5.29.0 (101 ítems de Toggle's Temple, Agents, REDmas, derby y cyberpets), v5.30.0 (Screamsheet, Gunpath y Referencias IR5 en TABLAS DEL GM) y v5.31.0 (panel de mantenimiento y estado del equipo en ARSENAL & BLINDAJE y el Ripperdoc: Damaged, Lifestyle, 11 tablas de fallas y reventa). Ramas encadenadas; la última es `claude/plan31-v5.31.0`. Nada pusheado. tsc, 766 tests y build pasan; probado en local.
+  - Siguiente: v5.32.0, investigación (Did Someone Say Murder?, IR5 pp.61-70): Focus en la ficha y tracker de misterios en el Modo GM, con el doc `gm/mysteries` en la allowlist de `firestore.rules` y sus tests de reglas. Después v5.33.0 (cyberpets) y v5.34.0 (nivel mercenario).
+  - Desvíos: el pack de `data/` en la raíz quedó viejo desde la v5.3.2 y no se toca. El Hiring Hall trae 13 avisos, no 14. Gunpath: el GM elige cuántos attachments. Durabilidad: la regla automática del 1 natural queda como texto en el panel (no se dispara sola en las tiradas de ataque); la reventa se muestra en el panel, no cambia los precios de venta del Night Market.
 
 ## Último trabajo terminado
 - [Claude Code · 2026-11-13] Plan 30 cerrado: Solo of Fortune 2045 y ACPA, v5.25.0 a v5.28.0 (PR #89), publicado en la beta y en prod.

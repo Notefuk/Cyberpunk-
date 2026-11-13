@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.31.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Reglas',
+    title: 'Durabilidad y mantenimiento',
+    summary: 'Las reglas opcionales de "Breaking Your Stuff" llegan a la ficha. Cada arma, armadura, implante, ítem de la mochila o vehículo puede quedar Damaged, Destroyed o Destroyed Beyond Repair. Tu Lifestyle (con el +1 de tu Rol) lo mantiene solo o te pide una tirada al mes. Un ítem dañado puede fallar con su tabla, y vale menos al venderlo.',
+    highlights: [
+      'Panel de mantenimiento en ARSENAL & BLINDAJE y en el Ripperdoc (IR5 pp.5-7).',
+      'Las 11 tablas de fallas, con su duración y el jury rig del Maker (IR5 pp.8-12).',
+      'Valor de venta según el estado del ítem (IR5 p.5).'
+    ],
+    filesTouched: ['frontend/src/engine/maintenance.ts', 'frontend/src/data/malfunctionTables.ts', 'frontend/src/features/sheet/DurabilityPanel.tsx'],
+    metricsBadge: 'v5.31.0 • IR5 • 11 tablas'
+  },
+  {
     version: 'v5.30.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1863,6 +1879,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.31.0': true,
     'v5.30.0': true,
     'v5.29.0': true,
     'v5.28.0': true,

@@ -17,6 +17,7 @@ import type {
   InventoryItem,
   IpLogKind,
   MedtechCryoAndPharma,
+  ItemDurability,
   OwnedVehicle,
   RockerboyFanGroup,
   SoloCombatAwarenessAllocation,
@@ -507,6 +508,9 @@ export interface CharacterStoreState {
   toggleFavoriteSkill: (key: string) => void;
   /** v5.8.0 (plan 23): pone o quita (null) el nombre propio de un ítem. [Claude Code · 2026-10-30] */
   setItemNickname: (key: string, original: string, nick: { name: string; showOriginal: boolean } | null) => void;
+  /** v5.31.0 (plan 31): durabilidad por ítem y Lifestyle del mes (IR5 pp.4-12). [Claude Code · 2026-11-13] */
+  setItemDurability: (key: string, patch: Partial<ItemDurability> | null) => void;
+  setLifestyle: (lifestyle: string | undefined) => void;
   gmSetRoleRank: (rank: number) => void;
   setMakerAllocation: (alloc: MakerAllocation) => void;
   // v4.9.3 [Claude Code · 2026-10-23] Roles sociales: Team del Exec (Core p.154) y fans del Rockerboy (Core pp.144-145).
@@ -2697,6 +2701,26 @@ export const useCharacterStore = create<CharacterStoreState>()(
             else delete next[key];
             return { ...c, itemNicknames: next };
           })
+        }));
+      },
+
+      setItemDurability: (key, patch) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const next = { ...(c.itemDurability ?? {}) };
+            const merged = patch ? { ...next[key], ...patch } : {};
+            for (const k of Object.keys(merged) as (keyof ItemDurability)[]) if (merged[k] === undefined) delete merged[k];
+            if (Object.keys(merged).length) next[key] = merged;
+            else delete next[key];
+            return { ...c, itemDurability: next };
+          })
+        }));
+      },
+
+      setLifestyle: (lifestyle) => {
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id === state.activeCharacterId ? { ...c, lifestyle } : c))
         }));
       },
 
