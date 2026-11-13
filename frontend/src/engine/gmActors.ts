@@ -3,6 +3,8 @@
 // Funciones puras; el guardado está en store/gmActorsStore.ts.
 import type { EnemySheet, ThreatTier } from '../data/enemiesCatalog';
 import type { EncounterEnemy } from '../store/encounterStore';
+import type { ActiveAcpaState } from '../types/cyberpunk';
+import { boardEnemy } from './acpaActors';
 
 export interface ActorAmmo {
   /** Balas en el cargador. */
@@ -21,6 +23,8 @@ export interface GmActorState {
   /** Una entrada por arma de la ficha, en el mismo orden. Melee: { current: 0, reserve: 0 }. */
   ammo: ActorAmmo[];
   injuries: string[];
+  /** v5.28.0 (plan 30): ACPA que pilotea, con su HP y SP (IR5 pp.133-142). Las Onboard van al final de `ammo`. [Claude Code · 2026-11-12] */
+  acpa?: ActiveAcpaState;
 }
 
 export interface GmActor {
@@ -80,6 +84,7 @@ export function actorStateFromEnemy(e: EncounterEnemy): GmActorState {
     maxBodySp: e.maxBodySp,
     ammo: e.ammo ? e.ammo.map((a) => ({ ...a })) : defaultAmmo(e),
     injuries: [...(e.injuries ?? [])],
+    ...(e.acpa ? { acpa: { ...e.acpa } } : {}),
   };
 }
 
@@ -89,8 +94,10 @@ export function sameActorState(a: GmActorState, b: GmActorState): boolean {
 
 /** Pone el estado del actor sobre un enemigo recién armado desde su ficha. */
 export function applyActorState(e: EncounterEnemy, s: GmActorState): EncounterEnemy {
+  // v5.28.0: si estaba en ACPA, vuelve a subir (con sus armas Onboard) antes de poner balas y HP.
+  const base = s.acpa ? boardEnemy(e, s.acpa) : e;
   return {
-    ...e,
+    ...base,
     currentHp: s.hp,
     maxHp: s.maxHp,
     currentHeadSp: s.headSp,
@@ -110,6 +117,8 @@ export function healedState(s: GmActorState, weaponMags: number[]): GmActorState
     headSp: s.maxHeadSp,
     bodySp: s.maxBodySp,
     injuries: [],
+    // v5.28.0: curar a tope también deja la ACPA reparada (IR5 p.135).
+    ...(s.acpa ? { acpa: { ...s.acpa, hp: s.acpa.maxHp, sp: s.acpa.maxSp } } : {}),
     ammo: s.ammo.map((a, i) => {
       const mag = weaponMags[i] ?? 0;
       if (mag <= 0) return a;
