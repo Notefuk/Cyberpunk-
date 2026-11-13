@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.35.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: las 15 facciones canon',
+    summary: 'Empieza el Danger Gal Dossier. El bestiario tiene ahora las 15 facciones reales del libro: tocando una ves su base, su historia reciente, sus recursos y sus objetivos, con página. Las que aparecen en la guía de 2077 de CEMK dicen además cómo están en 2077. La lista anterior de facciones era inventada y se borró. Las 118 fichas de PNJ llegan en las próximas versiones.',
+    highlights: [
+      'Ficha de cada facción en el bestiario (Danger Gal Dossier pp.9-142).',
+      'Línea "En 2077" para 6 facciones (Edgerunners Handbook de CEMK pp.24-31).',
+      'Se borró la lista de facciones inventada.'
+    ],
+    filesTouched: ['frontend/src/data/dangerGalFactions.ts', 'frontend/src/features/gm/EnemiesCompendiumPanel.tsx', 'frontend/src/data/enemiesCatalog.ts'],
+    metricsBadge: 'v5.35.0 • Danger Gal • 15 facciones'
+  },
+  {
     version: 'v5.34.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1927,6 +1943,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.35.0': true,
     'v5.34.0': true,
     'v5.33.0': true,
     'v5.32.0': true,

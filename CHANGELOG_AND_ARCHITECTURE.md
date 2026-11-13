@@ -117,6 +117,17 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.35.0] - 2026-11-13 (Plan 32 I: las 15 facciones canon de Danger Gal Dossier) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon y herramientas del GM (Danger Gal Dossier pp.9-142; Edgerunners Handbook de CEMK pp.24-31).
+* **What Changed**:
+  * **Facciones canon**: `data/dangerGalFactions.ts` trae las 15 facciones del libro (6th Street, Bozos, Puma Squad, Digital Divas, Edgerunners, Generation Red, Maelstrom, NCPD Precinct #1, Network 54, Piranhas, Sightseers, Team Monster, Trauma Team NC4-2, Tyger Claws y Zoners), cada una con página, quién firma el informe y base, historia reciente, recursos y objetivos en paráfrasis corta. Reemplaza la lista inventada de `enemiesCatalog.ts` (tenía facciones que no están en el libro, como Continental Brands o Zhirafa).
+  * **Ficha de facción en el bestiario**: tocar una facción en la barra la filtra y muestra su ficha. Generation Red trae el recuadro "Kids in Night City" (p.66).
+  * **En 2077**: 6 facciones (6th Street, Maelstrom, NCPD, Network 54, Trauma Team y Tyger Claws) llevan lo que dice de ellas la Lore Guide de CEMK, con página. Las otras 9 no figuran en esa guía y la ficha lo aclara, sin inventar.
+  * Conteo por facción exacto (antes contaba de más) y encabezado del bestiario sin la promesa falsa de "128 PNJ canónicos". El PNJ custom arranca con facción "Independiente".
+* **Files Modified**: nuevos `data/dangerGalFactions.ts` y `engine/__tests__/dangerGal.test.ts` (5 tests); `data/enemiesCatalog.ts` (-167 líneas inventadas, reexporta la lista canon), `features/gm/EnemiesCompendiumPanel.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app; plan `docs/plans/plan32-danger-gal.md`.
+* **Verificación**: tsc, 790 tests y build. En el navegador: barra con las 15 facciones, ficha de Maelstrom con su línea de 2077, consola limpia.
+* **Pendiente del plan 32**: las 118 fichas (v5.36.0 a v5.38.0; las 95 inventadas siguen hasta la v5.36.0), New Gear y vehículos (v5.39.0) y el creador guiado (v5.40.0).
+
 ### [v5.34.0] - 2026-11-13 (Plan 31 VI: nivel mercenario de Solo of Fortune 2045; cierra el plan 31) [Claude Code · 2026-11-13]
 * **Category**: Contenido canon, herramientas del GM y ficha (Interface RED Vol. 5 pp.106-108, 144-147).
 * **What Changed**:

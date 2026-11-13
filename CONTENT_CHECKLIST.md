@@ -219,7 +219,7 @@
 ### 5. `DANGER GAL DOSSIER` (Expansión Completa de Facciones, Creador de NPCs y Tema Visual)
 *Módulo de inteligencia civil, agencias de detectives, facciones encubiertas y diseño de encuentros.*
 *(Nota: En Fase 2 ya se integró una primera tanda de operativos y armas de Danger Gal).*
-- [x] **Completar los 118 PNJs Oficiales (`118 New NPCs`)** distribuidos en las **15 Facciones (`15 Factions`)**.
+- [~] **Completar los 118 PNJs Oficiales (`118 New NPCs`)** distribuidos en las **15 Facciones (`15 Factions`)**. [Claude Code · 2026-11-13] Estaba marcado como hecho y no lo estaba: había 95 fichas y 15 facciones inventadas. Plan 32: las 15 facciones canon están desde la v5.35.0; las 118 fichas, en v5.36.0 a v5.38.0.
 - [x] **Nuevo Flujo de Creación de PNJs Personalizados (`New Workflow for Custom NPCs`)** para el Director de Juego.
 - [x] **Tema Visual "Danger Gal" (`Danger Gal Theme`)** seleccionable en la interfaz y **Retratos de Personajes (`New Character Portraits`)**.
 
@@ -254,7 +254,7 @@
   - 23 nuevas formas/estilos de artes marciales (sumadas a Aikido, Karate, Judo y Taekwondo).
   - 46 nuevos movimientos especiales de artes marciales integrados en el HUD de Combate (`CombatHudView.tsx`) para ejecutar llaves, golpes especiales y combos con sus requisitos de STATs y DVs.
 - [x] **Integración Módulo Premium `DANGER GAL DOSSIER` (Expansión de Facciones, NPCs y Estilo)**:
-  - Completar los 118 PNJs oficiales en sus 15 facciones en el bestiario táctico (`EnemiesCompendiumPanel.tsx`).
+  - Completar los 118 PNJs oficiales en sus 15 facciones en el bestiario táctico (`EnemiesCompendiumPanel.tsx`). [Claude Code · 2026-11-13] Pendiente: ver el ítem de arriba (plan 32).
   - Flujo de creación de PNJs personalizados (*New Workflow for Custom NPCs*) integrado en la Consola Fixer (`FixerDeckView.tsx`).
   - Tema visual "Danger Gal" (neón rosa/magenta/negro) y nuevos retratos de personajes oficiales.
 - [x] **Aventura Oneshot Oficial `RED CHROME CARGO (CEMK 2077 Edition)` (`RedChromeCargoView.tsx` & `redChromeCargoData.ts`)**:

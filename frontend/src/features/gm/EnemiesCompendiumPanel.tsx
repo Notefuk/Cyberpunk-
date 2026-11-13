@@ -16,6 +16,7 @@ import {
   type EnemyCombatBase,
   type EnemyWeaponProfile
 } from '../../data/enemiesCatalog';
+import { dangerGalFactionByName, DANGER_GAL_BOOK, CEMK_LORE_GUIDE } from '../../data/dangerGalFactions';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { portEnemyToCemk } from '../../engine/cemkPort';
 import type { StatKey, CharacterEra } from '../../types/cyberpunk';
@@ -313,7 +314,7 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
   const [customNpcForm, setCustomNpcForm] = useState({
     name: '',
     subtitle: 'Mercenario Independiente',
-    faction: 'Danger Gal Operations',
+    faction: 'Independiente',
     threatTier: 'mook' as ThreatTier,
     era: '2045' as CharacterEra,
     role: 'Solo',
@@ -995,10 +996,10 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
             <BookOpen className="w-5 h-5 text-amber-400" />
             <div>
               <h2 className="font-tech text-base font-bold text-white uppercase tracking-wider">
-                COMPENDIO TÁCTICO // 15 FACCIONES & 128 NPCS CANÓNICOS
+                COMPENDIO TÁCTICO // BESTIARIO Y FACCIONES
               </h2>
               <p className="text-[11px] font-mono-code text-slate-400">
-                Danger Gal Dossier completo (15 Facciones), Core 2045, CEMK 2077 y Creador de PNJ
+                Core, CEMK, Hardened, Interface RED y las 15 facciones de Danger Gal Dossier, con porte CEMK 2077 y Creador de PNJ
               </p>
             </div>
           </div>
@@ -1126,7 +1127,7 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
               TODAS ({combinedCatalog.length})
             </button>
             {DANGER_GAL_15_FACTIONS.map((fac) => {
-              const count = combinedCatalog.filter((e) => e.faction.toLowerCase().includes(fac.name.toLowerCase()) || fac.name.toLowerCase().includes(e.faction.toLowerCase())).length;
+              const count = combinedCatalog.filter((e) => e.faction === fac.name).length;
               const isSelected = selectedFaction === fac.name;
               return (
                 <button
@@ -1155,6 +1156,57 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
             })}
           </div>
         </div>
+
+        {/* [Claude Code · 2026-11-13] v5.35.0 (plan 32): ficha de la facción canon elegida (Danger Gal Dossier). */}
+        {(() => {
+          const fac = selectedFaction !== 'all' ? dangerGalFactionByName(selectedFaction) : undefined;
+          if (!fac) return null;
+          const rows: Array<[string, string]> = [
+            ['Base de operaciones', fac.base],
+            ['Historia reciente', fac.history],
+            ['Recursos', fac.resources],
+            ['Objetivos', fac.goals],
+          ];
+          return (
+            <div className="chamfer-card bg-[#10121b] border p-3.5 space-y-2" style={{ borderColor: fac.threatColor }} data-testid="dg-faction-card">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h3 className="font-tech text-sm font-bold uppercase" style={{ color: fac.threatColor }}>
+                  {fac.name}
+                </h3>
+                <span className="text-[10px] font-mono-code text-slate-400">
+                  {DANGER_GAL_BOOK} p.{fac.sourcePage} · informe de {fac.preparedBy}
+                </span>
+              </div>
+              <p className="text-[12px] text-slate-200">{fac.summary}</p>
+              <dl className="grid gap-1.5 sm:grid-cols-2">
+                {rows.map(([k, v]) => (
+                  <div key={k}>
+                    <dt className="text-[10px] font-mono-code uppercase text-slate-400 font-bold">{k}</dt>
+                    <dd className="text-[11px] text-slate-300">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+              {fac.sidebar && (
+                <div className="border border-[#23293c] rounded-xs p-2">
+                  <p className="text-[10px] font-mono-code uppercase text-slate-400 font-bold">
+                    {fac.sidebar.title} (p.{fac.sidebar.page})
+                  </p>
+                  <p className="text-[11px] text-slate-300">{fac.sidebar.text}</p>
+                </div>
+              )}
+              {fac.in2077 ? (
+                <div className="border border-cyan-900/60 bg-cyan-950/20 rounded-xs p-2">
+                  <p className="text-[10px] font-mono-code uppercase text-cyan-300 font-bold">
+                    En 2077 ({CEMK_LORE_GUIDE} p.{fac.in2077.page})
+                  </p>
+                  <p className="text-[11px] text-slate-300">{fac.in2077.text}</p>
+                </div>
+              ) : (
+                <p className="text-[10px] font-mono-code text-slate-500">La guía de 2077 de CEMK no menciona a esta facción.</p>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Listado de Tarjetas de Enemigos */}
         <div className="space-y-3 pt-2">
