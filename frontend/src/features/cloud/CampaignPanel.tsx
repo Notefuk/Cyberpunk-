@@ -313,6 +313,11 @@ function CampaignCard({ camp, uid, busy, run }: CardProps) {
                   <span>SP cabeza {p.headSp}/{p.headSpMax}</span>
                   <span>SP torso {p.bodySp}/{p.bodySpMax}</span>
                 </div>
+                {p.acpa && (
+                  <div className="text-[#facc15]">
+                    En ACPA {p.acpa.name}: HP {p.acpa.hp}/{p.acpa.maxHp} · SP {p.acpa.sp}/{p.acpa.maxSp}{p.acpa.hp <= 0 ? ' · DESTRUIDA' : ''}
+                  </div>
+                )}
                 {p.injuries.length > 0 && <div className="text-[#ef4444]">Críticas: {p.injuries.join(', ')}</div>}
               </li>
             ))}

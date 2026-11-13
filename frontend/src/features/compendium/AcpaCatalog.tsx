@@ -14,7 +14,8 @@ import {
   type AcpaShellId,
   type AcpaTunings,
 } from '../../data/acpaData';
-import { buildAcpa, prebuiltAcpaStats, type AcpaOnboardItem, type AcpaStats } from '../../engine/acpa';
+import { acpaStateFrom, acpaStateFromPrebuilt, buildAcpa, prebuiltAcpaStats, type AcpaOnboardItem, type AcpaStats } from '../../engine/acpa';
+import { useCharacterStore } from '../../store/useCharacterStore';
 
 type CatalogRow = { name: string; cost?: number; type?: string };
 const pack = coreData as unknown as { weapons: CatalogRow[]; cyberware: CatalogRow[] };
@@ -109,6 +110,17 @@ export function AcpaCatalog() {
   const [weapons, setWeapons] = useState<AcpaOnboardItem[]>([]);
   const [cyber, setCyber] = useState<AcpaOnboardItem[]>([]);
 
+  // v5.27.0 [Claude Code · 2026-11-12]: asignar la ACPA a la ficha activa (se entra desde la ficha o el HUD).
+  const activeChar = useCharacterStore((s) => s.getActiveCharacter());
+  const setAcpaFor = useCharacterStore((s) => s.setAcpaFor);
+  const [assigned, setAssigned] = useState<string | null>(null);
+  const assign = (acpa: ReturnType<typeof acpaStateFromPrebuilt>) => {
+    if (!activeChar) return;
+    setAcpaFor(activeChar.id, acpa);
+    setAssigned(`${acpa.name} asignada a ${activeChar.handle}. Entrá desde ARSENAL & BLINDAJE o el HUD de combate.`);
+  };
+  const [customName, setCustomName] = useState('ACPA propia');
+
   const stats = useMemo(() => buildAcpa({ frame, shell, tunings, onboardWeapons: weapons, onboardCyberware: cyber }), [frame, shell, tunings, weapons, cyber]);
 
   return (
@@ -198,7 +210,28 @@ export function AcpaCatalog() {
               {e}
             </div>
           ))}
+          {activeChar && (
+            <div className="flex gap-1.5 mt-2">
+              <input
+                className={selectCls}
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+                aria-label="Nombre de la ACPA"
+              />
+              <button
+                type="button"
+                disabled={stats.errors.length > 0}
+                onClick={() =>
+                  assign(acpaStateFrom(customName.trim() || 'ACPA propia', stats, { weapons: weapons.map((w) => w.name), cyberware: cyber.map((c) => c.name) }))
+                }
+                className="px-3 text-xs font-mono-code border border-[#facc15] text-[#facc15] rounded-xs disabled:opacity-40 cursor-pointer shrink-0"
+              >
+                Asignar a {activeChar.handle}
+              </button>
+            </div>
+          )}
         </div>
+        {assigned && <p className="text-[11px] font-mono-code text-[#4ade80]">{assigned}</p>}
       </section>
 
       {/* Las 10 de fábrica */}
@@ -229,6 +262,15 @@ export function AcpaCatalog() {
                 <div className="text-[11px] text-slate-300">
                   <b>Ciberware:</b> {p.onboardCyberware.length ? p.onboardCyberware.join(', ') : 'Ninguno'}
                 </div>
+                {activeChar && (
+                  <button
+                    type="button"
+                    onClick={() => assign(acpaStateFromPrebuilt(p))}
+                    className="px-2 py-0.5 text-[11px] border border-[#facc15]/70 text-[#facc15] rounded-xs cursor-pointer"
+                  >
+                    Asignar a {activeChar.handle}
+                  </button>
+                )}
                 {p.erratum && (
                   <div className="text-[10px] text-[#facc15] border-t border-[#262c3e] pt-1">
                     Errata: el libro imprime &ldquo;{p.printedLine}&rdquo;. {p.erratum}

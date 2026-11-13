@@ -5,6 +5,7 @@ import type {
   ActiveCriticalInjury,
   ActiveDrugEffect,
   ActiveFbcState,
+  ActiveAcpaState,
   AppThemeId,
   ArmorItem,
   CharacterDebt,
@@ -421,6 +422,8 @@ export interface CharacterStoreState {
   inflictRandomInjuryFor: (characterId: string, location: 'head' | 'body') => ActiveCriticalInjury | null;
   /** Aplica los efectos de un impacto (planImpactEffects) y devuelve las heridas críticas que salieron. */
   applyImpactTo: (characterId: string, effects: ImpactEffects) => ActiveCriticalInjury[];
+  /** v5.27.0 [Claude Code · 2026-11-12]: asigna, cambia o quita (undefined) la ACPA del personaje (IR5 pp.133-142). */
+  setAcpaFor: (characterId: string, acpa: ActiveAcpaState | undefined) => void;
   /** Condiciones de `data/conditions.ts`; `since` = round en que empezó (si hay combate). */
   addConditionFor: (characterId: string, conditionId: string, since?: number) => void;
   removeConditionFor: (characterId: string, conditionId: string) => void;
@@ -1776,6 +1779,17 @@ export const useCharacterStore = create<CharacterStoreState>()(
           st.addDeathSavePenaltyFor(characterId, 1);
         }
         return injuries;
+      },
+
+      setAcpaFor: (characterId, acpa) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== characterId) return c;
+            if (acpa) return { ...c, acpaState: acpa };
+            const { acpaState: _removed, ...rest } = c;
+            return rest as CharacterSheet;
+          })
+        }));
       },
 
       addConditionFor: (characterId, conditionId, since) => {

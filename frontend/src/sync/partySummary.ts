@@ -14,6 +14,8 @@ export interface PartySummary {
   headSp: number; headSpMax: number;
   bodySp: number; bodySpMax: number;
   injuries: string[]; // nombres de activeInjuries
+  /** v5.27.0 [Claude Code · 2026-11-12]: la ACPA que está piloteando (IR5 pp.133-142). */
+  acpa?: { name: string; hp: number; maxHp: number; sp: number; maxSp: number };
 }
 
 export function buildPartySummary(sheet: CharacterSheet, ownerUid: string, ownerName: string): PartySummary {
@@ -32,6 +34,9 @@ export function buildPartySummary(sheet: CharacterSheet, ownerUid: string, owner
     bodySp: sheet.bodyArmor?.currentSp ?? 0,
     bodySpMax: sheet.bodyArmor?.maxSp ?? 0,
     injuries: (sheet.activeInjuries ?? []).map((i) => i.name),
+    ...(sheet.acpaState?.isPiloting
+      ? { acpa: { name: sheet.acpaState.name, hp: sheet.acpaState.hp, maxHp: sheet.acpaState.maxHp, sp: sheet.acpaState.sp, maxSp: sheet.acpaState.maxSp } }
+      : {}),
   };
 }
 
@@ -43,11 +48,21 @@ export function sameSummary(a: PartySummary | null | undefined, b: PartySummary 
     a.currentHp !== b.currentHp || a.maxHp !== b.maxHp || a.woundState !== b.woundState ||
     a.headSp !== b.headSp || a.headSpMax !== b.headSpMax || a.bodySp !== b.bodySp || a.bodySpMax !== b.bodySpMax
   ) return false;
+  const acpaKey = (s: PartySummary) => (s.acpa ? `${s.acpa.name}|${s.acpa.hp}|${s.acpa.maxHp}|${s.acpa.sp}|${s.acpa.maxSp}` : '');
+  if (acpaKey(a) !== acpaKey(b)) return false;
   if (a.injuries.length !== b.injuries.length) return false;
   return a.injuries.every((n, i) => n === b.injuries[i]);
 }
 
 const WOUND_STATES = ['none', 'light', 'serious', 'mortal'] as const;
+
+function parseAcpa(v: unknown): Pick<PartySummary, 'acpa'> {
+  if (!v || typeof v !== 'object') return {};
+  const o = v as Record<string, unknown>;
+  if (typeof o.name !== 'string' || typeof o.hp !== 'number' || typeof o.sp !== 'number') return {};
+  const n = (x: unknown) => (typeof x === 'number' ? x : 0);
+  return { acpa: { name: o.name, hp: o.hp, maxHp: n(o.maxHp), sp: o.sp, maxSp: n(o.maxSp) } };
+}
 
 export function parsePartySummary(data: Record<string, unknown>): PartySummary | null {
   if (typeof data.ownerUid !== 'string' || typeof data.handle !== 'string') return null;
@@ -68,5 +83,6 @@ export function parsePartySummary(data: Record<string, unknown>): PartySummary |
     bodySp: num(data.bodySp),
     bodySpMax: num(data.bodySpMax),
     injuries: Array.isArray(data.injuries) ? data.injuries.filter((x): x is string => typeof x === 'string') : [],
+    ...parseAcpa(data.acpa),
   };
 }

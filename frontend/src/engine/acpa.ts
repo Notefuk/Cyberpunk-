@@ -15,6 +15,8 @@ import {
   type AcpaShellId,
   type AcpaTunings,
 } from '../data/acpaData';
+import type { IncomingAttackType } from './combatEngine';
+import type { ActiveAcpaState, CharacterSheet } from '../types/cyberpunk';
 
 export interface AcpaOnboardItem {
   name: string;
@@ -116,19 +118,21 @@ export interface AcpaDamageResult {
 
 /**
  * Daño a una ACPA (IR5 pp.133-134): el daño que supera el SP baja el HP y ablaciona el SP en 1.
- * No hay Wound Threshold ni Aimed Shot; a 0 HP queda Destruida y deja de proteger.
- * `halveSp`: para ataques que ignoran la mitad del SP. Las Martial Arts y los Special Moves
- * NO la ignoran contra una ACPA (p.133), así que quien llama no debe pasarlo en ese caso.
+ * No hay Wound Threshold ni Aimed Shot (la cabeza no multiplica); a 0 HP queda Destruida y deja de proteger.
+ * Tipos de ataque como en el Core (p.176, pp.186-187): Melee ignora la mitad del SP (redondeo arriba), Armor-Piercing
+ * ablaciona 2 y el daño directo va todo al HP. Las Martial Arts NO ignoran la mitad del SP de una ACPA (IR5 p.133).
  * Una ACPA destruida no absorbe nada: devuelve el estado sin cambios.
  */
-export function acpaTakeDamage(state: AcpaDamageState, damage: number, opts: { halveSp?: boolean } = {}): AcpaDamageResult {
+export function acpaTakeDamage(state: AcpaDamageState, damage: number, attackType: IncomingAttackType = 'standard'): AcpaDamageResult {
   if (state.hp <= 0) return { state, hpLost: 0, ablated: false, destroyed: true };
-  const effectiveSp = opts.halveSp ? Math.ceil(state.sp / 2) : state.sp;
+  const direct = attackType === 'direct';
+  const effectiveSp = direct ? 0 : attackType === 'melee' ? Math.ceil(state.sp / 2) : state.sp;
   const through = Math.max(0, damage - effectiveSp);
   if (through === 0) return { state, hpLost: 0, ablated: false, destroyed: false };
   const hp = Math.max(0, state.hp - through);
-  const sp = Math.max(0, state.sp - 1);
-  return { state: { ...state, hp, sp }, hpLost: state.hp - hp, ablated: true, destroyed: hp === 0 };
+  const ablation = direct ? 0 : Math.min(state.sp, attackType === 'ap' ? 2 : 1);
+  const sp = state.sp - ablation;
+  return { state: { ...state, hp, sp }, hpLost: state.hp - hp, ablated: ablation > 0, destroyed: hp === 0 };
 }
 
 /** Una Herida Crítica a la ACPA no se aplica: el piloto recibe 5 de daño directo, 0 si es FBC (IR5 p.133). */
@@ -194,4 +198,75 @@ export function acpaAllowsBulletDodge(
   if (pilot.pilotRef >= 8 && pilot.hasReflexCoProcessor && acpa.ref >= 0) return true;
   if (pilot.pilotDex >= 8 && acpa.ref >= 0 && acpa.dex >= 0 && acpa.move >= 0) return true;
   return (pilot.combatAwarenessRank ?? 0) >= 6;
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// v5.27.0 [Claude Code · 2026-11-12]: la ACPA en la ficha del PJ.
+
+/** Arma el estado de una ACPA para la ficha, con HP y SP llenos y fuera de ella. */
+export function acpaStateFrom(name: string, stats: AcpaStats, onboard: { weapons: string[]; cyberware: string[] }, prebuiltId?: string): ActiveAcpaState {
+  return {
+    ...(prebuiltId ? { prebuiltId } : {}),
+    name,
+    hp: stats.hp,
+    maxHp: stats.hp,
+    sp: stats.sp,
+    maxSp: stats.sp,
+    body: stats.body,
+    ref: stats.ref,
+    dex: stats.dex,
+    move: stats.move,
+    onboardWeapons: onboard.weapons,
+    onboardCyberware: onboard.cyberware,
+    isPiloting: false,
+  };
+}
+
+export function acpaStateFromPrebuilt(p: AcpaPrebuilt): ActiveAcpaState {
+  return acpaStateFrom(p.name, prebuiltAcpaStats(p), { weapons: p.onboardWeapons, cyberware: p.onboardCyberware }, p.id);
+}
+
+/** Pilotea una ACPA que todavía protege (no destruida). Una destruida no da mods ni absorbe daño (IR5 p.134). */
+export function isPilotingAcpa(c: Pick<CharacterSheet, 'acpaState'> | null | undefined): boolean {
+  return Boolean(c?.acpaState?.isPiloting && c.acpaState.hp > 0);
+}
+
+/** Mod con signo que la ACPA suma a REF, DEX o MOVE del piloto (IR5 p.134). 0 si no pilotea. */
+export function acpaStatMod(c: Pick<CharacterSheet, 'acpaState'>, stat: 'REF' | 'DEX' | 'MOVE'): number {
+  if (!isPilotingAcpa(c)) return 0;
+  const a = c.acpaState!;
+  return stat === 'REF' ? a.ref : stat === 'DEX' ? a.dex : a.move;
+}
+
+/** BODY del Linear Frame de la ACPA (0 si no pilotea). No cambia el HP ni el Death Save (IR5 p.134). */
+export function acpaBody(c: Pick<CharacterSheet, 'acpaState'>): number {
+  return isPilotingAcpa(c) ? c.acpaState!.body : 0;
+}
+
+export interface AcpaHitResolution {
+  acpa: ActiveAcpaState;
+  /** Daño directo al HP del piloto por la crítica (5, o 0 si es FBC; IR5 p.133). */
+  pilotDamage: number;
+  hpLost: number;
+  destroyed: boolean;
+  /** Resumen para el log: "ACPA SP 16→15 · HP 25→17". */
+  summary: string;
+}
+
+/**
+ * Un golpe al PJ que pilotea: lo recibe la ACPA (IR5 p.133). La armadura del piloto no pierde SP.
+ * Una Herida Crítica no se aplica a la ACPA ni suma +5 a su HP: el piloto recibe 5 directo (0 si es FBC).
+ */
+export function resolveHitOnAcpa(
+  acpa: ActiveAcpaState,
+  hit: { damage: number; attackType: IncomingAttackType; isCritical: boolean },
+  pilotIsFbc: boolean,
+): AcpaHitResolution {
+  const r = acpaTakeDamage(acpa, hit.damage, hit.attackType);
+  const pilotDamage = hit.isCritical ? acpaCriticalFeedback(pilotIsFbc) : 0;
+  const next: ActiveAcpaState = { ...acpa, hp: r.state.hp, sp: r.state.sp };
+  const parts = [`ACPA SP ${acpa.sp}→${next.sp}`, `HP ${acpa.hp}→${next.hp}`];
+  if (r.destroyed && acpa.hp > 0) parts.push('ACPA destruida (IR5 p.134)');
+  if (hit.isCritical) parts.push(`crítica: ${pilotDamage} al piloto (IR5 p.133)`);
+  return { acpa: next, pilotDamage, hpLost: r.hpLost, destroyed: r.destroyed, summary: parts.join(' · ') };
 }

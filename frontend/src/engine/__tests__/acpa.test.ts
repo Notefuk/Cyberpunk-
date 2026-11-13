@@ -89,8 +89,11 @@ describe('Daño, críticas y reparación (IR5 pp.133-135)', () => {
     expect(acpaTakeDamage(r.state, 50).state).toBe(r.state);
   });
 
-  it('la mitad del SP redondea para arriba', () => {
-    expect(acpaTakeDamage(full, 10, { halveSp: true }).hpLost).toBe(1);
+  it('Melee ignora la mitad del SP (arriba), Martial Arts no; AP ablaciona 2; directo va al HP', () => {
+    expect(acpaTakeDamage(full, 10, 'melee').hpLost).toBe(1);
+    expect(acpaTakeDamage(full, 10, 'martial_arts').hpLost).toBe(0);
+    expect(acpaTakeDamage(full, 20, 'ap').state.sp).toBe(15);
+    expect(acpaTakeDamage(full, 6, 'direct').state).toEqual({ ...full, hp: 24 });
   });
 
   it('la crítica le hace 5 al piloto, 0 si es FBC', () => {

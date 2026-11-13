@@ -538,6 +538,28 @@ export interface ActiveFbcState {
   preFbcBodyArmor?: CharacterSheet['bodyArmor'];
 }
 
+/**
+ * [Claude Code · 2026-11-12] v5.27.0 (plan 30): ACPA asignada al personaje ("Solo of Fortune 2045", IR5 pp.133-142).
+ * Un solo SP y un solo HP (p.133). Los mods de REF, DEX y MOVE y el BODY del frame solo valen mientras pilotea
+ * y la ACPA no está destruida (p.134).
+ */
+export interface ActiveAcpaState {
+  /** id de `ACPA_PREBUILTS` si es una de fábrica. */
+  prebuiltId?: string;
+  name: string;
+  hp: number;
+  maxHp: number;
+  sp: number;
+  maxSp: number;
+  body: number;
+  ref: number;
+  dex: number;
+  move: number;
+  onboardWeapons: string[];
+  onboardCyberware: string[];
+  isPiloting: boolean;
+}
+
 export interface OwnedVehicle {
   instanceId: string;
   catalogId: string;
@@ -640,6 +662,8 @@ export interface CharacterSheet {
   debt?: CharacterDebt;
   portraitId?: string;
   fbcState?: ActiveFbcState;
+  /** v5.27.0 [Claude Code · 2026-11-12]: ACPA del personaje (IR5 pp.133-142). */
+  acpaState?: ActiveAcpaState;
   soloAllocation?: SoloCombatAwarenessAllocation;
   knownMartialArts?: Record<string, number>;
   vehicles?: OwnedVehicle[];

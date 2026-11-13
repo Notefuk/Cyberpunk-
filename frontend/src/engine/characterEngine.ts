@@ -10,6 +10,7 @@ import { SKILL_METADATA } from '../types/cyberpunk';
 import { calculateWeaponAttachmentBonuses } from '../data/weaponAttachmentsAndTechData';
 import { cyberwareStatBonus } from './cyberwareEffects';
 import { parseAutofireMode } from '../data/rangeTables';
+import { acpaBody, acpaStatMod } from './acpa';
 
 export function calculateMaxHp(body: number, will: number): number {
   return 10 + 5 * Math.ceil((body + will) / 2);
@@ -162,9 +163,17 @@ export function calculateWeaponAttackBreakdown(
   if ((statKey === 'REF' || statKey === 'DEX' || statKey === 'MOVE') && character.fbcState?.isFullBodyConversion) {
     statVal = Math.max(statVal, character.fbcState.statFloor ?? 0);
   }
-  const skillVal = character.skills?.[skillKey] ?? 0;
-
   const penaltyBreakdown: string[] = [];
+  // v5.27.0 [Claude Code · 2026-11-12]: dentro de una ACPA, REF y DEX llevan sus mods y el BODY es el del frame (IR5 p.134).
+  if (statKey === 'REF' || statKey === 'DEX') {
+    const mod = acpaStatMod(character, statKey);
+    if (mod !== 0) {
+      statVal = Math.max(0, statVal + mod);
+      penaltyBreakdown.push(`[ACPA] ${statKey} ${mod > 0 ? '+' : ''}${mod} (incluido en el STAT)`);
+    }
+  }
+  if (statKey === 'BODY') statVal = Math.max(statVal, acpaBody(character));
+  const skillVal = character.skills?.[skillKey] ?? 0;
 
   // 1. Penalizador de Armadura (Afecta a REF y DEX; se toma el mayor entre cabeza y cuerpo)
   const armorPenalty = statKey === 'REF' || statKey === 'DEX' ? armorStatPenalty(character, statKey) : 0;
@@ -271,9 +280,11 @@ export function armorStatPenalty(character: Pick<CharacterSheet, 'headArmor' | '
 
 export function getEffectiveMove(character: CharacterSheet): number {
   const isFbc = Boolean(character.fbcState?.isFullBodyConversion);
-  const baseMove = isFbc
+  const baseMoveRaw = isFbc
     ? Math.max(character.stats?.MOVE ?? 0, character.fbcState?.statFloor ?? 0)
     : (character.stats?.MOVE ?? 0);
+  // v5.27.0 [Claude Code · 2026-11-12]: el MOVE del piloto lleva el mod de la ACPA (IR5 p.134).
+  const baseMove = Math.max(0, baseMoveRaw + acpaStatMod(character, 'MOVE'));
   let penalty = armorStatPenalty(character, 'MOVE');
 
   // Core p. 186: Mortally Wounded da -6 a MOVE (mínimo 1).

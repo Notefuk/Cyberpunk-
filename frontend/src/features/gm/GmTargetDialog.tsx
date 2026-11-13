@@ -9,6 +9,7 @@ import { useEncounterStore } from '../../store/encounterStore';
 import { useRulesSettingsStore } from '../../store/rulesSettingsStore';
 import type { IncomingAttackType } from '../../engine/combatEngine';
 import { applyHitToPc, pcImpactInput, previewPcImpact } from './gmDamage';
+import { isPilotingAcpa, resolveHitOnAcpa } from '../../engine/acpa';
 import { PlayerNotesEditor } from './PlayerNotesEditor';
 
 // v5.23.0 (plan 28): dar ítems (trae el catálogo entero, se carga al abrir la pestaña) y notas por jugador. [Claude Code · 2026-11-12]
@@ -79,6 +80,8 @@ export const GmTargetDialog: React.FC<{ charId: string; onClose: () => void }> =
   const input = pcImpactInput(char, hit);
   const impact = previewPcImpact(char, hit);
   const where = location === 'head' ? 'cabeza' : 'cuerpo';
+  // v5.27.0 [Claude Code · 2026-11-12]: si pilotea una ACPA, el golpe va a la ACPA (IR5 p.133).
+  const acpaPreview = isPilotingAcpa(char) ? resolveHitOnAcpa(char.acpaState!, hit, Boolean(char.fbcState?.isFullBodyConversion)) : null;
 
   const applyDamage = () => {
     const summary = applyHitToPc(charId, hit, `daño ${damage} en ${where}${isCritical ? ' (crítico)' : ''}`);
@@ -158,11 +161,17 @@ export const GmTargetDialog: React.FC<{ charId: string; onClose: () => void }> =
               <input type="checkbox" checked={isCritical} onChange={(e) => setIsCritical(e.target.checked)} /> Crítico (dos 6)
             </label>
           </div>
+          {acpaPreview ? (
+          <p className="font-mono-code text-[11px] text-[#facc15]">
+            En ACPA ({char.acpaState!.name}): {acpaPreview.summary}. La recibe la ACPA: sin cabeza x2, sin herida crítica y la armadura del piloto no pierde SP (IR5 pp.133-134).
+          </p>
+          ) : (
           <p className="font-mono-code text-[11px] text-[#94a3b8]">
             SP efectivo {impact.effectiveSp} · −{impact.spAblation} SP · −{impact.hpLoss} HP
             {isCritical ? ' · herida crítica al azar (+5 directo, Core p.187)' : ''} · Core pp.176, 186-188.
             {char.currentHp < 1 && attackType !== 'direct' && impact.hpLoss > 0 ? ' Mortally Wounded: otra herida y +1 al Death Save Penalty (Core p.188).' : ''}
           </p>
+          )}
           <p className="font-mono-code text-[10px] text-[#64748b]">El Damage Deflection del Solo (Core p.146) lo aplica el jugador desde su HUD.</p>
           <button type="button" onClick={applyDamage} disabled={damage <= 0} className={`${btn} border-red-500/60 text-red-200 hover:bg-red-500/10`}>Aplicar daño</button>
         </div>
