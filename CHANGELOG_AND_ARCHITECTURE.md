@@ -117,6 +117,16 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.30.0] - 2026-11-13 (Plan 31 II: generadores del GM del Interface RED Vol. 5) [Claude Code · 2026-11-13]
+* **Category**: Herramientas del GM. Tres pestañas nuevas en TABLAS DEL GM.
+* **What Changed**:
+  * **Screamsheet (IR5 pp.83-96)**: la Tabla A (1d6) elige el tipo (Flash de Noticias, En Luces de Neón o Se Busca Personal), y se tira intro, cuerpo y cierre con 1d6 cada uno. El titular sale entre los que permite el cierre y se puede cambiar, y la firma es de uno de los 12 periodistas. Los campos entre corchetes se completan en la app, y el texto se copia para dárselo a los jugadores.
+  * **Gunpath (IR5 pp.48-53)**: fabricante (1d100), tipo (1d10, con su sub-tirada para arco o ballesta y para lanzagranadas o lanzacohetes), calidad (1d6), attachments por Skill y esquema de nombre (1d100). El costo baja o sube una Categoría por la calidad, y los attachments solo suben la Categoría si el total llega a la siguiente (p.51). El arma se puede equipar al PJ activo: usa la ficha del Core con calidad, costo y attachments de fábrica.
+  * El libro no dice cuántos attachments lleva un arma ni qué pasa con los repetidos: el GM elige la cantidad (0 a 3) y la app vuelve a tirar los repetidos y los que no son elegibles (Silencer y Grapple Gun Underbarrel, p.48).
+  * **Referencias IR5**: reglas de roller derby (pp.18-21), los 13 avisos del Hiring Hall (p.132; el plan decía 14, el libro trae 13), parámetros de misión mercenaria (p.108) y DV para hackear Agents (pp.27-29). Se anotan las erratas del libro (diez o nueve penalizaciones en el derby; "10,0000" en Dangerous Mission).
+* **Files Modified**: nuevos `data/gmTables/screamsheet.ts`, `data/gmTables/gunpath.ts`, `data/gmTables/ir5References.ts`, `engine/screamsheet.ts`, `engine/gunpath.ts`, `features/gmtables/ScreamsheetSection.tsx`, `GunpathSection.tsx`, `Ir5ReferencesSection.tsx` y el test `engine/__tests__/ir5Generators.test.ts` (11 tests); `features/gmtables/GmTablesView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 757 tests y build. En el navegador salió una screamsheet de Se Busca Personal con sus campos, y un lanzagranadas Arasaka Excelente con Drum Magazine (1500eb, Very Expensive). Equipado al PJ da +1 al ataque; se sacó después. Consola limpia.
+
 ### [v5.29.0] - 2026-11-13 (Plan 31 I: catálogos del resto del Interface RED Vol. 5) [Claude Code · 2026-11-13]
 * **Category**: Contenido canon. Primera versión del plan 31 (resto del Interface RED Vol. 5; página impresa = índice del PDF en base 0).
 * **What Changed**:

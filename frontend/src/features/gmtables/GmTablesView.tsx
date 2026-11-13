@@ -33,8 +33,11 @@ import { DATING_INTRO, DATING_STEPS, DATING_TABLES, DATING_RULES } from '../../d
 import { COLLECTING_INTRO, COLLECTING_HOW_TO, COLLECTIONS } from '../../data/gmTables/collecting';
 import { HALLOWEEN_ADVENTURES } from '../../data/gmTables/halloween';
 import { ENEMIES_CATALOG } from '../../data/enemiesCatalog';
+import { ScreamsheetSection } from './ScreamsheetSection';
+import { GunpathSection } from './GunpathSection';
+import { Ir5ReferencesSection } from './Ir5ReferencesSection';
 
-type Section = 'achievements' | 'weather' | 'dating' | 'collecting' | 'salvaging' | 'halloween';
+type Section = 'achievements' | 'weather' | 'dating' | 'collecting' | 'salvaging' | 'halloween' | 'screamsheet' | 'gunpath' | 'ir5refs';
 
 const SECTIONS: { id: Section; label: string }[] = [
   { id: 'achievements', label: '🏆 Logros y cajas' },
@@ -43,6 +46,10 @@ const SECTIONS: { id: Section; label: string }[] = [
   { id: 'collecting', label: '🗃️ Collecting the Random' },
   { id: 'salvaging', label: '🔧 Salvaging' },
   { id: 'halloween', label: '🎃 Halloween Screamsheets' },
+  // [Claude Code · 2026-11-13] v5.30.0 (plan 31): generadores y referencias del Interface RED Vol. 5.
+  { id: 'screamsheet', label: '📰 Screamsheet' },
+  { id: 'gunpath', label: '🔫 Gunpath' },
+  { id: 'ir5refs', label: '📚 Referencias IR5' },
 ];
 
 const card = 'chamfer-card bg-[#0e1017] border border-[#202538] p-4 space-y-3';
@@ -356,6 +363,9 @@ export function GmTablesView() {
       {section === 'collecting' && <TablesSection intro={COLLECTING_INTRO} steps={COLLECTING_HOW_TO} tables={COLLECTIONS} />}
       {section === 'salvaging' && <SalvagingSection />}
       {section === 'halloween' && <HalloweenSection />}
+      {section === 'screamsheet' && <ScreamsheetSection />}
+      {section === 'gunpath' && <GunpathSection />}
+      {section === 'ir5refs' && <Ir5ReferencesSection />}
     </div>
   );
 }

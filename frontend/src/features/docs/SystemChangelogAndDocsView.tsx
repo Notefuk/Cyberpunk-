@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.30.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Herramientas del GM',
+    title: 'Screamsheets, Gunpath y referencias del IR5',
+    summary: 'Tres pestañas nuevas en TABLAS DEL GM: un generador de screamsheets para armar noticias con sus campos y copiarlas a los jugadores, Gunpath para inventar un arma con fabricante, calidad, accesorios y costo (y equiparla al PJ), y las referencias de roller derby, el Hiring Hall, los parámetros de misión y el hackeo de Agents.',
+    highlights: [
+      'Screamsheet: tipo, intro, cuerpo, cierre, titular y firma, con campos para completar (IR5 pp.83-96).',
+      'Gunpath: fabricante, tipo, calidad, accesorios y nombre, con el costo y su Categoría (IR5 pp.48-53).',
+      'Referencias: roller derby, Hiring Hall, parámetros de misión y DV para hackear Agents.'
+    ],
+    filesTouched: ['frontend/src/engine/screamsheet.ts', 'frontend/src/engine/gunpath.ts', 'frontend/src/features/gmtables/GmTablesView.tsx'],
+    metricsBadge: 'v5.30.0 • IR5 • 3 pestañas'
+  },
+  {
     version: 'v5.29.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1847,6 +1863,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.30.0': true,
     'v5.29.0': true,
     'v5.28.0': true,
     'v5.27.0': true,
