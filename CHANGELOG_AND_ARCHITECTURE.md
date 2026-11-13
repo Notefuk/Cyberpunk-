@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.29.0] - 2026-11-13 (Plan 31 I: catálogos del resto del Interface RED Vol. 5) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon. Primera versión del plan 31 (resto del Interface RED Vol. 5; página impresa = índice del PDF en base 0).
+* **What Changed**:
+  * **Toggle's Temple (pp.37-59)**: 62 armas con calidad (Poor, Standard o Excellent), ranuras libres y attachments de fábrica, tomadas de las tablas de las pp.54-59 y citando la página de cada ficha. De las 72 del libro, 10 ya estaban (9 del Core y el Type-18-S). Suma el Airhypo Bayonet y el Grapple Gun Underbarrel (p.48); el Silencer ya estaba.
+  * **All About Agents (pp.28-33)**: Breacher, Crunch Whistle, 11 apps, 4 Agents y 4 Internal Agents (Cyberaudio). Las DV para hackear un Agent van en la descripción del Breacher.
+  * **12 Days of REDmas (pp.98-101)**: Thermal Dagger, Nat's Long-Barreled Pistol (con su tabla de rango, p.99), E-TACK Rapid Responder (Burst Mode), High-Density Bulletproof Shield, CyberDude Smart Glove, Smart Ears, Stun Bayonet, el CyberConductor y su versión integrada, Quick Change Faceplate Mount, Quick Digits y Skydrivers. El Light Metalgear y el Sycust Cyberspine ya estaban.
+  * **Roller derby (p.21)**: Padding (SP7) y Skates. **Cyberpets (p.82)**: Chipware Compartment y FBC Chameleon Coating; las otras 5 son reimpresiones de Black Chrome e IR2 que ya estaban.
+  * **Calidad del arma** (`WeaponItem.quality`): Excellent suma +1 al ataque; Poor avisa que se encasquilla con un 1 natural (Interface RED Vol. 1 pp.3-4). **Ranuras** (`slots`) y **attachments de fábrica** (`preinstalledAttachments`, dan su efecto sin ocupar ranura).
+  * Las ranuras de los 3 attachments nuevos no las da el libro: se toman las del Bayonet (1) y los underbarrel (2) del Core, anotado en cada uno.
+* **Files Modified**: `data/core-rules.cprpack.json` (101 ítems), `data/rangeTables.ts`, `data/weaponAttachmentsAndTechData.ts`, `types/cyberpunk.ts`; tests `engine/__tests__/ir5CatalogRest.test.ts` (nuevo, 9 tests) y `ir5Catalog.test.ts` (acotado a pp.105-147); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 746 tests y build. En el navegador: la Towa Type-12 Police Pistol aparece en el Compendio (p.38); equipada da +2 (Calidad Excelente y Smartgun Link de fábrica) y 1 ranura. Consola limpia.
+
 ### [v5.28.0] - 2026-11-13 (Plan 30 IV: enemigos en ACPA; cierra el plan 30) [Claude Code · 2026-11-13]
 * **Category**: Modo GM. Última versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.133-142).
 * **What Changed**:

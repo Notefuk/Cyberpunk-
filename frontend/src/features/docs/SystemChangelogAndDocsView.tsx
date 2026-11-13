@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.29.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: "Toggle's Temple, Agents y REDmas",
+    summary: "Llegan al Compendio 101 ítems del Interface RED Vol. 5: la armería de Toggle's Temple (62 armas con su calidad, sus ranuras y sus accesorios de fábrica), los Agents y sus apps, el Breacher para hackearlos, los regalos de 12 Days of REDmas, el equipo de roller derby y dos ciberware nuevos. Un arma de Calidad Excelente ya suma su +1 al ataque.",
+    highlights: [
+      "62 armas de Toggle's Temple con calidad, ranuras y accesorios de fábrica (IR5 pp.37-59).",
+      'Agents, apps, Breacher e Internal Agents (IR5 pp.28-33).',
+      "12 Days of REDmas, con la tabla de rango del Nat's Long-Barreled Pistol (IR5 pp.98-101)."
+    ],
+    filesTouched: ['frontend/src/data/core-rules.cprpack.json', 'frontend/src/data/weaponAttachmentsAndTechData.ts', 'frontend/src/data/rangeTables.ts'],
+    metricsBadge: 'v5.29.0 • IR5 • 101 ítems'
+  },
+  {
     version: 'v5.28.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1831,6 +1847,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.29.0': true,
     'v5.28.0': true,
     'v5.27.0': true,
     'v5.26.0': true,
