@@ -14,17 +14,18 @@
 **Plan activo**: plan 32, Danger Gal Dossier completo con porte CEMK (`docs/plans/plan32-danger-gal.md`), v5.35.0 a v5.40.0. [Claude Code · 2026-11-13]
 
 ## Traspaso
-- Cierra: [Claude Code · 2026-11-12]
-- Rama y último commit: `main` @ 59b0cd7 (pusheada: sí). El cierre de sesión queda en `claude/checkpoint-2026-11-12`, sin pushear: falta OK.
-- A medias: nada en código.
-- Siguiente paso exacto: crear `claude/v5.22.0-actores` desde `main` y empezar la v5.22.0 del plan 28 (actores guardados): `GmActor` en `data/gmActors.ts` y `engine/gmActors.ts`, `actorId` en `EncounterEnemy` (`store/encounterStore.ts`) y la subcolección `campaigns/{c}/actors` con reglas y tests. Hay que probar con el emulador y dos navegadores, incluida la mesa de la v5.21.0, que no se probó online.
+- Cierra: [Claude Code · 2026-11-13]
+- Rama y último commit: `claude/plan32-v5.39.0` (encadenada: v5.35.0 → v5.35.1 → v5.36.0 → v5.37.0 → v5.38.0 → v5.39.0, todas desde `main` @ 670b3e5). Pusheada: no — falta OK. `main` sigue en la v5.34.0.
+- A medias: nada en código. tsc, 802 tests y build pasan en v5.39.0.
+- Siguiente paso exacto: crear `claude/plan32-v5.40.0` desde `claude/plan32-v5.39.0` y hacer el creador de PNJ guiado (DGD pp.149-152) en `features/gm/EnemiesCompendiumPanel.tsx` (formulario custom ~L310-360 y modal ~L1570). Después: push de la rama, PR a `main`, merge, beta y prod (cada uno con su OK; no hay cambios de reglas de Firestore en el plan 32).
+- Notas: el texto del PDF se vuelca con pymupdf al scratchpad (página impresa = índice); instrucciones de extracción en `data/enemies-src/DANGER_GAL_EXTRACT.md`. Erratas del libro guardadas tal cual: Flenser SW 13, Stringer Death Save 4; Drop y Paddles: la lista p.168-170 difiere de la ficha, se usa la ficha.
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
 - [Claude Code · 2026-11-13] **Plan 32** (`docs/plans/plan32-danger-gal.md`): Danger Gal Dossier (PDF `Sourcebooks/Cyberpunk-RED-Danger-Gal-Dossier_2023-07-07.pdf`; página impresa = índice del PDF). Reemplaza la v4.7.1 y la v4.7.2 del plan 6.
   - Hecho: plan guardado; v5.35.0 (`data/dangerGalFactions.ts`, ficha de facción en el bestiario, test `dangerGal.test.ts`). v5.35.1 (pedido de Giuliano, fuera del plan): bestiario y facciones solo para el GM (`canSeeGmOnly` en CombatHudView, EnemiesCompendiumPanel y el Haggle de FixerPanel). v5.36.0: 42 fichas (6th Street, Bozos, Puma Squad, Digital Divas, Edgerunners) en `data/enemies-src/danger-gal.json`; las 95 inventadas pasaron a `data/enemies/legacy-invented-danger-gal.ts` (solo para actores viejos, `findEnemySheet`). v5.37.0: 37 fichas más (Generation Red, Maelstrom, NCPD, Network 54, Piranhas); erratas del libro guardadas tal cual: Flenser SW 13 (p.72), Stringer Death Save 4 (p.94). v5.38.0: las últimas 39 (Sightseers, Team Monster, Trauma Team, Tyger Claws, Zoners, Darius y Nymph con facción "Arasaka"); 118 en total, revisadas contra la lista del libro (pp.168-170): difieren solo Drop y Paddles, se usa la ficha. v5.39.0: 4 ítems nuevos en el pack (ids `dg-*`), 27 con "También en Danger Gal Dossier p.N", fuera `danger-gal-kitty-smg`; `vehicles` en `dangerGalFactions.ts`; NET `net-dg-crab-lord-portable` (`data/netArchitecturesDangerGal.ts`), fuera `net-danger-gal-archive`.
   - Siguiente: v5.40.0 en `claude/plan32-v5.40.0` (desde v5.39.0): creador de PNJ guiado con las NPC Creation Guidelines (pp.149-152: niveles, Hardening, 6 pasos, plantillas Mook/LT/Mini-Boss/Boss), reemplazando el formulario de PNJ custom de `EnemiesCompendiumPanel.tsx`; facción de la lista canon y era 2045/2077; cierra el plan 32.
-  - Pendiente: v5.36.0 a v5.38.0 (118 fichas en 3 tandas, se borran las 95 inventadas), v5.39.0 (New Gear, vehículos, CrAB Drone y su NET) y v5.40.0 (creador de PNJ guiado).
+  - Pendiente: solo v5.40.0 (creador de PNJ guiado) y publicar.
   - Desvío: el plan cita algunas páginas con +1 (las del índice del PDF son 1-based). En los datos va la página impresa: facciones 9-131, CrAB Drone 42, Herakles 112, Mi-60 120, Chupacabra 139, New Gear 143-148, guía de PNJ 149-152, Darius y Nymph 165-166.
 
 ## Último trabajo terminado
