@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.36.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: las primeras 42 fichas',
+    summary: 'Llegan las primeras 42 fichas reales de Danger Gal Dossier: 6th Street, los Bozos, la Puma Squad, las Digital Divas y los Edgerunners. Todas se juegan en CEMK 2077 (Neuroport, hackeables y Quickhacks para los netrunners) y tienen su ficha RED original. Se borraron del bestiario las 95 fichas de "Danger Gal" que no eran del libro.',
+    highlights: [
+      '42 PNJ canon con página (Danger Gal Dossier pp.10-56).',
+      'Porte CEMK de todos, con Quickhacks para Pantera, Firewall y CrAB Lord.',
+      'Fuera del bestiario las 95 fichas inventadas.'
+    ],
+    filesTouched: ['data/enemies-src/danger-gal.json', 'frontend/src/data/enemies/danger-gal.ts', 'frontend/src/data/enemiesCatalog.ts'],
+    metricsBadge: 'v5.36.0 • Danger Gal • 42 fichas'
+  },
+  {
     version: 'v5.35.1',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1958,6 +1974,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.36.0': true,
     'v5.35.1': true,
     'v5.35.0': true,
     'v5.34.0': true,

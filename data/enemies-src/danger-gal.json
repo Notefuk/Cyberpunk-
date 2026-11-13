@@ -1,0 +1,4939 @@
+{
+  "book": "Danger Gal Dossier",
+  "pdf": "Sourcebooks/Cyberpunk-RED-Danger-Gal-Dossier_2023-07-07.pdf",
+  "pageConvention": "Página impresa = índice 0-based del PDF.",
+  "npcs": [
+    {
+      "id": "dg-6th-arbiter",
+      "name": "Arbiter",
+      "subtitle": "Squad Leader",
+      "sourcePage": 10,
+      "tier": "mini_boss",
+      "faction": "6th Street",
+      "role": "Lawman",
+      "roleAbility": {
+        "name": "Backup",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 5,
+      "stats": {
+        "INT": 7,
+        "REF": 8,
+        "DEX": 5,
+        "TECH": 4,
+        "COOL": 8,
+        "WILL": 6,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 5,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 5,
+      "armor": {
+        "name": "Kevlar® (cabeza) / L Armorjack (cuerpo)",
+        "headSp": 7,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "EQ Sniper Rifle w/ Sniping Scope",
+          "skill": "Shoulder Arms",
+          "skillBase": 16,
+          "damage": "5d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 8,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 12,
+        "Brawling": 7,
+        "Concentration": 11,
+        "Conversation": 7,
+        "Criminology": 12,
+        "Deduction": 12,
+        "Education": 11,
+        "Evasion": 14,
+        "First Aid": 6,
+        "Human Perception": 12,
+        "Language (English)": 13,
+        "Language (Japanese)": 10,
+        "Language (Spanish)": 10,
+        "Language (Streetslang)": 11,
+        "Lip Reading": 11,
+        "Local Expert (North Heywood)": 13,
+        "Personal Grooming": 13,
+        "Perception": 13,
+        "Persuasion": 15,
+        "Shoulder Arms": 16,
+        "Stealth": 10,
+        "Tactics": 12,
+        "Tracking": 12,
+        "Wardrobe & Style": 13
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cybereye x2 w/ Anti-Dazzle x2 & Image Enhance x2",
+        "Cyberarm w/ Grapple Hand",
+        "Techhair",
+        "Skinwatch"
+      ],
+      "gear": [
+        "Armor-Piercing Rifle Ammo x10",
+        "Basic H Pistol Ammo x16",
+        "Agent",
+        "Flashlight",
+        "Handcuffs x2",
+        "Homing Tracer",
+        "Radio Communicator",
+        "Road Flares x3"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Lawman: Backup 4."
+      ],
+      "lore": "Hijo de X y líder del Davis Squad de 6th Street; algunos hablan de nepotismo, pero es un francotirador de primer nivel criado entre veteranos. Bromea sin parar para mantener la conciencia situacional del equipo y vive afinando su rifle, Lucille.",
+      "doubts": [
+        "La ficha no lista Handgun en Skill Bases, por lo que la Heavy Pistol queda con skillBase null (no se infiere).",
+        "Rifle de francotirador asignado a Shoulder Arms (skill inferida; el libro no la nombra).",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY).",
+        "Heavy Pistol: la ficha no lista Handgun; base = REF 8 (skill en 0)."
+      ]
+    },
+    {
+      "id": "dg-6th-coldfire",
+      "name": "Coldfire",
+      "subtitle": "Action Heroine",
+      "sourcePage": 11,
+      "tier": "hardened_lieutenant",
+      "faction": "6th Street",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 5,
+        "REF": 8,
+        "DEX": 6,
+        "TECH": 3,
+        "COOL": 3,
+        "WILL": 6,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 7,
+        "EMP": 4
+      },
+      "statsArmorModified": {
+        "REF": 6,
+        "DEX": 4,
+        "MOVE": 4
+      },
+      "hp": 45,
+      "seriouslyWounded": 23,
+      "deathSave": 7,
+      "armor": {
+        "name": "L Armorjack (cabeza) / H Armorjack (cuerpo)",
+        "headSp": 11,
+        "bodySp": 13,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Arasaka WAA Bullpup Assault Weapon",
+          "skill": "Shoulder Arms",
+          "skillBase": 14,
+          "damage": "5d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "El libro también lista Autofire 14 (12) en skills; el arma se asignó a Shoulder Arms."
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 12,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 12,
+        "Autofire": 14,
+        "Brawling": 8,
+        "Bureaucracy": 9,
+        "Concentration": 8,
+        "Conversation": 6,
+        "Education": 10,
+        "Evasion": 12,
+        "First Aid": 5,
+        "Human Perception": 8,
+        "Language (English)": 8,
+        "Language (Japanese)": 10,
+        "Language (Streetslang)": 7,
+        "Local Expert (North Heywood)": 10,
+        "Melee Weapon": 12,
+        "Perception": 10,
+        "Persuasion": 5,
+        "Resist Torture/Drugs": 12,
+        "Shoulder Arms": 14,
+        "Stealth": 11
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberleg x2 w/ Jump Booster x2",
+        "Neural Link w/ Interface Plugs & Sandevistan"
+      ],
+      "gear": [
+        "Basic Rifle Ammo x50",
+        "Flashbang Grenade",
+        "Incendiary Grenade",
+        "Smoke Grenade",
+        "Teargas Grenade",
+        "Disposable Cell Phone",
+        "Flashlight",
+        "Handcuffs",
+        "Road Flare x3"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Solo: Combat Awareness 4.",
+        "Los valores entre paréntesis de STATs y skills son los modificados por la armadura (H Armorjack en el cuerpo)."
+      ],
+      "lore": "Hija de un mando medio de Arasaka que se quedó en Night City tras la 4ª Guerra Corporativa; reapareció como Coldfire y nadie sabe si sigue ligada a Arasaka. En combate es la lanza de 6th Street: carga al frente disparando.",
+      "doubts": [
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY).",
+        "Valores de skills entre paréntesis impresos (con armadura): Athletics 10, Autofire 12, Brawling 6, Evasion 10, Melee Weapon 10, Shoulder Arms 12, Stealth 9. skillBases usa el valor sin armadura."
+      ]
+    },
+    {
+      "id": "dg-6th-breacher",
+      "name": "Breacher",
+      "subtitle": "Ground Leader",
+      "sourcePage": 12,
+      "tier": "lieutenant",
+      "faction": "6th Street",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 4,
+        "REF": 4,
+        "DEX": 8,
+        "TECH": 4,
+        "COOL": 5,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 7,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 7,
+      "armor": {
+        "name": "L Armorjack / L Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 10,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 12,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 14,
+        "Brawling": 14,
+        "Concentration": 6,
+        "Conversation": 6,
+        "Education": 6,
+        "Endurance": 7,
+        "Evasion": 14,
+        "First Aid": 6,
+        "Handgun": 10,
+        "Human Perception": 8,
+        "Interrogation": 9,
+        "Language (English)": 6,
+        "Language (Spanish)": 10,
+        "Language (Streetslang)": 6,
+        "Local Expert (North Heywood)": 6,
+        "Martial Arts (Judo)": 12,
+        "Melee Weapon": 12,
+        "Perception": 8,
+        "Personal Grooming": 8,
+        "Persuasion": 10,
+        "Resist Torture/Drugs": 8,
+        "Stealth": 10,
+        "Streetwise": 10
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Neural Link w/ Kerenzikov"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x16",
+        "Carryall",
+        "Flashlight",
+        "Handcuffs",
+        "Radio Communicator",
+        "Road Flare",
+        "Rope (60 m/yds)"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Solo: Combat Awareness 4."
+      ],
+      "lore": "Ex boxeador profesional de Ciudad de México convertido en soldado en la 4ª Guerra Corporativa; segundo al mando del Davis Squad. Es un operativo encubierto con gran experiencia en combate cercano y suele infiltrarse solo para plantar explosivos o hacer reconocimiento.",
+      "doubts": [
+        "El libro usa pronombres neutros (ellos/ellas) para Breacher.",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY)."
+      ]
+    },
+    {
+      "id": "dg-6th-knock-knock",
+      "name": "Knock!Knock!",
+      "subtitle": "Veteran in His Sunset Years",
+      "sourcePage": 13,
+      "tier": "hardened_mook",
+      "faction": "6th Street",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 2
+      },
+      "level": null,
+      "rep": 2,
+      "stats": {
+        "INT": 6,
+        "REF": 5,
+        "DEX": 4,
+        "TECH": 3,
+        "COOL": 4,
+        "WILL": 3,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 9,
+        "EMP": 3
+      },
+      "statsArmorModified": null,
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 9,
+      "armor": {
+        "name": "Kevlar® / Kevlar®",
+        "headSp": 7,
+        "bodySp": 7,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "PQ Shotgun",
+          "skill": "Shoulder Arms",
+          "skillBase": 10,
+          "damage": "5d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 10,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 10,
+        "Brawling": 6,
+        "Concentration": 5,
+        "Conversation": 5,
+        "Education": 8,
+        "Evasion": 10,
+        "First Aid": 8,
+        "Human Perception": 5,
+        "Language (English)": 10,
+        "Language (Streetslang)": 8,
+        "Local Expert (North Heywood)": 8,
+        "Melee Weapon": 10,
+        "Perception": 10,
+        "Persuasion": 6,
+        "Shoulder Arms": 10,
+        "Stealth": 6,
+        "Streetwise": 10
+      },
+      "cyberware": [
+        "Grafted Muscle and Bone Lace"
+      ],
+      "gear": [
+        "Junk Shotgun Slug Ammo x8",
+        "Basic Shotgun Shell Ammo x8",
+        "Anti-Smog Breathing Mask",
+        "Disposable Cell Phone",
+        "Flashlight",
+        "Handcuffs",
+        "Radio Communicator",
+        "Road Flare x3"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Solo: Combat Awareness 2."
+      ],
+      "lore": "El miembro más veterano del Davis Squad: peleó las cuatro Guerras Corporativas y sigue saliendo casi ileso. Pone las vidas civiles por encima de las de su equipo y toma la banda como un trabajo, no una vocación.",
+      "doubts": [
+        "El libro usa pronombres neutros para Knock!Knock!.",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY)."
+      ]
+    },
+    {
+      "id": "dg-6th-roof-diver",
+      "name": "Roof Diver",
+      "subtitle": "Squad Member",
+      "sourcePage": 14,
+      "tier": "mook",
+      "faction": "6th Street",
+      "role": "Lawman",
+      "roleAbility": {
+        "name": "Backup",
+        "rank": 2
+      },
+      "level": null,
+      "rep": 1,
+      "stats": {
+        "INT": 4,
+        "REF": 4,
+        "DEX": 4,
+        "TECH": 3,
+        "COOL": 3,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 3,
+        "BODY": 4,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 30,
+      "seriouslyWounded": 15,
+      "deathSave": 4,
+      "armor": {
+        "name": "Kevlar® / Kevlar®",
+        "headSp": 7,
+        "bodySp": 7,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "PQ Assault Rifle",
+          "skill": "Shoulder Arms",
+          "skillBase": 12,
+          "damage": "5d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Popup Microwaver",
+          "skill": "Brawling",
+          "skillBase": 4,
+          "damage": "—",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Daño impreso como —; arma integrada en la Cyberarm."
+        }
+      ],
+      "skillBases": {
+        "Athletics": 8,
+        "Concentration": 6,
+        "Conversation": 9,
+        "Education": 6,
+        "Evasion": 10,
+        "First Aid": 10,
+        "Handgun": 10,
+        "Human Perception": 6,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Local Expert (North Heywood)": 6,
+        "Perception": 8,
+        "Persuasion": 5,
+        "Shoulder Arms": 12,
+        "Stealth": 6
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberarm w/ Popup Microwaver"
+      ],
+      "gear": [
+        "Junk Rifle Ammo x50",
+        "Disposable Cell Phone",
+        "Flashlight",
+        "Handcuffs",
+        "Radio Communicator",
+        "Road Flare x3"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Lawman: Backup 2.",
+        "El Popup Microwaver (ROF 1, sin daño impreso) está montado en la Cyberarm."
+      ],
+      "lore": "Veterano de la 4ª Guerra oriundo de BosWash que llegó a Night City sin apoyo y se unió a 6th Street. Perdió el brazo salvando a un compañero que cayó de un edificio de 40 pisos y se lo reemplazaron por uno cibernético.",
+      "doubts": [
+        "El texto de la historia llama al personaje 'Roof Jumper', pero el nombre de la ficha es Roof Diver.",
+        "Popup Microwaver: skill Brawling inferida (no hay Brawling en Skill Bases, skillBase null) y daño no impreso (null).",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY).",
+        "Popup Microwaver: el libro no imprime daño (—); el ataque no hace daño por sí solo.",
+        "Popup Microwaver: la ficha no lista Brawling; base = DEX 4 (skill en 0)."
+      ]
+    },
+    {
+      "id": "dg-bozos-big-top",
+      "name": "Big Top",
+      "subtitle": "Scalpel-Wielding Ringleader",
+      "sourcePage": 16,
+      "tier": "hardened_boss",
+      "faction": "Bozos",
+      "role": "Medtech",
+      "roleAbility": {
+        "name": "Medicine",
+        "rank": 8
+      },
+      "level": null,
+      "rep": 6,
+      "stats": {
+        "INT": 6,
+        "REF": 8,
+        "DEX": 6,
+        "TECH": 7,
+        "COOL": 8,
+        "WILL": 7,
+        "LUCK": null,
+        "MOVE": 7,
+        "BODY": 8,
+        "EMP": 0
+      },
+      "statsArmorModified": null,
+      "hp": 50,
+      "seriouslyWounded": 25,
+      "deathSave": 8,
+      "armor": {
+        "name": "TUp L Armorjack / TUp L Armorjack",
+        "headSp": 12,
+        "bodySp": 12,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "TUp Militech Tactical Umbrella w/ Smart Link",
+          "skill": "Handgun",
+          "skillBase": 16,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Smart Link."
+        },
+        {
+          "name": "Popup IMI Chainknife x4",
+          "skill": "Melee Weapon",
+          "skillBase": 16,
+          "damage": "2d6 (4d6)",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "El libro imprime 2d6 (4d6)."
+        }
+      ],
+      "skillBases": {
+        "Athletics": 10,
+        "Brawling": 12,
+        "Bribery": 12,
+        "Conceal/Reveal Object": 10,
+        "Concentration": 12,
+        "Conversation": 6,
+        "Cybertech": 16,
+        "Education": 10,
+        "Electronics/Security Tech": 15,
+        "Endurance": 12,
+        "Evasion": 12,
+        "Handgun": 16,
+        "Human Perception": 4,
+        "Interrogation": 14,
+        "Language (English)": 10,
+        "Language (Streetslang)": 8,
+        "Lip Reading": 8,
+        "Local Expert (Unknown)": 10,
+        "Medical Tech": 10,
+        "Melee Weapon": 16,
+        "Personal Grooming": 10,
+        "Paramedic": 14,
+        "Perception": 12,
+        "Persuasion": 14,
+        "Resist Torture/Drugs": 13,
+        "Streetwise": 12,
+        "Surgery": 17,
+        "Tactics": 11,
+        "Trading": 12,
+        "Wardrobe & Style": 12
+      },
+      "cyberware": [
+        "Exotic Bodysculpting",
+        "TUp (+2 limbs) Artificial Shoulder Mount",
+        "Chemskin",
+        "Cyberarm x2 w/ Hardened Shielding x2 & Popup IMI Chainknife x2",
+        "Cyberarm w/ Hardened Shielding, Popup IMI Chainknife & Medscanner",
+        "Cyberarm w/ Hardened Shielding, Popup IMI Chainknife & Raven Microcybernetics MicroWaldo",
+        "Cyberaudio Suite w/ Amplified Hearing, Homing Tracer & Voice Stress Analyzer",
+        "Cybereye w/ Anti-Dazzle & MicroOptics",
+        "Cybereye w/ Anti-Dazzle & Targeting Scope",
+        "Enhanced Antibodies",
+        "Nasal Filters",
+        "Neural Link w/ Braindance Recorder, Chipware Socket, Interface Plugs & Pain Editor",
+        "Sycust FleshWeave"
+      ],
+      "gear": [
+        "Armor-Piercing H Pistol Ammo x6",
+        "Biotoxin Grenade",
+        "Flashbang Grenade",
+        "Agent",
+        "Duct Tape",
+        "Glow Paint",
+        "Handcuffs",
+        "Medtech Bag",
+        "Rope (60 m/yds)",
+        "Techtool"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Medtech: Medicine 8, con Surgery 5 y MedTech [Pharm] 3.",
+        "Tiene un Artificial Shoulder Mount TUp (+2 miembros) para sus brazos cibernéticos extra."
+      ],
+      "lore": "Líder del circo rebelde de los Bozos: se cree el futuro frente al Great Bozo y provocó la guerra civil tras el incidente Hilaria 2045. Medtech sádico que opera a amigos y enemigos y cosecha partes para su beneficio.",
+      "doubts": [
+        "Tactical Umbrella: skill Handgun inferida (Handgun y Melee Weapon valen ambas 16).",
+        "Medicine impresa como 'Medicine 8 (Surgery 5 • MedTech [Pharm] 3)'; se conserva 'MedTech [Pharm]' tal cual.",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY)."
+      ]
+    },
+    {
+      "id": "dg-bozos-blammo",
+      "name": "Blammo",
+      "subtitle": "OG Bozo",
+      "sourcePage": 17,
+      "tier": "boss",
+      "faction": "Bozos",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 6
+      },
+      "level": null,
+      "rep": 5,
+      "stats": {
+        "INT": 7,
+        "REF": 8,
+        "DEX": 8,
+        "TECH": 5,
+        "COOL": 5,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 8,
+        "BODY": 8,
+        "EMP": 0
+      },
+      "statsArmorModified": {
+        "REF": 6,
+        "DEX": 6,
+        "MOVE": 6
+      },
+      "hp": 45,
+      "seriouslyWounded": 23,
+      "deathSave": 8,
+      "armor": {
+        "name": "Kevlar® (cabeza) / TUp H Armorjack (cuerpo)",
+        "headSp": 7,
+        "bodySp": 14,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "EQ Rocket Launcher w/ Extended Clip",
+          "skill": "Heavy Weapons",
+          "skillBase": 16,
+          "damage": "8d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "EQ Shotgun",
+          "skill": "Shoulder Arms",
+          "skillBase": 16,
+          "damage": "5d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 15,
+        "Brawling": 16,
+        "Bribery": 14,
+        "Conceal/Reveal Object": 14,
+        "Concentration": 11,
+        "Conversation": 2,
+        "Dance": 10,
+        "Demolitions": 10,
+        "Education": 9,
+        "Endurance": 10,
+        "Evasion": 16,
+        "First Aid": 7,
+        "Heavy Weapons": 16,
+        "Human Perception": 2,
+        "Interrogation": 14,
+        "Language (English)": 11,
+        "Language (Streetslang)": 9,
+        "Local Expert (Unknown)": 12,
+        "Melee Weapon": 14,
+        "Perception": 12,
+        "Persuasion": 10,
+        "Resist Torture/Drugs": 12,
+        "Shoulder Arms": 16,
+        "Stealth": 10,
+        "Tactics": 11,
+        "Trading": 10
+      },
+      "cyberware": [
+        "Exotic Bodysculpting",
+        "AudioVox",
+        "Cyberaudio Suite w/ Audio Recorder, Level Damper & Voice Stress Analyzer",
+        "Cybereye x2 w/ Anti-Dazzle x2 & Low Light/Infrared/UV x2",
+        "Neural Link w/ Chipware Socket, Pain Editor & Reflex Co-Processor",
+        "Subdermal Pocket x5"
+      ],
+      "gear": [
+        "Armor-Piercing Rocket x2",
+        "Armor-Piercing Shotgun Slug Ammo x4",
+        "Flashbang Grenade x2",
+        "Incendiary Grenade x3",
+        "Disposable Cell Phone"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Solo: Combat Awareness 6.",
+        "Los valores entre paréntesis de STATs y skills son los modificados por la armadura (TUp H Armorjack)."
+      ],
+      "lore": "Leyenda viva de los Bozos, presente desde los primeros días; no quiere liderar un circo pero instiga a los jóvenes a escalar el caos. En combate usa explosivos para acorralar enemigos sin importar si hiere a sus propios payasos.",
+      "doubts": [
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY).",
+        "Valores de skills entre paréntesis impresos (con armadura): Athletics 13, Brawling 14, Dance 8, Evasion 14, Heavy Weapons 14, Melee Weapon 12, Shoulder Arms 14, Stealth 8. skillBases usa el valor sin armadura."
+      ]
+    },
+    {
+      "id": "dg-bozos-jester",
+      "name": "Jester",
+      "subtitle": "Bouncing Bozo Beauty",
+      "sourcePage": 18,
+      "tier": "mini_boss",
+      "faction": "Bozos",
+      "role": "Rockerboy",
+      "roleAbility": {
+        "name": "Charismatic Impact",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 4,
+      "stats": {
+        "INT": 4,
+        "REF": 8,
+        "DEX": 7,
+        "TECH": 3,
+        "COOL": 6,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 8,
+        "BODY": 6,
+        "EMP": 3
+      },
+      "statsArmorModified": null,
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 6,
+      "armor": {
+        "name": "L Armorjack / L Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "EQ Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 16,
+          "damage": "3d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "IMI Chainknife",
+          "skill": "Melee Weapon",
+          "skillBase": 16,
+          "damage": "2d6 (4d6)",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "El libro imprime 2d6 (4d6)."
+        }
+      ],
+      "skillBases": {
+        "Acting": 14,
+        "Athletics": 14,
+        "Brawling": 14,
+        "Conceal/Reveal Object": 9,
+        "Concentration": 7,
+        "Contortionist": 14,
+        "Conversation": 5,
+        "Dance": 13,
+        "Education": 6,
+        "Endurance": 10,
+        "Evasion": 16,
+        "First Aid": 5,
+        "Handgun": 16,
+        "Human Perception": 7,
+        "Interrogation": 10,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Local Expert (Little Europe)": 6,
+        "Melee Weapon": 16,
+        "Perception": 8,
+        "Personal Grooming": 10,
+        "Persuasion": 8,
+        "Resist Torture/Drugs": 10,
+        "Stealth": 9,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Chemskin",
+        "Contraceptive Implant",
+        "Cyberleg x2 w/ Jump Booster x2 & Talon Foot (ROF2 1d6) x2",
+        "Neural Link w/ Sandevistan",
+        "Light Tattoo x3"
+      ],
+      "gear": [
+        "Armor-Piercing H Pistol Ammunition x16",
+        "Smoke Grenade x2",
+        "Agent",
+        "Vial of Biotoxin"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Rockerboy: Charismatic Impact 4.",
+        "Talon Foot x2 en las Cyberlegs: ROF 2, 1d6 (patada con garras).",
+        "Según el libro, teme al fuego de helio; una llama naranja-rosada puede desestabilizarla."
+      ],
+      "lore": "Jade Sky fue una gran acróbata que escupía fuego hasta que una explosión de helio mató a noventa y cuatro personas y le costó las piernas. Reapareció como Jester, con piernas instaladas por Big Top, y combate con espectáculo, saltos y patadas.",
+      "doubts": [
+        "Talon Foot (ROF2 1d6) está dentro del cyberware del libro; no se agregó como arma aparte.",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY)."
+      ]
+    },
+    {
+      "id": "dg-bozos-tomfool",
+      "name": "Tomfool",
+      "subtitle": "Bozo Brawler",
+      "sourcePage": 19,
+      "tier": "hardened_lieutenant",
+      "faction": "Bozos",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 4,
+        "REF": 7,
+        "DEX": 7,
+        "TECH": 3,
+        "COOL": 6,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 7,
+        "EMP": 3
+      },
+      "statsArmorModified": null,
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 7,
+      "armor": {
+        "name": "Subdermal Armor / Subdermal Armor",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Nomad Air Cannon",
+          "skill": "Shoulder Arms",
+          "skillBase": 13,
+          "damage": "—",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Daño impreso como —."
+        },
+        {
+          "name": "Martial Arts Attack",
+          "skill": "Martial Arts (Judo)",
+          "skillBase": 14,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Acting": 10,
+        "Athletics": 14,
+        "Concentration": 7,
+        "Conversation": 5,
+        "Education": 6,
+        "Endurance": 11,
+        "Evasion": 14,
+        "First Aid": 5,
+        "Human Perception": 7,
+        "Language (French)": 8,
+        "Language (Streetslang)": 6,
+        "Local Expert (Old Combat Zone)": 6,
+        "Martial Arts (Judo)": 14,
+        "Perception": 10,
+        "Persuasion": 10,
+        "Resist Torture/Drugs": 10,
+        "Shoulder Arms": 13,
+        "Stealth": 9,
+        "Wardrobe & Style": 8
+      },
+      "cyberware": [
+        "Exotic Bodysculpting",
+        "Contraceptive Implant",
+        "Cyberarm",
+        "Light Tattoo",
+        "Subdermal Armor"
+      ],
+      "gear": [
+        "Agent",
+        "Duct Tape",
+        "Glow Paint",
+        "Vial of Poison x3"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Solo: Combat Awareness 4.",
+        "Abre los combates a distancia con su Nomad Air Cannon y luego usa Judo para derribar y golpear."
+      ],
+      "lore": "Tom Smart era un luchador de bloodsport clandestino conocido como el Killer Clown antes de unirse a los Bozos. Tras Hilaria 2045 pasó a ser el principal combatiente de Big Top en las peleas callejeras.",
+      "doubts": [
+        "Nomad Air Cannon: skill Shoulder Arms inferida (no se nombra) y daño no impreso (null).",
+        "Martial Arts Attack asignado a Martial Arts (Judo) 14 por inferencia.",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY).",
+        "Nomad Air Cannon: el libro no imprime daño (—); el ataque no hace daño por sí solo."
+      ]
+    },
+    {
+      "id": "dg-bozos-centwit",
+      "name": "Centwit",
+      "subtitle": "Clown Gone Bad",
+      "sourcePage": 20,
+      "tier": "lieutenant",
+      "faction": "Bozos",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 4,
+        "REF": 7,
+        "DEX": 6,
+        "TECH": 3,
+        "COOL": 4,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 6,
+        "EMP": 3
+      },
+      "statsArmorModified": {
+        "REF": 6,
+        "DEX": 5,
+        "MOVE": 5
+      },
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 6,
+      "armor": {
+        "name": "TUp M Armorjack / TUp M Armorjack",
+        "headSp": 12,
+        "bodySp": 12,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 13,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 12,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Acting": 10,
+        "Athletics": 13,
+        "Brawling": 12,
+        "Conceal/Reveal Object": 9,
+        "Concentration": 9,
+        "Contortionist": 10,
+        "Conversation": 7,
+        "Dance": 8,
+        "Education": 8,
+        "Endurance": 10,
+        "Evasion": 12,
+        "First Aid": 5,
+        "Handgun": 13,
+        "Human Perception": 5,
+        "Language (Louisiana Creole)": 8,
+        "Language (Streetslang)": 6,
+        "Local Expert (Unknown)": 8,
+        "Perception": 8,
+        "Persuasion": 8,
+        "Resist Torture/Drugs": 10,
+        "Stealth": 8,
+        "Trading": 6
+      },
+      "cyberware": [
+        "Exotic Bodysculpting",
+        "Cybereye x2 w/ Low Light/Infrared/UV x2",
+        "Neural Link w/ Kerenzikov"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x8",
+        "Armor-Piercing Grenade x2",
+        "Flashbang Grenade x2",
+        "Teargas Grenade x2",
+        "Agent",
+        "Rope (60 m/yds)"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Habilidad de rol Solo: Combat Awareness 4.",
+        "Los valores entre paréntesis son los modificados por la armadura (TUp M Armorjack).",
+        "Lleva explosivos disfrazados de globos y pompones en el disfraz."
+      ],
+      "lore": "Terry Claymora, payaso de tercera generación cuyo padre fue asesinado por los Voodoo Boys; se unió a los Bozos en 2020 y los hostiga desde las sombras. No es miembro pleno del circo de Big Top pero colabora con él.",
+      "doubts": [
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY).",
+        "Valores de skills entre paréntesis impresos (con armadura): Athletics 12, Contortionist 9, Dance 7, Evasion 11, Handgun 12. skillBases usa el valor sin armadura."
+      ]
+    },
+    {
+      "id": "dg-bozos-dead-ringer-blue",
+      "name": "Dead Ringer",
+      "subtitle": "The Blue One",
+      "sourcePage": 21,
+      "tier": "lieutenant",
+      "faction": "Bozos",
+      "role": "",
+      "roleAbility": null,
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 4,
+        "REF": 6,
+        "DEX": 6,
+        "TECH": 4,
+        "COOL": 6,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 5,
+        "EMP": 3
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Scavenged Armor (cabeza sin protección)",
+        "headSp": null,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Very Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 6,
+          "damage": "4d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "El libro la lista con munición Incendiary VH Pistol."
+        },
+        {
+          "name": "Scratchers",
+          "skill": "Melee Weapon",
+          "skillBase": 12,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Cyberware Scratchers; el libro dice que los unta con veneno."
+        }
+      ],
+      "skillBases": {
+        "Acting": 11,
+        "Athletics": 13,
+        "Brawling": 8,
+        "Conceal/Reveal Object": 6,
+        "Concentration": 6,
+        "Contortionist": 11,
+        "Conversation": 6,
+        "Dance": 8,
+        "Education": 6,
+        "Endurance": 7,
+        "Evasion": 13,
+        "First Aid": 6,
+        "Human Perception": 5,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Library Search": 12,
+        "Lip Reading": 10,
+        "Local Expert (South Night City)": 6,
+        "Melee Weapon": 12,
+        "Personal Grooming": 10,
+        "Perception": 7,
+        "Persuasion": 11,
+        "Resist Torture/Drugs": 8,
+        "Stealth": 8,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Exotic Biosculpting",
+        "Contraceptive Implant",
+        "Neural Link w/ Reflex Co-Processor",
+        "Scratchers"
+      ],
+      "gear": [
+        "Incendiary VH Pistol Ammo x8",
+        "Poison Grenade",
+        "Carryall",
+        "Disposable Cell Phone",
+        "Vial of Poison"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Rol impreso 'None': sin habilidad de rol.",
+        "Es la gemela ruidosa y distractora: hace malabares con granadas o viales de veneno, corre por el campo e incendia cosas."
+      ],
+      "lore": "Una de las gemelas Dead Ringer, la de pelo azul: ruidosa, bromista y amante de la atención. Funciona como distracción mientras usa granadas tóxicas y sus Scratchers envenenadas.",
+      "doubts": [
+        "Diferencia con la ficha de la pág. 22: esta es The Blue One (Very Heavy Pistol 4d6, TECH 4, COOL 6, Library Search 12, Lip Reading 10, Persuasion 11, Acting, Dance, Contortionist 11); la otra es The Pink One (EQ Light Melee Weapon, TECH 6, COOL 4, Pick Lock 14, Pick Pocket 15, Stealth 12).",
+        "Scratchers: skill Melee Weapon inferida (el libro no la nombra).",
+        "Cabeza impresa como — (sin armadura): headSp null.",
+        "Hay dos fichas Dead Ringer consecutivas (págs. 21 y 22).",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY).",
+        "Very Heavy Pistol: skill Handgun inferida; Handgun no figura en Skill Bases, skillBase null.",
+        "Very Heavy Pistol: la ficha no lista Handgun; base = REF 6 (skill en 0)."
+      ]
+    },
+    {
+      "id": "dg-bozos-dead-ringer-pink",
+      "name": "Dead Ringer",
+      "subtitle": "The Pink One",
+      "sourcePage": 22,
+      "tier": "lieutenant",
+      "faction": "Bozos",
+      "role": "",
+      "roleAbility": null,
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 4,
+        "REF": 6,
+        "DEX": 6,
+        "TECH": 6,
+        "COOL": 4,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 5,
+        "EMP": 3
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Scavenged Armor (cabeza sin protección)",
+        "headSp": null,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "EQ Light Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 12,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Scratchers",
+          "skill": "Melee Weapon",
+          "skillBase": 12,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Cyberware Scratchers; el libro dice que los unta con veneno."
+        }
+      ],
+      "skillBases": {
+        "Athletics": 12,
+        "Brawling": 8,
+        "Conceal/Reveal Object": 6,
+        "Concentration": 6,
+        "Contortionist": 10,
+        "Conversation": 5,
+        "Education": 6,
+        "Endurance": 6,
+        "Evasion": 12,
+        "First Aid": 8,
+        "Human Perception": 5,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Lip Reading": 6,
+        "Local Expert (South Night City)": 6,
+        "Melee Weapon": 12,
+        "Perception": 10,
+        "Personal Grooming": 9,
+        "Persuasion": 6,
+        "Pick Lock": 14,
+        "Pick Pocket": 15,
+        "Resist Torture/Drugs": 7,
+        "Stealth": 12,
+        "Wardrobe & Style": 9
+      },
+      "cyberware": [
+        "Exotic Bodysculpting",
+        "Contraceptive Implant",
+        "Neural Link w/ Reflex Co-Processor",
+        "Scratchers"
+      ],
+      "gear": [
+        "Flashbang Grenade",
+        "Smoke Grenade",
+        "Carryall",
+        "Disposable Cell Phone",
+        "Lock Picking Set",
+        "Vial of Biotoxin"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Rol impreso 'None': sin habilidad de rol.",
+        "Es la gemela silenciosa: nunca habla, roba bolsillos (Pick Pocket 15) y entrega las armas robadas a otros Bozos."
+      ],
+      "lore": "La Dead Ringer de pelo rosa: callada y sigilosa, se dedica a robar pertenencias y a pasarle a otros Bozos las armas de la víctima. Como su hermana, lleva granadas y Scratchers con toxinas.",
+      "doubts": [
+        "Diferencia con la ficha de la pág. 21 (The Blue One): esta es The Pink One (EQ Light Melee Weapon 1d6, TECH 6, COOL 4, Pick Lock 14, Pick Pocket 15, Stealth 12; sin pistola).",
+        "El texto de la historia la nombra 'Deadly Ringer' (errata del libro).",
+        "Scratchers: skill Melee Weapon inferida.",
+        "Cabeza impresa como — (sin armadura): headSp null.",
+        "Hay dos fichas Dead Ringer consecutivas (págs. 21 y 22).",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY)."
+      ]
+    },
+    {
+      "id": "dg-bozos-finale",
+      "name": "Finale",
+      "subtitle": "Silent But Deadly",
+      "sourcePage": 23,
+      "tier": "lieutenant",
+      "faction": "Bozos",
+      "role": "",
+      "roleAbility": null,
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 4,
+        "REF": 7,
+        "DEX": 7,
+        "TECH": 3,
+        "COOL": 4,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 6,
+        "EMP": 3
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 6,
+      "armor": {
+        "name": "Scavenged Armor (cabeza sin protección)",
+        "headSp": null,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Assault Rifle",
+          "skill": "Shoulder Arms",
+          "skillBase": 13,
+          "damage": "5d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "El libro también lista Autofire 13."
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 15,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 13,
+        "Autofire": 13,
+        "Brawling": 15,
+        "Conceal/Reveal Object": 8,
+        "Concentration": 7,
+        "Conversation": 5,
+        "Dance": 12,
+        "Demolitions": 5,
+        "Education": 6,
+        "Endurance": 8,
+        "Evasion": 13,
+        "First Aid": 5,
+        "Handgun": 9,
+        "Human Perception": 5,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Lip Reading": 6,
+        "Local Expert (Old Combat Zone)": 6,
+        "Perception": 7,
+        "Persuasion": 6,
+        "Resist Torture/Drugs": 6,
+        "Shoulder Arms": 13,
+        "Stealth": 9,
+        "Streetwise": 7
+      },
+      "cyberware": [
+        "Cybereye x2 w/ Low Light/Infrared/UV x2"
+      ],
+      "gear": [
+        "Armor-Piercing Rifle Ammo x25",
+        "Smoke Grenade",
+        "Agent"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Rol impreso 'None': sin habilidad de rol."
+      ],
+      "lore": "Kane Nove, un chico de la calle al que un ripperdoc le cosió la mandíbula con alambre; el circo de Big Top lo rescató del agua y lo bautizó Finale. Los Bozos se burlan de él y apuntan su rabia contra Night City.",
+      "doubts": [
+        "Assault Rifle: ROF impreso 2 (tal cual); skill Shoulder Arms inferida (el libro también lista Autofire 13).",
+        "Cabeza impresa como — (sin armadura): headSp null.",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY)."
+      ]
+    },
+    {
+      "id": "dg-bozos-burt-the-squirt",
+      "name": "Burt the Squirt",
+      "subtitle": "An Acid Wit",
+      "sourcePage": 24,
+      "tier": "hardened_mook",
+      "faction": "Bozos",
+      "role": "",
+      "roleAbility": null,
+      "level": null,
+      "rep": 1,
+      "stats": {
+        "INT": 3,
+        "REF": 6,
+        "DEX": 4,
+        "TECH": 5,
+        "COOL": 5,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 5,
+        "BODY": 7,
+        "EMP": 1
+      },
+      "statsArmorModified": null,
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 7,
+      "armor": {
+        "name": "Kevlar® / Kevlar®",
+        "headSp": 7,
+        "bodySp": 7,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Air Pistol",
+          "skill": "Handgun",
+          "skillBase": 12,
+          "damage": "—",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Daño impreso como —; dispara Acid Paintball x24."
+        },
+        {
+          "name": "PQ Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 12,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 10,
+        "Basic Tech": 8,
+        "Brawling": 7,
+        "Concentration": 6,
+        "Conversation": 3,
+        "Education": 5,
+        "Evasion": 12,
+        "First Aid": 7,
+        "Handgun": 12,
+        "Human Perception": 3,
+        "Interrogation": 10,
+        "Language (English)": 7,
+        "Language (Streetslang)": 5,
+        "Local Expert (Heywood Industrial Zone)": 5,
+        "Perception": 5,
+        "Persuasion": 6,
+        "Resist Torture/Drugs": 10,
+        "Stealth": 6
+      },
+      "cyberware": [
+        "Exotic Bodysculpting",
+        "Contraceptive Implant",
+        "Cybereye x2 w/ Color Shift x2"
+      ],
+      "gear": [
+        "Acid Paintball x24",
+        "Basic H Pistol Ammo x8",
+        "Agent"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Rol impreso 'None': sin habilidad de rol.",
+        "Su Air Pistol dispara bolas de pintura ácidas (Acid Paintball x24); el libro no imprime daño ni reglas del ácido en la ficha.",
+        "Siempre ataca al objetivo con el pelo más lujoso, incluso techhair."
+      ],
+      "lore": "Burt Batail perdió el pelo en un accidente industrial y se obsesionó con el ácido; quiere calvicie permanente para Night City. Se unió a los Bozos por el suministro ilimitado de químicos y siguió a Big Top en la guerra civil.",
+      "doubts": [
+        "Air Pistol: skill Handgun inferida; daño no impreso (null).",
+        "Reglas de daño del ácido no están en la ficha.",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY).",
+        "Air Pistol: el libro no imprime daño (—); el ataque no hace daño por sí solo."
+      ]
+    },
+    {
+      "id": "dg-bozos-dunce",
+      "name": "Dunce",
+      "subtitle": "A Fool No More",
+      "sourcePage": 25,
+      "tier": "mook",
+      "faction": "Bozos",
+      "role": "",
+      "roleAbility": null,
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 2,
+        "REF": 4,
+        "DEX": 5,
+        "TECH": 2,
+        "COOL": 4,
+        "WILL": 3,
+        "LUCK": null,
+        "MOVE": 5,
+        "BODY": 5,
+        "EMP": 3
+      },
+      "statsArmorModified": null,
+      "hp": 30,
+      "seriouslyWounded": 15,
+      "deathSave": 5,
+      "armor": {
+        "name": "Kevlar® (cabeza) / Leathers (cuerpo)",
+        "headSp": 7,
+        "bodySp": 4,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "PQ Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 8,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 12,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Bate con púas según la historia."
+        }
+      ],
+      "skillBases": {
+        "Athletics": 7,
+        "Brawling": 12,
+        "Conceal/Reveal Object": 4,
+        "Concentration": 7,
+        "Conversation": 5,
+        "Dance": 7,
+        "Education": 4,
+        "Endurance": 6,
+        "Evasion": 12,
+        "First Aid": 4,
+        "Handgun": 8,
+        "Human Perception": 5,
+        "Language (English)": 6,
+        "Language (Streetslang)": 4,
+        "Local Expert (Sewers of Little China)": 4,
+        "Melee Weapon": 12,
+        "Perception": 4,
+        "Persuasion": 6,
+        "Stealth": 7
+      },
+      "cyberware": [],
+      "gear": [
+        "Basic H Pistol Ammo x8",
+        "Disposable Cell Phone"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Rol impreso 'None': sin habilidad de rol."
+      ],
+      "lore": "Sion Bannerkin, el Fool que sobrevivió a Hilaria 2045 y fue promovido a Bozo completo; perdió sus pistolas en las alcantarillas y se salvó con un bate. Big Top lo curó y le fundió una máscara en la cara.",
+      "doubts": [
+        "Cyberware impreso como 'None': cyberware [].",
+        "PQ Heavy Pistol impresa con 2d6 (tal cual; otras PQ Heavy Pistol del libro imprimen 3d6).",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY)."
+      ]
+    },
+    {
+      "id": "dg-bozos-the-fool",
+      "name": "The Fool",
+      "subtitle": "Tears of a Clown",
+      "sourcePage": 26,
+      "tier": "mook",
+      "faction": "Bozos",
+      "role": "",
+      "roleAbility": null,
+      "level": null,
+      "rep": 0,
+      "stats": {
+        "INT": 3,
+        "REF": 5,
+        "DEX": 3,
+        "TECH": 2,
+        "COOL": 3,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 4,
+        "EMP": 3
+      },
+      "statsArmorModified": null,
+      "hp": 30,
+      "seriouslyWounded": 15,
+      "deathSave": 4,
+      "armor": {
+        "name": "Leathers (cabeza sin protección)",
+        "headSp": null,
+        "bodySp": 4,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "PQ Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 11,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "PQ Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 11,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 8,
+        "Brawling": 8,
+        "Concentration": 6,
+        "Conversation": 5,
+        "Education": 5,
+        "Endurance": 5,
+        "Evasion": 8,
+        "First Aid": 4,
+        "Gamble": 5,
+        "Handgun": 11,
+        "Human Perception": 5,
+        "Language (Probably Won't Live Long Enough to Talk)": 7,
+        "Language (Streetslang)": 5,
+        "Local Expert (The Place They Die In)": 5,
+        "Melee Weapon": 8,
+        "Perception": 5,
+        "Persuasion": 5,
+        "Play Instrument (Bike Horn)": 4,
+        "Stealth": 5,
+        "Streetwise": 7
+      },
+      "cyberware": [],
+      "gear": [
+        "Junk H Pistol Ammo x8",
+        "Incendiary H Pistol Ammo x1",
+        "Bike Horn",
+        "Disposable Cellphone",
+        "Duct Tape"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Rol impreso 'None': sin habilidad de rol.",
+        "La Good Luck Bag (máscara) no da protección y limita la visión; los otros Bozos lo usan como escudo humano."
+      ],
+      "lore": "El Fool no es una persona sino una iniciación: los reclutas poco prometedores reciben la máscara Good Luck Bag y van al frente como carne de cañón. Si sobreviven hasta el siguiente recluta, pasan la máscara y reciben el biosculpt.",
+      "doubts": [
+        "Cyberware impreso como 'None': cyberware [].",
+        "Cabeza impresa como — (sin armadura): headSp null; la Good Luck Bag no ofrece protección según el libro.",
+        "HP, Seriously Wounded y Death Save verificados contra la página (SW = mitad del HP, Death Save = BODY)."
+      ]
+    },
+    {
+      "subtitle": "One Badass Librarian",
+      "level": null,
+      "statsArmorModified": null,
+      "isNetrunner": true,
+      "interfaceRank": 6,
+      "cyberdeckPrograms": [
+        "EQ Cyberdeck",
+        "Armor",
+        "DeckKRASH",
+        "Sabertooth x3",
+        "Shield & Range Upgrade (in Bodyweight Suit)"
+      ],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Interface",
+        "rank": 6
+      },
+      "rep": 6,
+      "specialRules": [
+        "Netrunner con Interface 6; su cyberdeck es de calidad excelente (EQ) e incluye Armor, DeckKRASH, Sabertooth x3 y un Shield & Range Upgrade integrado en el Bodyweight Suit.",
+        "El Bodyweight Suit cubre cabeza y cuerpo con SP 11."
+      ],
+      "doubts": [
+        "El libro lista el cyberdeck como 'w/ Armor, DeckKRASH, Sabertooth x3, Shield & Range Upgrade (in Bodyweight Suit)'; no queda claro si 'Shield' y 'Range Upgrade' son un único ítem o dos.",
+        "Segunda fila de armas vacía en el libro (—).",
+        "El libro menciona rumores no confirmados de un romance con Mouse (omitido)."
+      ],
+      "id": "dg-puma-pantera",
+      "name": "Pantera",
+      "sourcePage": 28,
+      "tier": "hardened_mini_boss",
+      "faction": "Danger Gal Puma Squad",
+      "role": "Netrunner",
+      "stats": {
+        "INT": 8,
+        "REF": 5,
+        "DEX": 5,
+        "TECH": 7,
+        "COOL": 6,
+        "WILL": 6,
+        "MOVE": 6,
+        "BODY": 5,
+        "EMP": 6,
+        "LUCK": null
+      },
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 5,
+      "armor": {
+        "name": "Bodyweight Suit",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol w/ Smartgun Link",
+          "skill": "Handgun",
+          "skillBase": 14,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": "Armor-Piercing H Pistol Ammo x16",
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": "Con Smartgun Link"
+        }
+      ],
+      "skillBases": {
+        "Athletics": 9,
+        "Basic Tech": 13,
+        "Brawling": 7,
+        "Concentration": 10,
+        "Conversation": 10,
+        "Cybertech": 10,
+        "Education": 14,
+        "Electronics/Security Tech": 13,
+        "Evasion": 15,
+        "First Aid": 9,
+        "Handgun": 14,
+        "Human Perception": 8,
+        "Language (English)": 12,
+        "Language (Japanese)": 12,
+        "Language (Streetslang)": 10,
+        "Library Search": 14,
+        "Local Expert (University District)": 10,
+        "Paint/Draw/Sculpt": 12,
+        "Perception": 12,
+        "Personal Grooming": 10,
+        "Persuasion": 10,
+        "Resist Torture/Drugs": 10,
+        "Science (Library)": 13,
+        "Stealth": 9,
+        "Tactics": 12,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Neural Link",
+        "Interface Plugs x2",
+        "Reflex Co-Processor"
+      ],
+      "gear": [
+        "Armor-Piercing H Pistol Ammo x16",
+        "Agent",
+        "Disposable Cell Phone",
+        "Memory Chips x5",
+        "Radio Communicator",
+        "Scrambler/Descrambler",
+        "Trauma Team (Silver)",
+        "Virtuality Goggles",
+        "EQ Cyberdeck w/ Armor, DeckKRASH, Sabertooth x3, Shield & Range Upgrade (in Bodyweight Suit)"
+      ],
+      "lore": "Mx. Shoko Asagiri, bibliotecaria investigadora de Vancouver, llamó la atención de Danger Gal al robar con discreción episodios inéditos de Elflines Online Chronicles solo para verlos. Mouse notó que se aburría en su trabajo y Danger Gal la reclutó enseguida; es miembro clave de Puma Squad."
+    },
+    {
+      "subtitle": "YoGanger Made Good",
+      "level": null,
+      "statsArmorModified": null,
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 4
+      },
+      "rep": 6,
+      "specialRules": [
+        "Solo con Combat Awareness 4.",
+        "Lleva una Heavy Pistol de respaldo (ROF 2, 3d6) y dos Medium Melee Weapon en los tacones (ROF 2, 2d6)."
+      ],
+      "doubts": [
+        "Armadura impresa como 'L Armorjack' (expandido a Light Armorjack).",
+        "Las armas de respaldo del gear no tienen skill/skillBase impresos; se dejaron solo en gear."
+      ],
+      "id": "dg-puma-tigress",
+      "name": "Tigress",
+      "sourcePage": 29,
+      "tier": "hardened_mini_boss",
+      "faction": "Danger Gal Puma Squad",
+      "role": "Solo",
+      "stats": {
+        "INT": 5,
+        "REF": 8,
+        "DEX": 6,
+        "TECH": 5,
+        "COOL": 7,
+        "WILL": 7,
+        "MOVE": 7,
+        "BODY": 5,
+        "EMP": 4,
+        "LUCK": null
+      },
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 5,
+      "armor": {
+        "name": "Light Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Sniper Rifle w/ Smartgun Link & Sniping Scope",
+          "skill": "Shoulder Arms",
+          "skillBase": 16,
+          "damage": "5d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": "Armor-Piercing Rifle Ammo x12",
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": "Con Smartgun Link y Sniping Scope"
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 14,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 12,
+        "Brawling": 8,
+        "Concentration": 9,
+        "Conversation": 6,
+        "Dance": 10,
+        "Drive Land Vehicle": 10,
+        "Education": 7,
+        "Endurance": 13,
+        "Evasion": 16,
+        "First Aid": 9,
+        "Handgun": 14,
+        "Human Perception": 6,
+        "Language (English)": 9,
+        "Language (Streetslang)": 7,
+        "Local Expert (South Night City)": 7,
+        "Melee Weapon": 14,
+        "Perception": 14,
+        "Personal Grooming": 10,
+        "Persuasion": 9,
+        "Photography/Film": 12,
+        "Resist Torture/Drugs": 12,
+        "Shoulder Arms": 16,
+        "Stealth": 8,
+        "Streetwise": 12,
+        "Tactics": 11,
+        "Trading": 11,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cybereye w/ Targeting Scope",
+        "Neural Link w/ Interface Plugs"
+      ],
+      "gear": [
+        "Armor-Piercing Rifle Ammo x 12",
+        "Basic H Pistol Ammo x8",
+        "Backup Heavy Pistol (ROF2 • 3d6)",
+        "Backup Medium Melee Weapon x2 in Heels (ROF2 • 2d6)",
+        "Agent",
+        "Cat Ears Headband",
+        "Disposable Cell Phone x2",
+        "Grapple Gun",
+        "Radio Communicator",
+        "Scrambler/Descrambler",
+        "Trauma Team (Silver)",
+        "Video Camera"
+      ],
+      "lore": "Criada en las Combat Zones, organizó y lideró una YoGang para que los niños tuvieran comida, armas y refugio. Danger Gal compró su contrato tras un encargo para asesinar a un VIP protegido por una NeoCorp; hoy es el motor de los acercamientos de Puma Squad a las YoGangs."
+    },
+    {
+      "subtitle": "A Beary Good Field Medic",
+      "level": null,
+      "statsArmorModified": {
+        "REF": 5,
+        "DEX": 5,
+        "MOVE": 4
+      },
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Medicine",
+        "rank": 4
+      },
+      "rep": 6,
+      "specialRules": [
+        "Medtech con Medicine 4; Medtech (Pharm) 2 y Medtech (Cryo) 2.",
+        "Con la armadura puesta sus valores bajan: REF 5, DEX 5, MOVE 4, y las skills Athletics 7, Drive Land Vehicle 10, Evasion 11 y Handgun 13 (entre paréntesis en el libro)."
+      ],
+      "doubts": [
+        "Skills con armadura entre paréntesis: Athletics (7), Drive Land Vehicle (10), Evasion (11), Handgun (13); skillBases guarda el valor sin armadura. El Brawling (7) con armadura en el arma es inferido de la nota del libro 'Brawling 8 (7)'.",
+        "Armadura impresa 'TUp M Armorjack' (TUp = mejorada; M = Medium).",
+        "Las subhabilidades Medtech (Pharm) 2 y (Cryo) 2 no se modelan en roleAbility."
+      ],
+      "id": "dg-puma-doc-mittens",
+      "name": "Doc Mittens",
+      "sourcePage": 30,
+      "tier": "hardened_lieutenant",
+      "faction": "Danger Gal Puma Squad",
+      "role": "Medtech",
+      "stats": {
+        "INT": 6,
+        "REF": 6,
+        "DEX": 6,
+        "TECH": 6,
+        "COOL": 4,
+        "WILL": 6,
+        "MOVE": 5,
+        "BODY": 4,
+        "EMP": 5,
+        "LUCK": null
+      },
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 4,
+      "armor": {
+        "name": "TUp M Armorjack",
+        "headSp": 12,
+        "bodySp": 12,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 14,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": "Basic H Pistol Ammo x16",
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Handgun 13 con armadura"
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 8,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Brawling 7 con armadura"
+        }
+      ],
+      "skillBases": {
+        "Athletics": 8,
+        "Brawling": 8,
+        "Concentration": 8,
+        "Criminology": 12,
+        "Deduction": 10,
+        "Drive Land Vehicle": 11,
+        "Education": 10,
+        "Evasion": 12,
+        "First Aid": 8,
+        "Handgun": 14,
+        "Human Perception": 7,
+        "Language (Finnish)": 10,
+        "Language (Spanish)": 8,
+        "Language (Streetslang)": 8,
+        "Library Search": 10,
+        "Local Expert (Santo Domingo)": 8,
+        "Medical Tech": 10,
+        "Paramedic": 12,
+        "Perception": 8,
+        "Personal Grooming": 10,
+        "Persuasion": 6,
+        "Science (Forensics)": 10,
+        "Stealth": 8,
+        "Wardrobe & Style": 6
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberarm w/ Medscanner"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x16",
+        "Agent",
+        "Airhypo",
+        "Bear Ears Headband",
+        "Cryopump",
+        "Disposable Cell Phone",
+        "Medtech Bag",
+        "Radio Communicator",
+        "Scrambler/Descrambler",
+        "Trauma Team (Silver)"
+      ],
+      "lore": "Naomi Alexis creció en una familia Reclaimer cerca de Colorado Springs; sus padres vendieron a su hermana menor Minna y ella se unió a una manada Nomad como aprendiz de curandera. Aceptó trabajar para Danger Gal sobre todo para usar sus bases de datos y encontrar a Minna, y fue ascendida a Puma Squad."
+    },
+    {
+      "subtitle": "Cat Burglar and Poster Girl",
+      "level": null,
+      "statsArmorModified": null,
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 4
+      },
+      "rep": 7,
+      "specialRules": [
+        "Solo con Combat Awareness 4.",
+        "Cyberlegs x2 con Jump Boosters x2 y Grafted Muscle and Bone Lace: movilidad y agilidad de gato; usa Scratchers (garras) en melé."
+      ],
+      "doubts": [
+        "Heavy SMG usa la skill Handgun (10) según las reglas base; el libro lista Autofire 13 que aplica a su modo Autofire. Verificar cuál usa la app.",
+        "Armadura: cabeza L Armorjack SP 11, cuerpo TUp L Armorjack SP 12.",
+        "Munición 'Basic H Pistol Ammo x60' asignada al Heavy SMG por inferencia."
+      ],
+      "id": "dg-puma-mouse",
+      "name": "Mouse",
+      "sourcePage": 31,
+      "tier": "hardened_lieutenant",
+      "faction": "Danger Gal Puma Squad",
+      "role": "Solo",
+      "stats": {
+        "INT": 4,
+        "REF": 8,
+        "DEX": 7,
+        "TECH": 6,
+        "COOL": 6,
+        "WILL": 3,
+        "MOVE": 6,
+        "BODY": 6,
+        "EMP": 4,
+        "LUCK": null
+      },
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 6,
+      "armor": {
+        "name": "L Armorjack (cabeza) / TUp L Armorjack (cuerpo)",
+        "headSp": 11,
+        "bodySp": 12,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy SMG w/ Drum Magazine",
+          "skill": "Handgun",
+          "skillBase": 10,
+          "damage": "3d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": "Basic H Pistol Ammo x60",
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": "Con Drum Magazine. El libro lista Autofire 13 en skill bases (para disparo en modo Autofire)."
+        },
+        {
+          "name": "Scratchers x2",
+          "skill": "Brawling",
+          "skillBase": 9,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 12,
+        "Autofire": 13,
+        "Brawling": 9,
+        "Concentration": 5,
+        "Contortionist": 12,
+        "Conversation": 6,
+        "Education": 8,
+        "Electronics/Security Tech": 10,
+        "Evasion": 12,
+        "First Aid": 8,
+        "Handgun": 10,
+        "Human Perception": 10,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Local Expert (Little Europe)": 6,
+        "Melee Weapon": 12,
+        "Perception": 10,
+        "Personal Grooming": 10,
+        "Persuasion": 8,
+        "Pick Lock": 12,
+        "Resist Torture/Drugs": 8,
+        "Stealth": 12,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Exotic Biosculpting",
+        "Contraceptive Implant",
+        "Cybereye x2 w/ Low Light/Infrared/UV x2",
+        "Cyberleg x2 w/ Jump Boosters x2",
+        "EMP Threading",
+        "Grafted Muscle and Bone Lace",
+        "Scratchers",
+        "Shift Tacts",
+        "Techhair"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x60",
+        "Agent",
+        "Grapple Gun",
+        "Lock Picking Set",
+        "Radio Communicator",
+        "Scrambler/Descrambler",
+        "Techtool",
+        "Trauma Team (Silver)",
+        "Vial of Poison x5"
+      ],
+      "lore": "Moira Kahn, hija de dos ejecutivos ausentes, perdió las piernas y a sus padres en un accidente y salió de la capacitación corporativa para huérfanos. Años después reapareció como ladrona de azoteas con cyberware a medida; Michiko Sanderson la reclutó y su lealtad a Danger Gal parece inquebrantable."
+    },
+    {
+      "subtitle": "Enjoys Shooting People",
+      "level": null,
+      "statsArmorModified": null,
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 4
+      },
+      "rep": 6,
+      "specialRules": [
+        "Solo con Combat Awareness 4.",
+        "Neural Link con Chipware Socket y Chemical Analyzer; Chemskin."
+      ],
+      "doubts": [
+        "Munición Slug/Shell asignada a la escopeta como grupo; el libro no la empareja explícitamente."
+      ],
+      "id": "dg-puma-lynx",
+      "name": "Lynx",
+      "sourcePage": 32,
+      "tier": "lieutenant",
+      "faction": "Danger Gal Puma Squad",
+      "role": "Solo",
+      "stats": {
+        "INT": 4,
+        "REF": 7,
+        "DEX": 6,
+        "TECH": 4,
+        "COOL": 4,
+        "WILL": 4,
+        "MOVE": 6,
+        "BODY": 5,
+        "EMP": 4,
+        "LUCK": null
+      },
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Light Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Shotgun",
+          "skill": "Shoulder Arms",
+          "skillBase": 14,
+          "damage": "5d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": "Basic Shotgun Slug Ammo x8 / Basic Shotgun Shell Ammo x4",
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 10,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": "Basic H Pistol Ammo x8",
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 8,
+        "Brawling": 10,
+        "Concentration": 6,
+        "Conversation": 6,
+        "Criminology": 12,
+        "Deduction": 12,
+        "Drive Land Vehicle": 10,
+        "Education": 6,
+        "Evasion": 8,
+        "First Aid": 6,
+        "Handgun": 10,
+        "Human Perception": 6,
+        "Interrogation": 10,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Local Expert (The Glen)": 6,
+        "Perception": 6,
+        "Persuasion": 6,
+        "Resist Torture/Drugs": 10,
+        "Shoulder Arms": 14,
+        "Stealth": 8,
+        "Streetwise": 10,
+        "Tactics": 8,
+        "Tracking": 11
+      },
+      "cyberware": [
+        "Chemskin",
+        "Contraceptive Implant",
+        "Neural Link w/ Chipware Socket & Chemical Analyzer",
+        "Techhair"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x8",
+        "Basic Shotgun Slug Ammo x8",
+        "Basic Shotgun Shell Ammo x4",
+        "Agent",
+        "Disposable Cell Phone",
+        "Flashlight",
+        "Handcuffs",
+        "Radio Communicator w/ Cat Ears",
+        "Scrambler/Descrambler",
+        "Trauma Team (Silver)"
+      ],
+      "lore": "Bella Sawyer creció bajo el régimen estricto de los Inquisitors y fue adoptada por un policía del NCPD tras el ataque a Rocklin Augmentics. Rechazada como Ejecutora de la ciudad por joven e inexperta, Danger Gal la reclutó; su hermana Jack le provee muchas de sus armas desde Faisal's Customs."
+    },
+    {
+      "subtitle": "Gunner Turned Drummer",
+      "level": null,
+      "statsArmorModified": null,
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Charismatic Impact",
+        "rank": 2
+      },
+      "rep": 5,
+      "specialRules": [
+        "Doble rol: Rockerboy con Charismatic Impact 2 y Solo con Combat Awareness 2.",
+        "Su Mercurius Cyberchair está modificada como kit de percusión con Interface Plugs: experimenta los tambores neurológicamente y transmite automáticamente los ritmos a Firewall (p. 35) para efectos sincronizados."
+      ],
+      "doubts": [
+        "El libro lista dos filas idénticas de Heavy Melee Weapon; no hay más detalle.",
+        "El rol secundario Solo: Combat Awareness 2 no cabe en roleAbility (se dejó solo Rockerboy)."
+      ],
+      "id": "dg-divas-andre-nez",
+      "name": "André Nez",
+      "sourcePage": 34,
+      "tier": "lieutenant",
+      "faction": "The Digital Divas",
+      "role": "Rockerboy",
+      "stats": {
+        "INT": 4,
+        "REF": 5,
+        "DEX": 6,
+        "TECH": 4,
+        "COOL": 5,
+        "WILL": 5,
+        "MOVE": 5,
+        "BODY": 5,
+        "EMP": 6,
+        "LUCK": null
+      },
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Subdermal Armor",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 13,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 13,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 12,
+        "Brawling": 14,
+        "Concentration": 7,
+        "Conversation": 10,
+        "Education": 6,
+        "Endurance": 13,
+        "Evasion": 11,
+        "First Aid": 6,
+        "Human Perception": 8,
+        "Interrogation": 7,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Local Expert (Watson Development)": 6,
+        "Melee Weapon": 13,
+        "Perception": 11,
+        "Personal Grooming": 10,
+        "Persuasion": 14,
+        "Play Instrument (Drums)": 12,
+        "Shoulder Arms": 13,
+        "Stealth": 8,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Medical Grade Cyberarm x2",
+        "Kiroshi OptiShields",
+        "Neural Link w/ Interface Plugs",
+        "Subdermal Armor"
+      ],
+      "gear": [
+        "Armor-Piercing Grenade x2",
+        "Smoke Grenade x2",
+        "Agent",
+        "Drum Synthesizer",
+        "Pocket Amplifier",
+        "Rocklin Augmentics Mercurius Cyberchair"
+      ],
+      "lore": "Ex soldado de Militech que se negó a matar a un niño Nomad, perdió las piernas en una obra y recibió una cyberchair de Rocklin Augmentics. Su furia primaria la canaliza como baterista de las Digital Divas."
+    },
+    {
+      "subtitle": "Light and Sound Rigger",
+      "level": null,
+      "statsArmorModified": null,
+      "isNetrunner": true,
+      "interfaceRank": 4,
+      "cyberdeckPrograms": [
+        "Cyberdeck",
+        "Armor",
+        "DeckKRASH x3",
+        "Nervescrub x3"
+      ],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Interface",
+        "rank": 4
+      },
+      "rep": 4,
+      "specialRules": [
+        "Netrunner con Interface 4; cyberdeck con Armor, DeckKRASH x3 y Nervescrub x3.",
+        "Encargado/a de luces, audio y efectos de las Digital Divas; recibe los ritmos de André automáticamente para efectos sincronizados."
+      ],
+      "doubts": [
+        "El libro usa pronombres neutros (su/ellos) para Firewall; se parafrasea sin género."
+      ],
+      "id": "dg-divas-firewall",
+      "name": "Firewall",
+      "sourcePage": 35,
+      "tier": "lieutenant",
+      "faction": "The Digital Divas",
+      "role": "Netrunner",
+      "stats": {
+        "INT": 6,
+        "REF": 5,
+        "DEX": 5,
+        "TECH": 5,
+        "COOL": 4,
+        "WILL": 5,
+        "MOVE": 4,
+        "BODY": 4,
+        "EMP": 6,
+        "LUCK": null
+      },
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 4,
+      "armor": {
+        "name": "Bodyweight Suit",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 11,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": "Basic H Pistol Ammo x8",
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 10,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 7,
+        "Basic Tech": 6,
+        "Brawling": 10,
+        "Composition": 10,
+        "Concentration": 10,
+        "Conversation": 8,
+        "Cryptography": 11,
+        "Demolitions": 7,
+        "Education": 10,
+        "Electronics/Security Tech": 9,
+        "Evasion": 9,
+        "First Aid": 8,
+        "Handgun": 11,
+        "Human Perception": 11,
+        "Language (English)": 10,
+        "Language (Streetslang)": 8,
+        "Local Expert (Japantown)": 8,
+        "Perception": 13,
+        "Persuasion": 6,
+        "Stealth": 11
+      },
+      "cyberware": [
+        "Neural Link w/ Interface Plugs"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x8",
+        "Agent",
+        "Computer",
+        "Techtool",
+        "Virtuality Goggles",
+        "Cyberdeck w/ Armor, DeckKRASH x3 & Nervescrub x3"
+      ],
+      "lore": "Antiguo artista asistido por IA que se deshizo de una seudo-inteligencia rebelde con un antivirus C9 tras exigirle esta regalías (la IA) , lo que lo volvió leyenda en Night City. Ahora maneja luces, audio y efectos de las Divas tras responder al aviso de Sizzle Jams."
+    },
+    {
+      "subtitle": "Brat-Punk Songsmith",
+      "level": null,
+      "statsArmorModified": null,
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Charismatic Impact",
+        "rank": 4
+      },
+      "rep": 4,
+      "specialRules": [
+        "Rockerboy con Charismatic Impact 4; sin armadura en la cabeza (—), solo Light Armorjack en el cuerpo (SP 11)."
+      ],
+      "doubts": [
+        "Cabeza sin armadura: headSp null (el libro imprime —).",
+        "Munición asignada al Heavy Pistol por inferencia."
+      ],
+      "id": "dg-divas-jose-quispe",
+      "name": "José Quispe",
+      "sourcePage": 36,
+      "tier": "lieutenant",
+      "faction": "The Digital Divas",
+      "role": "Rockerboy",
+      "stats": {
+        "INT": 6,
+        "REF": 6,
+        "DEX": 6,
+        "TECH": 4,
+        "COOL": 4,
+        "WILL": 5,
+        "MOVE": 4,
+        "BODY": 4,
+        "EMP": 5,
+        "LUCK": null
+      },
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 4,
+      "armor": {
+        "name": "Light Armorjack (solo cuerpo)",
+        "headSp": null,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol w/ Smartgun Link",
+          "skill": "Handgun",
+          "skillBase": 13,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": "Basic H Pistol Ammo x16",
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Con Smartgun Link"
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 12,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 8,
+        "Brawling": 12,
+        "Composition": 12,
+        "Concentration": 7,
+        "Conversation": 7,
+        "Drive Land Vehicle": 10,
+        "Education": 10,
+        "Evasion": 8,
+        "First Aid": 6,
+        "Handgun": 13,
+        "Human Perception": 7,
+        "Language (English)": 8,
+        "Language (Quechua)": 8,
+        "Language (Spanish)": 8,
+        "Language (Streetslang)": 8,
+        "Local Expert (Badlands)": 10,
+        "Perception": 8,
+        "Personal Grooming": 10,
+        "Persuasion": 6,
+        "Pick Lock": 10,
+        "Pick Pocket": 10,
+        "Play Instrument (Keytar)": 12,
+        "Play Instrument (Sing)": 10,
+        "Stealth": 8,
+        "Streetwise": 8,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "EMP Threading",
+        "Neural Link w/ Interface Plugs"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x16",
+        "Agent",
+        "Duct Tape",
+        "Flashlight",
+        "Keytar",
+        "Segotari RUSH Revolution w/ Elflines Online",
+        "Pocket Amplifier",
+        "Radio Scanner/Music Player"
+      ],
+      "lore": "Criado en las rutas Nomad entre Bolivia y la Confederación del Pacífico, fue mandadero de una pandilla de dorphers y sobrevivió a todos ellos. Es compositor y tecladista de las Digital Divas, y en secreto está enganchado a Elflines Online."
+    },
+    {
+      "subtitle": "Power to the People?",
+      "level": null,
+      "statsArmorModified": null,
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Charismatic Impact",
+        "rank": 4
+      },
+      "rep": 5,
+      "specialRules": [
+        "Rockerboy con Charismatic Impact 4; usa judo contra fans que se le acercan sin permiso.",
+        "Sin armadura en la cabeza; Light Armorjack en el cuerpo (SP 11)."
+      ],
+      "doubts": [
+        "Martial Arts Attack imprime 1d6 (igual que Brawling), tal cual.",
+        "La skill Martial Arts (Judo) del arma se asume por la skill listada (13)."
+      ],
+      "id": "dg-divas-pat-rezin",
+      "name": "Pat Rezin",
+      "sourcePage": 37,
+      "tier": "lieutenant",
+      "faction": "The Digital Divas",
+      "role": "Rockerboy",
+      "stats": {
+        "INT": 5,
+        "REF": 5,
+        "DEX": 6,
+        "TECH": 6,
+        "COOL": 6,
+        "WILL": 4,
+        "MOVE": 3,
+        "BODY": 4,
+        "EMP": 5,
+        "LUCK": null
+      },
+      "hp": 30,
+      "seriouslyWounded": 15,
+      "deathSave": 4,
+      "armor": {
+        "name": "Light Armorjack (solo cuerpo)",
+        "headSp": null,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Martial Arts Attack",
+          "skill": "Martial Arts (Judo)",
+          "skillBase": 13,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 9,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Acting": 11,
+        "Athletics": 8,
+        "Brawling": 9,
+        "Composition": 10,
+        "Concentration": 11,
+        "Conversation": 9,
+        "Education": 10,
+        "Electronics/Security Tech": 8,
+        "Evasion": 11,
+        "First Aid": 8,
+        "Human Perception": 9,
+        "Language (English)": 9,
+        "Language (Streetslang)": 7,
+        "Local Expert (Little Europe)": 7,
+        "Martial Arts (Judo)": 13,
+        "Perception": 10,
+        "Personal Grooming": 12,
+        "Persuasion": 12,
+        "Play Instrument (Sing)": 13,
+        "Play Instrument (Guitar)": 13,
+        "Stealth": 8,
+        "Wardrobe & Style": 12
+      },
+      "cyberware": [
+        "AudioVox",
+        "Contraceptive Implant",
+        "EMP Threading",
+        "Light Tattoo x3",
+        "Shift Tacts",
+        "Techhair"
+      ],
+      "gear": [
+        "Agent",
+        "Audio Recorder",
+        "Electric Guitar",
+        "Pocket Amplifier",
+        "Techtool"
+      ],
+      "lore": "Hija de dos ingenieros de Zhirafa, creció con componentes electrónicos y se volvió Rockerboy con AudioVox. Es la voz de las Digital Divas y cultiva una imagen de rebelde que da poder al pueblo."
+    },
+    {
+      "subtitle": "Independent Entertainment Agent",
+      "level": null,
+      "statsArmorModified": null,
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "roleAbility": {
+        "name": "Teamwork",
+        "rank": 2
+      },
+      "rep": 3,
+      "specialRules": [
+        "Exec con Teamwork 2. No porta armas de fuego; su reputación de tratar con dureza a los difíciles es conocida."
+      ],
+      "doubts": [
+        "Cabeza sin armadura: headSp null (el libro imprime —); segunda fila de armas vacía."
+      ],
+      "id": "dg-divas-sizzle-jams",
+      "name": "Sizzle Jams",
+      "sourcePage": 38,
+      "tier": "hardened_mook",
+      "faction": "The Digital Divas",
+      "role": "Exec",
+      "stats": {
+        "INT": 7,
+        "REF": 4,
+        "DEX": 4,
+        "TECH": 2,
+        "COOL": 6,
+        "WILL": 5,
+        "MOVE": 5,
+        "BODY": 4,
+        "EMP": 2,
+        "LUCK": null
+      },
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 4,
+      "armor": {
+        "name": "Kevlar®",
+        "headSp": null,
+        "bodySp": 7,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 10,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Accounting": 12,
+        "Acting": 10,
+        "Athletics": 6,
+        "Brawling": 10,
+        "Bribery": 11,
+        "Bureaucracy": 11,
+        "Business": 11,
+        "Concentration": 7,
+        "Conversation": 4,
+        "Drive Land Vehicle": 10,
+        "Education": 9,
+        "Evasion": 6,
+        "First Aid": 4,
+        "Human Perception": 4,
+        "Interrogation": 8,
+        "Language (English)": 11,
+        "Language (Streetslang)": 9,
+        "Local Expert (New Westbrook)": 9,
+        "Perception": 9,
+        "Persuasion": 8,
+        "Stealth": 6
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberarm w/ Psiberstuff Watch-Man"
+      ],
+      "gear": [
+        "Audio Recorder",
+        "Handcuffs",
+        "Flashlight",
+        "Personal CarePak"
+      ],
+      "lore": "Agente de entretenimiento independiente con una fama de temperamento frío e implacable, quizá exagerada, que viene de su época de mensajera. Rumores apuntan a que un ejecutivo de DMS, Albert Rudd, la prepara en secreto."
+    },
+    {
+      "id": "dg-edge-tetsuo",
+      "name": "Tetsuo",
+      "subtitle": "Great with a Knife",
+      "sourcePage": 40,
+      "tier": "boss",
+      "faction": "Edgerunners",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 6
+      },
+      "level": null,
+      "rep": 6,
+      "stats": {
+        "INT": 6,
+        "REF": 8,
+        "DEX": 8,
+        "TECH": 6,
+        "COOL": 6,
+        "WILL": 6,
+        "LUCK": null,
+        "MOVE": 5,
+        "BODY": 7,
+        "EMP": 5
+      },
+      "statsArmorModified": null,
+      "hp": 45,
+      "seriouslyWounded": 23,
+      "deathSave": 7,
+      "armor": {
+        "name": "TUp Light Armorjack",
+        "headSp": 12,
+        "bodySp": 12,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol w/ Smartgun Link",
+          "skill": "Handgun",
+          "skillBase": 16,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Kendachi Mono-Three",
+          "skill": "Melee Weapon",
+          "skillBase": 16,
+          "damage": "4d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Skill inferida: el libro no la indica"
+        }
+      ],
+      "skillBases": {
+        "Athletics": 16,
+        "Brawling": 14,
+        "Bribery": 10,
+        "Bureaucracy": 10,
+        "Business": 11,
+        "Concentration": 8,
+        "Conversation": 7,
+        "Drive Land Vehicle": 10,
+        "Education": 8,
+        "Endurance": 10,
+        "Evasion": 16,
+        "First Aid": 8,
+        "Handgun": 16,
+        "Human Perception": 9,
+        "Interrogation": 10,
+        "Language (English)": 8,
+        "Language (Japanese)": 10,
+        "Language (Streetslang)": 8,
+        "Local Expert (Pacifica Playground)": 8,
+        "Martial Arts (Karate)": 16,
+        "Melee Weapon": 16,
+        "Perception": 12,
+        "Personal Grooming": 9,
+        "Persuasion": 10,
+        "Resist Torture/Drugs": 10,
+        "Science (Culinary)": 14,
+        "Stealth": 16,
+        "Streetwise": 12,
+        "Tactics": 12,
+        "Trading": 10,
+        "Wardrobe & Style": 9
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberarm w/ Hardened Shielding",
+        "Cyberarm w/ Hardened Shielding & Subdermal Grip",
+        "Neural Link w/ Chipware Socket x2, Olfactory Boost, Sandevistan & Tactile Boost"
+      ],
+      "gear": [
+        "Armor-Piercing H Pistol Ammo x16",
+        "Heavy Melee Weapon x2 (ROF2 • 3d6)",
+        "Agent",
+        "Disposable Cell Phone"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Solo: Combat Awareness 6.",
+        "Lleva dos Heavy Melee Weapon (ROF2, 3d6) como equipo."
+      ],
+      "lore": "Chef del restaurante japonés Big Success en Pacifica Playground, conocido como Ryu Sakai; en realidad es un Solo que desapareció de la escena Edgerunner japonesa con un botín robado a la Yakuza de Chiba. Ahora la Yakuza de Night City tiene interés en su local.",
+      "doubts": [
+        "Abreviaturas del libro: 'L Armorjack' = Light Armorjack y 'TUp' = mejorado por un Tech (el libro indica normalmente +1 SP o -1 a la penalización de REF/DEX/MOVE); el SP impreso ya incluye la mejora.",
+        "El arma Kendachi Mono-Three no indica skill en el libro; se asignó Melee Weapon (16) por ser arma cuerpo a cuerpo (Martial Arts también es 16).",
+        "Nivel impreso 'Boss' (no Hardened)."
+      ]
+    },
+    {
+      "id": "dg-edge-crab-lord",
+      "name": "CrAB Lord",
+      "subtitle": "Night City Street Legend",
+      "sourcePage": 41,
+      "tier": "hardened_mini_boss",
+      "faction": "Edgerunners",
+      "role": "Netrunner",
+      "roleAbility": {
+        "name": "Interface",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 5,
+      "stats": {
+        "INT": 8,
+        "REF": 7,
+        "DEX": 7,
+        "TECH": 8,
+        "COOL": 7,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 3,
+        "BODY": 5,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "TUp Bodyweight Suit",
+        "headSp": 12,
+        "bodySp": 12,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 12,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 15,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 9,
+        "Basic Tech": 14,
+        "Brawling": 9,
+        "Bureaucracy": 12,
+        "Concentration": 11,
+        "Conversation": 6,
+        "Cryptography": 14,
+        "Cybertech": 14,
+        "Drive Land Vehicle": 10,
+        "Education": 12,
+        "Electronics/Security Tech": 14,
+        "Evasion": 9,
+        "First Aid": 12,
+        "Gamble": 11,
+        "Handgun": 12,
+        "Human Perception": 8,
+        "Land Vehicle Tech": 10,
+        "Language (English)": 12,
+        "Language (Streetslang)": 10,
+        "Lip Reading": 12,
+        "Local Expert (Hot Zone)": 12,
+        "Melee Weapon": 15,
+        "Perception": 12,
+        "Persuasion": 9,
+        "Stealth": 9,
+        "Streetwise": 15,
+        "Tactics": 10,
+        "Trading": 10,
+        "Weaponstech": 12
+      },
+      "cyberware": [
+        "Neural Link w/ Interface Plugs"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x8",
+        "Carryall",
+        "Inflatable Bed & Sleep-bag",
+        "Kibble Pack",
+        "Virtuality Goggles",
+        "Portable NET Architecture",
+        "CrAB Drones",
+        "EQ Cyberdeck w/ Armor, Giant, Hellbolt x2, Hardened Circuitry, Insulated Wiring & KRASH Barrier (en el Bodyweight Suit)"
+      ],
+      "isNetrunner": true,
+      "interfaceRank": 4,
+      "cyberdeckPrograms": [
+        "EQ Cyberdeck",
+        "Armor",
+        "Giant",
+        "Hellbolt x2"
+      ],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Netrunner: Interface 4.",
+        "Tech: Maker 2 (Field Expertise 2, Fabrication Expertise 2).",
+        "Cyberdeck de calidad excelente (EQ) con Hardened Circuitry, Insulated Wiring y KRASH Barrier, alojado en el Bodyweight Suit; programas: Armor, Giant y Hellbolt x2.",
+        "Equipo: Portable NET Architecture y CrAB Drones (detalle de la página 42, que no es una ficha aparte).",
+        "CrAB Drone (tipo Active Defense): dron caminante del tamaño de un perro pequeño, con cámara de observación, patas de agarre y un airhypo cargado con Black Lace, Blue Glass o Biotoxin. Disparador por defecto: un objetivo entra en el área y falla el escaneo de reconocimiento biométrico/facial. Datos: 6 MOVE y 40 HP; protege el perímetro del área defendida. Para contrarrestarlo: DV21 de Electronics/Security Tech, 5 minutos.",
+        "NET Architecture portátil de CrAB Lord. Demon instalado: Rock Lobster (un Balron 'con demasiada personalidad'): REZ 30, Interface 7, NET Actions 4, Combat Number 14; puede realizar cualquier NET Action que un Netrunner pueda hacer.",
+        "Pisos de la NET: Piso 1 Black ICE Giant (DV —); Piso 2 Password (DV 10); Piso 3 Control Node: CrAB Drone (DV 10); Piso 4 Control Node: CrAB Drone (DV 10)."
+      ],
+      "lore": "Leyenda urbana de Night City: algunos creen que 'CrAB Lord' es un título heredado, pero el original sigue activo aunque casi no se mueva; sus drones y remotos son sus brazos, piernas, ojos y oídos. Prefiere manejar a sus 'hijitos' desde un lugar seguro, dentro del alcance de su NET portátil, y guarda una enorme cantidad de inteligencia sobre la ciudad.",
+      "doubts": [
+        "Ficha de la página 41; el CrAB Drone y la NET portátil de la página 42 se incluyeron en specialRules, no como ficha aparte.",
+        "El libro imprime dos roles (Netrunner: Interface 4 y Tech: Maker 2); se tomó Netrunner como role principal por ser el primero.",
+        "El DV del Piso 1 (Black ICE Giant) aparece como '—' en el libro.",
+        "Hardened Circuitry, Insulated Wiring y KRASH Barrier son mejoras del deck, no programas: no están en cyberdeckPrograms (que lista el deck EQ y los programas Armor, Giant, Hellbolt x2).",
+        "Abreviaturas del libro: 'TUp' = mejorado por un Tech (el libro indica normalmente +1 SP o -1 a la penalización de REF/DEX/MOVE); el SP impreso ya incluye la mejora."
+      ]
+    },
+    {
+      "id": "dg-edge-tia-puno",
+      "name": "Tía Puño",
+      "subtitle": "Auntie Fist",
+      "sourcePage": 43,
+      "tier": "hardened_mini_boss",
+      "faction": "Edgerunners",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 4,
+      "stats": {
+        "INT": 5,
+        "REF": 6,
+        "DEX": 5,
+        "TECH": 6,
+        "COOL": 6,
+        "WILL": 7,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 8,
+        "EMP": 5
+      },
+      "statsArmorModified": null,
+      "hp": 50,
+      "seriouslyWounded": 25,
+      "deathSave": 8,
+      "armor": {
+        "name": "Light Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Constitutional Arms Multiammo Pistol",
+          "skill": "Handgun",
+          "skillBase": 14,
+          "damage": "4d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Martial Arts Attack",
+          "skill": "Martial Arts",
+          "skillBase": 15,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Martial Arts (Aikido)"
+        }
+      ],
+      "skillBases": {
+        "Athletics": 10,
+        "Basic Tech": 13,
+        "Brawling": 15,
+        "Concentration": 11,
+        "Conversation": 8,
+        "Education": 7,
+        "Electronics/Security Tech": 10,
+        "Evasion": 15,
+        "Handgun": 14,
+        "Heavy Weapons": 10,
+        "Human Perception": 9,
+        "Language (Spanish)": 9,
+        "Language (Streetslang)": 7,
+        "Local Expert (NorCal Military Base)": 7,
+        "Martial Arts (Aikido)": 15,
+        "Perception": 9,
+        "Personal Grooming": 8,
+        "Persuasion": 8,
+        "Stealth": 7,
+        "Wardrobe & Style": 8,
+        "Weaponstech": 13
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberarm w/ RealSkinn Covering & Toolhand",
+        "EMP Threading",
+        "Neural Link w/ Chipware Socket & Pain Editor"
+      ],
+      "gear": [
+        "Basic VH Pistol Ammo x3",
+        "Armor-Piercing VH Pistol Ammo x3",
+        "Expansive VH Pistol Ammo x3",
+        "Incendiary VH Pistol Ammo x3",
+        "Rubber VH Pistol Ammo x3",
+        "Armor-Piercing Grenade",
+        "Agent",
+        "Carryall",
+        "Disposable Cell Phone",
+        "Techbag"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Solo: Combat Awareness 4.",
+        "Tech: Maker 2 (Field Expertise 2, Fabrication Expertise 2); se especializa en ordenanza explosiva."
+      ],
+      "lore": "Antigua empleada de Militech que acabó como freelance tras romperle la mandíbula a un superior que no respetó su instinto protector. Es como la 'madre' de los Edgerunners: experta en explosivos que abre paso a golpes, fría bajo fuego y feroz defendiendo a su gente.",
+      "doubts": [
+        "El libro imprime dos roles (Solo y Tech); se tomó Solo como principal por ser el primero.",
+        "'L Armorjack' interpretado como Light Armorjack (SP 11)."
+      ]
+    },
+    {
+      "id": "dg-edge-backhand",
+      "name": "Backhand",
+      "subtitle": "Freelance Tech",
+      "sourcePage": 44,
+      "tier": "hardened_lieutenant",
+      "faction": "Edgerunners",
+      "role": "Tech",
+      "roleAbility": {
+        "name": "Maker",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 6,
+        "REF": 5,
+        "DEX": 5,
+        "TECH": 7,
+        "COOL": 5,
+        "WILL": 6,
+        "LUCK": null,
+        "MOVE": 5,
+        "BODY": 5,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 5,
+      "armor": {
+        "name": "TUp Light Armorjack",
+        "headSp": 12,
+        "bodySp": 12,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy SMG",
+          "skill": "Handgun",
+          "skillBase": 13,
+          "damage": "3d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": "Excellent",
+          "weaponType2077": null,
+          "notes": "Skill inferida (Handgun 13; Autofire también 13)"
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 7,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 7,
+        "Autofire": 13,
+        "Basic Tech": 13,
+        "Brawling": 7,
+        "Concentration": 8,
+        "Conversation": 8,
+        "Cybertech": 13,
+        "Education": 10,
+        "Electronics/Security Tech": 13,
+        "Evasion": 11,
+        "First Aid": 9,
+        "Handgun": 13,
+        "Human Perception": 8,
+        "Interrogation": 7,
+        "Language (English)": 10,
+        "Language (Streetslang)": 8,
+        "Local Expert (Heywood Industrial Zone)": 8,
+        "Perception": 10,
+        "Personal Grooming": 9,
+        "Persuasion": 9,
+        "Stealth": 7,
+        "Wardrobe & Style": 9,
+        "Weaponstech": 11
+      },
+      "cyberware": [
+        "Artificial Shoulder Mount",
+        "Contraceptive Implant",
+        "Cyberarm w/ Techscanner & Tool Hand"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x80",
+        "Agent",
+        "Carryall",
+        "Computer",
+        "Duct Tape",
+        "Flashlight",
+        "Tech Bag"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Tech: Maker 4 (Field Expertise 4, Fabrication Expertise 4)."
+      ],
+      "lore": "Cicely Feng, apodada Backhand por su don de elogiar y castigar con la misma frase; es una Tech freelance excelente y sin interés en caerle bien a nadie. Se puede contar con ella para cumplir el trabajo, pero su lealtad es limitada.",
+      "doubts": [
+        "Abreviaturas del libro: 'L Armorjack' = Light Armorjack y 'TUp' = mejorado por un Tech (el libro indica normalmente +1 SP o -1 a la penalización de REF/DEX/MOVE); el SP impreso ya incluye la mejora.",
+        "El arma EQ Heavy SMG no indica skill; se asignó Handgun (13), Autofire también vale 13.",
+        "La munición impresa es 'Basic H Pistol Ammo x80' (tal cual el libro)."
+      ]
+    },
+    {
+      "id": "dg-edge-jumpshot",
+      "name": "Jumpshot",
+      "subtitle": "Leaping into the News",
+      "sourcePage": 45,
+      "tier": "hardened_lieutenant",
+      "faction": "Edgerunners",
+      "role": "Media",
+      "roleAbility": {
+        "name": "Credibility",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 4,
+      "stats": {
+        "INT": 5,
+        "REF": 5,
+        "DEX": 5,
+        "TECH": 4,
+        "COOL": 6,
+        "WILL": 6,
+        "LUCK": null,
+        "MOVE": 7,
+        "BODY": 5,
+        "EMP": 5
+      },
+      "statsArmorModified": {
+        "REF": 3,
+        "DEX": 3,
+        "WILL": 4
+      },
+      "hp": 40,
+      "seriouslyWounded": 20,
+      "deathSave": 5,
+      "armor": {
+        "name": "Medium Armorjack",
+        "headSp": 12,
+        "bodySp": 12,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 13,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Handgun 13 (11 con armadura)"
+        },
+        {
+          "name": "Microwave",
+          "skill": "",
+          "skillBase": 0,
+          "damage": "—",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "El libro imprime ROF1 y '—' como daño; no indica skill"
+        }
+      ],
+      "skillBases": {
+        "Athletics": 9,
+        "Brawling": 13,
+        "Composition": 10,
+        "Concentration": 8,
+        "Conversation": 9,
+        "Deduction": 9,
+        "Education": 7,
+        "Evasion": 13,
+        "First Aid": 6,
+        "Handgun": 13,
+        "Human Perception": 11,
+        "Language (English)": 9,
+        "Language (Streetslang)": 7,
+        "Library Search": 10,
+        "Lip Reading": 9,
+        "Local Expert (The Glen)": 11,
+        "Perception": 10,
+        "Persuasion": 12,
+        "Photography/Film": 12,
+        "Stealth": 7
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberleg x2 w/ Jump Booster x2",
+        "Neural Link w/ Interface Plugs"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x16",
+        "Agent",
+        "Audio Recorder",
+        "Carryall",
+        "Flashlight",
+        "Memory Chips x10",
+        "Video Camera"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Media: Credibility 4."
+      ],
+      "lore": "Angela Banks, reportera freelance que se ganó el apodo al saltar de un AV-4 con la cámara grabando una paliza del NCPD a manifestantes, y publicó ella misma el video. Llega muy lejos por una historia y siempre la cuenta; trabaja con 24/7 y otros medios.",
+      "doubts": [
+        "Los valores entre paréntesis (con la armadura puesta) son: REF 3, DEX 3, WILL 4 (en statsArmorModified) y skills Athletics 7, Brawling 11, Evasion 11, Handgun 11, Stealth 5; skillBases guarda el valor sin paréntesis.",
+        "'M Armorjack' interpretado como Medium Armorjack (SP 12).",
+        "Microwave: sin daño ni skill impresos (skill vacía, skillBase null).",
+        "Microwave: sin skill impresa; base 0."
+      ]
+    },
+    {
+      "id": "dg-edge-24-7",
+      "name": "24/7",
+      "subtitle": "Never Blink News",
+      "sourcePage": 46,
+      "tier": "lieutenant",
+      "faction": "Edgerunners",
+      "role": "Media",
+      "roleAbility": {
+        "name": "Credibility",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 2,
+      "stats": {
+        "INT": 5,
+        "REF": 4,
+        "DEX": 4,
+        "TECH": 4,
+        "COOL": 7,
+        "WILL": 6,
+        "LUCK": null,
+        "MOVE": 5,
+        "BODY": 4,
+        "EMP": 5
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 4,
+      "armor": {
+        "name": "Light Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 13,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 6,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 6,
+        "Brawling": 6,
+        "Composition": 10,
+        "Concentration": 8,
+        "Conversation": 10,
+        "Deduction": 11,
+        "Education": 7,
+        "Evasion": 13,
+        "First Aid": 6,
+        "Handgun": 13,
+        "Human Perception": 11,
+        "Language (English)": 9,
+        "Language (Streetslang)": 7,
+        "Lip Reading": 12,
+        "Local Expert (Upper Marina)": 12,
+        "Perception": 10,
+        "Persuasion": 12,
+        "Photography/Film": 12,
+        "Stealth": 6
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberaudio Suite w/ Voice Stress Analyzer",
+        "EMP Threading"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x16",
+        "Agent",
+        "Audio Recorder",
+        "Binoculars",
+        "Computer",
+        "Disposable Cell Phone x2",
+        "Radio Scanner/Music Player",
+        "Video Camera"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [],
+      "lore": "Periodista, presentador, investigador y camarógrafo de Never Blink News, que en realidad es un solo hombre. Dejó las noticias corporativas por la censura y el sesgo y persigue historias para publicarlas en el Data Pool sin soltar la presa.",
+      "doubts": [
+        "El nombre '24/7' lleva barra; el id usa guiones (dg-edge-24-7). El texto también lo menciona como 'Toofer'.",
+        "'L Armorjack' interpretado como Light Armorjack (SP 11)."
+      ]
+    },
+    {
+      "id": "dg-edge-derby",
+      "name": "Derby",
+      "subtitle": "Star Jammer",
+      "sourcePage": 47,
+      "tier": "lieutenant",
+      "faction": "Edgerunners",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 2,
+      "stats": {
+        "INT": 4,
+        "REF": 6,
+        "DEX": 4,
+        "TECH": 4,
+        "COOL": 6,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 6,
+        "BODY": 5,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Subdermal Armor",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Very Heavy Pistol w/ Smartgun Link",
+          "skill": "Handgun",
+          "skillBase": 12,
+          "damage": "4d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 9,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Acting": 8,
+        "Athletics": 12,
+        "Brawling": 13,
+        "Concentration": 9,
+        "Conversation": 8,
+        "Dance": 8,
+        "Education": 6,
+        "Endurance": 8,
+        "Evasion": 12,
+        "First Aid": 6,
+        "Handgun": 12,
+        "Human Perception": 8,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Local Expert (Watson Development)": 7,
+        "Melee Weapon": 9,
+        "Perception": 6,
+        "Personal Grooming": 10,
+        "Resist Torture/Drugs": 10,
+        "Stealth": 6,
+        "Streetwise": 9,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Neural Link",
+        "Subdermal Armor",
+        "Subdermal Grip"
+      ],
+      "gear": [
+        "Basic VH Pistol Ammo x16",
+        "Smoke Grenade",
+        "Disposable Cell Phone",
+        "Inline Skates"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [],
+      "lore": "'Demolition' Derby viene del circuito de roller derby de Night City y sabe jugar al público tanto como derribar rivales. Busca trabajos mejor pagados y mejoras (como el agarre subdérmico para el smartgun link); tiene un fuerte sentido del juego limpio.",
+      "doubts": []
+    },
+    {
+      "id": "dg-edge-forty",
+      "name": "Forty",
+      "subtitle": "Making Music and Raising Hell",
+      "sourcePage": 48,
+      "tier": "lieutenant",
+      "faction": "Edgerunners",
+      "role": "Rockerboy",
+      "roleAbility": {
+        "name": "Charismatic Impact",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 3,
+      "stats": {
+        "INT": 4,
+        "REF": 5,
+        "DEX": 5,
+        "TECH": 4,
+        "COOL": 6,
+        "WILL": 6,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 4,
+        "EMP": 6
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 4,
+      "armor": {
+        "name": "Light Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Very Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 13,
+          "damage": "4d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 9,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Acting": 8,
+        "Athletics": 7,
+        "Brawling": 9,
+        "Bribery": 8,
+        "Composition": 10,
+        "Concentration": 8,
+        "Conversation": 8,
+        "Dance": 9,
+        "Education": 8,
+        "Evasion": 11,
+        "First Aid": 6,
+        "Handgun": 13,
+        "Human Perception": 12,
+        "Language (English)": 8,
+        "Language (Streetslang)": 6,
+        "Local Expert (New Westbrook)": 6,
+        "Perception": 6,
+        "Personal Grooming": 10,
+        "Persuasion": 12,
+        "Play Instrument (Guitar)": 12,
+        "Play Instrument (Singing)": 12,
+        "Stealth": 7,
+        "Wardrobe & Style": 12
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberaudio Suite w/ Audio Recorder",
+        "EMP Threading",
+        "Medical Grade Cyberleg",
+        "Light Tattoo x3",
+        "Techhair"
+      ],
+      "gear": [
+        "Basic VH Pistol Ammo x16",
+        "Flashbang Grenade x2",
+        "Agent",
+        "Electric Guitar",
+        "Pocket Amplifier",
+        "Radio Scanner/Music Player"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [],
+      "lore": "Hija del músico Adam Dore, arruinado por un contrato abusivo de DMS. Heredó sus archivos, sus lecciones y un fuerte rencor contra las corporaciones, y se reinventó en la escena musical underground y entre los Edgerunners.",
+      "doubts": [
+        "'L Armorjack' interpretado como Light Armorjack (SP 11)."
+      ]
+    },
+    {
+      "id": "dg-edge-grease",
+      "name": "Grease",
+      "subtitle": "Up-and-Coming Fixer",
+      "sourcePage": 49,
+      "tier": "lieutenant",
+      "faction": "Edgerunners",
+      "role": "Fixer",
+      "roleAbility": {
+        "name": "Operator",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 2,
+      "stats": {
+        "INT": 5,
+        "REF": 5,
+        "DEX": 4,
+        "TECH": 5,
+        "COOL": 6,
+        "WILL": 6,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 4,
+        "EMP": 5
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 4,
+      "armor": {
+        "name": "Light Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Very Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 13,
+          "damage": "4d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 6,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Accounting": 7,
+        "Acting": 8,
+        "Athletics": 6,
+        "Basic Tech": 7,
+        "Brawling": 6,
+        "Business": 9,
+        "Concentration": 9,
+        "Conversation": 12,
+        "Education": 8,
+        "Evasion": 12,
+        "First Aid": 7,
+        "Handgun": 13,
+        "Human Perception": 10,
+        "Language (English)": 9,
+        "Language (Spanish)": 9,
+        "Language (Streetslang)": 7,
+        "Local Expert (Watson Development)": 7,
+        "Perception": 9,
+        "Personal Grooming": 9,
+        "Persuasion": 10,
+        "Stealth": 8,
+        "Streetwise": 10,
+        "Tactics": 7,
+        "Trading": 12,
+        "Wardrobe & Style": 9
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberaudio Suite w/ Bug Detector, Internal Agent & Voice Stress Analyzer"
+      ],
+      "gear": [
+        "Basic VH Pistol Ammo x16",
+        "Carryall",
+        "Disposable Cell Phone x2",
+        "Smart Glasses w/ Targeting Scope"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [],
+      "lore": "Fixer emergente, profesional y suave ('solo soy el intermediario'), que mantiene un perfil bajo. No se arriesga de más: cancelará un trabajo que crea inviable y es leal a su cliente, aunque se le puede convencer de que se retire.",
+      "doubts": [
+        "'L Armorjack' interpretado como Light Armorjack (SP 11)."
+      ]
+    },
+    {
+      "id": "dg-edge-redeye",
+      "name": "Redeye",
+      "subtitle": "Runs the Edge and Your Games",
+      "sourcePage": 50,
+      "tier": "lieutenant",
+      "faction": "Edgerunners",
+      "role": "Netrunner",
+      "roleAbility": {
+        "name": "Interface",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 1,
+      "stats": {
+        "INT": 6,
+        "REF": 6,
+        "DEX": 4,
+        "TECH": 5,
+        "COOL": 5,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 5,
+        "BODY": 5,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Bodyweight Suit",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 11,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 6,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 6,
+        "Basic Tech": 11,
+        "Brawling": 6,
+        "Concentration": 10,
+        "Conversation": 6,
+        "Cryptography": 12,
+        "Cybertech": 11,
+        "Education": 12,
+        "Electronics/Security Tech": 11,
+        "Evasion": 10,
+        "First Aid": 7,
+        "Forgery": 9,
+        "Handgun": 11,
+        "Human Perception": 6,
+        "Language (English)": 10,
+        "Language (Streetslang)": 8,
+        "Library Search": 12,
+        "Local Expert (Little Europe)": 8,
+        "Perception": 8,
+        "Persuasion": 7,
+        "Stealth": 9
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Neural Link w/ Interface Plugs",
+        "Shift Tacts x2"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x16",
+        "Agent",
+        "Virtuality Goggles",
+        "Cyberdeck w/ Armor, See Ya, Sword, Vrizzbolt & Worm"
+      ],
+      "isNetrunner": true,
+      "interfaceRank": 4,
+      "cyberdeckPrograms": [
+        "Armor",
+        "See Ya",
+        "Sword",
+        "Vrizzbolt",
+        "Worm"
+      ],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Netrunner: Interface 4."
+      ],
+      "lore": "Netrunner que escapó de una familia corporativa que no la aceptaba ni como programadora ni en su identidad, y se hizo un nombre en la calle. Sigue dirigiendo juegos de rol para sus amigos Edgerunners.",
+      "doubts": []
+    },
+    {
+      "id": "dg-edge-saber",
+      "name": "Saber",
+      "subtitle": "Freelance Corporate Troubleshooter",
+      "sourcePage": 51,
+      "tier": "lieutenant",
+      "faction": "Edgerunners",
+      "role": "Exec",
+      "roleAbility": {
+        "name": "Teamwork",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 2,
+      "stats": {
+        "INT": 5,
+        "REF": 5,
+        "DEX": 5,
+        "TECH": 4,
+        "COOL": 5,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 5,
+        "BODY": 5,
+        "EMP": 5
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Subdermal Armor",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 11,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Popup Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 13,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Accounting": 12,
+        "Athletics": 7,
+        "Brawling": 9,
+        "Bureaucracy": 10,
+        "Business": 12,
+        "Concentration": 7,
+        "Conversation": 9,
+        "Deduction": 9,
+        "Education": 9,
+        "Evasion": 13,
+        "First Aid": 6,
+        "Handgun": 11,
+        "Human Perception": 7,
+        "Language (English)": 9,
+        "Language (Streetslang)": 7,
+        "Local Expert (The Glen)": 7,
+        "Melee Weapon": 13,
+        "Perception": 9,
+        "Personal Grooming": 10,
+        "Persuasion": 9,
+        "Stealth": 7,
+        "Wardrobe & Style": 10
+      },
+      "cyberware": [
+        "Cyberarm w/ Popup Melee Heavy Weapon",
+        "Cyberarm w/ Popup Shield",
+        "Subdermal Armor"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x16",
+        "Agent",
+        "Businesswear Outfit",
+        "Carryall",
+        "Scrambler/Descrambler"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Exec: Teamwork 4 (Driver): el libro indica 'Driver' entre paréntesis junto a la habilidad de rol."
+      ],
+      "lore": "Denny Haulk, exmiembro del equipo de esgrima de NCU y troubleshooter freelance al que las corporaciones contratan para arreglar sus desastres. Perdió ambos brazos salvando a un Exec y ahora lleva un arma y un escudo ocultos en los cyberbrazos.",
+      "doubts": [
+        "El cyberware imprime 'Popup Melee Heavy Weapon' mientras que el arma figura como 'Popup Heavy Melee Weapon' (misma arma); skill Melee Weapon 13 inferida."
+      ]
+    },
+    {
+      "id": "dg-edge-torch",
+      "name": "Torch",
+      "subtitle": "Fire-Wielding Tech",
+      "sourcePage": 52,
+      "tier": "lieutenant",
+      "faction": "Edgerunners",
+      "role": "Tech",
+      "roleAbility": {
+        "name": "Maker",
+        "rank": 4
+      },
+      "level": null,
+      "rep": 1,
+      "stats": {
+        "INT": 6,
+        "REF": 4,
+        "DEX": 5,
+        "TECH": 7,
+        "COOL": 4,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 5,
+        "EMP": 5
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Light Armorjack",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 12,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Flamethrower",
+          "skill": "Heavy Weapons",
+          "skillBase": 13,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": "Skill inferida"
+        }
+      ],
+      "skillBases": {
+        "Athletics": 7,
+        "Basic Tech": 13,
+        "Brawling": 7,
+        "Business": 10,
+        "Conceal/Reveal Object": 8,
+        "Conversation": 7,
+        "Cybertech": 9,
+        "Education": 8,
+        "Electronics/Security Tech": 11,
+        "Evasion": 9,
+        "First Aid": 9,
+        "Handgun": 12,
+        "Heavy Weapons": 13,
+        "Human Perception": 8,
+        "Land Vehicle Tech": 10,
+        "Language (Portuguese)": 10,
+        "Language (Spanish)": 8,
+        "Language (Streetslang)": 8,
+        "Local Expert (Upper Marina)": 10,
+        "Perception": 8,
+        "Persuasion": 6,
+        "Stealth": 7,
+        "Weaponstech": 10
+      },
+      "cyberware": [
+        "Contraceptive Implant",
+        "Cyberarm w/ Tool Hand",
+        "Cybereye w/ MicroOptics",
+        "Skinwatch"
+      ],
+      "gear": [
+        "Basic H Pistol Ammo x8",
+        "Incendiary Shotgun Shell x 4",
+        "Disposable Cell Phone",
+        "Duct Tape",
+        "Tech Bag"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Tech: Maker 4 (Field Expertise 2, Upgrade Expertise 2, Fabrication Expertise 2, Invention Expertise 2)."
+      ],
+      "lore": "João 'Torch' Barbosa Alves, dueño de un taller de reparaciones en el sur de Upper Marina; arregla casi todo, incluso lo ilegal (con recargo) y sin hacer preguntas. El apodo viene del soplete, aunque también tiene un lanzallamas que sabe usar.",
+      "doubts": [
+        "El lanzallamas no indica skill en el libro; se asignó Heavy Weapons (13).",
+        "'L Armorjack' interpretado como Light Armorjack (SP 11)."
+      ]
+    },
+    {
+      "id": "dg-edge-crasher",
+      "name": "Crasher",
+      "subtitle": "Weddings and Funerals",
+      "sourcePage": 53,
+      "tier": "hardened_mook",
+      "faction": "Edgerunners",
+      "role": "Media",
+      "roleAbility": {
+        "name": "Credibility",
+        "rank": 2
+      },
+      "level": null,
+      "rep": 1,
+      "stats": {
+        "INT": 4,
+        "REF": 5,
+        "DEX": 4,
+        "TECH": 4,
+        "COOL": 5,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 4,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 4,
+      "armor": {
+        "name": "Kevlar®",
+        "headSp": 7,
+        "bodySp": 7,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Medium Pistol",
+          "skill": "Handgun",
+          "skillBase": 12,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 6,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 6,
+        "Brawling": 6,
+        "Composition": 8,
+        "Concentration": 7,
+        "Conversation": 8,
+        "Education": 6,
+        "Evasion": 8,
+        "First Aid": 6,
+        "Handgun": 12,
+        "Human Perception": 10,
+        "Language (English)": 8,
+        "Language (Streetslang)": 8,
+        "Local Expert (Heywood)": 8,
+        "Perception": 8,
+        "Persuasion": 9,
+        "Photography/Film": 10,
+        "Stealth": 6
+      },
+      "cyberware": [
+        "EMP Threading"
+      ],
+      "gear": [
+        "Incendiary M Pistol Ammo x12",
+        "Computer",
+        "Disposable Cell Phone",
+        "TUp (+1 a Photography/Film) Video Camera"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [],
+      "lore": "Camarógrafo mercenario (de 'wedding crasher') que filma lo que sea por dinero, idealmente con buffet. Guarda un archivo personal de material potencialmente incriminatorio y, por un precio, rebusca en su historial de imágenes de Night City.",
+      "doubts": [
+        "El libro imprime 'PQ Medium Pistol' (calidad Poor)."
+      ]
+    },
+    {
+      "id": "dg-edge-flasher",
+      "name": "Flasher",
+      "subtitle": "He'll Show You His Goods",
+      "sourcePage": 54,
+      "tier": "hardened_mook",
+      "faction": "Edgerunners",
+      "role": "Fixer",
+      "roleAbility": {
+        "name": "Operator",
+        "rank": 2
+      },
+      "level": null,
+      "rep": 1,
+      "stats": {
+        "INT": 5,
+        "REF": 5,
+        "DEX": 4,
+        "TECH": 4,
+        "COOL": 5,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 4,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 30,
+      "seriouslyWounded": 15,
+      "deathSave": 4,
+      "armor": {
+        "name": "Scavenged Armor",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Heavy Pistol",
+          "skill": "Handgun",
+          "skillBase": 12,
+          "damage": "3d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 6,
+          "damage": "1d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 6,
+        "Brawling": 6,
+        "Bribery": 9,
+        "Conceal/Reveal Object": 10,
+        "Concentration": 6,
+        "Conversation": 8,
+        "Education": 7,
+        "Evasion": 12,
+        "First Aid": 6,
+        "Handgun": 12,
+        "Human Perception": 8,
+        "Language (English)": 9,
+        "Language (Streetslang)": 7,
+        "Local Expert (Old Combat Zone)": 7,
+        "Perception": 7,
+        "Persuasion": 9,
+        "Stealth": 6,
+        "Trading": 9
+      },
+      "cyberware": [
+        "Cyberaudio Suite w/ Internal Agent",
+        "Cybereye w/ Chyron"
+      ],
+      "gear": [
+        "Expansive H Pistol Ammo x8",
+        "Disposable Cell Phone x2",
+        "Unloaded Teen Dreem (ROF1 • 2d6) x12"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [],
+      "lore": "Mal Devincher, buhonero de poca monta que abre su abrigo para vender armas baratas y maltrechas, o lo que 'se cayó de un dron de reparto'. Siempre al acecho de una oportunidad, también es buena fuente de información de la calle.",
+      "doubts": [
+        "El libro imprime 'PQ Heavy Pistol' (calidad Poor).",
+        "'Unloaded Teen Dreem' (ROF1, 2d6) x12 figura en gear tal cual, sin skill ni calidad."
+      ]
+    },
+    {
+      "id": "dg-edge-hammer",
+      "name": "Hammer",
+      "subtitle": "All the World's a Nail",
+      "sourcePage": 55,
+      "tier": "hardened_mook",
+      "faction": "Edgerunners",
+      "role": "Solo",
+      "roleAbility": {
+        "name": "Combat Awareness",
+        "rank": 2
+      },
+      "level": null,
+      "rep": 0,
+      "stats": {
+        "INT": 3,
+        "REF": 6,
+        "DEX": 5,
+        "TECH": 4,
+        "COOL": 4,
+        "WILL": 5,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 5,
+        "EMP": 3
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 5,
+      "armor": {
+        "name": "Scavenged Armor",
+        "headSp": 11,
+        "bodySp": 11,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Very Heavy Pistol w/ Extended Magazine",
+          "skill": "Handgun",
+          "skillBase": 12,
+          "damage": "4d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Brawling Attack",
+          "skill": "Brawling",
+          "skillBase": 10,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": null,
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 7,
+        "Brawling": 10,
+        "Concentration": 7,
+        "Conversation": 5,
+        "Education": 5,
+        "Evasion": 10,
+        "First Aid": 8,
+        "Handgun": 12,
+        "Heavy Weapons": 10,
+        "Language (English)": 7,
+        "Language (Streetslang)": 5,
+        "Local Expert (Rancho Coronado)": 5,
+        "Melee Weapon": 10,
+        "Perception": 8,
+        "Persuasion": 6,
+        "Stealth": 7
+      },
+      "cyberware": [
+        "Cybereye w/ Targeting Scope"
+      ],
+      "gear": [
+        "Armor-Piercing VH Pistol Ammo x14",
+        "Disposable Cell Phone"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [],
+      "lore": "Harlan Briggs, exsoldado de una fuerza militar privada que se cansó de ser carne de cañón y se puso a trabajar por su cuenta. Resuelve los problemas de forma directa y contundente, se queda comprado una vez contratado, pero se distrae luciéndose ante quien quiere impresionar.",
+      "doubts": [
+        "El libro imprime 'PQ Very Heavy Pistol w/ Extended Magazine' (calidad Poor)."
+      ]
+    },
+    {
+      "id": "dg-edge-leverage",
+      "name": "Leverage",
+      "subtitle": "Edgerunner by Accident",
+      "sourcePage": 56,
+      "tier": "hardened_mook",
+      "faction": "Edgerunners",
+      "role": "Tech",
+      "roleAbility": {
+        "name": "Maker",
+        "rank": 2
+      },
+      "level": null,
+      "rep": 0,
+      "stats": {
+        "INT": 4,
+        "REF": 3,
+        "DEX": 4,
+        "TECH": 6,
+        "COOL": 4,
+        "WILL": 4,
+        "LUCK": null,
+        "MOVE": 4,
+        "BODY": 6,
+        "EMP": 4
+      },
+      "statsArmorModified": null,
+      "hp": 35,
+      "seriouslyWounded": 18,
+      "deathSave": 6,
+      "armor": {
+        "name": "Kevlar® (solo cuerpo)",
+        "headSp": null,
+        "bodySp": 7,
+        "headSpVsMelee": null,
+        "bodySpVsMelee": null,
+        "penalty": null
+      },
+      "weapons": [
+        {
+          "name": "Medium Pistol",
+          "skill": "Handgun",
+          "skillBase": 8,
+          "damage": "2d6",
+          "rof": 2,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        },
+        {
+          "name": "Very Heavy Melee Weapon",
+          "skill": "Melee Weapon",
+          "skillBase": 12,
+          "damage": "4d6",
+          "rof": 1,
+          "mag": null,
+          "ammo": null,
+          "quality": "Poor",
+          "weaponType2077": null,
+          "notes": ""
+        }
+      ],
+      "skillBases": {
+        "Athletics": 6,
+        "Basic Tech": 12,
+        "Brawling": 8,
+        "Bureaucracy": 6,
+        "Concentration": 6,
+        "Conversation": 6,
+        "Education": 6,
+        "Electronics/Security Tech": 10,
+        "Evasion": 6,
+        "First Aid": 8,
+        "Handgun": 8,
+        "Human Perception": 6,
+        "Language (Samoan)": 8,
+        "Language (Spanish)": 6,
+        "Local Expert (Heywood Industrial Zone)": 6,
+        "Melee Weapon": 12,
+        "Perception": 6,
+        "Persuasion": 6,
+        "Stealth": 6
+      },
+      "cyberware": [
+        "Contraceptive Implant"
+      ],
+      "gear": [
+        "Junk M Pistol Ammo x12",
+        "Disposable Cell Phone",
+        "Smart Lens w/ MicroOptics",
+        "Tech Tool"
+      ],
+      "isNetrunner": false,
+      "interfaceRank": null,
+      "cyberdeckPrograms": [],
+      "hasNeuroport": null,
+      "selfIce": null,
+      "quickhacks": [],
+      "specialRules": [
+        "Tech: Maker 2 (Field Expertise 2, Fabrication Expertise 2)."
+      ],
+      "lore": "Tech corporativo que acabó ayudando a un grupo de Edgerunners que se coló en su edificio, para salvar el pellejo. Le gustó tanto la experiencia que renunció y se hizo Edgerunner; sigue aprendiendo y su lealtad se gana pagándole bien.",
+      "doubts": [
+        "El libro imprime 'PQ Medium Pistol' y 'PQ Very Heavy Melee Weapon' (calidad Poor).",
+        "Armadura de cabeza impresa como '—' (headSp null)."
+      ]
+    }
+  ]
+}

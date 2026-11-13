@@ -54,3 +54,56 @@ describe('Bestiario solo para el GM', () => {
     expect(canSeeGmOnly('local-locked')).toBe(false);
   });
 });
+
+// v5.36.0 [Claude Code · 2026-11-13]: primera tanda de fichas (6th Street, Bozos, Puma Squad, Digital Divas y Edgerunners, DGD pp.10-56).
+import { DANGER_GAL_ENEMIES } from '../../data/enemies/danger-gal';
+import { ENEMIES_CATALOG, findEnemySheet } from '../../data/enemiesCatalog';
+import { LEGACY_INVENTED_ENEMIES } from '../../data/enemies/legacy-invented-danger-gal';
+import { portEnemyToCemk } from '../cemkPort';
+
+describe('Danger Gal Dossier: fichas', () => {
+  const byFaction = (f: string) => DANGER_GAL_ENEMIES.filter((e) => e.faction === f).length;
+
+  it('la tanda 1 trae las 42 fichas de sus 5 facciones', () => {
+    expect(byFaction('6th Street')).toBe(5);
+    expect(byFaction('Bozos')).toBe(11);
+    expect(byFaction('Danger Gal Puma Squad')).toBe(5);
+    expect(byFaction('The Digital Divas')).toBe(5);
+    expect(byFaction('Edgerunners')).toBe(16);
+  });
+
+  it('toda ficha tiene id dg-, página del libro, facción canon y sale del libro Danger Gal', () => {
+    const names = new Set(DANGER_GAL_15_FACTIONS.map((f) => f.name));
+    for (const e of DANGER_GAL_ENEMIES) {
+      expect(e.id).toMatch(/^dg-/);
+      expect(e.sourcePage).toBeGreaterThanOrEqual(10);
+      expect(e.sourcePage).toBeLessThanOrEqual(166);
+      expect(names.has(e.faction), e.id).toBe(true);
+      expect(e.sourceBook).toBe('danger_gal');
+      expect(e.hp).toBeGreaterThan(0);
+      expect(e.seriouslyWounded).toBe(Math.ceil(e.hp / 2));
+      expect(e.deathSave).toBe(e.stats.BODY);
+    }
+  });
+
+  it('las fichas inventadas salieron del bestiario, pero un actor viejo encuentra la suya', () => {
+    expect(LEGACY_INVENTED_ENEMIES).toHaveLength(95);
+    const ids = new Set(ENEMIES_CATALOG.map((e) => e.id));
+    for (const l of LEGACY_INVENTED_ENEMIES) expect(ids.has(l.id), l.id).toBe(false);
+    expect(findEnemySheet(LEGACY_INVENTED_ENEMIES[0].id)?.id).toBe(LEGACY_INVENTED_ENEMIES[0].id);
+    expect(findEnemySheet('dg-6th-arbiter')?.name).toBe('Arbiter');
+  });
+
+  it('todas tienen porte CEMK: Neuroport, hackeables y los netrunners con Quickhacks (CEMK RB pp.15-16, 25)', () => {
+    for (const e of DANGER_GAL_ENEMIES) {
+      const p = portEnemyToCemk(e);
+      expect(p.hasNeuroport).toBe(true);
+      expect(p.hackable).toBe(true);
+    }
+    for (const id of ['dg-puma-pantera', 'dg-divas-firewall', 'dg-edge-crab-lord']) {
+      const e = findEnemySheet(id)!;
+      expect(e.isNetrunner, id).toBe(true);
+      expect(portEnemyToCemk(e).availableQuickhacks.length, id).toBeGreaterThan(0);
+    }
+  });
+});

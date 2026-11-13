@@ -117,6 +117,17 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.36.0] - 2026-11-13 (Plan 32 II: primeras 42 fichas canon de Danger Gal; se van las 95 inventadas) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon (Danger Gal Dossier pp.10-56) y bestiario.
+* **What Changed**:
+  * **42 fichas del libro** en el bestiario: 6th Street (5), Bozos (11, con los dos Dead Ringer), Danger Gal Puma Squad (5), The Digital Divas (5) y Edgerunners (16). Cada una con STATs, HP, armadura, armas, skills, ciberware, equipo, reglas especiales, historia corta y página. Fuente `data/enemies-src/danger-gal.json`, generada a `data/enemies/danger-gal.ts` con `scripts/gen_enemies.py` (nueva entrada `danger-gal` en `BOOK_SPECS`).
+  * **Porte CEMK de todas**: sale de `portEnemyToCemk` (Neuroport, hackeables, SP contra melee, armas Power/Smart/Melee). Los netrunners (Pantera, Firewall, CrAB Lord) pasan a Cyberdeck Port con Quickhacks según su Interface. El CrAB Drone y la NET portátil del CrAB Lord (p.42) van en sus reglas especiales.
+  * **Se fueron las 95 fichas inventadas** del bestiario. Quedan en `data/enemies/legacy-invented-danger-gal.ts` solo para que un actor guardado del Modo GM que salió de una de ellas no pierda su ficha (`findEnemySheet`, usado en `actorSpawn.ts` y `ActorAttackForm.tsx`); no se muestran en ningún lado.
+  * Textos del bestiario sin el viejo "44 fichas".
+  * **Interpretado**: si la ficha no lista la skill de un arma, la base es el STAT (skill en 0) y queda anotado; las 4 armas sin daño impreso (Popup Microwaver, Nomad Air Cannon, Air Pistol, Microwave) muestran "—". Los PNJ con dos roles guardan el principal y el otro va en reglas especiales.
+* **Files Modified**: nuevos `data/enemies-src/danger-gal.json`, `frontend/src/data/enemies/danger-gal.ts` (generado), `frontend/src/data/enemies/legacy-invented-danger-gal.ts`; `scripts/gen_enemies.py`, `data/enemiesCatalog.ts`, `features/gmmode/actorSpawn.ts`, `features/gmmode/ActorAttackForm.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`, `engine/__tests__/dangerGal.test.ts` (+4 tests); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 795 tests y build. Contra el PDF: Big Top (p.16) y Pantera (p.28) revisadas sobre el render. En el navegador: conteos por facción (6th Street 5, Bozos 11, Puma Squad 5, Digital Divas 5, Edgerunners 16) y ficha del CrAB Lord con su porte CEMK, Quickhacks hasta DV12, su dron y su NET.
+
 ### [v5.35.1] - 2026-11-13 (Plan 32: el bestiario y las facciones, solo para el GM) [Claude Code · 2026-11-13]
 * **Category**: Mesa y GM (pedido de Giuliano: que los jugadores no se spoileen los PNJ ni las facciones).
 * **What Changed**:

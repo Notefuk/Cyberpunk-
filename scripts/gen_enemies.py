@@ -78,6 +78,8 @@ BOOK_SPECS = {
     'hardened': dict(const='HARDENED_ENEMIES', sourceBook='dlc', era='2045', fmt='red'),
     # [Claude Code · 2026-11-11] v5.20.0: PNJ de Interface RED Vol. 2 (Jumpstart) y Vol. 4 (Halloween).
     'interface-red': dict(const='INTERFACE_RED_ENEMIES', sourceBook='interface_red', era='2045', fmt='red'),
+    # [Claude Code · 2026-11-13] v5.36.0 (plan 32): fichas de Danger Gal Dossier. El porte CEMK lo calcula la app (engine/cemkPort.ts).
+    'danger-gal': dict(const='DANGER_GAL_ENEMIES', sourceBook='danger_gal', era='2045', fmt='red'),
 }
 
 
@@ -93,6 +95,8 @@ def book_title(book_key, npc):
         raise ValueError('CEMK sin book reconocible: ' + npc['id'])
     if book_key == 'interface-red':
         return npc['book']
+    if book_key == 'danger-gal':
+        return 'Danger Gal Dossier'
     sub = npc.get('subtitle') or ''
     for t in ('Hardened Mooks', 'Hardened Lieutenants', 'Hardened Mini-Bosses'):
         if sub.startswith(t):

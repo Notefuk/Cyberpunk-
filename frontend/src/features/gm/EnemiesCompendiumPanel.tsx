@@ -745,7 +745,7 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
             {activeEnemies.length === 0 ? (
               <div className="p-6 text-center font-mono-code text-xs text-slate-500 bg-[#0b0d14] rounded-xs border border-dashed border-[#23293c]">
                 No hay enemigos en el encuentro activo.<br />
-                Usa el <strong>Catálogo de 44 Fichas</strong> más abajo para añadir Mooks, Tenientes, Ciberpsicópatas o a <strong>Adam Smasher</strong> con 1 clic.
+                Usá el <strong>catálogo</strong> de más abajo para añadir Mooks, Tenientes, Ciberpsicópatas o a <strong>Adam Smasher</strong> con 1 clic.
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 pt-1">
@@ -1005,7 +1005,7 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
       <PunknaughtBuilder />
 
       {/* =====================================================================
-          SECCIÓN 2: CATÁLOGO MASTER DE 44 ENEMIGOS, GOONS Y JEFES
+          SECCIÓN 2: CATÁLOGO DE ENEMIGOS, GOONS Y JEFES
       ===================================================================== */}
       <div className="chamfer-card bg-[#0e1017] border border-[#202538] p-4 space-y-4">
         {/* Cabecera & Contador */}

@@ -24,7 +24,7 @@ import { resolveRollRequest } from '../../engine/rollRequest';
 import type { IncomingAttackType } from '../../engine/combatEngine';
 import { applyHitToPc } from '../gm/gmDamage';
 import { publishGmAction } from '../../sync/tableSync';
-import { ENEMIES_CATALOG, type EnemyWeaponProfile } from '../../data/enemiesCatalog';
+import { findEnemySheet, type EnemyWeaponProfile } from '../../data/enemiesCatalog';
 import { actorSheet } from './actorSpawn';
 import { acpaAttackMod } from '../../engine/acpaActors';
 
@@ -84,7 +84,7 @@ export function ActorAttackForm({ c, targets }: { c: EncounterCombatant; targets
 
   // Autofire: el tope y la base salen de la ficha (bestiario o PNJ propio); la base se puede corregir a mano.
   const afMax = ranged ? autofireMax(w) : null;
-  const sheet = ENEMIES_CATALOG.find((x) => x.id === e.catalogId) ?? (() => {
+  const sheet = findEnemySheet(e.catalogId) ?? (() => {
     const a = actors.find((x) => x.id === e.actorId);
     return a ? actorSheet(a) : undefined;
   })();
