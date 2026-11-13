@@ -117,6 +117,17 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.33.0] - 2026-11-13 (Plan 31 V: Cyberpets, "Your New Best Friend") [Claude Code · 2026-11-13]
+* **Category**: Contenido canon y ficha (Interface RED Vol. 5 pp.71-82).
+* **What Changed**:
+  * **Bestiario**: las 8 Cyberpets® de Biotechnica (Datarabbit, Forever Turtle, Neon Newt, Obsidian Ocelot, Cyberbear, Cyberboa, Cyberrat y Cyberwolf; pp.74-81) con stats, HP, SP, ataques con su Combat Number, skill bases, ciberware y habilidades. Entran por `data/enemies-src/interface-red.json` (ids `ir5-pet-*`) y sirven como enemigos y actores. Los niveles Hardened del libro quedan como `hardened_mook` o `hardened_lieutenant`.
+  * **"Mascota" en la ficha** (panel en ARSENAL & BLINDAJE, `CharacterSheet.pets`): se compra (costo más el primer mes de su Lifestyle, sin prorratear) o se agrega sin cobrar. Muestra HP, SP, ataques, ciberware de fábrica y habilidades. Lleva su Lifestyle mensual (el Cyberbear pide Fresh Food x2) y las camas de Housing que ocupa (Mook 0, Lieutenant 1, Mini-Boss 2, Boss 3).
+  * **Obediencia** (p.73): obedece si INT + Animal Handling es 10 o más y está cuidada (Lifestyle pago, durmiendo bien, sin maltrato). Si no, el GM decide; hay botón de tirada de Animal Handling.
+  * **Ciberware de la mascota** (p.73): ranuras libres del modelo, una pieza puede ocupar 0 con Tech Upgrade, y el entrenamiento de 1 día con Animal Handling contra la DV de instalación (sin entrenar, solo come y duerme).
+  * Las fichas se revisaron contra el render del PDF; el Cyberrat (p.80) se volvió a comparar a mano.
+* **Files Modified**: nuevos `data/cyberpets.ts`, `engine/cyberpets.ts`, `features/sheet/PetPanel.tsx` y el test `engine/__tests__/cyberpets.test.ts` (5 tests); `data/enemies-src/interface-red.json` y el generado `data/enemies/interface-red.ts`; `types/cyberpunk.ts` (`OwnedPet`), `store/useCharacterStore.ts` (`addPet`, `updatePet`, `removePet`), `features/sheet/StreetLabView.tsx`; `engine/__tests__/rules.test.ts` (los ids de interface_red admiten `ir5-pet-`); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 780 tests y build. En el navegador, Hardpoint no podía pagar el Cyberrat (1300eb con el primer mes). Agregado sin cobrar: 10 HP, SP 7, no obedece (INT 6 + Animal Handling 0 = 6). Le instalé un Cyberaudio (1 de 2 ranuras) y el entrenamiento falló (11 contra DV13). Se quitó después; consola limpia.
+
 ### [v5.32.0] - 2026-11-13 (Plan 31 IV: investigación y Focus, "Did Someone Say Murder?") [Claude Code · 2026-11-13]
 * **Category**: Reglas opcionales del Interface RED Vol. 5 (pp.61-70) en la ficha y en el Modo GM. Toca `firestore.rules`.
 * **What Changed**:

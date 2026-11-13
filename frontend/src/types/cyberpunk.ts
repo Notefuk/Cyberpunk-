@@ -703,6 +703,23 @@ export interface CharacterSheet {
   itemDurability?: Record<string, ItemDurability>;
   /** v5.32.0 (plan 31): Focus actual; sin el campo, lleno. Máximo 10 + 5 × ceil((INT+WILL)/2) (IR5 p.63). [Claude Code · 2026-11-13] */
   focus?: number;
+  /** v5.33.0 (plan 31): Cyberpets del PJ (IR5 pp.72-81). [Claude Code · 2026-11-13] */
+  pets?: OwnedPet[];
+}
+
+/** v5.33.0 (plan 31): una Cyberpet del PJ. Sus stats salen de su ficha del bestiario (`enemyId`). [Claude Code · 2026-11-13] */
+export interface OwnedPet {
+  instanceId: string;
+  enemyId: string;
+  /** Nombre que le puso el dueño. */
+  name: string;
+  currentHp: number;
+  /** Ciberware agregado después de la compra (IR5 p.73). */
+  extraCyberware: { name: string; trained: boolean; zeroSlot?: boolean }[];
+  lifestylePaid: boolean;
+  housed: boolean;
+  mistreated?: boolean;
+  notes?: string;
 }
 
 /** v5.31.0 (plan 31): durabilidad de un ítem ("Breaking Your Stuff", IR5 pp.4-12). [Claude Code · 2026-11-13] */

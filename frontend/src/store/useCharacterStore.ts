@@ -18,6 +18,7 @@ import type {
   IpLogKind,
   MedtechCryoAndPharma,
   ItemDurability,
+  OwnedPet,
   OwnedVehicle,
   RockerboyFanGroup,
   SoloCombatAwarenessAllocation,
@@ -514,6 +515,10 @@ export interface CharacterStoreState {
   setLifestyle: (lifestyle: string | undefined) => void;
   /** v5.32.0 (plan 31): Focus de investigación (IR5 p.63); lo usan el jugador y el GM. [Claude Code · 2026-11-13] */
   adjustFocusFor: (characterId: string, delta: number) => void;
+  /** v5.33.0 (plan 31): Cyberpets del PJ activo (IR5 pp.72-81). [Claude Code · 2026-11-13] */
+  addPet: (pet: OwnedPet) => void;
+  updatePet: (instanceId: string, patch: Partial<OwnedPet>) => void;
+  removePet: (instanceId: string) => void;
   gmSetRoleRank: (rank: number) => void;
   setMakerAllocation: (alloc: MakerAllocation) => void;
   // v4.9.3 [Claude Code · 2026-10-23] Roles sociales: Team del Exec (Core p.154) y fans del Rockerboy (Core pp.144-145).
@@ -2736,6 +2741,26 @@ export const useCharacterStore = create<CharacterStoreState>()(
             const next = Math.max(0, Math.min(max, currentFocus(c) + delta));
             return { ...c, focus: next >= max ? undefined : next };
           })
+        }));
+      },
+
+      addPet: (pet) => {
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id === state.activeCharacterId ? { ...c, pets: [...(c.pets ?? []), pet] } : c))
+        }));
+      },
+
+      updatePet: (instanceId, patch) => {
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id === state.activeCharacterId ? { ...c, pets: (c.pets ?? []).map((p) => (p.instanceId === instanceId ? { ...p, ...patch } : p)) } : c
+          )
+        }));
+      },
+
+      removePet: (instanceId) => {
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id === state.activeCharacterId ? { ...c, pets: (c.pets ?? []).filter((p) => p.instanceId !== instanceId) } : c))
         }));
       },
 

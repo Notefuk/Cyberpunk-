@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.33.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Cyberpets',
+    summary: 'Las 8 Cyberpets® de Biotechnica llegan al bestiario, del Datarabbit al Cyberbear. También podés tener la tuya: la sección Mascota de la ficha la compra, lleva su HP, su Lifestyle mensual y las camas que ocupa, te dice si te obedece según tu Animal Handling y te deja instalarle ciberware y entrenarla.',
+    highlights: [
+      '8 Cyberpets en el bestiario, como enemigos o actores (IR5 pp.74-81).',
+      'Sección Mascota en la ficha: compra, Lifestyle, Housing y obediencia (IR5 pp.72-73).',
+      'Ciberware para la mascota, con sus ranuras y el entrenamiento (IR5 p.73).'
+    ],
+    filesTouched: ['frontend/src/data/cyberpets.ts', 'frontend/src/engine/cyberpets.ts', 'frontend/src/features/sheet/PetPanel.tsx'],
+    metricsBadge: 'v5.33.0 • IR5 • 8 mascotas'
+  },
+  {
     version: 'v5.32.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1895,6 +1911,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.33.0': true,
     'v5.32.0': true,
     'v5.31.0': true,
     'v5.30.0': true,
