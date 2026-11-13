@@ -301,6 +301,15 @@ export interface WeaponItem {
   booth?: string[];
   /** v5.25.0 (plan 30): tabla de rango propia, clave de WEAPON_RANGE_PROFILES (ej. 'ir5_battle_rifle', IR5 p.113). [Claude Code · 2026-11-12] */
   rangeTable?: string;
+  /**
+   * v5.29.0 (plan 31) [Claude Code · 2026-11-13]: calidad del arma (Toggle's Temple, IR5 pp.37-59). Excellent: +1 al ataque;
+   * Poor: con un 1 natural se encasquilla y desatascarla cuesta 1 Acción (Interface RED Vol. 1 pp.3-4).
+   */
+  quality?: 'poor' | 'standard' | 'excellent';
+  /** v5.29.0: ranuras libres para attachments que da el libro (IR5 p.99). Sin el campo, 3 (0 si es exótica). */
+  slots?: number;
+  /** v5.29.0: attachments de fábrica (ids de WEAPON_ATTACHMENTS_CATALOG). Dan su efecto y no ocupan las `slots`. */
+  preinstalledAttachments?: string[];
 }
 
 export interface ArmorItem {

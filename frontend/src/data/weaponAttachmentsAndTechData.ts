@@ -221,7 +221,8 @@ export function calculateWeaponSlotCapacity(weapon: EquippedWeapon): WeaponSlotC
   const nameOrType = `${weapon.name} ${weapon.type ?? ''} ${weapon.notes ?? ''}`.toLowerCase();
   const isExotic = (weapon as any).quality === 'exotic' || nameOrType.includes('exotic') || isMelee;
 
-  let maxSlots = isExotic ? 0 : 3;
+  // v5.29.0 (plan 31): las armas de Toggle's Temple traen sus ranuras libres (IR5 p.99). [Claude Code · 2026-11-13]
+  let maxSlots = typeof weapon.slots === 'number' ? weapon.slots : isExotic ? 0 : 3;
 
   if (weapon.techUpgrade === 'extra_slot') {
     maxSlots += 1;
@@ -319,11 +320,19 @@ export function calculateWeaponAttachmentBonuses(
 ): WeaponAttachmentBonusesResult {
   let attackBonus = 0;
   const bonusBreakdown: string[] = [];
-  const installed = weapon.installedAttachments ?? [];
+  // v5.29.0 (plan 31): los attachments de fábrica también dan su efecto. [Claude Code · 2026-11-13]
+  const installed = [...(weapon.installedAttachments ?? []), ...(weapon.preinstalledAttachments ?? [])];
 
   if (weapon.techUpgrade === 'excellent_quality') {
     attackBonus += 1;
     bonusBreakdown.push('+1 Calidad Excelente (Tech Maker Upgrade)');
+  } else if (weapon.quality === 'excellent') {
+    // v5.29.0 (plan 31): arma de Calidad Excelente de fábrica (Interface RED Vol. 1 pp.3-4). [Claude Code · 2026-11-13]
+    attackBonus += 1;
+    bonusBreakdown.push('+1 Calidad Excelente');
+  }
+  if (weapon.quality === 'poor' && weapon.techUpgrade !== 'excellent_quality') {
+    bonusBreakdown.push('Calidad Pobre: con un 1 natural se encasquilla (desatascarla cuesta 1 Acción)');
   }
 
   const isSmart =

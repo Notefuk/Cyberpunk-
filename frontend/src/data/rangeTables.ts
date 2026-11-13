@@ -211,9 +211,12 @@ export const AUTOFIRE_TABLES: Record<AutofireTableId, { name: string; dvs: numbe
   machine_gun: { name: 'Machine Gun', dvs: [21, 18, 18, 19, 25] },
 };
 
+// v5.29.0 (plan 31): tabla propia del Nat's Long-Barreled Pistol, 12 Days of REDmas (IR5 p.99). [Claude Code · 2026-11-13]
+IR5_SINGLE_SHOT.nats_long_barreled = ["Nat's Long-Barreled Pistol", [14, 13, 14, 20, 25, 28, 30, null]];
+
 for (const [key, [name, dvs]] of Object.entries(IR5_SINGLE_SHOT)) {
   WEAPON_RANGE_PROFILES[`ir5_${key}`] = {
-    name: `${name} (IR5 p.113)`,
+    name: `${name} (IR5 p.${key === 'nats_long_barreled' ? 99 : 113})`,
     dvs: Object.fromEntries(RANGE_BRACKETS.map((b, i) => [b.range, dvs[i] ?? null])),
   };
 }
