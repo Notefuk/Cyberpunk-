@@ -117,6 +117,15 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.38.0] - 2026-11-13 (Plan 32 IV: las 118 fichas de Danger Gal completas) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon (Danger Gal Dossier pp.100-142 y 165-166) y bestiario.
+* **What Changed**:
+  * **Últimas 39 fichas**: Sightseers (5), Team Monster (6), Trauma Team Squad NC4-2 (6), Tyger Claws (10, con el Bouncer y el Vendor de la misma página), Zoners (10) y los 2 PNJ de Arasaka de la aventura The Incident (Darius y Nymph). El bestiario tiene ya las **118** del libro, con el mismo reparto que su índice: 9 Boss, 16 Mini-Boss, 57 Lieutenant y 36 Mook, 60 Hardened, y 8 netrunners (Pantera, Firewall, CrAB Lord, Redeye, Flenser, Cereal, Darius y Freefall), todos con Quickhacks en el porte CEMK.
+  * **Revisión contra la lista "Characters by Faction" del libro (pp.168-170)**: las 118 coinciden en nivel y rol salvo Drop (p.75) y Paddles (p.119), donde la lista dice Lieutenant y la ficha dice Hardened Mook; se usa la ficha y queda anotado.
+  * **Interpretado**: Darius y Nymph van con facción "Arasaka" (como en la lista del libro), aunque Arasaka no es una de las 15 facciones con ficha; se encuentran buscando por nombre. Los vehículos de Team Monster, Trauma Team y Speed Demon (pp.112, 120, 139) no son fichas: llegan en la v5.39.0.
+* **Files Modified**: `data/enemies-src/danger-gal.json`, `frontend/src/data/enemies/danger-gal.ts` (generado), `engine/__tests__/dangerGal.test.ts` (+2 tests); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 798 tests y build. Contra el PDF: Shinobu the Second (p.122), Vanisher (p.132) y Paddles (p.119) sobre el render. En el navegador: las 15 facciones con su conteo y Darius encontrado por búsqueda; consola limpia.
+
 ### [v5.37.0] - 2026-11-13 (Plan 32 III: 37 fichas más de Danger Gal) [Claude Code · 2026-11-13]
 * **Category**: Contenido canon (Danger Gal Dossier pp.58-98) y bestiario.
 * **What Changed**:

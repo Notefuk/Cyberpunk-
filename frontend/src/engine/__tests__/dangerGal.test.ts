@@ -80,8 +80,29 @@ describe('Danger Gal Dossier: fichas', () => {
     expect(byFaction('Piranhas')).toBe(3);
   });
 
+  it('la tanda 3 cierra el libro: Sightseers, Team Monster, Trauma Team, Tyger Claws, Zoners y los 2 de Arasaka de The Incident', () => {
+    expect(byFaction('Sightseers')).toBe(5);
+    expect(byFaction('Team Monster')).toBe(6);
+    expect(byFaction('Trauma Team Squad NC4-2')).toBe(6);
+    expect(byFaction('Tyger Claws')).toBe(10);
+    expect(byFaction('Zoners')).toBe(10);
+    expect(byFaction('Arasaka')).toBe(2);
+  });
+
+  it('son las 118 del libro, con el reparto de niveles de su índice (9 Boss, 16 Mini-Boss, 57 LT, 36 Mook; 60 Hardened)', () => {
+    expect(DANGER_GAL_ENEMIES).toHaveLength(118);
+    const t = (pred: (x: string) => boolean) => DANGER_GAL_ENEMIES.filter((e) => pred(e.threatTier)).length;
+    expect(t((x) => x === 'boss' || x === 'hardened_boss')).toBe(9);
+    expect(t((x) => x.endsWith('mini_boss'))).toBe(16);
+    expect(t((x) => x.endsWith('lieutenant'))).toBe(57);
+    expect(t((x) => x.endsWith('mook'))).toBe(36);
+    expect(t((x) => x.startsWith('hardened_'))).toBe(60);
+    expect(DANGER_GAL_ENEMIES.filter((e) => e.isNetrunner)).toHaveLength(8);
+  });
+
   it('toda ficha tiene id dg-, página del libro, facción canon y sale del libro Danger Gal', () => {
-    const names = new Set(DANGER_GAL_15_FACTIONS.map((f) => f.name));
+    // Arasaka no es una de las 15 facciones, pero el libro pone ahí a Darius y Nymph (lista p.168).
+    const names = new Set([...DANGER_GAL_15_FACTIONS.map((f) => f.name), 'Arasaka']);
     for (const e of DANGER_GAL_ENEMIES) {
       expect(e.id).toMatch(/^dg-/);
       expect(e.sourcePage).toBeGreaterThanOrEqual(10);
@@ -109,7 +130,7 @@ describe('Danger Gal Dossier: fichas', () => {
       expect(p.hasNeuroport).toBe(true);
       expect(p.hackable).toBe(true);
     }
-    for (const id of ['dg-puma-pantera', 'dg-divas-firewall', 'dg-edge-crab-lord', 'dg-maelstrom-flenser']) {
+    for (const id of DANGER_GAL_ENEMIES.filter((e) => e.isNetrunner).map((e) => e.id)) {
       const e = findEnemySheet(id)!;
       expect(e.isNetrunner, id).toBe(true);
       expect(portEnemyToCemk(e).availableQuickhacks.length, id).toBeGreaterThan(0);

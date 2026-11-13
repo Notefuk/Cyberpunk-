@@ -26,6 +26,21 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.38.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: las 118 fichas completas',
+    summary: 'Se completa el bestiario de Danger Gal Dossier con los Sightseers, Team Monster, el escuadrón de Trauma Team, los Tyger Claws, los Zoners y los dos agentes de Arasaka de la aventura. Son las 118 fichas del libro, todas jugables en CEMK 2077, con 8 netrunners que tienen Quickhacks.',
+    highlights: [
+      '39 PNJ más (Danger Gal Dossier pp.100-142 y 165-166): 118 en total.',
+      'Nivel y rol revisados contra la lista oficial del libro.'
+    ],
+    filesTouched: ['data/enemies-src/danger-gal.json', 'frontend/src/data/enemies/danger-gal.ts'],
+    metricsBadge: 'v5.38.0 • Danger Gal • 118 fichas'
+  },
+  {
     version: 'v5.37.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1989,6 +2004,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.38.0': true,
     'v5.37.0': true,
     'v5.36.0': true,
     'v5.35.1': true,
