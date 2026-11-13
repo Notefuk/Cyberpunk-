@@ -24,7 +24,7 @@
 - [Claude Code · 2026-11-12] **Plan 30** (`docs/plans/plan30-solo-of-fortune-acpa.md`): Solo of Fortune 2045, Interface RED Vol. 5 pp.105-147 (PDF `Sourcebooks/Interface-RED/ilide.info-interface-5-pr_…pdf`, página impresa = PDF − 1).
   - Hecho (nada pusheado; cuatro ramas apiladas): v5.25.0 (`claude/plan30-v5.25.0`, arsenal, tablas de rango, Metalgear), v5.26.0 (`-v5.26.0`, datos, motor y armador de ACPA), v5.27.0 (`-v5.27.0`, el PJ pilotea: `acpaState`, `features/sheet/AcpaPanel.tsx`, daño del HUD y del GM) y v5.28.0 (`-v5.28.0`, enemigos en ACPA: `engine/acpaActors.ts`, `setEnemyAcpa`, fila del enemigo en MODO GM, actor guardado). tsc, 737 tests y build pasan; todo probado en local con la consola limpia; nada probado en una mesa online.
   - Erratas ACPA: Giuliano eligió los valores recalculados con la p.136 y mostrar lo impreso en una nota.
-  - Siguiente: [Claude Code · 2026-11-13] PR #89 mergeado en `main` (7cee905). Falta publicar en la beta y en prod, cada uno con su OK. El resto del Interface RED Vol. 5 queda para un plan nuevo (anotado en CONTENT_CHECKLIST).
+  - Siguiente: [Claude Code · 2026-11-13] PR #89 mergeado en `main` (7cee905) y publicado en la beta (gh-pages b6de981, `index-2YHbmQt4.js`). Falta prod (Firebase hosting), con su OK. El resto del Interface RED Vol. 5 queda para un plan nuevo (anotado en CONTENT_CHECKLIST).
   - Desvíos: v5.27.0, las armas Onboard del PJ se listan en el panel y no en el arsenal; v5.28.0, no hay botón "Spawnear en ACPA" en el bestiario: se sube desde la fila del enemigo en MODO GM.
   - Desvíos: el pack de `data/` en la raíz quedó viejo desde la v5.3.2 y no se toca. El número 29 de plan lo tiene la sesión de Owlbear.
 
