@@ -47,6 +47,7 @@ import { SlotBox } from './SlotBox';
 import { ZoneConnectors } from './ZoneConnectors';
 import { ZoneDetailPanel } from './ZoneDetailPanel';
 import { GoingMetalBanner } from './GoingMetalBanner';
+import { DurabilityPanel } from '../sheet/DurabilityPanel';
 import { getCyberwareArt } from './cyberwareCardArt';
 
 export type { CyberwareItemData };
@@ -330,6 +331,9 @@ export function CyberwareRipperdocView() {
         handleInstallCyberware={handleInstallCyberware}
         handleUninstallImplant={handleUninstallImplant}
       />
+
+      {/* v5.31.0 [Claude Code · 2026-11-13]: mantenimiento y fallas del ciberware (IR5 pp.3-12) */}
+      {activeChar && <DurabilityPanel character={activeChar} groups={['Ciberware']} />}
 
       {/* ========================================================================= */}
       {/* CATEGORÍAS DE CIBERWARE OFICIALES // TOOLTIPS FLOTANTES CLAROS */}

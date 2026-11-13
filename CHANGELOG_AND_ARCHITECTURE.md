@@ -117,6 +117,74 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.34.0] - 2026-11-13 (Plan 31 VI: nivel mercenario de Solo of Fortune 2045; cierra el plan 31) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon, herramientas del GM y ficha (Interface RED Vol. 5 pp.106-108, 144-147).
+* **What Changed**:
+  * **Presupuesto operativo en la ficha** (panel en ARSENAL & BLINDAJE, `CharacterSheet.opBudget`): se empieza una misión con su presupuesto por persona (atajos para las 2 del libro: 5,000eb y 25,000eb), se compra con él y lo comprado va a la mochila marcado (`InventoryItem.fromOpBudget`). Al terminar la misión, lo comprado vuelve al armory y lo que sobra se pierde (p.108). No toca los €$ del PJ.
+  * **Pestaña "Solo of Fortune" en TABLAS DEL GM**: las reglas de nivel mercenario (advertencia, Hot Tip para endurecer PNJ, balance, Crews rivales, botín, presupuesto, IP; pp.106-108) y las 2 misiones como aventuras. Georgia On My Mind incluye el rancho McAlister cuarto por cuarto con sus defensas, Kelly McAlister con su bloque completo, los drones Rock Razer y Mineral Softener, y el Wright Hotel. Trouble in Tanzania incluye la batería antiaérea, los 3 ataques y las fuerzas del ESC con sus ids del bestiario.
+  * **NET del rancho McAlister** (p.145) en NET & ROLES: 6 pisos, Demon Efreet, Hellhound x2 en el piso 2 y el File de 5,000eb en el 6.
+  * La tarjeta de aventura de Halloween se volvió componente compartido (`AdventureCard`).
+  * `CLAUDE.md`: nueva regla "Resumen corto de cada cosa" (pedido de Giuliano): en planes y cierres, cada ítem con qué hace, dónde se ve, cómo afecta y qué se interpretó.
+* **Files Modified**: nuevos `data/gmTables/solo-of-fortune.ts`, `engine/opBudget.ts`, `features/sheet/OpBudgetPanel.tsx` y el test `engine/__tests__/soloOfFortune.test.ts` (5 tests); `data/netArchitecturesInterfaceRed.ts`, `features/gmtables/GmTablesView.tsx`, `features/sheet/StreetLabView.tsx`, `types/cyberpunk.ts` (`OperationalBudget`, `fromOpBudget`), `store/useCharacterStore.ts` (`startOpBudget`, `spendOpBudget`, `closeOpBudget`); `store/persistence.ts` (APP_VERSION); changelog in-app; `CLAUDE.md`.
+* **Verificación**: tsc, 785 tests y build. En el navegador: Georgia On My Mind con 5,000eb; Frag Grenade x3 por 300eb fue a la mochila, una compra de 9,000eb se rechazó, y al terminar la misión la granada volvió al armory y se perdieron 4,700eb. La pestaña Solo of Fortune muestra a Kelly y los 4 PNJ Hardened del bestiario.
+* **Plan 31 cerrado**: v5.29.0 a v5.34.0, todo en ramas locales encadenadas (la última, `claude/plan31-v5.34.0`), sin pushear. Al publicar, las reglas de Firestore de la v5.32.0 piden su propio deploy.
+
+### [v5.33.0] - 2026-11-13 (Plan 31 V: Cyberpets, "Your New Best Friend") [Claude Code · 2026-11-13]
+* **Category**: Contenido canon y ficha (Interface RED Vol. 5 pp.71-82).
+* **What Changed**:
+  * **Bestiario**: las 8 Cyberpets® de Biotechnica (Datarabbit, Forever Turtle, Neon Newt, Obsidian Ocelot, Cyberbear, Cyberboa, Cyberrat y Cyberwolf; pp.74-81) con stats, HP, SP, ataques con su Combat Number, skill bases, ciberware y habilidades. Entran por `data/enemies-src/interface-red.json` (ids `ir5-pet-*`) y sirven como enemigos y actores. Los niveles Hardened del libro quedan como `hardened_mook` o `hardened_lieutenant`.
+  * **"Mascota" en la ficha** (panel en ARSENAL & BLINDAJE, `CharacterSheet.pets`): se compra (costo más el primer mes de su Lifestyle, sin prorratear) o se agrega sin cobrar. Muestra HP, SP, ataques, ciberware de fábrica y habilidades. Lleva su Lifestyle mensual (el Cyberbear pide Fresh Food x2) y las camas de Housing que ocupa (Mook 0, Lieutenant 1, Mini-Boss 2, Boss 3).
+  * **Obediencia** (p.73): obedece si INT + Animal Handling es 10 o más y está cuidada (Lifestyle pago, durmiendo bien, sin maltrato). Si no, el GM decide; hay botón de tirada de Animal Handling.
+  * **Ciberware de la mascota** (p.73): ranuras libres del modelo, una pieza puede ocupar 0 con Tech Upgrade, y el entrenamiento de 1 día con Animal Handling contra la DV de instalación (sin entrenar, solo come y duerme).
+  * Las fichas se revisaron contra el render del PDF; el Cyberrat (p.80) se volvió a comparar a mano.
+* **Files Modified**: nuevos `data/cyberpets.ts`, `engine/cyberpets.ts`, `features/sheet/PetPanel.tsx` y el test `engine/__tests__/cyberpets.test.ts` (5 tests); `data/enemies-src/interface-red.json` y el generado `data/enemies/interface-red.ts`; `types/cyberpunk.ts` (`OwnedPet`), `store/useCharacterStore.ts` (`addPet`, `updatePet`, `removePet`), `features/sheet/StreetLabView.tsx`; `engine/__tests__/rules.test.ts` (los ids de interface_red admiten `ir5-pet-`); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 780 tests y build. En el navegador, Hardpoint no podía pagar el Cyberrat (1300eb con el primer mes). Agregado sin cobrar: 10 HP, SP 7, no obedece (INT 6 + Animal Handling 0 = 6). Le instalé un Cyberaudio (1 de 2 ranuras) y el entrenamiento falló (11 contra DV13). Se quitó después; consola limpia.
+
+### [v5.32.0] - 2026-11-13 (Plan 31 IV: investigación y Focus, "Did Someone Say Murder?") [Claude Code · 2026-11-13]
+* **Category**: Reglas opcionales del Interface RED Vol. 5 (pp.61-70) en la ficha y en el Modo GM. Toca `firestore.rules`.
+* **What Changed**:
+  * **Focus en la ficha** (`CharacterSheet.focus`, sin el campo está lleno): máximo `10 + 5 × ceil((INT+WILL)/2)`, igual a la tabla de la p.63. Panel en STREET LAB con botones para perder Focus, Deduction DV15 (cuesta 1d6) y Descansar un día (INT + WILL, +5 con Concentration DV15).
+  * **Tracker de misterios en el Modo GM**: objetivo, Complexity (Easy 25 a Legendary 200), pistas con su tipo (los 12 de la p.65), DV, daño, Obfuscation y pifia, y obstáculos (los 13 de la p.67 más el Ticking Clock). La Evidence Check toma el total que tiró el jugador: si sale, baja la Complexity con el daño menos la Obfuscation; si falla, le baja el Focus al PJ elegido. Los obstáculos cuestan 1d6 (superado) o 2d6 (fallado). Trae los 2 misterios de ejemplo (pp.69-70) y un registro.
+  * El Focus que pierde un PJ por el tracker se aplica a su ficha como el daño del GM y va al log de la mesa. La tarjeta de cada jugador en el Modo GM muestra su Focus.
+  * **Mesa online**: el tracker se guarda en `campaigns/{c}/gm/mysteries` (solo el GM, hasta 30 misterios), un secreto del GM más en `sync/gmSecrets.ts`. Sin mesa, en este navegador (`cpr_gm_mysteries_v1`).
+* **Files Modified**: nuevos `data/mysteryData.ts`, `engine/mystery.ts`, `features/sheet/FocusPanel.tsx`, `features/gmmode/MysteryTracker.tsx` y el test `engine/__tests__/mystery.test.ts` (9 tests); `types/cyberpunk.ts`, `store/useCharacterStore.ts` (`adjustFocusFor`), `engine/gmMode.ts`, `features/gmmode/GmModeView.tsx`, `features/sheet/StreetLabView.tsx`, `sync/gmSecrets.ts` y su test; `firestore.rules` y `sync/__tests__/rules/firestore.rules.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 775 tests, 52 tests de reglas con el emulador y build. En el navegador, Hardpoint (INT 6, WILL 6) tiene 40 de Focus; perdió 3d6 y lo recuperó descansando. En el Modo GM, con "Someone Stole It First!": Forensics con 18 cobró la pista (16 − 2 = 14, Complexity 36/50); Digital Scavenging con 8 y 1 natural le bajó 12 de Focus a Wrench, y un obstáculo superado 1 más. Todo se limpió después; consola limpia.
+* **Publicación**: las reglas nuevas de Firestore hay que desplegarlas (OK aparte) antes o junto con el hosting, o el tracker no guarda en la mesa online.
+
+### [v5.31.0] - 2026-11-13 (Plan 31 III: durabilidad y mantenimiento, "Breaking Your Stuff") [Claude Code · 2026-11-13]
+* **Category**: Reglas opcionales del Interface RED Vol. 5 (pp.3-12) en la ficha.
+* **What Changed**:
+  * **Panel "Mantenimiento y estado del equipo"** en ARSENAL & BLINDAJE, con todo el equipo: armas, armadura, ciberware, mochila y vehículos. En el Ripperdoc aparece el mismo panel, solo con el ciberware.
+  * **Estado por ítem** (`CharacterSheet.itemDurability`, con la clave de `engine/itemNames.ts`): Damaged (IR5 p.4), Destroyed y Destroyed Beyond Repair (Core p.140).
+  * **Mantenimiento** (pp.5-7): el Lifestyle del mes (`CharacterSheet.lifestyle`) lo cubre si alcanza el de la tabla Maintenance Basics; si no, hay una tirada mensual con la Skill de Maintenance Skills, la DV y el tiempo. Los Roles: Tech +1 en todo; Solo y Lawman en armas y armaduras; Netrunner en cyberdecks; Media y Rockerboy en su equipo de Rol; Exec, Medtech y Nomad quedan exentos con su equipo de Rol (se marca por ítem). Mantener quita Damaged y la falla en curso.
+  * **Fallas** (pp.8-12): las 11 tablas de 1d6 traducidas (`data/malfunctionTables.ts`). Cada ítem va a su tabla (el ciberware según su tipo) y se puede tirar en otra. La falla queda en el ítem con su duración, hasta que el jugador la termina. Jury rig del Maker: 10 minutos por punto de Field Expertise.
+  * **Reventa** (p.5): el valor de venta o de materiales baja una Categoría si está Damaged y dos si está Destroyed; Beyond Repair no vale nada.
+  * El ciberware de los Folios CEMK (`cw-cemk-…`) se busca por nombre para sacar su costo y su tabla.
+* **Files Modified**: nuevos `data/malfunctionTables.ts`, `engine/maintenance.ts`, `engine/durabilityItems.ts`, `features/sheet/DurabilityPanel.tsx` y el test `engine/__tests__/maintenance.test.ts` (9 tests); `types/cyberpunk.ts`, `store/useCharacterStore.ts` (`setItemDurability`, `setLifestyle`), `features/sheet/StreetLabView.tsx`, `features/cyberware/CyberwareRipperdocView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 766 tests y build. En el navegador, con Hardpoint (Solo) y Lifestyle Kibble: la Masamune (1000eb) pide Good Prepak y una tirada de Weaponstech DV17. Marcada Damaged, salió la falla 6 de armas y la tirada de mantenimiento falló (15 contra DV17). La armadura se mantiene sola con el +1 del Solo. En el Ripperdoc aparecen los 3 implantes. Todo se limpió después; consola limpia.
+
+### [v5.30.0] - 2026-11-13 (Plan 31 II: generadores del GM del Interface RED Vol. 5) [Claude Code · 2026-11-13]
+* **Category**: Herramientas del GM. Tres pestañas nuevas en TABLAS DEL GM.
+* **What Changed**:
+  * **Screamsheet (IR5 pp.83-96)**: la Tabla A (1d6) elige el tipo (Flash de Noticias, En Luces de Neón o Se Busca Personal), y se tira intro, cuerpo y cierre con 1d6 cada uno. El titular sale entre los que permite el cierre y se puede cambiar, y la firma es de uno de los 12 periodistas. Los campos entre corchetes se completan en la app, y el texto se copia para dárselo a los jugadores.
+  * **Gunpath (IR5 pp.48-53)**: fabricante (1d100), tipo (1d10, con su sub-tirada para arco o ballesta y para lanzagranadas o lanzacohetes), calidad (1d6), attachments por Skill y esquema de nombre (1d100). El costo baja o sube una Categoría por la calidad, y los attachments solo suben la Categoría si el total llega a la siguiente (p.51). El arma se puede equipar al PJ activo: usa la ficha del Core con calidad, costo y attachments de fábrica.
+  * El libro no dice cuántos attachments lleva un arma ni qué pasa con los repetidos: el GM elige la cantidad (0 a 3) y la app vuelve a tirar los repetidos y los que no son elegibles (Silencer y Grapple Gun Underbarrel, p.48).
+  * **Referencias IR5**: reglas de roller derby (pp.18-21), los 13 avisos del Hiring Hall (p.132; el plan decía 14, el libro trae 13), parámetros de misión mercenaria (p.108) y DV para hackear Agents (pp.27-29). Se anotan las erratas del libro (diez o nueve penalizaciones en el derby; "10,0000" en Dangerous Mission).
+* **Files Modified**: nuevos `data/gmTables/screamsheet.ts`, `data/gmTables/gunpath.ts`, `data/gmTables/ir5References.ts`, `engine/screamsheet.ts`, `engine/gunpath.ts`, `features/gmtables/ScreamsheetSection.tsx`, `GunpathSection.tsx`, `Ir5ReferencesSection.tsx` y el test `engine/__tests__/ir5Generators.test.ts` (11 tests); `features/gmtables/GmTablesView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 757 tests y build. En el navegador salió una screamsheet de Se Busca Personal con sus campos, y un lanzagranadas Arasaka Excelente con Drum Magazine (1500eb, Very Expensive). Equipado al PJ da +1 al ataque; se sacó después. Consola limpia.
+
+### [v5.29.0] - 2026-11-13 (Plan 31 I: catálogos del resto del Interface RED Vol. 5) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon. Primera versión del plan 31 (resto del Interface RED Vol. 5; página impresa = índice del PDF en base 0).
+* **What Changed**:
+  * **Toggle's Temple (pp.37-59)**: 62 armas con calidad (Poor, Standard o Excellent), ranuras libres y attachments de fábrica, tomadas de las tablas de las pp.54-59 y citando la página de cada ficha. De las 72 del libro, 10 ya estaban (9 del Core y el Type-18-S). Suma el Airhypo Bayonet y el Grapple Gun Underbarrel (p.48); el Silencer ya estaba.
+  * **All About Agents (pp.28-33)**: Breacher, Crunch Whistle, 11 apps, 4 Agents y 4 Internal Agents (Cyberaudio). Las DV para hackear un Agent van en la descripción del Breacher.
+  * **12 Days of REDmas (pp.98-101)**: Thermal Dagger, Nat's Long-Barreled Pistol (con su tabla de rango, p.99), E-TACK Rapid Responder (Burst Mode), High-Density Bulletproof Shield, CyberDude Smart Glove, Smart Ears, Stun Bayonet, el CyberConductor y su versión integrada, Quick Change Faceplate Mount, Quick Digits y Skydrivers. El Light Metalgear y el Sycust Cyberspine ya estaban.
+  * **Roller derby (p.21)**: Padding (SP7) y Skates. **Cyberpets (p.82)**: Chipware Compartment y FBC Chameleon Coating; las otras 5 son reimpresiones de Black Chrome e IR2 que ya estaban.
+  * **Calidad del arma** (`WeaponItem.quality`): Excellent suma +1 al ataque; Poor avisa que se encasquilla con un 1 natural (Interface RED Vol. 1 pp.3-4). **Ranuras** (`slots`) y **attachments de fábrica** (`preinstalledAttachments`, dan su efecto sin ocupar ranura).
+  * Las ranuras de los 3 attachments nuevos no las da el libro: se toman las del Bayonet (1) y los underbarrel (2) del Core, anotado en cada uno.
+* **Files Modified**: `data/core-rules.cprpack.json` (101 ítems), `data/rangeTables.ts`, `data/weaponAttachmentsAndTechData.ts`, `types/cyberpunk.ts`; tests `engine/__tests__/ir5CatalogRest.test.ts` (nuevo, 9 tests) y `ir5Catalog.test.ts` (acotado a pp.105-147); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 746 tests y build. En el navegador: la Towa Type-12 Police Pistol aparece en el Compendio (p.38); equipada da +2 (Calidad Excelente y Smartgun Link de fábrica) y 1 ranura. Consola limpia.
+
 ### [v5.28.0] - 2026-11-13 (Plan 30 IV: enemigos en ACPA; cierra el plan 30) [Claude Code · 2026-11-13]
 * **Category**: Modo GM. Última versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.133-142).
 * **What Changed**:

@@ -17,6 +17,8 @@ import type {
   InventoryItem,
   IpLogKind,
   MedtechCryoAndPharma,
+  ItemDurability,
+  OwnedPet,
   OwnedVehicle,
   RockerboyFanGroup,
   SoloCombatAwarenessAllocation,
@@ -37,6 +39,8 @@ import {
   buildCharacterSheetFromPregen as instantiatePregenCharacter
 } from '../data/characterCreationData';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
+import { opBudgetLeft } from '../engine/opBudget';
+import { currentFocus, maxFocus } from '../engine/mystery';
 import { SKILL_METADATA } from '../types/cyberpunk';
 import { checkRoleRankRaise, checkSkillRaise } from '../engine/roleRules';
 import type { MakerAllocation, MedicineAllocation } from '../engine/roleRules';
@@ -507,6 +511,19 @@ export interface CharacterStoreState {
   toggleFavoriteSkill: (key: string) => void;
   /** v5.8.0 (plan 23): pone o quita (null) el nombre propio de un ítem. [Claude Code · 2026-10-30] */
   setItemNickname: (key: string, original: string, nick: { name: string; showOriginal: boolean } | null) => void;
+  /** v5.31.0 (plan 31): durabilidad por ítem y Lifestyle del mes (IR5 pp.4-12). [Claude Code · 2026-11-13] */
+  setItemDurability: (key: string, patch: Partial<ItemDurability> | null) => void;
+  setLifestyle: (lifestyle: string | undefined) => void;
+  /** v5.32.0 (plan 31): Focus de investigación (IR5 p.63); lo usan el jugador y el GM. [Claude Code · 2026-11-13] */
+  adjustFocusFor: (characterId: string, delta: number) => void;
+  /** v5.33.0 (plan 31): Cyberpets del PJ activo (IR5 pp.72-81). [Claude Code · 2026-11-13] */
+  addPet: (pet: OwnedPet) => void;
+  updatePet: (instanceId: string, patch: Partial<OwnedPet>) => void;
+  removePet: (instanceId: string) => void;
+  /** v5.34.0 (plan 31): presupuesto operativo de la misión (IR5 p.108). [Claude Code · 2026-11-13] */
+  startOpBudget: (mission: string, total: number) => void;
+  spendOpBudget: (name: string, cost: number, category: InventoryItem['category'] | null) => boolean;
+  closeOpBudget: () => { lost: number; returned: number } | null;
   gmSetRoleRank: (rank: number) => void;
   setMakerAllocation: (alloc: MakerAllocation) => void;
   // v4.9.3 [Claude Code · 2026-10-23] Roles sociales: Team del Exec (Core p.154) y fans del Rockerboy (Core pp.144-145).
@@ -2698,6 +2715,98 @@ export const useCharacterStore = create<CharacterStoreState>()(
             return { ...c, itemNicknames: next };
           })
         }));
+      },
+
+      setItemDurability: (key, patch) => {
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== state.activeCharacterId) return c;
+            const next = { ...(c.itemDurability ?? {}) };
+            const merged = patch ? { ...next[key], ...patch } : {};
+            for (const k of Object.keys(merged) as (keyof ItemDurability)[]) if (merged[k] === undefined) delete merged[k];
+            if (Object.keys(merged).length) next[key] = merged;
+            else delete next[key];
+            return { ...c, itemDurability: next };
+          })
+        }));
+      },
+
+      setLifestyle: (lifestyle) => {
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id === state.activeCharacterId ? { ...c, lifestyle } : c))
+        }));
+      },
+
+      adjustFocusFor: (characterId, delta) => {
+        if (!Number.isFinite(delta)) return;
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== characterId) return c;
+            const max = maxFocus(c.stats.INT, c.stats.WILL);
+            const next = Math.max(0, Math.min(max, currentFocus(c) + delta));
+            return { ...c, focus: next >= max ? undefined : next };
+          })
+        }));
+      },
+
+      addPet: (pet) => {
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id === state.activeCharacterId ? { ...c, pets: [...(c.pets ?? []), pet] } : c))
+        }));
+      },
+
+      updatePet: (instanceId, patch) => {
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id === state.activeCharacterId ? { ...c, pets: (c.pets ?? []).map((p) => (p.instanceId === instanceId ? { ...p, ...patch } : p)) } : c
+          )
+        }));
+      },
+
+      removePet: (instanceId) => {
+        set((state) => ({
+          characters: state.characters.map((c) => (c.id === state.activeCharacterId ? { ...c, pets: (c.pets ?? []).filter((p) => p.instanceId !== instanceId) } : c))
+        }));
+      },
+
+      startOpBudget: (mission, total) => {
+        if (!Number.isFinite(total) || total <= 0) return;
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id === state.activeCharacterId ? { ...c, opBudget: { mission: mission.trim().slice(0, 80), total: Math.round(total), purchases: [] } } : c
+          )
+        }));
+      },
+
+      spendOpBudget: (name, cost, category) => {
+        const c = get().characters.find((x) => x.id === get().activeCharacterId);
+        if (!c?.opBudget || !Number.isFinite(cost) || cost <= 0 || !name.trim()) return false;
+        if (opBudgetLeft(c.opBudget) < cost) return false;
+        const invId = category ? `inv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}` : undefined;
+        set((state) => ({
+          characters: state.characters.map((x) => {
+            if (x.id !== state.activeCharacterId || !x.opBudget) return x;
+            const purchases = [...x.opBudget.purchases, { name: name.trim().slice(0, 80), cost: Math.round(cost), inventoryId: invId }];
+            const inventory = invId && category
+              ? [...(x.inventory ?? []), { id: invId, catalogId: `opbudget-${invId}`, name: name.trim().slice(0, 80), category, cost: Math.round(cost), quantity: 1, details: `Presupuesto operativo: ${x.opBudget.mission}`, fromOpBudget: true }]
+              : x.inventory;
+            return { ...x, opBudget: { ...x.opBudget, purchases }, inventory };
+          })
+        }));
+        return true;
+      },
+
+      closeOpBudget: () => {
+        const c = get().characters.find((x) => x.id === get().activeCharacterId);
+        if (!c?.opBudget) return null;
+        const lost = opBudgetLeft(c.opBudget);
+        const returned = (c.inventory ?? []).filter((i) => i.fromOpBudget).length;
+        set((state) => ({
+          characters: state.characters.map((x) =>
+            x.id === state.activeCharacterId ? { ...x, opBudget: undefined, inventory: (x.inventory ?? []).filter((i) => !i.fromOpBudget) } : x
+          )
+        }));
+        return { lost, returned };
       },
 
       gmSetRoleRank: (rank: number) => {

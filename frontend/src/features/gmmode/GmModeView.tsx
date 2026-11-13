@@ -10,6 +10,7 @@ import { GmTargetDialog } from '../gm/GmTargetDialog';
 import type { PartySummary } from '../../sync/partySummary';
 import { ActorsColumn, EnemyRow } from './GmActorsPanels';
 import { RollRequestsPanel } from './RollRequestsPanel';
+import { MysteryTracker } from './MysteryTracker';
 
 const card = 'bg-[#0f1219] border border-[#1e2334] rounded-xs p-3 space-y-2';
 const small = 'text-[11px] font-mono-code text-[#94a3b8]';
@@ -51,6 +52,7 @@ function PlayerCard({ c, onOpen }: { c: GmPlayerCard; onOpen: () => void }) {
         <span className={small}>SP cuerpo {c.bodySp}/{c.bodySpMax}</span>
         <span className={small}>Suerte {c.luck}/{c.luckMax}</span>
         <span className={small}>Humanidad {c.humanity}/{c.humanityMax}</span>
+        <span className={small}>Focus {c.focus}/{c.focusMax}</span>
         <span className={small}>€$ {c.eurodollars}</span>
       </div>
       {c.acpa && (
@@ -188,6 +190,9 @@ export function GmModeView() {
 
         <ActorsColumn />
       </div>
+
+      {/* v5.32.0 (plan 31): tracker de misterios (IR5 pp.61-70). [Claude Code · 2026-11-13] */}
+      <MysteryTracker players={players.filter((p) => p.sheet).map((p) => ({ id: p.id, handle: p.sheet!.handle }))} />
 
       {targetId && <GmTargetDialog charId={targetId} onClose={() => setTargetId(null)} />}
     </div>

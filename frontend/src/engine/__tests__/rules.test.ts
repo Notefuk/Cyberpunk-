@@ -541,10 +541,11 @@ describe('Enemigos canon v4.7.0', () => {
     }
   });
 
-  it('ids únicos en ENEMIES_CATALOG; los de interface_red son solo los PNJ canon de IR2/IR4 (v5.20.0)', () => {
+  // v5.33.0 (plan 31): se suman las 8 Cyberpets de IR5 (ir5-pet-*). [Claude Code · 2026-11-13]
+  it('ids únicos en ENEMIES_CATALOG; los de interface_red son solo los PNJ canon de IR2/IR4 (v5.20.0) y las Cyberpets de IR5 (v5.33.0)', () => {
     const ids = ENEMIES_CATALOG.map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);
-    expect(ENEMIES_CATALOG.filter((e) => e.sourceBook === 'interface_red').every((e) => /^ir[24]-/.test(e.id) && typeof e.sourcePage === 'number')).toBe(true);
+    expect(ENEMIES_CATALOG.filter((e) => e.sourceBook === 'interface_red').every((e) => /^(ir[24]-|ir5-pet-)/.test(e.id) && typeof e.sourcePage === 'number')).toBe(true);
   });
 
   it('Boosterganger Core: BODY 2 y Death Save 2 (Errata v1.25 p. 412)', () => {

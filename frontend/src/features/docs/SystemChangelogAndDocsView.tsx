@@ -26,6 +26,102 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.34.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Nivel mercenario: Solo of Fortune 2045',
+    summary: 'Cierra el Interface RED Vol. 5. Tu ficha tiene ahora un presupuesto operativo para las misiones mercenarias: comprás con la plata del empleador y, al terminar, lo comprado vuelve al armory y lo que sobra se pierde. El GM tiene una pestaña nueva con las reglas de nivel mercenario y las dos misiones del libro, Georgia On My Mind y Trouble in Tanzania, con la NET del rancho McAlister.',
+    highlights: [
+      'Presupuesto operativo en la ficha (IR5 p.108).',
+      'Reglas de nivel mercenario y 2 misiones en TABLAS DEL GM (IR5 pp.106-108, 144-147).',
+      'NET del rancho McAlister en NET & ROLES (IR5 p.145).'
+    ],
+    filesTouched: ['frontend/src/data/gmTables/solo-of-fortune.ts', 'frontend/src/features/sheet/OpBudgetPanel.tsx', 'frontend/src/data/netArchitecturesInterfaceRed.ts'],
+    metricsBadge: 'v5.34.0 • IR5 • plan 31 completo'
+  },
+  {
+    version: 'v5.33.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Cyberpets',
+    summary: 'Las 8 Cyberpets® de Biotechnica llegan al bestiario, del Datarabbit al Cyberbear. También podés tener la tuya: la sección Mascota de la ficha la compra, lleva su HP, su Lifestyle mensual y las camas que ocupa, te dice si te obedece según tu Animal Handling y te deja instalarle ciberware y entrenarla.',
+    highlights: [
+      '8 Cyberpets en el bestiario, como enemigos o actores (IR5 pp.74-81).',
+      'Sección Mascota en la ficha: compra, Lifestyle, Housing y obediencia (IR5 pp.72-73).',
+      'Ciberware para la mascota, con sus ranuras y el entrenamiento (IR5 p.73).'
+    ],
+    filesTouched: ['frontend/src/data/cyberpets.ts', 'frontend/src/engine/cyberpets.ts', 'frontend/src/features/sheet/PetPanel.tsx'],
+    metricsBadge: 'v5.33.0 • IR5 • 8 mascotas'
+  },
+  {
+    version: 'v5.32.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Reglas',
+    title: 'Investigaciones y Focus',
+    summary: 'Llega el sistema de investigación del Interface RED Vol. 5. Cada PJ tiene Focus, que se gasta resolviendo misterios y se recupera descansando. El GM tiene un tracker de misterios en el Modo GM: arma la Complexity, las pistas y los obstáculos, carga las Evidence Checks y la app baja la Complexity o el Focus del PJ. Trae los 2 misterios de ejemplo del libro.',
+    highlights: [
+      'Focus en la ficha, con Deduction y descanso (IR5 p.63).',
+      'Tracker de misterios del GM, guardado en la mesa online (IR5 pp.64-67).',
+      'Los misterios de ejemplo Grab and Smash y Someone Stole It First! (IR5 pp.69-70).'
+    ],
+    filesTouched: ['frontend/src/engine/mystery.ts', 'frontend/src/features/gmmode/MysteryTracker.tsx', 'frontend/firestore.rules'],
+    metricsBadge: 'v5.32.0 • IR5 • Focus'
+  },
+  {
+    version: 'v5.31.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Reglas',
+    title: 'Durabilidad y mantenimiento',
+    summary: 'Las reglas opcionales de "Breaking Your Stuff" llegan a la ficha. Cada arma, armadura, implante, ítem de la mochila o vehículo puede quedar Damaged, Destroyed o Destroyed Beyond Repair. Tu Lifestyle (con el +1 de tu Rol) lo mantiene solo o te pide una tirada al mes. Un ítem dañado puede fallar con su tabla, y vale menos al venderlo.',
+    highlights: [
+      'Panel de mantenimiento en ARSENAL & BLINDAJE y en el Ripperdoc (IR5 pp.5-7).',
+      'Las 11 tablas de fallas, con su duración y el jury rig del Maker (IR5 pp.8-12).',
+      'Valor de venta según el estado del ítem (IR5 p.5).'
+    ],
+    filesTouched: ['frontend/src/engine/maintenance.ts', 'frontend/src/data/malfunctionTables.ts', 'frontend/src/features/sheet/DurabilityPanel.tsx'],
+    metricsBadge: 'v5.31.0 • IR5 • 11 tablas'
+  },
+  {
+    version: 'v5.30.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Herramientas del GM',
+    title: 'Screamsheets, Gunpath y referencias del IR5',
+    summary: 'Tres pestañas nuevas en TABLAS DEL GM: un generador de screamsheets para armar noticias con sus campos y copiarlas a los jugadores, Gunpath para inventar un arma con fabricante, calidad, accesorios y costo (y equiparla al PJ), y las referencias de roller derby, el Hiring Hall, los parámetros de misión y el hackeo de Agents.',
+    highlights: [
+      'Screamsheet: tipo, intro, cuerpo, cierre, titular y firma, con campos para completar (IR5 pp.83-96).',
+      'Gunpath: fabricante, tipo, calidad, accesorios y nombre, con el costo y su Categoría (IR5 pp.48-53).',
+      'Referencias: roller derby, Hiring Hall, parámetros de misión y DV para hackear Agents.'
+    ],
+    filesTouched: ['frontend/src/engine/screamsheet.ts', 'frontend/src/engine/gunpath.ts', 'frontend/src/features/gmtables/GmTablesView.tsx'],
+    metricsBadge: 'v5.30.0 • IR5 • 3 pestañas'
+  },
+  {
+    version: 'v5.29.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: "Toggle's Temple, Agents y REDmas",
+    summary: "Llegan al Compendio 101 ítems del Interface RED Vol. 5: la armería de Toggle's Temple (62 armas con su calidad, sus ranuras y sus accesorios de fábrica), los Agents y sus apps, el Breacher para hackearlos, los regalos de 12 Days of REDmas, el equipo de roller derby y dos ciberware nuevos. Un arma de Calidad Excelente ya suma su +1 al ataque.",
+    highlights: [
+      "62 armas de Toggle's Temple con calidad, ranuras y accesorios de fábrica (IR5 pp.37-59).",
+      'Agents, apps, Breacher e Internal Agents (IR5 pp.28-33).',
+      "12 Days of REDmas, con la tabla de rango del Nat's Long-Barreled Pistol (IR5 pp.98-101)."
+    ],
+    filesTouched: ['frontend/src/data/core-rules.cprpack.json', 'frontend/src/data/weaponAttachmentsAndTechData.ts', 'frontend/src/data/rangeTables.ts'],
+    metricsBadge: 'v5.29.0 • IR5 • 101 ítems'
+  },
+  {
     version: 'v5.28.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1831,6 +1927,12 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.34.0': true,
+    'v5.33.0': true,
+    'v5.32.0': true,
+    'v5.31.0': true,
+    'v5.30.0': true,
+    'v5.29.0': true,
     'v5.28.0': true,
     'v5.27.0': true,
     'v5.26.0': true,

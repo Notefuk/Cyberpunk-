@@ -45,6 +45,16 @@ Para cualquier feature grande (nuevo módulo, cambio de varios archivos, cambio 
 
 Tareas chicas (un fix, un ajuste de UI, un dato) no necesitan plan.
 
+### Resumen corto de cada cosa (obligatorio) [Claude Code · 2026-11-13]
+
+Giuliano no puede leer todo para saber qué se adapta. Cada vez que se planifica, se adapta una regla del libro o se cierra una versión, cada cosa nueva lleva **un resumen breve en lenguaje simple**:
+- **Qué es**: qué hace, en una o dos frases.
+- **Dónde se ve**: en qué pestaña o panel aparece.
+- **Cómo afecta**: qué cambia en la ficha, en la mesa o en las tiradas, y si toca datos guardados o reglas de Firestore.
+- **Qué se dejó afuera o se interpretó**: lo que el libro no dice y se decidió, o lo que no se hizo.
+
+Va en el plan (una línea por ítem), en la pregunta de aprobación y en el mensaje al cerrar cada versión. Corto: que se lea en un minuto.
+
 ## Antes de tocar nada: leer contexto
 
 Al empezar una tarea nueva, lee en este orden (solo las secciones relevantes). Qué es cada documento: `docs/INDEX.md` [Claude Code · 2026-10-24].

@@ -301,6 +301,15 @@ export interface WeaponItem {
   booth?: string[];
   /** v5.25.0 (plan 30): tabla de rango propia, clave de WEAPON_RANGE_PROFILES (ej. 'ir5_battle_rifle', IR5 p.113). [Claude Code · 2026-11-12] */
   rangeTable?: string;
+  /**
+   * v5.29.0 (plan 31) [Claude Code · 2026-11-13]: calidad del arma (Toggle's Temple, IR5 pp.37-59). Excellent: +1 al ataque;
+   * Poor: con un 1 natural se encasquilla y desatascarla cuesta 1 Acción (Interface RED Vol. 1 pp.3-4).
+   */
+  quality?: 'poor' | 'standard' | 'excellent';
+  /** v5.29.0: ranuras libres para attachments que da el libro (IR5 p.99). Sin el campo, 3 (0 si es exótica). */
+  slots?: number;
+  /** v5.29.0: attachments de fábrica (ids de WEAPON_ATTACHMENTS_CATALOG). Dan su efecto y no ocupan las `slots`. */
+  preinstalledAttachments?: string[];
 }
 
 export interface ArmorItem {
@@ -458,6 +467,8 @@ export interface InventoryItem {
   cost: number;
   quantity: number;
   details?: string;
+  /** v5.34.0 (plan 31): comprado con el presupuesto operativo; vuelve al armory al cerrar la misión (IR5 p.108). [Claude Code · 2026-11-13] */
+  fromOpBudget?: boolean;
 }
 
 export interface EurodollarTransaction {
@@ -688,6 +699,50 @@ export interface CharacterSheet {
   favoriteSkills?: string[];
   /** v5.8.0 (plan 23): nombre propio de cada ítem, por clave de ejemplar (ver `engine/itemNames.ts`). Solo cambia lo que se muestra. [Claude Code · 2026-10-30] */
   itemNicknames?: Record<string, ItemNickname>;
+  /** v5.31.0 (plan 31): Lifestyle del mes, para el mantenimiento automático (Core p.377; IR5 p.7). [Claude Code · 2026-11-13] */
+  lifestyle?: string;
+  /** v5.31.0 (plan 31): estado y fallas de cada ítem, con la clave de `engine/itemNames.ts` (IR5 pp.4-12). [Claude Code · 2026-11-13] */
+  itemDurability?: Record<string, ItemDurability>;
+  /** v5.32.0 (plan 31): Focus actual; sin el campo, lleno. Máximo 10 + 5 × ceil((INT+WILL)/2) (IR5 p.63). [Claude Code · 2026-11-13] */
+  focus?: number;
+  /** v5.33.0 (plan 31): Cyberpets del PJ (IR5 pp.72-81). [Claude Code · 2026-11-13] */
+  pets?: OwnedPet[];
+  /** v5.34.0 (plan 31): presupuesto operativo de una misión mercenaria (IR5 p.108). [Claude Code · 2026-11-13] */
+  opBudget?: OperationalBudget;
+}
+
+/** v5.34.0 (plan 31): plata del empleador para equiparse; lo comprado y lo que sobra no quedan al terminar (IR5 p.108). [Claude Code · 2026-11-13] */
+export interface OperationalBudget {
+  mission: string;
+  total: number;
+  purchases: { name: string; cost: number; inventoryId?: string }[];
+}
+
+/** v5.33.0 (plan 31): una Cyberpet del PJ. Sus stats salen de su ficha del bestiario (`enemyId`). [Claude Code · 2026-11-13] */
+export interface OwnedPet {
+  instanceId: string;
+  enemyId: string;
+  /** Nombre que le puso el dueño. */
+  name: string;
+  currentHp: number;
+  /** Ciberware agregado después de la compra (IR5 p.73). */
+  extraCyberware: { name: string; trained: boolean; zeroSlot?: boolean }[];
+  lifestylePaid: boolean;
+  housed: boolean;
+  mistreated?: boolean;
+  notes?: string;
+}
+
+/** v5.31.0 (plan 31): durabilidad de un ítem ("Breaking Your Stuff", IR5 pp.4-12). [Claude Code · 2026-11-13] */
+export interface ItemDurability {
+  /** Destroyed y Destroyed Beyond Repair son del Core (p.140); Damaged, de IR5 p.4. */
+  condition?: 'damaged' | 'destroyed' | 'beyond_repair';
+  /** Falla en curso (IR5 pp.8-12). */
+  malfunction?: { table: string; roll: number; text: string; duration: string };
+  /** Equipo de Rol: exento para Exec, Medtech y Nomad; +1 de Lifestyle para Media y Rockerboy (IR5 p.6). */
+  roleGear?: boolean;
+  /** Última vez que se mantuvo (texto libre). */
+  lastMaintained?: string;
 }
 
 /** v5.8.0 (plan 23): apodo de un ítem. `original` es el nombre del libro cuando se puso. [Claude Code · 2026-10-30] */

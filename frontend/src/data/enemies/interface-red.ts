@@ -1532,5 +1532,761 @@ export const INTERFACE_RED_ENEMIES: EnemySheet[] = [
       "Surgery": 11
     },
     "isNetrunner": false
+  },
+  {
+    "id": "ir5-pet-datarabbit",
+    "name": "Datarabbit™",
+    "subtitle": "Cyberpet® de Biotechnica",
+    "faction": "Biotechnica",
+    "threatTier": "mook",
+    "sourceBook": "interface_red",
+    "sourceBookTitle": "Interface RED Volume 5",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 74,
+    "role": "",
+    "hp": 10,
+    "seriouslyWounded": 5,
+    "deathSave": 5,
+    "headSp": 11,
+    "bodySp": 11,
+    "stats": {
+      "INT": 2,
+      "REF": 8,
+      "DEX": 8,
+      "TECH": 2,
+      "COOL": 2,
+      "WILL": 2,
+      "LUCK": 0,
+      "MOVE": 10,
+      "BODY": 3,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Teeth",
+        "totalBase": 8,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 8,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 10
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Teeth",
+        "skillBase": 8,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 8,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "TUp (Independent Mounting) Homing Tracer Cyberfinger",
+      "TUp (+1 Option Slot) Cybereye w/ Chipware Compartment & Hardened Cybereye Casing",
+      "Subdermal Armor"
+    ],
+    "gear": [],
+    "specialRules": [
+      "Cybereye con compartimento para chips de memoria y carcasa endurecida (protegida contra EMP): transporta datos sensibles.",
+      "Homing Tracer Cyberfinger: permite localizar a la mascota después."
+    ],
+    "loreSummary": "Conejo biodiseñado como portador de datos: su ojo es un compartimento protegido contra EMP para chips de memoria; rápido y con rastreador implantado.",
+    "skillBases": {
+      "Athletics": 10,
+      "Endurance": 8,
+      "Evasion": 12,
+      "Human Perception": 8,
+      "Perception": 10,
+      "Stealth": 10,
+      "Wilderness Survival": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "ir5-pet-forever-turtle",
+    "name": "Forever Turtle™",
+    "subtitle": "Cyberpet® de Biotechnica",
+    "faction": "Biotechnica",
+    "threatTier": "hardened_mook",
+    "sourceBook": "interface_red",
+    "sourceBookTitle": "Interface RED Volume 5",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 75,
+    "role": "",
+    "hp": 15,
+    "seriouslyWounded": 7,
+    "deathSave": 2,
+    "headSp": 0,
+    "bodySp": 11,
+    "stats": {
+      "INT": 2,
+      "REF": 2,
+      "DEX": 3,
+      "TECH": 2,
+      "COOL": 3,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 3,
+      "BODY": 2,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Combat Jaw",
+        "totalBase": 8,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 5,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 10
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Combat Jaw",
+        "skillBase": 8,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Cyberware Combat Jaw",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 5,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Combat Jaw",
+      "Hardened Shell (Subdermal Armor)",
+      "Trauma Response Nanomatrix"
+    ],
+    "gear": [],
+    "specialRules": [
+      "Protection: puede replegar cabeza y extremidades en el caparazón; entonces el SP de su Hardened Shell cubre también la cabeza y no puede ser objetivo de Aimed Shots."
+    ],
+    "loreSummary": "Una de las Cyberpets originales; con Trauma Response Nanomatrix para longevidad y ADN de más de seis especies, es una amalgama de tortuga inquietante.",
+    "skillBases": {
+      "Athletics": 5,
+      "Brawling": 5,
+      "Evasion": 12,
+      "Human Perception": 8,
+      "Melee Weapon": 8,
+      "Perception": 10,
+      "Stealth": 10,
+      "Wilderness Survival": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "ir5-pet-neon-newt",
+    "name": "Neon Newt™",
+    "subtitle": "Cyberpet® de Biotechnica",
+    "faction": "Biotechnica",
+    "threatTier": "hardened_mook",
+    "sourceBook": "interface_red",
+    "sourceBookTitle": "Interface RED Volume 5",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 76,
+    "role": "",
+    "hp": 20,
+    "seriouslyWounded": 10,
+    "deathSave": 3,
+    "headSp": 0,
+    "bodySp": 0,
+    "stats": {
+      "INT": 1,
+      "REF": 4,
+      "DEX": 5,
+      "TECH": 2,
+      "COOL": 3,
+      "WILL": 2,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 2,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Flamebreath",
+        "totalBase": 8,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Acid Secretion",
+        "totalBase": 5,
+        "damage": "",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 12
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Flamebreath",
+        "skillBase": 8,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Actua como Flamethrower (CP:R p.348)",
+        "skill": "Heavy Weapons"
+      },
+      {
+        "name": "Acid Secretion",
+        "skillBase": 5,
+        "damage": "",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Reduce el SP de toda armadura usada en 1; sin daño",
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [],
+    "gear": [],
+    "specialRules": [
+      "Acid Secretion: con un ataque exitoso el ácido no hace daño pero baja en 1 el SP de toda la armadura puesta; se ataca con Brawling, no Melee Weapon.",
+      "Flamebreath: actúa como Flamethrower (CP:R p.348); no puede usarse si se activo en el Turno anterior del tritón."
+    ],
+    "loreSummary": "Tritón de bolsillo genéticamente modificado que escupe fuego al ser apretado y cuya piel secreta ácido, con colores neon de laboratorio.",
+    "skillBases": {
+      "Athletics": 5,
+      "Brawling": 5,
+      "Contortionist": 12,
+      "Evasion": 12,
+      "Human Perception": 4,
+      "Heavy Weapons": 8,
+      "Melee Weapon": 7,
+      "Perception": 12,
+      "Stealth": 10,
+      "Wilderness Survival": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "ir5-pet-obsidian-ocelot",
+    "name": "Obsidian Ocelot™",
+    "subtitle": "Cyberpet® de Biotechnica",
+    "faction": "Biotechnica",
+    "threatTier": "hardened_lieutenant",
+    "sourceBook": "interface_red",
+    "sourceBookTitle": "Interface RED Volume 5",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 77,
+    "role": "",
+    "hp": 40,
+    "seriouslyWounded": 20,
+    "deathSave": 5,
+    "headSp": 12,
+    "bodySp": 12,
+    "stats": {
+      "INT": 3,
+      "REF": 9,
+      "DEX": 8,
+      "TECH": 2,
+      "COOL": 2,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 8,
+      "BODY": 5,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Combat Jaw",
+        "totalBase": 15,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Cat Claws",
+        "totalBase": 15,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 15
+      },
+      {
+        "label": "Perception",
+        "totalBase": 12
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Combat Jaw",
+        "skillBase": 15,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Cat Claws",
+        "skillBase": 15,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Melee Weapon"
+      }
+    ],
+    "cyberware": [
+      "Combat Jaw",
+      "TUp (Animal Compatibility) FBC Chameleon Coating",
+      "TUp (+1 SP) Subdermal Armor"
+    ],
+    "gear": [],
+    "specialRules": [
+      "Combat Awareness: sin ser Solo, puede usar la habilidad de rol Combat Awareness (CP:R p.146) con Rank 5."
+    ],
+    "loreSummary": "Felino criado para clientes de alto nivel: ornamento hermoso y asesino sigiloso; unos pocos acompañan a asesinos que no podrías pagar.",
+    "skillBases": {
+      "Athletics": 16,
+      "Brawling": 13,
+      "Endurance": 8,
+      "Evasion": 15,
+      "Human Perception": 8,
+      "Melee Weapon": 15,
+      "Perception": 12,
+      "Stealth": 15,
+      "Tactics": 12,
+      "Tracking": 13,
+      "Wilderness Survival": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "ir5-pet-cyberbear",
+    "name": "Cyberbear™",
+    "subtitle": "Cyberpet® de Biotechnica",
+    "faction": "Biotechnica",
+    "threatTier": "mini_boss",
+    "sourceBook": "interface_red",
+    "sourceBookTitle": "Interface RED Volume 5",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 78,
+    "role": "",
+    "hp": 55,
+    "seriouslyWounded": 28,
+    "deathSave": 10,
+    "headSp": 13,
+    "bodySp": 13,
+    "stats": {
+      "INT": 3,
+      "REF": 8,
+      "DEX": 8,
+      "TECH": 6,
+      "COOL": 5,
+      "WILL": 8,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 10,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "Bear Claw",
+        "totalBase": 16,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Combat Jaw",
+        "totalBase": 16,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 10
+      },
+      {
+        "label": "Perception",
+        "totalBase": 11
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Bear Claw",
+        "skillBase": 16,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      },
+      {
+        "name": "Combat Jaw",
+        "skillBase": 16,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Cyberware Combat Jaw",
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Combat Jaw",
+      "Grafted Muscle & Bone Lace",
+      "Neural Link w/ Chipware Socket & Pain Editor",
+      "TUp (+2 SP, Requires BODY 10) Subdermal Armor"
+    ],
+    "gear": [],
+    "specialRules": [
+      "Arte marcial Cyberbear (innata, imposible de aprender): Special Move Recovery (si está derribado, al usar Get Up puede superar DV13 con Martial Arts Special Move Resolution para que no cueste Acción).",
+      "Cyberbear Three-Arm Strike: una vez por Turno si golpea al mismo objetivo con dos Bear Claw, intenta DV15; si triunfa elige: agarrar/soltar al objetivo, atacar de nuevo con Bear Claw o Combat Jaw, causar una Body Critical Injury aleatoria (CP:R p.187) o reducir 4 el SP de la armadura del objetivo. Si falla sufre 5 de daño directo a HP (tumor)."
+    ],
+    "loreSummary": "Oso con un tercer brazo (no cibernético) y tumores cerebrales que lo vuelven feral; algunos escaparon y viven en el Yukon de Alaska.",
+    "skillBases": {
+      "Athletics": 14,
+      "Brawling": 16,
+      "Concentration": 10,
+      "Evasion": 10,
+      "Human Perception": 7,
+      "Martial Arts (Cyberbear)": 10,
+      "Melee Weapon": 16,
+      "Perception": 11,
+      "Persuasion": 7,
+      "Resist Torture/Drugs": 15,
+      "Stealth": 10,
+      "Wilderness Survival": 14
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "ir5-pet-cyberboa",
+    "name": "Cyberboa™",
+    "subtitle": "Cyberpet® de Biotechnica",
+    "faction": "Biotechnica",
+    "threatTier": "hardened_lieutenant",
+    "sourceBook": "interface_red",
+    "sourceBookTitle": "Interface RED Volume 5",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 79,
+    "role": "",
+    "hp": 40,
+    "seriouslyWounded": 20,
+    "deathSave": 7,
+    "headSp": 12,
+    "bodySp": 12,
+    "stats": {
+      "INT": 3,
+      "REF": 5,
+      "DEX": 9,
+      "TECH": 3,
+      "COOL": 4,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 4,
+      "BODY": 7,
+      "EMP": 1
+    },
+    "combatBases": [
+      {
+        "label": "TUp (Airhypo) Vampyres",
+        "totalBase": 15,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 16,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 14
+      },
+      {
+        "label": "Perception",
+        "totalBase": 10
+      }
+    ],
+    "weapons": [
+      {
+        "name": "TUp (Airhypo) Vampyres",
+        "skillBase": 15,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Airhypo Vampyres inyectan una dosis de la sustancia cargada",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 16,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "TUp (\"Third Eye\" Mounted) Flashbulb",
+      "Neural Link w/ Chipware Socket & Pain Editor",
+      "TUp (+1 SP) Subdermal Armor",
+      "TUp (Airhypo) Vampyres"
+    ],
+    "gear": [],
+    "specialRules": [
+      "Airhypo Vampyres: al acertar con los Vampyres (aunque no haga daño) inyecta una dosis; un compartimento en la boca carga hasta 5 dosis de un solo Biotoxin, Poison o Streetdrug."
+    ],
+    "loreSummary": "Serpiente vendida como operativa de búsqueda y rescate, con el ADN de las serpientes más peligrosas del mundo.",
+    "skillBases": {
+      "Athletics": 11,
+      "Brawling": 16,
+      "Contortionist": 11,
+      "Endurance": 8,
+      "Evasion": 14,
+      "Human Perception": 4,
+      "Melee Weapon": 15,
+      "Perception": 10,
+      "Stealth": 13,
+      "Tracking": 10,
+      "Wilderness Survival": 12
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "ir5-pet-cyberrat",
+    "name": "Cyberrat™",
+    "subtitle": "Cyberpet® de Biotechnica",
+    "faction": "Biotechnica",
+    "threatTier": "mook",
+    "sourceBook": "interface_red",
+    "sourceBookTitle": "Interface RED Volume 5",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 80,
+    "role": "",
+    "hp": 10,
+    "seriouslyWounded": 5,
+    "deathSave": 5,
+    "headSp": 7,
+    "bodySp": 7,
+    "stats": {
+      "INT": 3,
+      "REF": 6,
+      "DEX": 8,
+      "TECH": 3,
+      "COOL": 2,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 9,
+      "BODY": 3,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Venom Fangs/Claws",
+        "totalBase": 12,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 5,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 10
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Venom Fangs/Claws",
+        "skillBase": 12,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Ver specialRules (veneno)",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 5,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Cyberaudio w/ Audio Recorder",
+      "Cybereye w/ MicroVideo",
+      "Neural Link w/ Chipware Socket & Memory Chip",
+      "Skinweave"
+    ],
+    "gear": [],
+    "specialRules": [
+      "Venom Fangs/Claws: al acertar (aunque no haga daño) el objetivo debe superar un Resist Torture/Drugs DV13 o sufre 1d6 de daño adicional directo a HP.",
+      "El Brawling base (5) es menor que su DEX a propósito: el tamaño reduce su capacidad de combate con patas."
+    ],
+    "loreSummary": "Rata venenosa bioaumentada para espionaje corporativo, con cyberware de vigilancia y skinweave; operativa prescindible o vigilante de apartamento.",
+    "skillBases": {
+      "Athletics": 10,
+      "Brawling": 5,
+      "Concentration": 8,
+      "Endurance": 6,
+      "Evasion": 12,
+      "Human Perception": 8,
+      "Melee Weapon": 12,
+      "Perception": 10,
+      "Stealth": 15,
+      "Wilderness Survival": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "ir5-pet-cyberwolf",
+    "name": "Cyberwolf™",
+    "subtitle": "Cyberpet® de Biotechnica",
+    "faction": "Biotechnica",
+    "threatTier": "hardened_lieutenant",
+    "sourceBook": "interface_red",
+    "sourceBookTitle": "Interface RED Volume 5",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 81,
+    "role": "",
+    "hp": 40,
+    "seriouslyWounded": 20,
+    "deathSave": 5,
+    "headSp": 0,
+    "bodySp": 11,
+    "stats": {
+      "INT": 3,
+      "REF": 7,
+      "DEX": 8,
+      "TECH": 2,
+      "COOL": 2,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 7,
+      "BODY": 5,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "TUp (Grapple Damage Bonus) Combat Jaw",
+        "totalBase": 12,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Claws",
+        "totalBase": 12,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 13
+      },
+      {
+        "label": "Perception",
+        "totalBase": 10
+      }
+    ],
+    "weapons": [
+      {
+        "name": "TUp (Grapple Damage Bonus) Combat Jaw",
+        "skillBase": 12,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "+1d6 de daño contra el objetivo que está agarrando",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Claws",
+        "skillBase": 12,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Melee Weapon"
+      }
+    ],
+    "cyberware": [
+      "TUp (+1d6 damage vs target the Cyberwolf is grappling) Combat Jaw",
+      "Cyberaudio Suite w/Internal Agent",
+      "Cybereye w/Chyron & Targeting Scope"
+    ],
+    "gear": [],
+    "specialRules": [
+      "Combat Awareness: sin ser Solo, puede usar la habilidad de rol Combat Awareness (CP:R p.146) con Rank 3 mientras esté a 20 m/yds de otro Cyberwolf de su manada.",
+      "Viene con una Light Armorjack a medida (SP 11 en cuerpo)."
+    ],
+    "loreSummary": "Cazadores de manada cibernéticos con mandíbulas hidráulicas, pensados para ser la nueva cima de la cadena alimenticia; también se venden como perros de seguridad.",
+    "skillBases": {
+      "Athletics": 13,
+      "Brawling": 14,
+      "Concentration": 6,
+      "Endurance": 8,
+      "Evasion": 13,
+      "Human Perception": 8,
+      "Melee Weapon": 12,
+      "Perception": 10,
+      "Stealth": 10,
+      "Tactics": 14,
+      "Tracking": 16,
+      "Wilderness Survival": 12
+    },
+    "isNetrunner": false
   }
 ];

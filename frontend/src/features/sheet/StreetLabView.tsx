@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { acpaBody, acpaStatMod } from '../../engine/acpa';
 import { AcpaPanel } from './AcpaPanel';
+import { DurabilityPanel } from './DurabilityPanel';
+import { FocusPanel } from './FocusPanel';
+import { PetPanel } from './PetPanel';
+import { OpBudgetPanel } from './OpBudgetPanel';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCloudState } from '../../sync/cloudState';
 import { 
@@ -1755,6 +1759,8 @@ export const StreetLabView: React.FC = () => {
                 <div className={`mt-1 text-[11px] font-mono-code ${skillMsg.success ? 'text-emerald-300' : 'text-red-400'}`}>{skillMsg.text}</div>
               )}
               <OtherSkillsPanel />
+              {/* v5.32.0 [Claude Code · 2026-11-13]: Focus de investigación (IR5 pp.63-66) */}
+              {activeChar && <FocusPanel character={activeChar} />}
               </>
             )}
 
@@ -1856,6 +1862,12 @@ export const StreetLabView: React.FC = () => {
             <div className="space-y-3">
               {/* v5.27.0 [Claude Code · 2026-11-12]: ACPA (IR5 pp.133-142) */}
               {activeChar && <AcpaPanel character={activeChar} />}
+              {/* v5.31.0 [Claude Code · 2026-11-13]: mantenimiento y fallas (IR5 pp.3-12) */}
+              {activeChar && <DurabilityPanel character={activeChar} />}
+              {/* v5.33.0 [Claude Code · 2026-11-13]: Cyberpets (IR5 pp.72-81) */}
+              {activeChar && <PetPanel character={activeChar} />}
+              {/* v5.34.0 [Claude Code · 2026-11-13]: presupuesto operativo de misión mercenaria (IR5 p.108) */}
+              {activeChar && <OpBudgetPanel character={activeChar} />}
               {/* 1. Blindaje Activo */}
               <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
                 <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase pb-1.5 mb-2 border-b border-[#1f2230]">

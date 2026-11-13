@@ -9,7 +9,9 @@ import type { CharacterSheet, WeaponItem } from '../../types/cyberpunk';
 
 type Row = { id: string; name: string; sourceBookTitle?: string; sourcePage?: number; rangeTable?: string; altFireModes?: string };
 const sections = pack as unknown as Record<string, Row[]>;
-const ir5 = (k: string) => sections[k].filter((i) => i.sourceBookTitle === 'Interface RED Volume 5');
+// v5.29.0 [Claude Code · 2026-11-13]: solo el artículo Solo of Fortune (pp.105-147); el resto del Vol. 5 está en ir5CatalogRest.test.ts.
+const ir5 = (k: string) =>
+  sections[k].filter((i) => i.sourceBookTitle === 'Interface RED Volume 5' && (i.sourcePage ?? 0) >= 105 && (i.sourcePage ?? 0) <= 147);
 
 describe('Solo of Fortune 2045 en el catálogo (IR5)', () => {
   it('trae lo del artículo: 13 armas y una reimpresión, 8 attachments, 12 municiones y explosivos', () => {
