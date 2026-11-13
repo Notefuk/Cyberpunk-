@@ -53,6 +53,11 @@ function PlayerCard({ c, onOpen }: { c: GmPlayerCard; onOpen: () => void }) {
         <span className={small}>Humanidad {c.humanity}/{c.humanityMax}</span>
         <span className={small}>€$ {c.eurodollars}</span>
       </div>
+      {c.acpa && (
+        <p className="text-[11px] font-mono-code text-[#facc15]">
+          En ACPA {c.acpa.name}: HP {c.acpa.hp}/{c.acpa.maxHp} · SP {c.acpa.sp}/{c.acpa.maxSp}{c.acpa.destroyed ? ' · DESTRUIDA' : ''}
+        </p>
+      )}
       {c.weapon && (
         <p className={small}>
           🔫 {c.weapon.name}
@@ -71,7 +76,7 @@ function SummaryCard({ s }: { s: PartySummary }) {
   return (
     <div className={card}>
       <span className="font-tech font-bold text-white uppercase">{s.handle}</span>
-      <p className={small}>HP {s.currentHp}/{s.maxHp} · SP {s.headSp}/{s.bodySp} · cargando la ficha…</p>
+      <p className={small}>HP {s.currentHp}/{s.maxHp} · SP {s.headSp}/{s.bodySp}{s.acpa ? ` · ACPA HP ${s.acpa.hp}/${s.acpa.maxHp} SP ${s.acpa.sp}` : ''} · cargando la ficha…</p>
     </div>
   );
 }

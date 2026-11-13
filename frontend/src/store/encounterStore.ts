@@ -5,9 +5,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { EnemySheet, ThreatTier, EnemyCombatBase, EnemyWeaponProfile } from '../data/enemiesCatalog';
-import type { StatKey, CharacterEra } from '../types/cyberpunk';
+import type { StatKey, CharacterEra, ActiveAcpaState } from '../types/cyberpunk';
 import { useCombatStore } from './useCombatStore';
 import { defaultAmmo, reloadAmmo, spendAmmo } from '../engine/gmActors';
+import { acpaTakeDamage, isPilotingAcpa } from '../engine/acpa';
+import { boardEnemy, unboardEnemy } from '../engine/acpaActors';
 
 export const ENCOUNTER_STORAGE_KEY = 'cpr_encounter_v1';
 export const LEGACY_ENCOUNTER_KEY = 'cpr_active_encounter_v1';
@@ -41,6 +43,10 @@ export interface EncounterEnemy {
   ammo?: { current: number; reserve: number }[];
   /** v5.22.0: heridas críticas (nombres de la tabla, Core pp.187-188). */
   injuries?: string[];
+  /** v5.28.0 (plan 30): ACPA que pilotea (IR5 pp.133-142). [Claude Code · 2026-11-12] */
+  acpa?: ActiveAcpaState;
+  /** v5.28.0: cuántas armas del final de `weapons` son las Onboard de la ACPA. */
+  acpaWeaponCount?: number;
 }
 
 export interface EncounterCombatant {
@@ -103,6 +109,8 @@ export interface EnemyDamageResult {
   hpLost: number;
   newSp: number;
   ablated: boolean;
+  /** v5.28.0: el golpe lo recibió su ACPA (HP y SP de la ACPA). */
+  acpa?: { hp: number; destroyed: boolean };
 }
 
 export interface EncounterData {
@@ -125,6 +133,10 @@ interface EncounterState extends EncounterData {
   setEnemyReserve: (id: string, weaponIdx: number, reserve: number) => void;
   addEnemyInjury: (id: string, name: string) => void;
   removeEnemyInjury: (id: string, idx: number) => void;
+  /** v5.28.0 [Claude Code · 2026-11-12]: sube (con estado) o baja (undefined) a un enemigo de una ACPA. */
+  setEnemyAcpa: (id: string, acpa: ActiveAcpaState | undefined) => void;
+  /** Cambia HP o SP de su ACPA. */
+  patchEnemyAcpa: (id: string, patch: Partial<ActiveAcpaState>) => void;
   addPc: (charId: string, name: string, ownerUid?: string) => string;
   setInitiative: (id: string, initiative: number | null) => void;
   adjustEnemyHp: (id: string, delta: number) => void;
@@ -322,6 +334,12 @@ export const useEncounterStore = create<EncounterState>()(
       removeEnemyInjury: (id, idx) =>
         set((s) => ({ combatants: mapEnemy(s, id, (e) => ({ ...e, injuries: (e.injuries ?? []).filter((_, i) => i !== idx) })) })),
 
+      setEnemyAcpa: (id, acpa) =>
+        set((s) => ({ combatants: mapEnemy(s, id, (e) => (acpa ? boardEnemy(e, acpa) : unboardEnemy(e))) })),
+
+      patchEnemyAcpa: (id, patch) =>
+        set((s) => ({ combatants: mapEnemy(s, id, (e) => (e.acpa ? { ...e, acpa: { ...e.acpa, ...patch } } : e)) })),
+
       addPc: (charId, name, ownerUid) => {
         const id = pcCombatantId(charId);
         set((s) => {
@@ -363,6 +381,12 @@ export const useEncounterStore = create<EncounterState>()(
       applyEnemyDamage: (id, damage, location) => {
         const target = get().combatants.find((c) => c.id === id)?.enemy;
         if (!target) return null;
+        // v5.28.0 [Claude Code · 2026-11-12]: en ACPA, el golpe lo recibe la ACPA: un solo SP, sin x2 en la cabeza (IR5 p.133).
+        if (target.acpa && isPilotingAcpa({ acpaState: target.acpa })) {
+          const r = acpaTakeDamage(target.acpa, damage);
+          set((s) => ({ combatants: mapEnemy(s, id, (e) => (e.acpa ? { ...e, acpa: { ...e.acpa, hp: r.state.hp, sp: r.state.sp } } : e)) }));
+          return { penetrating: Math.max(0, damage - target.acpa.sp), hpLost: r.hpLost, newSp: r.state.sp, ablated: r.ablated, acpa: { hp: r.state.hp, destroyed: r.destroyed } };
+        }
         const sp = location === 'head' ? target.currentHeadSp : target.currentBodySp;
         const penetrating = Math.max(0, damage - sp);
         const ablated = damage > sp;

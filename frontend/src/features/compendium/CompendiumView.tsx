@@ -3,11 +3,12 @@ import coreData from '../../data/core-rules.cprpack.json';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
 import type { WeaponItem, ArmorItem } from '../../types/cyberpunk';
-import { RANGE_BRACKETS, WEAPON_RANGE_PROFILES, getWeaponProfileKey } from '../../data/rangeTables';
+import { RANGE_BRACKETS, getWeaponRangeProfile } from '../../data/rangeTables';
 import { getAutofireRulesSummary, parseHumanityLossAverage } from '../../engine/characterEngine';
 import { canInstallAnother, countInstalls } from '../../engine/cyberwareEffects';
 import { SOURCEBOOKS_CATALOG, EXPANSION_RULE_SYSTEMS } from '../../data/expansionRulesData';
 import { VehicleCatalogList } from './VehicleCatalogList';
+import { AcpaCatalog } from './AcpaCatalog';
 import { BLACK_CHROME_VEHICLES } from '../../data/blackChromeVehicles';
 import { INTERFACE_RED_VEHICLES } from '../../data/interfaceRedVehicles';
 import { CORE_VEHICLES } from '../../data/creation';
@@ -44,6 +45,14 @@ import {
   CheckCircle2,
   AlertTriangle
 } from 'lucide-react';
+
+
+/** v5.25.0: el Metalgear de IR5 p.123 penaliza distinto a REF, DEX y MOVE. [Claude Code · 2026-11-12] */
+function armorPenaltyLabel(a: { penalty: number; penaltyDex?: number; penaltyMove?: number }): string {
+  const dex = a.penaltyDex ?? a.penalty;
+  const move = a.penaltyMove ?? a.penalty;
+  return dex === a.penalty && move === a.penalty ? String(a.penalty) : `REF ${a.penalty} / DEX ${dex} / MOVE ${move}`;
+}
 
 export type CompendiumCategory = 
   | 'all' 
@@ -288,7 +297,7 @@ const CyberCategoryTooltip: React.FC<{
 // v5.8.0 (plan 23): `initialCategory` para abrirlo desde Street Lab en la categoría de donde viene. [Claude Code · 2026-10-30]
 // v5.14.0 (plan 26): `initialSearch` para abrirlo desde un Night Market con el ítem ya buscado. [Claude Code · 2026-11-06]
 export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; initialSearch?: string }> = ({ initialCategory = 'all', initialSearch = '' }) => {
-  const [compendiumMode, setCompendiumMode] = useState<'items' | 'vehicles' | 'systems'>('items'); // [Claude Code · 2026-11-06] v5.13.0: + vehículos
+  const [compendiumMode, setCompendiumMode] = useState<'items' | 'vehicles' | 'acpa' | 'systems'>('items'); // [Claude Code · 2026-11-06] v5.13.0: + vehículos; v5.26.0 [Claude Code · 2026-11-12]: + ACPA
   const [selectedBookFilter, setSelectedBookFilter] = useState<SourceBookId | 'all'>('all');
   const [isBookSummaryExpanded, setIsBookSummaryExpanded] = useState<boolean>(true);
 
@@ -605,8 +614,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
   const renderItemDetails = (item: any, category: CompendiumCategory) => {
     if (category === 'weapons') {
       const isMelee = item.type === 'Melee' || !item.standardMag;
-      const profileKey = getWeaponProfileKey(item.name, item.type);
-      const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
+      const profile = getWeaponRangeProfile(item);
       const autofireRules = getAutofireRulesSummary(item as WeaponItem);
       const weaponInfo = getWeaponClassAndRebuildInfo(item);
 
@@ -1180,7 +1188,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
       {/* =====================================================================
           CONMUTADOR PRINCIPAL DESTACADO: ITEMS (368) vs SISTEMAS Y REGLAS NUEVAS
       ===================================================================== */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-[#0c0f1a] p-1.5 rounded-xs border border-[#1e2337] shadow-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2 bg-[#0c0f1a] p-1.5 rounded-xs border border-[#1e2337] shadow-lg">
         <button
           onClick={() => setCompendiumMode('items')}
           className={`flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xs text-xs font-mono-code font-bold transition-all cursor-pointer chamfer-btn ${
@@ -1201,6 +1209,17 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
           }`}
         >
           <span>🚗 VEHÍCULOS ({BLACK_CHROME_VEHICLES.length + INTERFACE_RED_VEHICLES.length + CORE_VEHICLES.vehicles.length}: CORE, BLACK CHROME E INTERFACE RED)</span>
+        </button>
+        {/* [Claude Code · 2026-11-12] v5.26.0: ACPA de Solo of Fortune 2045 (IR5 pp.133-142) */}
+        <button
+          onClick={() => setCompendiumMode('acpa')}
+          className={`flex items-center justify-center gap-2.5 py-2.5 px-4 rounded-xs text-xs font-mono-code font-bold transition-all cursor-pointer chamfer-btn ${
+            compendiumMode === 'acpa'
+              ? 'bg-[#facc15]/20 text-[#facc15] border border-[#facc15] shadow-md shadow-yellow-950/60'
+              : 'bg-[#12141f] text-slate-400 hover:text-slate-200 border border-[#20273a]'
+          }`}
+        >
+          <span>🦾 ACPA (ARMADOR Y LAS 10 DE INTERFACE RED VOL. 5)</span>
         </button>
         <button
           onClick={() => setCompendiumMode('systems')}
@@ -1695,7 +1714,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
                           <TacticalTooltip term="SP">SP {armor.sp}</TacticalTooltip>
                         </span>
                         <span className={`px-1.5 py-0.2 rounded-xs border ${armor.penalty < 0 ? 'bg-[#f43f5e]/15 text-[#f43f5e] border-[#f43f5e]/30 font-bold' : 'bg-[#181b2a] text-[#10b981] border-[#262c3e]'}`}>
-                          Pen: {armor.penalty}
+                          Pen: {armorPenaltyLabel(armor)}
                         </span>
                         <span className="px-1.5 py-0.2 bg-[#181b2a] text-[#64748b] rounded-xs border border-[#262c3e]">
                           {armor.costTier}
@@ -2411,7 +2430,7 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
                             <TacticalTooltip term="SP">SP {a.sp}</TacticalTooltip>
                           </span>
                           <span className={a.penalty < 0 ? 'text-[#f43f5e] mr-2 font-bold' : 'text-[#10b981] mr-2'}>
-                            Pen: {a.penalty}
+                            Pen: {armorPenaltyLabel(a)}
                           </span>
                         </td>
                         <td className="py-1.5 px-2 text-right text-[#f59e0b] font-bold">
@@ -2852,6 +2871,10 @@ export const CompendiumView: React.FC<{ initialCategory?: CompendiumCategory; in
             Para comprarlos o tomarlos del Family Motorpool del Nomad (Nomad Access, Black Chrome p.9), andá a NET, ROLES &amp; VEHÍCULOS.
           </p>
           <VehicleCatalogList includeCore />
+        </div>
+      ) : compendiumMode === 'acpa' ? (
+        <div className="bg-[#12141f] border border-[#262c3e] p-3 rounded-xs chamfer-card">
+          <AcpaCatalog />
         </div>
       ) : (
         /* =====================================================================

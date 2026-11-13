@@ -204,15 +204,17 @@
 
 ### 4. `SOLO OF FORTUNE` (ACPA Power Armor & Heavy Ordinance Expansion — Planeado para Fase 5 / Premium Expansion)
 *Módulo de exoesqueletos blindados pesados, tecnología militar de vanguardia y balística pesada corporativa.*
-- [ ] **ACPA Armor Type (Assisted Combat Personnel Armor)**: Nueva categoría canónica de blindaje de combate asistido con reglas estructurales de chasis.
-- [ ] **Custom ACPA Builder**: Taller de ensamblaje modular para diseñar, configurar y costear armaduras de poder personalizadas.
-- [ ] **10 ACPAs**: 10 chasis oficiales completos de ACPA listos para equipar, tripular y desplegar en combate.
-- [ ] **13 New Weapons**: 13 nuevas armas militares y pesadas de grado bélico.
-- [ ] **8 New Weapon Attachments**: 8 nuevos accesorios tácticos especializados para armamento ACPA y militar.
-- [ ] **15 New Weapon Range Tables**: 15 nuevas matrices y tablas de rango de combate por metro adaptadas a armamento pesado.
-- [ ] **12 New Ammunition & Explosives**: 12 tipos de municiones especiales, proyectiles pesados y explosivos de demolición.
-- [ ] **3 New Armor Sets**: 3 nuevos conjuntos completos de blindaje corporal táctico.
-- [ ] **10 New Pieces of Gear**: 10 nuevas piezas de equipo especializado para operadores pesados.
+- [Claude Code · 2026-11-12] Fuente: artículo "Solo of Fortune 2045" del *Interface RED Vol. 5* (pp.105-147; página impresa = PDF − 1). Se hace con el plan 30 (v5.25.0 a v5.28.0).
+- [ ] [Claude Code · 2026-11-12] **Resto del Interface RED Vol. 5** (para otro plan): Breaking Your Stuff, durabilidad y mantenimiento (pp.3-12); Chasing the Rabbit, roller derby (pp.13-22); All About Agents (pp.23-34); Toggle's Temple, armería y generador de armas (pp.35-60); Did Someone Say Murder?, investigación (pp.61-70); Your New Best Friend, cyberpets (pp.71-82); Screamsheet Generator (pp.83-96); 12 Days of REDmas (pp.97-104); y de Solo of Fortune, Nivel Mercenario y Operational Budget (pp.107-108), Hiring Hall (p.132) y misiones (pp.144-147).
+- [x] [Claude Code · 2026-11-12] v5.27.0: el PJ pilotea una ACPA, con daño, crítica, stats y reparación (IR5 pp.133-135). **ACPA Armor Type (Assisted Combat Personnel Armor)**: Nueva categoría canónica de blindaje de combate asistido con reglas estructurales de chasis.
+- [x] [Claude Code · 2026-11-12] v5.26.0: armador en el Compendio (IR5 pp.135-136). **Custom ACPA Builder**: Taller de ensamblaje modular para diseñar, configurar y costear armaduras de poder personalizadas.
+- [x] [Claude Code · 2026-11-12] v5.26.0: las 10 con stats recalculados y erratas anotadas (IR5 pp.138-142). [Claude Code · 2026-11-13] v5.27.0 y v5.28.0: las pilotean PJ y enemigos. **10 ACPAs**: 10 chasis oficiales completos de ACPA listos para equipar, tripular y desplegar en combate.
+- [x] [Claude Code · 2026-11-12] v5.25.0: 13 armas (IR5 pp.116-123) y el Type-18-S reimpreso (p.143). **13 New Weapons**: 13 nuevas armas militares y pesadas de grado bélico.
+- [x] [Claude Code · 2026-11-12] v5.25.0 (IR5 pp.111-115). **8 New Weapon Attachments**: 8 nuevos accesorios tácticos especializados para armamento ACPA y militar.
+- [x] [Claude Code · 2026-11-12] v5.25.0: el libro trae 21 tablas de tiro único y 4 de Autofire (IR5 p.113). **15 New Weapon Range Tables**: 15 nuevas matrices y tablas de rango de combate por metro adaptadas a armamento pesado.
+- [x] [Claude Code · 2026-11-12] v5.25.0 (IR5 pp.120-127). **12 New Ammunition & Explosives**: 12 tipos de municiones especiales, proyectiles pesados y explosivos de demolición.
+- [x] [Claude Code · 2026-11-12] v5.25.0: Light, Hybrid y Heavy Metalgear con penalización por stat (IR5 p.123). **3 New Armor Sets**: 3 nuevos conjuntos completos de blindaje corporal táctico.
+- [x] [Claude Code · 2026-11-12] v5.25.0: Authorization Handshake Port, Thermal Decoy, Multihypo, 8 drogas de Combat Chemistry y el Sycust Cyberspine (IR5 pp.122-143). **10 New Pieces of Gear**: 10 nuevas piezas de equipo especializado para operadores pesados.
 
 ### 5. `DANGER GAL DOSSIER` (Expansión Completa de Facciones, Creador de NPCs y Tema Visual)
 *Módulo de inteligencia civil, agencias de detectives, facciones encubiertas y diseño de encuentros.*

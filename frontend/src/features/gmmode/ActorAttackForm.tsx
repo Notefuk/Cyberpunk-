@@ -26,6 +26,7 @@ import { applyHitToPc } from '../gm/gmDamage';
 import { publishGmAction } from '../../sync/tableSync';
 import { ENEMIES_CATALOG, type EnemyWeaponProfile } from '../../data/enemiesCatalog';
 import { actorSheet } from './actorSpawn';
+import { acpaAttackMod } from '../../engine/acpaActors';
 
 const small = 'text-[11px] font-mono-code text-[#94a3b8]';
 const mini = 'font-mono-code text-[10px] px-1.5 py-0.5 border border-[#262b3c] text-[#cbd5e1] hover:border-[#22d3ee] hover:text-[#22d3ee] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
@@ -46,8 +47,9 @@ export interface AttackTarget {
 }
 
 /** Las armas de la ficha; el goon rápido del Fixer (sin ficha) ataca con su base y su daño, sin cargador. */
+// v5.28.0 [Claude Code · 2026-11-12]: en ACPA, la base lleva el mod de REF (a distancia) o DEX (cuerpo a cuerpo) (IR5 p.134).
 function attackWeapons(e: NonNullable<EncounterCombatant['enemy']>): EnemyWeaponProfile[] {
-  if (e.weapons.length > 0) return e.weapons;
+  if (e.weapons.length > 0) return e.weapons.map((w) => ({ ...w, skillBase: Math.max(0, w.skillBase + acpaAttackMod(e, w)) }));
   if (e.quick) return [{ name: 'Ataque', skillBase: e.quick.atkBase, damage: e.quick.damageDice, rof: 1, mag: 0 }];
   return [];
 }
@@ -87,7 +89,7 @@ export function ActorAttackForm({ c, targets }: { c: EncounterCombatant; targets
     return a ? actorSheet(a) : undefined;
   })();
   const afBaseSheet = afMax ? enemyAutofireBase(sheet?.skillBases, w) : null;
-  const afBase = afBaseEdit ?? afBaseSheet ?? w.skillBase;
+  const afBase = afBaseEdit ?? (afBaseSheet != null ? Math.max(0, afBaseSheet + acpaAttackMod(e, w)) : w.skillBase);
   const afClass = afMax ? autofireClass(w, afMax) : 'ar';
   const afMode = mode !== 'single' && afMax !== null;
 

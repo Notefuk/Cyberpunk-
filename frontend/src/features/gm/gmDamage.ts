@@ -5,6 +5,7 @@ import { useCharacterStore } from '../../store/useCharacterStore';
 import { calculateIncomingImpact, planImpactEffects, type IncomingAttackType, type IncomingImpactInput, type IncomingImpactResult } from '../../engine/combatEngine';
 import { publishGmAction } from '../../sync/tableSync';
 import type { CharacterSheet } from '../../types/cyberpunk';
+import { isPilotingAcpa, resolveHitOnAcpa } from '../../engine/acpa';
 
 export interface PcHit {
   damage: number;
@@ -40,6 +41,15 @@ export function applyHitToPc(charId: string, hit: PcHit, label: string): string 
   const st = useCharacterStore.getState;
   const char = st().characters.find((c) => c.id === charId);
   if (!char) return null;
+  // v5.27.0 [Claude Code · 2026-11-12]: si pilotea una ACPA, el golpe lo recibe la ACPA y la crítica son 5 al piloto (IR5 p.133).
+  if (isPilotingAcpa(char)) {
+    const r = resolveHitOnAcpa(char.acpaState!, hit, Boolean(char.fbcState?.isFullBodyConversion));
+    st().setAcpaFor(charId, r.acpa);
+    if (r.pilotDamage > 0) st().adjustHpFor(charId, -r.pilotDamage);
+    const detail = r.pilotDamage > 0 ? `${r.summary} · HP piloto ${char.currentHp}→${char.currentHp - r.pilotDamage}` : r.summary;
+    publishGmAction({ targetCharId: charId, targetHandle: char.handle, label, detail, total: hit.damage });
+    return detail;
+  }
   const input = pcImpactInput(char, hit);
   const impact = calculateIncomingImpact(input);
   const spBefore = hit.location === 'head' ? input.headSp : input.bodySp;

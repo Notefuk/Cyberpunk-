@@ -26,6 +26,70 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.28.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Modo GM',
+    title: 'Enemigos en ACPA',
+    summary: 'El GM ya puede subir a cualquier enemigo del encuentro a una de las 10 ACPA. Suma sus armas Onboard al ataque, los golpes los absorbe la ACPA hasta que queda destruida y los mods de REF y DEX se aplican solos. Si lo sacás del combate, el actor guardado se acuerda de su ACPA y de cuánto daño tiene.',
+    highlights: [
+      'Subir, bajar, reparar y la crítica de 5 al piloto, desde la fila del enemigo (IR5 p.133).',
+      'Armas Onboard de las 10 ACPA listas para atacar (IR5 pp.138-142).',
+      'El actor guardado vuelve con su ACPA, su HP y su SP.'
+    ],
+    filesTouched: ['frontend/src/engine/acpaActors.ts', 'frontend/src/store/encounterStore.ts', 'frontend/src/features/gmmode/GmActorsPanels.tsx'],
+    metricsBadge: 'v5.28.0 • ACPA • Modo GM'
+  },
+  {
+    version: 'v5.27.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Combate',
+    title: 'ACPA: subite y pilotea',
+    summary: 'Tu personaje ya puede tener y pilotear una ACPA. Asignala desde el Compendio o desde ARSENAL & BLINDAJE, entrá con 1 Acción y los golpes que recibas, del HUD o del GM, los absorbe la ACPA. Una crítica te hace 5 de daño por el feedback neural (0 si sos FBC). Tus REF, DEX y MOVE llevan los mods de la ACPA, y el GM y la party te ven "En ACPA" con su HP y SP.',
+    highlights: [
+      'Entrar y salir, daño a la ACPA y crítica de 5 al piloto (IR5 pp.133-134).',
+      'REF, DEX, MOVE y BODY del piloto con los mods de la ACPA (IR5 p.134).',
+      'Reparación con su DV y tiempo (IR5 p.135); la party y el Modo GM la muestran.'
+    ],
+    filesTouched: ['frontend/src/engine/acpa.ts', 'frontend/src/features/sheet/AcpaPanel.tsx', 'frontend/src/features/gm/gmDamage.ts'],
+    metricsBadge: 'v5.27.0 • ACPA • IR5 pp.133-135'
+  },
+  {
+    version: 'v5.26.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'ACPA: el armador y las 10 de fábrica',
+    summary: 'El Compendio suma la pestaña ACPA: armá tu propia armadura de poder eligiendo frame, shell, tunings y armas o ciberware Onboard, con HP, SP, BODY, mods y costo calculados, y mirá las 10 ACPA de fábrica de Solo of Fortune 2045. Donde el libro tiene erratas, la app usa el valor que dan las reglas de armado y te muestra lo impreso.',
+    highlights: [
+      'Armador de ACPA con el costo y la disponibilidad del libro (IR5 pp.135-136).',
+      'Las 10 ACPA de fábrica, de la Grasshopper al Boris (IR5 pp.138-142).',
+      'Motor de daño, crítica, reparación y fatiga listo para pilotearlas (IR5 pp.133-135).'
+    ],
+    filesTouched: ['frontend/src/data/acpaData.ts', 'frontend/src/engine/acpa.ts', 'frontend/src/features/compendium/AcpaCatalog.tsx'],
+    metricsBadge: 'v5.26.0 • ACPA • IR5 pp.133-142'
+  },
+  {
+    version: 'v5.25.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Solo of Fortune 2045: el arsenal pesado',
+    summary: 'Llega el arsenal de Solo of Fortune 2045 (Interface RED Vol. 5): ametralladoras, el railgun Deathwind, escopetas y pistolas automáticas, accesorios, munición especial, cargas C9, Metalgear liviano, híbrido y pesado, señuelos térmicos y las drogas de Combat Chemistry. Las armas nuevas usan las tablas de rango expandidas del libro y el Autofire de Machine Gun y Machine Pistol.',
+    highlights: [
+      '13 armas, 8 accesorios y 12 municiones y explosivos (IR5 pp.111-127).',
+      'Tablas de rango expandidas y Autofire de Machine Gun y Machine Pistol (IR5 p.113).',
+      'Metalgear con penalización distinta a REF, DEX y MOVE (IR5 p.123).'
+    ],
+    filesTouched: ['frontend/src/data/core-rules.cprpack.json', 'frontend/src/data/rangeTables.ts', 'frontend/src/engine/characterEngine.ts'],
+    metricsBadge: 'v5.25.0 • Solo of Fortune • IR5 pp.111-143'
+  },
+  {
     version: 'v5.24.0',
     date: '2026-11-12',
     author: 'Claude Code',
@@ -1767,6 +1831,10 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.28.0': true,
+    'v5.27.0': true,
+    'v5.26.0': true,
+    'v5.25.0': true,
     'v5.24.0': true,
     'v5.23.0': true,
     'v5.22.0': true,

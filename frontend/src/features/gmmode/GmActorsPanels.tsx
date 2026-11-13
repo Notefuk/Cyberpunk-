@@ -6,6 +6,8 @@ import { HEAD_CRITICAL_INJURIES, BODY_CRITICAL_INJURIES } from '../../data/criti
 import { bringActorBack, duplicateActor, healActor, actorSheet } from './actorSpawn';
 import type { GmActor } from '../../engine/gmActors';
 import { ActorAttackForm, type AttackTarget } from './ActorAttackForm';
+import { ACPA_PREBUILTS } from '../../data/acpaData';
+import { acpaStateFromPrebuilt } from '../../engine/acpa';
 
 const small = 'text-[11px] font-mono-code text-[#94a3b8]';
 const mini = 'font-mono-code text-[10px] px-1.5 py-0.5 border border-[#262b3c] text-[#cbd5e1] hover:border-[#22d3ee] hover:text-[#22d3ee] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed';
@@ -20,6 +22,7 @@ const INJURY_NAMES = [
 export function EnemyRow({ c, active, targets = [] }: { c: EncounterCombatant; active: boolean; targets?: AttackTarget[] }) {
   const [open, setOpen] = useState(false);
   const [injury, setInjury] = useState('');
+  const [acpaPick, setAcpaPick] = useState(ACPA_PREBUILTS[0].id);
   const st = useEncounterStore.getState;
   const e = c.enemy!;
   const ammo = e.ammo ?? e.weapons.map((w) => ({ current: w.mag, reserve: 0 }));
@@ -29,7 +32,10 @@ export function EnemyRow({ c, active, targets = [] }: { c: EncounterCombatant; a
         <button type="button" onClick={() => setOpen(!open)} className="text-left text-[#cbd5e1] hover:text-white cursor-pointer">
           {active ? '▶ ' : ''}💀 {c.name} {e.actorId ? '' : '(sin guardar)'}
         </button>
-        <span className="text-[#94a3b8]">HP {e.currentHp}/{e.maxHp} · Init {c.initiative ?? '—'}</span>
+        <span className="text-[#94a3b8]">
+          HP {e.currentHp}/{e.maxHp}
+          {e.acpa ? ` · 🦾 ${e.acpa.hp > 0 ? `ACPA ${e.acpa.hp}/${e.acpa.maxHp} SP ${e.acpa.sp}` : 'ACPA destruida'}` : ''} · Init {c.initiative ?? '—'}
+        </span>
       </div>
       {open && (
         <div className="pl-4 space-y-1 py-1">
@@ -41,6 +47,38 @@ export function EnemyRow({ c, active, targets = [] }: { c: EncounterCombatant; a
             <span className={small}>SP {e.currentHeadSp}/{e.currentBodySp}</span>
             <button type="button" className={mini} onClick={() => st().remove(c.id)} title="El actor queda guardado con su estado">Sacar del combate</button>
           </div>
+          {/* v5.28.0 [Claude Code · 2026-11-12]: ACPA del enemigo (IR5 pp.133-142) */}
+          {e.acpa ? (
+            <div className="flex flex-wrap gap-1 items-center" data-testid="enemy-acpa">
+              <span className="text-[11px] font-mono-code text-[#facc15]">🦾 {e.acpa.name}{e.acpa.hp <= 0 ? ' (DESTRUIDA)' : ''}</span>
+              <span className={small}>HP {e.acpa.hp}/{e.acpa.maxHp}</span>
+              {[-5, -1, 1, 5].map((d) => (
+                <button key={d} type="button" className={mini} onClick={() => st().patchEnemyAcpa(c.id, { hp: Math.max(0, Math.min(e.acpa!.maxHp, e.acpa!.hp + d)) })}>{d > 0 ? `+${d}` : d}</button>
+              ))}
+              <span className={small}>SP {e.acpa.sp}/{e.acpa.maxSp}</span>
+              <button type="button" className={mini} onClick={() => st().patchEnemyAcpa(c.id, { sp: Math.max(0, e.acpa!.sp - 1) })}>−1 SP</button>
+              <button type="button" className={mini} title="Herida Crítica a la ACPA: no se aplica; 5 de daño directo al piloto (IR5 p.133)" onClick={() => st().adjustEnemyHp(c.id, -5)}>Crítica: −5 al piloto</button>
+              <button type="button" className={mini} onClick={() => st().patchEnemyAcpa(c.id, { hp: e.acpa!.maxHp, sp: e.acpa!.maxSp })}>Reparar</button>
+              <button type="button" className={mini} title="Salir es 1 Acción; de una destruida, gratis (IR5 p.133)" onClick={() => st().setEnemyAcpa(c.id, undefined)}>Bajar</button>
+              {e.acpa.hp > 0 && (e.acpa.ref || e.acpa.dex || e.acpa.move) ? (
+                <span className={small}>· mods {[e.acpa.ref && `REF ${e.acpa.ref}`, e.acpa.dex && `DEX ${e.acpa.dex}`, e.acpa.move && `MOVE ${e.acpa.move > 0 ? '+' : ''}${e.acpa.move}`].filter(Boolean).join(', ')} (ya en el ataque)</span>
+              ) : null}
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-1 items-center">
+              <select className={`${field} max-w-[12rem]`} value={acpaPick} onChange={(ev) => setAcpaPick(ev.target.value)} aria-label="ACPA para el enemigo">
+                {ACPA_PREBUILTS.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+              <button
+                type="button"
+                className={mini}
+                title="Subir es 1 Acción (IR5 p.133). Suma sus armas Onboard."
+                onClick={() => { const p = ACPA_PREBUILTS.find((x) => x.id === acpaPick); if (p) st().setEnemyAcpa(c.id, acpaStateFromPrebuilt(p)); }}
+              >
+                🦾 Subir a ACPA
+              </button>
+            </div>
+          )}
           {e.weapons.map((w, i) => (
             <div key={`${w.name}-${i}`} className="flex flex-wrap gap-1 items-center">
               <span className={small}>🔫 {w.name}</span>
@@ -100,6 +138,7 @@ function ActorCard({ a, inCombat }: { a: GmActor; inCombat: boolean }) {
       <p className={small}>
         HP {s.hp}/{s.maxHp} · SP {s.headSp}/{s.bodySp}
         {s.injuries.length > 0 && <span className="text-[#f97316]"> · {s.injuries.length} herida(s)</span>}
+        {s.acpa && <span className="text-[#facc15]"> · 🦾 {s.acpa.name} {s.acpa.hp > 0 ? `HP ${s.acpa.hp}/${s.acpa.maxHp} SP ${s.acpa.sp}` : 'destruida'}</span>}
       </p>
       {ammo.length > 0 && <p className={small}>{ammo.join(' · ')}</p>}
       {broken && <p className="text-[11px] font-mono-code text-[#ef4444]">La ficha de origen ya no existe: no se puede traer al combate.</p>}

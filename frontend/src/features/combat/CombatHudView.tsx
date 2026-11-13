@@ -16,7 +16,7 @@ import { HandoutNotice } from '../cloud/HandoutsPanel';
 import { 
   RANGE_BRACKETS, 
   WEAPON_RANGE_PROFILES, 
-  getWeaponProfileKey 
+  getWeaponRangeProfile 
 } from '../../data/rangeTables';
 import { 
   getAutofireRulesSummary, 
@@ -46,6 +46,8 @@ import {
 } from '../../engine/combatEngine';
 import type { IncomingImpactInput } from '../../engine/combatEngine';
 import { applyDamageDeflection, spotWeaknessBonus, rollInitiative, rollPerception } from '../../engine/combatAwareness';
+import { acpaStatMod, isPilotingAcpa, resolveHitOnAcpa } from '../../engine/acpa';
+import { AcpaPanel } from '../sheet/AcpaPanel';
 import { getInterfaceRank, netActionsForInterface, maxQuickhackDv, neuroportFirewallDv, canUseQuickhacks, jackInRangeM } from '../../engine/roleRules';
 import { GameClockBar } from './GameClockBar';
 import { conditionById } from '../../data/conditions';
@@ -1783,9 +1785,7 @@ export const CombatHudView: React.FC = () => {
   // Helper: DV for weapon & distance
   const getDvForWeapon = (weapon: WeaponItem, distance: string, isAuto: boolean): number | null => {
     if (weapon.type === 'Melee') return 13;
-    const profileKey = getWeaponProfileKey(weapon.name, weapon.type);
-    if (!profileKey) return 15;
-    const profile = WEAPON_RANGE_PROFILES[profileKey];
+    const profile = getWeaponRangeProfile(weapon);
     if (!profile) return 15;
     if (isAuto && profile.autofireDvs) {
       return profile.autofireDvs[distance] ?? null;
@@ -1851,7 +1851,12 @@ export const CombatHudView: React.FC = () => {
   } = calcImpactResult;
 
   let calcExplanation = '';
-  if (calcLocation === 'shield') {
+  const acpaCalcPreview = activeChar && calcLocation !== 'shield' && isPilotingAcpa(activeChar)
+    ? resolveHitOnAcpa(activeChar.acpaState!, { damage: incomingDamageInput, attackType: calcAttackType, isCritical: calcIsCritical }, Boolean(activeChar.fbcState?.isFullBodyConversion))
+    : null;
+  if (acpaCalcPreview) {
+    calcExplanation = `En ACPA (${activeChar!.acpaState!.name}): ${acpaCalcPreview.summary}. La recibe la ACPA, sin cabeza x2 ni herida crítica (IR5 pp.133-134).`;
+  } else if (calcLocation === 'shield') {
     if (incomingDamageInput <= shieldCover.currentSdp) {
       calcExplanation = `El escudo/cobertura detiene por completo el impacto recibiendo -${calcShieldLoss} SDP (quedan ${calcNewShieldSdp} SDP). 0 daño a la armadura y 0 daño a HP.`;
     } else if (calcPassExcess) {
@@ -1886,7 +1891,12 @@ export const CombatHudView: React.FC = () => {
     }
     // v5.2.0 (plan 20): ablación, HP, crítica (Core p. 187), FBC (Going Metal p. 94) y Mortally Wounded (Core p. 188)
     // salen del motor, igual que cuando el GM daña a un PJ. [Claude Code · 2026-10-28]
-    if (activeChar) {
+    // v5.27.0 [Claude Code · 2026-11-12]: si pilotea una ACPA, el golpe lo recibe la ACPA; la crítica son 5 al piloto (IR5 p.133).
+    if (activeChar && calcLocation !== 'shield' && isPilotingAcpa(activeChar)) {
+      const r = resolveHitOnAcpa(activeChar.acpaState!, { damage: incomingDamageInput, attackType: calcAttackType, isCritical: calcIsCritical }, Boolean(activeChar.fbcState?.isFullBodyConversion));
+      useCharacterStore.getState().setAcpaFor(activeChar.id, r.acpa);
+      if (r.pilotDamage > 0) useCharacterStore.getState().adjustHpFor(activeChar.id, -r.pilotDamage);
+    } else if (activeChar) {
       applyImpactTo(activeChar.id, planImpactEffects(calcImpactInput, calcImpactResult, appliedHpLoss, wasMortallyWounded));
     }
 
@@ -1955,7 +1965,8 @@ export const CombatHudView: React.FC = () => {
       ref = Math.max(ref, activeChar.fbcState.statFloor ?? 0);
     }
     const armorPenalty = Math.max(Math.abs(activeChar?.headArmor?.penalty ?? 0), Math.abs(activeChar?.bodyArmor?.penalty ?? 0));
-    ref = Math.max(0, ref - armorPenalty);
+    // v5.27.0 [Claude Code · 2026-11-12]: dentro de una ACPA el REF lleva su mod (IR5 p.134).
+    ref = Math.max(0, ref - armorPenalty + (activeChar ? acpaStatMod(activeChar, 'REF') : 0));
     const r = rollInitiative(ref, soloAlloc);
     addRollEntry({
       id: `roll-init-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`,
@@ -4008,6 +4019,9 @@ export const CombatHudView: React.FC = () => {
                     )}
                   </div>
 
+                  {/* v5.27.0 [Claude Code · 2026-11-12]: ACPA del personaje, entrar y salir (IR5 pp.133-134) */}
+                  {activeChar?.acpaState && <AcpaPanel character={activeChar} compact />}
+
                   {/* Live Real-time Preview Card */}
                   <div className="bg-[#0b0e14] p-2.5 rounded border border-[#1f2638] space-y-1.5 font-mono-code text-xs">
                     <div className="flex items-center justify-between text-[11px] font-bold text-white border-b border-[#1b2132] pb-1">
@@ -5195,8 +5209,7 @@ export const CombatHudView: React.FC = () => {
                   : parseInt((selectedDistance as string)?.match(/\d+/)?.[0] || '0', 10);
                 const breakdown = calculateWeaponAttackBreakdown(activeChar, w, isAuto, distMeters);
                 const currentDv = getDvForWeapon(w, selectedDistance, isAuto);
-                const profileKey = getWeaponProfileKey(w.name, w.type);
-                const profile = profileKey ? WEAPON_RANGE_PROFILES[profileKey] : null;
+                const profile = getWeaponRangeProfile(w);
                 const placeholderType = getItemPlaceholderType(w);
                 const isOutOfAmmo = isRanged && (w.currentMag ?? 0) <= 0;
                 const aimedPenalty = aimedShotTarget !== 'none' ? 8 : 0;

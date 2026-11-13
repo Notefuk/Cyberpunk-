@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { acpaBody, acpaStatMod } from '../../engine/acpa';
+import { AcpaPanel } from './AcpaPanel';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCloudState } from '../../sync/cloudState';
 import { 
   calculateMaxHp, 
   calculateSeriouslyWoundedThreshold, 
+  armorStatPenalty,
   calculateMaxHumanity,
   calculateWeaponAttackBreakdown,
   getEffectiveEmp,
@@ -424,10 +427,10 @@ export const StreetLabView: React.FC = () => {
   // Calculate active penalties per stat
   const getStatPenalty = (stat: StatKey): number => {
     let pen = 0;
-    if (stat === 'REF' || stat === 'DEX' || stat === 'MOVE') {
-      const headPen = Math.abs(activeChar?.headArmor?.penalty ?? 0);
-      const bodyPen = Math.abs(activeChar?.bodyArmor?.penalty ?? 0);
-      pen += Math.max(headPen, bodyPen);
+    if ((stat === 'REF' || stat === 'DEX' || stat === 'MOVE') && activeChar) {
+      pen += armorStatPenalty(activeChar, stat);
+      // v5.27.0 [Claude Code · 2026-11-12]: el penalizador de la ACPA se suma al de la armadura (IR5 p.133).
+      pen += Math.max(0, -acpaStatMod(activeChar, stat));
     }
     activeChar?.activeInjuries?.forEach((inj) => {
       if (!inj.isTreated && inj.modifiers?.statPenalties?.[stat]) {
@@ -1279,11 +1282,14 @@ export const StreetLabView: React.FC = () => {
             {STAT_KEYS.map((stat) => {
               // Con Full Body Conversion el chasis reemplaza BODY y fija un mínimo a REF/DEX/MOVE sin pisar los stats base.
               const isFbcActive = Boolean(activeChar?.fbcState?.isFullBodyConversion);
-              const val = stat === 'BODY' && activeChar
-                ? getEffectiveBody(activeChar)
+              // v5.27.0 [Claude Code · 2026-11-12]: en ACPA, BODY del frame y bonos de REF/DEX/MOVE (IR5 p.134).
+              const acpaBonus = activeChar && (stat === 'REF' || stat === 'DEX' || stat === 'MOVE') ? Math.max(0, acpaStatMod(activeChar, stat)) : 0;
+              const baseVal = stat === 'BODY' && activeChar
+                ? Math.max(getEffectiveBody(activeChar), acpaBody(activeChar))
                 : isFbcActive && (stat === 'REF' || stat === 'DEX' || stat === 'MOVE')
                   ? Math.max(activeChar?.stats?.[stat] ?? 6, activeChar?.fbcState?.statFloor ?? 0)
                   : activeChar?.stats?.[stat] ?? 6;
+              const val = baseVal + acpaBonus;
               const penalty = getStatPenalty(stat);
 
               return (
@@ -1848,6 +1854,8 @@ export const StreetLabView: React.FC = () => {
           {/* TAB 1: ARSENAL & BLINDAJE */}
           {rightColTab === 'combat' && (
             <div className="space-y-3">
+              {/* v5.27.0 [Claude Code · 2026-11-12]: ACPA (IR5 pp.133-142) */}
+              {activeChar && <AcpaPanel character={activeChar} />}
               {/* 1. Blindaje Activo */}
               <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
                 <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase pb-1.5 mb-2 border-b border-[#1f2230]">

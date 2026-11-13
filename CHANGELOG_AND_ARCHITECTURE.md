@@ -117,6 +117,54 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.28.0] - 2026-11-13 (Plan 30 IV: enemigos en ACPA; cierra el plan 30) [Claude Code · 2026-11-13]
+* **Category**: Modo GM. Última versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.133-142).
+* **What Changed**:
+  * **Subir y bajar a un enemigo** desde su fila en MODO GM: elige una de las 10 ACPA de fábrica (subir y bajar son 1 Acción, p.133). La fila muestra HP y SP de la ACPA, con botones para ajustarlos, "Crítica: −5 al piloto" (p.133), "Reparar" y "Bajar".
+  * **Armas Onboard** (`engine/acpaActors.ts`): las de las 10 fichas se buscan en el catálogo ("EQ" = Excellent Quality, +1; "(x4)" = cuatro armas; los accesorios quedan como nota) y se suman al enemigo con sus cargadores. La base de ataque es la de otra arma suya con la misma habilidad o su REF/DEX. Al bajar, se sacan.
+  * **Ataque**: mientras la ACPA protege, la base lleva el mod de REF (a distancia) o DEX (cuerpo a cuerpo) de la ACPA (p.134), también en Autofire.
+  * **Daño** (`encounterStore.applyEnemyDamage`): en ACPA lo recibe la ACPA, con un solo SP, sin x2 en la cabeza y ablación; a 0 HP queda destruida y el golpe siguiente va al enemigo (pp.133-134). El bestiario avisa cuando el golpe fue a la ACPA.
+  * **Actor guardado**: `GmActorState.acpa` guarda la ACPA con su HP y SP; al traerlo de vuelta sube otra vez con sus armas Onboard, y "Curar a tope" también la repara. Las reglas de Firestore no cambian (`gm/actors` limita la cantidad de ítems, no su forma).
+* **Desvío del plan**: no hay botón "Spawnear en ACPA" en el bestiario; se spawnea como siempre y se sube desde su fila en MODO GM (dos clics, y sirve para cualquier enemigo, también los rápidos y los PNJ propios).
+* **Files Modified**: `engine/acpaActors.ts` (nuevo), `engine/gmActors.ts`, `store/encounterStore.ts` (`acpa`, `acpaWeaponCount`, `setEnemyAcpa`, `patchEnemyAcpa`), `features/gmmode/GmActorsPanels.tsx`, `features/gmmode/ActorAttackForm.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`; test `engine/__tests__/acpaActors.test.ts` (6 tests: lectura de las Onboard, las 10 en el catálogo, subir y bajar, mods, actor guardado y daño); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 737 tests (6 nuevos) y build. En el navegador (MODO GM sin mesa online): un Bodyguard sube a la Militech Commando, suma el MK.27 y el Mountain Goat al ataque, y un golpe de 25 a la cabeza baja la ACPA de 30 a 22 HP y de 17 a 16 SP sin tocar su HP. Consola limpia.
+
+### [v5.27.0] - 2026-11-12 (Plan 30 III: el PJ pilotea una ACPA) [Claude Code · 2026-11-12]
+* **Category**: Motor y ficha. Tercera versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.133-135).
+* **What Changed**:
+  * **Ficha**: `CharacterSheet.acpaState` (`ActiveAcpaState`): nombre, HP y SP actuales y máximos, BODY, mods, Onboard y si pilotea. Se asigna desde el Compendio (pestaña ACPA, las 10 de fábrica o la armada) o desde ARSENAL & BLINDAJE.
+  * **Panel ACPA** (`features/sheet/AcpaPanel.tsx`) en ARSENAL & BLINDAJE y, compacto, en la calculadora de impactos del HUD: Entrar y Salir (1 Acción; salir de una destruida es gratis, p.133), HP y SP a mano, reparación con su DV y tiempo (Weaponstech DV9, DV13 o DV17, p.135), Onboard, esquive de balas y fatiga (p.134).
+  * **Daño**: con la ACPA puesta, el golpe del HUD y el del GM (`gmDamage.applyHitToPc`, también el ataque de un actor) los recibe la ACPA: un solo SP, sin x2 en la cabeza, ablación y destruida a 0 HP. La armadura del piloto no pierde SP. La crítica no es herida: 5 de daño directo al piloto, 0 si es FBC (p.133). Melee ignora la mitad del SP; Martial Arts no (p.133). Destruida deja de proteger (p.134). El diálogo del GM y el HUD muestran la vista previa.
+  * **Stats** (p.134): mientras pilotea, REF y DEX de los ataques, el REF de la Iniciativa y el MOVE llevan los mods de la ACPA; el BODY de los ataques es el del frame si es mayor. No cambia el HP ni el Death Save.
+  * **Mesa**: el resumen de party y la tarjeta del Modo GM muestran "En ACPA" con su HP y SP. Las reglas de Firestore no cambian (el resumen de party no limita campos).
+* **Desvío del plan**: las armas Onboard se listan en el panel, no en el arsenal, porque las fichas del libro las nombran con accesorios y variantes que no son ítems del catálogo.
+* **Files Modified**: `engine/acpa.ts` (`acpaTakeDamage` con tipo de ataque, `resolveHitOnAcpa`, `isPilotingAcpa`, `acpaStatMod`, `acpaBody`, `acpaStateFrom*`), `types/cyberpunk.ts`, `store/useCharacterStore.ts` (`setAcpaFor`), `engine/characterEngine.ts`, `engine/gmMode.ts`, `features/gm/gmDamage.ts`, `features/gm/GmTargetDialog.tsx`, `features/combat/CombatHudView.tsx`, `features/sheet/StreetLabView.tsx`, `features/sheet/AcpaPanel.tsx` (nuevo), `features/compendium/AcpaCatalog.tsx`, `features/gmmode/GmModeView.tsx`, `features/cloud/CampaignPanel.tsx`, `sync/partySummary.ts`; tests `engine/__tests__/acpaPilot.test.ts` (nuevo) y `acpa.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 731 tests (9 nuevos) y build. En el navegador: asignar la Nyx desde el Compendio, entrar (MOVE 7→10, DEX -1), golpe crítico de 24 a la cabeza (ACPA SP 16→15, HP 28→20; piloto 40→35; su armadura igual). Consola limpia.
+
+### [v5.26.0] - 2026-11-12 (Plan 30 II: armador de ACPA y las 10 de fábrica) [Claude Code · 2026-11-12]
+* **Category**: Contenido canon y motor. Segunda versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5).
+* **What Changed**:
+  * **Datos** (`data/acpaData.ts`): 4 Linear Frames, 5 Shells y 4 tunings A/B (IR5 p.136); topes de 6 armas y 6 ciberware Onboard, base de 4.000eb y 500eb por Onboard (p.135); las 10 ACPA de fábrica (pp.138-142).
+  * **Erratas del libro**: las fichas no dicen qué tunings llevan. En 5 de ellas ninguna combinación da lo impreso: Sewer Rat dice 4 SP (el Salvaged Shell da 14), Neo Standard imprime BODY 12 con frame Beta (14) y le falta +1 MOVE, y Grasshopper, Bombardier y Boris tienen el MOVE corrido. Por decisión de Giuliano la app usa el valor recalculado con la p.136 y muestra lo impreso en una nota.
+  * **Motor** (`engine/acpa.ts`, funciones puras): `buildAcpa` (HP, SP, BODY, mods de REF, DEX y MOVE, costo y disponibilidad), `acpaTakeDamage` (un solo SP y HP, ablación, destruida a 0 HP; pp.133-134), `acpaCriticalFeedback` (5 al piloto, 0 si es FBC; p.133), `acpaRepair` (Weaponstech DV9, DV13 o DV17; p.135), `acpaFatiguePenalty` (p.134), `pilotStatsInAcpa` y `acpaAllowsBulletDodge` (p.134).
+  * **Compendio**: pestaña "ACPA" con el armador (frame, shell, tunings y Onboard del catálogo) y las 10 de fábrica con sus stats, página y erratas.
+* **Files Modified**: `data/acpaData.ts` (nuevo), `engine/acpa.ts` (nuevo), `features/compendium/AcpaCatalog.tsx` (nuevo), `features/compendium/CompendiumView.tsx`; test `engine/__tests__/acpa.test.ts` (15 tests: el ejemplo de la p.137, las 10 de fábrica, daño, crítica, reparación, fatiga, piloto y esquive); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 722 tests (15 nuevos) y build. En el navegador, el armador reproduce el ejemplo de la p.137 (24 HP, 13 SP, BODY 12, -1 DEX, 9.800eb Luxury) y muestra las 10 de fábrica. Consola limpia.
+
+### [v5.25.0] - 2026-11-12 (Plan 30 I: arsenal de Solo of Fortune 2045) [Claude Code · 2026-11-12]
+* **Category**: Contenido canon. Primera versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.105-147; página impresa = PDF − 1).
+* **What Changed**:
+  * **Catálogo** (`sourceBookTitle` "Interface RED Volume 5", cada ítem con su página):
+    * 13 armas: Neo Rapid Assault 16, Takanami SMG, Chaingun "Victoria", Dawnmaker AMR, Midnight Assault HB, MK.27 LMG, Mountain Goat, BMG-500 Silver, Helix Citrus, Scatter Ratter y "Deathwind" Railgun (pp.116-119), Stickybomb Launcher (p.122) y "Big Boomer" (p.123). También el Tsunami Arms Type-18-S, reimpreso en la p.143.
+    * 8 attachments (pp.111-115), entre ellos Range Table Modification, Pistol Autosear, Shotgun Automatic Control Group y SMG Cyclic Internals.
+    * 12 municiones y explosivos: 7 municiones (pp.120-121), C9 Charge, C9 Kill Switch y Mini C9 (pp.121-122), Arrowhypo y Airburst (pp.126-127).
+    * Light, Hybrid y Heavy Metalgear (p.123); Authorization Handshake Port, Thermal Decoy y Multihypo (pp.122-126); las 8 drogas de Combat Chemistry (pp.127-129) y el Sycust Cyberspine (reimpreso en la p.143).
+  * **Tablas de rango expandidas (p.113)**: las 21 de tiro único y las 4 de Autofire (Machine Pistol, SMG, Assault Rifle y Machine Gun). Las usan solo las armas que traen `rangeTable`; las del Core siguen con su tabla (Core p.173). La ficha, el HUD de combate y el Compendio leen la tabla con `getWeaponRangeProfile`.
+  * **Autofire nuevo**: "Autofire (Machine Gun 5)" y "Autofire (Machine Pistol 4)" (p.115) se leen para el tope y la fila de DV, también en el ataque de un enemigo en Modo GM. La clase Machine Gun aparece en la clasificación del arma.
+  * **Metalgear con penalización por stat (p.123)**: la armadura puede traer una penalización propia a DEX y MOVE (Heavy: -4 REF, -5 DEX, -5 MOVE); la de REF sigue siendo `penalty`. Las armaduras del Core no cambian.
+* **Files Modified**: `data/core-rules.cprpack.json`, `data/rangeTables.ts` (tablas IR5, `parseAutofireMode`, `getWeaponRangeProfile`), `engine/actorAttack.ts`, `engine/characterEngine.ts` (`armorStatPenalty`), `types/cyberpunk.ts` (`rangeTable`, `penaltyDex`, `penaltyMove`), `store/useCharacterStore.ts`, `data/weaponAndCyberwareTooltips.ts`, `features/combat/CombatHudView.tsx`, `features/compendium/CompendiumView.tsx`, `features/sheet/StreetLabView.tsx`; test `engine/__tests__/ir5Catalog.test.ts` (incluye el conteo de Going Metal: 13 cuerpos y 20 piezas de ciberware); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 707 tests (13 nuevos) y build. En el navegador, el Compendio muestra la Midnight Assault HB como Machine Gun, con la tabla de Marksman Rifle y Autofire de Machine Gun hasta x5. El Heavy Metalgear muestra "REF -4 / DEX -5 / MOVE -5", y equipado baja MOVE de 7 a 2. Consola limpia.
+
 ### [v5.24.0] - 2026-11-12 (Modo GM: Autofire y supresión de un actor) [Claude Code · 2026-11-12]
 * **Category**: Herramientas del GM. Sigue al plan 28, que había dejado afuera el fuego automático y la supresión.
 * **What Changed**:

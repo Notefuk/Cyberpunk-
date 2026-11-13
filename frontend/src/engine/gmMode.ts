@@ -22,6 +22,8 @@ export interface GmPlayerCard {
   conditions: string[];
   injuries: string[];
   eurodollars: number;
+  /** v5.27.0 [Claude Code · 2026-11-12]: ACPA que pilotea (IR5 pp.133-142). */
+  acpa?: { name: string; hp: number; maxHp: number; sp: number; maxSp: number; destroyed: boolean };
 }
 
 export function buildGmPlayerCard(sheet: CharacterSheet): GmPlayerCard {
@@ -52,6 +54,9 @@ export function buildGmPlayerCard(sheet: CharacterSheet): GmPlayerCard {
     conditions: (sheet.conditions ?? []).map((c) => conditionById(c.id)?.name ?? c.id),
     injuries: (sheet.activeInjuries ?? []).map((i) => i.name),
     eurodollars: sheet.eurodollars ?? 0,
+    ...(sheet.acpaState?.isPiloting
+      ? { acpa: { name: sheet.acpaState.name, hp: sheet.acpaState.hp, maxHp: sheet.acpaState.maxHp, sp: sheet.acpaState.sp, maxSp: sheet.acpaState.maxSp, destroyed: sheet.acpaState.hp <= 0 } }
+      : {}),
   };
 }
 

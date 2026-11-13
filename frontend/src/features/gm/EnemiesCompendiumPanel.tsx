@@ -563,6 +563,15 @@ export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ 
     const r = useEncounterStore.getState().applyEnemyDamage(instanceId, dmg, loc);
     if (!r) return;
     const { penetrating, hpLost: multipliedDmg, newSp } = r;
+    // v5.28.0 [Claude Code · 2026-11-12]: si pilotea una ACPA, el golpe lo recibió la ACPA (IR5 p.133).
+    if (r.acpa) {
+      showFeedback(
+        `💥 Daño de ${dmg} a la ACPA de ${target.name}: ` +
+          (r.hpLost > 0 ? `-${r.hpLost} HP de la ACPA (queda ${r.acpa.hp}), SP ${newSp}.` : `SP ${newSp} detuvo todo.`) +
+          (r.acpa.destroyed ? ' ACPA DESTRUIDA: ya no protege (IR5 p.134).' : '')
+      );
+      return;
+    }
 
     showFeedback(
       `💥 Daño de ${dmg} a ${loc === 'head' ? 'CABEZA' : 'CUERPO'} (${target.name}): ` +
