@@ -26,6 +26,21 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.37.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: 37 fichas más',
+    summary: 'Suman 37 fichas reales de Danger Gal Dossier: Generation Red, Maelstrom, la NCPD del Precinct #1, el equipo de Fiona Hayes de Network 54 y los Piranhas. Como las anteriores, se juegan en CEMK 2077 y tienen su ficha RED original. Ya hay 79 de las 118 del libro.',
+    highlights: [
+      '37 PNJ canon con página (Danger Gal Dossier pp.58-98).',
+      'Dos erratas del libro anotadas en su ficha (Flenser y Stringer).'
+    ],
+    filesTouched: ['data/enemies-src/danger-gal.json', 'frontend/src/data/enemies/danger-gal.ts'],
+    metricsBadge: 'v5.37.0 • Danger Gal • 79 fichas'
+  },
+  {
     version: 'v5.36.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1974,6 +1989,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.37.0': true,
     'v5.36.0': true,
     'v5.35.1': true,
     'v5.35.0': true,

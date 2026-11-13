@@ -219,7 +219,7 @@
 ### 5. `DANGER GAL DOSSIER` (Expansión Completa de Facciones, Creador de NPCs y Tema Visual)
 *Módulo de inteligencia civil, agencias de detectives, facciones encubiertas y diseño de encuentros.*
 *(Nota: En Fase 2 ya se integró una primera tanda de operativos y armas de Danger Gal).*
-- [~] **Completar los 118 PNJs Oficiales (`118 New NPCs`)** distribuidos en las **15 Facciones (`15 Factions`)**. [Claude Code · 2026-11-13] Estaba marcado como hecho y no lo estaba: había 95 fichas y 15 facciones inventadas. Plan 32: las 15 facciones canon están desde la v5.35.0; 42 fichas en la v5.36.0 [Claude Code · 2026-11-13]; faltan 76 (v5.37.0 y v5.38.0).
+- [~] **Completar los 118 PNJs Oficiales (`118 New NPCs`)** distribuidos en las **15 Facciones (`15 Factions`)**. [Claude Code · 2026-11-13] Estaba marcado como hecho y no lo estaba: había 95 fichas y 15 facciones inventadas. Plan 32: las 15 facciones canon están desde la v5.35.0; 42 fichas en la v5.36.0 y 37 en la v5.37.0 [Claude Code · 2026-11-13]; faltan 39 (v5.38.0).
 - [x] **Nuevo Flujo de Creación de PNJs Personalizados (`New Workflow for Custom NPCs`)** para el Director de Juego.
 - [x] **Tema Visual "Danger Gal" (`Danger Gal Theme`)** seleccionable en la interfaz y **Retratos de Personajes (`New Character Portraits`)**.
 

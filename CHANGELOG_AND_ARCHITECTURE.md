@@ -117,6 +117,15 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.37.0] - 2026-11-13 (Plan 32 III: 37 fichas más de Danger Gal) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon (Danger Gal Dossier pp.58-98) y bestiario.
+* **What Changed**:
+  * **37 fichas del libro**: Generation Red (8), Maelstrom (12, con el Ripperdoc y el Scavver de la misma página), NCPD Precinct #1 (11, con Gustav, el perro de Shepard), Network 54 (3) y Piranhas (3). Van al mismo `data/enemies-src/danger-gal.json` (79 fichas en total) y salen generadas con su porte CEMK automático; Flenser (Maelstrom) es netrunner y tiene Quickhacks.
+  * **Erratas del libro guardadas tal cual y anotadas**: Flenser imprime Seriously Wounded 13 con HP 35 (p.72) y Stringer imprime Death Save 4 con BODY 6 (p.94).
+  * **Interpretado**: las fichas no imprimen la skill de cada arma; se toma la del tipo de arma (Handgun, Shoulder Arms, Heavy Weapons, Melee Weapon, Brawling, Autofire) y, si la ficha no la lista, el STAT solo. A Caliber y Pitbull se les pasó a armas la pistola que el libro tiene solo en el equipo, con nota. Los Wolvers de Crusher siguen en su ciberware (el libro no los pone en la tabla de armas).
+* **Files Modified**: `data/enemies-src/danger-gal.json`, `frontend/src/data/enemies/danger-gal.ts` (generado), `engine/__tests__/dangerGal.test.ts` (+1 test); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 796 tests y build. Contra el PDF: Crusher (p.68), Fiona Hayes (p.92) y el Death Save de Stringer (p.94) sobre el render. En el navegador: conteos por facción (Generation Red 8, Maelstrom 14 con las 2 de CEMK, NCPD 11, Network 54 3, Piranhas 3); Crusher entró al encuentro y se sacó; consola limpia.
+
 ### [v5.36.0] - 2026-11-13 (Plan 32 II: primeras 42 fichas canon de Danger Gal; se van las 95 inventadas) [Claude Code · 2026-11-13]
 * **Category**: Contenido canon (Danger Gal Dossier pp.10-56) y bestiario.
 * **What Changed**:

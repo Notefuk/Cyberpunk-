@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-13] v5.36.0 (42 fichas de Danger Gal; fuera las 95 inventadas) terminada en `claude/plan32-v5.36.0`, sin pushear
+**Última actualización**: [Claude Code · 2026-11-13] v5.37.0 (79 de 118 fichas de Danger Gal) terminada en `claude/plan32-v5.37.0`, sin pushear
 
 **Versión de la app**: v5.34.0 en `main` @ 87b1091, en la beta (gh-pages 2a8327a, `index-7aUPZNE2.js`) y en Firebase prod (hosting `index-n44uUOG_.js` y reglas con `gm/mysteries`). [Claude Code · 2026-11-13]
 
@@ -22,8 +22,8 @@
 
 ## En curso (a cargo)
 - [Claude Code · 2026-11-13] **Plan 32** (`docs/plans/plan32-danger-gal.md`): Danger Gal Dossier (PDF `Sourcebooks/Cyberpunk-RED-Danger-Gal-Dossier_2023-07-07.pdf`; página impresa = índice del PDF). Reemplaza la v4.7.1 y la v4.7.2 del plan 6.
-  - Hecho: plan guardado; v5.35.0 (`data/dangerGalFactions.ts`, ficha de facción en el bestiario, test `dangerGal.test.ts`). v5.35.1 (pedido de Giuliano, fuera del plan): bestiario y facciones solo para el GM (`canSeeGmOnly` en CombatHudView, EnemiesCompendiumPanel y el Haggle de FixerPanel). v5.36.0: 42 fichas (6th Street, Bozos, Puma Squad, Digital Divas, Edgerunners) en `data/enemies-src/danger-gal.json`; las 95 inventadas pasaron a `data/enemies/legacy-invented-danger-gal.ts` (solo para actores viejos, `findEnemySheet`).
-  - Siguiente: v5.37.0 en `claude/plan32-v5.37.0` (desde v5.36.0): Generation Red, Maelstrom, NCPD Precinct #1, Network 54 y Piranhas (~37 fichas, pp.58-98). Mismo método: instrucciones en `data/enemies-src/DANGER_GAL_EXTRACT.md` (el texto del PDF se vuelca de nuevo al scratchpad; facción exacta de `dangerGalFactions.ts`), 2-3 workers en paralelo, revisión de 2 fichas sobre el render, agregar al array `npcs` y correr `scripts/gen_enemies.py`.
+  - Hecho: plan guardado; v5.35.0 (`data/dangerGalFactions.ts`, ficha de facción en el bestiario, test `dangerGal.test.ts`). v5.35.1 (pedido de Giuliano, fuera del plan): bestiario y facciones solo para el GM (`canSeeGmOnly` en CombatHudView, EnemiesCompendiumPanel y el Haggle de FixerPanel). v5.36.0: 42 fichas (6th Street, Bozos, Puma Squad, Digital Divas, Edgerunners) en `data/enemies-src/danger-gal.json`; las 95 inventadas pasaron a `data/enemies/legacy-invented-danger-gal.ts` (solo para actores viejos, `findEnemySheet`). v5.37.0: 37 fichas más (Generation Red, Maelstrom, NCPD, Network 54, Piranhas); erratas del libro guardadas tal cual: Flenser SW 13 (p.72), Stringer Death Save 4 (p.94).
+  - Siguiente: v5.38.0 en `claude/plan32-v5.38.0` (desde v5.37.0): Sightseers, Team Monster, Trauma Team, Tyger Claws, Zoners, más Darius y Nymph de The Incident (pp.100-142 y 165-166; Darius es de Arasaka, que no es una de las 15 facciones: decidir su `faction`). Mismo método: `data/enemies-src/DANGER_GAL_EXTRACT.md`, 3 workers, 2 fichas sobre el render, agregar a `npcs`, `scripts/gen_enemies.py`.
   - Pendiente: v5.36.0 a v5.38.0 (118 fichas en 3 tandas, se borran las 95 inventadas), v5.39.0 (New Gear, vehículos, CrAB Drone y su NET) y v5.40.0 (creador de PNJ guiado).
   - Desvío: el plan cita algunas páginas con +1 (las del índice del PDF son 1-based). En los datos va la página impresa: facciones 9-131, CrAB Drone 42, Herakles 112, Mi-60 120, Chupacabra 139, New Gear 143-148, guía de PNJ 149-152, Darius y Nymph 165-166.
 

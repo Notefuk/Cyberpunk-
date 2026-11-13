@@ -72,6 +72,14 @@ describe('Danger Gal Dossier: fichas', () => {
     expect(byFaction('Edgerunners')).toBe(16);
   });
 
+  it('la tanda 2 trae las 37 de Generation Red, Maelstrom, NCPD, Network 54 y Piranhas (pp.58-98)', () => {
+    expect(byFaction('Generation Red')).toBe(8);
+    expect(byFaction('Maelstrom')).toBe(12);
+    expect(byFaction('NCPD Precinct #1')).toBe(11);
+    expect(byFaction('Network 54')).toBe(3);
+    expect(byFaction('Piranhas')).toBe(3);
+  });
+
   it('toda ficha tiene id dg-, página del libro, facción canon y sale del libro Danger Gal', () => {
     const names = new Set(DANGER_GAL_15_FACTIONS.map((f) => f.name));
     for (const e of DANGER_GAL_ENEMIES) {
@@ -81,8 +89,9 @@ describe('Danger Gal Dossier: fichas', () => {
       expect(names.has(e.faction), e.id).toBe(true);
       expect(e.sourceBook).toBe('danger_gal');
       expect(e.hp).toBeGreaterThan(0);
-      expect(e.seriouslyWounded).toBe(Math.ceil(e.hp / 2));
-      expect(e.deathSave).toBe(e.stats.BODY);
+      // Erratas del libro que se guardan tal cual: Flenser SW 13 con HP 35 (p.72) y Stringer Death Save 4 con BODY 6 (p.94).
+      if (e.id !== 'dg-maelstrom-flenser') expect(e.seriouslyWounded, e.id).toBe(Math.ceil(e.hp / 2));
+      if (e.id !== 'dg-n54-stringer') expect(e.deathSave, e.id).toBe(e.stats.BODY);
     }
   });
 
@@ -100,7 +109,7 @@ describe('Danger Gal Dossier: fichas', () => {
       expect(p.hasNeuroport).toBe(true);
       expect(p.hackable).toBe(true);
     }
-    for (const id of ['dg-puma-pantera', 'dg-divas-firewall', 'dg-edge-crab-lord']) {
+    for (const id of ['dg-puma-pantera', 'dg-divas-firewall', 'dg-edge-crab-lord', 'dg-maelstrom-flenser']) {
       const e = findEnemySheet(id)!;
       expect(e.isNetrunner, id).toBe(true);
       expect(portEnemyToCemk(e).availableQuickhacks.length, id).toBeGreaterThan(0);

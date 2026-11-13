@@ -5027,5 +5027,4515 @@ export const DANGER_GAL_ENEMIES: EnemySheet[] = [
       "Stealth": 6
     },
     "isNetrunner": false
+  },
+  {
+    "id": "dg-genred-blades",
+    "name": "Blades",
+    "subtitle": "On the Edge of Adulthood",
+    "faction": "Generation Red",
+    "threatTier": "lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 58,
+    "role": "Fixer",
+    "hp": 30,
+    "seriouslyWounded": 15,
+    "deathSave": 3,
+    "headSp": 4,
+    "bodySp": 11,
+    "stats": {
+      "INT": 4,
+      "REF": 7,
+      "DEX": 6,
+      "TECH": 3,
+      "COOL": 5,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 7,
+      "BODY": 3,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "Heavy Melee Weapon",
+        "totalBase": 12,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 8,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 7
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Heavy Melee Weapon",
+        "skillBase": 12,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "ROF/cargador según tabla Core p.92",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 8,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Contraceptive Implant",
+      "Cybereye w/ MicroVideo",
+      "Cyberleg x2 w/ Skate Foot x2"
+    ],
+    "gear": [
+      "Carryall",
+      "Disposable Cell Phone x2",
+      "Duct Tape",
+      "Flashlight",
+      "Inflatable Bed & Sleep-bag",
+      "Lock Picking Set",
+      "Personal CarePak"
+    ],
+    "specialRules": [
+      "Operator 2 (Fixer): habilidad de rol de Fixer con rango 2.",
+      "Cyberlegs con Skate Foot x2 (patines integrados), reemplazo financiado por Danger Gal.",
+      "Role Ability: Operator rank 2"
+    ],
+    "loreSummary": "Callejera desde muy chica; perdió un ojo y las piernas peleando contra carroñeros y conoce los sitios de rapiña de la Old Combat Zone. Admira a Danger Gal y Tigress la anima a convencer al resto de Generation Red.",
+    "rep": 1,
+    "roleAbility": {
+      "name": "Operator",
+      "rank": 2
+    },
+    "skillBases": {
+      "Athletics": 12,
+      "Brawling": 8,
+      "Bribery": 7,
+      "Conversation": 9,
+      "Education": 6,
+      "Evasion": 12,
+      "First Aid": 5,
+      "Handgun": 8,
+      "Human Perception": 10,
+      "Interrogation": 7,
+      "Language (English)": 8,
+      "Language (Streetslang)": 10,
+      "Library Search": 8,
+      "Local Expert (Old Combat Zone)": 9,
+      "Melee Weapon": 12,
+      "Perception": 7,
+      "Persuasion": 10,
+      "Photography/Film": 9,
+      "Pick Lock": 5,
+      "Pick Pocket": 5,
+      "Stealth": 8,
+      "Streetwise": 10,
+      "Trading": 10,
+      "Wardrobe & Style": 8
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-genred-apex",
+    "name": "Apex",
+    "subtitle": "YoGang Leader",
+    "faction": "Generation Red",
+    "threatTier": "hardened_mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 59,
+    "role": "Tech",
+    "hp": 30,
+    "seriouslyWounded": 15,
+    "deathSave": 3,
+    "headSp": 4,
+    "bodySp": 4,
+    "stats": {
+      "INT": 4,
+      "REF": 4,
+      "DEX": 4,
+      "TECH": 5,
+      "COOL": 5,
+      "WILL": 5,
+      "LUCK": 0,
+      "MOVE": 3,
+      "BODY": 3,
+      "EMP": 6
+    },
+    "combatBases": [
+      {
+        "label": "PQ Heavy Pistol (Poor Quality)",
+        "totalBase": 10,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 6,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 6
+      },
+      {
+        "label": "Perception",
+        "totalBase": 6
+      }
+    ],
+    "weapons": [
+      {
+        "name": "PQ Heavy Pistol (Poor Quality)",
+        "skillBase": 10,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Handgun"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 6,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [],
+    "gear": [
+      "Junk H Pistol Ammo x8",
+      "Flashbang Grenade x3",
+      "Anti-Smog Mask",
+      "Battleglove w/ Tool Hand",
+      "Carryall",
+      "Disposable Cell Phone",
+      "Duct Tape x2",
+      "Flashlight"
+    ],
+    "specialRules": [
+      "Maker 2 (Tech) con Field Expertise 1, Upgrade Expertise 1, Fabrication Expertise 1 e Invention Expertise 1.",
+      "Role Ability: Maker rank 2"
+    ],
+    "loreSummary": "Hija de cogs corporativos de Zhirafa que huyó tras sufrir abuso de un superior y fundó Generation Red en la Old Combat Zone con ayuda de Lookout. Desconfía de adultos y Corps, pero es una líder nata.",
+    "rep": 1,
+    "roleAbility": {
+      "name": "Maker",
+      "rank": 2
+    },
+    "skillBases": {
+      "Athletics": 7,
+      "Basic Tech": 10,
+      "Brawling": 6,
+      "Concentration": 7,
+      "Conversation": 8,
+      "Education": 6,
+      "Electronics/Security Tech": 10,
+      "Evasion": 6,
+      "First Aid": 7,
+      "Handgun": 10,
+      "Human Perception": 8,
+      "Language (English)": 8,
+      "Language (Streetslang)": 6,
+      "Local Expert (Old Combat Zone)": 6,
+      "Perception": 6,
+      "Persuasion": 10,
+      "Stealth": 8,
+      "Streetwise": 10,
+      "Tactics": 7,
+      "Weaponstech": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-genred-tetra",
+    "name": "Tetra",
+    "subtitle": "Latchkey Kid Chaos",
+    "faction": "Generation Red",
+    "threatTier": "hardened_mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 60,
+    "role": "Solo",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 5,
+    "headSp": 7,
+    "bodySp": 7,
+    "stats": {
+      "INT": 3,
+      "REF": 6,
+      "DEX": 5,
+      "TECH": 3,
+      "COOL": 4,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 4,
+      "BODY": 5,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "Midnight Arms SDF-45",
+        "totalBase": 10,
+        "damage": "8d6",
+        "rof": 1
+      },
+      {
+        "label": "Martial Arts Attack",
+        "totalBase": 10,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 10
+      },
+      {
+        "label": "Perception",
+        "totalBase": 7
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Midnight Arms SDF-45",
+        "skillBase": 10,
+        "damage": "8d6",
+        "rof": 1,
+        "mag": 0,
+        "skill": "Heavy Weapons"
+      },
+      {
+        "name": "Martial Arts Attack",
+        "skillBase": 10,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Martial Arts"
+      }
+    ],
+    "cyberware": [],
+    "gear": [
+      "Armor-Piercing Rocket x4",
+      "Agent",
+      "Carryall",
+      "Flashlight"
+    ],
+    "specialRules": [
+      "Combat Awareness 2 (Solo).",
+      "El lanzacohetes Midnight Arms SDF-45 (8d6, ROF 1) sale del armario de armas de sus padres; se usa con 4 cohetes perforantes.",
+      "Role Ability: Combat Awareness rank 2"
+    ],
+    "loreSummary": "Hija de ejecutivos de seguridad de Petrochem que casi no le prestan atención; tomó el lanzacohetes de su armario y lo usó contra los pandilleros. Hace taekwondo, adora a Blades y gasta su mesada en la banda.",
+    "rep": 1,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 2
+    },
+    "skillBases": {
+      "Athletics": 7,
+      "Brawling": 7,
+      "Concentration": 6,
+      "Conversation": 7,
+      "Education": 7,
+      "Evasion": 10,
+      "First Aid": 5,
+      "Heavy Weapons": 10,
+      "Human Perception": 7,
+      "Language (English)": 7,
+      "Language (Streetslang)": 5,
+      "Library Search": 5,
+      "Local Expert (New Westbrook)": 5,
+      "Local Expert (Old Combat Zone)": 5,
+      "Martial Arts (Taekwondo)": 10,
+      "Perception": 7,
+      "Persuasion": 7,
+      "Stealth": 7
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-genred-hi-stick",
+    "name": "Hi-Stick",
+    "subtitle": "Street Hockey Meets Street Poetry",
+    "faction": "Generation Red",
+    "threatTier": "mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 61,
+    "role": "",
+    "hp": 30,
+    "seriouslyWounded": 15,
+    "deathSave": 4,
+    "headSp": 0,
+    "bodySp": 4,
+    "stats": {
+      "INT": 4,
+      "REF": 4,
+      "DEX": 4,
+      "TECH": 2,
+      "COOL": 4,
+      "WILL": 3,
+      "LUCK": 0,
+      "MOVE": 3,
+      "BODY": 4,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "PQ Heavy Melee Weapon (Poor Quality)",
+        "totalBase": 10,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 10,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 10
+      },
+      {
+        "label": "Perception",
+        "totalBase": 7
+      }
+    ],
+    "weapons": [
+      {
+        "name": "PQ Heavy Melee Weapon (Poor Quality)",
+        "skillBase": 10,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 10,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "EMP Threading"
+    ],
+    "gear": [
+      "Carryall",
+      "Disposable Cell Phone",
+      "Duct Tape",
+      "Glow Paint",
+      "Inflatable Bed & Sleep-bag",
+      "Inline Skates",
+      "Kibble Packet",
+      "Radio Scanner/Music Player"
+    ],
+    "specialRules": [
+      "Sin rol; el palo de hockey es un arma cuerpo a cuerpo pesada de calidad pobre."
+    ],
+    "loreSummary": "Jugadora de hockey callejero y poeta; vive con su familia extendida en South Cargo Village y tiene su cuarto en el clubhouse. Pagó su EMP Threading con premios de poesía.",
+    "rep": 1,
+    "skillBases": {
+      "Athletics": 10,
+      "Basic Tech": 4,
+      "Brawling": 10,
+      "Composition": 10,
+      "Concentration": 5,
+      "Conversation": 7,
+      "Education": 6,
+      "Endurance": 5,
+      "Evasion": 10,
+      "Human Perception": 7,
+      "Language (English)": 7,
+      "Language (Streetslang)": 6,
+      "Local Expert (Old Combat Zone)": 6,
+      "Local Expert (South Night City)": 6,
+      "Melee Weapon": 10,
+      "Perception": 7,
+      "Persuasion": 6,
+      "Stealth": 7
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-genred-izzy",
+    "name": "Izzy",
+    "subtitle": "Future Audio Tech",
+    "faction": "Generation Red",
+    "threatTier": "mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 62,
+    "role": "Tech",
+    "hp": 30,
+    "seriouslyWounded": 15,
+    "deathSave": 3,
+    "headSp": 4,
+    "bodySp": 4,
+    "stats": {
+      "INT": 4,
+      "REF": 3,
+      "DEX": 3,
+      "TECH": 5,
+      "COOL": 3,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 3,
+      "BODY": 3,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "PQ Heavy Pistol w/ Extended Magazine (Poor Quality)",
+        "totalBase": 10,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "PQ Heavy Pistol w/ Extended Magazine (Poor Quality)",
+        "totalBase": 10,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 5
+      },
+      {
+        "label": "Perception",
+        "totalBase": 8
+      }
+    ],
+    "weapons": [
+      {
+        "name": "PQ Heavy Pistol w/ Extended Magazine (Poor Quality)",
+        "skillBase": 10,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Handgun"
+      },
+      {
+        "name": "PQ Heavy Pistol w/ Extended Magazine (Poor Quality)",
+        "skillBase": 10,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [],
+    "gear": [
+      "Rubber H Pistol Ammo x28",
+      "Agent",
+      "Carryall",
+      "Computer",
+      "DJ Deck",
+      "Food Stick",
+      "Memory Chip x5",
+      "Radio Scanner/Music Player",
+      "Techtool",
+      "Virtuality Goggles"
+    ],
+    "specialRules": [
+      "Maker 1 (Tech) con Field Expertise 1 y Fabrication Expertise 1.",
+      "Dos pistolas pesadas de calidad pobre con cargador extendido (dos entradas de arma idénticas).",
+      "Role Ability: Maker rank 1"
+    ],
+    "loreSummary": "Hije de una medtech de la Crisis Medical Center en Old Japantown, prefiere la ingeniería de audio y es sigiloso. Es cercane a Lookout y diseñó con Apex las trampas del clubhouse.",
+    "rep": 0,
+    "roleAbility": {
+      "name": "Maker",
+      "rank": 1
+    },
+    "skillBases": {
+      "Athletics": 5,
+      "Basic Tech": 10,
+      "Brawling": 5,
+      "Composition": 6,
+      "Concentration": 6,
+      "Conversation": 7,
+      "Education": 7,
+      "Electronics/Security Tech": 8,
+      "Evasion": 5,
+      "First Aid": 10,
+      "Handgun": 10,
+      "Human Perception": 7,
+      "Language (Hebrew)": 8,
+      "Language (Streetslang)": 6,
+      "Local Expert (Old Combat Zone)": 6,
+      "Local Expert (Old Japantown)": 6,
+      "Perception": 8,
+      "Persuasion": 5,
+      "Play Instrument (DJ Deck)": 8,
+      "Stealth": 10,
+      "Weaponstech": 6
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-genred-lookout",
+    "name": "Lookout",
+    "subtitle": "Sharp-Eyed Graffiti Artist",
+    "faction": "Generation Red",
+    "threatTier": "mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 63,
+    "role": "",
+    "hp": 25,
+    "seriouslyWounded": 13,
+    "deathSave": 3,
+    "headSp": 4,
+    "bodySp": 4,
+    "stats": {
+      "INT": 5,
+      "REF": 4,
+      "DEX": 4,
+      "TECH": 4,
+      "COOL": 3,
+      "WILL": 3,
+      "LUCK": 0,
+      "MOVE": 3,
+      "BODY": 3,
+      "EMP": 4
+    },
+    "combatBases": [
+      {
+        "label": "PQ Light Melee Weapon (Poor Quality)",
+        "totalBase": 4,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 8,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 10
+      },
+      {
+        "label": "Perception",
+        "totalBase": 11
+      }
+    ],
+    "weapons": [
+      {
+        "name": "PQ Light Melee Weapon (Poor Quality)",
+        "skillBase": 4,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Sin skill Melee Weapon en Skill Bases: skillBase = DEX",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 8,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Light Tattoo"
+    ],
+    "gear": [
+      "Agent",
+      "Carryall",
+      "Duct Tape x3",
+      "Flashlight",
+      "Food Stick",
+      "Glow Paint x10"
+    ],
+    "specialRules": [
+      "Centinela oficial de Generation Red; su Perception 11 la hace una excelente vigía."
+    ],
+    "loreSummary": "Artista del grafiti de trece años y falsificadora hábil; es amiga cercana de Apex y centinela de la banda. Probablemente diseñó el logo de Generation Red.",
+    "rep": 0,
+    "skillBases": {
+      "Athletics": 8,
+      "Brawling": 8,
+      "Concentration": 5,
+      "Conversation": 6,
+      "Education": 7,
+      "Evasion": 10,
+      "First Aid": 6,
+      "Forgery": 10,
+      "Human Perception": 10,
+      "Language (Greek)": 7,
+      "Language (Streetslang)": 7,
+      "Library Search": 7,
+      "Local Expert (Old Combat Zone)": 7,
+      "Local Expert (Upper Marina)": 7,
+      "Paint/Draw/Sculpt": 10,
+      "Perception": 11,
+      "Persuasion": 5,
+      "Stealth": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-genred-shredder",
+    "name": "Shredder",
+    "subtitle": "Skateboarding Streetrat",
+    "faction": "Generation Red",
+    "threatTier": "mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 64,
+    "role": "",
+    "hp": 30,
+    "seriouslyWounded": 15,
+    "deathSave": 4,
+    "headSp": 7,
+    "bodySp": 4,
+    "stats": {
+      "INT": 3,
+      "REF": 5,
+      "DEX": 3,
+      "TECH": 2,
+      "COOL": 3,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 4,
+      "BODY": 4,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "PQ Very Heavy Melee Weapon (Poor Quality)",
+        "totalBase": 8,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 5,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 9
+      },
+      {
+        "label": "Perception",
+        "totalBase": 5
+      }
+    ],
+    "weapons": [
+      {
+        "name": "PQ Very Heavy Melee Weapon (Poor Quality)",
+        "skillBase": 8,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 5,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [],
+    "gear": [
+      "Carryall",
+      "Disposable Cell Phone",
+      "Flashlight",
+      "Inflatable Bed & Sleep-bag",
+      "Kibble Pack",
+      "Skateboard",
+      "Techtool"
+    ],
+    "specialRules": [
+      "Arma cuerpo a cuerpo muy pesada de calidad pobre (4d6, ROF 1)."
+    ],
+    "loreSummary": "Huérfana de padres edgerunners; se unió a Generation Red tras enamorarse de Hi-Stick. Cose la ropa de la banda y es la que menos quiere ver peleas internas.",
+    "rep": 0,
+    "skillBases": {
+      "Athletics": 8,
+      "Basic Tech": 8,
+      "Brawling": 5,
+      "Concentration": 6,
+      "Conversation": 7,
+      "Education": 5,
+      "Endurance": 10,
+      "Evasion": 9,
+      "First Aid": 8,
+      "Human Perception": 7,
+      "Language (English)": 7,
+      "Language (Streetslang)": 5,
+      "Library Search": 5,
+      "Local Expert (Old Combat Zone)": 5,
+      "Melee Weapon": 8,
+      "Perception": 5,
+      "Persuasion": 5,
+      "Stealth": 5
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-genred-wheelie",
+    "name": "Wheelie",
+    "subtitle": "Heir to the Kibble Alternative",
+    "faction": "Generation Red",
+    "threatTier": "mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 65,
+    "role": "",
+    "hp": 25,
+    "seriouslyWounded": 13,
+    "deathSave": 3,
+    "headSp": 0,
+    "bodySp": 4,
+    "stats": {
+      "INT": 5,
+      "REF": 4,
+      "DEX": 4,
+      "TECH": 3,
+      "COOL": 3,
+      "WILL": 3,
+      "LUCK": 0,
+      "MOVE": 3,
+      "BODY": 3,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "PQ Heavy Pistol (Poor Quality)",
+        "totalBase": 8,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 6,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 6
+      },
+      {
+        "label": "Perception",
+        "totalBase": 8
+      }
+    ],
+    "weapons": [
+      {
+        "name": "PQ Heavy Pistol (Poor Quality)",
+        "skillBase": 8,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Handgun"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 6,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Medical Grade Cyberarm"
+    ],
+    "gear": [
+      "Armor-Piercing H Pistol Ammo x8",
+      "Bicycle",
+      "Disposable Cell Phone",
+      "Carryall",
+      "Computer",
+      "Kibble Pack"
+    ],
+    "specialRules": [
+      "Cyberbrazo de grado médico (perdió el brazo en el accidente que mató a sus padres)."
+    ],
+    "loreSummary": "Hijo de los Nishioka, que investigaban una alternativa al Kibble y murieron en un accidente que él sospecha provocado. Se unió a Generation Red por la poesía que comparte con Hi-Stick.",
+    "rep": 1,
+    "skillBases": {
+      "Athletics": 10,
+      "Brawling": 6,
+      "Composition": 8,
+      "Concentration": 5,
+      "Contortionist": 8,
+      "Conversation": 7,
+      "Education": 8,
+      "Evasion": 6,
+      "First Aid": 8,
+      "Handgun": 8,
+      "Human Perception": 8,
+      "Language (English)": 9,
+      "Language (Japanese)": 7,
+      "Language (Streetslang)": 7,
+      "Library Search": 10,
+      "Local Expert (University District)": 7,
+      "Local Expert (Old Combat Zone)": 7,
+      "Perception": 8,
+      "Persuasion": 8,
+      "Science (Biochemistry)": 8,
+      "Stealth": 8,
+      "Streetwise": 5
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-n54-fiona-hayes",
+    "name": "Fiona Hayes",
+    "subtitle": "Night City Investigative Powerhouse",
+    "faction": "Network 54",
+    "threatTier": "boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 92,
+    "role": "Media",
+    "hp": 45,
+    "seriouslyWounded": 23,
+    "deathSave": 6,
+    "headSp": 12,
+    "bodySp": 12,
+    "stats": {
+      "INT": 8,
+      "REF": 5,
+      "DEX": 5,
+      "TECH": 5,
+      "COOL": 8,
+      "WILL": 7,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 6,
+      "EMP": 6
+    },
+    "combatBases": [
+      {
+        "label": "Light Melee Weapon",
+        "totalBase": 5,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 7,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 10
+      },
+      {
+        "label": "Perception",
+        "totalBase": 16
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Light Melee Weapon",
+        "skillBase": 5,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Sin skill Melee Weapon en Skill Bases: skillBase = DEX · ROF/cargador según tabla Core p.92",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 7,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Biomonitor",
+      "Contraceptive Implant",
+      "Cyberaudio Suite w/ Audio Recorder & Internal Agent",
+      "Cybereye w/ Chyron & MicroVideo",
+      "EMP Threading",
+      "Enhanced Antibodies",
+      "PerfectFit Cyberfoot x2",
+      "Subdermal Armor",
+      "Techhair"
+    ],
+    "gear": [
+      "Auto Level Dampening Ear Protectors",
+      "Computer",
+      "Disposable Cell Phone x2",
+      "Memory Chip x5",
+      "Personal CarePak",
+      "Scrambler/Descrambler",
+      "Trauma Team (Executive)"
+    ],
+    "specialRules": [
+      "Credibility 6 (Media).",
+      "Trauma Team (Executive): cobertura de Trauma Team de nivel ejecutivo, listada en el equipo.",
+      "Role Ability: Credibility rank 6"
+    ],
+    "loreSummary": "Reportera estrella de Net54 conocida por su energía positiva; el rumor de que no es la Fiona Hayes original es cierto: la Corp moldea su imagen con cirugía corporal y entrenamiento de Braindance.",
+    "rep": 9,
+    "roleAbility": {
+      "name": "Credibility",
+      "rank": 6
+    },
+    "skillBases": {
+      "Acting": 16,
+      "Athletics": 10,
+      "Basic Tech": 8,
+      "Brawling": 7,
+      "Bribery": 14,
+      "Bureaucracy": 14,
+      "Business": 11,
+      "Composition": 14,
+      "Concentration": 9,
+      "Criminology": 10,
+      "Deduction": 16,
+      "Drive Land Vehicle": 10,
+      "Education": 13,
+      "Evasion": 10,
+      "First Aid": 9,
+      "Human Perception": 15,
+      "Interrogation": 12,
+      "Language (English)": 12,
+      "Language (Streetslang)": 10,
+      "Library Search": 14,
+      "Lip Reading": 12,
+      "Local Expert (Night City)": 14,
+      "Perception": 16,
+      "Personal Grooming": 16,
+      "Persuasion": 14,
+      "Resist Torture/Drugs": 14,
+      "Stealth": 7,
+      "Wardrobe & Style": 16
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-n54-angle",
+    "name": "Angle",
+    "subtitle": "Bodyguard to a Star",
+    "faction": "Network 54",
+    "threatTier": "hardened_lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 93,
+    "role": "Solo",
+    "hp": 40,
+    "seriouslyWounded": 20,
+    "deathSave": 6,
+    "headSp": 7,
+    "bodySp": 11,
+    "stats": {
+      "INT": 5,
+      "REF": 6,
+      "DEX": 6,
+      "TECH": 4,
+      "COOL": 5,
+      "WILL": 6,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 6,
+      "EMP": 4
+    },
+    "combatBases": [
+      {
+        "label": "Very Heavy Pistol",
+        "totalBase": 14,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 12,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 13
+      },
+      {
+        "label": "Perception",
+        "totalBase": 12
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Very Heavy Pistol",
+        "skillBase": 14,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 8,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 12,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Contraceptive Implant",
+      "EMP Threading",
+      "Kiroshi OptiShield",
+      "Neural Link w/ Reflex Co-Processor",
+      "Skin Weave"
+    ],
+    "gear": [
+      "Armor-Piercing VH Pistol Ammo x8",
+      "Basic VH Pistol x8",
+      "Agent",
+      "Binoculars",
+      "Bulletproof Shield",
+      "Disposable Cell Phone",
+      "Flashlight",
+      "Radio Scanner/Music Player"
+    ],
+    "specialRules": [
+      "Combat Awareness 4 (Solo).",
+      "Skin Weave (SP 7 en la cabeza) y Neural Link con Reflex Co-Processor; lleva Bulletproof Shield.",
+      "Role Ability: Combat Awareness rank 4"
+    ],
+    "loreSummary": "Guardaespaldas y supervisor corporativo de Fiona, ex agente de inteligencia con un pasado turbio que Net54 oculta. Es reservado y mataría a sus compañeros si el secreto de las 'Fionas' se filtrara.",
+    "rep": 4,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 11,
+      "Brawling": 12,
+      "Conceal/Reveal Object": 7,
+      "Concentration": 9,
+      "Conversation": 6,
+      "Drive Land Vehicle": 10,
+      "Education": 7,
+      "Endurance": 8,
+      "Evasion": 13,
+      "First Aid": 12,
+      "Handgun": 14,
+      "Human Perception": 12,
+      "Interrogation": 7,
+      "Language (English)": 9,
+      "Language (Streetslang)": 7,
+      "Local Expert (New Westbrook)": 7,
+      "Personal Grooming": 8,
+      "Perception": 12,
+      "Persuasion": 7,
+      "Resist Torture/Drugs": 8,
+      "Stealth": 8,
+      "Streetwise": 9,
+      "Wardrobe & Style": 8
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-n54-stringer",
+    "name": "Stringer",
+    "subtitle": "Camera Jockey in Love",
+    "faction": "Network 54",
+    "threatTier": "hardened_lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 94,
+    "role": "Tech",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 4,
+    "headSp": 0,
+    "bodySp": 11,
+    "stats": {
+      "INT": 5,
+      "REF": 6,
+      "DEX": 5,
+      "TECH": 6,
+      "COOL": 4,
+      "WILL": 6,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 6,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "Heavy Pistol",
+        "totalBase": 14,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 14,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 7
+      },
+      {
+        "label": "Perception",
+        "totalBase": 7
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Heavy Pistol",
+        "skillBase": 14,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 8,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 14,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Contraceptive Implant",
+      "Cyberaudio Suite w/ Internal Agent",
+      "Cybereye w/ MicroVideo",
+      "Enhanced Antibodies"
+    ],
+    "gear": [
+      "Armor-Piercing H Pistol Ammo x16",
+      "Audio Recorder",
+      "Memory Chip x5",
+      "Observer Drone",
+      "Techtool",
+      "Video Camera"
+    ],
+    "specialRules": [
+      "Maker 3 (Tech) con Field Expertise 2, Upgrade Expertise 2 y Fabrication Expertise 2.",
+      "Segunda habilidad de rol: Media: Credibility 1.",
+      "Lleva un Observer Drone en el equipo (el libro no imprime sus stats).",
+      "Role Ability: Maker rank 3"
+    ],
+    "loreSummary": "Camarógrafo y confidente de Fiona; lleva veinte años en Net54 y guarda rencor a la Megacorp. Se enamoró de una Fiona anterior y planea vengarla, aunque su lealtad actual es incierta.",
+    "rep": 4,
+    "roleAbility": {
+      "name": "Maker",
+      "rank": 3
+    },
+    "skillBases": {
+      "Athletics": 10,
+      "Basic Tech": 12,
+      "Brawling": 14,
+      "Concentration": 9,
+      "Conversation": 8,
+      "Cybertech": 10,
+      "Education": 9,
+      "Electronics/Security Tech": 12,
+      "Evasion": 7,
+      "First Aid": 9,
+      "Forgery": 8,
+      "Handgun": 14,
+      "Human Perception": 8,
+      "Language (English)": 9,
+      "Language (Streetslang)": 7,
+      "Library Search": 7,
+      "Local Expert (New Westbrook)": 7,
+      "Perception": 7,
+      "Persuasion": 6,
+      "Photography/Film": 13,
+      "Resist Torture/Drugs": 13,
+      "Stealth": 7
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-piranhas-bazooka-joe",
+    "name": "Bazooka Joe",
+    "subtitle": "The Piranha's Teeth",
+    "faction": "Piranhas",
+    "threatTier": "hardened_mini_boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 96,
+    "role": "Solo",
+    "hp": 50,
+    "seriouslyWounded": 25,
+    "deathSave": 12,
+    "headSp": 11,
+    "bodySp": 11,
+    "stats": {
+      "INT": 5,
+      "REF": 7,
+      "DEX": 6,
+      "TECH": 3,
+      "COOL": 6,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 7,
+      "BODY": 12,
+      "EMP": 4
+    },
+    "combatBases": [
+      {
+        "label": "TUp (+1 Wardrobe & Style) Tsunami Arms Helix",
+        "totalBase": 17,
+        "damage": "—",
+        "rof": 1
+      },
+      {
+        "label": "Brawling Damage",
+        "totalBase": 12,
+        "damage": "4d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 12
+      }
+    ],
+    "weapons": [
+      {
+        "name": "TUp (+1 Wardrobe & Style) Tsunami Arms Helix",
+        "skillBase": 17,
+        "damage": "—",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Daño no impreso en el libro",
+        "skill": "Autofire"
+      },
+      {
+        "name": "Brawling Damage",
+        "skillBase": 12,
+        "damage": "4d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Chemskin",
+      "Contraceptive Implant",
+      "Grafted Muscle and Bone Lace",
+      "Linear Frame Sigma",
+      "Neural Link w/ Reflex Co-Processor",
+      "Techhair x2"
+    ],
+    "gear": [
+      "Rubber Rifle Ammo x120",
+      "Carryall",
+      "Duct Tape x2",
+      "Handcuffs",
+      "Flashlight",
+      "Piranha Smash x5",
+      "Synthcoke x1"
+    ],
+    "specialRules": [
+      "Combat Awareness 4 (Solo).",
+      "Linear Frame Sigma y Grafted Muscle and Bone Lace: BODY 12 y Death Save 12.",
+      "Su arma principal es una Tsunami Arms Helix (ROF 1, daño no impreso) con munición de goma para rifle (x120).",
+      "Role Ability: Combat Awareness rank 4"
+    ],
+    "loreSummary": "Lugarteniente de seguridad de Corpse Reviver y la piraña activa más veterana; donde hay violencia en una fiesta, está Joe. Entrena a los reclutas para mantener las fiestas vivas y seguras.",
+    "rep": 4,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 8,
+      "Autofire": 17,
+      "Brawling": 12,
+      "Concentration": 6,
+      "Conversation": 6,
+      "Criminology": 9,
+      "Dance": 14,
+      "Education": 7,
+      "Endurance": 10,
+      "Evasion": 12,
+      "First Aid": 5,
+      "Handgun": 11,
+      "Human Perception": 8,
+      "Language (French)": 9,
+      "Language (Streetslang)": 7,
+      "Local Expert (Watson Development)": 7,
+      "Melee Weapon": 11,
+      "Perception": 12,
+      "Personal Grooming": 12,
+      "Persuasion": 8,
+      "Resist Torture/Drugs": 14,
+      "Stealth": 8,
+      "Streetwise": 12,
+      "Wardrobe & Style": 12
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-piranhas-corpse-reviver",
+    "name": "Corpse Reviver",
+    "subtitle": "Party Queen of Night City",
+    "faction": "Piranhas",
+    "threatTier": "hardened_mini_boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 97,
+    "role": "Exec",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 4,
+    "headSp": 12,
+    "bodySp": 12,
+    "stats": {
+      "INT": 7,
+      "REF": 6,
+      "DEX": 6,
+      "TECH": 5,
+      "COOL": 7,
+      "WILL": 6,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 4,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "Sanroo Hello Cutie MicroCutie",
+        "totalBase": 16,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Sanroo Hello Cutie MicroCutie",
+        "totalBase": 16,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 14
+      },
+      {
+        "label": "Perception",
+        "totalBase": 11
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Sanroo Hello Cutie MicroCutie",
+        "skillBase": 16,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Handgun"
+      },
+      {
+        "name": "Sanroo Hello Cutie MicroCutie",
+        "skillBase": 16,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Biomonitor",
+      "Contraceptive Implant",
+      "Cyberaudio Suite w/ Internal Agent x2",
+      "Cybereye x2 w/ Chyron x2",
+      "Cybersnake",
+      "Midnight Lady Sexual Implant",
+      "Mr. Studd Sexual Implant",
+      "Lead's Turn-On-Show-Off Nails",
+      "Neural Link w/ Reflex Co-Processor",
+      "PerfectFit Cyberfoot x2",
+      "Shift Tacts",
+      "Techhair"
+    ],
+    "gear": [
+      "Basic M Pistol Ammo x40",
+      "Anti-Smog Breathing Mask",
+      "Audio Recorder",
+      "Blue Glass x2",
+      "Braindance Viewer",
+      "Bug Detector",
+      "Carryall",
+      "Computer",
+      "Food Stick x2",
+      "Memory Chip x5",
+      "Piranha Smash x2",
+      "Synthcoke x2"
+    ],
+    "specialRules": [
+      "Teamwork 4 (Exec), con la anotación (Driver) impresa junto al rol.",
+      "Dos entradas de arma idénticas (Sanroo Hello Cutie MicroCutie).",
+      "Role Ability: Teamwork rank 4"
+    ],
+    "loreSummary": "Líder carismática de las Piranhas; unió pandillas quemadas y las convirtió en la maquinaria de fiestas de Night City. Lleva las cuentas impecables y vive para construir su 'familia'.",
+    "rep": 6,
+    "roleAbility": {
+      "name": "Teamwork",
+      "rank": 4
+    },
+    "skillBases": {
+      "Accounting": 12,
+      "Acting": 10,
+      "Athletics": 8,
+      "Brawling": 8,
+      "Bribery": 11,
+      "Bureaucracy": 12,
+      "Business": 12,
+      "Concentration": 11,
+      "Conversation": 10,
+      "Dance": 14,
+      "Deduction": 12,
+      "Education": 9,
+      "Endurance": 10,
+      "Evasion": 14,
+      "First Aid": 7,
+      "Handgun": 16,
+      "Human Perception": 12,
+      "Language (English)": 11,
+      "Language (Streetslang)": 9,
+      "Lip Reading": 9,
+      "Local Expert (Watson Development)": 9,
+      "Melee Weapon": 16,
+      "Perception": 11,
+      "Personal Grooming": 16,
+      "Persuasion": 12,
+      "Resist Torture/Drugs": 14,
+      "Stealth": 8,
+      "Streetwise": 14,
+      "Trading": 12,
+      "Wardrobe & Style": 16
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-piranhas-dirty-shirley",
+    "name": "Dirty Shirley",
+    "subtitle": "Creator of Piranha Smash",
+    "faction": "Piranhas",
+    "threatTier": "lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 98,
+    "role": "Tech",
+    "hp": 25,
+    "seriouslyWounded": 13,
+    "deathSave": 3,
+    "headSp": 11,
+    "bodySp": 11,
+    "stats": {
+      "INT": 8,
+      "REF": 6,
+      "DEX": 4,
+      "TECH": 8,
+      "COOL": 4,
+      "WILL": 3,
+      "LUCK": 0,
+      "MOVE": 3,
+      "BODY": 3,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "SMG",
+        "totalBase": 14,
+        "damage": "2d6",
+        "rof": 1
+      },
+      {
+        "label": "Brawling Damage",
+        "totalBase": 6,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 6
+      },
+      {
+        "label": "Perception",
+        "totalBase": 10
+      }
+    ],
+    "weapons": [
+      {
+        "name": "SMG",
+        "skillBase": 14,
+        "damage": "2d6",
+        "rof": 1,
+        "mag": 30,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Autofire"
+      },
+      {
+        "name": "Brawling Damage",
+        "skillBase": 6,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "AudioVox",
+      "Contraceptive Implant",
+      "EMP Threading",
+      "Neural Link w/ Chemical Analyzer & Chipware Socket",
+      "Techhair"
+    ],
+    "gear": [
+      "Basic M Pistol Ammo x30",
+      "Agent",
+      "Airhypo",
+      "Black Lace x2",
+      "Blue Glass x2",
+      "Boost x2",
+      "Carryall",
+      "Duct Tape x2",
+      "Medtech Bag",
+      "Piranha Smash x5",
+      "Synthcoke x2",
+      "Tech Bag",
+      "Techscanner",
+      "Urban Flash Mirrorshades"
+    ],
+    "specialRules": [
+      "Maker 4 (Tech) con Fabrication Expertise 4 e Invention Expertise 4.",
+      "Creadora de la droga Piranha Smash.",
+      "Role Ability: Maker rank 4"
+    ],
+    "loreSummary": "Cocinera y traficante que se unió a Corpse Reviver y se volvió la joya de las Piranhas con drogas de diseño; su receta más nueva, Piranha Smash, es la comidilla de la ciudad.",
+    "rep": 3,
+    "roleAbility": {
+      "name": "Maker",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 6,
+      "Autofire": 14,
+      "Basic Tech": 14,
+      "Brawling": 6,
+      "Concentration": 5,
+      "Conversation": 12,
+      "Education": 12,
+      "Evasion": 6,
+      "First Aid": 14,
+      "Human Perception": 12,
+      "Language (English)": 12,
+      "Language (Streetslang)": 10,
+      "Library Search": 12,
+      "Local Expert (Watson Development)": 10,
+      "Paramedic": 14,
+      "Perception": 10,
+      "Personal Grooming": 6,
+      "Persuasion": 6,
+      "Resist Torture/Drugs": 12,
+      "Science (Chemistry)": 14,
+      "Stealth": 6,
+      "Streetwise": 8,
+      "Trading": 7,
+      "Wardrobe & Style": 6
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-crusher",
+    "name": "Crusher",
+    "subtitle": "Cyberpsycho Urban Legend",
+    "faction": "Maelstrom",
+    "threatTier": "hardened_boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 68,
+    "role": "Solo",
+    "hp": 70,
+    "seriouslyWounded": 35,
+    "deathSave": 15,
+    "headSp": 12,
+    "bodySp": 12,
+    "stats": {
+      "INT": 7,
+      "REF": 8,
+      "DEX": 8,
+      "TECH": 7,
+      "COOL": 8,
+      "WILL": 8,
+      "LUCK": 0,
+      "MOVE": 8,
+      "BODY": 15,
+      "EMP": 0
+    },
+    "combatBases": [
+      {
+        "label": "Popup Kendachi Flamethrower",
+        "totalBase": 16,
+        "damage": "3d6",
+        "rof": 1
+      },
+      {
+        "label": "Popup Grenade Launcher x2",
+        "totalBase": 16,
+        "damage": "6d6",
+        "rof": 1
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 14
+      },
+      {
+        "label": "Perception",
+        "totalBase": 15
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Popup Kendachi Flamethrower",
+        "skillBase": 16,
+        "damage": "3d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Integrado en Cyberarm",
+        "skill": "Heavy Weapons"
+      },
+      {
+        "name": "Popup Grenade Launcher x2",
+        "skillBase": 16,
+        "damage": "6d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Integrado en Cyberarm (x2)",
+        "skill": "Heavy Weapons"
+      }
+    ],
+    "cyberware": [
+      "Cyberarm w/ Hardened Shielding, Popup Kendachi Flamethrower & Wolvers (ROF2 • 3d6)",
+      "Cyberarm w/ Hardened Shielding, TUp (-1 Slot) Popup Grenade Launcher x2",
+      "Cyberaudio w/ Level Damper",
+      "Cybereye x2 w/ Anti-Dazzle x2 & Low Light/Infrared/UV x2",
+      "Cyberleg x2 w/ Hardened Shielding & Jump Booster x2",
+      "Grafted Muscle and Bone Lace x2",
+      "TUp (+1 BODY) Implanted Linear Frame Beta",
+      "Neural Link w/ Chipware Socket, Kerenzikov & Pain Editor",
+      "TUp (+1 SP) Subdermal Armor"
+    ],
+    "gear": [
+      "Incendiary Shotgun Shell x4",
+      "Incendiary Grenade x4"
+    ],
+    "specialRules": [
+      "Combat Awareness 8 (rol Solo).",
+      "Cyberarm con Wolvers integrados (ROF 2, 3d6) además del lanzallamas Popup Kendachi (ROF 1, 3d6).",
+      "Lanzagranadas Popup x2 (ROF 1, 6d6), instalado en Cyberarm con TUp (-1 Slot).",
+      "Armadura subdérmica TUp (+1 SP): SP 12 en cabeza y cuerpo.",
+      "Implanted Linear Frame Beta con TUp (+1 BODY).",
+      "Role Ability: Combat Awareness rank 8"
+    ],
+    "loreSummary": "Líder de Maelstrom tras la muerte de Hammer; resistió en la Burleson Tower y el Totentanz. En 2027 tuvo un episodio ciberpsicótico, masacró un convoy de StormTech y desapareció en la Hot Zone, reapareciendo al azar como un 'dios enojado' de la pandilla.",
+    "rep": 9,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 8
+    },
+    "skillBases": {
+      "Athletics": 16,
+      "Brawling": 16,
+      "Conceal/Reveal Object": 7,
+      "Concentration": 16,
+      "Conversation": 2,
+      "Drive Land Vehicle": 10,
+      "Education": 9,
+      "Electronics/Security Tech": 7,
+      "Endurance": 13,
+      "Evasion": 14,
+      "First Aid": 11,
+      "Handgun": 14,
+      "Heavy Weapons": 16,
+      "Human Perception": 2,
+      "Interrogation": 12,
+      "Language (English)": 11,
+      "Language (Streetslang)": 9,
+      "Local Expert (Night City)": 15,
+      "Martial Arts (Karate)": 16,
+      "Melee Weapon": 16,
+      "Perception": 15,
+      "Persuasion": 10,
+      "Resist Torture/Drugs": 16,
+      "Shoulder Arms": 14,
+      "Stealth": 16,
+      "Streetwise": 16,
+      "Tracking": 13
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-warlock",
+    "name": "Warlock",
+    "subtitle": "Maelstrom Warlord",
+    "faction": "Maelstrom",
+    "threatTier": "boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 69,
+    "role": "Solo",
+    "hp": 60,
+    "seriouslyWounded": 30,
+    "deathSave": 12,
+    "headSp": 11,
+    "bodySp": 11,
+    "stats": {
+      "INT": 7,
+      "REF": 7,
+      "DEX": 7,
+      "TECH": 3,
+      "COOL": 8,
+      "WILL": 8,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 12,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Militech Crusher",
+        "totalBase": 15,
+        "damage": "3d6",
+        "rof": 1
+      },
+      {
+        "label": "Popup Magnum Opus Hellbringer",
+        "totalBase": 15,
+        "damage": "5d6",
+        "rof": 1
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 11
+      },
+      {
+        "label": "Perception",
+        "totalBase": 13
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Militech Crusher",
+        "skillBase": 15,
+        "damage": "3d6",
+        "rof": 1,
+        "mag": 0,
+        "skill": "Handgun"
+      },
+      {
+        "name": "Popup Magnum Opus Hellbringer",
+        "skillBase": 15,
+        "damage": "5d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Popup en Cyberarm",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Cyberarm w/ Popup Ranged Weapon (Hellbringer)",
+      "Cyberaudio Suite w/ Internal Agent",
+      "Cybereye w/ Chyron & Low Light/Infrared/UV",
+      "Cybereye w/ Low Light/Infrared/UV & Targeting Scope",
+      "EMP Threading",
+      "Grafted Muscle and Bone Lace",
+      "Implanted Linear Frame Sigma",
+      "Neural Link w/ Chipware Socket & Pain Editor",
+      "Subdermal Armor",
+      "Subdermal Pocket"
+    ],
+    "gear": [
+      "Armor-Piercing Shotgun Slugs x12",
+      "Basic VH Pistol Ammo x6",
+      "Anti-Smog Breathing Mask",
+      "Auto Level Dampening Ear Protectors",
+      "Disposable Cell Phone x2",
+      "Kibble Pack x10"
+    ],
+    "specialRules": [
+      "Combat Awareness 6 (rol Solo).",
+      "EMP Threading.",
+      "Subdermal Armor: SP 11 en cabeza y cuerpo.",
+      "Role Ability: Combat Awareness rank 6"
+    ],
+    "loreSummary": "Parece un 'ganger' desechable, pero es un líder astuto con conocimiento y presencia para cerrar tratos con corpos. Entró de niño a la pandilla bajo Crusher, tomó las riendas tras la caída de Hextra y organizó a los scavvers y el control del Totentanz.",
+    "rep": 6,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 6
+    },
+    "skillBases": {
+      "Athletics": 9,
+      "Autofire": 11,
+      "Brawling": 13,
+      "Bribery": 12,
+      "Business": 12,
+      "Concentration": 16,
+      "Conversation": 8,
+      "Cybertech": 10,
+      "Deduction": 10,
+      "Drive Land Vehicle": 10,
+      "Education": 9,
+      "Endurance": 16,
+      "Evasion": 11,
+      "First Aid": 6,
+      "Handgun": 15,
+      "Human Perception": 9,
+      "Interrogation": 14,
+      "Language (English)": 11,
+      "Language (Streetslang)": 12,
+      "Local Expert (Upper Marina)": 13,
+      "Melee Weapon": 7,
+      "Perception": 13,
+      "Persuasion": 14,
+      "Resist Torture/Drugs": 16,
+      "Shoulder Arms": 11,
+      "Stealth": 10,
+      "Streetwise": 15,
+      "Tactics": 15,
+      "Trading": 12
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-the-pit",
+    "name": "The Pit",
+    "subtitle": "Pet Cyberpsycho",
+    "faction": "Maelstrom",
+    "threatTier": "hardened_mini_boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 70,
+    "role": "Solo",
+    "hp": 65,
+    "seriouslyWounded": 33,
+    "deathSave": 13,
+    "headSp": 11,
+    "bodySp": 11,
+    "stats": {
+      "INT": 2,
+      "REF": 8,
+      "DEX": 8,
+      "TECH": 2,
+      "COOL": 8,
+      "WILL": 8,
+      "LUCK": 0,
+      "MOVE": 8,
+      "BODY": 13,
+      "EMP": 0
+    },
+    "combatBases": [
+      {
+        "label": "Brawling Attack",
+        "totalBase": 18,
+        "damage": "4d6",
+        "rof": 2
+      },
+      {
+        "label": "Someone Else's Very Heavy Pistol",
+        "totalBase": 12,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 16
+      },
+      {
+        "label": "Perception",
+        "totalBase": 12
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Brawling Attack",
+        "skillBase": 18,
+        "damage": "4d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      },
+      {
+        "name": "Someone Else's Very Heavy Pistol",
+        "skillBase": 12,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Cyberleg x2 w/ Grip Foot x2",
+      "Grafted Muscle and Bone Lace",
+      "TUp (+1 BODY) Implanted Linear Frame Sigma",
+      "Subdermal Armor"
+    ],
+    "gear": [
+      "Basic VH Pistol Ammo x3",
+      "Anti-Smog Breathing Mask (bolted on)",
+      "Smart Glasses w/ Low Light/Infrared/UV (bolted on)"
+    ],
+    "specialRules": [
+      "Combat Awareness 6 (rol Solo).",
+      "Cyberlegs con Grip Foot x2.",
+      "Implanted Linear Frame Sigma con TUp (+1 BODY).",
+      "La máscara antihumo y las gafas inteligentes están 'atornilladas' (bolted on) a la criatura.",
+      "Role Ability: Combat Awareness rank 6"
+    ],
+    "loreSummary": "Monstruo ciberpsicótico de carne y metal que la banda mantiene en los subsótanos de la Burleson Tower para entretener y castigar; cree ser un monstruo y acecha a quienes le arrojan para pelear.",
+    "rep": 6,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 6
+    },
+    "skillBases": {
+      "Athletics": 14,
+      "Brawling": 18,
+      "Concentration": 16,
+      "Conversation": 2,
+      "Education": 4,
+      "Endurance": 18,
+      "Evasion": 16,
+      "First Aid": 4,
+      "Handgun": 12,
+      "Human Perception": 2,
+      "Language (Unknown)": 6,
+      "Language (Streetslang)": 4,
+      "Local Expert (Tunnels Beneath Totentanz)": 12,
+      "Perception": 12,
+      "Persuasion": 13,
+      "Resist Torture/Drugs": 16,
+      "Shoulder Arms": 12,
+      "Stealth": 16,
+      "Streetwise": 12,
+      "Tactics": 6,
+      "Tracking": 8,
+      "Wilderness Survival": 8
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-quake",
+    "name": "Quake",
+    "subtitle": "Lord of the Hammer",
+    "faction": "Maelstrom",
+    "threatTier": "hardened_mini_boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 71,
+    "role": "Solo",
+    "hp": 60,
+    "seriouslyWounded": 30,
+    "deathSave": 12,
+    "headSp": 11,
+    "bodySp": 11,
+    "stats": {
+      "INT": 5,
+      "REF": 8,
+      "DEX": 8,
+      "TECH": 3,
+      "COOL": 8,
+      "WILL": 7,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 12,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Very Heavy Melee Weapon (Excellent Quality)",
+        "totalBase": 16,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Popup Magnum Opus Hellbringer",
+        "totalBase": 16,
+        "damage": "5d6",
+        "rof": 1
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 14
+      },
+      {
+        "label": "Perception",
+        "totalBase": 8
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Very Heavy Melee Weapon (Excellent Quality)",
+        "skillBase": 16,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "ROF/cargador según tabla Core p.92",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Popup Magnum Opus Hellbringer",
+        "skillBase": 16,
+        "damage": "5d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Popup en Cyberarm",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Contraceptive Implant",
+      "Cyberarm w/ Popup Ranged Weapon (Hellbringer)",
+      "Cyberarm w/ Popup Shield",
+      "EMP Threading",
+      "Grafted Muscle and Bone Lace",
+      "Implanted Linear Frame Sigma",
+      "Shift Tacts x2",
+      "Subdermal Armor"
+    ],
+    "gear": [
+      "Basic VH Pistol Ammo x6",
+      "Agent",
+      "Disposable Cell Phone",
+      "Road Flare x5"
+    ],
+    "specialRules": [
+      "Combat Awareness 6 (rol Solo).",
+      "Cyberarm con Popup Shield (escudo emergente) además del Hellbringer en el otro brazo.",
+      "EMP Threading; Shift Tacts x2.",
+      "Role Ability: Combat Awareness rank 6"
+    ],
+    "loreSummary": "El 'puño enguantado' de Maelstrom: un bruto cicatrizado que lidera disturbios y combates contra los Inquisidores con un martillo enorme y un revólver integrado. No solo mata, aterra.",
+    "rep": 5,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 6
+    },
+    "skillBases": {
+      "Athletics": 14,
+      "Brawling": 10,
+      "Concentration": 13,
+      "Conversation": 4,
+      "Drive Land Vehicle": 10,
+      "Education": 7,
+      "Endurance": 13,
+      "Evasion": 14,
+      "First Aid": 5,
+      "Handgun": 16,
+      "Human Perception": 6,
+      "Interrogation": 14,
+      "Language (English)": 9,
+      "Language (Spanish)": 8,
+      "Language (Russian)": 8,
+      "Language (Streetslang)": 9,
+      "Library Search": 10,
+      "Local Expert (Upper Marina)": 12,
+      "Melee Weapon": 16,
+      "Perception": 8,
+      "Persuasion": 12,
+      "Resist Torture/Drugs": 13,
+      "Stealth": 10,
+      "Streetwise": 15,
+      "Tactics": 12,
+      "Tracking": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-flenser",
+    "name": "Flenser",
+    "subtitle": "Maelstrom Intelligence Expert",
+    "faction": "Maelstrom",
+    "threatTier": "hardened_lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 72,
+    "role": "Netrunner",
+    "hp": 35,
+    "seriouslyWounded": 13,
+    "deathSave": 5,
+    "headSp": 11,
+    "bodySp": 11,
+    "stats": {
+      "INT": 5,
+      "REF": 5,
+      "DEX": 7,
+      "TECH": 7,
+      "COOL": 6,
+      "WILL": 5,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 5,
+      "EMP": 3
+    },
+    "combatBases": [
+      {
+        "label": "Very Heavy Pistol",
+        "totalBase": 13,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Popup Heavy Melee Weapon",
+        "totalBase": 11,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 11
+      },
+      {
+        "label": "Perception",
+        "totalBase": 11
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Very Heavy Pistol",
+        "skillBase": 13,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 8,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      },
+      {
+        "name": "Popup Heavy Melee Weapon",
+        "skillBase": 11,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Popup en Cyberarm · ROF/cargador según tabla Core p.92",
+        "skill": "Melee Weapon"
+      }
+    ],
+    "cyberware": [
+      "Contraceptive Implant",
+      "Cyberarm w/ Cyberdeck",
+      "Cyberarm w/ Popup Melee Weapon (Heavy Melee Weapon)",
+      "Cybereye w/ Chyron & Virtuality",
+      "Cybereye w/ Virtuality",
+      "Cyberleg x2 w/ Grip Foot x2",
+      "Neural Link w/ Interface Plugs"
+    ],
+    "gear": [
+      "Basic VH Pistol Ammo x16",
+      "Agent",
+      "Audio Recorder",
+      "Binoculars",
+      "Flashlight",
+      "Grapple Gun",
+      "Lock Picking Set",
+      "Memory Chip x5",
+      "Scrambler/Descrambler",
+      "Techtool",
+      "Video Camera",
+      "EQ Cyberdeck (in Cyberarm) w/ Shield x5, Speedy Gonzalves x4 & Insulated Wiring (in Bodyweight Suit)"
+    ],
+    "specialRules": [
+      "Netrunner con Interface 4.",
+      "Cyberdeck de calidad excelente (EQ) en el Cyberarm, con Insulated Wiring (en el Bodyweight Suit) y programas Shield x5 y Speedy Gonzalves x4.",
+      "Espía sigilosa y paciente: rara vez pelea de frente.",
+      "Role Ability: Interface rank 4"
+    ],
+    "loreSummary": "Teniente de inteligencia de Warlock: espía y ladrona de datos que acecha a otras bandas, y también protege los secretos y la seguridad informática de Maelstrom.",
+    "rep": 3,
+    "roleAbility": {
+      "name": "Interface",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 11,
+      "Brawling": 10,
+      "Bribery": 10,
+      "Concentration": 10,
+      "Contortionist": 10,
+      "Conversation": 5,
+      "Education": 7,
+      "Electronics/Security Tech": 14,
+      "Evasion": 11,
+      "First Aid": 9,
+      "Handgun": 13,
+      "Human Perception": 5,
+      "Language (Korean)": 9,
+      "Language (Streetslang)": 7,
+      "Library Search": 8,
+      "Local Expert (Upper Marina)": 9,
+      "Melee Weapon": 11,
+      "Perception": 11,
+      "Persuasion": 8,
+      "Pick Lock": 12,
+      "Pick Pocket": 12,
+      "Stealth": 13
+    },
+    "isNetrunner": true,
+    "interfaceRank": 4,
+    "cyberdeckPrograms": [
+      "EQ Cyberdeck (en Cyberarm) w/ Insulated Wiring",
+      "Shield x5",
+      "Speedy Gonzalves x4"
+    ]
+  },
+  {
+    "id": "dg-maelstrom-joe-pitt",
+    "name": "Joe Pitt",
+    "subtitle": "Maelstrom Tech Guru",
+    "faction": "Maelstrom",
+    "threatTier": "hardened_lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 73,
+    "role": "Tech",
+    "hp": 40,
+    "seriouslyWounded": 20,
+    "deathSave": 7,
+    "headSp": 0,
+    "bodySp": 11,
+    "stats": {
+      "INT": 6,
+      "REF": 6,
+      "DEX": 5,
+      "TECH": 8,
+      "COOL": 4,
+      "WILL": 5,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 7,
+      "EMP": 3
+    },
+    "combatBases": [
+      {
+        "label": "Assault Rifle",
+        "totalBase": 13,
+        "damage": "5d6",
+        "rof": 1
+      },
+      {
+        "label": "Combat Jaw",
+        "totalBase": 5,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 13
+      },
+      {
+        "label": "Perception",
+        "totalBase": 8
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Assault Rifle",
+        "skillBase": 13,
+        "damage": "5d6",
+        "rof": 1,
+        "mag": 25,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Shoulder Arms"
+      },
+      {
+        "name": "Combat Jaw",
+        "skillBase": 5,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Cyberware Combat Jaw",
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Combat Jaw",
+      "Contraceptive Implant",
+      "Grafted Muscle and Bone Lace"
+    ],
+    "gear": [
+      "Armor-Piercing Rifle Ammo x25",
+      "Agent",
+      "Bug Detector",
+      "Computer",
+      "Tech Bag",
+      "Techscanner"
+    ],
+    "specialRules": [
+      "Rol Tech: Maker 4 (Field Expertise 3, Upgrade Expertise 2, Fabrication Expertise 2, Invention Expertise 1).",
+      "Combat Jaw cibernético (4d6, ROF 1).",
+      "Role Ability: Maker rank 4"
+    ],
+    "loreSummary": "Ingeniero residente de Maelstrom: refuerza la Burleson Tower, instala la seguridad de Flenser y mantiene el ciberware y las armas de la banda. Denuncia en secreto a ciberpsicóticos peligrosos a un oficial del NCPD para evitar a MAX-TAC.",
+    "rep": 5,
+    "roleAbility": {
+      "name": "Maker",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 7,
+      "Autofire": 13,
+      "Basic Tech": 12,
+      "Concentration": 9,
+      "Conversation": 5,
+      "Cybertech": 12,
+      "Education": 8,
+      "Electronics/Security Tech": 12,
+      "Evasion": 13,
+      "First Aid": 10,
+      "Human Perception": 5,
+      "Language (English)": 10,
+      "Language (Streetslang)": 8,
+      "Local Expert (Upper Marina)": 10,
+      "Perception": 8,
+      "Persuasion": 6,
+      "Science (Engineering)": 8,
+      "Shoulder Arms": 13,
+      "Stealth": 8,
+      "Streetwise": 7,
+      "Weaponstech": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-ripper",
+    "name": "Ripper",
+    "subtitle": "True Believer",
+    "faction": "Maelstrom",
+    "threatTier": "lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 74,
+    "role": "Solo",
+    "hp": 40,
+    "seriouslyWounded": 20,
+    "deathSave": 6,
+    "headSp": 7,
+    "bodySp": 7,
+    "stats": {
+      "INT": 5,
+      "REF": 6,
+      "DEX": 6,
+      "TECH": 4,
+      "COOL": 6,
+      "WILL": 5,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 6,
+      "EMP": 1
+    },
+    "combatBases": [
+      {
+        "label": "Assault Rifle",
+        "totalBase": 13,
+        "damage": "5d6",
+        "rof": 1
+      },
+      {
+        "label": "Wolvers",
+        "totalBase": 13,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 13
+      },
+      {
+        "label": "Perception",
+        "totalBase": 10
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Assault Rifle",
+        "skillBase": 13,
+        "damage": "5d6",
+        "rof": 1,
+        "mag": 25,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Shoulder Arms"
+      },
+      {
+        "name": "Wolvers",
+        "skillBase": 13,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Integrados en Cyberarm · ROF/cargador según tabla Core p.115",
+        "skill": "Melee Weapon"
+      }
+    ],
+    "cyberware": [
+      "Cyberarm w/ Wolvers",
+      "EMP Threading",
+      "Neural Link w/ Chipware Socket & Pain Editor",
+      "Sycust FleshWeave"
+    ],
+    "gear": [
+      "Basic Rifle Ammo x50",
+      "Agent",
+      "Disposable Cell Phone x2",
+      "Carryall",
+      "Glow Paint",
+      "Techtool"
+    ],
+    "specialRules": [
+      "Combat Awareness 4 (rol Solo).",
+      "Wolvers integrados en el Cyberarm (ROF 2, 3d6).",
+      "EMP Threading; armadura Sycust FleshWeave SP 7 en cabeza y cuerpo.",
+      "Role Ability: Combat Awareness rank 4"
+    ],
+    "loreSummary": "Sádico organizador del ejército de scavvers de Maelstrom; sus 'Pruebas' pseudo-místicas llevan a muchos a morir en la Hot Zone. Es el subordinado de Warlock con más probabilidad de morderle.",
+    "rep": 2,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 10,
+      "Basic Tech": 12,
+      "Brawling": 11,
+      "Conceal/Reveal Object": 8,
+      "Concentration": 7,
+      "Conversation": 4,
+      "Education": 7,
+      "Endurance": 7,
+      "Evasion": 13,
+      "First Aid": 6,
+      "Gamble": 7,
+      "Handgun": 13,
+      "Human Perception": 5,
+      "Interrogation": 9,
+      "Language (English)": 9,
+      "Language (Streetslang)": 7,
+      "Local Expert (Hot Zone)": 10,
+      "Melee Weapon": 13,
+      "Perception": 10,
+      "Persuasion": 11,
+      "Shoulder Arms": 13,
+      "Stealth": 8,
+      "Streetwise": 8,
+      "Weaponstech": 6
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-drop",
+    "name": "Drop",
+    "subtitle": "Cosplaying as a Sniper",
+    "faction": "Maelstrom",
+    "threatTier": "hardened_mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 75,
+    "role": "Solo",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 5,
+    "headSp": 0,
+    "bodySp": 11,
+    "stats": {
+      "INT": 5,
+      "REF": 6,
+      "DEX": 4,
+      "TECH": 3,
+      "COOL": 4,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 5,
+      "EMP": 3
+    },
+    "combatBases": [
+      {
+        "label": "Assault Rifle w/ Sniping Scope (Poor Quality)",
+        "totalBase": 12,
+        "damage": "5d6",
+        "rof": 1
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 7,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 10
+      },
+      {
+        "label": "Perception",
+        "totalBase": 12
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Assault Rifle w/ Sniping Scope (Poor Quality)",
+        "skillBase": 12,
+        "damage": "5d6",
+        "rof": 1,
+        "mag": 0,
+        "skill": "Shoulder Arms"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 7,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Cybereye x2 w/ Low Light/Infrared/UV x2"
+    ],
+    "gear": [
+      "Basic Rifle Ammo x25",
+      "Agent",
+      "Binoculars",
+      "Radio Communicator"
+    ],
+    "specialRules": [
+      "Combat Awareness 2 (rol Solo).",
+      "Francotirador aficionado en los nidos de la Burleson Tower; rifle de calidad pobre (PQ) con mira de francotirador.",
+      "Role Ability: Combat Awareness rank 2"
+    ],
+    "loreSummary": "Soldado medio de Maelstrom que se viste de veterano y vigila desde los nidos de francotirador de la Burleson Tower; sueña con interface plugs, speedware y un rifle ramjet RJ85.",
+    "rep": 1,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 2
+    },
+    "skillBases": {
+      "Athletics": 9,
+      "Brawling": 7,
+      "Concentration": 8,
+      "Conversation": 5,
+      "Education": 7,
+      "Evasion": 10,
+      "First Aid": 5,
+      "Human Perception": 5,
+      "Language (English)": 9,
+      "Language (Streetslang)": 7,
+      "Local Expert (Upper Marina)": 9,
+      "Perception": 12,
+      "Persuasion": 6,
+      "Shoulder Arms": 12,
+      "Stealth": 10,
+      "Streetwise": 8
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-raguel",
+    "name": "Raguel",
+    "subtitle": "Recent Convert",
+    "faction": "Maelstrom",
+    "threatTier": "hardened_mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 76,
+    "role": "",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 6,
+    "headSp": 0,
+    "bodySp": 4,
+    "stats": {
+      "INT": 5,
+      "REF": 4,
+      "DEX": 6,
+      "TECH": 2,
+      "COOL": 5,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 6,
+      "EMP": 0
+    },
+    "combatBases": [
+      {
+        "label": "Heavy Melee Weapon (Poor Quality)",
+        "totalBase": 12,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Very Heavy Melee Weapon (Poor Quality)",
+        "totalBase": 12,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 8
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Heavy Melee Weapon (Poor Quality)",
+        "skillBase": 12,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "ROF/cargador según tabla Core p.92",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Very Heavy Melee Weapon (Poor Quality)",
+        "skillBase": 12,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "ROF/cargador según tabla Core p.92",
+        "skill": "Melee Weapon"
+      }
+    ],
+    "cyberware": [
+      "Cyberarm x2",
+      "Cybereye w/ Chyron"
+    ],
+    "gear": [
+      "Agent",
+      "Audio Recorder",
+      "Disposable Cell Phone",
+      "Memory Chips x5"
+    ],
+    "specialRules": [
+      "Rol: None (sin habilidad de rol).",
+      "Dos Cyberarms; armas cuerpo a cuerpo de calidad pobre (PQ)."
+    ],
+    "loreSummary": "Infiltrado de los Inquisidores que se convirtió y ahora es un fanático de Maelstrom; admira los rituales de Quake y Ripper y se hizo un implante ocular barato.",
+    "rep": 0,
+    "skillBases": {
+      "Acting": 8,
+      "Athletics": 10,
+      "Brawling": 9,
+      "Concentration": 6,
+      "Conversation": 2,
+      "Education": 8,
+      "Evasion": 12,
+      "First Aid": 4,
+      "Human Perception": 2,
+      "Language (English)": 9,
+      "Language (Streetslang)": 7,
+      "Local Expert (Hot Zone)": 7,
+      "Melee Weapon": 12,
+      "Perception": 8,
+      "Persuasion": 7,
+      "Pick Lock": 8,
+      "Stealth": 9,
+      "Streetwise": 7,
+      "Wardrobe & Style": 5
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-ghoul",
+    "name": "Ghoul",
+    "subtitle": "Bottom of the Barrel",
+    "faction": "Maelstrom",
+    "threatTier": "mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 77,
+    "role": "",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 5,
+    "headSp": 0,
+    "bodySp": 4,
+    "stats": {
+      "INT": 3,
+      "REF": 5,
+      "DEX": 5,
+      "TECH": 2,
+      "COOL": 2,
+      "WILL": 5,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 5,
+      "EMP": 1
+    },
+    "combatBases": [
+      {
+        "label": "Heavy Pistol (Poor Quality)",
+        "totalBase": 10,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Medium Melee Weapon",
+        "totalBase": 10,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 9
+      },
+      {
+        "label": "Perception",
+        "totalBase": 9
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Heavy Pistol (Poor Quality)",
+        "skillBase": 10,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 8,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      },
+      {
+        "name": "Medium Melee Weapon",
+        "skillBase": 10,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "ROF/cargador según tabla Core p.92",
+        "skill": "Melee Weapon"
+      }
+    ],
+    "cyberware": [
+      "Cyberarm",
+      "Techhair"
+    ],
+    "gear": [
+      "Basic H Pistol Ammo x16",
+      "Disposable Cell Phone",
+      "Glow Paint x2",
+      "Techtool"
+    ],
+    "specialRules": [
+      "Rol: None (sin habilidad de rol).",
+      "Pistola pesada de calidad pobre (PQ)."
+    ],
+    "loreSummary": "Ex scavver llamado Digger que sobrevivió radiación, derrumbes y nanoenjambres en la Hot Zone; Ripper lo bautizó Ghoul tras sus 'Pruebas'. Perdió una mano en una de ellas y la reemplazó con un cyberarm; conservó el cuchillo.",
+    "rep": 0,
+    "skillBases": {
+      "Athletics": 9,
+      "Basic Tech": 8,
+      "Brawling": 10,
+      "Concentration": 7,
+      "Conversation": 3,
+      "Education": 5,
+      "Endurance": 8,
+      "Evasion": 9,
+      "First Aid": 4,
+      "Handgun": 10,
+      "Human Perception": 3,
+      "Language (English)": 7,
+      "Language (Streetslang)": 5,
+      "Local Expert (Hot Zone)": 7,
+      "Melee Weapon": 10,
+      "Perception": 9,
+      "Persuasion": 4,
+      "Resist Torture/Drugs": 10,
+      "Stealth": 7
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-ripperdoc",
+    "name": "Maelstrom Ripperdoc",
+    "subtitle": "",
+    "faction": "Maelstrom",
+    "threatTier": "hardened_mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 78,
+    "role": "Medtech",
+    "hp": 30,
+    "seriouslyWounded": 15,
+    "deathSave": 4,
+    "headSp": 7,
+    "bodySp": 7,
+    "stats": {
+      "INT": 5,
+      "REF": 4,
+      "DEX": 5,
+      "TECH": 7,
+      "COOL": 3,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 4,
+      "BODY": 4,
+      "EMP": 3
+    },
+    "combatBases": [
+      {
+        "label": "Heavy Pistol (Poor Quality)",
+        "totalBase": 6,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Light Melee Weapon",
+        "totalBase": 5,
+        "damage": "1d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 7
+      },
+      {
+        "label": "Perception",
+        "totalBase": 7
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Heavy Pistol (Poor Quality)",
+        "skillBase": 6,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 8,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      },
+      {
+        "name": "Light Melee Weapon",
+        "skillBase": 5,
+        "damage": "1d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "ROF/cargador según tabla Core p.92",
+        "skill": "Melee Weapon"
+      }
+    ],
+    "cyberware": [
+      "Cyberarm w/ Tool Hand & Scratchers",
+      "Cybereye w/ MicroOptics"
+    ],
+    "gear": [
+      "Basic H Pistol Ammo x8",
+      "Anti-Smog Breathing Mask",
+      "Disposable Cell Phone",
+      "Duct Tape x2",
+      "Medtech Bag",
+      "Techtool"
+    ],
+    "specialRules": [
+      "Medtech: Medicine 2 (Surgery 2).",
+      "Cyberarm con Tool Hand y Scratchers; Cybereye con MicroOptics.",
+      "Role Ability: Medicine rank 2"
+    ],
+    "loreSummary": "Ripperdoc de Maelstrom: un estudiante de medicina fallido o ex paramédico dispuesto a hacerse cargo de la pandilla más cromada de la ciudad; el puesto es más peligroso que ser miembro.",
+    "rep": 0,
+    "roleAbility": {
+      "name": "Medicine",
+      "rank": 2
+    },
+    "skillBases": {
+      "Athletics": 7,
+      "Brawling": 7,
+      "Concentration": 11,
+      "Conversation": 6,
+      "Cybertech": 14,
+      "Education": 10,
+      "Evasion": 7,
+      "First Aid": 9,
+      "Handgun": 6,
+      "Human Perception": 5,
+      "Language (Native)": 9,
+      "Language (Streetslang)": 7,
+      "Local Expert (GM's choice)": 7,
+      "Paramedic": 14,
+      "Perception": 7,
+      "Persuasion": 5,
+      "Stealth": 7,
+      "Surgery": 11
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-maelstrom-scavver",
+    "name": "Maelstrom Scavver",
+    "subtitle": "",
+    "faction": "Maelstrom",
+    "threatTier": "mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 78,
+    "role": "",
+    "hp": 30,
+    "seriouslyWounded": 15,
+    "deathSave": 4,
+    "headSp": 4,
+    "bodySp": 4,
+    "stats": {
+      "INT": 3,
+      "REF": 4,
+      "DEX": 4,
+      "TECH": 4,
+      "COOL": 3,
+      "WILL": 3,
+      "LUCK": 0,
+      "MOVE": 4,
+      "BODY": 4,
+      "EMP": 4
+    },
+    "combatBases": [
+      {
+        "label": "Medium Pistol (Poor Quality)",
+        "totalBase": 10,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Heavy Melee Weapon (Poor Quality)",
+        "totalBase": 10,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 10
+      },
+      {
+        "label": "Perception",
+        "totalBase": 5
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Medium Pistol (Poor Quality)",
+        "skillBase": 10,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 12,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      },
+      {
+        "name": "Heavy Melee Weapon (Poor Quality)",
+        "skillBase": 10,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "ROF/cargador según tabla Core p.92",
+        "skill": "Melee Weapon"
+      }
+    ],
+    "cyberware": [],
+    "gear": [
+      "Junk M Pistol Ammo x12",
+      "Anti-Smog Breathing Mask",
+      "Carryall x2",
+      "Disposable Cell Phone",
+      "Glow Stick x5",
+      "Kibble Pack x2"
+    ],
+    "specialRules": [
+      "Rol: None. Cyberware: None.",
+      "No es técnicamente miembro de Maelstrom: aspira a ganarse el ingreso trabajando en la Hot Zone."
+    ],
+    "loreSummary": "Pobres desgraciados que esperan salir de la Hot Zone y entrar al Totentanz; la mayoría no sobrevive a su próximo cumpleaños.",
+    "rep": 0,
+    "skillBases": {
+      "Athletics": 10,
+      "Basic Tech": 10,
+      "Brawling": 6,
+      "Concentration": 5,
+      "Conversation": 6,
+      "Education": 5,
+      "Endurance": 7,
+      "Evasion": 10,
+      "First Aid": 6,
+      "Handgun": 10,
+      "Human Perception": 6,
+      "Language (Native)": 7,
+      "Language (Streetslang)": 5,
+      "Local Expert (Hot Zone)": 5,
+      "Melee Weapon": 10,
+      "Perception": 5,
+      "Persuasion": 5,
+      "Stealth": 6
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-caliber",
+    "name": "Caliber",
+    "subtitle": "Sergeant Alexander Marconi",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 80,
+    "role": "Solo",
+    "hp": 45,
+    "seriouslyWounded": 23,
+    "deathSave": 6,
+    "headSp": 12,
+    "bodySp": 12,
+    "stats": {
+      "INT": 8,
+      "REF": 8,
+      "DEX": 8,
+      "TECH": 6,
+      "COOL": 6,
+      "WILL": 7,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 6,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Sniper Rifle (Excellent Quality)",
+        "totalBase": 18,
+        "damage": "5d6",
+        "rof": 1
+      },
+      {
+        "label": "Heavy Pistol",
+        "totalBase": 14,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 16
+      },
+      {
+        "label": "Perception",
+        "totalBase": 14
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Sniper Rifle (Excellent Quality)",
+        "skillBase": 18,
+        "damage": "5d6",
+        "rof": 1,
+        "mag": 4,
+        "notes": "TUp (+1 Slot); con Infrared Nightvision Scope, Smartgun Link y Sniping Scope · ROF/cargador según tabla Core p.94",
+        "skill": "Shoulder Arms"
+      },
+      {
+        "name": "Heavy Pistol",
+        "skillBase": 14,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 8,
+        "notes": "Listada en Gear como (ROF2 • 3d6); el bloque de armas solo muestra el rifle · ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Contraceptive Implant",
+      "Cyberaudio Suite w/ Radio Communicator & Scrambler/Descrambler",
+      "Cybereye w/ Image Enhance",
+      "Cybereye w/ Image Enhance & Targeting Scope",
+      "Cyberleg x2 w/ Jump Booster x2",
+      "Enhanced Antibodies",
+      "Neural Link w/ Chipware Socket, Interface Plugs, Reflex Co-Processor, Sandevistan & Skill Chip (Pilot Air Vehicle)",
+      "Toxin Binders"
+    ],
+    "gear": [
+      "Armor-Piercing Rifle Ammo x12",
+      "Basic H Pistol Ammo x8",
+      "Heavy Pistol (ROF2",
+      "3d6)",
+      "Smoke Grenade x2",
+      "Agent",
+      "Disposable Cell Phone x2",
+      "Flashlight",
+      "Grapple Gun",
+      "Handcuffs x2",
+      "Road Flare x5"
+    ],
+    "specialRules": [
+      "Habilidad de rol Solo: Combat Awareness rango 6.",
+      "El libro imprime valores modificados entre paréntesis: REF 7, DEX 7 y MOVE 5, además de varias skills (ver statsArmorModified).",
+      "Neural Link con Sandevistan, Reflex Co-Processor, Interface Plugs y Skill Chip (Pilot Air Vehicle); Cyberlegs x2 con Jump Booster x2; rifle de francotirador Excellent Quality con una ranura extra (TUp), visor nocturno infrarrojo, Smartgun Link y mira de francotirador.",
+      "Role Ability: Combat Awareness rank 6"
+    ],
+    "loreSummary": "Sargento de TAC con un historial de tiro casi perfecto, solitario y sin spotter; el dossier sospecha que es un asesino infiltrado en la policía.",
+    "rep": 4,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 6
+    },
+    "skillBases": {
+      "Athletics": 14,
+      "Autofire": 14,
+      "Basic Tech": 10,
+      "Brawling": 10,
+      "Concentration": 15,
+      "Conversation": 4,
+      "Deduction": 10,
+      "Drive Land Vehicle": 11,
+      "Education": 10,
+      "Electronics/Security Tech": 11,
+      "Endurance": 10,
+      "Evasion": 16,
+      "First Aid": 8,
+      "Handgun": 14,
+      "Human Perception": 4,
+      "Interrogation": 9,
+      "Language (Italian)": 12,
+      "Language (Streetslang)": 10,
+      "Local Expert (Precinct #1)": 13,
+      "Martial Arts (Judo)": 12,
+      "Melee Weapon": 12,
+      "Perception": 14,
+      "Persuasion": 8,
+      "Resist Torture/Drugs": 13,
+      "Shoulder Arms": 18,
+      "Stealth": 14,
+      "Tactics": 13,
+      "Tracking": 11,
+      "Weaponstech": 12
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-hellhound",
+    "name": "Hellhound",
+    "subtitle": "Detective William \"Bill\" Mauser",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "hardened_mini_boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 81,
+    "role": "Lawman",
+    "hp": 50,
+    "seriouslyWounded": 25,
+    "deathSave": 7,
+    "headSp": 0,
+    "bodySp": 11,
+    "stats": {
+      "INT": 7,
+      "REF": 7,
+      "DEX": 6,
+      "TECH": 4,
+      "COOL": 7,
+      "WILL": 8,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 7,
+      "EMP": 1
+    },
+    "combatBases": [
+      {
+        "label": "Nova Model 757 Cityhunter (Excellent Quality)",
+        "totalBase": 16,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Heavy Pistol",
+        "totalBase": 16,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 14
+      },
+      {
+        "label": "Perception",
+        "totalBase": 12
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Nova Model 757 Cityhunter (Excellent Quality)",
+        "skillBase": 16,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "TUp (+1 Slot); munición Smart Cityhunter (en Gear)",
+        "skill": "Handgun"
+      },
+      {
+        "name": "Heavy Pistol",
+        "skillBase": 16,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 8,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Contraceptive Implant",
+      "TUp (+1 Slot) Cyberaudio Suite w/ Audio Recorder, Internal Agent x2 & Scrambler/Descrambler",
+      "Cybereye w/ Chyron & Image Enhance",
+      "Cybereye w/ Image Enhance & Targeting Scope",
+      "Enhanced Antibodies",
+      "Neural Link w/ Chipware Socket, Olfactory Boost & Reflex Co-Processor"
+    ],
+    "gear": [
+      "Smart Cityhunter Ammo x26",
+      "Basic H Pistol Ammo x8",
+      "Agent",
+      "Disposable Cell Phone",
+      "Duct Tape",
+      "Flashlight",
+      "Handcuffs x2",
+      "Radio Communicator",
+      "Scrambler/Descrambler"
+    ],
+    "specialRules": [
+      "Habilidad de rol Lawman: Backup rango 4.",
+      "Sin armadura en la cabeza (el bloque imprime — en esa fila); L Armorjack SP 11 solo en el cuerpo.",
+      "Dos Internal Agent en el Cyberaudio Suite y Neural Link con Reflex Co-Processor y Olfactory Boost.",
+      "Role Ability: Backup rank 4"
+    ],
+    "loreSummary": "Detective incorruptible y obsesivo de casos graves (asesinos seriales, posibles ciberpsicópatas); el dossier sospecha que lucha contra una ciberpsicosis propia, con su historial médico censurado.",
+    "rep": 5,
+    "roleAbility": {
+      "name": "Backup",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 10,
+      "Brawling": 12,
+      "Concentration": 10,
+      "Conversation": 7,
+      "Criminology": 12,
+      "Cybertech": 8,
+      "Deduction": 13,
+      "Drive Land Vehicle": 10,
+      "Education": 9,
+      "Evasion": 14,
+      "First Aid": 6,
+      "Handgun": 16,
+      "Human Perception": 11,
+      "Interrogation": 14,
+      "Language (English)": 11,
+      "Language (Streetslang)": 11,
+      "Local Expert (Precinct #1)": 13,
+      "Martial Arts (Aikido)": 14,
+      "Perception": 12,
+      "Persuasion": 11,
+      "Pilot Air Vehicle": 10,
+      "Stealth": 8,
+      "Streetwise": 12,
+      "Tracking": 13
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-escobar",
+    "name": "Escobar",
+    "subtitle": "Detective Philip Escobar",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "mini_boss",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 82,
+    "role": "Media",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 5,
+    "headSp": 11,
+    "bodySp": 11,
+    "stats": {
+      "INT": 7,
+      "REF": 5,
+      "DEX": 6,
+      "TECH": 6,
+      "COOL": 7,
+      "WILL": 5,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 5,
+      "EMP": 6
+    },
+    "combatBases": [
+      {
+        "label": "Constitutional Arms Multiammo Pistol",
+        "totalBase": 14,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Constitutional Arms Multiammo Pistol",
+        "totalBase": 14,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 14
+      },
+      {
+        "label": "Perception",
+        "totalBase": 13
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Constitutional Arms Multiammo Pistol",
+        "skillBase": 14,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "skill": "Handgun"
+      },
+      {
+        "name": "Constitutional Arms Multiammo Pistol",
+        "skillBase": 14,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Biomonitor",
+      "Contraceptive Implant",
+      "Cybereye w/ MicroVideo",
+      "Cybersnake",
+      "Subdermal Pocket"
+    ],
+    "gear": [
+      "Basic VH Pistol Ammo x10",
+      "Armor-Piercing VH Pistol Ammo x10",
+      "Expansive VH Pistol Ammo x10",
+      "Incendiary VH Pistol Ammo x10",
+      "Rubber VH Pistol Ammo x10",
+      "Agent",
+      "Disposable Cell Phone",
+      "Flashlight",
+      "Handcuffs x2",
+      "Radio Communicator",
+      "Scrambler/Descrambler",
+      "Trauma Team (Silver)"
+    ],
+    "specialRules": [
+      "Habilidad de rol Media: Credibility rango 4.",
+      "El bloque de armas lista dos veces la Constitutional Arms Multiammo Pistol (ROF1, 4d6); cinco tipos de munición de pistola VH en Gear (Basic, Armor-Piercing, Expansive, Incendiary, Rubber).",
+      "Cuenta con Trauma Team (Silver) y un Cybersnake en el cyberware.",
+      "Role Ability: Credibility rank 4"
+    ],
+    "loreSummary": "Agente de INTERPOL (División de Apoyo a Investigaciones de Fugitivos) que trabaja junto al NCPD; elegante, negocia favores y datos, y es muy buen bailarín.",
+    "rep": 5,
+    "roleAbility": {
+      "name": "Credibility",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 8,
+      "Brawling": 10,
+      "Bribery": 10,
+      "Composition": 10,
+      "Conceal/Reveal Object": 14,
+      "Concentration": 7,
+      "Conversation": 12,
+      "Criminology": 12,
+      "Cryptography": 10,
+      "Dance": 14,
+      "Drive Land Vehicle": 10,
+      "Education": 11,
+      "Evasion": 14,
+      "First Aid": 8,
+      "Handgun": 14,
+      "Human Perception": 12,
+      "Interrogation": 10,
+      "Language (English)": 11,
+      "Language (Spanish)": 12,
+      "Language (Streetslang)": 9,
+      "Library Search": 12,
+      "Local Expert (Barcelona)": 16,
+      "Local Expert (Precinct #1)": 11,
+      "Melee Weapon": 14,
+      "Perception": 13,
+      "Personal Grooming": 10,
+      "Persuasion": 14,
+      "Photography/Film": 10,
+      "Stealth": 10,
+      "Streetwise": 10,
+      "Wardrobe & Style": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-grinder",
+    "name": "Grinder",
+    "subtitle": "Lieutenant Jessie Brasso",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "hardened_lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 83,
+    "role": "Solo",
+    "hp": 40,
+    "seriouslyWounded": 20,
+    "deathSave": 7,
+    "headSp": 13,
+    "bodySp": 13,
+    "stats": {
+      "INT": 5,
+      "REF": 7,
+      "DEX": 6,
+      "TECH": 4,
+      "COOL": 5,
+      "WILL": 5,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 7,
+      "EMP": 4
+    },
+    "combatBases": [
+      {
+        "label": "Very Heavy Pistol (Excellent Quality)",
+        "totalBase": 13,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Microwaver",
+        "totalBase": 7,
+        "damage": "—",
+        "rof": 1
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 11
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Very Heavy Pistol (Excellent Quality)",
+        "skillBase": 13,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 8,
+        "notes": "con Smartgun Link · ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      },
+      {
+        "name": "Microwaver",
+        "skillBase": 7,
+        "damage": "—",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Daño no impreso en el libro (—)",
+        "skill": "REF"
+      }
+    ],
+    "cyberware": [
+      "Biomonitor",
+      "Contraceptive Implant",
+      "Enhanced Antibodies",
+      "Neural Link w/ Subdermal Grip"
+    ],
+    "gear": [
+      "Basic VH Pistol Ammo x16",
+      "Flashbang Grenade x3",
+      "Agent",
+      "Bulletproof Shield",
+      "Flashlight",
+      "Handcuffs x2",
+      "Radio Communicator",
+      "Scrambler/Descrambler",
+      "Smart Glasses w/ Anti-Dazzle"
+    ],
+    "specialRules": [
+      "Habilidad de rol Solo: Combat Awareness rango 4.",
+      "El libro imprime valores modificados entre paréntesis: REF 5, DEX 4 y MOVE 3, además de varias skills (ver statsArmorModified).",
+      "Microwaver: arma con ROF1 y sin daño impreso en el libro; lleva Bulletproof Shield en el equipo.",
+      "Role Ability: Combat Awareness rank 4"
+    ],
+    "loreSummary": "Teniente que dirige el Escuadrón TAC del Precinct #1; prudente, entrena él mismo a sus agentes y MAX-TAC le ofreció un puesto que aún no responde.",
+    "rep": 3,
+    "roleAbility": {
+      "name": "Combat Awareness",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 10,
+      "Autofire": 13,
+      "Brawling": 12,
+      "Concentration": 7,
+      "Conversation": 6,
+      "Criminology": 9,
+      "Deduction": 9,
+      "Education": 7,
+      "Evasion": 12,
+      "First Aid": 8,
+      "Handgun": 13,
+      "Human Perception": 8,
+      "Interrogation": 10,
+      "Language (English)": 9,
+      "Language (Streetslang)": 7,
+      "Local Expert (Little Europe)": 7,
+      "Perception": 11,
+      "Persuasion": 9,
+      "Shoulder Arms": 13,
+      "Stealth": 8,
+      "Tactics": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-cavalry",
+    "name": "Cavalry",
+    "subtitle": "Officer Suri Navarro",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 84,
+    "role": "Lawman",
+    "hp": 40,
+    "seriouslyWounded": 20,
+    "deathSave": 6,
+    "headSp": 11,
+    "bodySp": 11,
+    "stats": {
+      "INT": 6,
+      "REF": 6,
+      "DEX": 5,
+      "TECH": 4,
+      "COOL": 5,
+      "WILL": 6,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 6,
+      "EMP": 3
+    },
+    "combatBases": [
+      {
+        "label": "Assault Rifle",
+        "totalBase": 13,
+        "damage": "5d6",
+        "rof": 1
+      },
+      {
+        "label": "Heavy Pistol",
+        "totalBase": 10,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 11
+      },
+      {
+        "label": "Perception",
+        "totalBase": 8
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Assault Rifle",
+        "skillBase": 13,
+        "damage": "5d6",
+        "rof": 1,
+        "mag": 25,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Shoulder Arms"
+      },
+      {
+        "name": "Heavy Pistol",
+        "skillBase": 10,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 8,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Contraceptive Implant",
+      "Cyberaudio Suite w/ Internal Agent & Scrambler/Descrambler",
+      "Hidden Holster",
+      "Subdermal Pocket"
+    ],
+    "gear": [
+      "Basic H Pistol Ammo x8",
+      "Basic Rifle Ammo x50",
+      "Agent",
+      "Bulletproof Shield",
+      "Flashlight",
+      "Handcuffs x2",
+      "Radio Communicator",
+      "Road Flare x5"
+    ],
+    "specialRules": [
+      "Habilidad de rol Lawman: Backup rango 4.",
+      "Lleva Bulletproof Shield en el equipo y Hidden Holster en el cyberware.",
+      "Role Ability: Backup rank 4"
+    ],
+    "loreSummary": "Agente de patrulla honesta e ícono entre sus colegas por llegar primera a las llamadas de oficial caído; su esposa tiene deudas de juego con un Fixer.",
+    "rep": 2,
+    "roleAbility": {
+      "name": "Backup",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 7,
+      "Autofire": 13,
+      "Brawling": 11,
+      "Concentration": 8,
+      "Conversation": 9,
+      "Criminology": 12,
+      "Deduction": 10,
+      "Drive Land Vehicle": 10,
+      "Education": 8,
+      "Evasion": 11,
+      "First Aid": 6,
+      "Handgun": 10,
+      "Human Perception": 5,
+      "Interrogation": 10,
+      "Language (English)": 10,
+      "Language (Streetslang)": 8,
+      "Local Expert (Upper Marina)": 8,
+      "Perception": 8,
+      "Persuasion": 7,
+      "Shoulder Arms": 13,
+      "Stealth": 7,
+      "Tracking": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-golden-boy",
+    "name": "Golden Boy",
+    "subtitle": "Officer Dennis Gant",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 85,
+    "role": "Lawman",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 6,
+    "headSp": 12,
+    "bodySp": 12,
+    "stats": {
+      "INT": 4,
+      "REF": 8,
+      "DEX": 7,
+      "TECH": 3,
+      "COOL": 4,
+      "WILL": 3,
+      "LUCK": 0,
+      "MOVE": 6,
+      "BODY": 6,
+      "EMP": 3
+    },
+    "combatBases": [
+      {
+        "label": "Assault Rifle (Poor Quality)",
+        "totalBase": 15,
+        "damage": "5d6",
+        "rof": 1
+      },
+      {
+        "label": "Medium Pistol",
+        "totalBase": 12,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 13
+      },
+      {
+        "label": "Perception",
+        "totalBase": 6
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Assault Rifle (Poor Quality)",
+        "skillBase": 15,
+        "damage": "5d6",
+        "rof": 1,
+        "mag": 25,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Shoulder Arms"
+      },
+      {
+        "name": "Medium Pistol",
+        "skillBase": 12,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 12,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Chemskin",
+      "Mr. Studd Sexual Implant",
+      "Neural Link w/ Kerenzikov",
+      "Techhair"
+    ],
+    "gear": [
+      "Basic M Pistol Ammo x12",
+      "Basic Rifle Ammo x50",
+      "Agent",
+      "Braindance Viewer",
+      "Flashlight",
+      "Handcuffs x2",
+      "Radio Communicator",
+      "Road Flare x5"
+    ],
+    "specialRules": [
+      "Habilidad de rol Lawman: Backup rango 4.",
+      "Neural Link con Kerenzikov; el libro imprime valores modificados entre paréntesis (REF 6, DEX 5, MOVE 4, además de varias skills).",
+      "Su Assault Rifle es de Poor Quality (PQ).",
+      "Role Ability: Backup rank 4"
+    ],
+    "loreSummary": "Oficial convertido en favorito de los medios por sus hazañas de héroe de acción; es adicto a la adrenalina y lo apartaron de patrulla para tareas de relaciones públicas.",
+    "rep": 3,
+    "roleAbility": {
+      "name": "Backup",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 9,
+      "Autofire": 10,
+      "Brawling": 11,
+      "Concentration": 5,
+      "Conversation": 5,
+      "Deduction": 5,
+      "Drive Land Vehicle": 12,
+      "Education": 6,
+      "Evasion": 13,
+      "First Aid": 5,
+      "Handgun": 12,
+      "Human Perception": 5,
+      "Language (English)": 8,
+      "Language (Streetslang)": 6,
+      "Local Expert (Upper Marina)": 6,
+      "Perception": 6,
+      "Personal Grooming": 12,
+      "Persuasion": 6,
+      "Shoulder Arms": 15,
+      "Stealth": 9
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-sarge",
+    "name": "Sarge",
+    "subtitle": "Sergeant Titus Malloy",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 86,
+    "role": "Lawman",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 4,
+    "headSp": 11,
+    "bodySp": 13,
+    "stats": {
+      "INT": 6,
+      "REF": 6,
+      "DEX": 5,
+      "TECH": 2,
+      "COOL": 7,
+      "WILL": 5,
+      "LUCK": 0,
+      "MOVE": 4,
+      "BODY": 4,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "Militech Crusher",
+        "totalBase": 10,
+        "damage": "3d6",
+        "rof": 1
+      },
+      {
+        "label": "Medium Pistol",
+        "totalBase": 15,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 9
+      },
+      {
+        "label": "Perception",
+        "totalBase": 10
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Militech Crusher",
+        "skillBase": 10,
+        "damage": "3d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Escopeta; skill inferida (Basic Shotgun Shell x12 en Gear)",
+        "skill": "Shoulder Arms"
+      },
+      {
+        "name": "Medium Pistol",
+        "skillBase": 15,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 12,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Biomonitor",
+      "Cybereye w/ Chyron & Low Light/Infrared/UV",
+      "Cybereye w/ Low Light/Infrared/UV",
+      "Enhanced Antibodies",
+      "Skinwatch"
+    ],
+    "gear": [
+      "Basic M Pistol Ammo x12",
+      "Basic Shotgun Shell x12",
+      "Agent",
+      "Disposable Cell Phone x2",
+      "Flashlight",
+      "Handcuffs x2",
+      "Kibble Pack",
+      "Radio Communicator",
+      "Road Flare x5"
+    ],
+    "specialRules": [
+      "Habilidad de rol Lawman: Backup rango 4.",
+      "Armadura mixta: L Armorjack en la cabeza (SP 11) y H Armorjack en el cuerpo (SP 13); el libro imprime valores modificados entre paréntesis (REF 4, DEX 3, MOVE 2).",
+      "Su Militech Crusher es una escopeta (munición Basic Shotgun Shell x12).",
+      "Role Ability: Backup rank 4"
+    ],
+    "loreSummary": "Sargento veterano con más de treinta años en el NCPD; hace favores y encubrimientos menores, es un informante pagado de Danger Gal y se acerca al retiro con ingresos de sobornos.",
+    "rep": 3,
+    "roleAbility": {
+      "name": "Backup",
+      "rank": 4
+    },
+    "skillBases": {
+      "Athletics": 7,
+      "Brawling": 7,
+      "Bribery": 10,
+      "Bureaucracy": 9,
+      "Concentration": 7,
+      "Conversation": 9,
+      "Criminology": 11,
+      "Deduction": 10,
+      "Drive Land Vehicle": 10,
+      "Education": 8,
+      "Evasion": 9,
+      "First Aid": 6,
+      "Handgun": 15,
+      "Human Perception": 10,
+      "Interrogation": 12,
+      "Language (English)": 10,
+      "Language (Streetslang)": 10,
+      "Local Expert (Precinct #1)": 11,
+      "Perception": 10,
+      "Persuasion": 13,
+      "Shoulder Arms": 10,
+      "Stealth": 7,
+      "Streetwise": 11
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-shepard",
+    "name": "Shepard",
+    "subtitle": "Officer Elena Korda",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "lieutenant",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 87,
+    "role": "Lawman",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 5,
+    "headSp": 13,
+    "bodySp": 13,
+    "stats": {
+      "INT": 6,
+      "REF": 7,
+      "DEX": 6,
+      "TECH": 3,
+      "COOL": 5,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 4,
+      "BODY": 5,
+      "EMP": 4
+    },
+    "combatBases": [
+      {
+        "label": "Assault Rifle",
+        "totalBase": 13,
+        "damage": "5d6",
+        "rof": 1
+      },
+      {
+        "label": "Medium Pistol",
+        "totalBase": 12,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 11
+      },
+      {
+        "label": "Perception",
+        "totalBase": 11
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Assault Rifle",
+        "skillBase": 13,
+        "damage": "5d6",
+        "rof": 1,
+        "mag": 25,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Shoulder Arms"
+      },
+      {
+        "name": "Medium Pistol",
+        "skillBase": 12,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 12,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Cyberaudio Suite w/ Amplified Hearing, Homing Tracer & Internal Agent",
+      "Cybereye w/ Chyron"
+    ],
+    "gear": [
+      "Basic M Pistol Ammo x12",
+      "Basic Rifle Ammo x50",
+      "Flashlight",
+      "Handcuffs x2",
+      "Kibble Pack x2",
+      "Radio Communicator",
+      "Road Flare x5"
+    ],
+    "specialRules": [
+      "Habilidad de rol Lawman: Backup rango 4.",
+      "Compañera de Gustav (ficha dg-ncpd-gustav): sigue su cybercam con el Chyron y le da órdenes mediante el Internal Agent; Animal Handling 12.",
+      "El libro imprime valores modificados entre paréntesis (REF 5, DEX 4, MOVE 2).",
+      "Role Ability: Backup rank 4"
+    ],
+    "loreSummary": "Oficial de una de las ocho unidades K-9 del Precinct #1, inseparable de su perro Gustav; viuda de un policía muerto en servicio y muy reservada.",
+    "rep": 2,
+    "roleAbility": {
+      "name": "Backup",
+      "rank": 4
+    },
+    "skillBases": {
+      "Animal Handling": 12,
+      "Athletics": 10,
+      "Autofire": 13,
+      "Brawling": 10,
+      "Conceal/Reveal Object": 11,
+      "Concentration": 8,
+      "Conversation": 6,
+      "Criminology": 10,
+      "Deduction": 10,
+      "Education": 8,
+      "Evasion": 11,
+      "First Aid": 5,
+      "Handgun": 12,
+      "Human Perception": 6,
+      "Interrogation": 7,
+      "Language (English)": 10,
+      "Language (Streetslang)": 8,
+      "Local Expert (Precinct #1)": 10,
+      "Perception": 11,
+      "Persuasion": 7,
+      "Shoulder Arms": 13,
+      "Stealth": 10,
+      "Tracking": 12
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-gustav",
+    "name": "Gustav",
+    "subtitle": "Custom Security Canine",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "hardened_mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 88,
+    "role": "",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 5,
+    "headSp": 0,
+    "bodySp": 11,
+    "stats": {
+      "INT": 2,
+      "REF": 7,
+      "DEX": 8,
+      "TECH": 2,
+      "COOL": 2,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 7,
+      "BODY": 5,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Combat Jaw",
+        "totalBase": 12,
+        "damage": "4d6",
+        "rof": 1
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 10,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 10
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Combat Jaw",
+        "skillBase": 12,
+        "damage": "4d6",
+        "rof": 1,
+        "mag": 0,
+        "notes": "Cyberware de combate",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 10,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      }
+    ],
+    "cyberware": [
+      "Combat Jaw",
+      "Contraceptive Implant",
+      "Cyberaudio Suite w/ Internal Agent",
+      "Cybereye w/ MicroVideo",
+      "Neural Link w/ Chipware Socket & Olfactory Boost"
+    ],
+    "gear": [
+      "Homing Tracer"
+    ],
+    "specialRules": [
+      "Perro Custom Security Canine (CSC) de Biotechnica, subtipo Gun Dog: olfato mejorado (Neural Link con Olfactory Boost) para localizar propelentes de armas y explosivos.",
+      "Su manejadora, Officer Elena Korda (Shepard, p.87), le da órdenes con el Internal Agent y sigue su cámara MicroVideo; armadura canina L Armorjack SP 11 en el cuerpo; cabeza sin protección.",
+      "Sin habilidad de rol (role: None)."
+    ],
+    "loreSummary": "Perro de seguridad cibernético de Biotechnica entrenado como Gun Dog, compañero de la oficial Korda y equipado con armadura canina.",
+    "rep": 2,
+    "skillBases": {
+      "Athletics": 10,
+      "Brawling": 10,
+      "Concentration": 6,
+      "Endurance": 8,
+      "Evasion": 12,
+      "Human Perception": 8,
+      "Language (German)": 6,
+      "Melee Weapon": 12,
+      "Perception": 10,
+      "Stealth": 10,
+      "Tracking": 10,
+      "Wilderness Survival": 10
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-pitbull",
+    "name": "Pitbull",
+    "subtitle": "Officer Judy Warren",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "hardened_mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 89,
+    "role": "Lawman",
+    "hp": 45,
+    "seriouslyWounded": 23,
+    "deathSave": 10,
+    "headSp": 7,
+    "bodySp": 7,
+    "stats": {
+      "INT": 4,
+      "REF": 5,
+      "DEX": 6,
+      "TECH": 3,
+      "COOL": 3,
+      "WILL": 3,
+      "LUCK": 0,
+      "MOVE": 5,
+      "BODY": 10,
+      "EMP": 2
+    },
+    "combatBases": [
+      {
+        "label": "Stun Baton",
+        "totalBase": 6,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Brawling Attack",
+        "totalBase": 12,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Heavy Pistol (Poor Quality)",
+        "totalBase": 10,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 12
+      },
+      {
+        "label": "Perception",
+        "totalBase": 6
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Stun Baton",
+        "skillBase": 6,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 0,
+        "notes": "Skill no impresa y Melee Weapon no figura en Skill Bases: skillBase = DEX",
+        "skill": "Melee Weapon"
+      },
+      {
+        "name": "Brawling Attack",
+        "skillBase": 12,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 0,
+        "skill": "Brawling"
+      },
+      {
+        "name": "Heavy Pistol (Poor Quality)",
+        "skillBase": 10,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 8,
+        "notes": "Listada en Gear como PQ Heavy Pistol (ROF2 • 3d6); el bloque de armas no la muestra · ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Contraceptive Implant",
+      "Grafted Muscle and Bone Lace"
+    ],
+    "gear": [
+      "Basic HP Ammo x8",
+      "PQ Heavy Pistol (ROF2",
+      "3d6)",
+      "Agent",
+      "Anti-Smog Breathing Mask",
+      "Bulletproof Shield",
+      "Disposable Cell Phone",
+      "Flashlight",
+      "Handcuffs x2",
+      "Radio Communicator",
+      "Road Flare x5"
+    ],
+    "specialRules": [
+      "Habilidad de rol Lawman: Backup rango 2.",
+      "Cyberware Grafted Muscle and Bone Lace; BODY 10 y Death Save 10 impresos.",
+      "Lleva Bulletproof Shield y Anti-Smog Breathing Mask en el equipo.",
+      "Role Ability: Backup rank 2"
+    ],
+    "loreSummary": "Oficial recién graduada que se hizo policía para golpear con licencia; tiene informes por fuerza excesiva, implantes premium de origen dudoso y vínculos sospechados con la Red Chrome Legion.",
+    "rep": 1,
+    "roleAbility": {
+      "name": "Backup",
+      "rank": 2
+    },
+    "skillBases": {
+      "Athletics": 8,
+      "Brawling": 12,
+      "Bribery": 5,
+      "Concentration": 5,
+      "Conversation": 4,
+      "Criminology": 6,
+      "Education": 6,
+      "Evasion": 12,
+      "First Aid": 5,
+      "Handgun": 10,
+      "Human Perception": 4,
+      "Language (English)": 8,
+      "Language (Streetslang)": 6,
+      "Local Expert (South Night City)": 6,
+      "Martial Arts (Karate)": 8,
+      "Perception": 6,
+      "Persuasion": 5,
+      "Stealth": 8
+    },
+    "isNetrunner": false
+  },
+  {
+    "id": "dg-ncpd-cherub",
+    "name": "Cherub",
+    "subtitle": "Officer Ranbir Majumdar",
+    "faction": "NCPD Precinct #1",
+    "threatTier": "mook",
+    "sourceBook": "danger_gal",
+    "sourceBookTitle": "Danger Gal Dossier",
+    "era": "2045",
+    "format": "red",
+    "sourcePage": 90,
+    "role": "",
+    "hp": 35,
+    "seriouslyWounded": 18,
+    "deathSave": 5,
+    "headSp": 7,
+    "bodySp": 7,
+    "stats": {
+      "INT": 5,
+      "REF": 4,
+      "DEX": 4,
+      "TECH": 2,
+      "COOL": 2,
+      "WILL": 4,
+      "LUCK": 0,
+      "MOVE": 4,
+      "BODY": 5,
+      "EMP": 5
+    },
+    "combatBases": [
+      {
+        "label": "Heavy Pistol (Poor Quality)",
+        "totalBase": 12,
+        "damage": "3d6",
+        "rof": 2
+      },
+      {
+        "label": "Medium Pistol (Poor Quality)",
+        "totalBase": 12,
+        "damage": "2d6",
+        "rof": 2
+      },
+      {
+        "label": "Evasion",
+        "totalBase": 10
+      },
+      {
+        "label": "Perception",
+        "totalBase": 9
+      }
+    ],
+    "weapons": [
+      {
+        "name": "Heavy Pistol (Poor Quality)",
+        "skillBase": 12,
+        "damage": "3d6",
+        "rof": 2,
+        "mag": 8,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      },
+      {
+        "name": "Medium Pistol (Poor Quality)",
+        "skillBase": 12,
+        "damage": "2d6",
+        "rof": 2,
+        "mag": 12,
+        "notes": "ROF/cargador según tabla Core p.94",
+        "skill": "Handgun"
+      }
+    ],
+    "cyberware": [
+      "Biomonitor",
+      "Grafted Muscle and Bone Lace"
+    ],
+    "gear": [
+      "Basic M Pistol Ammo x12",
+      "Basic H Pistol Ammo x8",
+      "Disposable Cell Phone",
+      "Flashlight",
+      "Handcuffs x2",
+      "Radio Communicator",
+      "Road Flare x5"
+    ],
+    "specialRules": [
+      "Sin habilidad de rol (role: None).",
+      "Las dos pistolas son de Poor Quality (PQ).",
+      "Cyberware: Biomonitor y Grafted Muscle and Bone Lace."
+    ],
+    "loreSummary": "Oficial novato recién graduado del Programa de Entrenamiento del NCPD, idealista y con rencor hacia los guardias privados; el dossier propone asignarlo a Cavalry.",
+    "rep": 0,
+    "skillBases": {
+      "Athletics": 7,
+      "Brawling": 10,
+      "Concentration": 7,
+      "Conversation": 7,
+      "Deduction": 7,
+      "Education": 7,
+      "Evasion": 10,
+      "First Aid": 4,
+      "Handgun": 12,
+      "Human Perception": 9,
+      "Interrogation": 4,
+      "Language (English)": 9,
+      "Language (Hindi)": 7,
+      "Language (Streetslang)": 7,
+      "Local Expert (University District)": 7,
+      "Perception": 9,
+      "Persuasion": 4,
+      "Stealth": 6
+    },
+    "isNetrunner": false
   }
 ];
