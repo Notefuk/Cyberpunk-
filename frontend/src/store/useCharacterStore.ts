@@ -38,6 +38,7 @@ import {
   buildCharacterSheetFromPregen as instantiatePregenCharacter
 } from '../data/characterCreationData';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
+import { currentFocus, maxFocus } from '../engine/mystery';
 import { SKILL_METADATA } from '../types/cyberpunk';
 import { checkRoleRankRaise, checkSkillRaise } from '../engine/roleRules';
 import type { MakerAllocation, MedicineAllocation } from '../engine/roleRules';
@@ -511,6 +512,8 @@ export interface CharacterStoreState {
   /** v5.31.0 (plan 31): durabilidad por ítem y Lifestyle del mes (IR5 pp.4-12). [Claude Code · 2026-11-13] */
   setItemDurability: (key: string, patch: Partial<ItemDurability> | null) => void;
   setLifestyle: (lifestyle: string | undefined) => void;
+  /** v5.32.0 (plan 31): Focus de investigación (IR5 p.63); lo usan el jugador y el GM. [Claude Code · 2026-11-13] */
+  adjustFocusFor: (characterId: string, delta: number) => void;
   gmSetRoleRank: (rank: number) => void;
   setMakerAllocation: (alloc: MakerAllocation) => void;
   // v4.9.3 [Claude Code · 2026-10-23] Roles sociales: Team del Exec (Core p.154) y fans del Rockerboy (Core pp.144-145).
@@ -2721,6 +2724,18 @@ export const useCharacterStore = create<CharacterStoreState>()(
       setLifestyle: (lifestyle) => {
         set((state) => ({
           characters: state.characters.map((c) => (c.id === state.activeCharacterId ? { ...c, lifestyle } : c))
+        }));
+      },
+
+      adjustFocusFor: (characterId, delta) => {
+        if (!Number.isFinite(delta)) return;
+        set((state) => ({
+          characters: state.characters.map((c) => {
+            if (c.id !== characterId) return c;
+            const max = maxFocus(c.stats.INT, c.stats.WILL);
+            const next = Math.max(0, Math.min(max, currentFocus(c) + delta));
+            return { ...c, focus: next >= max ? undefined : next };
+          })
         }));
       },
 

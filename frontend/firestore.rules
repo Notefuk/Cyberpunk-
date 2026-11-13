@@ -250,7 +250,8 @@ service cloud.firestore {
         allow create, update: if isGmOf(campId)
           // v5.22.0 (plan 28): 'actors', los actores guardados del GM (hasta 200). [Claude Code · 2026-11-12]
           // v5.23.0 (plan 28): 'playerNotes', notas privadas del GM por jugador (lista de { charId, text }). [Claude Code · 2026-11-12]
-          && docId in ['notes', 'npcs', 'net', 'actors', 'playerNotes']
+          // v5.32.0 (plan 31): 'mysteries', el tracker de misterios del GM (hasta 30; IR5 pp.61-70). [Claude Code · 2026-11-13]
+          && docId in ['notes', 'npcs', 'net', 'actors', 'playerNotes', 'mysteries']
           && request.resource.data._ts == request.time
           && (resource == null || request.time > resource.data._ts + duration.value(1, 's'))
           && (docId != 'notes' || (request.resource.data.keys().hasOnly(['text', '_ts'])
@@ -262,7 +263,9 @@ service cloud.firestore {
           && (docId != 'actors' || (request.resource.data.keys().hasOnly(['items', '_ts'])
               && request.resource.data.items is list && request.resource.data.items.size() <= 200))
           && (docId != 'playerNotes' || (request.resource.data.keys().hasOnly(['items', '_ts'])
-              && request.resource.data.items is list && request.resource.data.items.size() <= 100));
+              && request.resource.data.items is list && request.resource.data.items.size() <= 100))
+          && (docId != 'mysteries' || (request.resource.data.keys().hasOnly(['items', '_ts'])
+              && request.resource.data.items is list && request.resource.data.items.size() <= 30));
       }
 
       // v5.23.0 (plan 28): el GM le pide una tirada a un jugador; el jugador tira con su ficha y deja el resultado. [Claude Code · 2026-11-12]

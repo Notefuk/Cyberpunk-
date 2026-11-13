@@ -1,5 +1,6 @@
 // [Claude Code · 2026-11-12] v5.21.0 (plan 28): datos del panel MODO GM.
 // Tarjeta de jugador a partir de su ficha completa (la que el GM ya tiene cargada) e iniciativa de todos.
+import { currentFocus, maxFocus } from './mystery';
 import type { CharacterSheet } from '../types/cyberpunk';
 import { calculateMaxHumanity, calculateMaxHp, calculateSeriouslyWoundedThreshold, getEffectiveBody } from './characterEngine';
 import { woundStateForStabilization } from './medicalRules';
@@ -16,6 +17,8 @@ export interface GmPlayerCard {
   headSp: number; headSpMax: number;
   bodySp: number; bodySpMax: number;
   luck: number; luckMax: number;
+  /** v5.32.0 (plan 31): Focus de investigación (IR5 p.63). [Claude Code · 2026-11-13] */
+  focus: number; focusMax: number;
   humanity: number; humanityMax: number;
   /** Arma en mano (o la primera equipada). Melee: mag null. */
   weapon: { name: string; mag: number | null; magMax: number | null; reserve: number | null } | null;
@@ -45,6 +48,8 @@ export function buildGmPlayerCard(sheet: CharacterSheet): GmPlayerCard {
     bodySpMax: sheet.bodyArmor?.maxSp ?? 0,
     luck: sheet.currentLuck ?? 0,
     luckMax: sheet.stats?.LUCK ?? 0,
+    focus: sheet.stats ? currentFocus(sheet) : 0,
+    focusMax: sheet.stats ? maxFocus(sheet.stats.INT, sheet.stats.WILL) : 0,
     humanity: sheet.currentHumanity ?? 0,
     // Core pp.79-80: Humanidad = EMP × 10 (el máximo sin ciberware).
     humanityMax: calculateMaxHumanity(sheet.stats?.EMP ?? 0),

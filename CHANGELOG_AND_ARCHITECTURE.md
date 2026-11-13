@@ -117,6 +117,17 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.32.0] - 2026-11-13 (Plan 31 IV: investigación y Focus, "Did Someone Say Murder?") [Claude Code · 2026-11-13]
+* **Category**: Reglas opcionales del Interface RED Vol. 5 (pp.61-70) en la ficha y en el Modo GM. Toca `firestore.rules`.
+* **What Changed**:
+  * **Focus en la ficha** (`CharacterSheet.focus`, sin el campo está lleno): máximo `10 + 5 × ceil((INT+WILL)/2)`, igual a la tabla de la p.63. Panel en STREET LAB con botones para perder Focus, Deduction DV15 (cuesta 1d6) y Descansar un día (INT + WILL, +5 con Concentration DV15).
+  * **Tracker de misterios en el Modo GM**: objetivo, Complexity (Easy 25 a Legendary 200), pistas con su tipo (los 12 de la p.65), DV, daño, Obfuscation y pifia, y obstáculos (los 13 de la p.67 más el Ticking Clock). La Evidence Check toma el total que tiró el jugador: si sale, baja la Complexity con el daño menos la Obfuscation; si falla, le baja el Focus al PJ elegido. Los obstáculos cuestan 1d6 (superado) o 2d6 (fallado). Trae los 2 misterios de ejemplo (pp.69-70) y un registro.
+  * El Focus que pierde un PJ por el tracker se aplica a su ficha como el daño del GM y va al log de la mesa. La tarjeta de cada jugador en el Modo GM muestra su Focus.
+  * **Mesa online**: el tracker se guarda en `campaigns/{c}/gm/mysteries` (solo el GM, hasta 30 misterios), un secreto del GM más en `sync/gmSecrets.ts`. Sin mesa, en este navegador (`cpr_gm_mysteries_v1`).
+* **Files Modified**: nuevos `data/mysteryData.ts`, `engine/mystery.ts`, `features/sheet/FocusPanel.tsx`, `features/gmmode/MysteryTracker.tsx` y el test `engine/__tests__/mystery.test.ts` (9 tests); `types/cyberpunk.ts`, `store/useCharacterStore.ts` (`adjustFocusFor`), `engine/gmMode.ts`, `features/gmmode/GmModeView.tsx`, `features/sheet/StreetLabView.tsx`, `sync/gmSecrets.ts` y su test; `firestore.rules` y `sync/__tests__/rules/firestore.rules.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 775 tests, 52 tests de reglas con el emulador y build. En el navegador, Hardpoint (INT 6, WILL 6) tiene 40 de Focus; perdió 3d6 y lo recuperó descansando. En el Modo GM, con "Someone Stole It First!": Forensics con 18 cobró la pista (16 − 2 = 14, Complexity 36/50); Digital Scavenging con 8 y 1 natural le bajó 12 de Focus a Wrench, y un obstáculo superado 1 más. Todo se limpió después; consola limpia.
+* **Publicación**: las reglas nuevas de Firestore hay que desplegarlas (OK aparte) antes o junto con el hosting, o el tracker no guarda en la mesa online.
+
 ### [v5.31.0] - 2026-11-13 (Plan 31 III: durabilidad y mantenimiento, "Breaking Your Stuff") [Claude Code · 2026-11-13]
 * **Category**: Reglas opcionales del Interface RED Vol. 5 (pp.3-12) en la ficha.
 * **What Changed**:

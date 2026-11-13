@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.32.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Reglas',
+    title: 'Investigaciones y Focus',
+    summary: 'Llega el sistema de investigación del Interface RED Vol. 5. Cada PJ tiene Focus, que se gasta resolviendo misterios y se recupera descansando. El GM tiene un tracker de misterios en el Modo GM: arma la Complexity, las pistas y los obstáculos, carga las Evidence Checks y la app baja la Complexity o el Focus del PJ. Trae los 2 misterios de ejemplo del libro.',
+    highlights: [
+      'Focus en la ficha, con Deduction y descanso (IR5 p.63).',
+      'Tracker de misterios del GM, guardado en la mesa online (IR5 pp.64-67).',
+      'Los misterios de ejemplo Grab and Smash y Someone Stole It First! (IR5 pp.69-70).'
+    ],
+    filesTouched: ['frontend/src/engine/mystery.ts', 'frontend/src/features/gmmode/MysteryTracker.tsx', 'frontend/firestore.rules'],
+    metricsBadge: 'v5.32.0 • IR5 • Focus'
+  },
+  {
     version: 'v5.31.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1879,6 +1895,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.32.0': true,
     'v5.31.0': true,
     'v5.30.0': true,
     'v5.29.0': true,

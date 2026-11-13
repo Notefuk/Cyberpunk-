@@ -291,6 +291,11 @@ describe('campañas', () => {
     await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/gm/actors'), { items: [], _ts: serverTimestamp() }));
     await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/actors'), { items: [{ id: 'act1', name: 'Guardia 1' }], _ts: serverTimestamp() }));
     await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/net'), { items: [], _ts: serverTimestamp() }));
+    // v5.32.0 (plan 31): tracker de misterios, solo el GM y hasta 30 (IR5 pp.61-70). [Claude Code · 2026-11-13]
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/mysteries'), { items: Array.from({ length: 31 }, (_, i) => ({ id: 'm' + i })), _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(db('alice'), 'campaigns/camp1/gm/mysteries'), { items: [], _ts: serverTimestamp() }));
+    await assertFails(setDoc(doc(gm, 'campaigns/camp1/gm/mysteries'), { items: [], extra: 1, _ts: serverTimestamp() }));
+    await assertSucceeds(setDoc(doc(gm, 'campaigns/camp1/gm/mysteries'), { items: [{ id: 'm1', title: 'Grab and Smash', complexity: 25 }], _ts: serverTimestamp() }));
   });
 
   // [Claude Code · 2026-10-28] v5.3.0 (plan 20, B.2): lo que revela el GM. La mesa lee; solo el GM escribe.

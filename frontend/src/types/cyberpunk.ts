@@ -701,6 +701,8 @@ export interface CharacterSheet {
   lifestyle?: string;
   /** v5.31.0 (plan 31): estado y fallas de cada ítem, con la clave de `engine/itemNames.ts` (IR5 pp.4-12). [Claude Code · 2026-11-13] */
   itemDurability?: Record<string, ItemDurability>;
+  /** v5.32.0 (plan 31): Focus actual; sin el campo, lleno. Máximo 10 + 5 × ceil((INT+WILL)/2) (IR5 p.63). [Claude Code · 2026-11-13] */
+  focus?: number;
 }
 
 /** v5.31.0 (plan 31): durabilidad de un ítem ("Breaking Your Stuff", IR5 pp.4-12). [Claude Code · 2026-11-13] */

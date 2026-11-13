@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { acpaBody, acpaStatMod } from '../../engine/acpa';
 import { AcpaPanel } from './AcpaPanel';
 import { DurabilityPanel } from './DurabilityPanel';
+import { FocusPanel } from './FocusPanel';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCloudState } from '../../sync/cloudState';
 import { 
@@ -1756,6 +1757,8 @@ export const StreetLabView: React.FC = () => {
                 <div className={`mt-1 text-[11px] font-mono-code ${skillMsg.success ? 'text-emerald-300' : 'text-red-400'}`}>{skillMsg.text}</div>
               )}
               <OtherSkillsPanel />
+              {/* v5.32.0 [Claude Code · 2026-11-13]: Focus de investigación (IR5 pp.63-66) */}
+              {activeChar && <FocusPanel character={activeChar} />}
               </>
             )}
 
