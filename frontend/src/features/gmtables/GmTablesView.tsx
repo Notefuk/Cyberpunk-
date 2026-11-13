@@ -31,13 +31,14 @@ import {
 } from '../../data/gmTables/salvaging';
 import { DATING_INTRO, DATING_STEPS, DATING_TABLES, DATING_RULES } from '../../data/gmTables/dating';
 import { COLLECTING_INTRO, COLLECTING_HOW_TO, COLLECTIONS } from '../../data/gmTables/collecting';
-import { HALLOWEEN_ADVENTURES } from '../../data/gmTables/halloween';
+import { HALLOWEEN_ADVENTURES, type GmAdventure } from '../../data/gmTables/halloween';
+import { MERC_LEVEL_RULES, SOLO_OF_FORTUNE_ADVENTURES } from '../../data/gmTables/solo-of-fortune';
 import { ENEMIES_CATALOG } from '../../data/enemiesCatalog';
 import { ScreamsheetSection } from './ScreamsheetSection';
 import { GunpathSection } from './GunpathSection';
 import { Ir5ReferencesSection } from './Ir5ReferencesSection';
 
-type Section = 'achievements' | 'weather' | 'dating' | 'collecting' | 'salvaging' | 'halloween' | 'screamsheet' | 'gunpath' | 'ir5refs';
+type Section = 'achievements' | 'weather' | 'dating' | 'collecting' | 'salvaging' | 'halloween' | 'screamsheet' | 'gunpath' | 'ir5refs' | 'solo';
 
 const SECTIONS: { id: Section; label: string }[] = [
   { id: 'achievements', label: '🏆 Logros y cajas' },
@@ -50,6 +51,8 @@ const SECTIONS: { id: Section; label: string }[] = [
   { id: 'screamsheet', label: '📰 Screamsheet' },
   { id: 'gunpath', label: '🔫 Gunpath' },
   { id: 'ir5refs', label: '📚 Referencias IR5' },
+  // [Claude Code · 2026-11-13] v5.34.0 (plan 31): nivel mercenario y misiones de Solo of Fortune 2045.
+  { id: 'solo', label: '🎖️ Solo of Fortune' },
 ];
 
 const card = 'chamfer-card bg-[#0e1017] border border-[#202538] p-4 space-y-3';
@@ -323,9 +326,16 @@ function HalloweenSection() {
         <p className="text-[12px] text-[#cbd5e1]">Tres aventuras cortas de Halloween, armadas como screamsheets. Resúmenes para el GM; los PNJ con ficha están en el bestiario.</p>
         <Source s="Interface RED Vol. 4 pp.56-65" />
       </div>
-      {HALLOWEEN_ADVENTURES.map((a) => (
-        <div key={a.id} className={card}>
-          <h3 className="font-tech text-sm font-bold text-white uppercase">{a.title} <Source s={`IR4 pp.${a.pages}`} /></h3>
+      {HALLOWEEN_ADVENTURES.map((a) => <AdventureCard key={a.id} a={a} book="IR4" />)}
+    </div>
+  );
+}
+
+/** v5.34.0 (plan 31): tarjeta de aventura compartida por Halloween (IR4) y Solo of Fortune (IR5). [Claude Code · 2026-11-13] */
+function AdventureCard({ a, book }: { a: GmAdventure; book: string }) {
+  return (
+        <div className={card}>
+          <h3 className="font-tech text-sm font-bold text-white uppercase">{a.title} <Source s={`${book} pp.${a.pages}`} /></h3>
           <p className={small}><b className="text-white">Gancho:</b> {a.hookEs}</p>
           <p className={small}><b className="text-white">Cómo arranca:</b> {a.setupEs}</p>
           <ol className="list-decimal pl-5 space-y-0.5">{a.scenesEs.map((sc) => <li key={sc} className={small}>{sc}</li>)}</ol>
@@ -335,7 +345,20 @@ function HalloweenSection() {
             <p className={small}><b className="text-white">PNJ en el bestiario:</b> {a.npcIds.map((id) => ENEMIES_CATALOG.find((e) => e.id === id)?.name ?? id).join(', ')}</p>
           )}
         </div>
-      ))}
+  );
+}
+
+/** v5.34.0 (plan 31): reglas de nivel mercenario y las 2 misiones (Interface RED Vol. 5 pp.106-108, 144-147). [Claude Code · 2026-11-13] */
+function SoloOfFortuneSection() {
+  return (
+    <div className="space-y-4">
+      <div className={card}>
+        <h3 className="font-tech text-sm font-bold text-white uppercase">Nivel mercenario</h3>
+        <ul className="list-disc pl-5 space-y-0.5">{MERC_LEVEL_RULES.map((r) => <li key={r} className={small}>{r}</li>)}</ul>
+        <p className={small}>Los parámetros de misión (presupuesto y pago por persona) y los avisos del Hiring Hall están en Referencias IR5. El presupuesto operativo de cada PJ se lleva en su ficha (ARSENAL &amp; BLINDAJE).</p>
+        <Source s="Interface RED Vol. 5 pp.106-108" />
+      </div>
+      {SOLO_OF_FORTUNE_ADVENTURES.map((a) => <AdventureCard key={a.id} a={a} book="IR5" />)}
     </div>
   );
 }
@@ -366,6 +389,7 @@ export function GmTablesView() {
       {section === 'screamsheet' && <ScreamsheetSection />}
       {section === 'gunpath' && <GunpathSection />}
       {section === 'ir5refs' && <Ir5ReferencesSection />}
+      {section === 'solo' && <SoloOfFortuneSection />}
     </div>
   );
 }

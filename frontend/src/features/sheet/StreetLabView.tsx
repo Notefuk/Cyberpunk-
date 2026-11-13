@@ -5,6 +5,7 @@ import { AcpaPanel } from './AcpaPanel';
 import { DurabilityPanel } from './DurabilityPanel';
 import { FocusPanel } from './FocusPanel';
 import { PetPanel } from './PetPanel';
+import { OpBudgetPanel } from './OpBudgetPanel';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCloudState } from '../../sync/cloudState';
 import { 
@@ -1865,6 +1866,8 @@ export const StreetLabView: React.FC = () => {
               {activeChar && <DurabilityPanel character={activeChar} />}
               {/* v5.33.0 [Claude Code · 2026-11-13]: Cyberpets (IR5 pp.72-81) */}
               {activeChar && <PetPanel character={activeChar} />}
+              {/* v5.34.0 [Claude Code · 2026-11-13]: presupuesto operativo de misión mercenaria (IR5 p.108) */}
+              {activeChar && <OpBudgetPanel character={activeChar} />}
               {/* 1. Blindaje Activo */}
               <div className="chamfer-card p-3 bg-[#121319] border border-[#232736]">
                 <div className="flex items-center gap-1.5 font-tech text-xs font-bold text-white uppercase pb-1.5 mb-2 border-b border-[#1f2230]">

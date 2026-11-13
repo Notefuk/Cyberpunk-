@@ -467,6 +467,8 @@ export interface InventoryItem {
   cost: number;
   quantity: number;
   details?: string;
+  /** v5.34.0 (plan 31): comprado con el presupuesto operativo; vuelve al armory al cerrar la misión (IR5 p.108). [Claude Code · 2026-11-13] */
+  fromOpBudget?: boolean;
 }
 
 export interface EurodollarTransaction {
@@ -705,6 +707,15 @@ export interface CharacterSheet {
   focus?: number;
   /** v5.33.0 (plan 31): Cyberpets del PJ (IR5 pp.72-81). [Claude Code · 2026-11-13] */
   pets?: OwnedPet[];
+  /** v5.34.0 (plan 31): presupuesto operativo de una misión mercenaria (IR5 p.108). [Claude Code · 2026-11-13] */
+  opBudget?: OperationalBudget;
+}
+
+/** v5.34.0 (plan 31): plata del empleador para equiparse; lo comprado y lo que sobra no quedan al terminar (IR5 p.108). [Claude Code · 2026-11-13] */
+export interface OperationalBudget {
+  mission: string;
+  total: number;
+  purchases: { name: string; cost: number; inventoryId?: string }[];
 }
 
 /** v5.33.0 (plan 31): una Cyberpet del PJ. Sus stats salen de su ficha del bestiario (`enemyId`). [Claude Code · 2026-11-13] */

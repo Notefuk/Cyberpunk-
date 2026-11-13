@@ -39,6 +39,7 @@ import {
   buildCharacterSheetFromPregen as instantiatePregenCharacter
 } from '../data/characterCreationData';
 import { CEMK_FOLIO_PREMADE_CHARACTERS } from '../data/cemkFolioPremadesData';
+import { opBudgetLeft } from '../engine/opBudget';
 import { currentFocus, maxFocus } from '../engine/mystery';
 import { SKILL_METADATA } from '../types/cyberpunk';
 import { checkRoleRankRaise, checkSkillRaise } from '../engine/roleRules';
@@ -519,6 +520,10 @@ export interface CharacterStoreState {
   addPet: (pet: OwnedPet) => void;
   updatePet: (instanceId: string, patch: Partial<OwnedPet>) => void;
   removePet: (instanceId: string) => void;
+  /** v5.34.0 (plan 31): presupuesto operativo de la misión (IR5 p.108). [Claude Code · 2026-11-13] */
+  startOpBudget: (mission: string, total: number) => void;
+  spendOpBudget: (name: string, cost: number, category: InventoryItem['category'] | null) => boolean;
+  closeOpBudget: () => { lost: number; returned: number } | null;
   gmSetRoleRank: (rank: number) => void;
   setMakerAllocation: (alloc: MakerAllocation) => void;
   // v4.9.3 [Claude Code · 2026-10-23] Roles sociales: Team del Exec (Core p.154) y fans del Rockerboy (Core pp.144-145).
@@ -2762,6 +2767,46 @@ export const useCharacterStore = create<CharacterStoreState>()(
         set((state) => ({
           characters: state.characters.map((c) => (c.id === state.activeCharacterId ? { ...c, pets: (c.pets ?? []).filter((p) => p.instanceId !== instanceId) } : c))
         }));
+      },
+
+      startOpBudget: (mission, total) => {
+        if (!Number.isFinite(total) || total <= 0) return;
+        set((state) => ({
+          characters: state.characters.map((c) =>
+            c.id === state.activeCharacterId ? { ...c, opBudget: { mission: mission.trim().slice(0, 80), total: Math.round(total), purchases: [] } } : c
+          )
+        }));
+      },
+
+      spendOpBudget: (name, cost, category) => {
+        const c = get().characters.find((x) => x.id === get().activeCharacterId);
+        if (!c?.opBudget || !Number.isFinite(cost) || cost <= 0 || !name.trim()) return false;
+        if (opBudgetLeft(c.opBudget) < cost) return false;
+        const invId = category ? `inv-${Date.now()}-${Math.random().toString(36).substring(2, 7)}` : undefined;
+        set((state) => ({
+          characters: state.characters.map((x) => {
+            if (x.id !== state.activeCharacterId || !x.opBudget) return x;
+            const purchases = [...x.opBudget.purchases, { name: name.trim().slice(0, 80), cost: Math.round(cost), inventoryId: invId }];
+            const inventory = invId && category
+              ? [...(x.inventory ?? []), { id: invId, catalogId: `opbudget-${invId}`, name: name.trim().slice(0, 80), category, cost: Math.round(cost), quantity: 1, details: `Presupuesto operativo: ${x.opBudget.mission}`, fromOpBudget: true }]
+              : x.inventory;
+            return { ...x, opBudget: { ...x.opBudget, purchases }, inventory };
+          })
+        }));
+        return true;
+      },
+
+      closeOpBudget: () => {
+        const c = get().characters.find((x) => x.id === get().activeCharacterId);
+        if (!c?.opBudget) return null;
+        const lost = opBudgetLeft(c.opBudget);
+        const returned = (c.inventory ?? []).filter((i) => i.fromOpBudget).length;
+        set((state) => ({
+          characters: state.characters.map((x) =>
+            x.id === state.activeCharacterId ? { ...x, opBudget: undefined, inventory: (x.inventory ?? []).filter((i) => !i.fromOpBudget) } : x
+          )
+        }));
+        return { lost, returned };
       },
 
       gmSetRoleRank: (rank: number) => {

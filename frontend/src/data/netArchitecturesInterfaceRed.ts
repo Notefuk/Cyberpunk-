@@ -1,5 +1,6 @@
 // [Claude Code · 2026-11-11] v5.20.0 (plan 27): arquitecturas NET de Interface RED.
 // Single Shot Pack (Interface RED Vol. 1 pp.32-36) y Jumpstart Kit Conversion Guide (Interface RED Vol. 2 pp.30-31).
+// v5.34.0 (plan 31): McAlister Ranch (Interface RED Vol. 5 p.145). [Claude Code · 2026-11-13]
 // El libro no imprime la dificultad: se toma la del DV más alto según la tabla de Core p.210
 // (Basic DV6, Standard DV8, Uncommon DV10, Advanced DV12).
 // Las stats de los Black ICE se completan en netAndRolesData.ts con BLACK_ICE_STATS (Core pp.206-207).
@@ -127,6 +128,23 @@ export const INTERFACE_RED_NET_PRESETS: NetArchitecturePreset[] = [
       node(4, 8, 'Cameras'),
       pw(5, 8),
       { ...ice(6, 'Hellhound'), rewardOrDevice: 'Custom Icon: Terrier' }
+    ]
+  },
+  // [Claude Code · 2026-11-13] v5.34.0 (plan 31): misión Georgia On My Mind, Solo of Fortune 2045 (Interface RED Vol. 5 p.145).
+  {
+    id: 'net-ir5-mcalister-ranch',
+    name: 'McAlister Ranch (Georgia On My Mind — 6 pisos)',
+    difficulty: 'Advanced',
+    totalFloors: 6,
+    loreDescription:
+      'La NET del rancho de Kelly McAlister, en el sótano de la casa principal. Demon: Efreet. El File del piso 6 vale 5,000eb para SovOil. Cada dron de Kelly lleva además su propia arquitectura. Interface RED Vol. 5 p.145.',
+    floors: [
+      pw(1, 8),
+      { ...ice(2, 'Hellhound'), name: 'Black ICE: Hellhound x2' },
+      pw(3, 12),
+      node(4, 12, 'Guest House Defenses'),
+      node(5, 12, 'Main House Defenses'),
+      file(6, 12, 'Worth 5,000eb to SovOil')
     ]
   }
 ];

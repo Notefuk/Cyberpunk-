@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.34.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Nivel mercenario: Solo of Fortune 2045',
+    summary: 'Cierra el Interface RED Vol. 5. Tu ficha tiene ahora un presupuesto operativo para las misiones mercenarias: comprás con la plata del empleador y, al terminar, lo comprado vuelve al armory y lo que sobra se pierde. El GM tiene una pestaña nueva con las reglas de nivel mercenario y las dos misiones del libro, Georgia On My Mind y Trouble in Tanzania, con la NET del rancho McAlister.',
+    highlights: [
+      'Presupuesto operativo en la ficha (IR5 p.108).',
+      'Reglas de nivel mercenario y 2 misiones en TABLAS DEL GM (IR5 pp.106-108, 144-147).',
+      'NET del rancho McAlister en NET & ROLES (IR5 p.145).'
+    ],
+    filesTouched: ['frontend/src/data/gmTables/solo-of-fortune.ts', 'frontend/src/features/sheet/OpBudgetPanel.tsx', 'frontend/src/data/netArchitecturesInterfaceRed.ts'],
+    metricsBadge: 'v5.34.0 • IR5 • plan 31 completo'
+  },
+  {
     version: 'v5.33.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1911,6 +1927,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.34.0': true,
     'v5.33.0': true,
     'v5.32.0': true,
     'v5.31.0': true,

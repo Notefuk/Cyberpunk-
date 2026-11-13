@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.34.0] - 2026-11-13 (Plan 31 VI: nivel mercenario de Solo of Fortune 2045; cierra el plan 31) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon, herramientas del GM y ficha (Interface RED Vol. 5 pp.106-108, 144-147).
+* **What Changed**:
+  * **Presupuesto operativo en la ficha** (panel en ARSENAL & BLINDAJE, `CharacterSheet.opBudget`): se empieza una misión con su presupuesto por persona (atajos para las 2 del libro: 5,000eb y 25,000eb), se compra con él y lo comprado va a la mochila marcado (`InventoryItem.fromOpBudget`). Al terminar la misión, lo comprado vuelve al armory y lo que sobra se pierde (p.108). No toca los €$ del PJ.
+  * **Pestaña "Solo of Fortune" en TABLAS DEL GM**: las reglas de nivel mercenario (advertencia, Hot Tip para endurecer PNJ, balance, Crews rivales, botín, presupuesto, IP; pp.106-108) y las 2 misiones como aventuras. Georgia On My Mind incluye el rancho McAlister cuarto por cuarto con sus defensas, Kelly McAlister con su bloque completo, los drones Rock Razer y Mineral Softener, y el Wright Hotel. Trouble in Tanzania incluye la batería antiaérea, los 3 ataques y las fuerzas del ESC con sus ids del bestiario.
+  * **NET del rancho McAlister** (p.145) en NET & ROLES: 6 pisos, Demon Efreet, Hellhound x2 en el piso 2 y el File de 5,000eb en el 6.
+  * La tarjeta de aventura de Halloween se volvió componente compartido (`AdventureCard`).
+  * `CLAUDE.md`: nueva regla "Resumen corto de cada cosa" (pedido de Giuliano): en planes y cierres, cada ítem con qué hace, dónde se ve, cómo afecta y qué se interpretó.
+* **Files Modified**: nuevos `data/gmTables/solo-of-fortune.ts`, `engine/opBudget.ts`, `features/sheet/OpBudgetPanel.tsx` y el test `engine/__tests__/soloOfFortune.test.ts` (5 tests); `data/netArchitecturesInterfaceRed.ts`, `features/gmtables/GmTablesView.tsx`, `features/sheet/StreetLabView.tsx`, `types/cyberpunk.ts` (`OperationalBudget`, `fromOpBudget`), `store/useCharacterStore.ts` (`startOpBudget`, `spendOpBudget`, `closeOpBudget`); `store/persistence.ts` (APP_VERSION); changelog in-app; `CLAUDE.md`.
+* **Verificación**: tsc, 785 tests y build. En el navegador: Georgia On My Mind con 5,000eb; Frag Grenade x3 por 300eb fue a la mochila, una compra de 9,000eb se rechazó, y al terminar la misión la granada volvió al armory y se perdieron 4,700eb. La pestaña Solo of Fortune muestra a Kelly y los 4 PNJ Hardened del bestiario.
+* **Plan 31 cerrado**: v5.29.0 a v5.34.0, todo en ramas locales encadenadas (la última, `claude/plan31-v5.34.0`), sin pushear. Al publicar, las reglas de Firestore de la v5.32.0 piden su propio deploy.
+
 ### [v5.33.0] - 2026-11-13 (Plan 31 V: Cyberpets, "Your New Best Friend") [Claude Code · 2026-11-13]
 * **Category**: Contenido canon y ficha (Interface RED Vol. 5 pp.71-82).
 * **What Changed**:
