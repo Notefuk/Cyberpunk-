@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-12] v5.25.0 (plan 30 I, arsenal de Solo of Fortune) terminada en claude/plan30-v5.25.0, sin pushear
+**Última actualización**: [Claude Code · 2026-11-12] v5.26.0 (plan 30 II, armador de ACPA) terminada en claude/plan30-v5.26.0, apilada sobre claude/plan30-v5.25.0; nada pusheado
 
 **Versión de la app**: v5.22.0 en `main` @ 1feacac (PR #82), en la beta (gh-pages c1faf19, `index-Bo35K1XF.js`) y en Firebase prod (`index-9QyHIP8x.js`), con las reglas de `gm/actors` en dev y prod.
 
@@ -22,8 +22,9 @@
 
 ## En curso (a cargo)
 - [Claude Code · 2026-11-12] **Plan 30** (`docs/plans/plan30-solo-of-fortune-acpa.md`): Solo of Fortune 2045, Interface RED Vol. 5 pp.105-147 (PDF `Sourcebooks/Interface-RED/ilide.info-interface-5-pr_…pdf`, página impresa = PDF − 1).
-  - Hecho: v5.25.0 en la rama `claude/plan30-v5.25.0` (sin pushear). Arsenal en el pack, tablas de rango y Autofire de IR5 p.113, Metalgear con penalización por stat. tsc, 707 tests y build pasan; probado en local con la consola limpia.
-  - Siguiente: push y PR de la v5.25.0 (con OK). Después, v5.26.0: `data/acpaData.ts` y `engine/acpa.ts` con frames, shells, tunings y las 10 ACPA (IR5 pp.133-142) y el armador en el Compendio. Luego v5.27.0 (el PJ pilotea) y v5.28.0 (enemigos en ACPA).
+  - Hecho: v5.25.0 en `claude/plan30-v5.25.0` (arsenal, tablas de rango y Autofire de IR5 p.113, Metalgear con penalización por stat) y v5.26.0 en `claude/plan30-v5.26.0`, apilada encima (`data/acpaData.ts`, `engine/acpa.ts`, pestaña ACPA del Compendio). Nada pusheado. tsc, 722 tests y build pasan; las dos probadas en local con la consola limpia.
+  - Erratas ACPA: Giuliano eligió usar los valores recalculados con la p.136 y mostrar lo impreso en una nota (Sewer Rat, Neo Standard, Grasshopper, Bombardier, Boris).
+  - Siguiente: push y PR de las dos ramas (con OK). Después, v5.27.0: `CharacterSheet.acpaState`, entrar y salir, daño por `acpaTakeDamage` (también `gmDamage.applyHitToPc`), stats con `pilotStatsInAcpa`, party y GM, reparar. Luego v5.28.0 (enemigos en ACPA).
   - Desvíos: el pack de `data/` en la raíz quedó viejo desde la v5.3.2 y no se toca. El número 29 de plan lo tiene la sesión de Owlbear.
 
 ## Último trabajo terminado

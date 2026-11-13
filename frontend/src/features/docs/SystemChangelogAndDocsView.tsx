@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.26.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'ACPA: el armador y las 10 de fábrica',
+    summary: 'El Compendio suma la pestaña ACPA: armá tu propia armadura de poder eligiendo frame, shell, tunings y armas o ciberware Onboard, con HP, SP, BODY, mods y costo calculados, y mirá las 10 ACPA de fábrica de Solo of Fortune 2045. Donde el libro tiene erratas, la app usa el valor que dan las reglas de armado y te muestra lo impreso.',
+    highlights: [
+      'Armador de ACPA con el costo y la disponibilidad del libro (IR5 pp.135-136).',
+      'Las 10 ACPA de fábrica, de la Grasshopper al Boris (IR5 pp.138-142).',
+      'Motor de daño, crítica, reparación y fatiga listo para pilotearlas (IR5 pp.133-135).'
+    ],
+    filesTouched: ['frontend/src/data/acpaData.ts', 'frontend/src/engine/acpa.ts', 'frontend/src/features/compendium/AcpaCatalog.tsx'],
+    metricsBadge: 'v5.26.0 • ACPA • IR5 pp.133-142'
+  },
+  {
     version: 'v5.25.0',
     date: '2026-11-12',
     author: 'Claude Code',
@@ -1783,6 +1799,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.26.0': true,
     'v5.25.0': true,
     'v5.24.0': true,
     'v5.23.0': true,

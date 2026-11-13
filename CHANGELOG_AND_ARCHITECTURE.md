@@ -117,6 +117,16 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.26.0] - 2026-11-12 (Plan 30 II: armador de ACPA y las 10 de fábrica) [Claude Code · 2026-11-12]
+* **Category**: Contenido canon y motor. Segunda versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5).
+* **What Changed**:
+  * **Datos** (`data/acpaData.ts`): 4 Linear Frames, 5 Shells y 4 tunings A/B (IR5 p.136); topes de 6 armas y 6 ciberware Onboard, base de 4.000eb y 500eb por Onboard (p.135); las 10 ACPA de fábrica (pp.138-142).
+  * **Erratas del libro**: las fichas no dicen qué tunings llevan. En 5 de ellas ninguna combinación da lo impreso: Sewer Rat dice 4 SP (el Salvaged Shell da 14), Neo Standard imprime BODY 12 con frame Beta (14) y le falta +1 MOVE, y Grasshopper, Bombardier y Boris tienen el MOVE corrido. Por decisión de Giuliano la app usa el valor recalculado con la p.136 y muestra lo impreso en una nota.
+  * **Motor** (`engine/acpa.ts`, funciones puras): `buildAcpa` (HP, SP, BODY, mods de REF, DEX y MOVE, costo y disponibilidad), `acpaTakeDamage` (un solo SP y HP, ablación, destruida a 0 HP; pp.133-134), `acpaCriticalFeedback` (5 al piloto, 0 si es FBC; p.133), `acpaRepair` (Weaponstech DV9, DV13 o DV17; p.135), `acpaFatiguePenalty` (p.134), `pilotStatsInAcpa` y `acpaAllowsBulletDodge` (p.134).
+  * **Compendio**: pestaña "ACPA" con el armador (frame, shell, tunings y Onboard del catálogo) y las 10 de fábrica con sus stats, página y erratas.
+* **Files Modified**: `data/acpaData.ts` (nuevo), `engine/acpa.ts` (nuevo), `features/compendium/AcpaCatalog.tsx` (nuevo), `features/compendium/CompendiumView.tsx`; test `engine/__tests__/acpa.test.ts` (15 tests: el ejemplo de la p.137, las 10 de fábrica, daño, crítica, reparación, fatiga, piloto y esquive); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 722 tests (15 nuevos) y build. En el navegador, el armador reproduce el ejemplo de la p.137 (24 HP, 13 SP, BODY 12, -1 DEX, 9.800eb Luxury) y muestra las 10 de fábrica. Consola limpia.
+
 ### [v5.25.0] - 2026-11-12 (Plan 30 I: arsenal de Solo of Fortune 2045) [Claude Code · 2026-11-12]
 * **Category**: Contenido canon. Primera versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.105-147; página impresa = PDF − 1).
 * **What Changed**:
