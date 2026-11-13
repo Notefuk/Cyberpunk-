@@ -1212,6 +1212,19 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
                   <p className="text-[11px] text-slate-300">{fac.sidebar.text}</p>
                 </div>
               )}
+              {fac.vehicles?.map((v) => (
+                <div key={v.name} className="border border-[#23293c] rounded-xs p-2 space-y-0.5" data-testid="dg-faction-vehicle">
+                  <p className="text-[10px] font-mono-code uppercase text-slate-400 font-bold">
+                    🚗 {v.name} de {v.owner} (p.{v.page})
+                  </p>
+                  <p className="text-[11px] text-slate-300">
+                    {v.type} · SDP {v.sdp} · {v.seats} asientos · {v.combatSpeed} ({v.narrativeSpeed}) · Nomad Access {v.nomadAccess} · {v.cost.toLocaleString('es-AR')}eb
+                    {v.base ? ` · base: ${v.base.book} p.${v.base.page}` : ''}
+                  </p>
+                  <p className="text-[11px] text-slate-300">Mejoras: {v.upgrades.join(', ')}.</p>
+                  <p className="text-[11px] text-slate-400">{v.story}</p>
+                </div>
+              ))}
               {fac.in2077 ? (
                 <div className="border border-cyan-900/60 bg-cyan-950/20 rounded-xs p-2">
                   <p className="text-[10px] font-mono-code uppercase text-cyan-300 font-bold">

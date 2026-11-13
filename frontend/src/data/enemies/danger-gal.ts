@@ -9939,7 +9939,7 @@ export const DANGER_GAL_ENEMIES: EnemySheet[] = [
     "combatBases": [
       {
         "label": "TUp (+1 Slot) Nomad Pneumatic Bolt Gun w/ Infrared Nightvision Scope",
-        "totalBase": 7,
+        "totalBase": 12,
         "damage": "4d6",
         "rof": 1
       },
@@ -9955,11 +9955,11 @@ export const DANGER_GAL_ENEMIES: EnemySheet[] = [
     "weapons": [
       {
         "name": "TUp (+1 Slot) Nomad Pneumatic Bolt Gun w/ Infrared Nightvision Scope",
-        "skillBase": 7,
+        "skillBase": 12,
         "damage": "4d6",
         "rof": 1,
         "mag": 0,
-        "skill": "Archery"
+        "skill": "Shoulder Arms"
       }
     ],
     "cyberware": [

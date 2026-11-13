@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.39.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: equipo, vehículos y la NET del CrAB Lord',
+    summary: 'El Compendio suma los 4 ítems de Danger Gal que faltaban (una pistola de munición mezclada, la MicroCutie, la bicicleta y la Smart Lens) y los otros 27 del libro llevan su página como segunda fuente. Las fichas de Team Monster, Trauma Team y Zoners muestran su vehículo (Herakles, Mi-60 y Chupacabra) y el GM tiene la NET portátil del CrAB Lord. Se borraron un SMG y una NET de Danger Gal que eran inventados.',
+    highlights: [
+      '4 ítems nuevos en el Compendio (Danger Gal Dossier pp.144-148).',
+      'Vehículos de facción en el bestiario (pp.112, 120, 139).',
+      'NET portátil del CrAB Lord (p.42).'
+    ],
+    filesTouched: ['frontend/src/data/core-rules.cprpack.json', 'frontend/src/data/dangerGalFactions.ts', 'frontend/src/data/netArchitecturesDangerGal.ts'],
+    metricsBadge: 'v5.39.0 • Danger Gal • New Gear'
+  },
+  {
     version: 'v5.38.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -2004,6 +2020,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.39.0': true,
     'v5.38.0': true,
     'v5.37.0': true,
     'v5.36.0': true,

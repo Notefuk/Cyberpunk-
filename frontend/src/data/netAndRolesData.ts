@@ -1,5 +1,6 @@
 import { buildRoleGuides } from './roleProgression';
 import { INTERFACE_RED_NET_PRESETS } from './netArchitecturesInterfaceRed';
+import { DANGER_GAL_NET_PRESETS } from './netArchitecturesDangerGal';
 /**
  * NET ARCHITECTURES, 2077 QUICKHACKS, ROLES & VEHICLES DATA CATALOG
  * Fase 3 Deep Systems: Netrunning 2045, Quickhacking 2077, 10 Role Guides, 14 Vehicles, GM Loot & Portraits
@@ -312,21 +313,6 @@ export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
     ]
   },
   {
-    id: 'net-danger-gal-archive',
-    name: 'Archivo Central de Inteligencia Danger Gal',
-    difficulty: 'Uncommon',
-    totalFloors: 6,
-    loreDescription: 'Servidor central protegido por la red de Michiko Sanderson con expedientes confidenciales.',
-    floors: [
-      { floorNumber: 1, type: 'Password', name: 'Acceso Gatuno Encriptado', dv: 10 },
-      { floorNumber: 2, type: 'Black ICE', name: 'Wisp (Interferidor Óptico)', iceType: 'Wisp', iceHp: 15, iceAtk: 4, iceDef: 2 },
-      { floorNumber: 3, type: 'Control Node', name: 'Micrófonos y Cámaras Espía del Edificio', dv: 10, rewardOrDevice: 'Intercepción de audio' },
-      { floorNumber: 4, type: 'Black ICE', name: 'Skunk (Rastreador Fétido)', iceType: 'Skunk', iceHp: 10, iceAtk: 4, iceDef: 2 },
-      { floorNumber: 5, type: 'File', name: 'Expedientes de Operativos de Night City', dv: 12, rewardOrDevice: 'Secretos de todas las facciones' },
-      { floorNumber: 6, type: 'Control Node', name: 'Servidor de Borrado Térmico de Emergencia', dv: 12, rewardOrDevice: 'Purgar base de datos' }
-    ]
-  },
-  {
     id: 'net-nomad-convoy',
     name: 'Red Telemétrica del Mega-Convoy Nómada',
     difficulty: 'Standard',
@@ -341,7 +327,9 @@ export const NET_ARCHITECTURE_PRESETS: NetArchitecturePreset[] = [
     ]
   },
   // Interface RED Vol. 1-2 (plan 27, v5.20.0). [Claude Code · 2026-11-11]
-  ...INTERFACE_RED_NET_PRESETS.map(withBlackIceStats)
+  ...INTERFACE_RED_NET_PRESETS.map(withBlackIceStats),
+  // Danger Gal Dossier (plan 32, v5.39.0); reemplaza la NET inventada de Danger Gal. [Claude Code · 2026-11-13]
+  ...DANGER_GAL_NET_PRESETS.map(withBlackIceStats)
 ];
 
 /** Completa PER/SPD/ATK/DEF/REZ de un piso de Black ICE simple con la tabla de Core pp.206-207. */

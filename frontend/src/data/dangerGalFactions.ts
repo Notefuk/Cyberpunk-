@@ -20,7 +20,28 @@ export interface DangerGalFaction {
   in2077?: { text: string; page: number };
   /** Recuadro extra del libro ligado a la facción. */
   sidebar?: { title: string; page: number; text: string };
+  /** v5.39.0: vehículo propio de la facción (ficha de vehículo del libro, con sus mejoras). */
+  vehicles?: DangerGalVehicle[];
   threatColor: string;
+}
+
+/** [Claude Code · 2026-11-13] v5.39.0 (plan 32): vehículo de una facción, tal cual su recuadro del libro. */
+export interface DangerGalVehicle {
+  name: string;
+  page: number;
+  owner: string;
+  company: string;
+  type: string;
+  nomadAccess: number;
+  sdp: number;
+  seats: number;
+  combatSpeed: string;
+  narrativeSpeed: string;
+  cost: number;
+  upgrades: string[];
+  /** Vehículo base en el catálogo de Black Chrome, si el libro lo remite ahí. */
+  base?: { book: string; page: number; catalogId?: string };
+  story: string;
 }
 
 export const DANGER_GAL_BOOK = 'Danger Gal Dossier';
@@ -190,6 +211,15 @@ export const DANGER_GAL_15_FACTIONS: DangerGalFaction[] = [
     history: 'Ayudaron a Biotechnica a recuperar animales de prueba robados para vender como mascotas raras. El "rescate de conejitos" se complicó: el bicho se había multiplicado en cientos de carnívoros.',
     resources: 'Buenas habilidades, equipo extra gracias a su Fixer Turbo y la plata de los trabajos: la crew moderna de alto nivel, con juguetes caros en manos de gente inestable.',
     goals: 'No planean a largo plazo: viven para el próximo gran trabajo y la próxima historia loca. El libro recuerda que aparecen en las partidas en vivo de Mike Pondsmith.',
+    vehicles: [
+      {
+        name: 'Zetatech Herakles', page: 112, owner: 'Team Monster', company: 'Zetatech', type: 'AV-4 Multipurpose Aerodyne',
+        nomadAccess: 10, sdp: 120, seats: 8, combatSpeed: '40 MOVE', narrativeSpeed: '322 km/h', cost: 63000,
+        upgrades: ['Armored Chassis', 'Bulletproof Glass', 'Heavy Chassis', 'Onboard Machine Gun', 'Seating Upgrade', 'Vehicle Heavy Weapon Mount con Militech Cowboy U-56 Grenade Launcher'],
+        base: { book: 'Black Chrome', page: 63, catalogId: 'bc-veh-zetatech-herakles' },
+        story: 'Cambiaron su viejo AV-4 por un Herakles nuevo robándolo de la fábrica de Zetatech en San José: dos AV de seguridad de Zetatech terminaron derribados en las Badlands y la corp no los quiere nada.'
+      }
+    ],
     threatColor: '#eab308',
   },
   {
@@ -203,6 +233,14 @@ export const DANGER_GAL_15_FACTIONS: DangerGalFaction[] = [
     history: 'Son terriblemente eficientes, se especializan en llamados de nivel Executive y les roban clientes a escuadrones más lentos. Hay quejas por comisiones perdidas, pero ninguna formal.',
     resources: 'Trauma Team ya no es lo de antes de la guerra, pero consigue buen equipo. Procesan sus propios fármacos, tienen seguridad biométrica, un armero chico y un AV-4 lleno de medicinas y criogenia, modificado con equipo Nomad de la familia de Rockabye.',
     goals: 'No morir. Volver a casa enteros es una obsesión; si cae uno, lo más probable es una venganza sangrienta.',
+    vehicles: [
+      {
+        name: 'SovOil Mi-60', page: 120, owner: 'Trauma Team Squad NC4-2', company: 'SovOil', type: 'AV-4 Multipurpose Aerodyne',
+        nomadAccess: 10, sdp: 120, seats: 8, combatSpeed: '40 MOVE', narrativeSpeed: '322 km/h', cost: 65000,
+        upgrades: ['Armored Chassis', 'Bulletproof Glass', 'Heavy Chassis', 'NOS', 'Onboard Machine Gun', 'Onboard Rocket Pod', 'Seating Upgrade'],
+        story: 'Un Mi-60 de antes de la guerra que se pudría en el sótano. Rockabye pidió favores a su familia Nomad y en una semana quedó como nuevo, mejor que cualquier AV de la flota de Trauma Team.'
+      }
+    ],
     in2077: { page: 24, text: 'Trauma Team International sigue siendo el mejor servicio de rescate, si podés pagarlo: el Platinum Plan monitorea el biomonitor por el neuroport las 24 horas y garantiza respuesta en tres minutos. Venden a sus empleados como héroes.' },
     threatColor: '#ef4444',
   },
@@ -231,6 +269,15 @@ export const DANGER_GAL_15_FACTIONS: DangerGalFaction[] = [
     history: 'Una protesta espontánea estalló cuando Night Corp pasó plata del fondo de reparación de South Night City a la nueva sede del Precinct #1. Esta vez los Zoners marcharon hasta el Glen y la policía no alcanzó a pararlos.',
     resources: 'Pocos y de cada uno: no están formalizados. Viviendo en una Combat Zone, tienen ciberware y armas saqueados de muertos; las Corps hacen ahí "pruebas con fuego real", como Nova Arms con un arma experimental.',
     goals: 'Un reparto justo de los recursos de la reconstrucción. Para lograrlo van a necesitar más que manifestaciones.',
+    vehicles: [
+      {
+        name: 'Diego Motors Chupacabra', page: 139, owner: 'Speed Demon', company: 'Diego Motors', type: 'Compact Groundcar',
+        nomadAccess: 5, sdp: 70, seats: 6, combatSpeed: '20 MOVE', narrativeSpeed: '161 km/h', cost: 38000,
+        upgrades: ['Combat Plow', 'NOS', 'Heavy Chassis', 'Seating Upgrade'],
+        base: { book: 'Black Chrome', page: 66, catalogId: 'bc-veh-diego-motors-chupacabra' },
+        story: 'Un transporte de la familia de Speed Demon (los Jodes) para su enlace con los Zoners: casi de fábrica, con un arado de combate al frente para romper bloqueos de la NCPD y sin las marcas que lo atan a los Nomads. Su moto propia es una Harvey 100 con doble NOS (Black Chrome p.69).'
+      }
+    ],
     threatColor: '#78716c',
   },
 ];

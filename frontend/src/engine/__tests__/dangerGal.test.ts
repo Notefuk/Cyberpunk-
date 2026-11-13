@@ -137,3 +137,46 @@ describe('Danger Gal Dossier: fichas', () => {
     }
   });
 });
+
+// v5.39.0 [Claude Code · 2026-11-13]: New Gear (DGD pp.143-148), vehículos de facción (pp.112, 120, 139) y NET del CrAB Lord (p.42).
+import pack from '../../data/core-rules.cprpack.json';
+import { BLACK_CHROME_VEHICLES } from '../../data/blackChromeVehicles';
+import { NET_ARCHITECTURE_PRESETS } from '../../data/netAndRolesData';
+
+describe('Danger Gal Dossier: New Gear, vehículos y NET', () => {
+  type Item = { id: string; name: string; sourceBook?: string; sourcePage?: number; notes?: string; description?: string };
+  const all = (['weapons', 'armor', 'ammunition', 'cyberware', 'drugs', 'gear'] as const).flatMap((k) => (pack as unknown as Record<string, Item[]>)[k]);
+  const byId = (id: string) => all.find((i) => i.id === id);
+
+  it('entran los 4 ítems que faltaban, con su página', () => {
+    expect(byId('dg-conarms-multiple-ammo-pistol')?.sourcePage).toBe(144);
+    expect(byId('dg-sanroo-microcutie')?.sourcePage).toBe(145);
+    expect(byId('dg-bicycle')?.sourcePage).toBe(146);
+    expect(byId('dg-smart-lens')?.sourcePage).toBe(148);
+    for (const id of ['dg-conarms-multiple-ammo-pistol', 'dg-sanroo-microcutie', 'dg-bicycle', 'dg-smart-lens']) expect(byId(id)?.sourceBook).toBe('danger_gal');
+  });
+
+  it('los otros 27 ítems del New Gear anotan Danger Gal como segunda fuente; el SMG inventado ya no está', () => {
+    const noted = all.filter((i) => /También en Danger Gal Dossier p\.14[4-8]/.test(`${i.notes ?? ''}${i.description ?? ''}`));
+    expect(noted).toHaveLength(27);
+    expect(byId('danger-gal-kitty-smg')).toBeUndefined();
+    expect(all.filter((i) => i.sourceBook === 'danger_gal' && !i.sourcePage)).toHaveLength(0);
+  });
+
+  it('3 vehículos de facción, con base en Black Chrome cuando el libro la da', () => {
+    const vs = DANGER_GAL_15_FACTIONS.flatMap((f) => f.vehicles ?? []);
+    expect(vs.map((v) => [v.name, v.page, v.sdp])).toEqual([
+      ['Zetatech Herakles', 112, 120],
+      ['SovOil Mi-60', 120, 120],
+      ['Diego Motors Chupacabra', 139, 70],
+    ]);
+    for (const v of vs) if (v.base?.catalogId) expect(BLACK_CHROME_VEHICLES.some((b) => b.id === v.base!.catalogId), v.name).toBe(true);
+  });
+
+  it('la NET del CrAB Lord reemplaza a la NET inventada de Danger Gal', () => {
+    const crab = NET_ARCHITECTURE_PRESETS.find((n) => n.id === 'net-dg-crab-lord-portable');
+    expect(crab?.floors.map((f) => f.type)).toEqual(['Black ICE', 'Password', 'Control Node', 'Control Node']);
+    expect(crab?.floors[0].iceHp).toBe(25); // Giant, Core pp.206-207
+    expect(NET_ARCHITECTURE_PRESETS.some((n) => n.id === 'net-danger-gal-archive')).toBe(false);
+  });
+});

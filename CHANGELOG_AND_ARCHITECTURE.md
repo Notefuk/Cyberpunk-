@@ -117,6 +117,17 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.39.0] - 2026-11-13 (Plan 32 V: New Gear, vehículos de facción y la NET del CrAB Lord) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon (Danger Gal Dossier pp.42, 112, 120, 139 y 143-148), Compendio, bestiario y NET.
+* **What Changed**:
+  * **New Gear (pp.143-148)**: entran al Compendio los 4 ítems que faltaban: Constitutional Arms Multiple Ammo Pistol (Very Heavy Pistol de 5 tiros con munición mezclada, 500eb), Sanroo Hello Cutie MicroCutie (Medium Pistol Excelente con Hypurrburst™, 1,000eb), Bicycle (vehículo a pedal con su tabla de velocidad por BODY y reglas de fatiga, 100eb) y Smart Lens (1 Option Slot de Cybereye, 500eb). Los otros 27 ya estaban (vinieron de Gunmas, Cybermas, Woodchipper, Black Chrome+, Interface RED, etc.); se compararon con el libro y coinciden, así que llevan "También en Danger Gal Dossier p.N". A la Militech Crusher de Gunmas se le suma la capacidad 6, a la Piranha Smash su efecto (+2 a 6 skills sociales 4 h; adicción DV9 con −2) y a la Scavenged Armor que sirve para cuerpo o cabeza.
+  * **Se borró el "Danger Gal Kitty Smart SMG"**, que era inventado (no tenía página).
+  * **Vehículos de facción** en la ficha de su facción del bestiario: el Zetatech Herakles de Team Monster (p.112), el SovOil Mi-60 de Trauma Team (p.120) y el Diego Motors Chupacabra de Speed Demon (Zoners, p.139), con SDP, asientos, velocidad, Nomad Access, costo, mejoras, su historia y la página de Black Chrome del vehículo base.
+  * **NET portátil del CrAB Lord (p.42)** en las arquitecturas del GM (NET & ROLES, modo master): Black ICE Giant, Password DV10 y 2 Control Nodes de CrAB Drone DV10, con el Demon Rock Lobster. Reemplaza al "Archivo Central de Inteligencia Danger Gal", que era inventado.
+  * Glare (Sightseers) dispara su Nomad Pneumatic Bolt Gun con Shoulder Arms (es una Sniper Rifle Exótica, p.145), no Archery.
+* **Files Modified**: `data/core-rules.cprpack.json`, nuevo `data/netArchitecturesDangerGal.ts`, `data/netAndRolesData.ts`, `data/dangerGalFactions.ts` (`vehicles`), `features/gm/EnemiesCompendiumPanel.tsx`, `data/enemies-src/danger-gal.json` + `data/enemies/danger-gal.ts`, `engine/__tests__/dangerGal.test.ts` (+4 tests); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 802 tests y build. En el navegador: el Herakles en la ficha de Team Monster, el MicroCutie en el Compendio (Danger Gal p.145), el Kitty SMG ya no aparece y la NET del CrAB Lord está entre las 18 arquitecturas del modo master; consola limpia.
+
 ### [v5.38.0] - 2026-11-13 (Plan 32 IV: las 118 fichas de Danger Gal completas) [Claude Code · 2026-11-13]
 * **Category**: Contenido canon (Danger Gal Dossier pp.100-142 y 165-166) y bestiario.
 * **What Changed**:
