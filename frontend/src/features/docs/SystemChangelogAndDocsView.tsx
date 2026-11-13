@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.27.0',
+    date: '2026-11-12',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Combate',
+    title: 'ACPA: subite y pilotea',
+    summary: 'Tu personaje ya puede tener y pilotear una ACPA. Asignala desde el Compendio o desde ARSENAL & BLINDAJE, entrá con 1 Acción y los golpes que recibas, del HUD o del GM, los absorbe la ACPA. Una crítica te hace 5 de daño por el feedback neural (0 si sos FBC). Tus REF, DEX y MOVE llevan los mods de la ACPA, y el GM y la party te ven "En ACPA" con su HP y SP.',
+    highlights: [
+      'Entrar y salir, daño a la ACPA y crítica de 5 al piloto (IR5 pp.133-134).',
+      'REF, DEX, MOVE y BODY del piloto con los mods de la ACPA (IR5 p.134).',
+      'Reparación con su DV y tiempo (IR5 p.135); la party y el Modo GM la muestran.'
+    ],
+    filesTouched: ['frontend/src/engine/acpa.ts', 'frontend/src/features/sheet/AcpaPanel.tsx', 'frontend/src/features/gm/gmDamage.ts'],
+    metricsBadge: 'v5.27.0 • ACPA • IR5 pp.133-135'
+  },
+  {
     version: 'v5.26.0',
     date: '2026-11-12',
     author: 'Claude Code',
@@ -1799,6 +1815,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.27.0': true,
     'v5.26.0': true,
     'v5.25.0': true,
     'v5.24.0': true,

@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.27.0] - 2026-11-12 (Plan 30 III: el PJ pilotea una ACPA) [Claude Code · 2026-11-12]
+* **Category**: Motor y ficha. Tercera versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.133-135).
+* **What Changed**:
+  * **Ficha**: `CharacterSheet.acpaState` (`ActiveAcpaState`): nombre, HP y SP actuales y máximos, BODY, mods, Onboard y si pilotea. Se asigna desde el Compendio (pestaña ACPA, las 10 de fábrica o la armada) o desde ARSENAL & BLINDAJE.
+  * **Panel ACPA** (`features/sheet/AcpaPanel.tsx`) en ARSENAL & BLINDAJE y, compacto, en la calculadora de impactos del HUD: Entrar y Salir (1 Acción; salir de una destruida es gratis, p.133), HP y SP a mano, reparación con su DV y tiempo (Weaponstech DV9, DV13 o DV17, p.135), Onboard, esquive de balas y fatiga (p.134).
+  * **Daño**: con la ACPA puesta, el golpe del HUD y el del GM (`gmDamage.applyHitToPc`, también el ataque de un actor) los recibe la ACPA: un solo SP, sin x2 en la cabeza, ablación y destruida a 0 HP. La armadura del piloto no pierde SP. La crítica no es herida: 5 de daño directo al piloto, 0 si es FBC (p.133). Melee ignora la mitad del SP; Martial Arts no (p.133). Destruida deja de proteger (p.134). El diálogo del GM y el HUD muestran la vista previa.
+  * **Stats** (p.134): mientras pilotea, REF y DEX de los ataques, el REF de la Iniciativa y el MOVE llevan los mods de la ACPA; el BODY de los ataques es el del frame si es mayor. No cambia el HP ni el Death Save.
+  * **Mesa**: el resumen de party y la tarjeta del Modo GM muestran "En ACPA" con su HP y SP. Las reglas de Firestore no cambian (el resumen de party no limita campos).
+* **Desvío del plan**: las armas Onboard se listan en el panel, no en el arsenal, porque las fichas del libro las nombran con accesorios y variantes que no son ítems del catálogo.
+* **Files Modified**: `engine/acpa.ts` (`acpaTakeDamage` con tipo de ataque, `resolveHitOnAcpa`, `isPilotingAcpa`, `acpaStatMod`, `acpaBody`, `acpaStateFrom*`), `types/cyberpunk.ts`, `store/useCharacterStore.ts` (`setAcpaFor`), `engine/characterEngine.ts`, `engine/gmMode.ts`, `features/gm/gmDamage.ts`, `features/gm/GmTargetDialog.tsx`, `features/combat/CombatHudView.tsx`, `features/sheet/StreetLabView.tsx`, `features/sheet/AcpaPanel.tsx` (nuevo), `features/compendium/AcpaCatalog.tsx`, `features/gmmode/GmModeView.tsx`, `features/cloud/CampaignPanel.tsx`, `sync/partySummary.ts`; tests `engine/__tests__/acpaPilot.test.ts` (nuevo) y `acpa.test.ts`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 731 tests (9 nuevos) y build. En el navegador: asignar la Nyx desde el Compendio, entrar (MOVE 7→10, DEX -1), golpe crítico de 24 a la cabeza (ACPA SP 16→15, HP 28→20; piloto 40→35; su armadura igual). Consola limpia.
+
 ### [v5.26.0] - 2026-11-12 (Plan 30 II: armador de ACPA y las 10 de fábrica) [Claude Code · 2026-11-12]
 * **Category**: Contenido canon y motor. Segunda versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5).
 * **What Changed**:
