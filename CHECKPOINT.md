@@ -7,11 +7,11 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-13] plan 31 cerrado: v5.34.0 (nivel mercenario) terminada en `claude/plan31-v5.34.0`, sin pushear
+**Última actualización**: [Claude Code · 2026-11-13] plan 31 mergeado a `main` (PR #91, squash 87b1091); falta publicar
 
-**Versión de la app**: v5.28.0 en `main` @ f302cc2, en la beta (gh-pages b6de981, `index-2YHbmQt4.js`) y en Firebase prod (`index-B4WS36A5.js`). [Claude Code · 2026-11-13]
+**Versión de la app**: v5.34.0 en `main` @ 87b1091. En la beta (gh-pages b6de981, `index-2YHbmQt4.js`) y en Firebase prod (`index-B4WS36A5.js`) sigue la v5.28.0. [Claude Code · 2026-11-13]
 
-**Plan activo**: ninguno. El plan 31 (resto del Interface RED Vol. 5, v5.29.0 a v5.34.0) está terminado y sin publicar. [Claude Code · 2026-11-13]
+**Plan activo**: ninguno. El plan 31 (resto del Interface RED Vol. 5, v5.29.0 a v5.34.0) está en `main`, sin publicar. [Claude Code · 2026-11-13]
 
 ## Traspaso
 - Cierra: [Claude Code · 2026-11-12]
@@ -22,8 +22,8 @@
 
 ## En curso (a cargo)
 - [Claude Code · 2026-11-13] **Plan 31** (`docs/plans/plan31-interface-red-5-resto.md`): resto del Interface RED Vol. 5 (PDF `Sourcebooks/Interface-RED/ilide.info-interface-5-pr_…pdf`, página impresa = índice del PDF en base 0).
-  - Hecho (todo el plan): v5.29.0 (catálogos), v5.30.0 (Screamsheet, Gunpath y Referencias IR5), v5.31.0 (mantenimiento), v5.32.0 (Focus y tracker de misterios, con `gm/mysteries` en `firestore.rules`), v5.33.0 (Cyberpets) y v5.34.0 (presupuesto operativo, pestaña Solo of Fortune y NET McAlister). Ramas encadenadas; la última, `claude/plan31-v5.34.0`, tiene todo. Nada pusheado. tsc, 785 tests, 52 de reglas y build pasan; probado en local.
-  - Siguiente: con OK de Giuliano, pushear `claude/plan31-v5.34.0`, abrir el PR a `main` y mergear. Después, cada uno con su OK: la beta, el deploy de las reglas de Firestore (cambiaron en la v5.32.0) y prod.
+  - Hecho (todo el plan): v5.29.0 (catálogos), v5.30.0 (Screamsheet, Gunpath y Referencias IR5), v5.31.0 (mantenimiento), v5.32.0 (Focus y tracker de misterios, con `gm/mysteries` en `firestore.rules`), v5.33.0 (Cyberpets) y v5.34.0 (presupuesto operativo, pestaña Solo of Fortune y NET McAlister). Mergeado a `main` con el PR #91 (squash 87b1091). tsc, 785 tests, 52 de reglas y build pasan; probado en local.
+  - Siguiente: publicar, cada paso con su OK: la beta (gh-pages), el deploy de las reglas de Firestore (cambiaron en la v5.32.0 con `gm/mysteries`; desplegarlas antes o junto con el hosting) y prod. Las ramas `claude/plan31-v5.29.0` a `v5.34.0` se pueden borrar.
   - Desvíos: el pack de `data/` en la raíz quedó viejo desde la v5.3.2 y no se toca. El Hiring Hall trae 13 avisos, no 14. Gunpath: el GM elige cuántos attachments. Durabilidad: la regla del 1 natural queda como texto. Misterios: el GM escribe el total de la Evidence Check. Cyberpets: se compran desde la ficha. Kelly McAlister va como bloque en la aventura, no en el bestiario (el libro no da sus stats completos). Nueva regla en `CLAUDE.md`: resumen corto de cada cosa en planes y cierres.
 
 ## Último trabajo terminado
