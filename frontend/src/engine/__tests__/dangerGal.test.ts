@@ -43,3 +43,14 @@ describe('Danger Gal Dossier: facciones', () => {
     expect(dangerGalFactionByName('Nadie')).toBeUndefined();
   });
 });
+
+// v5.35.1 [Claude Code · 2026-11-13]: el bestiario (PNJ y facciones) solo lo ve el GM.
+import { canSeeGmOnly } from '../../store/gmAccess';
+describe('Bestiario solo para el GM', () => {
+  it('lo ve el GM de la mesa o, sin mesa, quien no tiene PIN o lo desbloqueó; el jugador de la mesa y el PIN bloqueado no', () => {
+    expect(canSeeGmOnly('table-gm')).toBe(true);
+    expect(canSeeGmOnly('local-open')).toBe(true);
+    expect(canSeeGmOnly('table-player')).toBe(false);
+    expect(canSeeGmOnly('local-locked')).toBe(false);
+  });
+});

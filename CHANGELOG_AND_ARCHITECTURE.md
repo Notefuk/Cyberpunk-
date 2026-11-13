@@ -117,6 +117,16 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.35.1] - 2026-11-13 (Plan 32: el bestiario y las facciones, solo para el GM) [Claude Code · 2026-11-13]
+* **Category**: Mesa y GM (pedido de Giuliano: que los jugadores no se spoileen los PNJ ni las facciones).
+* **What Changed**:
+  * **Bestiario solo del GM**: el botón "Bestiario & Encuentro GM" de la pestaña de combate y el panel desplegable se ven solo si `canSeeGmOnly` (GM de la mesa, o sin mesa: sin PIN del GM o con el PIN desbloqueado). Si el panel se monta igual en otro lado, el jugador ve un cartel "solo el GM" en vez de las fichas.
+  * **Haggle del Fixer**: el jugador ya no ve la opción "Bestiario" (que listaba todo el catálogo); regatea contra una ficha guardada o a mano con el COOL y el Trading que le diga el GM. El GM la sigue teniendo.
+  * Ya eran solo del GM: TABLAS DEL GM, Modo GM, Red Chrome Cargo, el Fixer Deck, las arquitecturas NET en modo master y los enemigos del encuentro sin revelar.
+  * Límite: los datos siguen dentro del código de la app; esconderlos del todo pediría guardarlos en la nube solo para el GM.
+* **Files Modified**: `features/combat/CombatHudView.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`, `features/roles/FixerPanel.tsx`, `engine/__tests__/dangerGal.test.ts` (+1 test); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 791 tests y build. En el navegador: con PIN de GM puesto (bloqueado) no aparecen el bestiario ni TABLAS DEL GM; sin PIN vuelven. Consola limpia y PIN de prueba borrado.
+
 ### [v5.35.0] - 2026-11-13 (Plan 32 I: las 15 facciones canon de Danger Gal Dossier) [Claude Code · 2026-11-13]
 * **Category**: Contenido canon y herramientas del GM (Danger Gal Dossier pp.9-142; Edgerunners Handbook de CEMK pp.24-31).
 * **What Changed**:

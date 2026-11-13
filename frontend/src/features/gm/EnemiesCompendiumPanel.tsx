@@ -3,7 +3,7 @@ import { NpcToEncounter } from './NpcToEncounter';
 import { PunknaughtBuilder } from './PunknaughtBuilder';
 import { useDebouncedLocalStorage } from '../../hooks/useDebouncedLocalStorage';
 import { useGmSecretBinding } from '../../sync/gmSecrets';
-import { useGmAccess } from '../../store/gmAccess';
+import { canSeeGmOnly, useGmAccess } from '../../store/gmAccess';
 import { useEncounterStore, encounterEnemies, type EncounterEnemy } from '../../store/encounterStore';
 import { spawnActorsFromSheet } from '../gmmode/actorSpawn';
 import { 
@@ -244,7 +244,25 @@ const EnemyPortView: React.FC<{ enemy: EnemySheet; mode: EnemySheetMode }> = ({ 
   );
 };
 
-export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = ({ autoRollInitiative }) => {
+/** v5.35.1 [Claude Code · 2026-11-13]: el bestiario es solo del GM (mesa: rol de la campaña; sin mesa: PIN del GM). Los jugadores ven un cartel. */
+export const EnemiesCompendiumPanel: React.FC<EnemiesCompendiumPanelProps> = (props) => {
+  const access = useGmAccess();
+  if (!canSeeGmOnly(access.mode)) {
+    return (
+      <div className="chamfer-card bg-[#10121a] border border-[#262c3e] p-4 text-center space-y-1" data-testid="bestiary-gm-only">
+        <p className="font-tech text-sm font-bold text-white uppercase">👹 Bestiario: solo el GM</p>
+        <p className="text-xs font-mono-code text-[#94a3b8]">
+          {access.mode === 'table-player'
+            ? `Los PNJ y las facciones los ve el GM de "${access.campName}". Lo que te revele en combate aparece en el encuentro.`
+            : 'Está bloqueado con el PIN del GM.'}
+        </p>
+      </div>
+    );
+  }
+  return <EnemiesCompendiumPanelGm {...props} />;
+};
+
+const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoRollInitiative }) => {
   // Store hook to import character into active roster
   const createCharacterFromWizard = useCharacterStore((state) => state.createCharacterFromWizard);
 

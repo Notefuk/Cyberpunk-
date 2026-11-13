@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-13] v5.35.0 (facciones canon de Danger Gal) terminada en `claude/plan32-v5.35.0`, sin pushear
+**Última actualización**: [Claude Code · 2026-11-13] v5.35.1 (bestiario y facciones solo para el GM) terminada en `claude/plan32-v5.35.1`, sin pushear
 
 **Versión de la app**: v5.34.0 en `main` @ 87b1091, en la beta (gh-pages 2a8327a, `index-7aUPZNE2.js`) y en Firebase prod (hosting `index-n44uUOG_.js` y reglas con `gm/mysteries`). [Claude Code · 2026-11-13]
 
@@ -22,8 +22,8 @@
 
 ## En curso (a cargo)
 - [Claude Code · 2026-11-13] **Plan 32** (`docs/plans/plan32-danger-gal.md`): Danger Gal Dossier (PDF `Sourcebooks/Cyberpunk-RED-Danger-Gal-Dossier_2023-07-07.pdf`; página impresa = índice del PDF). Reemplaza la v4.7.1 y la v4.7.2 del plan 6.
-  - Hecho: plan guardado; v5.35.0 (`data/dangerGalFactions.ts`, ficha de facción en el bestiario, test `dangerGal.test.ts`).
-  - Siguiente: v5.36.0 en `claude/plan32-v5.36.0` (desde v5.35.0): fichas de 6th Street, Bozos, Puma Squad, Digital Divas y Edgerunners (41) en `data/enemies-src/danger-gal.json`, `BOOK_SPECS` de `scripts/gen_enemies.py`, y borrar las 95 inventadas de `enemiesCatalog.ts`.
+  - Hecho: plan guardado; v5.35.0 (`data/dangerGalFactions.ts`, ficha de facción en el bestiario, test `dangerGal.test.ts`). v5.35.1 (pedido de Giuliano, fuera del plan): bestiario y facciones solo para el GM (`canSeeGmOnly` en CombatHudView, EnemiesCompendiumPanel y el Haggle de FixerPanel).
+  - Siguiente: v5.36.0 en `claude/plan32-v5.36.0` (desde v5.35.1): fichas de 6th Street, Bozos, Puma Squad, Digital Divas y Edgerunners (41) en `data/enemies-src/danger-gal.json`, `BOOK_SPECS` de `scripts/gen_enemies.py`, y borrar las 95 inventadas de `enemiesCatalog.ts`.
   - Pendiente: v5.36.0 a v5.38.0 (118 fichas en 3 tandas, se borran las 95 inventadas), v5.39.0 (New Gear, vehículos, CrAB Drone y su NET) y v5.40.0 (creador de PNJ guiado).
   - Desvío: el plan cita algunas páginas con +1 (las del índice del PDF son 1-based). En los datos va la página impresa: facciones 9-131, CrAB Drone 42, Herakles 112, Mi-60 120, Chupacabra 139, New Gear 143-148, guía de PNJ 149-152, Darius y Nymph 165-166.
 

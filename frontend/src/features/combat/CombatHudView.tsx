@@ -8882,7 +8882,8 @@ export const CombatHudView: React.FC = () => {
             <RefreshCw className="w-3.5 h-3.5 text-amber-400" />
             <span>🔄 Restaurar Orden</span>
           </button>
-          <button
+          {/* v5.35.1 [Claude Code · 2026-11-13]: el bestiario (PNJ y facciones) es solo del GM, para que los jugadores no se spoileen. */}
+          {rccVisible && <button
             type="button"
             onClick={() => setIsBestiaryDrawerOpen((p) => !p)}
             className={`px-3 py-1.5 rounded-xs font-tech font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 shadow-sm cursor-pointer ${
@@ -8892,16 +8893,16 @@ export const CombatHudView: React.FC = () => {
             }`}
           >
             <Skull className="w-3.5 h-3.5 text-amber-400" />
-            <span>👹 BESTIARIO & ENCUENTRO GM (44 ENEMIGOS)</span>
+            <span>👹 BESTIARIO & ENCUENTRO GM</span>
             <span className="text-[10px] font-mono-code opacity-80">
               {isBestiaryDrawerOpen ? '[ Plegar ]' : '[ Desplegar ]'}
             </span>
-          </button>
+          </button>}
         </div>
       </div>
 
       {/* Sección Desplegable del Bestiario */}
-      {isBestiaryDrawerOpen && (
+      {isBestiaryDrawerOpen && rccVisible && (
         <div className="chamfer-card p-4 bg-[#0a0c13] border-2 border-amber-500/50 shadow-2xl space-y-3 animate-fade-in">
           <div className="flex items-center justify-between pb-2 border-b border-[#23293c]">
             <div className="flex items-center gap-2">

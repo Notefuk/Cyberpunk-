@@ -26,6 +26,21 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.35.1',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa',
+    title: 'El bestiario es solo del GM',
+    summary: 'Para que los jugadores no se spoileen: el bestiario con todos los PNJ y las fichas de facción ya no se ve desde la pestaña de combate de un jugador. En una mesa lo decide el rol de la campaña; sin mesa, el PIN del GM. El Fixer jugador regatea contra fichas guardadas o con los números que le pase el GM.',
+    highlights: [
+      'Bestiario y facciones ocultos para los jugadores.',
+      'El Haggle del Fixer jugador ya no lista el catálogo de enemigos.'
+    ],
+    filesTouched: ['frontend/src/features/combat/CombatHudView.tsx', 'frontend/src/features/gm/EnemiesCompendiumPanel.tsx', 'frontend/src/features/roles/FixerPanel.tsx'],
+    metricsBadge: 'v5.35.1 • solo GM'
+  },
+  {
     version: 'v5.35.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1943,6 +1958,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.35.1': true,
     'v5.35.0': true,
     'v5.34.0': true,
     'v5.33.0': true,
