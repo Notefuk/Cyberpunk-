@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.28.0] - 2026-11-13 (Plan 30 IV: enemigos en ACPA; cierra el plan 30) [Claude Code · 2026-11-13]
+* **Category**: Modo GM. Última versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.133-142).
+* **What Changed**:
+  * **Subir y bajar a un enemigo** desde su fila en MODO GM: elige una de las 10 ACPA de fábrica (subir y bajar son 1 Acción, p.133). La fila muestra HP y SP de la ACPA, con botones para ajustarlos, "Crítica: −5 al piloto" (p.133), "Reparar" y "Bajar".
+  * **Armas Onboard** (`engine/acpaActors.ts`): las de las 10 fichas se buscan en el catálogo ("EQ" = Excellent Quality, +1; "(x4)" = cuatro armas; los accesorios quedan como nota) y se suman al enemigo con sus cargadores. La base de ataque es la de otra arma suya con la misma habilidad o su REF/DEX. Al bajar, se sacan.
+  * **Ataque**: mientras la ACPA protege, la base lleva el mod de REF (a distancia) o DEX (cuerpo a cuerpo) de la ACPA (p.134), también en Autofire.
+  * **Daño** (`encounterStore.applyEnemyDamage`): en ACPA lo recibe la ACPA, con un solo SP, sin x2 en la cabeza y ablación; a 0 HP queda destruida y el golpe siguiente va al enemigo (pp.133-134). El bestiario avisa cuando el golpe fue a la ACPA.
+  * **Actor guardado**: `GmActorState.acpa` guarda la ACPA con su HP y SP; al traerlo de vuelta sube otra vez con sus armas Onboard, y "Curar a tope" también la repara. Las reglas de Firestore no cambian (`gm/actors` limita la cantidad de ítems, no su forma).
+* **Desvío del plan**: no hay botón "Spawnear en ACPA" en el bestiario; se spawnea como siempre y se sube desde su fila en MODO GM (dos clics, y sirve para cualquier enemigo, también los rápidos y los PNJ propios).
+* **Files Modified**: `engine/acpaActors.ts` (nuevo), `engine/gmActors.ts`, `store/encounterStore.ts` (`acpa`, `acpaWeaponCount`, `setEnemyAcpa`, `patchEnemyAcpa`), `features/gmmode/GmActorsPanels.tsx`, `features/gmmode/ActorAttackForm.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`; test `engine/__tests__/acpaActors.test.ts` (6 tests: lectura de las Onboard, las 10 en el catálogo, subir y bajar, mods, actor guardado y daño); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 737 tests (6 nuevos) y build. En el navegador (MODO GM sin mesa online): un Bodyguard sube a la Militech Commando, suma el MK.27 y el Mountain Goat al ataque, y un golpe de 25 a la cabeza baja la ACPA de 30 a 22 HP y de 17 a 16 SP sin tocar su HP. Consola limpia.
+
 ### [v5.27.0] - 2026-11-12 (Plan 30 III: el PJ pilotea una ACPA) [Claude Code · 2026-11-12]
 * **Category**: Motor y ficha. Tercera versión del plan 30 (Solo of Fortune 2045, Interface RED Vol. 5 pp.133-135).
 * **What Changed**:

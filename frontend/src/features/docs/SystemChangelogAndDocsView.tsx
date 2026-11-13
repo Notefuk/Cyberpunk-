@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.28.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Modo GM',
+    title: 'Enemigos en ACPA',
+    summary: 'El GM ya puede subir a cualquier enemigo del encuentro a una de las 10 ACPA. Suma sus armas Onboard al ataque, los golpes los absorbe la ACPA hasta que queda destruida y los mods de REF y DEX se aplican solos. Si lo sacás del combate, el actor guardado se acuerda de su ACPA y de cuánto daño tiene.',
+    highlights: [
+      'Subir, bajar, reparar y la crítica de 5 al piloto, desde la fila del enemigo (IR5 p.133).',
+      'Armas Onboard de las 10 ACPA listas para atacar (IR5 pp.138-142).',
+      'El actor guardado vuelve con su ACPA, su HP y su SP.'
+    ],
+    filesTouched: ['frontend/src/engine/acpaActors.ts', 'frontend/src/store/encounterStore.ts', 'frontend/src/features/gmmode/GmActorsPanels.tsx'],
+    metricsBadge: 'v5.28.0 • ACPA • Modo GM'
+  },
+  {
     version: 'v5.27.0',
     date: '2026-11-12',
     author: 'Claude Code',
@@ -1815,6 +1831,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.28.0': true,
     'v5.27.0': true,
     'v5.26.0': true,
     'v5.25.0': true,
