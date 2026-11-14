@@ -527,7 +527,8 @@ describe('Porte CEMK de PNJ (plan 6)', () => {
 });
 
 describe('Enemigos canon v4.7.0', () => {
-  const isCoreOrHardened = (e: { sourceBook: string }) => e.sourceBook === 'core' || e.sourceBook === 'dlc';
+  // v5.44.0 [Claude Code · 2026-11-14]: los civiles de Everyday People también son 'dlc', pero su ficha abreviada no trae BODY ni WILL.
+  const isCoreOrHardened = (e: { sourceBook: string; abbreviated?: boolean }) => (e.sourceBook === 'core' || e.sourceBook === 'dlc') && !e.abbreviated;
 
   it('Conteos por libro: Core 10, CEMK 14, Hardened 16', () => {
     expect(CORE_ENEMIES).toHaveLength(10);

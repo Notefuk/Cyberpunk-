@@ -149,6 +149,7 @@ cpr-omni-deck/
   * `data/enemiesCatalog.ts` (`abbreviated`, `enemyStatLabel`); `engine/cemkPort.ts`; `features/gm/EnemiesCompendiumPanel.tsx`.
   * `data/npcCreationGuidelines.ts` (nivel `civilian`); `features/gm/GuidedNpcCreator.tsx`.
   * `store/persistence.ts` (APP_VERSION); changelog in-app.
+  * `engine/__tests__/rules.test.ts`: la prueba de HP con la fórmula excluye las fichas abreviadas, porque no traen BODY ni WILL.
 * **Verificación**:
   * tsc, los tests de la app (+6) y el build.
   * Las 20 fichas se compararon una por una contra el PDF.
