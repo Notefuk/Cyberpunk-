@@ -89,7 +89,7 @@ Los `.bat` de la raíz (`start_app.bat`, `run_extractors.bat`, `push_to_github.b
 
 ## Arquitectura (modelo COMP/CON)
 
-- **Datos y reglas** en `frontend/src/data/` (registros TypeScript tipados) y `.cprpack.json` (`data/core-rules.cprpack.json` y su copia `frontend/src/data/core-rules.cprpack.json`). Nunca hardcodear reglas o ítems dentro de las vistas.
+- **Datos y reglas** en `frontend/src/data/` (registros TypeScript tipados) y `.cprpack.json` (un solo pack: `frontend/src/data/core-rules.cprpack.json`; la copia de `data/` en la raíz se borró y `extract_core_pack.py` ya no lo pisa) [Claude Code · 2026-11-14]. Nunca hardcodear reglas o ítems dentro de las vistas.
 - **Motores puros** en `frontend/src/engine/`: `characterEngine.ts` (HP, humanidad, derivados, filtros EMP) y `combatEngine.ts` (d10 explosivo, Xd6, ablación de SP, críticos).
 - **Estado** en `frontend/src/store/`: `useCharacterStore.ts` y `useCombatStore.ts` (Zustand con persistencia en `localStorage`).
 - **Vistas** en `frontend/src/features/<módulo>/`: consumidores reactivos de los stores. Las más grandes (`CombatHudView.tsx` ~8.7k líneas, `StreetLabView.tsx` ~4k) se editan de forma quirúrgica; lee solo la zona que tocas.

@@ -90,9 +90,8 @@ cpr-omni-deck/
 │       └── cpr-pdf-extractor/
 │           └── SKILL.md                  # Protocolo de extracción CLI y esquema .cprpack.json
 ├── data/
-│   └── core-rules.cprpack.json           # Copia vieja del pack (371 ítems, sin actualizar desde v5.3.2); la que usa la app es frontend/src/data [Claude Code · 2026-11-14]
 ├── scripts/
-│   ├── extract_core_pack.py              # Ingesta y validación real de páginas del Core Rulebook
+│   ├── extract_core_pack.py              # Extrae tablas del Core a un archivo aparte (no pisa el pack de la app)
 │   ├── find_sections.py                  # Inspector de bookmarks y outline del PDF
 │   └── inspect_pdf_pages.py              # Inspector CLI UTF-8 de páginas por rango
 ├── frontend/

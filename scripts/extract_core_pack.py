@@ -6,14 +6,19 @@ from pypdf import PdfReader
 # Force UTF-8 standard output for Windows consoles
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
 
 CANDIDATE_PDF_PATHS = [
     r'C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\Core-Rules\Cyberpunk-RED-Core-Rulebook-v1.24_2020-12-25.pdf',
     r'C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\Core-Rules\Cyberpunk-RED-Core-Rulebook-v1.24.pdf'
 ]
 
-OUTPUT_DATA_DIR = r'C:\Users\TeseoHeracles\cpr-omni-deck\data'
-OUTPUT_FRONTEND_DIR = r'C:\Users\TeseoHeracles\cpr-omni-deck\frontend\src\data'
+# [Claude Code · 2026-11-14] El pack de la app (frontend/src/data/core-rules.cprpack.json) se edita directo desde la v5.3.2
+# y tiene mucho más que lo que genera este script. Por eso el script ya NO lo pisa: escribe solo en el
+# archivo que se le pase (por defecto, uno en la carpeta temporal) para comparar y copiar a mano lo nuevo.
+# La copia vieja data/core-rules.cprpack.json de la raíz se borró.
+DEFAULT_OUTPUT_PATH = os.path.join(os.environ.get('TEMP', '.'), 'core-rules.extracted.cprpack.json')
+APP_PACK_PATH = os.path.normcase(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend', 'src', 'data', 'core-rules.cprpack.json')))
 
 def locate_pdf():
     for p in CANDIDATE_PDF_PATHS:
@@ -3242,19 +3247,13 @@ def build_core_pack():
     pack["gear"].extend(EXPANSION_GEAR)
     pack["programs"].extend(EXPANSION_PROGRAMS)
 
-    os.makedirs(OUTPUT_DATA_DIR, exist_ok=True)
-    os.makedirs(OUTPUT_FRONTEND_DIR, exist_ok=True)
-
-    data_file_path = os.path.join(OUTPUT_DATA_DIR, "core-rules.cprpack.json")
-    frontend_file_path = os.path.join(OUTPUT_FRONTEND_DIR, "core-rules.cprpack.json")
-
-    with open(data_file_path, "w", encoding="utf-8") as f:
+    output_path = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_OUTPUT_PATH
+    if os.path.normcase(output_path) == APP_PACK_PATH:
+        sys.exit("ERROR: este script no escribe el pack de la app; pasá otra ruta de salida y copiá a mano lo nuevo.")
+    os.makedirs(os.path.dirname(output_path) or '.', exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(pack, f, indent=2, ensure_ascii=False)
-    print(f"Wrote {data_file_path}")
-
-    with open(frontend_file_path, "w", encoding="utf-8") as f:
-        json.dump(pack, f, indent=2, ensure_ascii=False)
-    print(f"Copied to {frontend_file_path}")
+    print(f"Wrote {output_path} (el pack de la app no se tocó)")
 
     total_items = (
         len(pack['weapons']) +

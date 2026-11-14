@@ -151,6 +151,6 @@ Campos obligatorios:
 
 1. Inspeccionar las páginas del PDF con `inspect_pdf_pages.py`.
 2. Actualizar el extractor en `scripts/extract_core_pack.py`.
-3. Ejecutar el extractor para regenerar **ambas** copias: `data/core-rules.cprpack.json` y `frontend/src/data/core-rules.cprpack.json`.
+3. Ejecutar el extractor (`python scripts/extract_core_pack.py <salida.json>`): escribe solo en la salida que le pases (por defecto, en la carpeta temporal). Comparar con `frontend/src/data/core-rules.cprpack.json`, que es el **único** pack, y copiar ahí a mano solo los ítems nuevos o corregidos. El script no pisa el pack de la app, que tiene mucho más de lo que genera. [Claude Code · 2026-11-14]
 4. Validar el JSON (`python -m json.tool <archivo> > /dev/null`) y que el frontend compile (`cd frontend && npx tsc -b --noEmit && npm run build`).
 5. Citar libro y página de cada dato nuevo en el changelog de la versión.

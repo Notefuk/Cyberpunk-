@@ -121,5 +121,5 @@ Campos obligatorios:
 ## Flujo de Trabajo
 1. Inspeccionar las páginas del PDF con `inspect_pdf_pages.py`.
 2. Actualizar el extractor en `scripts/extract_core_pack.py`.
-3. Ejecutar `extract_core_pack.py` para generar tanto `data/core-rules.cprpack.json` como `frontend/src/data/core-rules.cprpack.json`.
+3. Ejecutar `extract_core_pack.py <salida.json>`: escribe solo en esa salida (por defecto, en la carpeta temporal). El único pack es `frontend/src/data/core-rules.cprpack.json`: comparar y copiar ahí a mano solo lo nuevo o corregido. El script no lo pisa. [Claude Code · 2026-11-14]
 4. Validar integridad de JSON y contratos de tipado.
