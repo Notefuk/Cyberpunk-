@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.40.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Herramientas GM',
+    title: 'Creador de PNJ guiado',
+    summary: 'El botón "Crear PNJ personalizado" del bestiario ahora abre un asistente de 6 pasos con las guías de Danger Gal Dossier: elegís si es Mook, Lieutenant, Mini-Boss o Boss (y si es Hardened), y te muestra cuántos puntos de STAT y skill repartir, el HP y SP sugeridos y el presupuesto de equipo. Avisa si te salís de la plantilla, pero te deja guardar igual, porque el libro dice que son guías. Se ve en CEMK 2077 como las fichas del libro.',
+    highlights: [
+      'Plantillas Mook, Lieutenant, Mini-Boss y Boss, con Hardening (Danger Gal Dossier p.152).',
+      'Contadores de puntos de STAT y skill, y bases comparadas con lo sugerido.',
+      'Cierra el plan de Danger Gal Dossier.'
+    ],
+    filesTouched: ['frontend/src/data/npcCreationGuidelines.ts', 'frontend/src/features/gm/GuidedNpcCreator.tsx'],
+    metricsBadge: 'v5.40.0 • Danger Gal • Creador de PNJ'
+  },
+  {
     version: 'v5.39.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -2020,6 +2036,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.40.0': true,
     'v5.39.0': true,
     'v5.38.0': true,
     'v5.37.0': true,

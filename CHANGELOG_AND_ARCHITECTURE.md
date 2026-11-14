@@ -117,6 +117,26 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.40.0] - 2026-11-13 (Plan 32 VI: creador de PNJ guiado; cierra el plan 32) [Claude Code · 2026-11-13]
+* **Category**: Herramienta del GM (Danger Gal Dossier pp.149-152, NPC Creation Guidelines) y bestiario.
+* **What Changed**:
+  * **Creador de PNJ guiado** en lugar del formulario libre del botón "Crear PNJ personalizado" del bestiario (solo GM). Tiene 6 pasos, como el libro:
+    1. Concepto: nombre, facción (las 15 canon o Independiente), era 2077/2045 e historia.
+    2. Nivel: Mook, Lieutenant, Mini-Boss o Boss, con o sin Hardened. Muestra la plantilla de p.152: puntos de STAT y skill, HP, SP, bases de combate y no combate, presupuesto de equipo y ciberware y nota de rol y armas.
+    3. Skills gratis: Native Language 4 y 13 skills a 2.
+    4. STATs y skills: contadores de puntos, base de cada skill comparada con lo sugerido, HP con la fórmula del Core p.79, SP, rol y Role Ability.
+    5. Equipo: armas, ciberware y equipo, con la sugerencia opcional de bajar 1 EMP cada 5 piezas.
+    6. Ajustes finales: resumen y avisos.
+  * Los avisos no bloquean el guardado: el libro dice que son guías y no reglas (p.150). Solo hace falta el nombre.
+  * El PNJ se guarda donde siempre (navegador o la campaña en la nube) y se ve en CEMK con `portEnemyToCemk`, igual que los del libro.
+  * **Interpretado**:
+    * Los puntos de STAT no cuentan LUCK: así suman las 118 fichas del libro (33 los Mook, 44 los Lieutenant).
+    * El creador no calcula precios de cada ítem; muestra el presupuesto.
+    * Cada STAT arranca repartido parejo al elegir el nivel.
+  * Los PNJ custom ya guardados siguen igual.
+* **Files Modified**: nuevo `data/npcCreationGuidelines.ts`, nuevo `features/gm/GuidedNpcCreator.tsx`, `features/gm/EnemiesCompendiumPanel.tsx` (sale el formulario viejo), `engine/__tests__/dangerGal.test.ts` (+4 tests); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 806 tests y build. En el navegador: se creó un Hardened Lieutenant (48 de 48 puntos de STAT, Handgun base 13 en el rango 13-14, la sugerencia de EMP con 5 piezas), se guardó, se vio en CEMK con Neuroport y arma Power, y se borró; consola limpia.
+
 ### [v5.39.0] - 2026-11-13 (Plan 32 V: New Gear, vehículos de facción y la NET del CrAB Lord) [Claude Code · 2026-11-13]
 * **Category**: Contenido canon (Danger Gal Dossier pp.42, 112, 120, 139 y 143-148), Compendio, bestiario y NET.
 * **What Changed**:
