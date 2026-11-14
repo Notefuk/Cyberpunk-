@@ -7,25 +7,25 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-14] plan 32 (v5.40.0) mergeado a `main` (PR #93, 4a05c4e); falta beta y prod
+**Última actualización**: [Claude Code · 2026-11-14] v5.40.0 en `main` (PR #93) y en la beta; falta prod
 
-**Versión de la app**: v5.40.0 en `main` @ 4a05c4e [Claude Code · 2026-11-14]. La beta (gh-pages 2a8327a, `index-7aUPZNE2.js`) y Firebase prod (hosting `index-n44uUOG_.js` y reglas con `gm/mysteries`) siguen en la v5.34.0.
+**Versión de la app**: v5.40.0 en `main` @ 4a05c4e y en la beta (gh-pages fedc9c8, `index--Iw6CGkO.js`) [Claude Code · 2026-11-14]. Firebase prod (hosting `index-n44uUOG_.js` y reglas con `gm/mysteries`) sigue en la v5.34.0.
 
-**Plan activo**: ninguno. El plan 32 (Danger Gal) está terminado y en `main`; falta publicarlo en la beta y en prod. [Claude Code · 2026-11-14]
+**Plan activo**: ninguno. El plan 32 (Danger Gal) está en `main` y en la beta; falta prod. [Claude Code · 2026-11-14]
 
 ## Traspaso
 - Cierra: [Claude Code · 2026-11-13]
 - Rama y último commit: `main` @ 4a05c4e (PR #93, squash del plan 32). Este checkpoint está en `claude/checkpoint-post-plan32`, solo local (falta OK para pushearlo). Las ramas `claude/plan32-v5.35.0` a `v5.40.0` ya están mergeadas. [Claude Code · 2026-11-14]
 - A medias: nada. tsc, 806 tests y build pasan en v5.40.0.
-- Siguiente paso exacto: publicar la v5.40.0, cada paso con su OK: la beta (`npm run build:beta` a gh-pages) y prod (hosting). No hay cambios de reglas de Firestore en el plan 32.
+- Siguiente paso exacto: publicar la v5.40.0 en prod (hosting), con su OK. No hay cambios de reglas de Firestore en el plan 32.
 - Notas: el creador guiado está en `features/gm/GuidedNpcCreator.tsx` y las plantillas en `data/npcCreationGuidelines.ts` (los puntos de STAT no cuentan LUCK). Erratas del libro guardadas tal cual: Flenser SW 13, Stringer Death Save 4; Drop y Paddles: la lista de pp.168-170 difiere de la ficha, se usa la ficha.
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
 - [Claude Code · 2026-11-13] **Plan 32** (`docs/plans/plan32-danger-gal.md`): Danger Gal Dossier (PDF `Sourcebooks/Cyberpunk-RED-Danger-Gal-Dossier_2023-07-07.pdf`; página impresa = índice del PDF). Reemplaza la v4.7.1 y la v4.7.2 del plan 6.
   - Hecho: plan guardado; v5.35.0 (`data/dangerGalFactions.ts`, ficha de facción en el bestiario, test `dangerGal.test.ts`). v5.35.1 (pedido de Giuliano, fuera del plan): bestiario y facciones solo para el GM (`canSeeGmOnly` en CombatHudView, EnemiesCompendiumPanel y el Haggle de FixerPanel). v5.36.0: 42 fichas (6th Street, Bozos, Puma Squad, Digital Divas, Edgerunners) en `data/enemies-src/danger-gal.json`; las 95 inventadas pasaron a `data/enemies/legacy-invented-danger-gal.ts` (solo para actores viejos, `findEnemySheet`). v5.37.0: 37 fichas más (Generation Red, Maelstrom, NCPD, Network 54, Piranhas); erratas del libro guardadas tal cual: Flenser SW 13 (p.72), Stringer Death Save 4 (p.94). v5.38.0: las últimas 39 (Sightseers, Team Monster, Trauma Team, Tyger Claws, Zoners, Darius y Nymph con facción "Arasaka"); 118 en total, revisadas contra la lista del libro (pp.168-170): difieren solo Drop y Paddles, se usa la ficha. v5.39.0: 4 ítems nuevos en el pack (ids `dg-*`), 27 con "También en Danger Gal Dossier p.N", fuera `danger-gal-kitty-smg`; `vehicles` en `dangerGalFactions.ts`; NET `net-dg-crab-lord-portable` (`data/netArchitecturesDangerGal.ts`), fuera `net-danger-gal-archive`. v5.40.0: creador de PNJ guiado (`features/gm/GuidedNpcCreator.tsx`, plantillas en `data/npcCreationGuidelines.ts`), reemplaza al formulario libre.
-  - Siguiente: publicar en la beta y en prod, cada paso con su OK.
-  - Pendiente: mergeado a `main` (PR #93); falta la beta y prod.
+  - Siguiente: publicar en prod (hosting), con su OK.
+  - Pendiente: en `main` (PR #93) y en la beta; falta prod.
   - Desvío: el plan cita algunas páginas con +1 (las del índice del PDF son 1-based). En los datos va la página impresa: facciones 9-131, CrAB Drone 42, Herakles 112, Mi-60 120, Chupacabra 139, New Gear 143-148, guía de PNJ 149-152, Darius y Nymph 165-166.
 
 ## Último trabajo terminado
