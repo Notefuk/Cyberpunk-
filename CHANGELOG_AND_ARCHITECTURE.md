@@ -117,6 +117,32 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.41.0] - 2026-11-14 (Plan 33 I: Going Quiet) [Claude Code · 2026-11-14]
+* **Category**: Reglas y equipo canon (DLC *Going Quiet*, pp.3-7), HUD, NET y mesa online.
+* **What Changed**:
+  * **Flash of Luck (p.3), regla opcional**:
+    * Se gasta 2, 4 u 8 de Luck para que el PJ "haya hecho antes" algo que ayuda ahora. Según el tipo, el tope de gasto es 100, 500 o 1,000eb.
+    * Va 1 vez por Beat (según el reloj de la mesa) y hasta 3 por misión.
+    * Aparece en la bandeja de Luck del HUD solo si está prendida. El botón "✨ Flash of Luck" de la barra de arriba la prende o la apaga; con mesa activa, solo el GM.
+    * "No se pudo comprar" devuelve la Luck. "Nueva misión" reinicia la cuenta.
+  * **Netrunning en sigilo (pp.4-5)**, en el corredor de NET:
+    * Quietly Jack In, con una NET Action extra, contra cada Watcher.
+    * Pasar el Black ICE del piso con Interface + Cloak contra su PER.
+    * Cruzarse con un Watcher, la búsqueda del Watcher con Pathfinder, y qué rompe el sigilo.
+  * **Los 14 ítems de Harry the Shrimp (pp.5-7)** en el Compendio y la tienda: 16 de equipo (el Branded Jumpsuit en sus 4 precios) y el Translation Chip (chipware, HL 7). Ids `gq-*`.
+  * **Interpretado**:
+    * El veto del GM y la compra quedan a la mesa.
+    * Si se devuelve la Luck, el uso tampoco cuenta.
+    * Los Watchers y el bonus de Cloak/Pathfinder se cargan a mano, porque la app no tiene IA de Demons ni los programas Eraser o See Ya.
+    * En las tiradas opuestas, el empate lo gana el que se defiende.
+* **Files Modified**: nuevos `engine/flashOfLuck.ts`, `engine/netStealth.ts`, `features/combat/FlashOfLuckPanel.tsx`, `features/netroles/NetStealthPanel.tsx` y `engine/__tests__/goingQuiet.test.ts`; `data/core-rules.cprpack.json`; `types/cyberpunk.ts` (`flashOfLuck`); `store/useCharacterStore.ts`; `store/useCombatStore.ts` (`flashOfLuckEnabled`, clave local); `sync/campaignRepo.ts`, `sync/cloudCampaigns.ts`, `sync/tableSync.ts` (`flashOfLuck` en la campaña); `firestore.rules` y su test; `features/combat/CombatHudView.tsx`; `features/layout/TopHudBar.tsx`; `features/netroles/NetAndRolesDeckView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**:
+  * tsc, los tests de la app (+7) y el build.
+  * Los 53 tests de reglas en el emulador.
+  * En el navegador: se prendió Flash of Luck, se gastó y quedó bloqueada en el mismo Beat. Después se devolvió, se reinició y se apagó.
+  * En el corredor de NET: un Quietly Jack In contra un Imp y un cruce que rompió el sigilo por empate.
+  * El Ghostsuit aparece en el Compendio. Consola limpia.
+
 ### [v5.40.0] - 2026-11-13 (Plan 32 VI: creador de PNJ guiado; cierra el plan 32) [Claude Code · 2026-11-13]
 * **Category**: Herramienta del GM (Danger Gal Dossier pp.149-152, NPC Creation Guidelines) y bestiario.
 * **What Changed**:

@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-14] plan 33 aprobado; arranca la v5.41.0 (Going Quiet) en `claude/plan33-v5.41.0`
+**Última actualización**: [Claude Code · 2026-11-14] v5.41.0 (Going Quiet) terminada en `claude/plan33-v5.41.0`, sin pushear
 
 **Versión de la app**: v5.40.0 en `main` @ 4a05c4e, en la beta (gh-pages fedc9c8) y en Firebase prod (hosting `index--Iw6CGkO.js`; reglas sin cambios, con `gm/mysteries`) [Claude Code · 2026-11-14].
 
@@ -17,14 +17,14 @@
 - Cierra: [Claude Code · 2026-11-13]
 - Rama y último commit: `claude/plan33-v5.41.0` (desde `claude/checkpoint-post-96`, que sale de `main` @ 08b741b). Pusheada: no — falta OK. [Claude Code · 2026-11-14]
 - A medias: nada. tsc, 806 tests y build pasan en v5.40.0.
-- Siguiente paso exacto: v5.41.0 Going Quiet (ítems `gq-*` en el pack, Flash of Luck con campo `flashOfLuck` en la campaña y en `firestore.rules`, sigilo en el corredor de NET).
+- Siguiente paso exacto: crear `claude/plan33-v5.42.0` desde `claude/plan33-v5.41.0` y hacer Invented Tech Upgrades (`data/inventedTechUpgrades.ts`, calculadora en el panel del Maker y en NET & ROLES, campo `inventedUpgrades` en la ficha). Reglas de Firestore cambiadas en v5.41.0 (`flashOfLuck`): el deploy de reglas pide OK.
 - Notas: el creador guiado está en `features/gm/GuidedNpcCreator.tsx` y las plantillas en `data/npcCreationGuidelines.ts` (los puntos de STAT no cuentan LUCK). Erratas del libro guardadas tal cual: Flenser SW 13, Stringer Death Save 4; Drop y Paddles: la lista de pp.168-170 difiere de la ficha, se usa la ficha. Hay un solo pack: `frontend/src/data/core-rules.cprpack.json` (770 ítems). `scripts/extract_core_pack.py <salida.json>` escribe aparte (genera 405 ítems) y se niega a pisar el pack de la app; lo nuevo se copia a mano.
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
 - [Claude Code · 2026-11-14] **Plan 33** (`docs/plans/plan33-going-quiet-tech-civiles.md`). PDFs en `Documents/CP RED TEST ANTIGRAVITY/DLC-Supplements/` (página impresa = índice).
-  - Hecho: plan guardado.
-  - Siguiente: v5.41.0 Going Quiet; después v5.42.0 Invented Tech Upgrades, v5.43.0 Cyberware Enhancements (solo 2077) y v5.44.0 Everyday People.
+  - Hecho: plan guardado. v5.41.0: ítems `gq-*`, `engine/flashOfLuck.ts` + `FlashOfLuckPanel` (campo `flashOfLuck` en la ficha, `flashOfLuckEnabled` en useCombatStore, `flashOfLuck` en la campaña y en `firestore.rules`), `engine/netStealth.ts` + `NetStealthPanel`.
+  - Siguiente: v5.42.0 Invented Tech Upgrades; después v5.43.0 Cyberware Enhancements (solo 2077) y v5.44.0 Everyday People.
   - Decisiones: civiles abreviados sin inventar STATs; Tech Upgrades solo catálogo y precio; enhancements solo 2077; Flash of Luck apagada, la prende el GM.
 
 ## Último trabajo terminado

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
 import { useCloudState } from '../../sync/cloudState';
-import { useActiveTable, chooseEra } from '../../sync/tableSync';
+import { useActiveTable, chooseEra, chooseFlashOfLuck } from '../../sync/tableSync';
 import { calculateMaxHp, calculateSeriouslyWoundedThreshold, getEffectiveBody } from '../../engine/characterEngine';
 import { 
   Users, 
@@ -32,6 +32,7 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
   const { table: activeTable, isGm: isTableGm } = useActiveTable();
   const eraLocked = !!activeTable && !isTableGm;
   const setEra = (e: '2045' | '2077') => { chooseEra(e); };
+  const flashOfLuckEnabled = useCombatStore((state) => state.flashOfLuckEnabled);
   const eraTitle = eraLocked ? `La era la fija el GM de "${activeTable!.name}"` : activeTable ? `Cambia la era de toda la mesa "${activeTable.name}"` : undefined;
   const appTheme = useCharacterStore((state) => state.appTheme);
   const setAppTheme = useCharacterStore((state) => state.setAppTheme);
@@ -260,6 +261,17 @@ export const TopHudBar: React.FC<TopHudBarProps> = ({ onOpenStreetLab }) => {
               2077 CEMK
             </button>
           </div>
+          {/* v5.41.0 (plan 33): Flash of Luck (Going Quiet p.3), regla opcional que prende el GM. [Claude Code · 2026-11-14] */}
+          <button
+            type="button"
+            onClick={() => chooseFlashOfLuck(!flashOfLuckEnabled)}
+            disabled={eraLocked}
+            data-testid="flash-of-luck-toggle"
+            title={eraLocked ? `Flash of Luck: la prende el GM de "${activeTable!.name}"` : 'Flash of Luck (Going Quiet p.3): regla opcional para gastar Luck en algo que el PJ hizo antes'}
+            className={`px-2 py-1 text-xs font-mono-code rounded-xs border disabled:cursor-not-allowed ${flashOfLuckEnabled ? 'border-[#f59e0b] text-[#f59e0b]' : 'border-[#222634] text-[#64748b]'}`}
+          >
+            ✨ Flash of Luck {flashOfLuckEnabled ? 'ON' : 'OFF'}
+          </button>
         </div>
 
       </div>

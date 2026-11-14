@@ -327,6 +327,10 @@ export function createCampaignController(host: CampaignHost) {
     async setTableEra(campId: string, era: TableEra): Promise<void> {
       await repo.setTableEra(campId, era);
     },
+
+    async setTableFlashOfLuck(campId: string, on: boolean): Promise<void> {
+      await repo.setTableFlashOfLuck(campId, on);
+    },
   };
   return controller;
 }

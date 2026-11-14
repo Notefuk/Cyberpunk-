@@ -191,7 +191,9 @@ service cloud.firestore {
           && d.clock.session is int && d.clock.session >= 1
           && d.clock.day is int && d.clock.day >= 1
           && d.clock.beat is int && d.clock.beat >= 1))
-        && (!('era' in d) || d.era in ['2045', '2077']);
+        && (!('era' in d) || d.era in ['2045', '2077'])
+        // v5.41.0 (plan 33): Flash of Luck (Going Quiet p.3), regla opcional que prende el GM. [Claude Code · 2026-11-14]
+        && (!('flashOfLuck' in d) || d.flashOfLuck is bool);
     }
 
     match /campaigns/{campId} {

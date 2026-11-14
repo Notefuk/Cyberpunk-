@@ -52,6 +52,7 @@ import { getInterfaceRank, netActionsForInterface, maxQuickhackDv, neuroportFire
 import { GameClockBar } from './GameClockBar';
 import { conditionById } from '../../data/conditions';
 import { CritTableSelector } from './CritTableSelector';
+import { FlashOfLuckPanel } from './FlashOfLuckPanel';
 import { MedtechTreatmentPanel } from '../netroles/MedtechTreatmentPanel';
 import { BackupCard } from './BackupCard';
 import { LawmanPanel } from '../roles/LawmanPanel';
@@ -4251,6 +4252,7 @@ export const CombatHudView: React.FC = () => {
                     </button>
                   </div>
                 </div>
+                <FlashOfLuckPanel />
               </div>
             </div>
             {renderLeftPanelResizeHandle('luck')}

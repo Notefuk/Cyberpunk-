@@ -11,6 +11,8 @@ export interface CampaignDoc {
   /** v5.1.0 (plan 19, punto 1): reloj y era de la mesa; los escribe solo el GM. Sin dato = todavía no se publicó. [Claude Code · 2026-10-27] */
   clock?: TableClock;
   era?: TableEra;
+  /** v5.41.0 (plan 33): regla opcional Flash of Luck (Going Quiet p.3); la escribe solo el GM. [Claude Code · 2026-11-14] */
+  flashOfLuck?: boolean;
 }
 
 /** Lee el reloj de un documento de campaña; null si falta o no es válido. [Claude Code · 2026-10-27] */
@@ -61,6 +63,7 @@ export interface CampaignRepo {
   assignCharacter(charId: string, campId: string | null, writerId: string): Promise<void>;
   setTableClock(campId: string, clock: TableClock): Promise<void>;
   setTableEra(campId: string, era: TableEra): Promise<void>;
+  setTableFlashOfLuck(campId: string, on: boolean): Promise<void>;
 }
 
 export function createCampaignRepo(h: FirebaseHandles, uid: string): CampaignRepo {
@@ -78,6 +81,7 @@ export function createCampaignRepo(h: FirebaseHandles, uid: string): CampaignRep
     inviteCode: (d.inviteCode as string | undefined) ?? '',
     clock: parseTableClock(d.clock) ?? undefined,
     era: d.era === '2045' || d.era === '2077' ? d.era : undefined,
+    flashOfLuck: typeof d.flashOfLuck === 'boolean' ? d.flashOfLuck : undefined,
   });
 
   const removeMember = async (campId: string, memberUid: string) => {
@@ -170,6 +174,10 @@ export function createCampaignRepo(h: FirebaseHandles, uid: string): CampaignRep
 
     async setTableEra(campId, era) {
       await fs.updateDoc(campRef(campId), { era });
+    },
+
+    async setTableFlashOfLuck(campId, on) {
+      await fs.updateDoc(campRef(campId), { flashOfLuck: on });
     },
   };
 }

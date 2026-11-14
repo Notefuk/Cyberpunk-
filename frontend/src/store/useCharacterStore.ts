@@ -45,6 +45,8 @@ import { SKILL_METADATA } from '../types/cyberpunk';
 import { checkRoleRankRaise, checkSkillRaise } from '../engine/roleRules';
 import type { MakerAllocation, MedicineAllocation } from '../engine/roleRules';
 import { canInstallAnother } from '../engine/cyberwareEffects';
+import { applyFlashOfLuck, canUseFlashOfLuck, flashOfLuckTier, newMission, refundLastFlashOfLuck, type FlashOfLuckTier } from '../engine/flashOfLuck';
+import { useCombatStore } from './useCombatStore';
 import { REPLACEMENT_FEE_EB, endOfSession, replacementMember } from '../engine/socialRoleRules';
 import type { ExecTeamMember } from '../engine/socialRoleRules';
 import coreRulesPack from '../data/core-rules.cprpack.json';
@@ -380,6 +382,10 @@ export interface CharacterStoreState {
   ablateArmor: (location: 'head' | 'body', amount?: number) => void;
   repairArmor: (location: 'head' | 'body') => void;
   spendLuck: (amount: number) => boolean;
+  /** v5.41.0 (plan 33): Flash of Luck (Going Quiet p.3). [Claude Code · 2026-11-14] */
+  spendFlashOfLuck: (tier: FlashOfLuckTier, note: string, currentBeatKey: string) => boolean;
+  refundFlashOfLuck: () => boolean;
+  startFlashOfLuckMission: () => void;
   restoreLuck: () => void;
   toggleLuckPip: (pipIndex: number) => void;
   consumeAmmo: (weaponInstanceId: string, amount: number) => boolean;
@@ -883,6 +889,43 @@ export const useCharacterStore = create<CharacterStoreState>()(
           return true;
         }
         return false;
+      },
+
+      spendFlashOfLuck: (tier, note, currentBeatKey) => {
+        const char = get().getActiveCharacter();
+        const enabled = useCombatStore.getState().flashOfLuckEnabled;
+        if (!char || !canUseFlashOfLuck(char.flashOfLuck, currentBeatKey, char.currentLuck, tier, enabled).ok) return false;
+        const cost = flashOfLuckTier(tier).luckCost;
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId
+              ? { ...c, currentLuck: c.currentLuck - cost, flashOfLuck: applyFlashOfLuck(c.flashOfLuck, currentBeatKey, tier, note, new Date().toISOString()) }
+              : c
+          )
+        }));
+        return true;
+      },
+
+      refundFlashOfLuck: () => {
+        const char = get().getActiveCharacter();
+        const r = char ? refundLastFlashOfLuck(char.flashOfLuck) : null;
+        if (!r) return false;
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId
+              ? { ...c, currentLuck: Math.min(c.stats.LUCK, c.currentLuck + r.luck), flashOfLuck: r.state }
+              : c
+          )
+        }));
+        return true;
+      },
+
+      startFlashOfLuckMission: () => {
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId ? { ...c, flashOfLuck: newMission(c.flashOfLuck) } : c
+          )
+        }));
       },
 
       restoreLuck: () => {

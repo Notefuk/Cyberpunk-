@@ -1,4 +1,5 @@
 import type { ExecTeamMember } from '../engine/socialRoleRules';
+import type { FlashOfLuckState } from '../engine/flashOfLuck';
 
 // v4.9.3 [Claude Code · 2026-10-23] Grupo de fans del Rockerboy (Core pp.144-145).
 export interface RockerboyFanGroup {
@@ -622,6 +623,8 @@ export interface CharacterSheet {
   stats: Record<StatKey, number>;
   currentHp: number;
   currentLuck: number;
+  /** v5.41.0 (plan 33): cuenta de Flash of Luck (Going Quiet p.3). [Claude Code · 2026-11-14] */
+  flashOfLuck?: FlashOfLuckState;
   currentHumanity: number;
   headArmor: {
     name: string;
