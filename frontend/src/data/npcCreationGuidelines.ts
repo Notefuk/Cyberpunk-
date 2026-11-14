@@ -8,7 +8,10 @@ import { calculateMaxHp, calculateSeriouslyWoundedThreshold } from '../engine/ch
 
 export const NPC_GUIDELINES_SOURCE = 'Danger Gal Dossier pp.149-152';
 
-export type NpcLevel = 'mook' | 'lieutenant' | 'mini_boss' | 'boss';
+/** v5.44.0 [Claude Code · 2026-11-14]: 'civilian' = guía de Everyday People p.2 (en combate cuenta como Mook). */
+export type NpcLevel = 'mook' | 'lieutenant' | 'mini_boss' | 'boss' | 'civilian';
+
+export const EVERYDAY_PEOPLE_GUIDE_SOURCE = 'Everyday People p.2';
 
 export interface NpcTemplate {
   level: NpcLevel;
@@ -59,12 +62,23 @@ const BASE: Record<NpcLevel, NpcTemplate> = {
     gearBudget: 3300, cyberwareBudget: 10000,
     roleNote: 'Tiene Role Ability (Rank 6).',
     encounterNote: 'Puede enfrentar solo a todo el grupo, o con pocos Mooks. Usalo con moderación.'
+  },
+  // v5.44.0 [Claude Code · 2026-11-14]: "Creating Everyday People" (Everyday People p.2). Es como hacer un PNJ de
+  // Danger Gal Dossier con estas guías; en combate se maneja como Mook. El libro no da versión Hardened.
+  civilian: {
+    level: 'civilian', label: 'Civil', statPoints: 33, maxStat: 6, skillPoints: 30, maxSkillLevel: 10,
+    hp: [20, 35], sp: [0, 7], combatBase: [6, 10], nonCombatBase: [8, 12],
+    gearBudget: 300, cyberwareBudget: 500, weaponNote: 'Armas de calidad Poor.',
+    roleNote: 'Puede tener Role Ability (Rank 2).',
+    encounterNote: 'En combate se maneja como un Mook (Everyday People p.2).'
   }
 };
 
 /** "To Harden" de cada plantilla (p.152). */
 const HARDEN: Record<NpcLevel, { stat: number; maxStat?: number; gear: number; cyber: number | null; roleNote: string }> = {
   mook: { stat: 6, maxStat: 7, gear: 200, cyber: 500, roleNote: 'Puede tener Role Ability (Rank 2).' },
+  // Everyday People no da versión Hardened del civil: npcTemplate la ignora.
+  civilian: { stat: 0, gear: 0, cyber: 0, roleNote: 'Puede tener Role Ability (Rank 2).' },
   lieutenant: { stat: 4, gear: 300, cyber: 500, roleNote: 'Probablemente tiene Role Ability (Rank 4).' },
   mini_boss: { stat: 2, gear: 800, cyber: 1200, roleNote: 'Tiene Role Ability (Rank 4); puede tenerla en Rank 6.' },
   boss: {
@@ -75,7 +89,7 @@ const HARDEN: Record<NpcLevel, { stat: number; maxStat?: number; gear: number; c
 
 export function npcTemplate(level: NpcLevel, hardened: boolean): NpcTemplate {
   const t = BASE[level];
-  if (!hardened) return t;
+  if (!hardened || level === 'civilian') return t;
   const h = HARDEN[level];
   return {
     ...t,
@@ -89,6 +103,7 @@ export function npcTemplate(level: NpcLevel, hardened: boolean): NpcTemplate {
 }
 
 export function npcThreatTier(level: NpcLevel, hardened: boolean): ThreatTier {
+  if (level === 'civilian') return 'mook';
   return (hardened ? `hardened_${level}` : level) as ThreatTier;
 }
 

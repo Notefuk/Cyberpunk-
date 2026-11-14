@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.44.0',
+    date: '2026-11-14',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Bestiario',
+    title: 'Everyday People: los 20 civiles de Night City',
+    summary: 'El bestiario del GM suma 20 civiles de Night City, como el Bartender, el Bouncer, el Taxi Driver o el Wage Slave, cada uno con sus variantes. Se filtran con el botón "Civiles". El libro usa una ficha corta, así que los STATs que no da se ven como "—". El creador de PNJ guiado suma la plantilla "Civil", para que el GM arme los suyos.',
+    highlights: [
+      '20 civiles con ficha abreviada y variantes (Everyday People pp.3-12).',
+      'Botón "Civiles" en el bestiario del GM.',
+      'Plantilla "Civil" en el creador de PNJ (p.2).'
+    ],
+    filesTouched: ['data/enemies-src/everyday-people.json', 'frontend/src/data/enemies/everyday-people.ts', 'frontend/src/data/npcCreationGuidelines.ts'],
+    metricsBadge: 'v5.44.0 • Everyday People'
+  },
+  {
     version: 'v5.43.0',
     date: '2026-11-14',
     author: 'Claude Code',
@@ -2084,6 +2100,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.44.0': true,
     'v5.43.0': true,
     'v5.42.0': true,
     'v5.41.0': true,

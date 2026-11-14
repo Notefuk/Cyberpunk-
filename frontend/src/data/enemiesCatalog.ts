@@ -3,6 +3,7 @@ import { CEMK_ENEMIES } from './enemies/cemk';
 import { HARDENED_ENEMIES } from './enemies/hardened';
 import { INTERFACE_RED_ENEMIES } from './enemies/interface-red';
 import { DANGER_GAL_ENEMIES } from './enemies/danger-gal';
+import { EVERYDAY_PEOPLE_ENEMIES } from './enemies/everyday-people';
 import { LEGACY_INVENTED_ENEMIES } from './enemies/legacy-invented-danger-gal';
 import { portEnemyToCemk } from '../engine/cemkPort';
 import type {
@@ -90,6 +91,20 @@ export interface EnemySheet {
   quickhacks?: string[]; // Quickhacks del PNJ
   headSpVsMelee?: number; // SP de cabeza vs melee
   bodySpVsMelee?: number; // SP de cuerpo vs melee
+  /**
+   * v5.44.0 [Claude Code · 2026-11-14]: ficha abreviada (Everyday People): el libro solo da HP, número de combate,
+   * INIT (= REF) y MOVE. Los demás STATs y el Death Save valen 0 adentro y se muestran como "—".
+   */
+  abbreviated?: boolean;
+}
+
+/** STATs que una ficha abreviada sí imprime (Everyday People p.2-3: INIT y MOVE). */
+export const ABBREVIATED_KNOWN_STATS: readonly StatKey[] = ['REF', 'MOVE'];
+
+/** Valor de un STAT para mostrar: "—" si la ficha es abreviada y el libro no lo da. */
+export function enemyStatLabel(enemy: Pick<EnemySheet, 'abbreviated' | 'stats'>, stat: StatKey): string {
+  if (enemy.abbreviated && !ABBREVIATED_KNOWN_STATS.includes(stat)) return '—';
+  return String(enemy.stats[stat]);
 }
 
 // [Claude Code · 2026-11-13] v5.35.0 (plan 32): las 15 facciones de Danger Gal Dossier son las canon de
@@ -107,8 +122,9 @@ export const ENEMIES_CATALOG: EnemySheet[] = [
   // Interface RED Vol. 2 (Jumpstart) y Vol. 4 (Halloween), plan 27 v5.20.0. [Claude Code · 2026-11-11]
   ...INTERFACE_RED_ENEMIES,
   // Danger Gal Dossier (plan 32, v5.36.0 a v5.38.0): fichas canon generadas. [Claude Code · 2026-11-13]
-  ...DANGER_GAL_ENEMIES
-
+  ...DANGER_GAL_ENEMIES,
+  // Everyday People (plan 33, v5.44.0): 20 civiles con ficha abreviada. [Claude Code · 2026-11-14]
+  ...EVERYDAY_PEOPLE_ENEMIES
 ];
 
 /** Ficha por id: primero el bestiario; si no está, las fichas inventadas viejas (solo para actores guardados que salieron de ellas). [Claude Code · 2026-11-13] */

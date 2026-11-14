@@ -117,6 +117,43 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.44.0] - 2026-11-14 (Plan 33 IV: Everyday People) [Claude Code · 2026-11-14]
+* **Category**: PNJ canon (DLC *Everyday People*, 2026, v1.01, pp.2-12), bestiario del GM y creador de PNJ. Cierra el plan 33.
+* **What Changed**:
+  * **Los 20 civiles** (pp.3-12) en el bestiario del GM, con el botón "Civiles (20)" en la barra de facciones:
+    * Bartender, Bouncer, Busker, Construction Worker, Corporate Researcher, Deal Maker y Glitterkid.
+    * Graffiti Artist, Guerrilla Gardener, Laborer, Line Cook, Neighborhood Tech, Paramedic y Scavver.
+    * Screamsheet Writer, Security Guard, Store Clerk, Streetrat, Taxi Driver y Wage Slave.
+    * Cada uno trae su HP, número de combate, INIT, MOVE, Role Ability, Reputation, armadura, armas, ciberware, equipo y skills.
+    * Sus 2 o 3 variantes van en las reglas especiales.
+    * Son Mooks y se pueden sumar al encuentro como cualquier otro PNJ.
+  * **Ficha abreviada**: el libro no imprime los STATs completos. El bestiario muestra solo REF (el INIT del libro) y MOVE; el resto de los STATs y el Death Save se ven como "—". El porte CEMK no compara su HP con la fórmula.
+  * **Plantilla "Civil"** en el creador de PNJ guiado, con las guías de p.2:
+    * 33 puntos de STAT (máximo 6) y 30 de skill.
+    * HP 20-35 y SP 0-7.
+    * Base de combate 6-10 y de las demás skills 8-12.
+    * 300eb de equipo con armas Poor y 500eb de ciberware.
+    * El libro no da versión Hardened del civil.
+  * **Interpretado**:
+    * El número de combate es la base de todas sus armas.
+    * Los STATs que el libro no da valen 0 por dentro y no se muestran.
+    * El ciberware y el equipo, que el libro lista juntos, se separaron.
+    * Quedan anotadas como dudas en la fuente cuatro cosas del libro:
+      * la cabeza del Streetrat dice "None" pero imprime SP 4;
+      * la PQ Very Heavy Pistol del taxista hace 5d6;
+      * dos variantes cambian skills con un nivel distinto al de la ficha base;
+      * la variante Combat Cabb nombra cosas que la ficha no tiene.
+* **Files Modified**:
+  * Nuevos: `data/enemies-src/everyday-people.json`, `frontend/src/data/enemies/everyday-people.ts` (generado) y `engine/__tests__/everydayPeople.test.ts`.
+  * `scripts/gen_enemies.py` (`BOOK_SPECS` y `abbreviated`).
+  * `data/enemiesCatalog.ts` (`abbreviated`, `enemyStatLabel`); `engine/cemkPort.ts`; `features/gm/EnemiesCompendiumPanel.tsx`.
+  * `data/npcCreationGuidelines.ts` (nivel `civilian`); `features/gm/GuidedNpcCreator.tsx`.
+  * `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**:
+  * tsc, los tests de la app (+6) y el build.
+  * Las 20 fichas se compararon una por una contra el PDF.
+  * En el navegador: el botón "Civiles (20)" filtra los 20. El Laborer muestra REF 4, MOVE 5 y "—" en los demás STATs. Consola limpia.
+
 ### [v5.43.0] - 2026-11-14 (Plan 33 III: Cyberware Enhancements de CEMK) [Claude Code · 2026-11-14]
 * **Category**: Reglas canon (*CEMK DLC 02: Cyberware Enhancements*, pp.1-3), ciberware y combate. Solo para PJ de 2077.
 * **What Changed**:

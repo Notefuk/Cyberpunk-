@@ -106,7 +106,9 @@ export function portEnemyToCemk(enemy: EnemySheet): CemkEnemyPort {
   const hpFormula = 10 + 5 * Math.ceil((enemy.stats.BODY + enemy.stats.WILL) / 2);
   const hp = enemy.hp;
   const hpMatchesFormula = hp === hpFormula;
-  if (!hpMatchesFormula) notes.push(`HP del libro (${hp}) ≠ fórmula CEMK (${hpFormula})`);
+  // v5.44.0 [Claude Code · 2026-11-14]: una ficha abreviada (Everyday People) no da BODY ni WILL: no se compara con la fórmula.
+  if (enemy.abbreviated) notes.push('Ficha abreviada: el HP es el del libro (no hay BODY ni WILL para la fórmula)');
+  else if (!hpMatchesFormula) notes.push(`HP del libro (${hp}) ≠ fórmula CEMK (${hpFormula})`);
 
   return {
     hasNeuroport: true,
