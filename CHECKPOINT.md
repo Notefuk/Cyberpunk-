@@ -17,14 +17,14 @@
 - Cierra: [Claude Code · 2026-11-13]
 - Rama y último commit: `main` @ 8dfe717 (PR #97, squash del plan 33). Este checkpoint vive en `claude/checkpoint-post-97`. Pusheada: no — falta OK. [Claude Code · 2026-11-14]
 - A medias: nada. tsc, 806 tests y build pasan en v5.40.0.
-- Siguiente paso exacto: la beta ya tiene la v5.44.0 (gh-pages 337cc88). Falta, cada uno con su OK: deploy de reglas de Firestore (cambió `flashOfLuck` en v5.41.0) y prod. Después, el plan de equipo y vehículos (Cutiemas, Vehiclemas, VA-11 Hall-A).
+- Siguiente paso exacto: beta (gh-pages 337cc88) y reglas de Firestore de prod ya tienen la v5.44.0 [Claude Code · 2026-11-14]. Falta prod hosting, con su OK. Después, el plan de equipo y vehículos (Cutiemas, Vehiclemas, VA-11 Hall-A).
 - Notas: el creador guiado está en `features/gm/GuidedNpcCreator.tsx` y las plantillas en `data/npcCreationGuidelines.ts` (los puntos de STAT no cuentan LUCK). Erratas del libro guardadas tal cual: Flenser SW 13, Stringer Death Save 4; Drop y Paddles: la lista de pp.168-170 difiere de la ficha, se usa la ficha. Hay un solo pack: `frontend/src/data/core-rules.cprpack.json` (770 ítems). `scripts/extract_core_pack.py <salida.json>` escribe aparte (genera 405 ítems) y se niega a pisar el pack de la app; lo nuevo se copia a mano.
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
 - [Claude Code · 2026-11-14] **Plan 33** (`docs/plans/plan33-going-quiet-tech-civiles.md`). PDFs en `Documents/CP RED TEST ANTIGRAVITY/DLC-Supplements/` (página impresa = índice).
   - Hecho: plan guardado. v5.41.0: ítems `gq-*`, `engine/flashOfLuck.ts` + `FlashOfLuckPanel` (campo `flashOfLuck` en la ficha, `flashOfLuckEnabled` en useCombatStore, `flashOfLuck` en la campaña y en `firestore.rules`), `engine/netStealth.ts` + `NetStealthPanel`. v5.42.0: `data/inventedTechUpgrades.ts` + `features/roles/InventedTechUpgradesPanel.tsx` (en NET & ROLES → rol Tech), campo `inventedUpgrades` en la ficha, etiqueta 🧪 en el Street Lab. v5.43.0: `data/cemkCyberwareEnhancements.ts` + `CyberwareEnhancementsPanel` (Ripperdoc) + `CritChoicePicker` (HUD), campo `cyberwareEnhancements` en la ficha, `ignoreSpBelow7`/`extraAblation` en `calculateIncomingImpact`, arma `monowire-2077`. v5.44.0: `data/enemies-src/everyday-people.json` + `BOOK_SPECS` (20 civiles, `abbreviated`), `enemyStatLabel` ("—"), botón "Civiles" en el bestiario, nivel `civilian` en `npcCreationGuidelines.ts`.
-  - Siguiente: reglas de Firestore y prod, cada uno con su OK (la beta ya está).
+  - Siguiente: prod hosting con OK (beta y reglas ya están).
   - Decisiones: civiles abreviados sin inventar STATs; Tech Upgrades solo catálogo y precio; enhancements solo 2077; Flash of Luck apagada, la prende el GM.
 
 ## Último trabajo terminado
