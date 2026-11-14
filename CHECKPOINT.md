@@ -7,22 +7,25 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-14] un solo pack (PR #96) y planes 5 y 6 cerrados (PR #95), en `main`
+**Última actualización**: [Claude Code · 2026-11-14] plan 33 aprobado; arranca la v5.41.0 (Going Quiet) en `claude/plan33-v5.41.0`
 
 **Versión de la app**: v5.40.0 en `main` @ 4a05c4e, en la beta (gh-pages fedc9c8) y en Firebase prod (hosting `index--Iw6CGkO.js`; reglas sin cambios, con `gm/mysteries`) [Claude Code · 2026-11-14].
 
-**Plan activo**: ninguno. El plan 32 (Danger Gal) está terminado y publicado. [Claude Code · 2026-11-14]
+**Plan activo**: plan 33 (`docs/plans/plan33-going-quiet-tech-civiles.md`), v5.41.0 a v5.44.0. [Claude Code · 2026-11-14]
 
 ## Traspaso
 - Cierra: [Claude Code · 2026-11-13]
-- Rama y último commit: `main` @ 08b741b (PR #96). Este checkpoint está en `claude/checkpoint-post-96`, solo local. [Claude Code · 2026-11-14]
+- Rama y último commit: `claude/plan33-v5.41.0` (desde `claude/checkpoint-post-96`, que sale de `main` @ 08b741b). Pusheada: no — falta OK. [Claude Code · 2026-11-14]
 - A medias: nada. tsc, 806 tests y build pasan en v5.40.0.
-- Siguiente paso exacto: elegir el próximo plan con Giuliano (`docs/plans/README.md`).
+- Siguiente paso exacto: v5.41.0 Going Quiet (ítems `gq-*` en el pack, Flash of Luck con campo `flashOfLuck` en la campaña y en `firestore.rules`, sigilo en el corredor de NET).
 - Notas: el creador guiado está en `features/gm/GuidedNpcCreator.tsx` y las plantillas en `data/npcCreationGuidelines.ts` (los puntos de STAT no cuentan LUCK). Erratas del libro guardadas tal cual: Flenser SW 13, Stringer Death Save 4; Drop y Paddles: la lista de pp.168-170 difiere de la ficha, se usa la ficha. Hay un solo pack: `frontend/src/data/core-rules.cprpack.json` (770 ítems). `scripts/extract_core_pack.py <salida.json>` escribe aparte (genera 405 ítems) y se niega a pisar el pack de la app; lo nuevo se copia a mano.
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
-- Nada en curso. [Claude Code · 2026-11-14] El plan 32 (Danger Gal) terminó: está en el CHANGELOG (v5.35.0 a v5.40.0) y en `docs/plans/README.md`.
+- [Claude Code · 2026-11-14] **Plan 33** (`docs/plans/plan33-going-quiet-tech-civiles.md`). PDFs en `Documents/CP RED TEST ANTIGRAVITY/DLC-Supplements/` (página impresa = índice).
+  - Hecho: plan guardado.
+  - Siguiente: v5.41.0 Going Quiet; después v5.42.0 Invented Tech Upgrades, v5.43.0 Cyberware Enhancements (solo 2077) y v5.44.0 Everyday People.
+  - Decisiones: civiles abreviados sin inventar STATs; Tech Upgrades solo catálogo y precio; enhancements solo 2077; Flash of Luck apagada, la prende el GM.
 
 ## Último trabajo terminado
 - [Claude Code · 2026-11-13] Plan 31 cerrado: resto del Interface RED Vol. 5, v5.29.0 a v5.34.0 (PR #91), publicado en la beta, en las reglas de Firestore y en prod. Ramas borradas.
