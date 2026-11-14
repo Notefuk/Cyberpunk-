@@ -346,5 +346,5 @@
 
 - [x] [Claude Code · 2026-11-14] *Going Quiet* (v5.41.0): Flash of Luck (p.3, opcional, la prende el GM), netrunning en sigilo (pp.4-5) y los 14 ítems de Harry the Shrimp (pp.5-7).
 - [x] [Claude Code · 2026-11-14] *Invented Tech Upgrades Guide* (v5.42.0): las 18 mejoras de 6 Techs, calculadora de precio con mano de obra o kit, y termómetro del GM; efectos en texto.
-- [ ] [Claude Code · 2026-11-14] *CEMK DLC 02: Cyberware Enhancements* (v5.43.0, solo 2077).
+- [x] [Claude Code · 2026-11-14] *CEMK DLC 02: Cyberware Enhancements* (v5.43.0, solo 2077): las 9 mejoras en el Ripperdoc, efectos de combate en el HUD (críticos para elegir, +5 de Pneumatic, modos de Tungsten, SP menor a 7 y +1 de ablación en la calculadora) y el arma Monowire.
 - [ ] [Claude Code · 2026-11-14] *Everyday People* (v5.44.0).

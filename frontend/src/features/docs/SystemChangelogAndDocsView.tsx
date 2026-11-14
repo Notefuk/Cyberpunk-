@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.43.0',
+    date: '2026-11-14',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Ciberware',
+    title: 'Cyberware Enhancements: mejoras para Gorilla Arms, Mantis Blades y Monowire',
+    summary: 'Los PJ de 2077 pueden comprar en el Ripperdoc una mejora para sus Gorilla Arms, Mantis Blades o Monowire. Hay 9 en total y va una por ciberware. En el HUD, los efectos van solos: Double-Edged y Barbed Line te dejan tirar 2 o 3 veces en la tabla de Críticas y elegir, Pneumatic Actuation sube el crítico a +10 y Tungsten Reinforcement le da dos modos a la Gorilla Arm. Además, el Monowire ya tiene su arma.',
+    highlights: [
+      '9 mejoras de CEMK DLC 02 (pp.1-3) en el Ripperdoc, solo 2077.',
+      'Críticas para elegir, +5 de Pneumatic y modos de Tungsten en el HUD.',
+      'Arma Monowire (CEMK p.35).'
+    ],
+    filesTouched: ['frontend/src/data/cemkCyberwareEnhancements.ts', 'frontend/src/features/cyberware/CyberwareEnhancementsPanel.tsx', 'frontend/src/features/combat/CritChoicePicker.tsx'],
+    metricsBadge: 'v5.43.0 • Cyberware Enhancements'
+  },
+  {
     version: 'v5.42.0',
     date: '2026-11-14',
     author: 'Claude Code',
@@ -2068,6 +2084,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.43.0': true,
     'v5.42.0': true,
     'v5.41.0': true,
     'v5.40.0': true,

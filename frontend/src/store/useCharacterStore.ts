@@ -390,6 +390,8 @@ export interface CharacterStoreState {
   /** v5.42.0 (plan 33): Invented Tech Upgrades (DLC pp.3-9). [Claude Code · 2026-11-14] */
   addInventedUpgrade: (record: InventedUpgradeRecord) => void;
   removeInventedUpgrade: (recordId: string) => void;
+  /** v5.43.0 (plan 33): Cyberware Enhancements de CEMK, una por ciberware (DLC 02 pp.1-3). [Claude Code · 2026-11-14] */
+  setCyberwareEnhancement: (cyberwareId: string, enhancementId: string | null) => void;
   restoreLuck: () => void;
   toggleLuckPip: (pipIndex: number) => void;
   consumeAmmo: (weaponInstanceId: string, amount: number) => boolean;
@@ -929,6 +931,17 @@ export const useCharacterStore = create<CharacterStoreState>()(
           characters: state.characters.map(c =>
             c.id === state.activeCharacterId ? { ...c, inventedUpgrades: [...(c.inventedUpgrades ?? []), record] } : c
           )
+        }));
+      },
+
+      setCyberwareEnhancement: (cyberwareId, enhancementId) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            const next = { ...(c.cyberwareEnhancements ?? {}) };
+            if (enhancementId) next[cyberwareId] = enhancementId; else delete next[cyberwareId];
+            return { ...c, cyberwareEnhancements: next };
+          })
         }));
       },
 

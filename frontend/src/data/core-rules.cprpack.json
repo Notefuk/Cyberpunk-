@@ -1533,6 +1533,22 @@
       "era": "2077"
     },
     {
+      "id": "monowire-2077",
+      "name": "Monowire",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "notes": "Cyberarm Option, HL 7 (2d6), instalación en Clinic. One-Handed Exotic Heavy Melee Weapon: látigo monofilamento que se oculta sin tirada y ataca cuerpo a cuerpo hasta a 6 m (3 casillas). Cuando causa una Herida Crítica, el atacante tira dos veces en la tabla y elige (CEMK p. 35 y p. 40).",
+      "sourceBook": "cemk",
+      "sourceBookTitle": "Cyberpunk: Edgerunners Mission Kit",
+      "era": "2077"
+    },
+    {
       "id": "gorilla-arms-2077",
       "name": "Gorilla Arm",
       "type": "Melee",

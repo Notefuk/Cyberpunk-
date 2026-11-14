@@ -117,6 +117,38 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.43.0] - 2026-11-14 (Plan 33 III: Cyberware Enhancements de CEMK) [Claude Code · 2026-11-14]
+* **Category**: Reglas canon (*CEMK DLC 02: Cyberware Enhancements*, pp.1-3), ciberware y combate. Solo para PJ de 2077.
+* **What Changed**:
+  * **Panel "Cyberware Enhancements (2077)"** en CYBERWARE // RIPPERDOC, debajo del mantenimiento. Aparece solo si el PJ es de 2077 y tiene Gorilla Arms, Mantis Blades o Monowire.
+    * Muestra las 9 mejoras con su precio y su efecto, y permite comprarlas (con o sin cobrar), cambiarlas o desinstalarlas.
+    * Va una por ciberware. Las instala un Tech en 1 hora, sin tirada (pp.1-2).
+  * **Efectos en el HUD de combate**, automáticos:
+    * **Pneumatic Actuation**: la Herida Crítica hace +10 en vez de +5.
+    * **Tungsten Reinforcement**: botones para elegir el modo de la Gorilla Arm, Heavy (3d6, ROF 2) o Very Heavy (4d6, ROF 1). El daño se tira con ese modo.
+    * **Double-Edged, Barbed Line y el Monowire**: con una Herida Crítica aparece "Tirás 2 (o 3) veces y elegís". Se ven las opciones de la tabla elegida y se aplica la que elija el atacante.
+    * **Hydraulic Ram**: tira los 3d6 extra y muestra el total contra cobertura.
+    * **Monomolecular Edge, Thermal-Bladed y Electroshock**: quedan como recordatorio en la tirada de daño. Además, la calculadora de impacto recibido tiene dos casillas: "SP menor a 7 no cuenta" y "+1 ablación".
+    * **Streamlined**: recordatorio en el arma.
+  * **Arma nueva Monowire** (`monowire-2077`): 3d6, ROF 2, una mano, ocultable, ataca a 6 m (CEMK p.35 y p.40). Hasta ahora el ciberware no tenía arma.
+  * **Interpretado**:
+    * La mejora se guarda por tipo de ciberware: si tenés dos Mantis Blades, las dos la tienen.
+    * Hydraulic Ram y Streamlined quedan como recordatorio, porque la app no sabe si le pegás a una cobertura ni si el Speedware está activo.
+    * Al "tirar N veces", si sale una herida repetida se vuelve a tirar, para que las opciones sean distintas.
+    * Quitar una mejora no devuelve la plata.
+* **Files Modified**:
+  * Nuevos: `data/cemkCyberwareEnhancements.ts`, `features/cyberware/CyberwareEnhancementsPanel.tsx`, `features/combat/CritChoicePicker.tsx` y `engine/__tests__/cyberwareEnhancements.test.ts`.
+  * `engine/combatEngine.ts` (`ignoreSpBelow7`, `extraAblation`); `engine/medicalRules.ts` (`rollCritOptions`).
+  * `types/cyberpunk.ts` (`cyberwareEnhancements`, y `critRolls` y `enhancementNotes` en las tiradas); `store/useCharacterStore.ts`.
+  * `features/combat/CombatHudView.tsx`; `features/cyberware/CyberwareRipperdocView.tsx`; `data/core-rules.cprpack.json` (Monowire).
+  * `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**:
+  * tsc, los tests de la app (+8) y el build.
+  * En el navegador, con Hardpoint (2077):
+    * Comprar con 100eb avisó "No alcanza". Se instaló Double-Edged sin cobrar.
+    * En el HUD apareció el recordatorio de la mejora en la Mantis Blade. Al salir una Herida Crítica, ofreció 2 opciones en cuerpo.
+    * Las casillas de la calculadora se ven. Consola limpia. Se volvió atrás todo lo de prueba.
+
 ### [v5.42.0] - 2026-11-14 (Plan 33 II: Invented Tech Upgrades) [Claude Code · 2026-11-14]
 * **Category**: Reglas canon (DLC *Invented Tech Upgrades Guide*, pp.3-9) y herramientas de rol.
 * **What Changed**:

@@ -53,6 +53,8 @@ import { GameClockBar } from './GameClockBar';
 import { conditionById } from '../../data/conditions';
 import { CritTableSelector } from './CritTableSelector';
 import { FlashOfLuckPanel } from './FlashOfLuckPanel';
+import { CritChoicePicker } from './CritChoicePicker';
+import { applyEnhancementToDamage, enhancementAttackNote, enhancementForWeapon, TUNGSTEN_MODES, weaponWithTungstenMode, type TungstenMode } from '../../data/cemkCyberwareEnhancements';
 import { MedtechTreatmentPanel } from '../netroles/MedtechTreatmentPanel';
 import { BackupCard } from './BackupCard';
 import { LawmanPanel } from '../roles/LawmanPanel';
@@ -894,6 +896,8 @@ export const CombatHudView: React.FC = () => {
   const selectedDistance = useCombatStore((state) => state.selectedDistance);
   const setSelectedDistance = useCombatStore((state) => state.setSelectedDistance);
   const autofireByWeapon = useCombatStore((state) => state.autofireByWeapon);
+  // v5.43.0 [Claude Code · 2026-11-14]: modo de la Gorilla Arm con Tungsten Reinforcement (CEMK DLC 02 p.2).
+  const [tungstenModeByWeapon, setTungstenModeByWeapon] = useState<Record<string, TungstenMode>>({});
   const toggleWeaponAutofire = useCombatStore((state) => state.toggleWeaponAutofire);
   const luckToSpendOnNextRoll = useCombatStore((state) => state.luckToSpendOnNextRoll);
   const setLuckToSpend = useCombatStore((state) => state.setLuckToSpend);
@@ -1568,6 +1572,9 @@ export const CombatHudView: React.FC = () => {
   const [calcLocation, setCalcLocation] = useState<'shield' | 'body' | 'head'>('body');
   const [calcAttackType, setCalcAttackType] = useState<'standard' | 'ap' | 'melee' | 'martial_arts' | 'brawling' | 'direct'>('standard');
   const [calcIsCritical, setCalcIsCritical] = useState<boolean>(false);
+  // v5.43.0 [Claude Code · 2026-11-14]: el que pega tiene Monomolecular Edge o Thermal-Bladed (CEMK DLC 02 p.3).
+  const [calcMonoEdge, setCalcMonoEdge] = useState<boolean>(false);
+  const [calcThermal, setCalcThermal] = useState<boolean>(false);
   const [lastDeathSave, setLastDeathSave] = useState<DeathSaveResult | null>(null);
   // Core p. 176: el cuerpo a cuerpo es enfrentado contra DEX + Evasion + 1d10 del defensor.
   const [meleeDefenseBase, setMeleeDefenseBase] = useState<number>(10);
@@ -1835,7 +1842,9 @@ export const CombatHudView: React.FC = () => {
     bodySp: activeChar?.bodyArmor?.currentSp ?? 0,
     shieldSdp: shieldCover.currentSdp,
     // Core p. 188: con Cracked Skull los Ataques Apuntados a la cabeza multiplican x3 en vez de x2.
-    hasCrackedSkull: (activeChar?.activeInjuries ?? []).some(inj => !inj.isTreated && inj.name.includes('Cracked Skull'))
+    hasCrackedSkull: (activeChar?.activeInjuries ?? []).some(inj => !inj.isTreated && inj.name.includes('Cracked Skull')),
+    ignoreSpBelow7: calcMonoEdge,
+    extraAblation: calcThermal ? 1 : 0
   };
   const calcImpactResult = calculateIncomingImpact(calcImpactInput);
   const {
@@ -2081,14 +2090,18 @@ export const CombatHudView: React.FC = () => {
     const recentHit = recentAttack?.isHit ? recentAttack : undefined;
     const multiplier = isAuto ? (recentHit?.autofireMultiplier || 1) : 1;
 
-    const dmgEntry = createDamageRoll(
+    // v5.43.0: Cyberware Enhancements de CEMK (DLC 02 pp.2-3): modo Tungsten, +5 de Pneumatic, críticas para elegir.
+    const enh = activeChar ? enhancementForWeapon(activeChar, weapon) : undefined;
+    const dmgWeapon = weaponWithTungstenMode(weapon, enh, tungstenModeByWeapon[instanceId] ?? 'heavy');
+    const coverRoll = enh?.kind === 'cover_3d6' ? [0, 0, 0].map(() => Math.floor(Math.random() * 6) + 1) : undefined;
+    const dmgEntry = applyEnhancementToDamage(createDamageRoll(
       weapon.name,
-      weapon.damage,
+      dmgWeapon.damage,
       isAuto,
       multiplier,
       instanceId,
       recentHit?.aimedShotTarget ?? aimedShotTarget
-    );
+    ), weapon, enh, coverRoll);
 
     if (recentHit) {
       markAttackDamageRolled(recentHit.id);
@@ -4004,6 +4017,14 @@ export const CombatHudView: React.FC = () => {
                         💥 Impacto Crítico (+5 HP directo)
                       </span>
                     </label>
+                    <label className="flex items-center gap-1.5 cursor-pointer select-none" title="CEMK DLC 02 p.3: ignora la armadura de SP menor a 7">
+                      <input type="checkbox" checked={calcMonoEdge} onChange={(e) => setCalcMonoEdge(e.target.checked)} data-testid="calc-mono-edge" className="rounded border-[#2e374f] text-cyan-500 focus:ring-0" />
+                      <span className={calcMonoEdge ? 'text-cyan-300 font-bold' : 'text-slate-400'}>Monomolecular Edge (SP menor a 7 no cuenta)</span>
+                    </label>
+                    <label className="flex items-center gap-1.5 cursor-pointer select-none" title="CEMK DLC 02 p.3: +1 SP de ablación">
+                      <input type="checkbox" checked={calcThermal} onChange={(e) => setCalcThermal(e.target.checked)} className="rounded border-[#2e374f] text-cyan-500 focus:ring-0" />
+                      <span className={calcThermal ? 'text-cyan-300 font-bold' : 'text-slate-400'}>Thermal-Bladed (+1 ablación)</span>
+                    </label>
 
                     {calcLocation === 'shield' && (
                       <label className="flex items-center gap-1.5 cursor-pointer select-none">
@@ -4997,10 +5018,16 @@ export const CombatHudView: React.FC = () => {
                         ))}
                         {entry.critBonusDamage ? (
                           <span className="text-[10px] font-mono-code text-[#dc2626] font-bold">
-                            +5 CRÍTICO
+                            +{entry.critBonusDamage} CRÍTICO
                           </span>
                         ) : null}
                       </div>
+
+                      {entry.enhancementNotes && entry.enhancementNotes.length > 0 && (
+                        <div className="mb-1 p-1 bg-[#0b1a20] border border-[#22d3ee]/40 rounded-xs text-[10px] font-mono-code text-[#67e8f9] space-y-0.5" data-testid="dmg-cw-enhancement">
+                          {entry.enhancementNotes.map((n) => <div key={n}>🔩 {n}</div>)}
+                        </div>
+                      )}
 
                       {entry.isCriticalInjuryTrigger && (
                         <div className="mt-1.5 p-1.5 bg-[#2a141a] border border-[#dc2626] rounded-xs">
@@ -5008,6 +5035,7 @@ export const CombatHudView: React.FC = () => {
                             <Skull className="w-3 h-3" /> ¡CRÍTICO EN DAÑO! (DOBLE 6+) → +5 DAÑO DIRECTO
                           </div>
                           <div className="mb-1"><CritTableSelector /></div>
+                          {entry.critRolls && <CritChoicePicker rolls={entry.critRolls} source={entry.enhancementName ?? entry.weaponName} />}
                           <div className="grid grid-cols-2 gap-1">
                             <button
                               onClick={() => inflictRandomInjury('head')}
@@ -5206,6 +5234,8 @@ export const CombatHudView: React.FC = () => {
                 const hasMag = (w.standardMag ?? 0) > 0;
                 const isAuto = !!autofireByWeapon[w.instanceId];
                 const autofireRules = getAutofireRulesSummary(w);
+                const wEnh = enhancementForWeapon(activeChar, w);
+                const wTungsten = tungstenModeByWeapon[w.instanceId] ?? 'heavy';
                 const distMeters = typeof selectedDistance === 'number'
                   ? selectedDistance
                   : parseInt((selectedDistance as string)?.match(/\d+/)?.[0] || '0', 10);
@@ -5508,8 +5538,23 @@ export const CombatHudView: React.FC = () => {
                         className={`${autofireRules.supportsAutofire ? 'sm:col-span-4' : 'sm:col-span-6'} py-2 px-3 bg-[#1d2232] hover:bg-[#252c42] hover:border-[#38bdf8] border border-[#2a3248] text-[#38bdf8] font-tech font-bold tracking-wider text-xs chamfer-btn transition-all active:scale-95 flex items-center justify-center gap-1.5`}
                       >
                         <Dices className="w-4 h-4" />
-                        <span>2. TIRAR DAÑO ({isAuto ? '2d6 × Auto' : w.damage})</span>
+                        <span>2. TIRAR DAÑO ({isAuto ? '2d6 × Auto' : weaponWithTungstenMode(w, wEnh, wTungsten).damage})</span>
                       </button>
+                      {wEnh && (
+                        <div className="sm:col-span-12 p-1.5 bg-[#0b1a20] border border-[#22d3ee]/40 rounded-xs text-[10px] font-mono-code text-[#67e8f9] space-y-1" data-testid="hud-cw-enhancement">
+                          <div>🔩 {enhancementAttackNote(wEnh)}</div>
+                          {wEnh.kind === 'tungsten_modes' && (
+                            <div className="flex gap-1">
+                              {(Object.keys(TUNGSTEN_MODES) as TungstenMode[]).map((m) => (
+                                <button key={m} type="button" onClick={() => setTungstenModeByWeapon((s) => ({ ...s, [w.instanceId]: m }))}
+                                  className={`px-1.5 py-0.5 rounded-xs border ${wTungsten === m ? 'bg-[#22d3ee] text-black border-[#22d3ee]' : 'border-[#2a3248] text-slate-300'}`}>
+                                  {TUNGSTEN_MODES[m].label} · ROF {TUNGSTEN_MODES[m].rof} · {TUNGSTEN_MODES[m].damage}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
 
                       {autofireRules.supportsAutofire && (
                         <button
