@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.41.0`** (Plan 33 I: Going Quiet) en `claude/plan33-v5.41.0`, sin pushear; en `main`, la beta y prod está la v5.40.0 [Claude Code · 2026-11-14]
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.42.0`** (Plan 33 II: Invented Tech Upgrades) en `claude/plan33-v5.42.0`, sin pushear; en `main`, la beta y prod está la v5.40.0 [Claude Code · 2026-11-14]
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
 > **PLAN ACTIVO**: ninguno en curso [Claude Code · 2026-11-14]. Último terminado y publicado: plan 32 (Danger Gal Dossier). Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  

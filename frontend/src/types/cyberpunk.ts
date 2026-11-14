@@ -1,5 +1,6 @@
 import type { ExecTeamMember } from '../engine/socialRoleRules';
 import type { FlashOfLuckState } from '../engine/flashOfLuck';
+import type { InventedUpgradeRecord } from '../data/inventedTechUpgrades';
 
 // v4.9.3 [Claude Code · 2026-10-23] Grupo de fans del Rockerboy (Core pp.144-145).
 export interface RockerboyFanGroup {
@@ -660,6 +661,8 @@ export interface CharacterSheet {
   eurodollars: number;
   inventory?: InventoryItem[];
   transactions?: EurodollarTransaction[];
+  /** v5.42.0 (plan 33): Invented Tech Upgrades anotadas (DLC pp.3-9); el efecto queda en texto. [Claude Code · 2026-11-14] */
+  inventedUpgrades?: InventedUpgradeRecord[];
   unarmedInHand?: { brawling?: boolean; martialArts?: boolean };
   activeDrugs?: ActiveDrugEffect[];
   era?: CharacterEra;

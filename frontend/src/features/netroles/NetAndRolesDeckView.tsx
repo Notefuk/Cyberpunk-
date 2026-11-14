@@ -34,6 +34,7 @@ import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
 import { beatsDv, rollCheckD10 } from '../../engine/combatEngine';
 import { NetStealthPanel } from './NetStealthPanel';
+import { InventedTechUpgradesPanel } from '../roles/InventedTechUpgradesPanel';
 import { getEffectiveBody, isValidSoloAllocation, soloAwarenessPointCost } from '../../engine/characterEngine';
 import { 
   NET_ARCHITECTURE_PRESETS, 
@@ -2304,6 +2305,8 @@ export const NetAndRolesDeckView: React.FC = () => {
           {selectedRoleView === 'tech' && (
             <div className="space-y-4">
               <MakerPanel />
+              {/* v5.42.0 (plan 33): Invented Tech Upgrades. [Claude Code · 2026-11-14] */}
+              <InventedTechUpgradesPanel />
               {/* FEEDBACK DEL BANCO DE TRABAJO */}
               {techMakerLog && (
                 <div

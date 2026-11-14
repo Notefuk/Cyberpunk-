@@ -345,6 +345,6 @@
 ## Plan 33 (v5.41.0 a v5.44.0)
 
 - [x] [Claude Code · 2026-11-14] *Going Quiet* (v5.41.0): Flash of Luck (p.3, opcional, la prende el GM), netrunning en sigilo (pp.4-5) y los 14 ítems de Harry the Shrimp (pp.5-7).
-- [ ] [Claude Code · 2026-11-14] *Invented Tech Upgrades Guide* (v5.42.0).
+- [x] [Claude Code · 2026-11-14] *Invented Tech Upgrades Guide* (v5.42.0): las 18 mejoras de 6 Techs, calculadora de precio con mano de obra o kit, y termómetro del GM; efectos en texto.
 - [ ] [Claude Code · 2026-11-14] *CEMK DLC 02: Cyberware Enhancements* (v5.43.0, solo 2077).
 - [ ] [Claude Code · 2026-11-14] *Everyday People* (v5.44.0).

@@ -117,6 +117,22 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.42.0] - 2026-11-14 (Plan 33 II: Invented Tech Upgrades) [Claude Code · 2026-11-14]
+* **Category**: Reglas canon (DLC *Invented Tech Upgrades Guide*, pp.3-9) y herramientas de rol.
+* **What Changed**:
+  * **Panel "Invented Tech Upgrades"** en NET & ROLES → Habilidades de Rol → Tech, debajo del Maker. Lo puede usar cualquier PJ: también le sirve al que contrata a un Tech de Night City.
+    * **Catálogo de las 18 mejoras de ejemplo** de Android Ace, Jack Sawyer, Lotos, Never Naughty Nedd, Troy Gordon y Tweak (3 cada uno). Cada una con su DV, sus dos costos, su termómetro, su requisito, su efecto y la nota de precio del libro.
+    * **Calculadora (p.3):**
+      * Costo 1 = lo que vale el ítem, o el componente más caro.
+      * Costo 2 = lo que puso el GM al inventarla.
+      * Si la instala el Tech PNJ, se suma 50% de mano de obra y la instala sin tirada.
+      * Si se compra el kit, se paga ahora el costo 2 y el Tech del grupo paga el costo 1 al instalarla.
+    * Las mejoras se anotan en la ficha con o sin cobrar. Si es un arma, aparece como etiqueta 🧪 en su tarjeta del Street Lab.
+    * **Termómetro de precios (p.4)** para el GM, con una opción "Inventada en la mesa".
+  * **Interpretado**: el efecto queda en texto y no cambia tiradas ni stats (decisión de Giuliano). Quitar una anotación no devuelve la plata.
+* **Files Modified**: nuevos `data/inventedTechUpgrades.ts`, `features/roles/InventedTechUpgradesPanel.tsx` y `engine/__tests__/inventedTechUpgrades.test.ts`; `types/cyberpunk.ts` (`inventedUpgrades`); `store/useCharacterStore.ts`; `features/netroles/NetAndRolesDeckView.tsx`; `features/sheet/StreetLabView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, los tests de la app (+4) y el build. En el navegador: Vorpal Coating en una Masamune, que dio 3.000eb con el Tech PNJ y 2.000eb con el kit. Se anotó, apareció la etiqueta en el Street Lab y se borró. Consola limpia.
+
 ### [v5.41.0] - 2026-11-14 (Plan 33 I: Going Quiet) [Claude Code · 2026-11-14]
 * **Category**: Reglas y equipo canon (DLC *Going Quiet*, pp.3-7), HUD, NET y mesa online.
 * **What Changed**:

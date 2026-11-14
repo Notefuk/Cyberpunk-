@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.42.0',
+    date: '2026-11-14',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Herramientas de rol',
+    title: 'Invented Tech Upgrades: mejoras de los Techs de Night City',
+    summary: 'En NET & ROLES, en el rol Tech, hay un panel con las 18 mejoras inventadas de 6 Techs de Night City (Android Ace, Never Naughty Nedd y otros). Calcula el precio: si la instala el Tech, suma 50% de mano de obra; si comprás el kit, la instala el Tech del grupo. La mejora queda anotada en la ficha y, si es un arma, se ve en su tarjeta del Street Lab. El GM tiene el termómetro de precios para las mejoras que inventen en la mesa.',
+    highlights: [
+      '18 mejoras con DV, costos y efecto (Invented Tech Upgrades Guide pp.5-9).',
+      'Calculadora de precio con mano de obra o kit (p.3).',
+      'Termómetro de precios para el GM (p.4).'
+    ],
+    filesTouched: ['frontend/src/data/inventedTechUpgrades.ts', 'frontend/src/features/roles/InventedTechUpgradesPanel.tsx'],
+    metricsBadge: 'v5.42.0 • Invented Tech Upgrades'
+  },
+  {
     version: 'v5.41.0',
     date: '2026-11-14',
     author: 'Claude Code',
@@ -2052,6 +2068,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.42.0': true,
     'v5.41.0': true,
     'v5.40.0': true,
     'v5.39.0': true,

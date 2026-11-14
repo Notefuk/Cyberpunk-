@@ -47,6 +47,7 @@ import type { MakerAllocation, MedicineAllocation } from '../engine/roleRules';
 import { canInstallAnother } from '../engine/cyberwareEffects';
 import { applyFlashOfLuck, canUseFlashOfLuck, flashOfLuckTier, newMission, refundLastFlashOfLuck, type FlashOfLuckTier } from '../engine/flashOfLuck';
 import { useCombatStore } from './useCombatStore';
+import type { InventedUpgradeRecord } from '../data/inventedTechUpgrades';
 import { REPLACEMENT_FEE_EB, endOfSession, replacementMember } from '../engine/socialRoleRules';
 import type { ExecTeamMember } from '../engine/socialRoleRules';
 import coreRulesPack from '../data/core-rules.cprpack.json';
@@ -386,6 +387,9 @@ export interface CharacterStoreState {
   spendFlashOfLuck: (tier: FlashOfLuckTier, note: string, currentBeatKey: string) => boolean;
   refundFlashOfLuck: () => boolean;
   startFlashOfLuckMission: () => void;
+  /** v5.42.0 (plan 33): Invented Tech Upgrades (DLC pp.3-9). [Claude Code · 2026-11-14] */
+  addInventedUpgrade: (record: InventedUpgradeRecord) => void;
+  removeInventedUpgrade: (recordId: string) => void;
   restoreLuck: () => void;
   toggleLuckPip: (pipIndex: number) => void;
   consumeAmmo: (weaponInstanceId: string, amount: number) => boolean;
@@ -918,6 +922,22 @@ export const useCharacterStore = create<CharacterStoreState>()(
           )
         }));
         return true;
+      },
+
+      addInventedUpgrade: (record) => {
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId ? { ...c, inventedUpgrades: [...(c.inventedUpgrades ?? []), record] } : c
+          )
+        }));
+      },
+
+      removeInventedUpgrade: (recordId) => {
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId ? { ...c, inventedUpgrades: (c.inventedUpgrades ?? []).filter(r => r.id !== recordId) } : c
+          )
+        }));
       },
 
       startFlashOfLuckMission: () => {
