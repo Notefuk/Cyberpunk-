@@ -1533,6 +1533,22 @@
       "era": "2077"
     },
     {
+      "id": "monowire-2077",
+      "name": "Monowire",
+      "type": "Melee",
+      "skill": "Melee Weapon",
+      "damage": "3d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "notes": "Cyberarm Option, HL 7 (2d6), instalación en Clinic. One-Handed Exotic Heavy Melee Weapon: látigo monofilamento que se oculta sin tirada y ataca cuerpo a cuerpo hasta a 6 m (3 casillas). Cuando causa una Herida Crítica, el atacante tira dos veces en la tabla y elige (CEMK p. 35 y p. 40).",
+      "sourceBook": "cemk",
+      "sourceBookTitle": "Cyberpunk: Edgerunners Mission Kit",
+      "era": "2077"
+    },
+    {
       "id": "gorilla-arms-2077",
       "name": "Gorilla Arm",
       "type": "Melee",
@@ -9034,6 +9050,19 @@
       "sourceBookTitle": "Interface RED Volume 5",
       "era": "2045",
       "sourcePage": 101
+    },
+    {
+      "id": "gq-translation-chip",
+      "name": "Translation Chip",
+      "type": "Neuralware",
+      "install": "N/A",
+      "humanityLoss": "7 (2d6)",
+      "cost": 1000,
+      "description": "Chipware. Requiere Chyron. Traduce en tiempo real lo que el usuario oye o lee a un idioma elegido y lo muestra como subtítulos en el Chyron. A criterio del GM, idiomas muertos o de grupos chicos y aislados no se traducen, y la jerga sale a medias. No permite hablar idiomas nuevos. [Claude Code · 2026-11-14]",
+      "sourcePage": 7,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
     }
   ],
   "drugs": [
@@ -11504,6 +11533,182 @@
       "sourceBook": "danger_gal",
       "sourceBookTitle": "Danger Gal Dossier",
       "sourcePage": 148,
+      "era": "2045"
+    },
+    {
+      "id": "gq-binary-compound",
+      "name": "Binary Compound (tubo)",
+      "cost": 50,
+      "costTier": "Costly",
+      "description": "Tubo con dos boquillas: cada químico es inofensivo solo, juntos comen cualquier cosa. Aplicarlo a una sección de cobertura de 2x2 m/yds lleva 6 segundos (2 Rounds); después hace 6d6 de daño a esa cobertura por Round. Si la cobertura tiene capas, sigue con la siguiente. Queda inerte 18 segundos (6 Rounds) después de aplicado. [Claude Code · 2026-11-14]",
+      "sourcePage": 5,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-branded-jumpsuit-low",
+      "name": "Branded Jumpsuit (seguridad baja)",
+      "cost": 50,
+      "costTier": "Premium",
+      "description": "Mono o uniforme idéntico al del personal de construcción, limpieza, comida u otro equipo de una organización. Con el color y los parches correctos, la mayoría de la gente no te mira dos veces. El precio depende de la seguridad de la organización: baja (un almacén). Precio de la categoría Premium aunque cueste 50eb (el DLC separa precio y categoría, p.5). [Claude Code · 2026-11-14]",
+      "sourcePage": 5,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-branded-jumpsuit-moderate",
+      "name": "Branded Jumpsuit (seguridad moderada)",
+      "cost": 100,
+      "costTier": "Expensive",
+      "description": "Mono o uniforme idéntico al del personal de construcción, limpieza, comida u otro equipo de una organización. Con el color y los parches correctos, la mayoría de la gente no te mira dos veces. El precio depende de la seguridad de la organización: moderada (una obra o un hospital). Categoría Expensive aunque cueste 100eb (p.5). [Claude Code · 2026-11-14]",
+      "sourcePage": 5,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-branded-jumpsuit-high",
+      "name": "Branded Jumpsuit (seguridad alta)",
+      "cost": 500,
+      "costTier": "Very Expensive",
+      "description": "Mono o uniforme idéntico al del personal de construcción, limpieza, comida u otro equipo de una organización. Con el color y los parches correctos, la mayoría de la gente no te mira dos veces. El precio depende de la seguridad de la organización: alta (una corporación chica). Categoría Very Expensive aunque cueste 500eb (p.5). [Claude Code · 2026-11-14]",
+      "sourcePage": 5,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-branded-jumpsuit-extreme",
+      "name": "Branded Jumpsuit (seguridad extrema)",
+      "cost": 1000,
+      "costTier": "Luxury",
+      "description": "Mono o uniforme idéntico al del personal de construcción, limpieza, comida u otro equipo de una organización. Con el color y los parches correctos, la mayoría de la gente no te mira dos veces. El precio depende de la seguridad de la organización: extrema (una Megacorporación). Categoría Luxury aunque cueste 1,000eb (p.5). [Claude Code · 2026-11-14]",
+      "sourcePage": 5,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-concealment-sleeve",
+      "name": "Concealment Sleeve",
+      "cost": 500,
+      "costTier": "Very Expensive",
+      "description": "Funda con emisores ultrafinos y RealSkinn™ que se ajusta sobre un cyberlimb: con ella puesta, un escáner de ciberware lee ese miembro como biológico. Se hace a medida para un cyberlimb y no se puede pasar a otro (lo ajusta un Tech). [Claude Code · 2026-11-14]",
+      "sourcePage": 5,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-handprint-glove",
+      "name": "Handprint Glove",
+      "cost": 500,
+      "costTier": "Very Expensive",
+      "description": "Guante de RealSkinn™ con la huella de una mano (y sus dedos): engaña a un escáner de mano, pero no deja huellas en las superficies. Se encarga a medida y hay que darle al Tech la huella a copiar. [Claude Code · 2026-11-14]",
+      "sourcePage": 6,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-handprint-scanner",
+      "name": "Handprint Scanner (App)",
+      "cost": 20,
+      "costTier": "Everyday",
+      "description": "App para el Agent. Escanear la mano de alguien: en Melee Range, sin hacer otra cosa, 9 segundos (3 Rounds, no hace falta seguidos); cada Round es una Acción con Brawling DV13 (automático si el objetivo está inconsciente, atado o no se puede mover). También escanea huellas en superficies lisas: una mano completa alcanza con un escaneo; si no, hacen falta al menos 5 huellas, cada una con Criminology DV13. [Claude Code · 2026-11-14]",
+      "sourcePage": 6,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-laser-microphone",
+      "name": "Laser Microphone",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Apunta un láser a un vidrio hasta a 300 m/yds y convierte la vibración en el sonido de la habitación de atrás. El láser es invisible salvo en niebla, humo o vapor. Lee Thin Bulletproof Glass, no Thick Bulletproof Glass. [Claude Code · 2026-11-14]",
+      "sourcePage": 6,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-militech-m97-ghostsuit",
+      "name": "Militech M97 Ghostsuit",
+      "cost": 5000,
+      "costTier": "Luxury",
+      "description": "Mono de cuerpo entero con pantallas de cristal líquido que copia el entorno. Si el usuario se queda quieto 1 minuto (20 Rounds), activa un camuflaje que lo oculta de todos los sentidos visuales (también Low Light, Infrarrojo y UV) salvo que el que mira saque Perception DV17. Activarlo no es una Acción. Se apaga solo si el usuario se mueve más de 2 m/yds (1 casillero) en 3 segundos (1 Round). [Claude Code · 2026-11-14]",
+      "sourcePage": 6,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-nymph-perfume",
+      "name": "Nymph Perfume (botella)",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Euforizante suave en aerosol (50 disparos por botella). Un disparo dura 1 hora en una superficie. Quien pasa más de 9 segundos (3 Rounds) a 6 m/yds o menos de la fuente hace Resist Torture/Drugs DV13 o queda algo confundido: -2 a Human Perception durante 1 hora. Quien lo lleva puesto cuenta como a 6 m/yds de sí mismo. Lo evitan los Nasal Filters o una Anti-Smog Breathing Mask. Cuenta como droga para Rapidetox (Core p.150). [Claude Code · 2026-11-14]",
+      "sourcePage": 6,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-parabolic-microphone",
+      "name": "Parabolic Microphone",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Amplifica el sonido de una dirección: se escucha hasta a 30 m/yds como si se estuviera al lado de la fuente. [Claude Code · 2026-11-14]",
+      "sourcePage": 7,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-professional-disguise-kit",
+      "name": "Professional Disguise Kit",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Maquillaje, rellenos y prótesis de RealSkinn™: +2 a Personal Grooming para parecer otra persona. No cambia más que unos centímetros la altura ni agrega ciberojos que funcionen. [Claude Code · 2026-11-14]",
+      "sourcePage": 7,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-retina-lens",
+      "name": "Retina Lens",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Lente que pone un patrón de retina falso sobre el ojo y engaña a algunos escáneres de retina. Se encarga a medida y hay que darle al Tech el patrón a copiar. [Claude Code · 2026-11-14]",
+      "sourcePage": 7,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-retina-scanner",
+      "name": "Retina Scanner (App)",
+      "cost": 50,
+      "costTier": "Costly",
+      "description": "App para el Agent. Escanear el ojo de alguien: en Melee Range, sin hacer otra cosa, 15 segundos (5 Rounds, no hace falta seguidos); cada Round es una Acción con Brawling DV13 (automático si el objetivo está inconsciente, atado o no se puede mover). Con Internal Agent también sirve si se tiene MicroVideo en un Cybereye o Smart Glasses. [Claude Code · 2026-11-14]",
+      "sourcePage": 7,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
+      "era": "2045"
+    },
+    {
+      "id": "gq-zetatech-tank-commander-headset",
+      "name": "Zetatech Tank Commander Headset",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Micrófono de garganta que capta lo subvocalizado y auricular que cancela el ruido, conectables por inalámbrico a un Agent o radio. Sin Amplified Hearing es imposible detectar el sonido que entra o sale. [Claude Code · 2026-11-14]",
+      "sourcePage": 7,
+      "sourceBook": "dlc",
+      "sourceBookTitle": "Going Quiet",
       "era": "2045"
     }
   ],

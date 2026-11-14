@@ -80,6 +80,8 @@ BOOK_SPECS = {
     'interface-red': dict(const='INTERFACE_RED_ENEMIES', sourceBook='interface_red', era='2045', fmt='red'),
     # [Claude Code · 2026-11-13] v5.36.0 (plan 32): fichas de Danger Gal Dossier. El porte CEMK lo calcula la app (engine/cemkPort.ts).
     'danger-gal': dict(const='DANGER_GAL_ENEMIES', sourceBook='danger_gal', era='2045', fmt='red'),
+    # [Claude Code · 2026-11-14] v5.44.0 (plan 33): los 20 civiles de Everyday People, con ficha abreviada (sin STATs completos).
+    'everyday-people': dict(const='EVERYDAY_PEOPLE_ENEMIES', sourceBook='dlc', era='2045', fmt='red'),
 }
 
 
@@ -97,6 +99,8 @@ def book_title(book_key, npc):
         return npc['book']
     if book_key == 'danger-gal':
         return 'Danger Gal Dossier'
+    if book_key == 'everyday-people':
+        return 'Everyday People'
     sub = npc.get('subtitle') or ''
     for t in ('Hardened Mooks', 'Hardened Lieutenants', 'Hardened Mini-Bosses'):
         if sub.startswith(t):
@@ -198,7 +202,7 @@ def build_npc(book_key, npc):
             if k == 'EMP':
                 emp_missing = True
         stats[k] = v
-    if emp_missing:
+    if emp_missing and not npc.get('abbreviated'):
         rules.append('EMP no impreso ("-")')
     armor = npc.get('armor') or {}
     skill_bases = npc.get('skillBases') or {}
@@ -241,6 +245,8 @@ def build_npc(book_key, npc):
     e['gear'] = list(npc.get('gear') or [])
     e['specialRules'] = rules
     e['loreSummary'] = npc.get('lore') or npc.get('subtitle') or ''
+    if npc.get('abbreviated'):
+        e['abbreviated'] = True
     if npc.get('level') is not None:
         e['level'] = npc['level']
     if npc.get('rep') is not None:

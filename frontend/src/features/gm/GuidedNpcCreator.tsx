@@ -14,7 +14,7 @@ import {
 } from '../../data/npcCreationGuidelines';
 
 const COMBAT_SKILLS = ['Handgun', 'Shoulder Arms', 'Heavy Weapons', 'Autofire', 'Archery', 'Melee Weapon', 'Brawling', 'Martial Arts', 'Evasion'];
-const LEVELS: NpcLevel[] = ['mook', 'lieutenant', 'mini_boss', 'boss'];
+const LEVELS: NpcLevel[] = ['mook', 'lieutenant', 'mini_boss', 'boss', 'civilian'];
 const STEP_TITLES = ['Concepto', 'Nivel', 'Skills gratis', 'STATs y skills', 'Equipo', 'Ajustes finales'];
 
 const inputCls = 'w-full bg-[#141824] border border-[#273248] focus:border-[#10b981] text-white p-2 rounded-xs focus:outline-none text-xs';
@@ -147,7 +147,7 @@ export const GuidedNpcCreator: React.FC<{ onClose: () => void; onSave: (npc: Ene
         {step === 1 && (
           <div className="space-y-3" data-testid="npc-step-level">
             <p className="text-slate-400">Paso 2: el nivel. Hardened es para grupos optimizados para el combate; Mini-Boss y Boss Hardened, solo para desafíos especiales.</p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
               {LEVELS.map((lv) => (
                 <button key={lv} type="button" onClick={() => pickLevel({ level: lv })}
                   className={`p-2 rounded-xs border font-bold uppercase ${d.level === lv ? 'border-amber-400 text-amber-300 bg-amber-400/10' : 'border-[#273248] text-slate-300'}`}>
@@ -155,7 +155,9 @@ export const GuidedNpcCreator: React.FC<{ onClose: () => void; onSave: (npc: Ene
                 </button>
               ))}
             </div>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={d.hardened} onChange={(e) => pickLevel({ hardened: e.target.checked })} /> Hardened</label>
+            {d.level === 'civilian'
+              ? <p className="text-slate-500" data-testid="npc-civilian-note">Civil: guías de Everyday People (p.2). El libro no tiene versión Hardened del civil.</p>
+              : <label className="flex items-center gap-2"><input type="checkbox" checked={d.hardened} onChange={(e) => pickLevel({ hardened: e.target.checked })} /> Hardened</label>}
             <div className="bg-[#111420] border border-[#1e2538] p-3 rounded-xs grid grid-cols-1 sm:grid-cols-2 gap-1" data-testid="npc-template-card">
               <div className="sm:col-span-2 font-tech font-bold text-amber-300 uppercase">{t.label}</div>
               <div>Puntos de STAT: <b>{t.statPoints}</b> (máximo {t.maxStat})</div>

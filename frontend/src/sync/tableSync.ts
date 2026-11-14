@@ -316,6 +316,21 @@ export function syncActiveTable(): void {
     seededEra.add(table.id);
     void ctl.setTableEra(table.id, localEra).catch(() => seededEra.delete(table.id));
   }
+
+  // v5.41.0 (plan 33): con mesa, Flash of Luck la decide el GM; sin dato en la campaña, apagada para todos.
+  const wantFol = table.flashOfLuck === true;
+  if (useCombatStore.getState().flashOfLuckEnabled !== wantFol) {
+    useCombatStore.getState().setFlashOfLuckEnabled(wantFol);
+  }
+}
+
+/** v5.41.0 (plan 33): Flash of Luck (Going Quiet p.3). Con mesa, solo el GM la prende o apaga. [Claude Code · 2026-11-14] */
+export function chooseFlashOfLuck(on: boolean): boolean {
+  const { table, isGm } = getActiveTable();
+  if (table && !isGm) return false;
+  useCombatStore.getState().setFlashOfLuckEnabled(on);
+  if (table) void getCampaignController()?.setTableFlashOfLuck(table.id, on).catch(() => {});
+  return true;
 }
 
 /** Cambio de era desde el selector: con mesa, solo el GM, y se publica en la campaña. Devuelve false si no se pudo. */

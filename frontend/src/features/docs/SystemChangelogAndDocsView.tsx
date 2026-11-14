@@ -26,6 +26,70 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.44.0',
+    date: '2026-11-14',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Bestiario',
+    title: 'Everyday People: los 20 civiles de Night City',
+    summary: 'El bestiario del GM suma 20 civiles de Night City, como el Bartender, el Bouncer, el Taxi Driver o el Wage Slave, cada uno con sus variantes. Se filtran con el botón "Civiles". El libro usa una ficha corta, así que los STATs que no da se ven como "—". El creador de PNJ guiado suma la plantilla "Civil", para que el GM arme los suyos.',
+    highlights: [
+      '20 civiles con ficha abreviada y variantes (Everyday People pp.3-12).',
+      'Botón "Civiles" en el bestiario del GM.',
+      'Plantilla "Civil" en el creador de PNJ (p.2).'
+    ],
+    filesTouched: ['data/enemies-src/everyday-people.json', 'frontend/src/data/enemies/everyday-people.ts', 'frontend/src/data/npcCreationGuidelines.ts'],
+    metricsBadge: 'v5.44.0 • Everyday People'
+  },
+  {
+    version: 'v5.43.0',
+    date: '2026-11-14',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Ciberware',
+    title: 'Cyberware Enhancements: mejoras para Gorilla Arms, Mantis Blades y Monowire',
+    summary: 'Los PJ de 2077 pueden comprar en el Ripperdoc una mejora para sus Gorilla Arms, Mantis Blades o Monowire. Hay 9 en total y va una por ciberware. En el HUD, los efectos van solos: Double-Edged y Barbed Line te dejan tirar 2 o 3 veces en la tabla de Críticas y elegir, Pneumatic Actuation sube el crítico a +10 y Tungsten Reinforcement le da dos modos a la Gorilla Arm. Además, el Monowire ya tiene su arma.',
+    highlights: [
+      '9 mejoras de CEMK DLC 02 (pp.1-3) en el Ripperdoc, solo 2077.',
+      'Críticas para elegir, +5 de Pneumatic y modos de Tungsten en el HUD.',
+      'Arma Monowire (CEMK p.35).'
+    ],
+    filesTouched: ['frontend/src/data/cemkCyberwareEnhancements.ts', 'frontend/src/features/cyberware/CyberwareEnhancementsPanel.tsx', 'frontend/src/features/combat/CritChoicePicker.tsx'],
+    metricsBadge: 'v5.43.0 • Cyberware Enhancements'
+  },
+  {
+    version: 'v5.42.0',
+    date: '2026-11-14',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Herramientas de rol',
+    title: 'Invented Tech Upgrades: mejoras de los Techs de Night City',
+    summary: 'En NET & ROLES, en el rol Tech, hay un panel con las 18 mejoras inventadas de 6 Techs de Night City (Android Ace, Never Naughty Nedd y otros). Calcula el precio: si la instala el Tech, suma 50% de mano de obra; si comprás el kit, la instala el Tech del grupo. La mejora queda anotada en la ficha y, si es un arma, se ve en su tarjeta del Street Lab. El GM tiene el termómetro de precios para las mejoras que inventen en la mesa.',
+    highlights: [
+      '18 mejoras con DV, costos y efecto (Invented Tech Upgrades Guide pp.5-9).',
+      'Calculadora de precio con mano de obra o kit (p.3).',
+      'Termómetro de precios para el GM (p.4).'
+    ],
+    filesTouched: ['frontend/src/data/inventedTechUpgrades.ts', 'frontend/src/features/roles/InventedTechUpgradesPanel.tsx'],
+    metricsBadge: 'v5.42.0 • Invented Tech Upgrades'
+  },
+  {
+    version: 'v5.41.0',
+    date: '2026-11-14',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Reglas',
+    title: 'Going Quiet: Flash of Luck, netrunning en sigilo y equipo de espionaje',
+    summary: 'Llega el DLC Going Quiet. Flash of Luck es una regla opcional que prende el GM: gastás Luck para que tu PJ haya hecho antes algo que ayuda ahora (1 vez por Beat, 3 por misión) y aparece en la bandeja de Luck del HUD. El corredor de NET suma el netrunning en sigilo: entrar sin que te vean, esquivar Black ICE y esconderte de los Watchers. Y el Compendio tiene los 14 ítems de espionaje, como el Ghostsuit, el micrófono láser y el Translation Chip.',
+    highlights: [
+      'Flash of Luck (Going Quiet p.3), apagada hasta que la prende el GM.',
+      'Netrunning en sigilo (pp.4-5) en el corredor de NET.',
+      '14 ítems de espionaje en el Compendio (pp.5-7).'
+    ],
+    filesTouched: ['frontend/src/engine/flashOfLuck.ts', 'frontend/src/engine/netStealth.ts', 'frontend/src/features/combat/FlashOfLuckPanel.tsx', 'frontend/src/features/netroles/NetStealthPanel.tsx'],
+    metricsBadge: 'v5.41.0 • Going Quiet'
+  },
+  {
     version: 'v5.40.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -2036,6 +2100,10 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.44.0': true,
+    'v5.43.0': true,
+    'v5.42.0': true,
+    'v5.41.0': true,
     'v5.40.0': true,
     'v5.39.0': true,
     'v5.38.0': true,

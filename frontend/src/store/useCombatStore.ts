@@ -22,6 +22,9 @@ export interface CombatStoreState {
   autofireByWeapon: Record<string, boolean>;
   luckToSpendOnNextRoll: number;
   aimedShotTarget: AimedShotTarget;
+  /** v5.41.0 (plan 33): regla opcional Flash of Luck (Going Quiet p.3). Con mesa, la fija el GM. [Claude Code · 2026-11-14] */
+  flashOfLuckEnabled: boolean;
+  setFlashOfLuckEnabled: (on: boolean) => void;
   rollHistory: RollEntry[];
   // v4.9.2 [Claude Code · 2026-10-22]: estado de Round (Core p.146: primer daño / primer Ataque exitoso del Round).
   round: number;
@@ -60,7 +63,7 @@ export interface CombatStoreState {
 // v4.9.7 [Claude Code · 2026-10-24] Grupos del estado persistido (plan 17, cambio 4).
 // local: UI y preparación de la tirada de cada jugador; nunca sale de su dispositivo.
 // shared: estado del combate; en v5.1.0 pasa al encuentro compartido.
-export const COMBAT_LOCAL_KEYS = ['era', 'selectedDistance', 'autofireByWeapon', 'luckToSpendOnNextRoll', 'aimedShotTarget'] as const;
+export const COMBAT_LOCAL_KEYS = ['era', 'selectedDistance', 'autofireByWeapon', 'luckToSpendOnNextRoll', 'aimedShotTarget', 'flashOfLuckEnabled'] as const;
 export const COMBAT_SHARED_KEYS = ['rollHistory', 'round', 'firstDamageTakenThisRound', 'firstHitLandedThisRound', 'netActionsSpent', 'backupCalls', 'turnLog'] as const;
 export type CombatLocalKey = typeof COMBAT_LOCAL_KEYS[number];
 export type CombatSharedKey = typeof COMBAT_SHARED_KEYS[number];
@@ -89,6 +92,8 @@ export const useCombatStore = create<CombatStoreState>()(
       autofireByWeapon: {},
       luckToSpendOnNextRoll: 0,
       aimedShotTarget: 'none',
+      flashOfLuckEnabled: false,
+      setFlashOfLuckEnabled: (on) => set({ flashOfLuckEnabled: on }),
       rollHistory: [],
       round: 1,
       firstDamageTakenThisRound: false,

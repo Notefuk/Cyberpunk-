@@ -279,6 +279,10 @@ export interface IncomingImpactInput {
   bodySp: number;
   shieldSdp: number;
   hasCrackedSkull?: boolean;
+  /** v5.43.0 [Claude Code · 2026-11-14]: Monomolecular Edge ignora la armadura de SP menor a 7, antes de dividir (CEMK DLC 02 p.3). */
+  ignoreSpBelow7?: boolean;
+  /** v5.43.0: Thermal-Bladed saca 1 SP más cuando ablaciona (CEMK DLC 02 p.3). */
+  extraAblation?: number;
 }
 
 export interface IncomingImpactResult {
@@ -310,12 +314,20 @@ function getSpAblation(penetrating: number, rawSp: number, attackType: IncomingA
 // Calculadora de impactos recibidos: SP, ablación, cabeza x2 (x3 con Cracked Skull), +5 de crítico
 // directo a HP aunque no atraviese el SP (Core pp. 186-188) y escudos/cobertura con su SDP.
 export function calculateIncomingImpact(input: IncomingImpactInput): IncomingImpactResult {
-  const { damage, location, attackType, isCritical, passExcess, headSp, bodySp, shieldSdp, hasCrackedSkull } = input;
+  const { damage, location, attackType, isCritical, passExcess, shieldSdp, hasCrackedSkull } = input;
+  // v5.43.0: Monomolecular Edge ignora entera la armadura de SP menor a 7 (no la ablaciona); Thermal-Bladed +1 de ablación.
+  const ignored = (sp: number) => (input.ignoreSpBelow7 && sp < 7 ? 0 : sp);
+  const headSp = ignored(input.headSp);
+  const bodySp = ignored(input.bodySp);
+  const ablate = (pen: number, sp: number) => {
+    const base = getSpAblation(pen, sp, attackType);
+    return base > 0 ? Math.min(sp, base + (input.extraAblation ?? 0)) : 0;
+  };
 
   const rawSp = location === 'head' ? headSp : bodySp;
   const effectiveSp = getEffectiveSpForAttack(rawSp, attackType);
   const penetratingDamage = Math.max(0, damage - effectiveSp);
-  const spAblation = getSpAblation(penetratingDamage, rawSp, attackType);
+  const spAblation = ablate(penetratingDamage, rawSp);
 
   let hpLoss = 0;
   if (attackType === 'direct') {
@@ -333,7 +345,7 @@ export function calculateIncomingImpact(input: IncomingImpactInput): IncomingImp
 
   const excessEffectiveSp = getEffectiveSpForAttack(bodySp, attackType);
   const excessPenetrating = Math.max(0, excessDamage - excessEffectiveSp);
-  const excessSpAblation = getSpAblation(excessPenetrating, bodySp, attackType);
+  const excessSpAblation = ablate(excessPenetrating, bodySp);
   let excessHpLoss = 0;
   if (excessDamage > 0) {
     excessHpLoss = attackType === 'direct' ? excessDamage : excessPenetrating;

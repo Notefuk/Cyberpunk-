@@ -48,6 +48,7 @@ import { ZoneConnectors } from './ZoneConnectors';
 import { ZoneDetailPanel } from './ZoneDetailPanel';
 import { GoingMetalBanner } from './GoingMetalBanner';
 import { DurabilityPanel } from '../sheet/DurabilityPanel';
+import { CyberwareEnhancementsPanel } from './CyberwareEnhancementsPanel';
 import { getCyberwareArt } from './cyberwareCardArt';
 
 export type { CyberwareItemData };
@@ -334,6 +335,9 @@ export function CyberwareRipperdocView() {
 
       {/* v5.31.0 [Claude Code · 2026-11-13]: mantenimiento y fallas del ciberware (IR5 pp.3-12) */}
       {activeChar && <DurabilityPanel character={activeChar} groups={['Ciberware']} />}
+
+      {/* v5.43.0 [Claude Code · 2026-11-14]: Cyberware Enhancements de CEMK, solo 2077 (DLC 02 pp.1-3) */}
+      <CyberwareEnhancementsPanel />
 
       {/* ========================================================================= */}
       {/* CATEGORÍAS DE CIBERWARE OFICIALES // TOOLTIPS FLOTANTES CLAROS */}

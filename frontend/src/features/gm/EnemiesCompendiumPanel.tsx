@@ -11,6 +11,7 @@ import {
   ENEMIES_CATALOG, 
   DANGER_GAL_15_FACTIONS,
   convertEnemyToCharacterSheet,
+  enemyStatLabel,
   type EnemySheet, 
   type ThreatTier, 
   type SourceBookId,
@@ -158,7 +159,7 @@ const EnemyPortView: React.FC<{ enemy: EnemySheet; mode: EnemySheetMode }> = ({ 
       <div className="p-3 bg-[#131622] rounded-xs border border-[#232b3f] space-y-2 text-[11px]">
         <span className="text-[10px] font-bold text-slate-300 uppercase block">FICHA RED ORIGINAL (LIBRO):</span>
         <p className="text-slate-300">
-          HP {enemy.hp} • Herida grave {enemy.seriouslyWounded} • Death Save {enemy.deathSave} • SP C{enemy.headSp} / T{enemy.bodySp}
+          HP {enemy.hp} • Herida grave {enemy.seriouslyWounded} • Death Save {enemy.abbreviated ? '—' : enemy.deathSave} • SP C{enemy.headSp} / T{enemy.bodySp}
           {enemy.stats.LUCK !== undefined && <> • LUCK {enemy.stats.LUCK}</>}
           {enemy.luck !== undefined && enemy.stats.LUCK === undefined && <> • LUCK {enemy.luck}</>}
         </p>
@@ -1090,6 +1091,20 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
                 </button>
               );
             })}
+            {/* v5.44.0 [Claude Code · 2026-11-14]: los 20 civiles de Everyday People. */}
+            <button
+              type="button"
+              data-testid="faction-civilians"
+              onClick={() => setSelectedFaction(selectedFaction === 'Civiles (Everyday People)' ? 'all' : 'Civiles (Everyday People)')}
+              className={`px-2.5 py-1 rounded-xs text-[11px] font-mono-code font-bold whitespace-nowrap transition-colors cursor-pointer border ${
+                selectedFaction === 'Civiles (Everyday People)'
+                  ? 'bg-emerald-500/20 text-white border-emerald-400'
+                  : 'bg-[#121520] text-slate-300 border-[#23293c] hover:bg-[#1a2030]'
+              }`}
+              title="Everyday People (DLC): 20 civiles de Night City con ficha abreviada"
+            >
+              Civiles ({combinedCatalog.filter((e) => e.faction === 'Civiles (Everyday People)').length})
+            </button>
           </div>
         </div>
 
@@ -1319,8 +1334,8 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
                             className="bg-[#141824] p-1.5 rounded-xs border border-[#232b3f] space-y-0.5"
                           >
                             <span className="text-[9px] text-slate-400 block font-bold">{statKey}</span>
-                            <span className="font-tech text-base font-black text-white">
-                              {enemy.stats[statKey]}
+                            <span className="font-tech text-base font-black text-white" data-testid={`enemy-stat-${statKey}`}>
+                              {enemyStatLabel(enemy, statKey)}
                             </span>
                           </div>
                         ))}

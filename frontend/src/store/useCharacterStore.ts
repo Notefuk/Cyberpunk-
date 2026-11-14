@@ -45,6 +45,9 @@ import { SKILL_METADATA } from '../types/cyberpunk';
 import { checkRoleRankRaise, checkSkillRaise } from '../engine/roleRules';
 import type { MakerAllocation, MedicineAllocation } from '../engine/roleRules';
 import { canInstallAnother } from '../engine/cyberwareEffects';
+import { applyFlashOfLuck, canUseFlashOfLuck, flashOfLuckTier, newMission, refundLastFlashOfLuck, type FlashOfLuckTier } from '../engine/flashOfLuck';
+import { useCombatStore } from './useCombatStore';
+import type { InventedUpgradeRecord } from '../data/inventedTechUpgrades';
 import { REPLACEMENT_FEE_EB, endOfSession, replacementMember } from '../engine/socialRoleRules';
 import type { ExecTeamMember } from '../engine/socialRoleRules';
 import coreRulesPack from '../data/core-rules.cprpack.json';
@@ -380,6 +383,15 @@ export interface CharacterStoreState {
   ablateArmor: (location: 'head' | 'body', amount?: number) => void;
   repairArmor: (location: 'head' | 'body') => void;
   spendLuck: (amount: number) => boolean;
+  /** v5.41.0 (plan 33): Flash of Luck (Going Quiet p.3). [Claude Code · 2026-11-14] */
+  spendFlashOfLuck: (tier: FlashOfLuckTier, note: string, currentBeatKey: string) => boolean;
+  refundFlashOfLuck: () => boolean;
+  startFlashOfLuckMission: () => void;
+  /** v5.42.0 (plan 33): Invented Tech Upgrades (DLC pp.3-9). [Claude Code · 2026-11-14] */
+  addInventedUpgrade: (record: InventedUpgradeRecord) => void;
+  removeInventedUpgrade: (recordId: string) => void;
+  /** v5.43.0 (plan 33): Cyberware Enhancements de CEMK, una por ciberware (DLC 02 pp.1-3). [Claude Code · 2026-11-14] */
+  setCyberwareEnhancement: (cyberwareId: string, enhancementId: string | null) => void;
   restoreLuck: () => void;
   toggleLuckPip: (pipIndex: number) => void;
   consumeAmmo: (weaponInstanceId: string, amount: number) => boolean;
@@ -883,6 +895,70 @@ export const useCharacterStore = create<CharacterStoreState>()(
           return true;
         }
         return false;
+      },
+
+      spendFlashOfLuck: (tier, note, currentBeatKey) => {
+        const char = get().getActiveCharacter();
+        const enabled = useCombatStore.getState().flashOfLuckEnabled;
+        if (!char || !canUseFlashOfLuck(char.flashOfLuck, currentBeatKey, char.currentLuck, tier, enabled).ok) return false;
+        const cost = flashOfLuckTier(tier).luckCost;
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId
+              ? { ...c, currentLuck: c.currentLuck - cost, flashOfLuck: applyFlashOfLuck(c.flashOfLuck, currentBeatKey, tier, note, new Date().toISOString()) }
+              : c
+          )
+        }));
+        return true;
+      },
+
+      refundFlashOfLuck: () => {
+        const char = get().getActiveCharacter();
+        const r = char ? refundLastFlashOfLuck(char.flashOfLuck) : null;
+        if (!r) return false;
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId
+              ? { ...c, currentLuck: Math.min(c.stats.LUCK, c.currentLuck + r.luck), flashOfLuck: r.state }
+              : c
+          )
+        }));
+        return true;
+      },
+
+      addInventedUpgrade: (record) => {
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId ? { ...c, inventedUpgrades: [...(c.inventedUpgrades ?? []), record] } : c
+          )
+        }));
+      },
+
+      setCyberwareEnhancement: (cyberwareId, enhancementId) => {
+        set(state => ({
+          characters: state.characters.map(c => {
+            if (c.id !== state.activeCharacterId) return c;
+            const next = { ...(c.cyberwareEnhancements ?? {}) };
+            if (enhancementId) next[cyberwareId] = enhancementId; else delete next[cyberwareId];
+            return { ...c, cyberwareEnhancements: next };
+          })
+        }));
+      },
+
+      removeInventedUpgrade: (recordId) => {
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId ? { ...c, inventedUpgrades: (c.inventedUpgrades ?? []).filter(r => r.id !== recordId) } : c
+          )
+        }));
+      },
+
+      startFlashOfLuckMission: () => {
+        set(state => ({
+          characters: state.characters.map(c =>
+            c.id === state.activeCharacterId ? { ...c, flashOfLuck: newMission(c.flashOfLuck) } : c
+          )
+        }));
       },
 
       restoreLuck: () => {

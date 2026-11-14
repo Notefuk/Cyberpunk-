@@ -1,4 +1,6 @@
 import type { ExecTeamMember } from '../engine/socialRoleRules';
+import type { FlashOfLuckState } from '../engine/flashOfLuck';
+import type { InventedUpgradeRecord } from '../data/inventedTechUpgrades';
 
 // v4.9.3 [Claude Code · 2026-10-23] Grupo de fans del Rockerboy (Core pp.144-145).
 export interface RockerboyFanGroup {
@@ -622,6 +624,8 @@ export interface CharacterSheet {
   stats: Record<StatKey, number>;
   currentHp: number;
   currentLuck: number;
+  /** v5.41.0 (plan 33): cuenta de Flash of Luck (Going Quiet p.3). [Claude Code · 2026-11-14] */
+  flashOfLuck?: FlashOfLuckState;
   currentHumanity: number;
   headArmor: {
     name: string;
@@ -657,6 +661,10 @@ export interface CharacterSheet {
   eurodollars: number;
   inventory?: InventoryItem[];
   transactions?: EurodollarTransaction[];
+  /** v5.42.0 (plan 33): Invented Tech Upgrades anotadas (DLC pp.3-9); el efecto queda en texto. [Claude Code · 2026-11-14] */
+  inventedUpgrades?: InventedUpgradeRecord[];
+  /** v5.43.0 (plan 33): Cyberware Enhancement por ciberware (id del ciberware → id de la mejora), solo 2077 (CEMK DLC 02). [Claude Code · 2026-11-14] */
+  cyberwareEnhancements?: Record<string, string>;
   unarmedInHand?: { brawling?: boolean; martialArts?: boolean };
   activeDrugs?: ActiveDrugEffect[];
   era?: CharacterEra;
@@ -788,6 +796,11 @@ export interface RollEntry {
   isCriticalInjuryTrigger?: boolean; // true si sixesCount >= 2
   baseDamageTotal?: number;
   critBonusDamage?: number; // +5 si sixesCount >= 2
+  /** v5.43.0 [Claude Code · 2026-11-14]: tiradas en la tabla de Críticas para elegir (Monowire 2, Barbed Line 3, Double-Edged 2). */
+  critRolls?: 2 | 3;
+  /** v5.43.0: Cyberware Enhancement del arma (CEMK DLC 02) y sus recordatorios. */
+  enhancementName?: string;
+  enhancementNotes?: string[];
   finalDamageTotal?: number;
   aimedShotTarget?: AimedShotTarget;
   aimedShotLabel?: string;

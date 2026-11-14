@@ -2039,6 +2039,12 @@ export const StreetLabView: React.FC = () => {
                                     </button>
                                   </span>
                                 )}
+                                {/* v5.42.0 (plan 33): Invented Tech Upgrades anotadas en esta arma. [Claude Code · 2026-11-14] */}
+                                {(activeChar.inventedUpgrades ?? []).filter((r) => r.weaponInstanceId === w.instanceId).map((r) => (
+                                  <span key={r.id} className="text-[9px] font-mono-code px-1.5 py-0.5 rounded bg-[#1b2234] text-amber-300 border border-amber-500/30" title={r.effect} data-testid="invented-tup-badge">
+                                    🧪 {r.name}
+                                  </span>
+                                ))}
                                 {w.installedAttachments && w.installedAttachments.length > 0 && w.installedAttachments.map((attId) => {
                                   const att = WEAPON_ATTACHMENTS_CATALOG.find((a) => a.id === attId);
                                   if (!att) return null;

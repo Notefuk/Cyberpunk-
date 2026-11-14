@@ -117,6 +117,118 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.44.0] - 2026-11-14 (Plan 33 IV: Everyday People) [Claude Code · 2026-11-14]
+* **Category**: PNJ canon (DLC *Everyday People*, 2026, v1.01, pp.2-12), bestiario del GM y creador de PNJ. Cierra el plan 33.
+* **What Changed**:
+  * **Los 20 civiles** (pp.3-12) en el bestiario del GM, con el botón "Civiles (20)" en la barra de facciones:
+    * Bartender, Bouncer, Busker, Construction Worker, Corporate Researcher, Deal Maker y Glitterkid.
+    * Graffiti Artist, Guerrilla Gardener, Laborer, Line Cook, Neighborhood Tech, Paramedic y Scavver.
+    * Screamsheet Writer, Security Guard, Store Clerk, Streetrat, Taxi Driver y Wage Slave.
+    * Cada uno trae su HP, número de combate, INIT, MOVE, Role Ability, Reputation, armadura, armas, ciberware, equipo y skills.
+    * Sus 2 o 3 variantes van en las reglas especiales.
+    * Son Mooks y se pueden sumar al encuentro como cualquier otro PNJ.
+  * **Ficha abreviada**: el libro no imprime los STATs completos. El bestiario muestra solo REF (el INIT del libro) y MOVE; el resto de los STATs y el Death Save se ven como "—". El porte CEMK no compara su HP con la fórmula.
+  * **Plantilla "Civil"** en el creador de PNJ guiado, con las guías de p.2:
+    * 33 puntos de STAT (máximo 6) y 30 de skill.
+    * HP 20-35 y SP 0-7.
+    * Base de combate 6-10 y de las demás skills 8-12.
+    * 300eb de equipo con armas Poor y 500eb de ciberware.
+    * El libro no da versión Hardened del civil.
+  * **Interpretado**:
+    * El número de combate es la base de todas sus armas.
+    * Los STATs que el libro no da valen 0 por dentro y no se muestran.
+    * El ciberware y el equipo, que el libro lista juntos, se separaron.
+    * Quedan anotadas como dudas en la fuente cuatro cosas del libro:
+      * la cabeza del Streetrat dice "None" pero imprime SP 4;
+      * la PQ Very Heavy Pistol del taxista hace 5d6;
+      * dos variantes cambian skills con un nivel distinto al de la ficha base;
+      * la variante Combat Cabb nombra cosas que la ficha no tiene.
+* **Files Modified**:
+  * Nuevos: `data/enemies-src/everyday-people.json`, `frontend/src/data/enemies/everyday-people.ts` (generado) y `engine/__tests__/everydayPeople.test.ts`.
+  * `scripts/gen_enemies.py` (`BOOK_SPECS` y `abbreviated`).
+  * `data/enemiesCatalog.ts` (`abbreviated`, `enemyStatLabel`); `engine/cemkPort.ts`; `features/gm/EnemiesCompendiumPanel.tsx`.
+  * `data/npcCreationGuidelines.ts` (nivel `civilian`); `features/gm/GuidedNpcCreator.tsx`.
+  * `store/persistence.ts` (APP_VERSION); changelog in-app.
+  * `engine/__tests__/rules.test.ts`: la prueba de HP con la fórmula excluye las fichas abreviadas, porque no traen BODY ni WILL.
+* **Verificación**:
+  * tsc, los tests de la app (+6) y el build.
+  * Las 20 fichas se compararon una por una contra el PDF.
+  * En el navegador: el botón "Civiles (20)" filtra los 20. El Laborer muestra REF 4, MOVE 5 y "—" en los demás STATs. Consola limpia.
+
+### [v5.43.0] - 2026-11-14 (Plan 33 III: Cyberware Enhancements de CEMK) [Claude Code · 2026-11-14]
+* **Category**: Reglas canon (*CEMK DLC 02: Cyberware Enhancements*, pp.1-3), ciberware y combate. Solo para PJ de 2077.
+* **What Changed**:
+  * **Panel "Cyberware Enhancements (2077)"** en CYBERWARE // RIPPERDOC, debajo del mantenimiento. Aparece solo si el PJ es de 2077 y tiene Gorilla Arms, Mantis Blades o Monowire.
+    * Muestra las 9 mejoras con su precio y su efecto, y permite comprarlas (con o sin cobrar), cambiarlas o desinstalarlas.
+    * Va una por ciberware. Las instala un Tech en 1 hora, sin tirada (pp.1-2).
+  * **Efectos en el HUD de combate**, automáticos:
+    * **Pneumatic Actuation**: la Herida Crítica hace +10 en vez de +5.
+    * **Tungsten Reinforcement**: botones para elegir el modo de la Gorilla Arm, Heavy (3d6, ROF 2) o Very Heavy (4d6, ROF 1). El daño se tira con ese modo.
+    * **Double-Edged, Barbed Line y el Monowire**: con una Herida Crítica aparece "Tirás 2 (o 3) veces y elegís". Se ven las opciones de la tabla elegida y se aplica la que elija el atacante.
+    * **Hydraulic Ram**: tira los 3d6 extra y muestra el total contra cobertura.
+    * **Monomolecular Edge, Thermal-Bladed y Electroshock**: quedan como recordatorio en la tirada de daño. Además, la calculadora de impacto recibido tiene dos casillas: "SP menor a 7 no cuenta" y "+1 ablación".
+    * **Streamlined**: recordatorio en el arma.
+  * **Arma nueva Monowire** (`monowire-2077`): 3d6, ROF 2, una mano, ocultable, ataca a 6 m (CEMK p.35 y p.40). Hasta ahora el ciberware no tenía arma.
+  * **Interpretado**:
+    * La mejora se guarda por tipo de ciberware: si tenés dos Mantis Blades, las dos la tienen.
+    * Hydraulic Ram y Streamlined quedan como recordatorio, porque la app no sabe si le pegás a una cobertura ni si el Speedware está activo.
+    * Al "tirar N veces", si sale una herida repetida se vuelve a tirar, para que las opciones sean distintas.
+    * Quitar una mejora no devuelve la plata.
+* **Files Modified**:
+  * Nuevos: `data/cemkCyberwareEnhancements.ts`, `features/cyberware/CyberwareEnhancementsPanel.tsx`, `features/combat/CritChoicePicker.tsx` y `engine/__tests__/cyberwareEnhancements.test.ts`.
+  * `engine/combatEngine.ts` (`ignoreSpBelow7`, `extraAblation`); `engine/medicalRules.ts` (`rollCritOptions`).
+  * `types/cyberpunk.ts` (`cyberwareEnhancements`, y `critRolls` y `enhancementNotes` en las tiradas); `store/useCharacterStore.ts`.
+  * `features/combat/CombatHudView.tsx`; `features/cyberware/CyberwareRipperdocView.tsx`; `data/core-rules.cprpack.json` (Monowire).
+  * `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**:
+  * tsc, los tests de la app (+8) y el build.
+  * En el navegador, con Hardpoint (2077):
+    * Comprar con 100eb avisó "No alcanza". Se instaló Double-Edged sin cobrar.
+    * En el HUD apareció el recordatorio de la mejora en la Mantis Blade. Al salir una Herida Crítica, ofreció 2 opciones en cuerpo.
+    * Las casillas de la calculadora se ven. Consola limpia. Se volvió atrás todo lo de prueba.
+
+### [v5.42.0] - 2026-11-14 (Plan 33 II: Invented Tech Upgrades) [Claude Code · 2026-11-14]
+* **Category**: Reglas canon (DLC *Invented Tech Upgrades Guide*, pp.3-9) y herramientas de rol.
+* **What Changed**:
+  * **Panel "Invented Tech Upgrades"** en NET & ROLES → Habilidades de Rol → Tech, debajo del Maker. Lo puede usar cualquier PJ: también le sirve al que contrata a un Tech de Night City.
+    * **Catálogo de las 18 mejoras de ejemplo** de Android Ace, Jack Sawyer, Lotos, Never Naughty Nedd, Troy Gordon y Tweak (3 cada uno). Cada una con su DV, sus dos costos, su termómetro, su requisito, su efecto y la nota de precio del libro.
+    * **Calculadora (p.3):**
+      * Costo 1 = lo que vale el ítem, o el componente más caro.
+      * Costo 2 = lo que puso el GM al inventarla.
+      * Si la instala el Tech PNJ, se suma 50% de mano de obra y la instala sin tirada.
+      * Si se compra el kit, se paga ahora el costo 2 y el Tech del grupo paga el costo 1 al instalarla.
+    * Las mejoras se anotan en la ficha con o sin cobrar. Si es un arma, aparece como etiqueta 🧪 en su tarjeta del Street Lab.
+    * **Termómetro de precios (p.4)** para el GM, con una opción "Inventada en la mesa".
+  * **Interpretado**: el efecto queda en texto y no cambia tiradas ni stats (decisión de Giuliano). Quitar una anotación no devuelve la plata.
+* **Files Modified**: nuevos `data/inventedTechUpgrades.ts`, `features/roles/InventedTechUpgradesPanel.tsx` y `engine/__tests__/inventedTechUpgrades.test.ts`; `types/cyberpunk.ts` (`inventedUpgrades`); `store/useCharacterStore.ts`; `features/netroles/NetAndRolesDeckView.tsx`; `features/sheet/StreetLabView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, los tests de la app (+4) y el build. En el navegador: Vorpal Coating en una Masamune, que dio 3.000eb con el Tech PNJ y 2.000eb con el kit. Se anotó, apareció la etiqueta en el Street Lab y se borró. Consola limpia.
+
+### [v5.41.0] - 2026-11-14 (Plan 33 I: Going Quiet) [Claude Code · 2026-11-14]
+* **Category**: Reglas y equipo canon (DLC *Going Quiet*, pp.3-7), HUD, NET y mesa online.
+* **What Changed**:
+  * **Flash of Luck (p.3), regla opcional**:
+    * Se gasta 2, 4 u 8 de Luck para que el PJ "haya hecho antes" algo que ayuda ahora. Según el tipo, el tope de gasto es 100, 500 o 1,000eb.
+    * Va 1 vez por Beat (según el reloj de la mesa) y hasta 3 por misión.
+    * Aparece en la bandeja de Luck del HUD solo si está prendida. El botón "✨ Flash of Luck" de la barra de arriba la prende o la apaga; con mesa activa, solo el GM.
+    * "No se pudo comprar" devuelve la Luck. "Nueva misión" reinicia la cuenta.
+  * **Netrunning en sigilo (pp.4-5)**, en el corredor de NET:
+    * Quietly Jack In, con una NET Action extra, contra cada Watcher.
+    * Pasar el Black ICE del piso con Interface + Cloak contra su PER.
+    * Cruzarse con un Watcher, la búsqueda del Watcher con Pathfinder, y qué rompe el sigilo.
+  * **Los 14 ítems de Harry the Shrimp (pp.5-7)** en el Compendio y la tienda: 16 de equipo (el Branded Jumpsuit en sus 4 precios) y el Translation Chip (chipware, HL 7). Ids `gq-*`.
+  * **Interpretado**:
+    * El veto del GM y la compra quedan a la mesa.
+    * Si se devuelve la Luck, el uso tampoco cuenta.
+    * Los Watchers y el bonus de Cloak/Pathfinder se cargan a mano, porque la app no tiene IA de Demons ni los programas Eraser o See Ya.
+    * En las tiradas opuestas, el empate lo gana el que se defiende.
+* **Files Modified**: nuevos `engine/flashOfLuck.ts`, `engine/netStealth.ts`, `features/combat/FlashOfLuckPanel.tsx`, `features/netroles/NetStealthPanel.tsx` y `engine/__tests__/goingQuiet.test.ts`; `data/core-rules.cprpack.json`; `types/cyberpunk.ts` (`flashOfLuck`); `store/useCharacterStore.ts`; `store/useCombatStore.ts` (`flashOfLuckEnabled`, clave local); `sync/campaignRepo.ts`, `sync/cloudCampaigns.ts`, `sync/tableSync.ts` (`flashOfLuck` en la campaña); `firestore.rules` y su test; `features/combat/CombatHudView.tsx`; `features/layout/TopHudBar.tsx`; `features/netroles/NetAndRolesDeckView.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**:
+  * tsc, los tests de la app (+7) y el build.
+  * Los 53 tests de reglas en el emulador.
+  * En el navegador: se prendió Flash of Luck, se gastó y quedó bloqueada en el mismo Beat. Después se devolvió, se reinició y se apagó.
+  * En el corredor de NET: un Quietly Jack In contra un Imp y un cruce que rompió el sigilo por empate.
+  * El Ghostsuit aparece en el Compendio. Consola limpia.
+
 ### [v5.40.0] - 2026-11-13 (Plan 32 VI: creador de PNJ guiado; cierra el plan 32) [Claude Code · 2026-11-13]
 * **Category**: Herramienta del GM (Danger Gal Dossier pp.149-152, NPC Creation Guidelines) y bestiario.
 * **What Changed**:

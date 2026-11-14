@@ -341,3 +341,10 @@
 - [x] [Claude Code · 2026-11-06] Black Chrome III (v5.14.0): generador de Night Market del Core (pp.338-339), los 6 mercados de BC (pp.131-156) con sus puestos, mostrar el mercado a la mesa, y Economics 101 (pp.125-130) (`docs/canon-audit/v5.14.0-night-markets.md`).
 - [ ] [Claude Code · 2026-10-21] HL de cada pieza del paquete como ciberware individual para el tope de terapia; volver a un cuerpo viejo no limita la Humanidad.
 - [ ] [Claude Code · 2026-10-21] Verificar dudas del libro: `packageHlAverage` impreso (Enforcer 53 vs p. 95 con 55) y precios del ejemplo Bazooka Joe.
+
+## Plan 33 (v5.41.0 a v5.44.0)
+
+- [x] [Claude Code · 2026-11-14] *Going Quiet* (v5.41.0): Flash of Luck (p.3, opcional, la prende el GM), netrunning en sigilo (pp.4-5) y los 14 ítems de Harry the Shrimp (pp.5-7).
+- [x] [Claude Code · 2026-11-14] *Invented Tech Upgrades Guide* (v5.42.0): las 18 mejoras de 6 Techs, calculadora de precio con mano de obra o kit, y termómetro del GM; efectos en texto.
+- [x] [Claude Code · 2026-11-14] *CEMK DLC 02: Cyberware Enhancements* (v5.43.0, solo 2077): las 9 mejoras en el Ripperdoc, efectos de combate en el HUD (críticos para elegir, +5 de Pneumatic, modos de Tungsten, SP menor a 7 y +1 de ablación en la calculadora) y el arma Monowire.
+- [x] [Claude Code · 2026-11-14] *Everyday People* (v5.44.0): los 20 civiles con ficha abreviada y sus variantes en el bestiario, y la plantilla "Civil" (p.2) en el creador de PNJ.

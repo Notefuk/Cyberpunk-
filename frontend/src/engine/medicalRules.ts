@@ -128,3 +128,27 @@ export function rollCemkCriticalInjury(location: 'head' | 'body', currentNames: 
 export function findCemkCriticalInjury(location: 'head' | 'body', name: string): CemkCritEntry | undefined {
   return (location === 'head' ? CEMK_CRITICAL_INJURIES.head : CEMK_CRITICAL_INJURIES.body).find((e) => e.name === name);
 }
+
+/**
+ * v5.43.0 [Claude Code · 2026-11-14]: "tira N veces en la tabla y elige" (Monowire, CEMK p.35; Double-Edged y Barbed Line,
+ * CEMK DLC 02 p.3). Devuelve hasta N opciones distintas, sin las heridas que el objetivo ya sufre.
+ */
+export function rollCritOptions(
+  location: 'head' | 'body',
+  n: number,
+  table: CritTable,
+  currentNames: string[] = [],
+  rollCore: (loc: 'head' | 'body', names: string[]) => { name: string; effect: string },
+  rng: () => number = Math.random
+): { name: string; effect: string }[] {
+  const out: { name: string; effect: string }[] = [];
+  for (let i = 0; i < n; i++) {
+    const taken = [...currentNames, ...out.map((o) => o.name)];
+    const r = table === 'cemk'
+      ? (() => { const e = rollCemkCriticalInjury(location, taken, rng); return { name: e.name, effect: e.effectEs }; })()
+      : rollCore(location, taken);
+    if (out.some((o) => o.name === r.name)) break; // no quedan opciones distintas
+    out.push(r);
+  }
+  return out;
+}

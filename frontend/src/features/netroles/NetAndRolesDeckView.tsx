@@ -33,6 +33,8 @@ import {
 import { useCharacterStore } from '../../store/useCharacterStore';
 import { useCombatStore } from '../../store/useCombatStore';
 import { beatsDv, rollCheckD10 } from '../../engine/combatEngine';
+import { NetStealthPanel } from './NetStealthPanel';
+import { InventedTechUpgradesPanel } from '../roles/InventedTechUpgradesPanel';
 import { getEffectiveBody, isValidSoloAllocation, soloAwarenessPointCost } from '../../engine/characterEngine';
 import { 
   NET_ARCHITECTURE_PRESETS, 
@@ -1013,6 +1015,8 @@ export const NetAndRolesDeckView: React.FC = () => {
 
           {/* COLUMNA DERECHA: ESCALERA VIRTUAL PISO POR PISO & PROGRAMAS (7 cols) */}
           <div className="lg:col-span-7 space-y-4">
+            {/* v5.41.0 (plan 33): netrunning en sigilo (Going Quiet pp.4-5). [Claude Code · 2026-11-14] */}
+            <NetStealthPanel interfaceRank={activeInterfaceRank} floor={activeArch.floors[currentFloorIndex]} onSpendNetAction={() => useCombatStore.getState().spendNetAction()} />
             <div className="bg-[#090b10] border border-[#1b2234] p-4 rounded-xs space-y-4 shadow-2xl">
               <div className="flex items-center justify-between border-b border-[#1b2234] pb-2">
                 <div>
@@ -2301,6 +2305,8 @@ export const NetAndRolesDeckView: React.FC = () => {
           {selectedRoleView === 'tech' && (
             <div className="space-y-4">
               <MakerPanel />
+              {/* v5.42.0 (plan 33): Invented Tech Upgrades. [Claude Code · 2026-11-14] */}
+              <InventedTechUpgradesPanel />
               {/* FEEDBACK DEL BANCO DE TRABAJO */}
               {techMakerLog && (
                 <div

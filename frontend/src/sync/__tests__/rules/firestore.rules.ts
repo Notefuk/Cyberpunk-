@@ -382,6 +382,14 @@ describe('mesa compartida (plan 19)', () => {
     await assertFails(updateDoc(doc(db('gm'), 'campaigns/camp1'), { era: '2020' }));
   });
 
+  // v5.41.0 (plan 33): Flash of Luck, solo el GM y booleano. [Claude Code · 2026-11-14]
+  it('Flash of Luck: solo el GM la prende, y es booleana', async () => {
+    await seed(['campaigns', 'camp1'], camp);
+    await assertFails(updateDoc(doc(db('alice'), 'campaigns/camp1'), { flashOfLuck: true }));
+    await assertSucceeds(updateDoc(doc(db('gm'), 'campaigns/camp1'), { flashOfLuck: true }));
+    await assertFails(updateDoc(doc(db('gm'), 'campaigns/camp1'), { flashOfLuck: 'si' }));
+  });
+
   it('encuentro: los miembros leen round y orden; solo el GM los escribe', async () => {
     await seed(['campaigns', 'camp1'], camp);
     await assertSucceeds(setDoc(doc(db('gm'), 'campaigns/camp1/encounters/current'), { round: 1, turnIndex: 0, order: [] }));
