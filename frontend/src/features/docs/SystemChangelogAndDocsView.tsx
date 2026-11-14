@@ -26,6 +26,115 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.40.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Herramientas GM',
+    title: 'Creador de PNJ guiado',
+    summary: 'El botón "Crear PNJ personalizado" del bestiario ahora abre un asistente de 6 pasos con las guías de Danger Gal Dossier: elegís si es Mook, Lieutenant, Mini-Boss o Boss (y si es Hardened), y te muestra cuántos puntos de STAT y skill repartir, el HP y SP sugeridos y el presupuesto de equipo. Avisa si te salís de la plantilla, pero te deja guardar igual, porque el libro dice que son guías. Se ve en CEMK 2077 como las fichas del libro.',
+    highlights: [
+      'Plantillas Mook, Lieutenant, Mini-Boss y Boss, con Hardening (Danger Gal Dossier p.152).',
+      'Contadores de puntos de STAT y skill, y bases comparadas con lo sugerido.',
+      'Cierra el plan de Danger Gal Dossier.'
+    ],
+    filesTouched: ['frontend/src/data/npcCreationGuidelines.ts', 'frontend/src/features/gm/GuidedNpcCreator.tsx'],
+    metricsBadge: 'v5.40.0 • Danger Gal • Creador de PNJ'
+  },
+  {
+    version: 'v5.39.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: equipo, vehículos y la NET del CrAB Lord',
+    summary: 'El Compendio suma los 4 ítems de Danger Gal que faltaban (una pistola de munición mezclada, la MicroCutie, la bicicleta y la Smart Lens) y los otros 27 del libro llevan su página como segunda fuente. Las fichas de Team Monster, Trauma Team y Zoners muestran su vehículo (Herakles, Mi-60 y Chupacabra) y el GM tiene la NET portátil del CrAB Lord. Se borraron un SMG y una NET de Danger Gal que eran inventados.',
+    highlights: [
+      '4 ítems nuevos en el Compendio (Danger Gal Dossier pp.144-148).',
+      'Vehículos de facción en el bestiario (pp.112, 120, 139).',
+      'NET portátil del CrAB Lord (p.42).'
+    ],
+    filesTouched: ['frontend/src/data/core-rules.cprpack.json', 'frontend/src/data/dangerGalFactions.ts', 'frontend/src/data/netArchitecturesDangerGal.ts'],
+    metricsBadge: 'v5.39.0 • Danger Gal • New Gear'
+  },
+  {
+    version: 'v5.38.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: las 118 fichas completas',
+    summary: 'Se completa el bestiario de Danger Gal Dossier con los Sightseers, Team Monster, el escuadrón de Trauma Team, los Tyger Claws, los Zoners y los dos agentes de Arasaka de la aventura. Son las 118 fichas del libro, todas jugables en CEMK 2077, con 8 netrunners que tienen Quickhacks.',
+    highlights: [
+      '39 PNJ más (Danger Gal Dossier pp.100-142 y 165-166): 118 en total.',
+      'Nivel y rol revisados contra la lista oficial del libro.'
+    ],
+    filesTouched: ['data/enemies-src/danger-gal.json', 'frontend/src/data/enemies/danger-gal.ts'],
+    metricsBadge: 'v5.38.0 • Danger Gal • 118 fichas'
+  },
+  {
+    version: 'v5.37.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: 37 fichas más',
+    summary: 'Suman 37 fichas reales de Danger Gal Dossier: Generation Red, Maelstrom, la NCPD del Precinct #1, el equipo de Fiona Hayes de Network 54 y los Piranhas. Como las anteriores, se juegan en CEMK 2077 y tienen su ficha RED original. Ya hay 79 de las 118 del libro.',
+    highlights: [
+      '37 PNJ canon con página (Danger Gal Dossier pp.58-98).',
+      'Dos erratas del libro anotadas en su ficha (Flenser y Stringer).'
+    ],
+    filesTouched: ['data/enemies-src/danger-gal.json', 'frontend/src/data/enemies/danger-gal.ts'],
+    metricsBadge: 'v5.37.0 • Danger Gal • 79 fichas'
+  },
+  {
+    version: 'v5.36.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: las primeras 42 fichas',
+    summary: 'Llegan las primeras 42 fichas reales de Danger Gal Dossier: 6th Street, los Bozos, la Puma Squad, las Digital Divas y los Edgerunners. Todas se juegan en CEMK 2077 (Neuroport, hackeables y Quickhacks para los netrunners) y tienen su ficha RED original. Se borraron del bestiario las 95 fichas de "Danger Gal" que no eran del libro.',
+    highlights: [
+      '42 PNJ canon con página (Danger Gal Dossier pp.10-56).',
+      'Porte CEMK de todos, con Quickhacks para Pantera, Firewall y CrAB Lord.',
+      'Fuera del bestiario las 95 fichas inventadas.'
+    ],
+    filesTouched: ['data/enemies-src/danger-gal.json', 'frontend/src/data/enemies/danger-gal.ts', 'frontend/src/data/enemiesCatalog.ts'],
+    metricsBadge: 'v5.36.0 • Danger Gal • 42 fichas'
+  },
+  {
+    version: 'v5.35.1',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa',
+    title: 'El bestiario es solo del GM',
+    summary: 'Para que los jugadores no se spoileen: el bestiario con todos los PNJ y las fichas de facción ya no se ve desde la pestaña de combate de un jugador. En una mesa lo decide el rol de la campaña; sin mesa, el PIN del GM. El Fixer jugador regatea contra fichas guardadas o con los números que le pase el GM.',
+    highlights: [
+      'Bestiario y facciones ocultos para los jugadores.',
+      'El Haggle del Fixer jugador ya no lista el catálogo de enemigos.'
+    ],
+    filesTouched: ['frontend/src/features/combat/CombatHudView.tsx', 'frontend/src/features/gm/EnemiesCompendiumPanel.tsx', 'frontend/src/features/roles/FixerPanel.tsx'],
+    metricsBadge: 'v5.35.1 • solo GM'
+  },
+  {
+    version: 'v5.35.0',
+    date: '2026-11-13',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Contenido',
+    title: 'Danger Gal: las 15 facciones canon',
+    summary: 'Empieza el Danger Gal Dossier. El bestiario tiene ahora las 15 facciones reales del libro: tocando una ves su base, su historia reciente, sus recursos y sus objetivos, con página. Las que aparecen en la guía de 2077 de CEMK dicen además cómo están en 2077. La lista anterior de facciones era inventada y se borró. Las 118 fichas de PNJ llegan en las próximas versiones.',
+    highlights: [
+      'Ficha de cada facción en el bestiario (Danger Gal Dossier pp.9-142).',
+      'Línea "En 2077" para 6 facciones (Edgerunners Handbook de CEMK pp.24-31).',
+      'Se borró la lista de facciones inventada.'
+    ],
+    filesTouched: ['frontend/src/data/dangerGalFactions.ts', 'frontend/src/features/gm/EnemiesCompendiumPanel.tsx', 'frontend/src/data/enemiesCatalog.ts'],
+    metricsBadge: 'v5.35.0 • Danger Gal • 15 facciones'
+  },
+  {
     version: 'v5.34.0',
     date: '2026-11-13',
     author: 'Claude Code',
@@ -1927,6 +2036,13 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.40.0': true,
+    'v5.39.0': true,
+    'v5.38.0': true,
+    'v5.37.0': true,
+    'v5.36.0': true,
+    'v5.35.1': true,
+    'v5.35.0': true,
     'v5.34.0': true,
     'v5.33.0': true,
     'v5.32.0': true,

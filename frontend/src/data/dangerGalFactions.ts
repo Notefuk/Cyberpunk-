@@ -1,0 +1,289 @@
+// [Claude Code · 2026-11-13] v5.35.0 (plan 32): las 15 facciones canon de Danger Gal Dossier (pp.9-142), con su base,
+// historia reciente, recursos y objetivos en paráfrasis corta. Reemplaza la lista inventada que estaba en enemiesCatalog.ts.
+// Página impresa = índice del PDF. La línea "en 2077" sale solo de la Lore Guide de CEMK (Edgerunners Handbook) y cita su página.
+
+export interface DangerGalFaction {
+  id: string;
+  /** Nombre tal cual el libro; las fichas de PNJ usan este mismo texto en `faction`. */
+  name: string;
+  sourcePage: number;
+  /** Quién firma el informe dentro del libro. */
+  preparedBy: string;
+  summary: string;
+  /** Zona de Night City, corta, para el título del botón. */
+  territory: string;
+  base: string;
+  history: string;
+  resources: string;
+  goals: string;
+  /** Qué dice la Lore Guide de CEMK de la facción en 2077, si la menciona. */
+  in2077?: { text: string; page: number };
+  /** Recuadro extra del libro ligado a la facción. */
+  sidebar?: { title: string; page: number; text: string };
+  /** v5.39.0: vehículo propio de la facción (ficha de vehículo del libro, con sus mejoras). */
+  vehicles?: DangerGalVehicle[];
+  threatColor: string;
+}
+
+/** [Claude Code · 2026-11-13] v5.39.0 (plan 32): vehículo de una facción, tal cual su recuadro del libro. */
+export interface DangerGalVehicle {
+  name: string;
+  page: number;
+  owner: string;
+  company: string;
+  type: string;
+  nomadAccess: number;
+  sdp: number;
+  seats: number;
+  combatSpeed: string;
+  narrativeSpeed: string;
+  cost: number;
+  upgrades: string[];
+  /** Vehículo base en el catálogo de Black Chrome, si el libro lo remite ahí. */
+  base?: { book: string; page: number; catalogId?: string };
+  story: string;
+}
+
+export const DANGER_GAL_BOOK = 'Danger Gal Dossier';
+export const CEMK_LORE_GUIDE = 'Edgerunners Handbook (CEMK)';
+
+export const DANGER_GAL_15_FACTIONS: DangerGalFaction[] = [
+  {
+    id: 'dg-6th-street',
+    name: '6th Street',
+    sourcePage: 9,
+    preparedBy: 'Cornelius Wright, ex Hellraiser de 6th Street',
+    summary: 'Veteranos de la guerra organizados con rangos militares. Se presentan como guardianes, pero son una pandilla con permiso para hacer de policía. Los fundó X (el coronel Solomon Wright) y deciden por votación de sus tres "I": investigaciones, impacto e interna.',
+    territory: 'North Heywood',
+    base: 'Un arsenal de la Guardia Nacional de nueve pisos en North Heywood, reacondicionado: garaje, armeros, comunicaciones militares, un refugio antinuclear en el subsuelo y pista de aterrizaje en la terraza.',
+    history: 'Ahora son contratistas privados de policía en North Heywood. Patrullan en grupos de 4 a 6, a pie y en moto, con un equipo de respuesta rápida en vehículos blindados comprados a los Nomads.',
+    resources: 'Bien financiados por contratos cortos con Corps y gobierno, y por el contrato de policía (su Davis Squad). Gastan tanto para competir con Militech y Lazarus que en 3 a 5 años se quedan sin plata; ya venden lo que "confiscan". Buena relación con los Nomads, por ahora. X obliga a declarar el ciberware cada mes y echa a los que tienen demasiado.',
+    goals: 'Extender su protección a todo Night City y reemplazar a la NCPD corrupta: tienen plata y equipo, les falta gente. X sueña con volver a unir Night City a Estados Unidos.',
+    in2077: { page: 25, text: 'Se corrompieron: empezaron con coimas y cobro de protección y terminaron en otros negocios criminales. Son una pandilla más con estética militar, con territorio en Santo Domingo y algo de influencia en Charter Hill y Heywood.' },
+    threatColor: '#64748b',
+  },
+  {
+    id: 'dg-bozos',
+    name: 'Bozos',
+    sourcePage: 15,
+    preparedBy: 'Sandi Quarter, autora de Fears of a Clown',
+    summary: 'Payasos con bodysculpt, violentos y bromistas, liderados por el mítico "Great Bozo". Una guerra civil entre ellos los partió en varios "circos" que compiten a ver quién hace la broma más brutal.',
+    territory: 'Little Europe, South Night City y las cloacas',
+    base: 'Desde Hilaria 2045 dejaron sus guaridas conocidas. Se dice que frecuentan una tienda de bromas en Little Europe y un complejo en South Night City; probablemente sus bases están conectadas a las cloacas.',
+    history: 'En Hilaria 2045 unos supuestos Bozos falsos balearon el Forlorn Hope: era parte de la guerra civil. Big Top secuestró, esculpió y lavó el cerebro a un grupo de novatos y los soltó contra el bar.',
+    resources: 'Nadie sabe de dónde, pero nunca les falta ciberware, armas ni gente: algunos se suman por gusto y a otros los secuestran y torturan hasta que firman. La synthcoke del incidente MAE era más potente que la de la calle.',
+    goals: 'Cambian de objetivo cada hora. Su sello son las bromas caóticas y la guerra civil lo empeora.',
+    threatColor: '#f43f5e',
+  },
+  {
+    id: 'dg-puma-squad',
+    name: 'Danger Gal Puma Squad',
+    sourcePage: 27,
+    preparedBy: 'Analista de inteligencia de Lazarus 13-Gamma-001 (informe "liberado")',
+    summary: 'El escuadrón estrella de Danger Gal: tiene serie animada, cómic, muñecas y disfraces. Es publicidad caminando y, a la vez, el brazo secreto de la CEO Michiko Sanderson.',
+    territory: 'Danger Gal HQ',
+    base: 'Los pisos 11 y 12 de Danger Gal HQ, de uso exclusivo: suites, simuladores, I+D y un armero enorme. Usan el hangar de AV de la terraza y la flota de vehículos de la empresa.',
+    history: 'Su caso más famoso es el robo de nenúfares casi extintos del Arboretum Loggagia de la Night City University: se infiltraron en círculos de piratas de patentes florales y recuperaron las plantas, encargadas por un Fixer de productos biológicos.',
+    resources: 'Acceso total a los armeros oficiales y no oficiales de la Corporación. En público usan equipo llamativo; encubiertas, uno más discreto.',
+    goals: 'Cazar en secreto agentes durmientes de Arasaka para Michiko Sanderson. Una o dos veces por año toman un caso "para quedar bien", contra un blanco más débil, y lo aplastan frente a las cámaras.',
+    threatColor: '#ec4899',
+  },
+  {
+    id: 'dg-digital-divas',
+    name: 'The Digital Divas',
+    sourcePage: 33,
+    preparedBy: 'Juana "Catrolos" García, especialista musical de Danger Gal',
+    summary: 'Una banda brat-punk que explotó cuando un pirómano se tomó al pie de la letra su tema Burn it Down e incendiaba algo en cada show.',
+    territory: 'Heywood (zona industrial) y New Westbrook',
+    base: 'Viven y ensayan en un cine abandonado al este de la zona industrial de Heywood, que paga su manager Sizzle Jams. Él trabaja desde un parque de oficinas en New Westbrook.',
+    history: 'Los medios las culparon por el pirómano. Lo que no salió en las screamsheets es que la banda contrató una crew para encontrarlo; la sospechosa se mató al ser atrapada y no dejó rastro de por qué lo hizo.',
+    resources: 'Les pagan una miseria, pero el presupuesto de equipo es el de una banda famosa. La seguridad de los shows la hacen Edgerunners freelance o algún Pack Nomad, y su manager tiene Fixers en toda la Pacifica Confederation.',
+    goals: 'Quieren ser las próximas Crimson Steel y saben que no son Samurai. Buscan fama, pero con cierta brújula moral.',
+    threatColor: '#a855f7',
+  },
+  {
+    id: 'dg-edgerunners',
+    name: 'Edgerunners',
+    sourcePage: 39,
+    preparedBy: 'Justin Case',
+    summary: 'No es una facción organizada: son los Edgerunners de Night City, que el libro junta en un solo informe.',
+    territory: 'Toda Night City',
+    base: 'En todos lados, desde las ciudades de carpas hasta los rascacielos. La mayoría vive en contenedores reacondicionados o conapts chicos.',
+    history: 'La historia de los Edgerunners es la historia de Night City: aceitan los engranajes del poder o ayudan a que la máquina corporativa se rompa con el empujón justo.',
+    resources: 'Sus herramientas, sus contactos y su palabra. El que traiciona a quien confía en él no dura.',
+    goals: 'Plata, fama, poder, sobrevivir… Hay tantos motivos como Edgerunners; algunos hasta quieren mejorar el mundo.',
+    threatColor: '#22d3ee',
+  },
+  {
+    id: 'dg-generation-red',
+    name: 'Generation Red',
+    sourcePage: 57,
+    preparedBy: 'Agente Gib, en tareas de oficina',
+    summary: 'Una YoGang de chicos de orígenes distintos, sin familias que los cuiden, con buen acceso a tecnología.',
+    territory: 'Old Combat Zone, cerca del Glen',
+    base: 'Un edificio de oficinas abandonado en la Old Combat Zone, unas cuadras al sudeste del Glen. La planta baja es un skatepark con rampas de escombro, y el edificio está lleno de trampas.',
+    history: 'Solo quieren sobrevivir, pero echaron a patadas a unos pandilleros adultos que quisieron quedarse con su edificio. Eso les trajo atención, y al menos uno de ellos está preocupado.',
+    resources: 'Lo que unos chicos decididos pueden juntar o robar: trampas por todo el edificio y un lanzacohetes que Tetra sacó del armero de sus padres. Algunos padres tienen peso en sus Corps, pero llamarlos es el último recurso.',
+    goals: 'Ser ellos mismos sin adultos que les digan qué hacer. Danger Gal quiere reclutarlos como la próxima generación de agentes.',
+    sidebar: {
+      title: 'Kids in Night City',
+      page: 66,
+      text: 'Los chicos de la calle se juntan en YoGangs, que duran poco frente a pandillas más armadas, enfermedades y hambre. Algunas sobreviven con un líder mayor (los Andersons, Black Chrome p.140) o moviéndose como un Pack Nomad (los Lost Kids, Street Stories p.136). Generation Red no aguantaría contra la NCPD o Militech sin ayuda. El libro sugiere hablar antes con los jugadores sobre chicos como aliados o enemigos.',
+    },
+    threatColor: '#facc15',
+  },
+  {
+    id: 'dg-maelstrom',
+    name: 'Maelstrom',
+    sourcePage: 67,
+    preparedBy: 'Linda "Overpass" Lucastra, infiltrada en el Totentanz',
+    summary: 'La boostergang del cromo. Sobrevivió a la guerra y a la reconstrucción golpeada pero viva, y se armó con restos de otras pandillas.',
+    territory: 'Totentanz (Burleson Tower Hotel)',
+    base: 'En 2023 perdieron su territorio por la bomba de la Arasaka Tower. Estabilizaron el Burleson Tower Hotel, reabrieron el Totentanz y viven en los pisos del medio; la pandilla se reúne en el salón de baile.',
+    history: 'Muchos de los más cromados murieron en un frenesí violento justo después de la bomba (los sobrevivientes dicen que fue el EMP). Los que quedaron absorbieron otras pandillas cromadas, y Warlock los convirtió en una organización productiva.',
+    resources: 'Una red de drogas que también mueve armas y tecnología recuperada; bandas de aspirantes que buscan ciberware en las ruinas de la Hot Zone; acuerdos con ripperdocs de toda la ciudad. Su base y su garaje están en el Totentanz.',
+    goals: 'Los de abajo trabajan las drogas o el ciberware para subir y pagarse el trago. Warlock quiere un hogar permanente para el Totentanz y la pandilla, y un pedazo grande del bajo mundo.',
+    in2077: { page: 25, text: 'La boostergang definitiva: "el metal es mejor que la carne", con una reverencia casi religiosa por el cromo. Armaron un imperio de contrabando, tecnología del mercado negro y drogas; viven en el Northside Industrial District, llegan hasta Kabuki y siguen controlando el Totentanz (pp.25-26).' },
+    threatColor: '#dc2626',
+  },
+  {
+    id: 'dg-ncpd-precinct-1',
+    name: 'NCPD Precinct #1',
+    sourcePage: 79,
+    preparedBy: 'Ramsey "Roxy" Cole, ex reportera de Night City Today',
+    summary: 'La policía oficial: con exceso de trabajo, poca gente y muy corrupta. Pero no todos los Lawmen buscan plata extra.',
+    territory: 'Del Glen a Little Europe, South Night City y Little China',
+    base: 'El 1st Precinct House, un búnker enorme donde el Glen se junta con la Old Combat Zone y Old Japantown. Cada sector tiene su comisaría con armero, celdas y drones; solo la central tiene AV, helicópteros y los blindados del TAC Squad.',
+    history: 'El Precinct #1 cubre Little Europe, la Hot Zone, casi todo Upper Marina, el University District, South Night City, el Glen, la Old Combat Zone, Old Japantown y Little China (en las últimas cuatro hay mucha menos policía). La NCPD lleva veinte años rearmándose. Le costó recuperar el orden después de la bomba, sobre todo cuando Hammerman se llevó a MAX-TAC, pero empezaba a contener a las pandillas en las zonas ricas y a entenderse con las Familias Nomad.',
+    resources: 'Armas, armadura y equipo básicos con aprobación; las armas pesadas son solo del TAC Squad. Los sectores ricos reciben "donaciones" corporativas; los de las Combat Zones, más equipo pero peor. A veces "requisan" cosas de escenas del crimen para venderlas.',
+    goals: 'Controlar toda la policía de Night City sin intereses especiales, cosa que no va a pasar. Cada policía tiene su propia agenda, y cuanto más años lleva, más personal se vuelve.',
+    in2077: { page: 28, text: 'Sirve a los intereses de las megacorps: hay que suponer que todo policía es corrupto hasta que demuestre lo contrario. La NCPD se privatizó y la dirige un CEO que no es policía.' },
+    threatColor: '#3b82f6',
+  },
+  {
+    id: 'dg-network-54',
+    name: 'Network 54',
+    sourcePage: 91,
+    preparedBy: 'Cherri P.I., investigadora asociada',
+    summary: 'El equipo de periodismo de investigación de élite de Net54, liderado por la legendaria Media Fiona Hayes.',
+    territory: 'New Westbrook',
+    base: 'La sede central está en Santa Fe, pero Fiona y su equipo trabajan en las oficinas corporativas de Night City, en New Westbrook, con su cartel de neón de titulares las 24 horas.',
+    history: 'La Fiona original murió en 2020. Desde entonces Net54 la reemplaza con jóvenes Medias idealistas que pasan por un campamento de Braindance y biosculpt. Su camarógrafo Stringer estaba enamorado de la anterior.',
+    resources: 'Un AV-4 blindado como móvil de noticias, con NET Architecture y cinco Observer Drones con cámara; asistentes de producción a un llamado; un contacto netrunner en la NCPD (Burton Fox) y un Fixer de secretos (Infobros).',
+    goals: 'Seguir arriba de todo en noticias y tapar cualquier rumor sobre Fiona. La Fiona actual todavía quiere que los poderosos rindan cuentas, aunque sabe que la cadena le va a censurar muchas notas.',
+    in2077: { page: 31, text: 'Junto con WNS es dueña de la señal y del cable de Night City, con noticias sanitizadas por las corps, reality shows y talk shows. Su sede de Night City (N54 HQ) figura en p.18.' },
+    threatColor: '#f97316',
+  },
+  {
+    id: 'dg-piranhas',
+    name: 'Piranhas',
+    sourcePage: 95,
+    preparedBy: 'D.R. Ache, analista y organizadora de eventos de Danger Gal',
+    summary: 'Una pandilla de fiestas: si querés una fiesta sin límite de presupuesto, ellos tienen el lugar y las drogas.',
+    territory: 'Móvil (la Piranha Palace)',
+    base: 'La Piranha Palace cambia de lugar seguido: un depósito en una Combat Zone una semana, un penthouse en el centro la siguiente. Cada líder de cardumen sabe el código y solo entran Piranhas.',
+    history: 'Corpse Reviver tomó el control cuando su antecesor murió de sobredosis. Absorbió otras pandillas de fiesta, las organizó en células ("shoals") y sumó técnicos de luz y sonido, bartenders, cocineros y bailarines.',
+    resources: 'Los miembros entran y salen, pero la cúpula de jóvenes genios se mantiene. Corpse Reviver y Bazooka Joe reclutan en los clubes y tienen de todo: cocineros de drogas, dealers, DJs, artistas de VR, seguridad y limpieza.',
+    goals: 'Ser el único lugar de fiesta. Para Corpse Reviver, una familia retorcida que la cuide mientras les saca plata a los ricos; enganchan a jóvenes de la élite con drogas y fantasías para tener con qué presionarlos.',
+    threatColor: '#14b8a6',
+  },
+  {
+    id: 'dg-sightseers',
+    name: 'Sightseers',
+    sourcePage: 99,
+    preparedBy: 'Jag, especialista en inteligencia Nomad de Danger Gal',
+    summary: 'Un Pack Nomad de los Aldecaldos, fundado por Racer Rajavi, que transporta y contrabandea cargas chicas por Night City.',
+    territory: 'Santo Domingo (East Cargo Village)',
+    base: 'Contenedores básicos en la East Cargo Village, a las afueras de Santo Domingo, para no gastar recursos del campamento Aldecaldo. Racer casi siempre duerme en su vehículo.',
+    history: 'La NCPD y los Aldecaldos tienen un acuerdo tácito: los Nomads se controlan solos y mantienen las rutas de carga, y la policía mira para otro lado. El problema son los novatos que no se saben quedar quietos.',
+    resources: 'Unas motos y una Kombi preparadas para contrabando; en los trabajos grandes van todos en el vehículo de Racer. Cada uno tiene sus armas y su ciberware, y si hay problemas los respaldan los Aldecaldos.',
+    goals: 'Sobrevivir sin una bota corporativa en el cuello. Racer refuerza las Naciones Nomad protegiendo rutas; Endo prefiere armar a las comunidades locales.',
+    threatColor: '#84cc16',
+  },
+  {
+    id: 'dg-team-monster',
+    name: 'Team Monster',
+    sourcePage: 105,
+    preparedBy: 'Yasmine Saab',
+    summary: 'Una crew de Edgerunners de alto riesgo que no se achica ante el peligro, a veces para mal.',
+    territory: 'Forlorn Hope, Little China',
+    base: 'Cuando no están en un trabajo, paran en el Forlorn Hope, el bar de Edgerunners de Little China.',
+    history: 'Ayudaron a Biotechnica a recuperar animales de prueba robados para vender como mascotas raras. El "rescate de conejitos" se complicó: el bicho se había multiplicado en cientos de carnívoros.',
+    resources: 'Buenas habilidades, equipo extra gracias a su Fixer Turbo y la plata de los trabajos: la crew moderna de alto nivel, con juguetes caros en manos de gente inestable.',
+    goals: 'No planean a largo plazo: viven para el próximo gran trabajo y la próxima historia loca. El libro recuerda que aparecen en las partidas en vivo de Mike Pondsmith.',
+    vehicles: [
+      {
+        name: 'Zetatech Herakles', page: 112, owner: 'Team Monster', company: 'Zetatech', type: 'AV-4 Multipurpose Aerodyne',
+        nomadAccess: 10, sdp: 120, seats: 8, combatSpeed: '40 MOVE', narrativeSpeed: '322 km/h', cost: 63000,
+        upgrades: ['Armored Chassis', 'Bulletproof Glass', 'Heavy Chassis', 'Onboard Machine Gun', 'Seating Upgrade', 'Vehicle Heavy Weapon Mount con Militech Cowboy U-56 Grenade Launcher'],
+        base: { book: 'Black Chrome', page: 63, catalogId: 'bc-veh-zetatech-herakles' },
+        story: 'Cambiaron su viejo AV-4 por un Herakles nuevo robándolo de la fábrica de Zetatech en San José: dos AV de seguridad de Zetatech terminaron derribados en las Badlands y la corp no los quiere nada.'
+      }
+    ],
+    threatColor: '#eab308',
+  },
+  {
+    id: 'dg-trauma-team-nc4-2',
+    name: 'Trauma Team Squad NC4-2',
+    sourcePage: 113,
+    preparedBy: 'Bex Haigh, ex superespía y analista de DG',
+    summary: 'Un escuadrón de Trauma Team de sobreexigidos codependientes que toman los llamados más duros y mejor pagos para que la adrenalina tape el dolor.',
+    territory: 'Trauma Team Tower',
+    base: 'Su AV-4 está en el cuarto piso de la Trauma Team Tower, Bay 4-2, y trabajan en las oficinas de al lado. Tienen plata pero viven amontonados: la jefa Cazadora duerme en la oficina y el piloto Rockabye en el hangar.',
+    history: 'Son terriblemente eficientes, se especializan en llamados de nivel Executive y les roban clientes a escuadrones más lentos. Hay quejas por comisiones perdidas, pero ninguna formal.',
+    resources: 'Trauma Team ya no es lo de antes de la guerra, pero consigue buen equipo. Procesan sus propios fármacos, tienen seguridad biométrica, un armero chico y un AV-4 lleno de medicinas y criogenia, modificado con equipo Nomad de la familia de Rockabye.',
+    goals: 'No morir. Volver a casa enteros es una obsesión; si cae uno, lo más probable es una venganza sangrienta.',
+    vehicles: [
+      {
+        name: 'SovOil Mi-60', page: 120, owner: 'Trauma Team Squad NC4-2', company: 'SovOil', type: 'AV-4 Multipurpose Aerodyne',
+        nomadAccess: 10, sdp: 120, seats: 8, combatSpeed: '40 MOVE', narrativeSpeed: '322 km/h', cost: 65000,
+        upgrades: ['Armored Chassis', 'Bulletproof Glass', 'Heavy Chassis', 'NOS', 'Onboard Machine Gun', 'Onboard Rocket Pod', 'Seating Upgrade'],
+        story: 'Un Mi-60 de antes de la guerra que se pudría en el sótano. Rockabye pidió favores a su familia Nomad y en una semana quedó como nuevo, mejor que cualquier AV de la flota de Trauma Team.'
+      }
+    ],
+    in2077: { page: 24, text: 'Trauma Team International sigue siendo el mejor servicio de rescate, si podés pagarlo: el Platinum Plan monitorea el biomonitor por el neuroport las 24 horas y garantiza respuesta en tres minutos. Venden a sus empleados como héroes.' },
+    threatColor: '#ef4444',
+  },
+  {
+    id: 'dg-tyger-claws',
+    name: 'Tyger Claws',
+    sourcePage: 121,
+    preparedBy: 'Michiko Sanderson (con informes de Hu Su-nyang)',
+    summary: 'Antes de la Time of the Red eran la pandilla títere de Arasaka. Tras la bomba se reconvirtieron en protectores de la comunidad japonesa, con la Kimen-Gumi como fachada legal.',
+    territory: 'Old Japantown y Kabuki',
+    base: 'Tienen oficinas públicas en Old Japantown y Kabuki, igual que su empresa de seguridad legal Kimen-Gumi, que hasta colabora con la NCPD. La cúpula trabaja desde el Nakagawa Kabuki Theater.',
+    history: 'Shinobu Nakagawa murió en 2042 en circunstancias sospechosas. Tras una guerra de herencia, Hayato Nakagawa (Shinobu the Second) se quedó con la pandilla y con la Nakagawa Foundation, que preside su esposa Ryoko Fujiwara.',
+    resources: 'La fortuna de la Foundation y el respaldo de la NCCS les darían poder de NeoCorp, pero Ryoko cuida mucho la plata y las corps de la NCCS se están alejando. Dependen de los contratos de seguridad de la Kimen-Gumi.',
+    goals: 'En público, proteger a la comunidad japonesa como quería Shinobu. Por debajo, poder: como Arasaka antes, se ganan a la gente con ayuda y protección mientras se quedan con todo lo que pueden.',
+    in2077: { page: 26, text: 'Una de las pandillas más viejas: nació del Tiger\'s Claw, un club de motos respaldado por Arasaka, y llenó el vacío cuando Arasaka se fue. Es grande y con facciones internas que pelean entre sí, pero frente a un extraño son un frente unido. Operan sobre todo en Little China y Kabuki (en Kabuki manejan el casino Ho-Oh, p.21).' },
+    threatColor: '#f59e0b',
+  },
+  {
+    id: 'dg-zoners',
+    name: 'Zoners',
+    sourcePage: 131,
+    preparedBy: 'Cornelius Wright, ex Hellraiser de 6th Street',
+    summary: 'Un movimiento de South Night City que se está organizando: le dice la verdad al poder y está dispuesto a respaldarla a palos.',
+    territory: 'South Night City',
+    base: 'Viven en el mismo barrio, en el norte de South Night City: dos complejos de viviendas grandes, parques de contenedores y carpas. Se reúnen cada quince días en el lavadero de uno de los complejos, rotando.',
+    history: 'Una protesta espontánea estalló cuando Night Corp pasó plata del fondo de reparación de South Night City a la nueva sede del Precinct #1. Esta vez los Zoners marcharon hasta el Glen y la policía no alcanzó a pararlos.',
+    resources: 'Pocos y de cada uno: no están formalizados. Viviendo en una Combat Zone, tienen ciberware y armas saqueados de muertos; las Corps hacen ahí "pruebas con fuego real", como Nova Arms con un arma experimental.',
+    goals: 'Un reparto justo de los recursos de la reconstrucción. Para lograrlo van a necesitar más que manifestaciones.',
+    vehicles: [
+      {
+        name: 'Diego Motors Chupacabra', page: 139, owner: 'Speed Demon', company: 'Diego Motors', type: 'Compact Groundcar',
+        nomadAccess: 5, sdp: 70, seats: 6, combatSpeed: '20 MOVE', narrativeSpeed: '161 km/h', cost: 38000,
+        upgrades: ['Combat Plow', 'NOS', 'Heavy Chassis', 'Seating Upgrade'],
+        base: { book: 'Black Chrome', page: 66, catalogId: 'bc-veh-diego-motors-chupacabra' },
+        story: 'Un transporte de la familia de Speed Demon (los Jodes) para su enlace con los Zoners: casi de fábrica, con un arado de combate al frente para romper bloqueos de la NCPD y sin las marcas que lo atan a los Nomads. Su moto propia es una Harvey 100 con doble NOS (Black Chrome p.69).'
+      }
+    ],
+    threatColor: '#78716c',
+  },
+];
+
+/** Busca la facción canon por el texto `faction` de una ficha (comparación exacta, sin mayúsculas). */
+export function dangerGalFactionByName(name: string): DangerGalFaction | undefined {
+  const n = name.trim().toLowerCase();
+  return DANGER_GAL_15_FACTIONS.find((f) => f.name.toLowerCase() === n);
+}

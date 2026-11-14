@@ -7,6 +7,7 @@ import { fixerReach, getRoleRankInfo } from '../../engine/roleRules';
 import { greaseForRank, haggleDealsAvailable, rollHaggle } from '../../engine/socialRoleRules';
 import type { HaggleResult } from '../../engine/socialRoleRules';
 import { ENEMIES_CATALOG } from '../../data/enemiesCatalog';
+import { canSeeGmOnly, useGmAccess } from '../../store/gmAccess';
 
 const ROLE = 'Fixer';
 type Source = 'sheet' | 'enemy' | 'manual';
@@ -45,6 +46,8 @@ export const FixerPanel: React.FC = () => {
   const [mRank, setMRank] = useState(1);
   const [result, setResult] = useState<{ r: HaggleResult; who: string; rank: number } | null>(null);
   const [dealIdx, setDealIdx] = useState<number | null>(null);
+  // v5.35.1 [Claude Code · 2026-11-13]: el bestiario es del GM; el jugador regatea con una ficha o a mano (el GM le pasa COOL y Trading).
+  const gmSees = canSeeGmOnly(useGmAccess().mode);
 
   if (!char) {
     return <div className={panelCls}><span className={txtCls}>No hay ficha activa.</span></div>;
@@ -71,7 +74,7 @@ export const FixerPanel: React.FC = () => {
   if (source === 'sheet' && sheet) {
     const isF = sheet.role === 'Fixer';
     cp = { name: sheet.handle, cool: sheet.stats?.COOL ?? 0, trading: tradingOf(sheet.generalSkills), isFixer: isF, operatorRank: isF ? (sheet.roleRank || 0) : 0 };
-  } else if (source === 'enemy' && enemy) {
+  } else if (source === 'enemy' && enemy && gmSees) {
     cp = { name: enemy.name, cool: enemy.stats.COOL ?? 0, trading: enemyTrading, isFixer: false, operatorRank: 0 };
   } else if (source === 'manual') {
     cp = { name: 'Contraparte', cool: mCool, trading: mTrading, isFixer: mIsFixer, operatorRank: mIsFixer ? mRank : 0 };
@@ -133,7 +136,7 @@ export const FixerPanel: React.FC = () => {
         <span className={titleCls}>Haggle (Core p.159)</span>
         <span className={txtCls}>Vos: COOL {fixerCool} + Trading {fixerTrading} + Operator {rank}</span>
         <div className="flex flex-wrap gap-1.5 min-w-0">
-          {([['sheet', 'Ficha guardada'], ['enemy', 'Bestiario'], ['manual', 'A mano']] as const).map(([k, label]) => (
+          {([['sheet', 'Ficha guardada'], ['enemy', 'Bestiario'], ['manual', 'A mano']] as const).filter(([k]) => k !== 'enemy' || gmSees).map(([k, label]) => (
             <button
               key={k}
               type="button"
@@ -151,7 +154,10 @@ export const FixerPanel: React.FC = () => {
             {characters.map((c) => <option key={c.id} value={c.id}>{c.handle}{c.role === 'Fixer' ? ` (Fixer R${c.roleRank})` : ''}</option>)}
           </select>
         )}
-        {source === 'enemy' && (
+        {!gmSees && (
+          <span className="text-[11px] text-slate-400">Para regatear con un PNJ, el GM te dice su COOL y su Trading y los cargás a mano.</span>
+        )}
+        {source === 'enemy' && gmSees && (
           <div className="flex flex-col gap-1 min-w-0">
             <select value={enemyId} onChange={(e) => setEnemyId(e.target.value)} className={selCls}>
               {ENEMIES_CATALOG.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}

@@ -675,7 +675,7 @@
       "ammoType": "Heavy Pistol",
       "altFireModes": "Smartgun Link",
       "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m)",
-      "notes": "Exotic Heavy Handgun (revolver firing caseless trounds). Smartgun Link; can fire Smart Ammunition. Its ammunition only fits this gun and is sold in increments of 18, priced like 10-increment ammunition. The stats table (p.7) shows ROF 2. Concealable.",
+      "notes": "Exotic Heavy Handgun (revolver firing caseless trounds). Smartgun Link; can fire Smart Ammunition. Its ammunition only fits this gun and is sold in increments of 18, priced like 10-increment ammunition. The stats table (p.7) shows ROF 2. Concealable. También en Danger Gal Dossier p.145. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "12 Days of Gunmas",
       "sourcePage": 5,
@@ -1549,26 +1549,6 @@
       "era": "2077"
     },
     {
-      "id": "danger-gal-kitty-smg",
-      "name": "Danger Gal \"Kitty\" Smart SMG",
-      "type": "Ranged",
-      "skill": "Handgun",
-      "damage": "3d6",
-      "rof": 1,
-      "hands": 1,
-      "concealable": false,
-      "cost": 500,
-      "costTier": "Expensive",
-      "standardMag": 35,
-      "ammoType": "Heavy Pistol",
-      "altFireModes": "Autofire (3)",
-      "autofireMaxMult": 3,
-      "sourceBook": "danger_gal",
-      "sourceBookTitle": "Danger Gal Dossier",
-      "era": "2045",
-      "notes": "Customized smart submachine gun with feline logo and targeting software."
-    },
-    {
       "id": "arasaka-waa-bullpup",
       "name": "Arasaka WAA Bullpup Assault Weapon",
       "type": "Ranged",
@@ -1587,7 +1567,7 @@
       "sourceBookTitle": "12 Days of Gunmas",
       "sourcePage": 3,
       "era": "2045",
-      "notes": "Exotic Assault Rifle. Smartgun Link. Can use Non-Basic ammunition despite being Exotic. Standard issue Arasaka rifle of the 2020s. Stats table: 12 Days of Gunmas p.7."
+      "notes": "Exotic Assault Rifle. Smartgun Link. Can use Non-Basic ammunition despite being Exotic. Standard issue Arasaka rifle of the 2020s. Stats table: 12 Days of Gunmas p.7. También en Danger Gal Dossier p.144. [Claude Code · 2026-11-13]"
     },
     {
       "id": "constitutional-arms-multi-ammo-pistol",
@@ -1623,7 +1603,7 @@
       "sourceBookTitle": "12 Days of Gunmas",
       "sourcePage": 3,
       "era": "2045",
-      "notes": "One-Handed Exotic Medium Melee Weapon (2d6, ROF 1). Revving is an Action; it stays revved until dropped, stowed or revved down as an Action. While revved it is an Excellent Quality One-Handed Exotic Very Heavy Melee Weapon (4d6, ROF 1). Stats table: p.7."
+      "notes": "One-Handed Exotic Medium Melee Weapon (2d6, ROF 1). Revving is an Action; it stays revved until dropped, stowed or revved down as an Action. While revved it is an Excellent Quality One-Handed Exotic Very Heavy Melee Weapon (4d6, ROF 1). Stats table: p.7. También en Danger Gal Dossier p.144. [Claude Code · 2026-11-13]"
     },
     {
       "id": "kendachi-dragon-flamethrower",
@@ -1642,7 +1622,7 @@
       "sourceBookTitle": "12 Days of Gunmas",
       "sourcePage": 3,
       "era": "2045",
-      "notes": "One-Handed Exotic Shotgun fired with Heavy Weapons instead of Shoulder Arms. Damage N/A in the book: it uses the Incendiary Shotgun Shell it fires (ammunition costs as Incendiary Shotgun Shell). Targets ignited take 4 damage to HP at the end of their turn until they spend an Action to put themselves out; replaces a weaker fire effect, does not stack. That damage cannot cause a Critical Injury; cannot make Aimed Shots. Stats table: p.7."
+      "notes": "One-Handed Exotic Shotgun fired with Heavy Weapons instead of Shoulder Arms. Damage N/A in the book: it uses the Incendiary Shotgun Shell it fires (ammunition costs as Incendiary Shotgun Shell). Targets ignited take 4 damage to HP at the end of their turn until they spend an Action to put themselves out; replaces a weaker fire effect, does not stack. That damage cannot cause a Critical Injury; cannot make Aimed Shots. Stats table: p.7. También en Danger Gal Dossier p.144. [Claude Code · 2026-11-13]"
     },
     {
       "id": "magnum-opus-hellbringer",
@@ -1661,7 +1641,7 @@
       "sourceBookTitle": "12 Days of Gunmas",
       "sourcePage": 4,
       "era": "2045",
-      "notes": "Exotic Very Heavy Pistol (break-action revolver). A wielder without BODY 10+ has the weapon jam after each shot; unjamming takes an Action. Stats table: p.7 (no alt fire)."
+      "notes": "Exotic Very Heavy Pistol (break-action revolver). A wielder without BODY 10+ has the weapon jam after each shot; unjamming takes an Action. Stats table: p.7 (no alt fire). También en Danger Gal Dossier p.144. [Claude Code · 2026-11-13]"
     },
     {
       "id": "malorian-sub-flechette-gun",
@@ -1701,7 +1681,7 @@
       "sourceBookTitle": "12 Days of Gunmas",
       "sourcePage": 4,
       "era": "2045",
-      "notes": "Exotic Very Heavy Pistol. Damage N/A in the book: it can only fire Shotgun Shell ammunition and uses that shell's damage. Different weapon from the CEMK Militech Crusher. Stats table: 12 Days of Gunmas p.7 (described on pp.4-5)."
+      "notes": "Exotic Very Heavy Pistol. Damage N/A in the book: it can only fire Shotgun Shell ammunition and uses that shell's damage. Different weapon from the CEMK Militech Crusher. Stats table: 12 Days of Gunmas p.7 (described on pp.4-5). Capacidad 6. También en Danger Gal Dossier p.144. [Claude Code · 2026-11-13]"
     },
     {
       "id": "mustang-arms-ars-5",
@@ -1741,7 +1721,7 @@
       "sourceBookTitle": "12 Days of Gunmas",
       "sourcePage": 5,
       "era": "2045",
-      "notes": "Exotic Sniper Rifle that fires Arrows instead of bullets. Can load all Non-Basic ammunition despite being Exotic. Stats table: p.7."
+      "notes": "Exotic Sniper Rifle that fires Arrows instead of bullets. Can load all Non-Basic ammunition despite being Exotic. Stats table: p.7. También en Danger Gal Dossier p.145. [Claude Code · 2026-11-13]"
     },
     {
       "id": "stolbovoy-st-5",
@@ -1783,7 +1763,7 @@
       "sourceBookTitle": "12 Days of Gunmas",
       "sourcePage": 6,
       "era": "2045",
-      "notes": "Poor Quality Exotic SMG. Autofire (3) and Suppressive Fire can be used only with 2 or more bullets in the clip; both drain the clip entirely, after which the barrel sloughs off and the weapon is destroyed beyond repair. Stats table: p.7."
+      "notes": "Poor Quality Exotic SMG. Autofire (3) and Suppressive Fire can be used only with 2 or more bullets in the clip; both drain the clip entirely, after which the barrel sloughs off and the weapon is destroyed beyond repair. Stats table: p.7. También en Danger Gal Dossier p.145. [Claude Code · 2026-11-13]"
     },
     {
       "id": "arachnid-grenade",
@@ -3031,7 +3011,7 @@
       "costTier": "Everyday",
       "standardMag": 0,
       "ammoType": "N/A",
-      "notes": "Incendiary Grenade de 5d6. Si el portador recibe daño que atraviese su armadura, cada Molotov que lleve tiene 50% de destruirse: no explota pero lo deja Deadly on Fire y destruye los demás que cargue.",
+      "notes": "Incendiary Grenade de 5d6. Si el portador recibe daño que atraviese su armadura, cada Molotov que lleve tiene 50% de destruirse: no explota pero lo deja Deadly on Fire y destruye los demás que cargue. También en Danger Gal Dossier p.145. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "Black Chrome+",
       "era": "2045",
@@ -3128,7 +3108,7 @@
       "costTier": "Very Expensive",
       "standardMag": 4,
       "ammoType": "Rockets",
-      "notes": "Lanzacohetes Exótico, alcance máx 400 m/yds, cargador de 4 Cohetes Perforantes. Cada ataque dispara 2 cohetes: no hay tirada de Heavy Weapons, el GM decide dónde caen (a 50 m/yds del objetivo y a 10 m/yds entre sí). Esquivar la explosión: Evasión DV15, solo si podría esquivar balas, y sale del área.",
+      "notes": "Lanzacohetes Exótico, alcance máx 400 m/yds, cargador de 4 Cohetes Perforantes. Cada ataque dispara 2 cohetes: no hay tirada de Heavy Weapons, el GM decide dónde caen (a 50 m/yds del objetivo y a 10 m/yds entre sí). Esquivar la explosión: Evasión DV15, solo si podría esquivar balas, y sale del área. También en Danger Gal Dossier p.144. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "Woodchipper's Garage",
       "era": "2045",
@@ -3185,7 +3165,7 @@
       "costTier": "Very Expensive",
       "standardMag": 1,
       "ammoType": "Liquid",
-      "notes": "Cañón de aire de líquido: Escopeta Exótica de 1 disparo, modo Shotgun Shell, sin daño; cubre a los blancos con el líquido (pintura, agua). Con ácido, la armadura de los cubiertos baja 1 SP; un disparo de ácido cuesta 10eb (Cheap). Con Veneno o Biotoxina requiere 3 viales por disparo y Resistir Tortura/Drogas.",
+      "notes": "Cañón de aire de líquido: Escopeta Exótica de 1 disparo, modo Shotgun Shell, sin daño; cubre a los blancos con el líquido (pintura, agua). Con ácido, la armadura de los cubiertos baja 1 SP; un disparo de ácido cuesta 10eb (Cheap). Con Veneno o Biotoxina requiere 3 viales por disparo y Resistir Tortura/Drogas. También en Danger Gal Dossier p.145. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "Woodchipper's Garage",
       "era": "2045",
@@ -3204,7 +3184,7 @@
       "costTier": "Expensive",
       "standardMag": 3,
       "ammoType": "Grenades",
-      "notes": "Lanzagranadas Exótico de Calidad Excelente con 3 disparos. Solo puede disparar munición de Humo o Gas Lacrimógeno.",
+      "notes": "Lanzagranadas Exótico de Calidad Excelente con 3 disparos. Solo puede disparar munición de Humo o Gas Lacrimógeno. También en Danger Gal Dossier p.145. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "Woodchipper's Garage",
       "era": "2045",
@@ -5217,6 +5197,47 @@
       "sourceBookTitle": "Interface RED Volume 5",
       "era": "2045",
       "sourcePage": 99
+    },
+    {
+      "id": "dg-conarms-multiple-ammo-pistol",
+      "name": "Constitutional Arms Multiple Ammo Pistol",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "4d6",
+      "rof": 1,
+      "hands": 1,
+      "concealable": false,
+      "cost": 500,
+      "costTier": "Expensive",
+      "standardMag": 5,
+      "ammoType": "Very Heavy Pistol",
+      "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
+      "notes": "Very Heavy Pistol Exótica de 5 tiros. Se puede cargar con una mezcla de hasta 5 tipos distintos de munición de Very Heavy Pistol y elegir cuál disparar en cada tiro. [Claude Code · 2026-11-13] v5.39.0",
+      "sourceBook": "danger_gal",
+      "sourceBookTitle": "Danger Gal Dossier",
+      "sourcePage": 144,
+      "era": "2045"
+    },
+    {
+      "id": "dg-sanroo-microcutie",
+      "name": "Sanroo Hello Cutie MicroCutie",
+      "type": "Ranged",
+      "skill": "Handgun",
+      "damage": "2d6",
+      "rof": 2,
+      "hands": 1,
+      "concealable": true,
+      "cost": 1000,
+      "costTier": "Very Expensive",
+      "standardMag": 10,
+      "ammoType": "Medium Pistol",
+      "quality": "excellent",
+      "dvTable": "DV 13 (0-6m) | DV 15 (7-12m) | DV 20 (13-25m) | DV 25 (26-50m) | DV 30 (51-100m)",
+      "notes": "Medium Pistol Exótica de Calidad Excelente, cargador de 10. Con una Acción se activa o desactiva el Hypurrburst™: ROF 1, ronronea, hace 4d6 pero gasta todas las balas que queden para un solo disparo; se apaga solo con menos de 4 balas y no permite Aimed Shots. Viene de Micro Chrome. [Claude Code · 2026-11-13] v5.39.0",
+      "sourceBook": "danger_gal",
+      "sourceBookTitle": "Danger Gal Dossier",
+      "sourcePage": 145,
+      "era": "2045"
     }
   ],
   "armor": [
@@ -5579,7 +5600,7 @@
       "penalty": 0,
       "cost": 50,
       "costTier": "Costly",
-      "description": "Armadura corporal artesanal de Judie (SP 11). Una vez ablandada su SP no se restaura; al llegar a 0 SP se cae del portador.",
+      "description": "Armadura corporal artesanal de Judie (SP 11). Una vez ablandada su SP no se restaura; al llegar a 0 SP se cae del portador. Sirve como armadura de cuerpo o de cabeza. También en Danger Gal Dossier p.148. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "Black Chrome+",
       "era": "2045",
@@ -6070,7 +6091,7 @@
       "name": "Junk Ammunition",
       "cost": 10,
       "costTier": "Cheap",
-      "description": "50 rondas (flechas, balas o Slugs). El daño en disparo simple baja 1d6 (mín. 1d6) contra objetivos con 1+ SP y el Autofire Rating baja 1 (mín. 3). Cualquier arma que cargue munición básica la acepta.",
+      "description": "50 rondas (flechas, balas o Slugs). El daño en disparo simple baja 1d6 (mín. 1d6) contra objetivos con 1+ SP y el Autofire Rating baja 1 (mín. 3). Cualquier arma que cargue munición básica la acepta. También en Danger Gal Dossier p.147. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "Black Chrome+",
       "era": "2045",
@@ -7887,7 +7908,7 @@
       "install": "Hospital",
       "humanityLoss": "14 (4d6)",
       "cost": 500,
-      "description": "Neuralware Option. Asiste al Neural Link: permite esquivar balas sin importar el REF.",
+      "description": "Neuralware Option. Asiste al Neural Link: permite esquivar balas sin importar el REF. También en Danger Gal Dossier p.146. [Claude Code · 2026-11-13]",
       "sourceBook": "black_chrome",
       "sourceBookTitle": "Black Chrome Tech & Style Guide",
       "era": "2045",
@@ -8357,7 +8378,7 @@
       "install": "Mall",
       "humanityLoss": "0 (N/A)",
       "cost": 100,
-      "description": "Juego de 10 uñas luminosas programables con presets descargables vía Agent. Cuenta como una instalación de Light Tattoo para el bonus +2 de Wardrobe and Style. Va en manos de carne o cyberware.",
+      "description": "Juego de 10 uñas luminosas programables con presets descargables vía Agent. Cuenta como una instalación de Light Tattoo para el bonus +2 de Wardrobe and Style. Va en manos de carne o cyberware. También en Danger Gal Dossier p.146. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "Must Have Cyberware Deals",
       "era": "2045",
@@ -8396,7 +8417,7 @@
       "install": "Clinic",
       "humanityLoss": "2 (1d6/2 Round up)",
       "cost": 100,
-      "description": "Con una Acción cambia el tamaño del cyberfoot (Euro 0 a US 37AA). En par, anula a cero la penalización por calzado inadecuado en situaciones no de moda. Puede ser lo único instalado en una pierna de carne.",
+      "description": "Con una Acción cambia el tamaño del cyberfoot (Euro 0 a US 37AA). En par, anula a cero la penalización por calzado inadecuado en situaciones no de moda. Puede ser lo único instalado en una pierna de carne. También en Danger Gal Dossier p.146. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "Must Have Cyberware Deals",
       "era": "2045",
@@ -8513,7 +8534,7 @@
       "install": "Clinic",
       "humanityLoss": "7 (2d6)",
       "cost": 500,
-      "description": "Gafas espejadas anti-deslumbramiento retráctiles en la ceja; se extienden o retraen con una Acción. Extendidas, inmunidad a ceguera y efectos de destellos peligrosos como una flashbang.",
+      "description": "Gafas espejadas anti-deslumbramiento retráctiles en la ceja; se extienden o retraen con una Acción. Extendidas, inmunidad a ceguera y efectos de destellos peligrosos como una flashbang. También en Danger Gal Dossier p.145. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "The 12 Days of Cybermas",
       "era": "2045",
@@ -8526,7 +8547,7 @@
       "install": "Mall",
       "humanityLoss": "3 (1d6)",
       "cost": 100,
-      "description": "Agent completo con pantalla abatible integrado en el cyberarm (ver CP:R pág. 352).",
+      "description": "Agent completo con pantalla abatible integrado en el cyberarm (ver CP:R pág. 352). También en Danger Gal Dossier p.146. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "The 12 Days of Cybermas",
       "era": "2045",
@@ -8565,7 +8586,7 @@
       "install": "Clinic",
       "humanityLoss": "7 (2d6)",
       "cost": 1000,
-      "description": "Es Cyberarm Option y Neuralware Option a la vez. Un Medtech que lo usa gana +1 a Surgery.",
+      "description": "Es Cyberarm Option y Neuralware Option a la vez. Un Medtech que lo usa gana +1 a Surgery. También en Danger Gal Dossier p.146. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "The 12 Days of Cybermas",
       "era": "2045",
@@ -8578,7 +8599,7 @@
       "install": "Hospital",
       "humanityLoss": "7 (2d6)",
       "cost": 1000,
-      "description": "Skinweave: cuerpo y cabeza con SP 7. El SP de cada ubicación es la mejor fuente y toda fuente se ablanda a la vez. Tras 10 min sin esfuerzo intenso se repara al SP completo.",
+      "description": "Skinweave: cuerpo y cabeza con SP 7. El SP de cada ubicación es la mejor fuente y toda fuente se ablanda a la vez. Tras 10 min sin esfuerzo intenso se repara al SP completo. También en Danger Gal Dossier p.146. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "The 12 Days of Cybermas",
       "era": "2045",
@@ -8825,7 +8846,7 @@
       "install": "Hospital",
       "humanityLoss": "14 (4d6)",
       "cost": 500,
-      "description": "Requiere 2 Option Slots. Mandíbula hidraulica con dientes reforzados; funciona como arma cuerpo a cuerpo Muy Pesada.",
+      "description": "Requiere 2 Option Slots. Mandíbula hidraulica con dientes reforzados; funciona como arma cuerpo a cuerpo Muy Pesada. También en Danger Gal Dossier p.145. [Claude Code · 2026-11-13]",
       "sourceBook": "interface_red",
       "sourceBookTitle": "Interface RED Volume 2",
       "era": "2045",
@@ -9310,7 +9331,7 @@
       "primaryEffect": "Euforia y ganas de fiesta: +2 a Dance, Contortionist, Conversation, Human Perception, Persuasion y Acting.",
       "secondaryEffect": "Adicción (DV9): pérdida de interés en actividades normales, -2 a las mismas Skills y antojos que el jugador debe interpretar.",
       "addictionDv": 9,
-      "description": "Smash mejorada por un Tech, menos adictiva y con sabor a lima. Solo la venden los Piranhas, y no a quien consideran doombas.",
+      "description": "Smash mejorada por un Tech, menos adictiva y con sabor a lima. Solo la venden los Piranhas, y no a quien consideran doombas. Efecto primario (4 h): +2 a Acting, Contortionist, Conversation, Dance, Human Perception y Persuasion. Secundario (DV9): adicción; mientras dure, −2 a esas mismas skills y el GM te avisa cuándo tenés ganas de más. También en Danger Gal Dossier p.148. [Claude Code · 2026-11-13]",
       "sourceBook": "dlc",
       "sourceBookTitle": "Black Chrome+",
       "era": "2045",
@@ -10572,7 +10593,7 @@
       "name": "The Observer",
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "Dron personal volador de 4 rotores con cámara de observación. 6 MOVE, 15 HP. Vinculado a un Agent. Modos: Standby, Auto (orbita a 6 m/yds grabando; guarda 1 h de video) y Control Directo (Acción, CP:R p.199). Se apaga y aterriza fuera de 6 m/yds; 48 h de batería, 1 h de carga. Contrarrestar DV17, 5 min.",
+      "description": "Dron personal volador de 4 rotores con cámara de observación. 6 MOVE, 15 HP. Vinculado a un Agent. Modos: Standby, Auto (orbita a 6 m/yds grabando; guarda 1 h de video) y Control Directo (Acción, CP:R p.199). Se apaga y aterriza fuera de 6 m/yds; 48 h de batería, 1 h de carga. Contrarrestar DV17, 5 min. También en Danger Gal Dossier p.148. [Claude Code · 2026-11-13]",
       "sourceBook": "interface_red",
       "sourceBookTitle": "Interface RED Volume 1",
       "sourcePage": 62,
@@ -10616,7 +10637,7 @@
       "name": "Militech Tactical Umbrella",
       "cost": 1000,
       "costTier": "Very Expensive",
-      "description": "Paraguas de la línea Armed Executive. Protege de Lluvia Ácida y de Sangre como un paraguas normal. Es dos armas: Arma Melee Pesada Exótica de calidad Excelente y Pistola Pesada Exótica de calidad Pobre (munición Básica y no Básica); el cargador tiene 2 balas y se recarga como una Heavy Pistol.",
+      "description": "Paraguas de la línea Armed Executive. Protege de Lluvia Ácida y de Sangre como un paraguas normal. Es dos armas: Arma Melee Pesada Exótica de calidad Excelente y Pistola Pesada Exótica de calidad Pobre (munición Básica y no Básica); el cargador tiene 2 balas y se recarga como una Heavy Pistol. También en Danger Gal Dossier p.144. [Claude Code · 2026-11-13]",
       "sourceBook": "interface_red",
       "sourceBookTitle": "Interface RED Volume 2",
       "sourcePage": 20,
@@ -10972,7 +10993,7 @@
       "name": "Inline Skates",
       "cost": 50,
       "costTier": "Costly",
-      "description": "Patines en línea de Yang's Wheels. Suman 4 m/yds al moverte con la Acción Run. Ponerlos o sacarlos cuesta una Acción y, puestos, no podés usar las opciones guardadas en una pierna (Cyberleg o de carne). A criterio del GM, una tarea de piernas o equilibrio con los patines puestos puede ser Complex Task (-2, Core p.130). Trucos: Simple DV13, Advanced DV15, Pro DV17 (p.6).",
+      "description": "Patines en línea de Yang's Wheels. Suman 4 m/yds al moverte con la Acción Run. Ponerlos o sacarlos cuesta una Acción y, puestos, no podés usar las opciones guardadas en una pierna (Cyberleg o de carne). A criterio del GM, una tarea de piernas o equilibrio con los patines puestos puede ser Complex Task (-2, Core p.130). Trucos: Simple DV13, Advanced DV15, Pro DV17 (p.6). También en Danger Gal Dossier p.147. [Claude Code · 2026-11-13]",
       "sourcePage": 5,
       "sourceBook": "dlc",
       "sourceBookTitle": "Spinning Your Wheels",
@@ -10994,7 +11015,7 @@
       "name": "Rocklin Augmentics Mercurius Cyberchair",
       "cost": 100,
       "costTier": "Premium",
-      "description": "Silla de ruedas deportiva de Rocklin Augmentics; no admite opciones de ciberware. Se maneja con un Interface Plug o con una mano en el apoyabrazos (esa mano no hace otra cosa). Mientras la manejás: tu MOVE pasa a 5 (menos la penalización de armadura) y podés hacer todo movimiento (Run, Jump, Climb, Swim, Get Up); sube escaleras sin penalización; los ataques a la silla van a vos; no te pueden sacar de la silla mientras estés consciente. Una Lesión Crítica que baje tu MOVE baja el de la silla y se cura en la silla (Core p.223). EMP y efectos de Programas que no son Black ICE no la inutilizan.",
+      "description": "Silla de ruedas deportiva de Rocklin Augmentics; no admite opciones de ciberware. Se maneja con un Interface Plug o con una mano en el apoyabrazos (esa mano no hace otra cosa). Mientras la manejás: tu MOVE pasa a 5 (menos la penalización de armadura) y podés hacer todo movimiento (Run, Jump, Climb, Swim, Get Up); sube escaleras sin penalización; los ataques a la silla van a vos; no te pueden sacar de la silla mientras estés consciente. Una Lesión Crítica que baje tu MOVE baja el de la silla y se cura en la silla (Core p.223). EMP y efectos de Programas que no son Black ICE no la inutilizan. También en Danger Gal Dossier p.147. [Claude Code · 2026-11-13]",
       "sourcePage": 38,
       "sourceBook": "interface_red",
       "sourceBookTitle": "Interface RED Volume 1",
@@ -11462,6 +11483,28 @@
       "sourceBookTitle": "Interface RED Volume 5",
       "era": "2045",
       "sourcePage": 101
+    },
+    {
+      "id": "dg-bicycle",
+      "name": "Bicycle",
+      "cost": 100,
+      "costTier": "Premium",
+      "description": "Vehículo a pedal (reglas de vehículos, CP:R p.189) con SDP 15 y un asiento. Velocidad según el BODY del ciclista: BODY <4 → 8 MOVE (19 km/h); 4-7 → 10 MOVE (32 km/h); 8+ → 15 MOVE (48 km/h); con BODY 11+ no se puede andar bien. Se maneja con Athletics (no Drive Land Vehicle) y se repara con Basic Tech; sin Interface Plugs ni mejoras de vehículos a motor, y no se consigue con Moto. Usás tu Iniciativa. Choque/embestida: 3d6 a la bici y al blanco; el ciclista sufre Whiplash y queda Prone. Hacer otra cosa mientras pedaleás (disparar) puede ser Complex Task (−2). Tras un viaje largo, Endurance según horas: 1 h DV13, 3 h DV15, 5 h DV17, 6+ h DV21; si falla, fatigado el resto del día. [Claude Code · 2026-11-13] v5.39.0",
+      "sourceBook": "danger_gal",
+      "sourceBookTitle": "Danger Gal Dossier",
+      "sourcePage": 146,
+      "era": "2045"
+    },
+    {
+      "id": "dg-smart-lens",
+      "name": "Smart Lens",
+      "cost": 500,
+      "costTier": "Expensive",
+      "description": "Lente de contacto o monóculo que da 1 Option Slot de Cybereye Option. Instalar la opción cuesta lo mismo que en un Cybereye; no admite opciones que requieren par. Una por ojo. Viene de Micro Chrome. [Claude Code · 2026-11-13] v5.39.0",
+      "sourceBook": "danger_gal",
+      "sourceBookTitle": "Danger Gal Dossier",
+      "sourcePage": 148,
+      "era": "2045"
     }
   ],
   "programs": [

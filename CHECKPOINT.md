@@ -7,26 +7,29 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-13] v5.34.0 publicada en todos lados: beta, reglas de Firestore y hosting de prod
+**Última actualización**: [Claude Code · 2026-11-13] v5.40.0 (creador de PNJ guiado) terminada en `claude/plan32-v5.40.0`: plan 32 completo, sin pushear
 
 **Versión de la app**: v5.34.0 en `main` @ 87b1091, en la beta (gh-pages 2a8327a, `index-7aUPZNE2.js`) y en Firebase prod (hosting `index-n44uUOG_.js` y reglas con `gm/mysteries`). [Claude Code · 2026-11-13]
 
-**Plan activo**: ninguno. El plan 31 (resto del Interface RED Vol. 5, v5.29.0 a v5.34.0) está terminado y publicado. [Claude Code · 2026-11-13]
+**Plan activo**: ninguno en código. El plan 32 (Danger Gal) está terminado en `claude/plan32-v5.40.0`; falta publicarlo. [Claude Code · 2026-11-13]
 
 ## Traspaso
-- Cierra: [Claude Code · 2026-11-12]
-- Rama y último commit: `main` @ 59b0cd7 (pusheada: sí). El cierre de sesión queda en `claude/checkpoint-2026-11-12`, sin pushear: falta OK.
-- A medias: nada en código.
-- Siguiente paso exacto: crear `claude/v5.22.0-actores` desde `main` y empezar la v5.22.0 del plan 28 (actores guardados): `GmActor` en `data/gmActors.ts` y `engine/gmActors.ts`, `actorId` en `EncounterEnemy` (`store/encounterStore.ts`) y la subcolección `campaigns/{c}/actors` con reglas y tests. Hay que probar con el emulador y dos navegadores, incluida la mesa de la v5.21.0, que no se probó online.
+- Cierra: [Claude Code · 2026-11-13]
+- Rama y último commit: `claude/plan32-v5.40.0` (encadenada: v5.35.0 → v5.35.1 → v5.36.0 → v5.37.0 → v5.38.0 → v5.39.0 → v5.40.0, todas desde `main` @ 670b3e5). Pusheada: no — falta OK. `main` sigue en la v5.34.0.
+- A medias: nada. tsc, 806 tests y build pasan en v5.40.0.
+- Siguiente paso exacto: publicar el plan 32, cada paso con su OK: push de `claude/plan32-v5.40.0`, PR a `main`, merge, beta (gh-pages) y prod (hosting). No hay cambios de reglas de Firestore en el plan 32.
+- Notas: el creador guiado está en `features/gm/GuidedNpcCreator.tsx` y las plantillas en `data/npcCreationGuidelines.ts` (los puntos de STAT no cuentan LUCK). Erratas del libro guardadas tal cual: Flenser SW 13, Stringer Death Save 4; Drop y Paddles: la lista de pp.168-170 difiere de la ficha, se usa la ficha.
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
-- [Claude Code · 2026-11-13] **Plan 31** (`docs/plans/plan31-interface-red-5-resto.md`): resto del Interface RED Vol. 5 (PDF `Sourcebooks/Interface-RED/ilide.info-interface-5-pr_…pdf`, página impresa = índice del PDF en base 0).
-  - Hecho (todo el plan): v5.29.0 (catálogos), v5.30.0 (Screamsheet, Gunpath y Referencias IR5), v5.31.0 (mantenimiento), v5.32.0 (Focus y tracker de misterios, con `gm/mysteries` en `firestore.rules`), v5.33.0 (Cyberpets) y v5.34.0 (presupuesto operativo, pestaña Solo of Fortune y NET McAlister). Mergeado a `main` con el PR #91 (squash 87b1091). tsc, 785 tests, 52 de reglas y build pasan; probado en local.
-  - Publicado: beta (gh-pages 2a8327a), reglas de Firestore y hosting de prod. El aviso `[W] 125:21 Invalid type` del compilador de reglas es viejo (`writerOk(null, …)`, 2026-10-25) y no bloquea. Las ramas `claude/plan31-v5.29.0` a `v5.34.0` se pueden borrar.
-  - Desvíos: el pack de `data/` en la raíz quedó viejo desde la v5.3.2 y no se toca. El Hiring Hall trae 13 avisos, no 14. Gunpath: el GM elige cuántos attachments. Durabilidad: la regla del 1 natural queda como texto. Misterios: el GM escribe el total de la Evidence Check. Cyberpets: se compran desde la ficha. Kelly McAlister va como bloque en la aventura, no en el bestiario (el libro no da sus stats completos). Nueva regla en `CLAUDE.md`: resumen corto de cada cosa en planes y cierres.
+- [Claude Code · 2026-11-13] **Plan 32** (`docs/plans/plan32-danger-gal.md`): Danger Gal Dossier (PDF `Sourcebooks/Cyberpunk-RED-Danger-Gal-Dossier_2023-07-07.pdf`; página impresa = índice del PDF). Reemplaza la v4.7.1 y la v4.7.2 del plan 6.
+  - Hecho: plan guardado; v5.35.0 (`data/dangerGalFactions.ts`, ficha de facción en el bestiario, test `dangerGal.test.ts`). v5.35.1 (pedido de Giuliano, fuera del plan): bestiario y facciones solo para el GM (`canSeeGmOnly` en CombatHudView, EnemiesCompendiumPanel y el Haggle de FixerPanel). v5.36.0: 42 fichas (6th Street, Bozos, Puma Squad, Digital Divas, Edgerunners) en `data/enemies-src/danger-gal.json`; las 95 inventadas pasaron a `data/enemies/legacy-invented-danger-gal.ts` (solo para actores viejos, `findEnemySheet`). v5.37.0: 37 fichas más (Generation Red, Maelstrom, NCPD, Network 54, Piranhas); erratas del libro guardadas tal cual: Flenser SW 13 (p.72), Stringer Death Save 4 (p.94). v5.38.0: las últimas 39 (Sightseers, Team Monster, Trauma Team, Tyger Claws, Zoners, Darius y Nymph con facción "Arasaka"); 118 en total, revisadas contra la lista del libro (pp.168-170): difieren solo Drop y Paddles, se usa la ficha. v5.39.0: 4 ítems nuevos en el pack (ids `dg-*`), 27 con "También en Danger Gal Dossier p.N", fuera `danger-gal-kitty-smg`; `vehicles` en `dangerGalFactions.ts`; NET `net-dg-crab-lord-portable` (`data/netArchitecturesDangerGal.ts`), fuera `net-danger-gal-archive`. v5.40.0: creador de PNJ guiado (`features/gm/GuidedNpcCreator.tsx`, plantillas en `data/npcCreationGuidelines.ts`), reemplaza al formulario libre.
+  - Siguiente: publicar (push, PR, merge, beta y prod), cada paso con su OK.
+  - Pendiente: solo publicar.
+  - Desvío: el plan cita algunas páginas con +1 (las del índice del PDF son 1-based). En los datos va la página impresa: facciones 9-131, CrAB Drone 42, Herakles 112, Mi-60 120, Chupacabra 139, New Gear 143-148, guía de PNJ 149-152, Darius y Nymph 165-166.
 
 ## Último trabajo terminado
+- [Claude Code · 2026-11-13] Plan 31 cerrado: resto del Interface RED Vol. 5, v5.29.0 a v5.34.0 (PR #91), publicado en la beta, en las reglas de Firestore y en prod. Ramas borradas.
 - [Claude Code · 2026-11-13] Plan 30 cerrado: Solo of Fortune 2045 y ACPA, v5.25.0 a v5.28.0 (PR #89), publicado en la beta y en prod.
 - [Claude Code · 2026-11-12] v5.21.0 (plan 28 I): pestaña MODO GM (PR #79), publicada en la beta y en prod.
 - [Claude Code · 2026-11-11] Plan 27 cerrado con la v5.20.0 (PR #77):

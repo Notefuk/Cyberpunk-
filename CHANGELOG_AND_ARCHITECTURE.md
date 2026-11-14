@@ -117,6 +117,87 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.40.0] - 2026-11-13 (Plan 32 VI: creador de PNJ guiado; cierra el plan 32) [Claude Code · 2026-11-13]
+* **Category**: Herramienta del GM (Danger Gal Dossier pp.149-152, NPC Creation Guidelines) y bestiario.
+* **What Changed**:
+  * **Creador de PNJ guiado** en lugar del formulario libre del botón "Crear PNJ personalizado" del bestiario (solo GM). Tiene 6 pasos, como el libro:
+    1. Concepto: nombre, facción (las 15 canon o Independiente), era 2077/2045 e historia.
+    2. Nivel: Mook, Lieutenant, Mini-Boss o Boss, con o sin Hardened. Muestra la plantilla de p.152: puntos de STAT y skill, HP, SP, bases de combate y no combate, presupuesto de equipo y ciberware y nota de rol y armas.
+    3. Skills gratis: Native Language 4 y 13 skills a 2.
+    4. STATs y skills: contadores de puntos, base de cada skill comparada con lo sugerido, HP con la fórmula del Core p.79, SP, rol y Role Ability.
+    5. Equipo: armas, ciberware y equipo, con la sugerencia opcional de bajar 1 EMP cada 5 piezas.
+    6. Ajustes finales: resumen y avisos.
+  * Los avisos no bloquean el guardado: el libro dice que son guías y no reglas (p.150). Solo hace falta el nombre.
+  * El PNJ se guarda donde siempre (navegador o la campaña en la nube) y se ve en CEMK con `portEnemyToCemk`, igual que los del libro.
+  * **Interpretado**:
+    * Los puntos de STAT no cuentan LUCK: así suman las 118 fichas del libro (33 los Mook, 44 los Lieutenant).
+    * El creador no calcula precios de cada ítem; muestra el presupuesto.
+    * Cada STAT arranca repartido parejo al elegir el nivel.
+  * Los PNJ custom ya guardados siguen igual.
+* **Files Modified**: nuevo `data/npcCreationGuidelines.ts`, nuevo `features/gm/GuidedNpcCreator.tsx`, `features/gm/EnemiesCompendiumPanel.tsx` (sale el formulario viejo), `engine/__tests__/dangerGal.test.ts` (+4 tests); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 806 tests y build. En el navegador: se creó un Hardened Lieutenant (48 de 48 puntos de STAT, Handgun base 13 en el rango 13-14, la sugerencia de EMP con 5 piezas), se guardó, se vio en CEMK con Neuroport y arma Power, y se borró; consola limpia.
+
+### [v5.39.0] - 2026-11-13 (Plan 32 V: New Gear, vehículos de facción y la NET del CrAB Lord) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon (Danger Gal Dossier pp.42, 112, 120, 139 y 143-148), Compendio, bestiario y NET.
+* **What Changed**:
+  * **New Gear (pp.143-148)**: entran al Compendio los 4 ítems que faltaban: Constitutional Arms Multiple Ammo Pistol (Very Heavy Pistol de 5 tiros con munición mezclada, 500eb), Sanroo Hello Cutie MicroCutie (Medium Pistol Excelente con Hypurrburst™, 1,000eb), Bicycle (vehículo a pedal con su tabla de velocidad por BODY y reglas de fatiga, 100eb) y Smart Lens (1 Option Slot de Cybereye, 500eb). Los otros 27 ya estaban (vinieron de Gunmas, Cybermas, Woodchipper, Black Chrome+, Interface RED, etc.); se compararon con el libro y coinciden, así que llevan "También en Danger Gal Dossier p.N". A la Militech Crusher de Gunmas se le suma la capacidad 6, a la Piranha Smash su efecto (+2 a 6 skills sociales 4 h; adicción DV9 con −2) y a la Scavenged Armor que sirve para cuerpo o cabeza.
+  * **Se borró el "Danger Gal Kitty Smart SMG"**, que era inventado (no tenía página).
+  * **Vehículos de facción** en la ficha de su facción del bestiario: el Zetatech Herakles de Team Monster (p.112), el SovOil Mi-60 de Trauma Team (p.120) y el Diego Motors Chupacabra de Speed Demon (Zoners, p.139), con SDP, asientos, velocidad, Nomad Access, costo, mejoras, su historia y la página de Black Chrome del vehículo base.
+  * **NET portátil del CrAB Lord (p.42)** en las arquitecturas del GM (NET & ROLES, modo master): Black ICE Giant, Password DV10 y 2 Control Nodes de CrAB Drone DV10, con el Demon Rock Lobster. Reemplaza al "Archivo Central de Inteligencia Danger Gal", que era inventado.
+  * Glare (Sightseers) dispara su Nomad Pneumatic Bolt Gun con Shoulder Arms (es una Sniper Rifle Exótica, p.145), no Archery.
+* **Files Modified**: `data/core-rules.cprpack.json`, nuevo `data/netArchitecturesDangerGal.ts`, `data/netAndRolesData.ts`, `data/dangerGalFactions.ts` (`vehicles`), `features/gm/EnemiesCompendiumPanel.tsx`, `data/enemies-src/danger-gal.json` + `data/enemies/danger-gal.ts`, `engine/__tests__/dangerGal.test.ts` (+4 tests); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 802 tests y build. En el navegador: el Herakles en la ficha de Team Monster, el MicroCutie en el Compendio (Danger Gal p.145), el Kitty SMG ya no aparece y la NET del CrAB Lord está entre las 18 arquitecturas del modo master; consola limpia.
+
+### [v5.38.0] - 2026-11-13 (Plan 32 IV: las 118 fichas de Danger Gal completas) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon (Danger Gal Dossier pp.100-142 y 165-166) y bestiario.
+* **What Changed**:
+  * **Últimas 39 fichas**: Sightseers (5), Team Monster (6), Trauma Team Squad NC4-2 (6), Tyger Claws (10, con el Bouncer y el Vendor de la misma página), Zoners (10) y los 2 PNJ de Arasaka de la aventura The Incident (Darius y Nymph). El bestiario tiene ya las **118** del libro, con el mismo reparto que su índice: 9 Boss, 16 Mini-Boss, 57 Lieutenant y 36 Mook, 60 Hardened, y 8 netrunners (Pantera, Firewall, CrAB Lord, Redeye, Flenser, Cereal, Darius y Freefall), todos con Quickhacks en el porte CEMK.
+  * **Revisión contra la lista "Characters by Faction" del libro (pp.168-170)**: las 118 coinciden en nivel y rol salvo Drop (p.75) y Paddles (p.119), donde la lista dice Lieutenant y la ficha dice Hardened Mook; se usa la ficha y queda anotado.
+  * **Interpretado**: Darius y Nymph van con facción "Arasaka" (como en la lista del libro), aunque Arasaka no es una de las 15 facciones con ficha; se encuentran buscando por nombre. Los vehículos de Team Monster, Trauma Team y Speed Demon (pp.112, 120, 139) no son fichas: llegan en la v5.39.0.
+* **Files Modified**: `data/enemies-src/danger-gal.json`, `frontend/src/data/enemies/danger-gal.ts` (generado), `engine/__tests__/dangerGal.test.ts` (+2 tests); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 798 tests y build. Contra el PDF: Shinobu the Second (p.122), Vanisher (p.132) y Paddles (p.119) sobre el render. En el navegador: las 15 facciones con su conteo y Darius encontrado por búsqueda; consola limpia.
+
+### [v5.37.0] - 2026-11-13 (Plan 32 III: 37 fichas más de Danger Gal) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon (Danger Gal Dossier pp.58-98) y bestiario.
+* **What Changed**:
+  * **37 fichas del libro**: Generation Red (8), Maelstrom (12, con el Ripperdoc y el Scavver de la misma página), NCPD Precinct #1 (11, con Gustav, el perro de Shepard), Network 54 (3) y Piranhas (3). Van al mismo `data/enemies-src/danger-gal.json` (79 fichas en total) y salen generadas con su porte CEMK automático; Flenser (Maelstrom) es netrunner y tiene Quickhacks.
+  * **Erratas del libro guardadas tal cual y anotadas**: Flenser imprime Seriously Wounded 13 con HP 35 (p.72) y Stringer imprime Death Save 4 con BODY 6 (p.94).
+  * **Interpretado**: las fichas no imprimen la skill de cada arma; se toma la del tipo de arma (Handgun, Shoulder Arms, Heavy Weapons, Melee Weapon, Brawling, Autofire) y, si la ficha no la lista, el STAT solo. A Caliber y Pitbull se les pasó a armas la pistola que el libro tiene solo en el equipo, con nota. Los Wolvers de Crusher siguen en su ciberware (el libro no los pone en la tabla de armas).
+* **Files Modified**: `data/enemies-src/danger-gal.json`, `frontend/src/data/enemies/danger-gal.ts` (generado), `engine/__tests__/dangerGal.test.ts` (+1 test); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 796 tests y build. Contra el PDF: Crusher (p.68), Fiona Hayes (p.92) y el Death Save de Stringer (p.94) sobre el render. En el navegador: conteos por facción (Generation Red 8, Maelstrom 14 con las 2 de CEMK, NCPD 11, Network 54 3, Piranhas 3); Crusher entró al encuentro y se sacó; consola limpia.
+
+### [v5.36.0] - 2026-11-13 (Plan 32 II: primeras 42 fichas canon de Danger Gal; se van las 95 inventadas) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon (Danger Gal Dossier pp.10-56) y bestiario.
+* **What Changed**:
+  * **42 fichas del libro** en el bestiario: 6th Street (5), Bozos (11, con los dos Dead Ringer), Danger Gal Puma Squad (5), The Digital Divas (5) y Edgerunners (16). Cada una con STATs, HP, armadura, armas, skills, ciberware, equipo, reglas especiales, historia corta y página. Fuente `data/enemies-src/danger-gal.json`, generada a `data/enemies/danger-gal.ts` con `scripts/gen_enemies.py` (nueva entrada `danger-gal` en `BOOK_SPECS`).
+  * **Porte CEMK de todas**: sale de `portEnemyToCemk` (Neuroport, hackeables, SP contra melee, armas Power/Smart/Melee). Los netrunners (Pantera, Firewall, CrAB Lord) pasan a Cyberdeck Port con Quickhacks según su Interface. El CrAB Drone y la NET portátil del CrAB Lord (p.42) van en sus reglas especiales.
+  * **Se fueron las 95 fichas inventadas** del bestiario. Quedan en `data/enemies/legacy-invented-danger-gal.ts` solo para que un actor guardado del Modo GM que salió de una de ellas no pierda su ficha (`findEnemySheet`, usado en `actorSpawn.ts` y `ActorAttackForm.tsx`); no se muestran en ningún lado.
+  * Textos del bestiario sin el viejo "44 fichas".
+  * **Interpretado**: si la ficha no lista la skill de un arma, la base es el STAT (skill en 0) y queda anotado; las 4 armas sin daño impreso (Popup Microwaver, Nomad Air Cannon, Air Pistol, Microwave) muestran "—". Los PNJ con dos roles guardan el principal y el otro va en reglas especiales.
+* **Files Modified**: nuevos `data/enemies-src/danger-gal.json`, `frontend/src/data/enemies/danger-gal.ts` (generado), `frontend/src/data/enemies/legacy-invented-danger-gal.ts`; `scripts/gen_enemies.py`, `data/enemiesCatalog.ts`, `features/gmmode/actorSpawn.ts`, `features/gmmode/ActorAttackForm.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`, `engine/__tests__/dangerGal.test.ts` (+4 tests); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 795 tests y build. Contra el PDF: Big Top (p.16) y Pantera (p.28) revisadas sobre el render. En el navegador: conteos por facción (6th Street 5, Bozos 11, Puma Squad 5, Digital Divas 5, Edgerunners 16) y ficha del CrAB Lord con su porte CEMK, Quickhacks hasta DV12, su dron y su NET.
+
+### [v5.35.1] - 2026-11-13 (Plan 32: el bestiario y las facciones, solo para el GM) [Claude Code · 2026-11-13]
+* **Category**: Mesa y GM (pedido de Giuliano: que los jugadores no se spoileen los PNJ ni las facciones).
+* **What Changed**:
+  * **Bestiario solo del GM**: el botón "Bestiario & Encuentro GM" de la pestaña de combate y el panel desplegable se ven solo si `canSeeGmOnly` (GM de la mesa, o sin mesa: sin PIN del GM o con el PIN desbloqueado). Si el panel se monta igual en otro lado, el jugador ve un cartel "solo el GM" en vez de las fichas.
+  * **Haggle del Fixer**: el jugador ya no ve la opción "Bestiario" (que listaba todo el catálogo); regatea contra una ficha guardada o a mano con el COOL y el Trading que le diga el GM. El GM la sigue teniendo.
+  * Ya eran solo del GM: TABLAS DEL GM, Modo GM, Red Chrome Cargo, el Fixer Deck, las arquitecturas NET en modo master y los enemigos del encuentro sin revelar.
+  * Límite: los datos siguen dentro del código de la app; esconderlos del todo pediría guardarlos en la nube solo para el GM.
+* **Files Modified**: `features/combat/CombatHudView.tsx`, `features/gm/EnemiesCompendiumPanel.tsx`, `features/roles/FixerPanel.tsx`, `engine/__tests__/dangerGal.test.ts` (+1 test); `store/persistence.ts` (APP_VERSION); changelog in-app.
+* **Verificación**: tsc, 791 tests y build. En el navegador: con PIN de GM puesto (bloqueado) no aparecen el bestiario ni TABLAS DEL GM; sin PIN vuelven. Consola limpia y PIN de prueba borrado.
+
+### [v5.35.0] - 2026-11-13 (Plan 32 I: las 15 facciones canon de Danger Gal Dossier) [Claude Code · 2026-11-13]
+* **Category**: Contenido canon y herramientas del GM (Danger Gal Dossier pp.9-142; Edgerunners Handbook de CEMK pp.24-31).
+* **What Changed**:
+  * **Facciones canon**: `data/dangerGalFactions.ts` trae las 15 facciones del libro (6th Street, Bozos, Puma Squad, Digital Divas, Edgerunners, Generation Red, Maelstrom, NCPD Precinct #1, Network 54, Piranhas, Sightseers, Team Monster, Trauma Team NC4-2, Tyger Claws y Zoners), cada una con página, quién firma el informe y base, historia reciente, recursos y objetivos en paráfrasis corta. Reemplaza la lista inventada de `enemiesCatalog.ts` (tenía facciones que no están en el libro, como Continental Brands o Zhirafa).
+  * **Ficha de facción en el bestiario**: tocar una facción en la barra la filtra y muestra su ficha. Generation Red trae el recuadro "Kids in Night City" (p.66).
+  * **En 2077**: 6 facciones (6th Street, Maelstrom, NCPD, Network 54, Trauma Team y Tyger Claws) llevan lo que dice de ellas la Lore Guide de CEMK, con página. Las otras 9 no figuran en esa guía y la ficha lo aclara, sin inventar.
+  * Conteo por facción exacto (antes contaba de más) y encabezado del bestiario sin la promesa falsa de "128 PNJ canónicos". El PNJ custom arranca con facción "Independiente".
+* **Files Modified**: nuevos `data/dangerGalFactions.ts` y `engine/__tests__/dangerGal.test.ts` (5 tests); `data/enemiesCatalog.ts` (-167 líneas inventadas, reexporta la lista canon), `features/gm/EnemiesCompendiumPanel.tsx`; `store/persistence.ts` (APP_VERSION); changelog in-app; plan `docs/plans/plan32-danger-gal.md`.
+* **Verificación**: tsc, 790 tests y build. En el navegador: barra con las 15 facciones, ficha de Maelstrom con su línea de 2077, consola limpia.
+* **Pendiente del plan 32**: las 118 fichas (v5.36.0 a v5.38.0; las 95 inventadas siguen hasta la v5.36.0), New Gear y vehículos (v5.39.0) y el creador guiado (v5.40.0).
+
 ### [v5.34.0] - 2026-11-13 (Plan 31 VI: nivel mercenario de Solo of Fortune 2045; cierra el plan 31) [Claude Code · 2026-11-13]
 * **Category**: Contenido canon, herramientas del GM y ficha (Interface RED Vol. 5 pp.106-108, 144-147).
 * **What Changed**:

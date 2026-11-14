@@ -1,5 +1,5 @@
 // [Claude Code · 2026-11-12] v5.22.0 (plan 28): spawnear enemigos como actores guardados y traerlos de vuelta.
-import { ENEMIES_CATALOG, type EnemySheet } from '../../data/enemiesCatalog';
+import { ENEMIES_CATALOG, findEnemySheet, type EnemySheet } from '../../data/enemiesCatalog';
 import {
   useEncounterStore,
   enemyFromSheet,
@@ -16,7 +16,7 @@ const inCatalog = (id: string) => ENEMIES_CATALOG.some((e) => e.id === id);
 
 /** La ficha de un actor: la copia guardada o la del bestiario. */
 export function actorSheet(actor: GmActor): EnemySheet | undefined {
-  return actor.sheet ?? ENEMIES_CATALOG.find((e) => e.id === actor.sourceId);
+  return actor.sheet ?? findEnemySheet(actor.sourceId);
 }
 
 function existingNames(): string[] {

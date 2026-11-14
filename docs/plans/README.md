@@ -18,7 +18,7 @@ Contenido sugerido de un plan: objetivo, decisiones tomadas con el usuario (preg
 | 3. (perdido) | Enemigos | — | Lo reemplazó el plan 6 |
 | 4. `plan4-ripperdoc-visual-2077.md` | Ripperdoc visual estilo 2077 | v4.6.0 | ✅ Terminado |
 | 5. `plan5-canon-audit.md` | Canonizar el contenido inventado | v4.6.1, v4.6.2 y v4.7.0 hechas | ⏳ Faltan Black Chrome con el catálogo de vehículos y los docs con totales reales |
-| 6. `plan6-enemigos-canon-cemk.md` | Enemigos canon porteados a CEMK | v4.7.0 hecha | ⏸️ En pausa: v4.7.1 Danger Gal y v4.7.2 New Gear |
+| 6. `plan6-enemigos-canon-cemk.md` | Enemigos canon porteados a CEMK | v4.7.0 hecha | ↪️ v4.7.0 hecha; Danger Gal (v4.7.1 y v4.7.2) pasó al plan 32 [Claude Code · 2026-11-13] |
 | 7. `plan7-creador-personajes.md` | Creador de personajes | v4.8.0 a v4.8.2 + v4.9.4 | ✅ Terminado (el Modo Novato se detalló en el plan 12) |
 | 8. `plan8-roles-core-cemk.md` | Roles y rangos Core + CEMK | v4.9.0 a v4.9.3 | ✅ Terminado (detallado en los planes 9, 10 y 11) |
 | 9. `plan9-v491-motor-roles-ip.md` | Motor de roles, avance con IP y modo GM | v4.9.1 | ✅ Terminado |
@@ -43,5 +43,6 @@ Contenido sugerido de un plan: objetivo, decisiones tomadas con el usuario (preg
 | 28. `plan28-modo-gm.md` | Modo GM al estilo Foundry: pestaña con todos los jugadores de un vistazo, iniciativa de todos, actores guardados con su estado (HP, SP, balas, heridas) en la nube de la campaña, pedir tiradas a los jugadores, atacar con un actor, dar ítems y notas del GM | v5.21.0 a v5.23.0 | ✅ Cerrado: v5.21.0 (PR #79), v5.22.0 (PR #82) y v5.23.0 (PR #84) en `main`, beta y prod, con sus reglas en dev y prod [Claude Code · 2026-11-12] |
 | 30. `plan30-solo-of-fortune-acpa.md` | Solo of Fortune 2045 (Interface RED Vol. 5, pp.105-147): arsenal pesado (armas, attachments, munición, Metalgear, equipo y drogas de combate), ACPA con armador, PJ que pilotean ACPA y enemigos en ACPA. El número 29 lo tiene la sesión de Owlbear | v5.25.0 a v5.28.0 | ✅ Terminado en código: v5.25.0 a v5.28.0 en `claude/plan30-v5.25.0` a `-v5.28.0` (apiladas), sin pushear [Claude Code · 2026-11-13] |
 | 31. `plan31-interface-red-5-resto.md` | Resto del Interface RED Vol. 5: catálogos (Agents, Toggle's Temple, REDmas, derby), generadores de screamsheets y armas, durabilidad y mantenimiento, investigación con Focus, cyberpets y nivel mercenario | v5.29.0 a v5.34.0 | ✅ Terminado, en `main` (PR #91, 87b1091); publicado en la beta y en prod [Claude Code · 2026-11-13] |
+| 32. `plan32-danger-gal.md` | Danger Gal Dossier completo con porte CEMK: 15 facciones, 118 fichas (se borran las 95 inventadas), New Gear, vehículos y drones de las facciones y creador de PNJ guiado | v5.35.0 a v5.40.0 | ✅ Terminado: v5.35.0 a v5.40.0 (más v5.35.1, bestiario solo para el GM) en `claude/plan32-v5.40.0`, sin pushear [Claude Code · 2026-11-13] |
 
 Pendientes y temas sin plan: `PROJECT_STATUS_AND_ROADMAP.md`, sección 0.
