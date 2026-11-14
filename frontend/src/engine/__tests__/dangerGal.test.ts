@@ -180,3 +180,55 @@ describe('Danger Gal Dossier: New Gear, vehículos y NET', () => {
     expect(NET_ARCHITECTURE_PRESETS.some((n) => n.id === 'net-danger-gal-archive')).toBe(false);
   });
 });
+
+// [Claude Code · 2026-11-13] v5.40.0: creador de PNJ guiado (NPC Creation Guidelines, Danger Gal Dossier pp.149-152).
+import {
+  npcTemplate, npcThreatTier, npcStatPointsUsed, npcSkillPointsUsed, npcSuggestedEmpLoss,
+  npcDraftWarnings, buildGuidedNpc, npcFormulaHp, NPC_FREE_SKILLS, type NpcDraft
+} from '../../data/npcCreationGuidelines';
+describe('Danger Gal Dossier: creador de PNJ guiado', () => {
+  it('plantillas de p.152, con y sin Hardening', () => {
+    expect(npcTemplate('mook', false)).toMatchObject({ statPoints: 33, maxStat: 6, skillPoints: 30, gearBudget: 300, cyberwareBudget: 500 });
+    expect(npcTemplate('mook', true)).toMatchObject({ statPoints: 39, maxStat: 7, gearBudget: 500, cyberwareBudget: 1000 });
+    expect(npcTemplate('lieutenant', true)).toMatchObject({ statPoints: 48, maxStat: 8, skillPoints: 60, gearBudget: 1000, cyberwareBudget: 1500 });
+    expect(npcTemplate('mini_boss', true)).toMatchObject({ statPoints: 54, skillPoints: 90, gearBudget: 2000, cyberwareBudget: 3200 });
+    expect(npcTemplate('boss', false)).toMatchObject({ statPoints: 57, skillPoints: 120, hp: [45, 50], sp: [11, 18] });
+    expect(npcTemplate('boss', true)).toMatchObject({ statPoints: 62, gearBudget: 8300, cyberwareBudget: null });
+    expect(npcThreatTier('mini_boss', true)).toBe('hardened_mini_boss');
+    expect(npcThreatTier('mook', false)).toBe('mook');
+  });
+  it('los puntos de STAT no cuentan LUCK: así suman los Mook y Lieutenant del libro', () => {
+    const counts = (tier: string) => DANGER_GAL_ENEMIES.filter((e) => e.threatTier === tier).map((e) => npcStatPointsUsed(e.stats));
+    expect(counts('mook').filter((n) => n === 33).length).toBeGreaterThanOrEqual(14);
+    expect(counts('lieutenant').filter((n) => n === 44).length).toBeGreaterThanOrEqual(27);
+  });
+  it('paso 3: 13 skills a 2 y el idioma nativo a 4, gratis', () => {
+    expect(NPC_FREE_SKILLS).toHaveLength(14);
+    expect(npcSkillPointsUsed([
+      { name: 'Language (Spanish)', stat: 'INT', level: 4 },
+      { name: 'Athletics', stat: 'DEX', level: 5 },
+      { name: 'Handgun', stat: 'REF', level: 6 }
+    ], 'Spanish', 'Watson')).toBe(9);
+    expect(npcSuggestedEmpLoss(11)).toBe(2);
+  });
+  it('arma la ficha con bases, tier y avisos', () => {
+    const stats = { INT: 4, REF: 6, DEX: 5, TECH: 3, COOL: 4, WILL: 3, LUCK: 0, MOVE: 3, BODY: 3, EMP: 2 };
+    const d: NpcDraft = {
+      name: 'Matón', subtitle: '', faction: 'Maelstrom', era: '2077', concept: 'Un matón.', level: 'mook', hardened: false,
+      nativeLanguage: 'Spanish', localExpert: 'Watson', stats, hp: npcFormulaHp(stats), headSp: 4, bodySp: 4,
+      role: '', roleRank: 0, roleAbility: '',
+      skills: [{ name: 'Handgun', stat: 'REF', level: 6, combat: true }],
+      weapons: [{ name: 'Poor Quality Heavy Pistol', skill: 'Handgun', damage: '3d6', rof: 2, mag: 8 }],
+      cyberware: [], gear: ['Agent'], specialRules: ''
+    };
+    expect(npcStatPointsUsed(stats)).toBe(33);
+    expect(d.hp).toBe(25);
+    expect(npcDraftWarnings(d)).toEqual([]);
+    const npc = buildGuidedNpc(d, 'custom-npc-test');
+    expect(npc).toMatchObject({ threatTier: 'mook', seriouslyWounded: 13, deathSave: 3, era: '2077' });
+    expect(npc.weapons[0].skillBase).toBe(12);
+    expect(npc.skillBases?.Handgun).toBe(12);
+    expect(() => portEnemyToCemk(npc)).not.toThrow();
+    expect(npcDraftWarnings({ ...d, stats: { ...stats, REF: 8 } })).toContain('REF 8 pasa el máximo de 6.');
+  });
+});
