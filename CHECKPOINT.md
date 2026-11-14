@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-14] se borró la copia vieja del pack de la raíz y `extract_core_pack.py` ya no pisa el pack de la app; en `claude/borrar-pack-raiz`, sin pushear
+**Última actualización**: [Claude Code · 2026-11-14] un solo pack (PR #96) y planes 5 y 6 cerrados (PR #95), en `main`
 
 **Versión de la app**: v5.40.0 en `main` @ 4a05c4e, en la beta (gh-pages fedc9c8) y en Firebase prod (hosting `index--Iw6CGkO.js`; reglas sin cambios, con `gm/mysteries`) [Claude Code · 2026-11-14].
 
@@ -15,9 +15,9 @@
 
 ## Traspaso
 - Cierra: [Claude Code · 2026-11-13]
-- Rama y último commit: `claude/borrar-pack-raiz` (desde `main` @ 7c7e2d1, con el commit de checkpoint b4ad226). Pusheada: no — falta OK. [Claude Code · 2026-11-14]
+- Rama y último commit: `main` @ 08b741b (PR #96). Este checkpoint está en `claude/checkpoint-post-96`, solo local. [Claude Code · 2026-11-14]
 - A medias: nada. tsc, 806 tests y build pasan en v5.40.0.
-- Siguiente paso exacto: con OK, push de `claude/borrar-pack-raiz`, PR y merge. Después, elegir el próximo plan con Giuliano (`docs/plans/README.md`).
+- Siguiente paso exacto: elegir el próximo plan con Giuliano (`docs/plans/README.md`).
 - Notas: el creador guiado está en `features/gm/GuidedNpcCreator.tsx` y las plantillas en `data/npcCreationGuidelines.ts` (los puntos de STAT no cuentan LUCK). Erratas del libro guardadas tal cual: Flenser SW 13, Stringer Death Save 4; Drop y Paddles: la lista de pp.168-170 difiere de la ficha, se usa la ficha. Hay un solo pack: `frontend/src/data/core-rules.cprpack.json` (770 ítems). `scripts/extract_core_pack.py <salida.json>` escribe aparte (genera 405 ítems) y se niega a pisar el pack de la app; lo nuevo se copia a mano.
 - Preguntas abiertas para Giuliano: ninguna.
 
