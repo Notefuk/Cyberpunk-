@@ -24,4 +24,4 @@ Registro de canonización del plan 5: por cada libro, qué se perdió, qué se g
 - Pack (`frontend/src/data/core-rules.cprpack.json`): 770 ítems (244 armas, 32 armaduras, 21 attachments, 28 municiones, 212 ciberware, 29 drogas, 177 de equipo, 27 programas).
 - Bestiario: 179 fichas (Core 10, CEMK 14, Hardened 16, Interface RED 21, Danger Gal Dossier 118).
 - Martial Arts: 27 formas y 54 movimientos (4 del Core y 23 de Interface RED 4).
-- La copia `data/core-rules.cprpack.json` de la raíz quedó en 371 ítems (sin actualizar desde v5.3.2); la app no la usa.
+- La copia vieja `data/core-rules.cprpack.json` de la raíz (371 ítems) se borró [Claude Code · 2026-11-14]: el único pack es el de `frontend/src/data`.

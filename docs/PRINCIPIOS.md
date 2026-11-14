@@ -123,7 +123,7 @@ Reglas adicionales:
 
 No uso razonamiento de LLM cuando una herramienta determinista lo resuelve mejor: grep, `tsc`, vitest, `oxlint`, `python -m json.tool`, `git diff`, comparaciones exactas o los scripts del repo.
 
-Para pasar tablas del PDF a datos prefiero el extractor (`scripts/extract_core_pack.py`, skill `cpr-pdf-extractor`) a transcribirlas a mano: una tabla tipeada por un modelo puede cambiar un número sin que nadie lo note.
+Para pasar tablas del PDF a datos prefiero el extractor (`scripts/extract_core_pack.py`, skill `cpr-pdf-extractor`) a transcribirlas a mano: una tabla tipeada por un modelo puede cambiar un número sin que nadie lo note. [Claude Code · 2026-11-14] El extractor escribe en un archivo aparte y lo nuevo se copia al pack de la app (`frontend/src/data/core-rules.cprpack.json`, el único); no lo regenera entero.
 
 ## Costo y elección de modelo
 
