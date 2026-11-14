@@ -7,7 +7,7 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-14] v5.40.0 publicada en `main` (PR #93), la beta y prod
+**Última actualización**: [Claude Code · 2026-11-14] planes 5 y 6 cerrados (docs con totales reales) en `claude/docs-cierre-plan5-6`, sin pushear
 
 **Versión de la app**: v5.40.0 en `main` @ 4a05c4e, en la beta (gh-pages fedc9c8) y en Firebase prod (hosting `index--Iw6CGkO.js`; reglas sin cambios, con `gm/mysteries`) [Claude Code · 2026-11-14].
 
@@ -15,10 +15,10 @@
 
 ## Traspaso
 - Cierra: [Claude Code · 2026-11-13]
-- Rama y último commit: `main` @ 4a05c4e (PR #93, squash del plan 32). Este checkpoint está en `claude/checkpoint-post-plan32`, solo local (falta OK para pushearlo). Las ramas `claude/plan32-v5.35.0` a `v5.40.0` ya están mergeadas. [Claude Code · 2026-11-14]
+- Rama y último commit: `claude/docs-cierre-plan5-6` (solo docs, desde `main` @ f0ebdde). Pusheada: no — falta OK. [Claude Code · 2026-11-14]
 - A medias: nada. tsc, 806 tests y build pasan en v5.40.0.
-- Siguiente paso exacto: ninguno pendiente del plan 32. Elegir el próximo plan con Giuliano (`docs/plans/README.md`). Pushear `claude/checkpoint-post-plan32` (solo docs) cuando dé el OK.
-- Notas: el creador guiado está en `features/gm/GuidedNpcCreator.tsx` y las plantillas en `data/npcCreationGuidelines.ts` (los puntos de STAT no cuentan LUCK). Erratas del libro guardadas tal cual: Flenser SW 13, Stringer Death Save 4; Drop y Paddles: la lista de pp.168-170 difiere de la ficha, se usa la ficha.
+- Siguiente paso exacto: con OK, push de `claude/docs-cierre-plan5-6`, PR y merge. Después, elegir el próximo plan con Giuliano (`docs/plans/README.md`).
+- Notas: el creador guiado está en `features/gm/GuidedNpcCreator.tsx` y las plantillas en `data/npcCreationGuidelines.ts` (los puntos de STAT no cuentan LUCK). Erratas del libro guardadas tal cual: Flenser SW 13, Stringer Death Save 4; Drop y Paddles: la lista de pp.168-170 difiere de la ficha, se usa la ficha. La copia `data/core-rules.cprpack.json` de la raíz quedó en 371 ítems (sin actualizar desde v5.3.2; la app usa la de `frontend/src/data`, con 770): decidir con Giuliano si se sincroniza o se borra.
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)

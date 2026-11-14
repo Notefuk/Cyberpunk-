@@ -17,8 +17,8 @@ Contenido sugerido de un plan: objetivo, decisiones tomadas con el usuario (preg
 | 2. `plan2-auditoria-expansiones.md` | Contenido canon de CEMK, Interface RED y Going Metal | v4.3.0 a v4.5.0 | ✅ Terminado |
 | 3. (perdido) | Enemigos | — | Lo reemplazó el plan 6 |
 | 4. `plan4-ripperdoc-visual-2077.md` | Ripperdoc visual estilo 2077 | v4.6.0 | ✅ Terminado |
-| 5. `plan5-canon-audit.md` | Canonizar el contenido inventado | v4.6.1, v4.6.2 y v4.7.0 hechas | ⏳ Faltan Black Chrome con el catálogo de vehículos y los docs con totales reales |
-| 6. `plan6-enemigos-canon-cemk.md` | Enemigos canon porteados a CEMK | v4.7.0 hecha | ↪️ v4.7.0 hecha; Danger Gal (v4.7.1 y v4.7.2) pasó al plan 32 [Claude Code · 2026-11-13] |
+| 5. `plan5-canon-audit.md` | Canonizar el contenido inventado | v4.5.1 a v4.7.0 | ✅ Cerrado: Black Chrome lo hizo el plan 26, Danger Gal el plan 32 y los docs con totales reales se corrigieron al cerrarlo [Claude Code · 2026-11-14] |
+| 6. `plan6-enemigos-canon-cemk.md` | Enemigos canon porteados a CEMK | v4.7.0 (+ plan 32) | ✅ Cerrado: v4.7.0 hecha; Danger Gal (v4.7.1 y v4.7.2) lo hizo el plan 32 y el Punknaught la v5.17.0 [Claude Code · 2026-11-14] |
 | 7. `plan7-creador-personajes.md` | Creador de personajes | v4.8.0 a v4.8.2 + v4.9.4 | ✅ Terminado (el Modo Novato se detalló en el plan 12) |
 | 8. `plan8-roles-core-cemk.md` | Roles y rangos Core + CEMK | v4.9.0 a v4.9.3 | ✅ Terminado (detallado en los planes 9, 10 y 11) |
 | 9. `plan9-v491-motor-roles-ip.md` | Motor de roles, avance con IP y modo GM | v4.9.1 | ✅ Terminado |

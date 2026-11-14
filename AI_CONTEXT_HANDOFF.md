@@ -24,14 +24,14 @@ Los resúmenes de versión viejos (v3.9.0 a v4.6.0) y el roadmap de fase 4 y mó
 ```text
 frontend/src/
 ├── data/
-│   ├── core-rules.cprpack.json          # 391+ ítems oficiales multi-libro
+│   ├── core-rules.cprpack.json          # 770 ítems oficiales multi-libro
 │   ├── weaponAttachmentsAndTechData.ts  # 23 accesorios canónicos, slots, Maker Tech upgrades & DVs
 │   ├── creation/coreLifepath.ts         # CORE_LIFEPATH (general + byRole), generado [Claude Code · 2026-10-23]
 │   ├── netAndRolesData.ts               # ROLE_ABILITIES_COMPLETE_PROGRESSION, Quickhacks, NET Topologies
 │   ├── weaponAndCyberwareTooltips.ts    # CEMK_WEAPON_REBUILD_SYSTEM_GUIDE, RESTING_AND_ARMOR_REPAIR_OFFICIAL_GUIDE
 │   ├── criticalInjuries.ts              # Tablas oficiales 2d6 de heridas críticas
 │   ├── cyberfistsMartialArtsData.ts     # 27 formas marciales canónicas
-│   ├── enemiesCatalog.ts                # 44 enemigos base + 15 facciones (118 PNJs de Danger Gal)
+│   ├── enemiesCatalog.ts                # Junta las 179 fichas de data/enemies/ (generadas desde data/enemies-src/); facciones en dangerGalFactions.ts
 │   └── systemDocsAndChangelogData.ts    # Changelogs, inventario y arquitectura
 ├── engine/
 │   ├── characterEngine.ts               # Fórmulas de STATs, derivados, cálculo de HP y filtros de EMP
