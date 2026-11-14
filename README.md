@@ -52,8 +52,8 @@ La interfaz superior (**TopHudBar**) proporciona acceso instantáneo y persisten
   - **Nomad**: Especialización *Moto* (Mejoras mecánicas y flotas de vehículos).
   - **Rockerboy, Netrunner, Fixer, Media, Exec y Lawman**: Herramientas específicas de rol.
 
-### 6. 📚 Compendio Doble: 391 Ítems Canónicos & 8 Sistemas de Expansiones (`CompendiumView.tsx`)
-- **Catálogo Maestro Multi-Libro (391 Ítems)**: Armas, blindajes, accesorios, municiones especiales, ciberware, drogas, equipo general, cyberdecks y programas extraídos directamente de los libros oficiales (*Core Rulebook, Black Chrome, CEMK 2077, Danger Gal Dossier, Interface RED*).
+### 6. 📚 Compendio Doble: 770 Ítems Canónicos & 8 Sistemas de Expansiones (`CompendiumView.tsx`)
+- **Catálogo Maestro Multi-Libro (770 Ítems: 244 armas, 32 armaduras, 21 attachments, 28 municiones, 212 ciberware, 29 drogas, 177 de equipo y 27 programas)** [Claude Code · 2026-11-14]: Armas, blindajes, accesorios, municiones especiales, ciberware, drogas, equipo general, cyberdecks y programas extraídos directamente de los libros oficiales (*Core Rulebook, Black Chrome, CEMK 2077, Danger Gal Dossier, Interface RED*).
 - **Filtros por Libro Origen (`sourceBook`)**: Badges visuales temáticos, búsqueda por texto libre y sinopsis de cada manual.
 - **Equipamiento Directo en 1 Clic**: Botones de equipar en mano principal/secundaria, armaduras de cabeza/cuerpo e instalación de ciberware sin fricción.
 - **Compendio de 8 Sistemas de Reglas de Expansiones (`expansionRulesData.ts`)**: Reglas de Full Body Conversions (*Interface RED Vol 3*), Reglas de la Era 2077 (*CEMK 2077*), drogas avanzadas (*Hornet's Pharmacy*), etc.
@@ -61,10 +61,10 @@ La interfaz superior (**TopHudBar**) proporciona acceso instantáneo y persisten
 ### 7. 📦 Gestor de Paquetes .cprpack (`DataPacksView.tsx`)
 - Arquitectura desacoplada estilo COMP/CON para inspeccionar, cargar y validar paquetes de datos modulares en formato JSON estándar (`.cprpack.json`).
 
-### 8. 🕶️ Consola GM Fixer & Bestiario de 162+ Enemigos (`FixerDeckView.tsx` & `EnemiesCompendiumPanel.tsx`)
+### 8. 🕶️ Consola GM Fixer & Bestiario de 179 Enemigos (`FixerDeckView.tsx` & `EnemiesCompendiumPanel.tsx`)
 - **Consola del Director de Juego con PIN Local (`0000`)**: Alternador entre vista de jugador y panel del GM.
 - **Tracker Táctico Multiobjetivo**: Iniciativa dinámica, seguimiento grupal de HP/SP de esbirros y bosses, y tiradas grupales.
-- **Bestiario Completo de 162+ Adversarios**: 44 enemigos Core/Tales of the RED + 118 PNJs oficiales de *Danger Gal Dossier* en 15 facciones (Arasaka, Militech, Maelstrom, Tyger Claws, Trauma Team, etc.) con inyección instantánea al combate.
+- **Bestiario solo para el GM** [Claude Code · 2026-11-14]: 179 fichas canon: Core 10, CEMK 14, Hardened 16, Interface RED 21 y Danger Gal Dossier 118 en sus 15 facciones (6th Street, Maelstrom, NCPD, Trauma Team, Tyger Claws, etc.), todas con porte CEMK 2077 y ficha RED original. Más un creador de PNJ guiado (Danger Gal Dossier pp.149-152) e inyección al combate.
 - **Herramientas de Campaña**: Notas secretas por escena, generador de botín aleatorio y registro cronológico de eventos.
 
 ### 9. 🚂 Aventura Oneshot Oficial: Red Chrome Cargo CEMK 2077 (`RedChromeCargoView.tsx`)
@@ -90,7 +90,7 @@ cpr-omni-deck/
 │       └── cpr-pdf-extractor/
 │           └── SKILL.md                  # Protocolo de extracción CLI y esquema .cprpack.json
 ├── data/
-│   └── core-rules.cprpack.json           # Catálogo maestro canónico (272 ítems oficiales)
+│   └── core-rules.cprpack.json           # Copia vieja del pack (371 ítems, sin actualizar desde v5.3.2); la que usa la app es frontend/src/data [Claude Code · 2026-11-14]
 ├── scripts/
 │   ├── extract_core_pack.py              # Ingesta y validación real de páginas del Core Rulebook
 │   ├── find_sections.py                  # Inspector de bookmarks y outline del PDF
@@ -104,10 +104,10 @@ cpr-omni-deck/
 │   │   │   └── ItemVisualPlaceholder.tsx # Frames tácticos vectoriales por categoría
 │   │   ├── data/
 │   │   │   ├── characterCreationData.ts  # Catálogo canónico de creación, Lifepath y pregenerados
-│   │   │   ├── core-rules.cprpack.json   # Catálogo maestro multi-libro (368 ítems canónicos)
+│   │   │   ├── core-rules.cprpack.json   # Catálogo maestro multi-libro (770 ítems canónicos)
 │   │   │   ├── criticalInjuries.ts       # Tablas oficiales 2d6 de heridas críticas (Head/Body)
 │   │   │   ├── cyberfistsMartialArtsData.ts # 23 artes marciales y 46 movimientos (Interface RED 4)
-│   │   │   ├── enemiesCatalog.ts         # Bestiario táctico de 44 enemigos Core/Tales + 118 Danger Gal
+│   │   │   ├── enemiesCatalog.ts         # Junta las 179 fichas generadas en data/enemies/ (Core, CEMK, Hardened, Interface RED, Danger Gal)
 │   │   │   ├── expansionRulesData.ts     # Compendio de 8 sistemas de reglas de expansiones (FBC/2077)
 │   │   │   ├── goingMetalFbcData.ts      # 13 chasis FBC, 16 cyberware borg e inmunidades (Interface RED 3)
 │   │   │   ├── netAndRolesData.ts        # Arquitecturas de red 2045, Quickhacks 2077 y 10 Roles

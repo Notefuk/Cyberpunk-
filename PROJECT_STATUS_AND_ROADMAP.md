@@ -1,8 +1,8 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.40.0`** (Plan 32 VI: creador de PNJ guiado; plan 32 terminado) en `claude/plan32-v5.40.0`, sin pushear; en `main`, la beta y Firebase prod está la v5.34.0 [Claude Code · 2026-11-13]
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.40.0`** (Plan 32: Danger Gal Dossier completo), en `main` (PR #93), la beta y Firebase prod [Claude Code · 2026-11-14]
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
-> **PLAN ACTIVO**: ninguno en curso. Plan 23 terminado y publicado (v5.8.0 y v5.9.0) [Claude Code · 2026-10-30]. En espera: plan 22 (Interface RED, Black Chrome y FBC). Estado de todos los planes en `docs/plans/README.md`.  
+> **PLAN ACTIVO**: ninguno en curso [Claude Code · 2026-11-14]. Último terminado y publicado: plan 32 (Danger Gal Dossier). Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 
@@ -14,18 +14,14 @@
 
 [Claude Code · 2026-10-24] El estado de cada plan está **solo** en `docs/plans/README.md` (fuente única; antes se repetía acá y se desfasaba).
 
-**Pendiente de planes aprobados (4 versiones)** [Claude Code · 2026-10-23, v4.9.4 Modo Novato terminada]:
-1. **Black Chrome completo + catálogo de vehículos** (plan 5): hay 31 de unos 160 ítems, más el Black Chrome+ de IR4. Los vehículos tienen que ir al pack y al Compendium. Los 14 genéricos del Core ya están en la vista de roles desde v4.9.2.
-2. **Docs con totales reales** (plan 5): CONTENT_CHECKLIST, README y STATUS.
-3. **v4.7.1 Danger Gal** (plan 6, en pausa): 118 fichas canon; se borran las 95 inventadas.
-4. **v4.7.2 New Gear de Danger Gal** (plan 6, en pausa), pp. 144-149.
+**Pendiente de planes aprobados**: nada [Claude Code · 2026-11-14]. Los cuatro pendientes que había acá se hicieron: Black Chrome con su catálogo de vehículos (plan 26), Danger Gal con su New Gear (plan 32) y los docs con totales reales (cierre de los planes 5 y 6).
 
 **Sin plan todavía (unos 4 planes):**
 - **Combate**: discrepancias 16-19 y 21-23 (Evasion contra disparos, Aimed Shot, umbral de Seriously Wounded, Mortally Wounded, Voice Stress Analyzer, costo y HL del ciberware que está en los dos libros, y si las armas del Core usan Power/Smart/Tech).
 - ~~**Fichas entre dispositivos**~~: ahora es el plan 16 (Firebase). [Claude Code · 2026-10-24]
 - **Modo Settings y GM Master Screen** (`FixerDeckView.tsx`).
-- **Libros nuevos**: Interface RED Vol. 1-3 (el 3 necesita OCR), Gang Guide, Woodchipper, Must-Have Cyberware y Midnight with the Upload. Probablemente un plan por libro.
-- **Módulos premium** (ideas viejas de v4.0): Night City 2045 como atlas interactivo y Solo of Fortune (armaduras ACPA). Detalle en `docs/archive/handoff-roadmap-y-premium.md`. [Claude Code · 2026-10-24]
+- **Libros nuevos**: ~~Interface RED Vol. 1-3~~ (hecho en el plan 27, sin Elflines) [Claude Code · 2026-11-14], Gang Guide, Woodchipper, Must-Have Cyberware y Midnight with the Upload. Probablemente un plan por libro.
+- **Módulos premium** (ideas viejas de v4.0): Night City 2045 como atlas interactivo y ~~Solo of Fortune (armaduras ACPA)~~ (hecho en el plan 30) [Claude Code · 2026-11-14]. Detalle en `docs/archive/handoff-roadmap-y-premium.md`. [Claude Code · 2026-10-24]
 
 **Arreglos chicos anotados:**
 - La mejora de armadura del Maker usa siempre 100 €$ y DV 17 (la ficha no guarda el precio de la armadura).

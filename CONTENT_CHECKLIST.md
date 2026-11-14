@@ -268,7 +268,7 @@
 - [x] **Portal Interactivo de Changelogs, Inventario de Contenido y Documentación (`SystemChangelogAndDocsView.tsx` & `systemDocsAndChangelogData.ts`)**:
   - Nueva pestaña permanente `📜 DOCS & CHANGELOG` en la barra superior del Omni-Deck para consultar toda la documentación sin salir de la app.
   - Registro interactivo y buscable versión por versión desde la `v1.0.0` hasta la `v3.5.0` con clasificación por categoría, impacto y archivos modificados.
-  - Inventario en vivo del catálogo total: 391+ ítems oficiales, 8 sistemas de reglas de expansiones, 44+ enemigos y 118 PNJs de Danger Gal Dossier, 23 artes marciales y 46 movimientos especiales.
+  - Inventario en vivo del catálogo total: 770 ítems oficiales [Claude Code · 2026-11-14], 8 sistemas de reglas de expansiones, 179 fichas canon: Core 10, CEMK 14, Hardened 16, Interface RED 21 y Danger Gal Dossier 118 en sus 15 facciones (6th Street, Maelstrom, NCPD, Trauma Team, Tyger Claws, etc.), 23 artes marciales y 46 movimientos especiales.
   - Visualizador de arquitectura técnica desacoplada (Zustand Stores, Motores matemáticos puros, Flujo COMP/CON y Árbol de archivos).
   - Monitor en vivo del Roadmap de desarrollo por fases (Fases 0 a 3 completadas, especificaciones para Fases 4 y 5).
 
