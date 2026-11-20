@@ -7,9 +7,9 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-20] v5.45.0 (DLC Everyday Items) commiteada en `claude/v5.45.0-everyday-items`, sin pushear
+**Última actualización**: [Claude Code · 2026-11-20] v5.45.0 (Everyday Items) publicada: `main` (PR #99), beta y prod
 
-**Versión de la app**: v5.45.0 en `claude/v5.45.0-everyday-items` (local, falta OK para pushear). En `main`, la beta y prod está la v5.44.0 [Claude Code · 2026-11-20].
+**Versión de la app**: v5.45.0 en `main` @ 5cfa798, en la beta (gh-pages 5da88db) y en Firebase prod (hosting `index-C1snalmV.js`; reglas sin cambios) [Claude Code · 2026-11-20].
 
 **Plan activo**: ninguno. La v5.45.0 es una tarea chica sin plan. Lo próximo es el plan 34 (equipo, vehículos y faltantes del Night Market Index) [Claude Code · 2026-11-20].
 
@@ -22,7 +22,7 @@
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
-- [Claude Code · 2026-11-20] **v5.45.0 DLC Everyday Items** (`RTG-CPR-DLC-EverydayItemsv1.3.pdf`, en la raíz de la carpeta de PDFs): 27 ítems `ei-*` en el pack y el Dinghy en `data/interfaceRedVehicles.ts` (`vehicleClass` admite `sea`). tsc, 834 tests y build pasan. Rama `claude/v5.45.0-everyday-items`, commiteada. Falta: OK para push, PR y merge; beta y prod con su OK. No cambia las reglas de Firestore.
+- [Claude Code · 2026-11-20] **v5.45.0 DLC Everyday Items**: publicada en `main` (PR #99), la beta y prod. No queda nada pendiente. Este checkpoint vive en `claude/checkpoint-post-99`, sin pushear.
 - [Claude Code · 2026-11-14] **Plan 33** (`docs/plans/plan33-going-quiet-tech-civiles.md`). PDFs en `Documents/CP RED TEST ANTIGRAVITY/DLC-Supplements/` (página impresa = índice).
   - Hecho: plan guardado. v5.41.0: ítems `gq-*`, `engine/flashOfLuck.ts` + `FlashOfLuckPanel` (campo `flashOfLuck` en la ficha, `flashOfLuckEnabled` en useCombatStore, `flashOfLuck` en la campaña y en `firestore.rules`), `engine/netStealth.ts` + `NetStealthPanel`. v5.42.0: `data/inventedTechUpgrades.ts` + `features/roles/InventedTechUpgradesPanel.tsx` (en NET & ROLES → rol Tech), campo `inventedUpgrades` en la ficha, etiqueta 🧪 en el Street Lab. v5.43.0: `data/cemkCyberwareEnhancements.ts` + `CyberwareEnhancementsPanel` (Ripperdoc) + `CritChoicePicker` (HUD), campo `cyberwareEnhancements` en la ficha, `ignoreSpBelow7`/`extraAblation` en `calculateIncomingImpact`, arma `monowire-2077`. v5.44.0: `data/enemies-src/everyday-people.json` + `BOOK_SPECS` (20 civiles, `abbreviated`), `enemyStatLabel` ("—"), botón "Civiles" en el bestiario, nivel `civilian` en `npcCreationGuidelines.ts`.
   - Siguiente: nada pendiente del plan 33.
