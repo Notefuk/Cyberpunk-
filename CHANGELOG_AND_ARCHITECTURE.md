@@ -117,6 +117,25 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.45.0] - 2026-11-20 (DLC Everyday Items) [Claude Code · 2026-11-20]
+* **Category**: equipo canon (DLC *Everyday Items*, J Gray, 2026, v1.3, pp.3-6). Tarea chica, sin plan.
+* **What Changed**:
+  * **27 ítems de equipo** en el pack (ids `ei-*`), en el Compendio y la tienda:
+    * Bungee Cord, Chop, Cigarettes (Generic y Biotechnica), Cigarillo (Nomad), Continental Brands EndurU y Cushions.
+    * Danshi Badgemaker, DataTel Image Wallet, DataTel Treasure, Foambag, Gun Cleaning Kit, Hammock e IEC Micro-Mate Blender.
+    * Kiroshi Multiscope, Lead's Autotan, Lead's Bodyfree Mask, Lead's Radiation Ring, Microtech Trode Set y Militech Armor Patch Kit.
+    * Petrochem SpeedFill, Portable Stove, Small Generator, SovOil NeoChew, WorldSat Newsdeck, Zetatech Flopscreen y Zetatech Holotank.
+  * **El Dinghy** (p.4): bote acuático, SDP 20, 4 plazas, 10 MOVE, 500eb, Nomad Access 1 y sin mejoras. Está en la lista de vehículos y se puede comprar para el garaje.
+  * La lista de vehículos del Compendio muestra siempre el filtro "Acuático".
+  * **Interpretado**:
+    * Los efectos van como texto en la descripción y no tocan tiradas: EndurU (+1 y después -1 a Endurance), Badgemaker (+2 a Forgery), Bodyfree Mask (-1 a Human Perception), Armor Patch Kit, SpeedFill, Trodes y Gun Cleaning Kit.
+    * "Dirt Cheap" (Chop y NeoChew) se guarda tal cual; la tienda lo trata como Cheap.
+    * El Cigarillo (Nomad) no se vende (N/A): queda con costo 0 como referencia.
+* **Files Modified**:
+  * `frontend/src/data/core-rules.cprpack.json` (27 ítems; equipo 193 → 220).
+  * `frontend/src/data/interfaceRedVehicles.ts` (Dinghy), `data/blackChromeVehicles.ts` (`vehicleClass` admite `'sea'`) y `features/compendium/VehicleCatalogList.tsx`.
+  * Nuevo: `engine/__tests__/everydayItems.test.ts`.
+
 ### [v5.44.0] - 2026-11-14 (Plan 33 IV: Everyday People) [Claude Code · 2026-11-14]
 * **Category**: PNJ canon (DLC *Everyday People*, 2026, v1.01, pp.2-12), bestiario del GM y creador de PNJ. Cierra el plan 33.
 * **What Changed**:

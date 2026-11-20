@@ -7,7 +7,7 @@ export interface BlackChromeVehicle {
   id: string;
   name: string;
   company: string;
-  vehicleClass: 'air' | 'land';
+  vehicleClass: 'air' | 'land' | 'sea'; // 'sea' desde v5.45.0 (Dinghy de Everyday Items) [Claude Code · 2026-11-20]
   /** Vehículo base del Core (Gyrocopter, AV4, Compact Groundcar...). */
   baseType: string;
   nomadAccess: number | null;
