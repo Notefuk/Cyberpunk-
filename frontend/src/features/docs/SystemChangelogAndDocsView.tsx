@@ -26,6 +26,22 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.45.0',
+    date: '2026-11-20',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Equipo',
+    title: 'Everyday Items: 27 cosas de todos los días y el Dinghy',
+    summary: 'El Compendio y la tienda suman 27 ítems del DLC Everyday Items: el Chop (credit chip), cigarrillos, la bebida EndurU, el Danshi Badgemaker, el Militech Armor Patch Kit, el Petrochem SpeedFill, los Trodes, el Kiroshi Multiscope y más. Sus efectos van escritos en cada ítem. Además, el Dinghy entra a la lista de vehículos como bote, y se puede comprar para el garaje.',
+    highlights: [
+      '27 ítems de equipo (Everyday Items pp.3-6).',
+      'Dinghy: vehículo acuático de 500eb (p.4).',
+      'Filtro "Acuático" siempre visible en la lista de vehículos.'
+    ],
+    filesTouched: ['frontend/src/data/core-rules.cprpack.json', 'frontend/src/data/interfaceRedVehicles.ts', 'frontend/src/features/compendium/VehicleCatalogList.tsx'],
+    metricsBadge: 'v5.45.0 • Everyday Items'
+  },
+  {
     version: 'v5.44.0',
     date: '2026-11-14',
     author: 'Claude Code',
@@ -2100,6 +2116,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.45.0': true,
     'v5.44.0': true,
     'v5.43.0': true,
     'v5.42.0': true,

@@ -109,7 +109,7 @@ export function VehicleCatalogList({ includeCore = false, renderActions }: {
           placeholder="Buscar vehículo..."
           className="bg-[#10141f] border border-[#1b2336] rounded-xs px-2 py-1 text-[11px] font-mono-code text-white w-full sm:w-48"
         />
-        {(['all', 'land', 'air', ...(includeCore ? ['sea'] as const : [])] as ClassFilter[]).map((c) => (
+        {(['all', 'land', 'air', 'sea'] as ClassFilter[]).map((c) => (
           <button key={c} className={chip(cls === c)} onClick={() => setCls(c)}>
             {c === 'all' ? 'Todos' : CLASS_LABEL[c]}
           </button>

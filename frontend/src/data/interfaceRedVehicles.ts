@@ -61,6 +61,28 @@ export const INTERFACE_RED_VEHICLES: BlackChromeVehicle[] = [
     booth: [],
     sourceTitle: 'Interface RED Vol. 4',
   },
+  // [Claude Code · 2026-11-20] v5.45.0: DLC Everyday Items p.4.
+  {
+    id: 'ei-veh-dinghy',
+    name: 'Dinghy',
+    company: '—',
+    vehicleClass: 'sea',
+    baseType: 'Dinghy (bote con motor fuera de borda)',
+    nomadAccess: 1,
+    sdp: 20,
+    seats: 4,
+    combatSpeed: '10 MOVE',
+    narrativeSpeed: '15 MPH/24 KPH',
+    cost: 500,
+    priceCategory: 'Expensive',
+    upgrades: [],
+    notes: ['No admite mejoras (Upgrades: None)'],
+    rulesText: 'SDP 20, Seats: 4, Speed (Combat): 10 MOVE, Speed (Narrative): 15 MPH/24 KPH, Upgrades: None, Nomad Access: 1.',
+    summaryEs: 'El bote de remos de toda la vida, con motor fuera de borda. Vas a pasar más tiempo sacando agua que manejándolo.',
+    sourcePage: 4,
+    booth: [],
+    sourceTitle: 'Everyday Items',
+  },
 ];
 
 /** Velocidad de la bici según el BODY del ciclista (Spinning Your Wheels p.3). */
