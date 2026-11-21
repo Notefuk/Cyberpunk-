@@ -7,11 +7,11 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-20] v5.45.0 (Everyday Items) publicada: `main` (PR #99), beta y prod
+**Última actualización**: [Claude Code · 2026-11-20] v5.46.0 (plan 29 I, cobertura canon) hecha en `claude/plan29-owlbear-coberturas`, sin pushear
 
 **Versión de la app**: v5.45.0 en `main` @ 5cfa798, en la beta (gh-pages 5da88db) y en Firebase prod (hosting `index-C1snalmV.js`; reglas sin cambios) [Claude Code · 2026-11-20].
 
-**Plan activo**: plan 29, extensión de Owlbear para coberturas (`docs/plans/plan29-owlbear-coberturas.md`), aprobado el 2026-11-20; v5.46.0 (cobertura canon en la app) en curso en `claude/plan29-owlbear-coberturas`, worktree `C:\Users\TeseoHeracles\cpr-wt-plan29` [Claude Code · 2026-11-20]. Después sigue el plan 34 (equipo, vehículos y faltantes del Night Market Index).
+**Plan activo**: plan 29, extensión de Owlbear para coberturas (`docs/plans/plan29-owlbear-coberturas.md`), aprobado el 2026-11-20; v5.46.0 (cobertura canon en la app) hecha en `claude/plan29-owlbear-coberturas`, sin pushear; falta la v5.47.0 (la extensión), worktree `C:\Users\TeseoHeracles\cpr-wt-plan29` [Claude Code · 2026-11-20]. Después sigue el plan 34 (equipo, vehículos y faltantes del Night Market Index).
 
 ## Traspaso
 - Cierra: [Claude Code · 2026-11-13]
@@ -22,6 +22,9 @@
 - Preguntas abiertas para Giuliano: ninguna.
 
 ## En curso (a cargo)
+- [Claude Code · 2026-11-20] **Plan 29** (`docs/plans/plan29-owlbear-coberturas.md`), rama `claude/plan29-owlbear-coberturas` sobre `main` bf2af23, worktree `C:\Users\TeseoHeracles\cpr-wt-plan29` (su `frontend/node_modules` es un junction al del repo principal; dev server `plan29-dev`, puerto 5179, en el `.claude/launch.json` de la carpeta de PDFs).
+  - Hecho: v5.46.0. `data/coverTable.ts` (Core p.182-183, shield p.350), `engine/cover.ts` + `engine/__tests__/cover.test.ts`, `COVER_HP_TABLE` y `COVER_RULES_EXPLANATION` en `data/rulesCheatSheet.ts` derivados de la tabla, presets del HUD (`equipShieldPreset` y `equipCoverPreset` en `CombatHudView.tsx`, clave local `cpr_shield_cover_sdp_v2`). Registro en `docs/canon-audit/v5.46.0-cobertura.md`. tsc, 845 tests y build OK; probado en el navegador.
+  - Siguiente: v5.47.0, la extensión. Primero una sala de prueba en Owlbear con la cuenta de Giuliano para los 4 puntos sin verificar del SDK (lista en el plan).
 - [Claude Code · 2026-11-20] **v5.45.0 DLC Everyday Items**: publicada en `main` (PR #99), la beta y prod. No queda nada pendiente. Este checkpoint vive en `claude/checkpoint-post-99`, sin pushear.
 - [Claude Code · 2026-11-14] **Plan 33** (`docs/plans/plan33-going-quiet-tech-civiles.md`). PDFs en `Documents/CP RED TEST ANTIGRAVITY/DLC-Supplements/` (página impresa = índice).
   - Hecho: plan guardado. v5.41.0: ítems `gq-*`, `engine/flashOfLuck.ts` + `FlashOfLuckPanel` (campo `flashOfLuck` en la ficha, `flashOfLuckEnabled` en useCombatStore, `flashOfLuck` en la campaña y en `firestore.rules`), `engine/netStealth.ts` + `NetStealthPanel`. v5.42.0: `data/inventedTechUpgrades.ts` + `features/roles/InventedTechUpgradesPanel.tsx` (en NET & ROLES → rol Tech), campo `inventedUpgrades` en la ficha, etiqueta 🧪 en el Street Lab. v5.43.0: `data/cemkCyberwareEnhancements.ts` + `CyberwareEnhancementsPanel` (Ripperdoc) + `CritChoicePicker` (HUD), campo `cyberwareEnhancements` en la ficha, `ignoreSpBelow7`/`extraAblation` en `calculateIncomingImpact`, arma `monowire-2077`. v5.44.0: `data/enemies-src/everyday-people.json` + `BOOK_SPECS` (20 civiles, `abbreviated`), `enemyStatLabel` ("—"), botón "Civiles" en el bestiario, nivel `civilian` en `npcCreationGuidelines.ts`.

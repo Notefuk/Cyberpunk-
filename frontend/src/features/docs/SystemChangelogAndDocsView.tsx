@@ -26,6 +26,23 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.46.0',
+    date: '2026-11-20',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Combate',
+    title: 'Cobertura con los HP del libro',
+    summary: 'La tabla de cobertura ahora es la del Core p.182: Steel, Stone, Bulletproof Glass, Concrete, Wood y Plaster/Foam/Plastic, cada una fina o gruesa. Se borraron los materiales y HP inventados. En el HUD de combate, el panel del escudo deja elegir material y grosor de la cobertura (antes tenía tres botones con 15, 25 y 35 que no salían del libro). La cobertura que tenías guardada se reinicia al Escudo Antibalas.',
+    highlights: [
+      'Cheat sheet: tabla del Core p.182 con los ejemplos de p.183 y la regla del daño que sobra (se pierde, salvo explosivos).',
+      'HUD: material + Fina/Gruesa; Yeso fino aparece como "no cubre".',
+      'Aviso del acero: Martial Arts y Brawling no lo dañan sin Cyberarm o BODY 10.',
+      'Primer paso del plan 29 (extensión de Owlbear para coberturas).'
+    ],
+    filesTouched: ['frontend/src/data/coverTable.ts', 'frontend/src/engine/cover.ts', 'frontend/src/data/rulesCheatSheet.ts', 'frontend/src/features/combat/CombatHudView.tsx'],
+    metricsBadge: 'v5.46.0 • Cobertura canon'
+  },
+  {
     version: 'v5.45.0',
     date: '2026-11-20',
     author: 'Claude Code',
@@ -2116,6 +2133,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.46.0': true,
     'v5.45.0': true,
     'v5.44.0': true,
     'v5.43.0': true,

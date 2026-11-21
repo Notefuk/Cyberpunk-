@@ -1,3 +1,5 @@
+import { COVER_MATERIALS } from './coverTable';
+
 export interface CoverItem {
   id: string;
   material: string;
@@ -24,82 +26,32 @@ export interface CheatSheetSection {
   rules: RulePoint[];
 }
 
+// Reglas y tabla de cobertura canon: Core p.182, ejemplos de p.183; datos en coverTable.ts. [Claude Code · 2026-11-20]
 export const COVER_RULES_EXPLANATION = {
-  title: 'Mecánica Canónica de Cobertura (Cyberpunk RED Core pág. 182)',
+  title: 'Cobertura (Cyberpunk RED Core p.182)',
   keyRules: [
-    'En Cyberpunk RED la cobertura es BINARIA: o estás completamente a cubierto o no lo estás. Si estás detrás de cobertura completa, no pueden seleccionarte como blanco directo para disparos estándar.',
-    'Para dañarte, el atacante debe destruir primero los HP de la cobertura hasta reducirlos a 0 HP.',
-    'REGLA DE ABSORCIÓN TOTAL: El daño sobrante del disparo que destruye la cobertura NO pasa al defensor (la cobertura absorbe todo el excedente de ese impacto), salvo munición/explosivos de área o armamento Tech especializado.',
-    'Una vez destruida (0 HP), esa sección de cobertura deja de existir y quedas expuesto a los siguientes ataques de la ronda.'
+    'Estás a cubierto si estás del todo detrás de algo que puede parar una bala. Si te tienen en línea de visión, no estás a cubierto. No hay cobertura parcial: o para una bala o no es cobertura (y no tiene HP).',
+    'Una sección de 2 m x 2 m (1 casilla) de cobertura se ataca igual que a un personaje. A 0 HP la cobertura se destruye.',
+    'Si la cobertura llega a 0 HP, el daño que sobra se pierde y no daña a quien está detrás; se lo puede atacar con el próximo ataque. La única excepción son los explosivos (Core p.174).',
+    'La cobertura fina se puede mover un poco en un apuro; la gruesa no, salvo con BODY 10 o más o equipo especial.',
+    'El acero no recibe daño de Martial Arts ni Brawling, salvo de un personaje con Cyberarm o BODY 10 o más.',
+    'Un escudo (Bulletproof Shield, 10 HP, Core p.350) es cobertura que se mueve: si lo interponés no podés esquivar y el escudo recibe todo el ataque (Core p.183).'
   ]
 };
 
-export const COVER_HP_TABLE: CoverItem[] = [
-  {
-    id: 'drywall',
-    material: 'Drywall / Pladur',
-    thinHp: '10 HP',
-    thickHp: '20 HP',
-    examples: 'Paredes interiores de departamento, tabiques de oficina, cielo falso',
-    notes: 'Destruible rápidamente con armas pesadas o fuego automático (Autofire).'
-  },
-  {
-    id: 'wood',
-    material: 'Madera / Puertas / Muebles',
-    thinHp: '5 HP',
-    thickHp: '15 HP',
-    examples: 'Puerta de madera estándar (5 HP), mesa pesada de conferencias, tronco de árbol (15 HP)',
-    notes: 'Material ligero. Ofrece poca protección ante armas de alto calibre.'
-  },
-  {
-    id: 'thin_metal',
-    material: 'Metal Fino / Vehículos',
-    thinHp: '25 HP',
-    thickHp: '50 HP',
-    examples: 'Puerta de auto (25 HP), carrocería civil, contenedor de basura, bloque de motor (50 HP)',
-    notes: 'Una puerta de auto civil detiene 25 HP. El bloque de motor es metal grueso (50 HP).'
-  },
-  {
-    id: 'brick',
-    material: 'Ladrillo / Mampostería',
-    thinHp: '25 HP',
-    thickHp: '50 HP',
-    examples: 'Muro exterior residencial, esquina de callejón, chimenea',
-    notes: 'Excelente cobertura urbana común en las calles de Night City.'
-  },
-  {
-    id: 'concrete',
-    material: 'Hormigón / Concreto / Roca',
-    thinHp: '25 HP',
-    thickHp: '50 HP',
-    examples: 'Barrera Jersey de autopista, pilar estructural, muro de búnker corporativo',
-    notes: 'Muy resistente. Capaz de absorber múltiples ráfagas de fusil antes de romperse.'
-  },
-  {
-    id: 'bulletproof_glass',
-    material: 'Cristal Antibalas / Blindado',
-    thinHp: '15 HP',
-    thickHp: '30 HP',
-    examples: 'Ventanilla corporativa AV, cabina de seguridad bancaria, parabrisas blindado',
-    notes: 'Permite visibilidad bidireccional mientras conserva sus puntos de vida.'
-  },
-  {
-    id: 'ice_industrial_plastic',
-    material: 'Hielo / Plástico Industrial',
-    thinHp: '15 HP',
-    thickHp: '30 HP',
-    examples: 'Contenedor químico, cámara frigorífica de carnicería, barril sintético',
-    notes: 'Material semi-rígido o congelado de uso industrial.'
-  },
-  {
-    id: 'soft_concealment',
-    material: 'Sofá / Vidrio común / Cartón',
-    thinHp: '0 HP',
-    thickHp: '0 HP',
-    examples: 'Sillón, cortinas, escaparate de vidrio simple, cajas de embalaje',
-    notes: 'SOLO OCULTACIÓN VISUAL: No detiene balas (0 HP). Los disparos impactan directamente al objetivo.'
-  }
-];
+const COVER_NOTES: Record<string, string> = {
+  steel: 'Martial Arts y Brawling no lo dañan, salvo con Cyberarm o BODY 10 o más.',
+  plaster_foam_plastic: 'La versión fina no es cobertura (0 HP): no para balas.',
+};
+
+export const COVER_HP_TABLE: CoverItem[] = COVER_MATERIALS.map((m) => ({
+  id: m.id,
+  material: `${m.name} (${m.label})`,
+  thinHp: m.thinHp > 0 ? `${m.thinHp} HP` : '0 HP',
+  thickHp: `${m.thickHp} HP`,
+  examples: m.examples.join(', '),
+  notes: COVER_NOTES[m.id] ?? 'Fina: se puede mover un poco. Gruesa: hace falta BODY 10 o equipo especial.',
+}));
 
 export const CHEAT_SHEET_SECTIONS: CheatSheetSection[] = [
   {
