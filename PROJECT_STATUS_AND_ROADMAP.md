@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.47.1`** (la extensión de Owlbear pasa a ser un proyecto aparte) en `claude/owlbear-separada`, sin pushear; en `main` y la beta está la v5.47.0, en prod la v5.45.0 [Claude Code · 2026-11-21]
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.47.1`** (la extensión de Owlbear pasa a ser un proyecto aparte) en `main` (PR #102); en la beta la v5.47.0, en prod la v5.45.0 [Claude Code · 2026-11-21]
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
 > **PLAN ACTIVO**: plan 29 terminado en código (v5.46.0 y v5.47.0), falta publicarlo [Claude Code · 2026-11-21]. Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
