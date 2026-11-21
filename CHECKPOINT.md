@@ -7,11 +7,11 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-21] plan 29 terminado en código (v5.46.0 y v5.47.0) en `claude/plan29-owlbear-coberturas`, sin pushear
+**Última actualización**: [Claude Code · 2026-11-21] v5.47.1: la extensión de Owlbear pasa a ser un proyecto aparte; en `claude/owlbear-separada`, sin pushear
 
-**Versión de la app**: v5.45.0 en `main` @ 5cfa798, en la beta (gh-pages 5da88db) y en Firebase prod (hosting `index-C1snalmV.js`; reglas sin cambios) [Claude Code · 2026-11-20].
+**Versión de la app**: v5.47.0 en `main` @ ef9cf3a (PR #101) y en la beta (gh-pages ab4b155, bundle `main-a28MoSCF.js`; el bundle principal ahora se llama `main-*` porque hay varias entradas). En Firebase prod (hosting `index-C1snalmV.js`) sigue la v5.45.0 [Claude Code · 2026-11-21].
 
-**Plan activo**: plan 29, extensión de Owlbear para coberturas (`docs/plans/plan29-owlbear-coberturas.md`), aprobado el 2026-11-20; v5.46.0 y v5.47.0 terminadas en `claude/plan29-owlbear-coberturas`, sin pushear; falta publicar [Claude Code · 2026-11-21], worktree `C:\Users\TeseoHeracles\cpr-wt-plan29` [Claude Code · 2026-11-20]. Después sigue el plan 34 (equipo, vehículos y faltantes del Night Market Index).
+**Plan activo**: plan 29 (`docs/plans/plan29-owlbear-coberturas.md`): v5.46.0 y v5.47.0 en `main` (PR #101) y en la beta. Desvío pedido por Giuliano: v5.47.1 saca la extensión del Omni-Deck a su propio proyecto (`C:\Users\TeseoHeracles\cpr-owlbear-coberturas`, repo https://github.com/Notefuk/cpr-owlbear-coberturas, publicada en `https://notefuk.github.io/cpr-owlbear-coberturas/manifest.json`). Perfil de Owlbear de Giuliano ya apunta a la URL publicada (probado en The Spry Tag: panel y menú cargan). Falta: PR de la v5.47.1, beta y prod del Omni-Deck. Después sigue el plan 34 [Claude Code · 2026-11-21].
 
 ## Traspaso
 - Cierra: [Claude Code · 2026-11-13]
@@ -29,7 +29,8 @@
     - El manifest lo genera el plugin `owlbearManifest` de `vite.config.ts`: Owlbear no acepta rutas relativas ("Invalid URL"); van con `/owlbear/` (dev y prod) o `/Cyberpunk-/owlbear/` (beta).
     - Chrome pide permiso de red local para que owlbear.rodeo lea `localhost` (solo en la prueba local).
     - El daño de un jugador va por `OBR.broadcast` y lo aplica el cliente del GM (con id para no repetir).
-  - Siguiente: con OK de Giuliano, push y PR a `main`; después beta y prod (OK aparte cada uno). Después, en su perfil de Owlbear, cambiar la URL de `localhost` por la publicada.
+  - Desvío v5.47.1 [Claude Code · 2026-11-21]: Giuliano pidió separar la extensión en su propio proyecto. Hecho: proyecto `C:\Users\TeseoHeracles\cpr-owlbear-coberturas` (build, 11 tests, README con la tabla de sincronía; manifest en `/` local y `/cpr-owlbear-coberturas/` para GitHub Pages con `npm run build:pages`), y del Omni-Deck se borró todo lo de Owlbear (rama `claude/owlbear-separada`, sobre `claude/docs-pr101`).
+  - Siguiente: con OK de Giuliano, (1) PR de `claude/owlbear-separada` a `main`; (2) ~~crear el repo y publicar~~ hecho [Claude Code · 2026-11-21]: `main` d465721 y `gh-pages` df303cd en `Notefuk/cpr-owlbear-coberturas`, Pages activo y los 5 archivos responden 200 con CORS; (3) ~~URL en el perfil de Owlbear~~ hecho [Claude Code · 2026-11-21]: se quitó la de localhost, se agregó la publicada y se activó en The Spry Tag; (4) beta y prod del Omni-Deck con la v5.47.1 (la beta todavía sirve `/owlbear/` de la v5.47.0 hasta que se republique). El deploy a prod quedó frenado antes de subir nada.
 - [Claude Code · 2026-11-20] **v5.45.0 DLC Everyday Items**: publicada en `main` (PR #99), la beta y prod. No queda nada pendiente. Este checkpoint vive en `claude/checkpoint-post-99`, sin pushear.
 - [Claude Code · 2026-11-14] **Plan 33** (`docs/plans/plan33-going-quiet-tech-civiles.md`). PDFs en `Documents/CP RED TEST ANTIGRAVITY/DLC-Supplements/` (página impresa = índice).
   - Hecho: plan guardado. v5.41.0: ítems `gq-*`, `engine/flashOfLuck.ts` + `FlashOfLuckPanel` (campo `flashOfLuck` en la ficha, `flashOfLuckEnabled` en useCombatStore, `flashOfLuck` en la campaña y en `firestore.rules`), `engine/netStealth.ts` + `NetStealthPanel`. v5.42.0: `data/inventedTechUpgrades.ts` + `features/roles/InventedTechUpgradesPanel.tsx` (en NET & ROLES → rol Tech), campo `inventedUpgrades` en la ficha, etiqueta 🧪 en el Street Lab. v5.43.0: `data/cemkCyberwareEnhancements.ts` + `CyberwareEnhancementsPanel` (Ripperdoc) + `CritChoicePicker` (HUD), campo `cyberwareEnhancements` en la ficha, `ignoreSpBelow7`/`extraAblation` en `calculateIncomingImpact`, arma `monowire-2077`. v5.44.0: `data/enemies-src/everyday-people.json` + `BOOK_SPECS` (20 civiles, `abbreviated`), `enemyStatLabel` ("—"), botón "Civiles" en el bestiario, nivel `civilian` en `npcCreationGuidelines.ts`.
@@ -67,6 +68,7 @@
   - Beta: desde `frontend/`, `npm run build:beta`, después `git init` en `dist`, branch `gh-pages`, push -f y borrar `dist/.git`.
   - Prod: desde `frontend/`, `npm run build` y después `node scripts/firebase-with-jdk.mjs deploy --only hosting --project prod`. Reglas con `--only firestore`, siempre con OK aparte.
 - **Dev server:** `.claude/launch.json` (`omni-deck-dev`, puerto 5173).
+- **Cobertura con copia en otro proyecto** [Claude Code · 2026-11-21]: `data/coverTable.ts`, `engine/cover.ts` y `engine/__tests__/cover.test.ts` tienen copia en `src/rules/` de la extensión de Owlbear (`C:\Users\TeseoHeracles\cpr-owlbear-coberturas`). Si se cambian valores, nombres o firmas, se cambian en los dos y se corre `npm test` en los dos. No renombrar los `id` de material.
 
 ## Próximos pasos
 1. Plan 28, v5.22.0: actores guardados.

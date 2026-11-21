@@ -117,6 +117,18 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.47.1] - 2026-11-21 (La extensión de Owlbear pasa a ser un proyecto aparte) [Claude Code · 2026-11-21]
+* **Category**: organización del código. Desvío del plan 29, pedido por Giuliano: la extensión no toca nada del Omni-Deck y no tiene que viajar en su build ni en su hosting.
+* **What Changed**:
+  * La extensión de Owlbear se mudó a su propio proyecto, `cpr-owlbear-coberturas` (en esta PC: `C:\Users\TeseoHeracles\cpr-owlbear-coberturas`), con su propio `package.json`, build, tests, README y sitio.
+  * Del Omni-Deck se borraron `frontend/src/owlbear/`, `frontend/owlbear/` y `frontend/public/owlbear/`. `vite.config.ts`, `firebase.json` y `package.json` volvieron a como estaban antes de la v5.47.0 (sin páginas extra, sin CORS para `/owlbear/**`, sin `@owlbear-rodeo/sdk`).
+  * **Sincronía**: la extensión tiene una copia de `data/coverTable.ts`, `engine/cover.ts` y `engine/__tests__/cover.test.ts`. Los tres archivos llevan un aviso arriba, y también la copia: si se cambian valores, nombres o firmas, se cambian en los dos proyectos. Los `id` de material no se renombran, porque están guardados en los mapas de Owlbear.
+  * Para quien la usa: el Omni-Deck no cambia. Si la extensión estaba instalada desde una URL del Omni-Deck, hay que cambiarla por la del proyecto nuevo.
+* **Files Modified**:
+  * Borrados: `frontend/src/owlbear/*`, `frontend/owlbear/*.html`, `frontend/public/owlbear/icon.svg`.
+  * `frontend/vite.config.ts`, `frontend/firebase.json`, `frontend/package.json`, `frontend/package-lock.json`, `README.md`.
+  * Aviso de sincronía: `frontend/src/data/coverTable.ts`, `frontend/src/engine/cover.ts`, `frontend/src/engine/__tests__/cover.test.ts`.
+
 ### [v5.47.0] - 2026-11-21 (Plan 29 II: extensión de Owlbear para coberturas) [Claude Code · 2026-11-21]
 * **Category**: herramienta de mesa (Owlbear Rodeo), reglas del Core p.182. Cierra el plan 29.
 * **What Changed**:

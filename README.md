@@ -191,15 +191,9 @@ npm run build
 
 ## 🗺️ Extensión de Owlbear Rodeo: coberturas
 
-[Claude Code · 2026-11-21] Plan 29, v5.47.0. Coberturas del Core p.182 sobre el mapa de [Owlbear Rodeo](https://www.owlbear.rodeo): el GM marca un objeto como cobertura (material y grosor), todos ven sus HP en una etiqueta y cualquier jugador le carga daño.
+[Claude Code · 2026-11-21] La extensión de Owlbear Rodeo para coberturas (plan 29) es un **proyecto aparte**, `cpr-owlbear-coberturas` (en esta PC: `C:\Users\TeseoHeracles\cpr-owlbear-coberturas`), con su propio build, su propio README y su propio sitio: repo https://github.com/Notefuk/cpr-owlbear-coberturas, manifest `https://notefuk.github.io/cpr-owlbear-coberturas/manifest.json`. No forma parte del build del Omni-Deck.
 
-- **Instalar (una vez, el GM):** Perfil → Extensions → Manage → "+" → pegar la URL del manifest y Add. Después activarla en la sala (lápiz de la sala → Extensions). Los jugadores la reciben solos.
-  - Beta: `https://notefuk.github.io/Cyberpunk-/owlbear/manifest.json`
-  - Prod: `<sitio de Firebase>/owlbear/manifest.json`
-  - Local, para probar: `http://localhost:5173/owlbear/manifest.json` con `npm run dev -- --cors`. Chrome pide permiso de red local en cada navegador.
-- **Usar:** seleccionar un objeto → ⋮ → "Cobertura". El ícono de la extensión, arriba a la izquierda, abre la lista de coberturas de la escena y la tabla.
-- **Daño de un jugador:** lo aplica el navegador del GM, así que el GM tiene que estar en la sala.
-- **Código:** `frontend/src/owlbear/` y `frontend/owlbear/*.html`. El manifest lo genera el plugin `owlbearManifest` de `frontend/vite.config.ts`, porque Owlbear exige rutas que empiecen con `/`.
+**Sincronía:** esa extensión tiene una copia de `frontend/src/data/coverTable.ts`, `frontend/src/engine/cover.ts` y `frontend/src/engine/__tests__/cover.test.ts`. Si se cambian valores, nombres o firmas en esos archivos, hay que cambiarlos igual en la copia (`src/rules/` del proyecto de la extensión) y correr `npm test` en los dos. Los `id` de material no se renombran: están guardados en las coberturas de los mapas de Owlbear.
 
 ---
 
