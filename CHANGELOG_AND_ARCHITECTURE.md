@@ -117,6 +117,22 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.47.0] - 2026-11-21 (Plan 29 II: extensión de Owlbear para coberturas) [Claude Code · 2026-11-21]
+* **Category**: herramienta de mesa (Owlbear Rodeo), reglas del Core p.182. Cierra el plan 29.
+* **What Changed**:
+  * **Extensión de Owlbear Rodeo** servida junto con la app en `owlbear/manifest.json`:
+    * Menú "Cobertura" en cada objeto. El GM marca material y grosor; aparece una etiqueta adjunta con los HP.
+    * Cualquier jugador carga daño. A 0 la cobertura queda DESTRUIDA (las formas bajan de opacidad) y se avisa el daño que se pierde. El GM restaura o quita.
+    * Panel de la acción con las coberturas de la escena y la tabla.
+  * **Daño de un jugador**: viaja por `OBR.broadcast` y lo aplica el navegador del GM (con id para no aplicarlo dos veces). Si el GM no está en la sala, no se aplica.
+  * **Datos**: en el `metadata` de cada ítem de Owlbear (`io.github.notefuk.cpr/cover`). No toca fichas, la nube ni las reglas de Firestore.
+  * **Manifest**: lo genera el plugin `owlbearManifest` de `vite.config.ts`, porque Owlbear no acepta rutas relativas. Usa `/owlbear/` (dev y prod) o `/Cyberpunk-/owlbear/` (beta). Firebase manda CORS para `/owlbear/**`.
+  * **Probado** en una sala real con dos cuentas (GM y jugador): marcar, el ejemplo de Gina (25 → 8 → destruida, sobran 9), restaurar, daño del jugador aplicado una sola vez, el jugador no ve "Cobertura" en objetos sin marcar, y borrar el objeto borra la etiqueta.
+  * **Interpretado**: las imágenes no bajan de opacidad al destruirse (el SDK no lo permite), solo cambia la etiqueta. Explosivos y Martial Arts/Brawling contra acero son avisos; los resuelve el GM.
+* **Files Modified**:
+  * Nuevos: `frontend/src/owlbear/` (`coverItem.ts`, `background.ts`, `CoverMenu.tsx`, `CoverPanel.tsx`, `useObr.ts`, `owlbear.css`), `frontend/owlbear/{background,cover,index}.html`, `frontend/public/owlbear/icon.svg`.
+  * `frontend/vite.config.ts` (páginas nuevas y manifest), `frontend/firebase.json` (CORS), `frontend/package.json` (`@owlbear-rodeo/sdk` 3.1.0), `README.md` (cómo instalarla), `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`.
+
 ### [v5.46.0] - 2026-11-20 (Plan 29 I: cobertura canon) [Claude Code · 2026-11-20]
 * **Category**: reglas de combate canon (Core p.182, ejemplos p.183, Bulletproof Shield p.350). Primer paso del plan 29.
 * **What Changed**:

@@ -189,6 +189,20 @@ npm run build
 
 ---
 
+## 🗺️ Extensión de Owlbear Rodeo: coberturas
+
+[Claude Code · 2026-11-21] Plan 29, v5.47.0. Coberturas del Core p.182 sobre el mapa de [Owlbear Rodeo](https://www.owlbear.rodeo): el GM marca un objeto como cobertura (material y grosor), todos ven sus HP en una etiqueta y cualquier jugador le carga daño.
+
+- **Instalar (una vez, el GM):** Perfil → Extensions → Manage → "+" → pegar la URL del manifest y Add. Después activarla en la sala (lápiz de la sala → Extensions). Los jugadores la reciben solos.
+  - Beta: `https://notefuk.github.io/Cyberpunk-/owlbear/manifest.json`
+  - Prod: `<sitio de Firebase>/owlbear/manifest.json`
+  - Local, para probar: `http://localhost:5173/owlbear/manifest.json` con `npm run dev -- --cors`. Chrome pide permiso de red local en cada navegador.
+- **Usar:** seleccionar un objeto → ⋮ → "Cobertura". El ícono de la extensión, arriba a la izquierda, abre la lista de coberturas de la escena y la tabla.
+- **Daño de un jugador:** lo aplica el navegador del GM, así que el GM tiene que estar en la sala.
+- **Código:** `frontend/src/owlbear/` y `frontend/owlbear/*.html`. El manifest lo genera el plugin `owlbearManifest` de `frontend/vite.config.ts`, porque Owlbear exige rutas que empiecen con `/`.
+
+---
+
 ## 🌐 Despliegue en GitHub Pages
 
 El proyecto está preconfigurado para compilar con rutas relativas (`base: './'`), lo que permite alojar la aplicación directamente en cualquier servidor web estático o GitHub Pages:

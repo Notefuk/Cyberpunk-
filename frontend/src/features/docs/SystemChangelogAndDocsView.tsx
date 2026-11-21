@@ -26,6 +26,23 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.47.0',
+    date: '2026-11-21',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa',
+    title: 'Extensión de Owlbear Rodeo para coberturas',
+    summary: 'Nueva extensión para jugar con mapa en Owlbear Rodeo. El GM elige un objeto del mapa y lo marca como cobertura (material y grosor del Core p.182); arriba aparece una etiqueta con sus HP que ve toda la mesa. Cualquier jugador le carga daño: a 0 queda DESTRUIDA y el daño que sobra se pierde. El GM puede restaurarla o quitarla. No toca las fichas ni la nube de la app: los datos viven en el mapa de Owlbear.',
+    highlights: [
+      'Menú "Cobertura" en cada objeto: el GM marca, todos dañan.',
+      'Etiqueta con HP que cambia de color y avisa cuánto daño se pierde.',
+      'Panel con las coberturas de la escena y la tabla del Core p.182.',
+      'Se instala pegando la URL del manifest en el perfil de Owlbear; los jugadores la reciben solos.'
+    ],
+    filesTouched: ['frontend/src/owlbear/', 'frontend/owlbear/', 'frontend/vite.config.ts', 'frontend/firebase.json'],
+    metricsBadge: 'v5.47.0 • Owlbear'
+  },
+  {
     version: 'v5.46.0',
     date: '2026-11-20',
     author: 'Claude Code',
@@ -2133,6 +2150,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.47.0': true,
     'v5.46.0': true,
     'v5.45.0': true,
     'v5.44.0': true,

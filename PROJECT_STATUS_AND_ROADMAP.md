@@ -1,8 +1,8 @@
 # CPR OMNI-DECK // Project Status & Master Development Roadmap
 
-> **ESTADO DEL PROYECTO**: Versión Activa **`v5.46.0`** (plan 29 I: cobertura canon) en `claude/plan29-owlbear-coberturas`, sin pushear; en `main`, la beta y prod está la v5.45.0 [Claude Code · 2026-11-20]
+> **ESTADO DEL PROYECTO**: Versión Activa **`v5.47.0`** (plan 29 completo: cobertura canon y extensión de Owlbear) en `claude/plan29-owlbear-coberturas`, sin pushear; en `main`, la beta y prod está la v5.45.0 [Claude Code · 2026-11-21]
 > **FECHA DE CORTE**: [Claude Code · 2026-10-28]  
-> **PLAN ACTIVO**: plan 29 (extensión de Owlbear para coberturas): v5.46.0 hecha, falta la v5.47.0 (la extensión) [Claude Code · 2026-11-20]. Estado de todos los planes en `docs/plans/README.md`.  
+> **PLAN ACTIVO**: plan 29 terminado en código (v5.46.0 y v5.47.0), falta publicarlo [Claude Code · 2026-11-21]. Estado de todos los planes en `docs/plans/README.md`.  
 > **ARQUITECTURA**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **ALINEACIÓN**: Reglas oficiales Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier.
 
