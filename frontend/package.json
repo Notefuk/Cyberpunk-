@@ -15,6 +15,7 @@
     "deploy:prod": "npm run build && firebase deploy --only hosting,firestore --project prod"
   },
   "dependencies": {
+    "@owlbear-rodeo/sdk": "^3.1.0",
     "firebase": "^13.1.0",
     "lucide-react": "^1.57.0",
     "react": "^19.2.8",
