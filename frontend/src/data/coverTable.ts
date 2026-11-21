@@ -1,5 +1,8 @@
+// ⚠️ SINCRONÍA [Claude Code · 2026-11-21]: la extensión de Owlbear (proyecto aparte C:\Users\TeseoHeracles\cpr-owlbear-coberturas) tiene una copia en src/rules/coverTable.ts.
+// Si se cambian valores, nombres o firmas acá, se cambian allá igual. Allá se usan COVER_MATERIALS, COVER_PAGE_REF, getCoverMaterial y los tipos CoverMaterialId y CoverThickness.
+// No renombrar los id de material: están guardados en las coberturas de los mapas de Owlbear.
 // Tabla canon de cobertura. Core p.182 (tabla "Cover Hit Points") y p.183 (ejemplos). [Claude Code · 2026-11-20]
-// La usan la cheat sheet, los presets del HUD de combate y la extensión de Owlbear (plan 29).
+// La usan la cheat sheet, los presets del HUD de combate y, como copia, la extensión de Owlbear (plan 29).
 
 export type CoverMaterialId = 'steel' | 'stone' | 'bulletproof_glass' | 'concrete' | 'wood' | 'plaster_foam_plastic';
 export type CoverThickness = 'thin' | 'thick';

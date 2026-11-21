@@ -1,3 +1,6 @@
+// ⚠️ SINCRONÍA [Claude Code · 2026-11-21]: la extensión de Owlbear (proyecto aparte C:\Users\TeseoHeracles\cpr-owlbear-coberturas) tiene una copia en src/rules/cover.test.ts.
+// Si se cambian valores, nombres o firmas acá, se cambian allá igual. Mismos casos en los dos proyectos.
+// No renombrar los id de material: están guardados en las coberturas de los mapas de Owlbear.
 // Cobertura canon. Core p.182 (tabla y reglas) y p.183 (ejemplos y escudos). [Claude Code · 2026-11-20]
 import { describe, expect, it } from 'vitest';
 import { COVER_MATERIALS, BULLETPROOF_SHIELD_HP } from '../../data/coverTable';

@@ -26,6 +26,21 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.47.1',
+    date: '2026-11-21',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Mesa',
+    title: 'La extensión de Owlbear pasa a ser un proyecto aparte',
+    summary: 'La extensión de coberturas para Owlbear Rodeo sale del Omni-Deck y pasa a tener su propio proyecto y su propio sitio. El Omni-Deck no cambia para quien lo usa: la tabla de cobertura del Core p.182 sigue en la cheat sheet y en el HUD. Si ya la tenías instalada en Owlbear, hay que cambiar la dirección del manifest por la del proyecto nuevo.',
+    highlights: [
+      'El Omni-Deck ya no incluye archivos ni dependencias de Owlbear.',
+      'La extensión tiene una copia de la tabla y las reglas de cobertura; los dos lados avisan que se mantienen iguales.'
+    ],
+    filesTouched: ['frontend/vite.config.ts', 'frontend/firebase.json', 'frontend/package.json', 'frontend/src/data/coverTable.ts', 'frontend/src/engine/cover.ts'],
+    metricsBadge: 'v5.47.1 • Owlbear aparte'
+  },
+  {
     version: 'v5.47.0',
     date: '2026-11-21',
     author: 'Claude Code',
@@ -2150,6 +2165,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.47.1': true,
     'v5.47.0': true,
     'v5.46.0': true,
     'v5.45.0': true,

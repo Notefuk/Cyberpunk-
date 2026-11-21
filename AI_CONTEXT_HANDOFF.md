@@ -1,6 +1,6 @@
 # CPR OMNI-DECK // AI Context Handoff & Technical Briefing
 
-> **SYSTEM VERSION**: `v5.47.0 OPERATIVO`  
+> **SYSTEM VERSION**: `v5.47.1 OPERATIVO`  
 > **LAST UPDATED**: [Claude Code · 2026-11-21]  
 > **STACK**: React 19 + TypeScript 5.8 + Vite + Tailwind CSS v4 + Zustand 5  
 > **RULESET**: Cyberpunk RED Core Rulebook + CEMK 2077 + Interface RED Vol. 1-4 + Danger Gal Dossier  
@@ -80,3 +80,7 @@ frontend/src/
 2. **MAINTAIN FILE SCOPE**: Only modify the files explicitly authorized by the orchestrator.
 3. **COMPILER VERIFICATION**: Always verify with `cmd /c npx tsc -b --noEmit` and `cmd /c npm run build` before reporting completion.
 4. **PRESERVE COMMENTS & DIRECTIVES**: Never delete existing comments, linter directives, or documentation headers.
+
+## Cobertura: archivos con copia en otro proyecto [Claude Code · 2026-11-21]
+
+`frontend/src/data/coverTable.ts`, `frontend/src/engine/cover.ts` y `frontend/src/engine/__tests__/cover.test.ts` tienen una copia en el proyecto de la extensión de Owlbear (`cpr-owlbear-coberturas`, en esta PC `C:\Users\TeseoHeracles\cpr-owlbear-coberturas`, carpeta `src/rules/`). Si se cambian valores, nombres o firmas, se cambian en los dos proyectos y se corre `npm test` en los dos. Los `id` de material no se renombran: están guardados en los mapas de Owlbear.

@@ -1,3 +1,6 @@
+// ⚠️ SINCRONÍA [Claude Code · 2026-11-21]: la extensión de Owlbear (proyecto aparte C:\Users\TeseoHeracles\cpr-owlbear-coberturas) tiene una copia en src/rules/cover.ts.
+// Si se cambian valores, nombres o firmas acá, se cambian allá igual. Allá se usan createCover, coverMaxHp, applyCoverDamage, restoreCover y el tipo CoverState.
+// No renombrar los id de material: están guardados en las coberturas de los mapas de Owlbear.
 // Motor puro de cobertura. Core p.182. [Claude Code · 2026-11-20]
 import { getCoverMaterial, type CoverMaterialId, type CoverThickness } from '../data/coverTable';
 
