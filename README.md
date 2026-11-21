@@ -191,7 +191,7 @@ npm run build
 
 ## 🗺️ Extensión de Owlbear Rodeo: coberturas
 
-[Claude Code · 2026-11-21] La extensión de Owlbear Rodeo para coberturas (plan 29) es un **proyecto aparte**, `cpr-owlbear-coberturas` (en esta PC: `C:\Users\TeseoHeracles\cpr-owlbear-coberturas`), con su propio build, su propio README y su propio sitio. No forma parte del build del Omni-Deck.
+[Claude Code · 2026-11-21] La extensión de Owlbear Rodeo para coberturas (plan 29) es un **proyecto aparte**, `cpr-owlbear-coberturas` (en esta PC: `C:\Users\TeseoHeracles\cpr-owlbear-coberturas`), con su propio build, su propio README y su propio sitio: repo https://github.com/Notefuk/cpr-owlbear-coberturas, manifest `https://notefuk.github.io/cpr-owlbear-coberturas/manifest.json`. No forma parte del build del Omni-Deck.
 
 **Sincronía:** esa extensión tiene una copia de `frontend/src/data/coverTable.ts`, `frontend/src/engine/cover.ts` y `frontend/src/engine/__tests__/cover.test.ts`. Si se cambian valores, nombres o firmas en esos archivos, hay que cambiarlos igual en la copia (`src/rules/` del proyecto de la extensión) y correr `npm test` en los dos. Los `id` de material no se renombran: están guardados en las coberturas de los mapas de Owlbear.
 
