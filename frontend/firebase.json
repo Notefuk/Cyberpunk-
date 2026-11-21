@@ -1,6 +1,12 @@
 {
   "firestore": { "rules": "firestore.rules", "indexes": "firestore.indexes.json" },
-  "hosting": { "public": "dist", "ignore": ["firebase.json", "**/.*", "**/node_modules/**"] },
+  "hosting": {
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "headers": [
+      { "source": "/owlbear/**", "headers": [{ "key": "Access-Control-Allow-Origin", "value": "*" }] }
+    ]
+  },
   "emulators": {
     "singleProjectMode": true,
     "auth": { "port": 9099 },

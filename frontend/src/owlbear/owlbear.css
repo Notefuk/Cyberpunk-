@@ -1,0 +1,47 @@
+/* Estilos de la extensión de Owlbear (plan 29). Sin Tailwind para que el bundle quede chico. [Claude Code · 2026-11-20] */
+:root {
+  --fg: #e5e7eb;
+  --muted: #9ca3af;
+  --line: rgba(255, 255, 255, 0.14);
+  --field: rgba(255, 255, 255, 0.08);
+  --accent: #22d3ee;
+  --warn: #f59e0b;
+  --bad: #f87171;
+  color-scheme: dark;
+}
+:root[data-theme='LIGHT'] {
+  --fg: #111827;
+  --muted: #4b5563;
+  --line: rgba(0, 0, 0, 0.14);
+  --field: rgba(0, 0, 0, 0.06);
+  --accent: #0e7490;
+  --warn: #b45309;
+  --bad: #b91c1c;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: transparent; color: var(--fg); font: 13px/1.35 system-ui, sans-serif; }
+#root { padding: 10px 12px; overflow-x: hidden; }
+select { max-width: 100%; }
+h1 { font-size: 13px; margin: 0 0 6px; }
+p { margin: 4px 0; }
+.muted { color: var(--muted); font-size: 11px; }
+.warn { color: var(--warn); font-size: 11px; }
+.bad { color: var(--bad); font-weight: 700; }
+.row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin: 6px 0; }
+select, input, button {
+  font: inherit; color: var(--fg); background: var(--field); border: 1px solid var(--line);
+  border-radius: 6px; padding: 4px 8px;
+}
+input[type='number'] { width: 64px; }
+button { cursor: pointer; }
+button.primary { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+.bar { height: 6px; border-radius: 3px; background: var(--field); overflow: hidden; margin: 4px 0; }
+.bar > div { height: 100%; background: var(--accent); }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th, td { text-align: left; padding: 3px 4px; border-bottom: 1px solid var(--line); }
+td.n, th.n { text-align: right; }
+ul { list-style: none; padding: 0; margin: 0; }
+li { padding: 5px 0; border-bottom: 1px solid var(--line); }
+li button { padding: 2px 6px; font-size: 11px; }

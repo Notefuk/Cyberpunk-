@@ -326,6 +326,7 @@
 - [x] [Claude Code · 2026-10-20] Tope de Humanidad por terapia y terapias Standard/Extreme (Core pp. 229-230).
 - [x] [Claude Code · 2026-10-20] Granadas por tabla de rango hasta 25 m y municiones de granada (Core pp. 173, 177, 345-347).
 - [x] [Claude Code · 2026-10-20] Curación natural tras estabilizar, Enhanced Antibodies, Cryotank, Speedheal (Core pp. 114, 150, 222-223, 353).
+- [x] [Claude Code · 2026-11-20] Cobertura canon (Core p.182, ejemplos p.183, Bulletproof Shield p.350): tabla única en `data/coverTable.ts`, motor `engine/cover.ts`, cheat sheet y presets del HUD (v5.46.0). Reemplaza la tabla de la Fase 1, que tenía materiales y HP inventados.
 - [~] [Claude Code · 2026-10-20] Damage Deflection y Fumble Recovery se reparten pero no se aplican solos en las tiradas.
 - [ ] [Claude Code · 2026-10-20] Auditar el catálogo de PNJ y Red Chrome Cargo (armas y ciberware inventados).
 

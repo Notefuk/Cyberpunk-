@@ -81,7 +81,9 @@ import {
 import { ItemVisualPlaceholder } from '../../components/ItemVisualPlaceholder';
 import { CommittedInput } from '../../components/CommittedInput';
 import { EnemiesCompendiumPanel } from '../gm/EnemiesCompendiumPanel';
-import { 
+import { COVER_MATERIALS, BULLETPROOF_SHIELD_HP, getCoverMaterial, type CoverMaterialId, type CoverThickness } from '../../data/coverTable';
+import { coverMaxHp } from '../../engine/cover';
+import {
   Heart, 
   Shield, 
   Crosshair, 
@@ -503,7 +505,8 @@ const STORAGE_KEY_DOCK_MODE = 'cpr_combat_telemetry_dock_v2';
 const STORAGE_KEY_TELEMETRY_SIZE = 'cpr_telemetry_size_v1';
 const STORAGE_KEY_ACTIVE_CENTER = 'cpr_combat_active_center_v3';
 const STORAGE_KEY_AUTO_EXPAND = 'cpr_telemetry_auto_expand_v1';
-const STORAGE_KEY_SHIELD_COVER = 'cpr_shield_cover_sdp_v1';
+// v2: los presets de cobertura salen de la tabla del Core p.182 (v1 tenía 15/25/35 inventados). [Claude Code · 2026-11-20]
+const STORAGE_KEY_SHIELD_COVER = 'cpr_shield_cover_sdp_v2';
 const STORAGE_KEY_LEFT_PANELS_SIZE = 'cpr_left_panels_size_v1';
 const STORAGE_KEY_DISABLED_RIGHT_MODULES = 'cpr_combat_disabled_right_modules_v1';
 
@@ -639,7 +642,10 @@ export interface ShieldCoverState {
   name: string;
   currentSdp: number;
   maxSdp: number;
-  type: 'bulletproof_shield' | 'wood_cover' | 'metal_cover' | 'steel_cover' | 'custom';
+  type: 'bulletproof_shield' | 'cover' | 'custom';
+  /** Solo con type 'cover': material y grosor de la tabla del Core p.182. */
+  coverMaterial?: CoverMaterialId;
+  coverThickness?: CoverThickness;
 }
 
 export interface LeftPanelsConfig {
@@ -1196,25 +1202,33 @@ export const CombatHudView: React.FC = () => {
     updateShieldCover({ currentSdp: shieldCover.maxSdp });
   };
 
-  const equipShieldPreset = (preset: 'bulletproof_shield' | 'wood_cover' | 'metal_cover' | 'steel_cover') => {
-    let name = 'Escudo Antibalas';
-    let maxSdp = 10;
-    if (preset === 'wood_cover') {
-      name = 'Cobertura Madera / Puerta';
-      maxSdp = 15;
-    } else if (preset === 'metal_cover') {
-      name = 'Cobertura Vehículo / Metal';
-      maxSdp = 25;
-    } else if (preset === 'steel_cover') {
-      name = 'Cobertura Muro de Acero';
-      maxSdp = 35;
-    }
+  // Bulletproof Shield: 10 HP (Core p.350). [Claude Code · 2026-11-20]
+  const equipShieldPreset = () => {
     updateShieldCover({
       active: true,
-      type: preset,
-      name,
-      maxSdp,
-      currentSdp: maxSdp
+      type: 'bulletproof_shield',
+      name: 'Escudo Antibalas',
+      maxSdp: BULLETPROOF_SHIELD_HP,
+      currentSdp: BULLETPROOF_SHIELD_HP,
+      coverMaterial: undefined,
+      coverThickness: undefined
+    });
+  };
+
+  // Cobertura con los HP de la tabla del Core p.182. [Claude Code · 2026-11-20]
+  const [coverPickMaterial, setCoverPickMaterial] = useState<CoverMaterialId>('concrete');
+  const equipCoverPreset = (thickness: CoverThickness) => {
+    const maxHp = coverMaxHp(coverPickMaterial, thickness);
+    if (maxHp === null) return;
+    const m = getCoverMaterial(coverPickMaterial);
+    updateShieldCover({
+      active: true,
+      type: 'cover',
+      name: `Cobertura ${m.label} ${thickness === 'thick' ? 'gruesa' : 'fina'}`,
+      maxSdp: maxHp,
+      currentSdp: maxHp,
+      coverMaterial: coverPickMaterial,
+      coverThickness: thickness
     });
   };
 
@@ -3716,52 +3730,46 @@ export const CombatHudView: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Presets de Escudos / Coberturas */}
-                  <div className="flex flex-wrap gap-1 pt-1">
+                  {/* Presets de Escudos / Coberturas: Bulletproof Shield (Core p.350) y tabla de cobertura (Core p.182) [Claude Code · 2026-11-20] */}
+                  <div className="flex flex-wrap items-center gap-1 pt-1">
                     <button
                       type="button"
-                      onClick={() => equipShieldPreset('bulletproof_shield')}
+                      onClick={equipShieldPreset}
                       className={`px-2 py-1 rounded-xs font-mono-code text-[9px] font-bold transition-all border cursor-pointer ${
                         shieldCover.type === 'bulletproof_shield'
                           ? 'bg-cyan-500 text-black border-cyan-400 font-bold'
                           : 'bg-[#1b2030] text-slate-300 border-[#2b354e] hover:bg-[#252d44]'
                       }`}
                     >
-                      🛡️ Escudo Antibalas (10)
+                      🛡️ Escudo Antibalas ({BULLETPROOF_SHIELD_HP})
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => equipShieldPreset('wood_cover')}
-                      className={`px-2 py-1 rounded-xs font-mono-code text-[9px] font-bold transition-all border cursor-pointer ${
-                        shieldCover.type === 'wood_cover'
-                          ? 'bg-cyan-500 text-black border-cyan-400 font-bold'
-                          : 'bg-[#1b2030] text-slate-300 border-[#2b354e] hover:bg-[#252d44]'
-                      }`}
+                    <select
+                      value={coverPickMaterial}
+                      onChange={(e) => setCoverPickMaterial(e.target.value as CoverMaterialId)}
+                      aria-label="Material de la cobertura"
+                      title="Material de la cobertura (Core p.182)"
+                      className="px-1 py-1 rounded-xs font-mono-code text-[9px] bg-[#1b2030] text-slate-300 border border-[#2b354e] cursor-pointer"
                     >
-                      🚪 Madera (15)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => equipShieldPreset('metal_cover')}
-                      className={`px-2 py-1 rounded-xs font-mono-code text-[9px] font-bold transition-all border cursor-pointer ${
-                        shieldCover.type === 'metal_cover'
-                          ? 'bg-cyan-500 text-black border-cyan-400 font-bold'
-                          : 'bg-[#1b2030] text-slate-300 border-[#2b354e] hover:bg-[#252d44]'
-                      }`}
-                    >
-                      🚗 Metal (25)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => equipShieldPreset('steel_cover')}
-                      className={`px-2 py-1 rounded-xs font-mono-code text-[9px] font-bold transition-all border cursor-pointer ${
-                        shieldCover.type === 'steel_cover'
-                          ? 'bg-cyan-500 text-black border-cyan-400 font-bold'
-                          : 'bg-[#1b2030] text-slate-300 border-[#2b354e] hover:bg-[#252d44]'
-                      }`}
-                    >
-                      🧱 Acero (35)
-                    </button>
+                      {COVER_MATERIALS.map((m) => (
+                        <option key={m.id} value={m.id}>{m.label}</option>
+                      ))}
+                    </select>
+                    {(['thin', 'thick'] as const).map((t) => {
+                      const hp = coverMaxHp(coverPickMaterial, t);
+                      const selected = shieldCover.type === 'cover' && shieldCover.coverMaterial === coverPickMaterial && shieldCover.coverThickness === t;
+                      return (
+                        <button
+                          key={t}
+                          type="button"
+                          disabled={hp === null}
+                          onClick={() => equipCoverPreset(t)}
+                          title={hp === null ? 'No es cobertura: no para balas (Core p.182)' : `Cobertura ${t === 'thick' ? 'gruesa' : 'fina'}: ${hp} HP (Core p.182)`}
+                          className={`px-2 py-1 rounded-xs font-mono-code text-[9px] font-bold transition-all border cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${selected ? 'bg-cyan-500 text-black border-cyan-400 font-bold' : 'bg-[#1b2030] text-slate-300 border-[#2b354e] hover:bg-[#252d44]'}`}
+                        >
+                          {t === 'thick' ? 'Gruesa' : 'Fina'} ({hp ?? 'no cubre'})
+                        </button>
+                      );
+                    })}
                   </div>
 
                   {/* Visual Plate Badges Grid for Shield SDP */}
@@ -3777,7 +3785,7 @@ export const CombatHudView: React.FC = () => {
                       </button>
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {Array.from({ length: Math.min(35, shieldCover.maxSdp) }).map((_, i) => {
+                      {Array.from({ length: Math.min(50, shieldCover.maxSdp) }).map((_, i) => {
                         const isIntact = i < shieldCover.currentSdp;
                         return (
                           <button
@@ -4112,7 +4120,7 @@ export const CombatHudView: React.FC = () => {
                   {showArmorRulesGuide && (
                     <div className="p-3 text-[11px] text-slate-300 font-mono-code leading-relaxed space-y-2 border-t border-[#202636] bg-[#0c0e16]">
                       <div className="text-cyan-400 font-bold text-xs">
-                        📖 REGLAS OFICIALES DE BLINDAJE Y COBERTURAS (Manual Core pp. 183-187):
+                        📖 REGLAS OFICIALES DE BLINDAJE Y COBERTURAS (Manual Core pp. 182-187):
                       </div>
                       <p>
                         <strong className="text-white">1. ¿Cuándo baja el SP de la Armadura (Ablación)?</strong><br />
