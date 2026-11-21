@@ -7,11 +7,11 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-21] plan 29 terminado en código (v5.46.0 y v5.47.0) en `claude/plan29-owlbear-coberturas`, sin pushear
+**Última actualización**: [Claude Code · 2026-11-21] plan 29 (v5.46.0 y v5.47.0) mergeado en `main` (PR #101, ef9cf3a); falta publicarlo en la beta y en prod
 
-**Versión de la app**: v5.45.0 en `main` @ 5cfa798, en la beta (gh-pages 5da88db) y en Firebase prod (hosting `index-C1snalmV.js`; reglas sin cambios) [Claude Code · 2026-11-20].
+**Versión de la app**: v5.47.0 en `main` @ ef9cf3a (PR #101). En la beta (gh-pages 5da88db) y en Firebase prod (hosting `index-C1snalmV.js`) sigue la v5.45.0 [Claude Code · 2026-11-21].
 
-**Plan activo**: plan 29, extensión de Owlbear para coberturas (`docs/plans/plan29-owlbear-coberturas.md`), aprobado el 2026-11-20; v5.46.0 y v5.47.0 terminadas en `claude/plan29-owlbear-coberturas`, sin pushear; falta publicar [Claude Code · 2026-11-21], worktree `C:\Users\TeseoHeracles\cpr-wt-plan29` [Claude Code · 2026-11-20]. Después sigue el plan 34 (equipo, vehículos y faltantes del Night Market Index).
+**Plan activo**: plan 29, extensión de Owlbear para coberturas (`docs/plans/plan29-owlbear-coberturas.md`): v5.46.0 y v5.47.0 en `main` (PR #101), falta publicarlas [Claude Code · 2026-11-21]. Después sigue el plan 34 (equipo, vehículos y faltantes del Night Market Index).
 
 ## Traspaso
 - Cierra: [Claude Code · 2026-11-13]
@@ -29,7 +29,7 @@
     - El manifest lo genera el plugin `owlbearManifest` de `vite.config.ts`: Owlbear no acepta rutas relativas ("Invalid URL"); van con `/owlbear/` (dev y prod) o `/Cyberpunk-/owlbear/` (beta).
     - Chrome pide permiso de red local para que owlbear.rodeo lea `localhost` (solo en la prueba local).
     - El daño de un jugador va por `OBR.broadcast` y lo aplica el cliente del GM (con id para no repetir).
-  - Siguiente: con OK de Giuliano, push y PR a `main`; después beta y prod (OK aparte cada uno). Después, en su perfil de Owlbear, cambiar la URL de `localhost` por la publicada.
+  - Siguiente [Claude Code · 2026-11-21]: mergeado en `main` (PR #101, ef9cf3a); la rama `claude/plan29-owlbear-coberturas` se puede borrar. Falta, con OK aparte cada uno: beta y prod (prod suma el header CORS de `/owlbear/**`; reglas sin cambios). Después, en el perfil de Owlbear de Giuliano, cambiar la URL de `localhost` por `<prod>/owlbear/manifest.json`. Este checkpoint vive en `claude/docs-pr101`.
 - [Claude Code · 2026-11-20] **v5.45.0 DLC Everyday Items**: publicada en `main` (PR #99), la beta y prod. No queda nada pendiente. Este checkpoint vive en `claude/checkpoint-post-99`, sin pushear.
 - [Claude Code · 2026-11-14] **Plan 33** (`docs/plans/plan33-going-quiet-tech-civiles.md`). PDFs en `Documents/CP RED TEST ANTIGRAVITY/DLC-Supplements/` (página impresa = índice).
   - Hecho: plan guardado. v5.41.0: ítems `gq-*`, `engine/flashOfLuck.ts` + `FlashOfLuckPanel` (campo `flashOfLuck` en la ficha, `flashOfLuckEnabled` en useCombatStore, `flashOfLuck` en la campaña y en `firestore.rules`), `engine/netStealth.ts` + `NetStealthPanel`. v5.42.0: `data/inventedTechUpgrades.ts` + `features/roles/InventedTechUpgradesPanel.tsx` (en NET & ROLES → rol Tech), campo `inventedUpgrades` en la ficha, etiqueta 🧪 en el Street Lab. v5.43.0: `data/cemkCyberwareEnhancements.ts` + `CyberwareEnhancementsPanel` (Ripperdoc) + `CritChoicePicker` (HUD), campo `cyberwareEnhancements` en la ficha, `ignoreSpBelow7`/`extraAblation` en `calculateIncomingImpact`, arma `monowire-2077`. v5.44.0: `data/enemies-src/everyday-people.json` + `BOOK_SPECS` (20 civiles, `abbreviated`), `enemyStatLabel` ("—"), botón "Civiles" en el bestiario, nivel `civilian` en `npcCreationGuidelines.ts`.
