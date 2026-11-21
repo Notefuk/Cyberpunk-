@@ -21,7 +21,8 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: transparent; color: var(--fg); font: 13px/1.35 system-ui, sans-serif; }
-#root { padding: 10px 12px; }
+#root { padding: 10px 12px; overflow-x: hidden; }
+select { max-width: 100%; }
 h1 { font-size: 13px; margin: 0 0 6px; }
 p { margin: 4px 0; }
 .muted { color: var(--muted); font-size: 11px; }
