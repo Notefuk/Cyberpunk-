@@ -7,9 +7,11 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-25] plan 35 (Corgo's 77, homebrew con sello) en curso en la rama `claude/plan35-corgo77`, worktree `C:\Users\TeseoHeracles\cpr-wt-plan35`. Antes: [Claude Code · 2026-11-21] v5.47.1 en `main` (PR #102), en la beta (gh-pages 3db2ed1) y en prod (Firebase Hosting); plan 29 cerrado
+**Última actualización**: [Claude Code · 2026-11-25] v5.48.0 (plan 35, Corgo's 77 homebrew con sello) en `main` (PR #104, squash fde60b9), en la beta (gh-pages ad676e3) y en prod (Firebase Hosting, sin reglas de Firestore). Plan 35 cerrado.
 
-**Plan activo (2026-11-25)**: plan 35, `docs/plans/plan35-drones-corgo77.md`, v5.48.0.
+**Plan activo**: ninguno. Lo próximo es el plan 34 (Night Market Index), reservado y sin empezar.
+
+**Plan 35, cerrado** [Claude Code · 2026-11-25] (`docs/plans/plan35-drones-corgo77.md`, v5.48.0):
 - Hecho:
   - Generador con fichas de máquina (`machine`, `combatNumber`, `homebrew`), tipos, `corgo77.json` (33 fichas) y `corgo77.ts` regenerado.
   - Sello en el bestiario, el Fixer y Data Packs; `enemyInitiativeBase` (las máquinas tiran iniciativa con su CN).
@@ -21,9 +23,7 @@
   - Hay cargadores con más balas que su capacidad, y se dejaron como los imprime el PDF.
   - Los tiers los elegimos nosotros.
   - Todo está anotado en `notes` y `doubts` del JSON.
-- Falta: push, PR, beta y prod (cada uno con su OK).
-- Push, beta y prod: cada uno con su OK.
-- El plan 34 (Night Market Index) sigue reservado y sin empezar.
+- Publicado: PR #104 mergeado (fde60b9), beta gh-pages ad676e3 (build:beta de fde60b9), prod `deploy --only hosting --project prod`. Worktree `C:\Users\TeseoHeracles\cpr-wt-plan35` (se puede borrar).
 
 **Versión de la app**: v5.47.0 en `main` @ ef9cf3a (PR #101) y en la beta (gh-pages ab4b155, bundle `main-a28MoSCF.js`; el bundle principal ahora se llama `main-*` porque hay varias entradas). En Firebase prod (hosting `index-C1snalmV.js`) sigue la v5.45.0 [Claude Code · 2026-11-21].
 
