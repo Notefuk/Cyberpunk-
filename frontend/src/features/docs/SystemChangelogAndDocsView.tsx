@@ -26,6 +26,23 @@ import {
 
 export const LOCAL_CHANGELOG_EXTENSIONS: VersionChangelogEntry[] = [
   {
+    version: 'v5.48.0',
+    date: '2026-11-25',
+    author: 'Claude Code',
+    phase: 'Codex',
+    category: 'Bestiario',
+    title: "Drones y robots de Corgo's 77 (homebrew, con sello)",
+    summary: "El bestiario del GM suma 33 máquinas de Corgo's 77 Collection V3, un homebrew de la comunidad (no oficial): drones aéreos, robots, mechs, torretas y drones personales, con el Militech Chimera como jefe. Se ven siempre con el sello violeta 🧪 HOMEBREW y borde punteado, y se pueden filtrar por fuente. No tienen STATs: muestran MOVE, HP, SP y Combat Number, y en la mesa tiran todo con su Combat Number. Las armas homebrew del PDF no entran al catálogo; solo están dentro de cada ficha.",
+    highlights: [
+      'Fuente nueva "Corgo\'s 77 (homebrew)" en el filtro del bestiario y nota de licencia en cada ficha.',
+      'Ficha de máquina: MOVE, HP, SP, Combat Number, cómo contrarrestarla, alcance y costo.',
+      'Las 9 Critical Injuries que los drones ignoran van como regla especial escrita.',
+      'Data Packs cuenta los homebrew aparte de los enemigos canon.'
+    ],
+    filesTouched: ['data/enemies-src/corgo77.json', 'scripts/gen_enemies.py', 'frontend/src/data/enemies/corgo77.ts', 'frontend/src/data/enemiesCatalog.ts', 'frontend/src/features/gm/EnemiesCompendiumPanel.tsx'],
+    metricsBadge: 'v5.48.0 • Corgo homebrew'
+  },
+  {
     version: 'v5.47.1',
     date: '2026-11-21',
     author: 'Claude Code',
@@ -2165,6 +2182,7 @@ export function SystemChangelogAndDocsView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>('Todas');
   const [expandedVersions, setExpandedVersions] = useState<Record<string, boolean>>({
+    'v5.48.0': true,
     'v5.47.1': true,
     'v5.47.0': true,
     'v5.46.0': true,

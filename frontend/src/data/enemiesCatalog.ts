@@ -4,6 +4,7 @@ import { HARDENED_ENEMIES } from './enemies/hardened';
 import { INTERFACE_RED_ENEMIES } from './enemies/interface-red';
 import { DANGER_GAL_ENEMIES } from './enemies/danger-gal';
 import { EVERYDAY_PEOPLE_ENEMIES } from './enemies/everyday-people';
+import { CORGO77_ENEMIES } from './enemies/corgo77';
 import { LEGACY_INVENTED_ENEMIES } from './enemies/legacy-invented-danger-gal';
 import { portEnemyToCemk } from '../engine/cemkPort';
 import type {
@@ -32,7 +33,20 @@ export type SourceBookId =
   | 'cemk_2077'
   | 'interface_red'
   | 'danger_gal'
-  | 'dlc';
+  | 'dlc'
+  // v5.48.0 (plan 35) [Claude Code · 2026-11-25]: HOMEBREW, no canon. Excepción aprobada por Giuliano, siempre con sello propio.
+  | 'homebrew_corgo77';
+
+/** Datos de una ficha de máquina (drone, robot, torreta): no tiene STATs, usa Combat Number. Plan 35. [Claude Code · 2026-11-25] */
+export interface EnemyMachineInfo {
+  type: string;
+  move?: number;
+  cost?: string;
+  counter?: string;
+  range?: string;
+  defaultTrigger?: string;
+  size?: string;
+}
 
 export interface EnemyCombatBase {
   label: string;
@@ -96,15 +110,32 @@ export interface EnemySheet {
    * INIT (= REF) y MOVE. Los demás STATs y el Death Save valen 0 adentro y se muestran como "—".
    */
   abbreviated?: boolean;
+  /** v5.48.0 (plan 35) [Claude Code · 2026-11-25]: contenido homebrew (no oficial). La UI lo marca siempre con sello propio. */
+  homebrew?: true;
+  /** v5.48.0 (plan 35): ficha de máquina. Sus STATs valen 0 adentro; todas sus tiradas usan `combatNumber`. */
+  machine?: EnemyMachineInfo;
+  combatNumber?: number;
 }
 
 /** STATs que una ficha abreviada sí imprime (Everyday People p.2-3: INIT y MOVE). */
 export const ABBREVIATED_KNOWN_STATS: readonly StatKey[] = ['REF', 'MOVE'];
 
 /** Valor de un STAT para mostrar: "—" si la ficha es abreviada y el libro no lo da. */
-export function enemyStatLabel(enemy: Pick<EnemySheet, 'abbreviated' | 'stats'>, stat: StatKey): string {
+export function enemyStatLabel(enemy: Pick<EnemySheet, 'abbreviated' | 'stats' | 'machine'>, stat: StatKey): string {
   if (enemy.abbreviated && !ABBREVIATED_KNOWN_STATS.includes(stat)) return '—';
+  if (enemy.machine && stat !== 'MOVE') return '—'; // plan 35: las máquinas no tienen STATs
+  if (enemy.machine && enemy.machine.move === undefined) return '—';
   return String(enemy.stats[stat]);
+}
+
+/** Base de iniciativa: REF; una máquina (plan 35) usa su Combat Number, como en todas sus tiradas. [Claude Code · 2026-11-25] */
+export function enemyInitiativeBase(
+  enemy: { stats: Partial<Record<StatKey, number>>; combatNumber?: number; catalogId?: string },
+  fallback = 6
+): number {
+  // Un enemigo del encuentro no guarda el Combat Number (no se agregan campos a la nube): se lee de su ficha.
+  const cn = enemy.combatNumber ?? (enemy.catalogId ? ENEMIES_CATALOG.find((e) => e.id === enemy.catalogId)?.combatNumber : undefined);
+  return cn ?? enemy.stats.REF ?? fallback;
 }
 
 // [Claude Code · 2026-11-13] v5.35.0 (plan 32): las 15 facciones de Danger Gal Dossier son las canon de
@@ -124,7 +155,9 @@ export const ENEMIES_CATALOG: EnemySheet[] = [
   // Danger Gal Dossier (plan 32, v5.36.0 a v5.38.0): fichas canon generadas. [Claude Code · 2026-11-13]
   ...DANGER_GAL_ENEMIES,
   // Everyday People (plan 33, v5.44.0): 20 civiles con ficha abreviada. [Claude Code · 2026-11-14]
-  ...EVERYDAY_PEOPLE_ENEMIES
+  ...EVERYDAY_PEOPLE_ENEMIES,
+  // Corgo's 77 Collection V3 (plan 35, v5.48.0): drones y robots HOMEBREW con sello propio. [Claude Code · 2026-11-25]
+  ...CORGO77_ENEMIES
 ];
 
 /** Ficha por id: primero el bestiario; si no está, las fichas inventadas viejas (solo para actores guardados que salieron de ellas). [Claude Code · 2026-11-13] */
@@ -172,6 +205,10 @@ export function convertEnemyToCharacterSheet(enemy: EnemySheet): CharacterSheet 
     } else if (l.includes('esquiva') || l.includes('evasion')) {
       defaultCombatSkills.evasion = Math.max(0, base.totalBase - enemy.stats.DEX);
     }
+  }
+  // v5.48.0 (plan 35): una máquina no tiene STATs (valen 0) y tira todo con su Combat Number. [Claude Code · 2026-11-25]
+  if (enemy.combatNumber !== undefined) {
+    for (const k of Object.keys(defaultCombatSkills) as CombatSkillKey[]) defaultCombatSkills[k] = enemy.combatNumber;
   }
 
   const equippedWeapons: EquippedWeapon[] = enemy.weapons.map((w, idx) => ({

@@ -82,6 +82,9 @@ BOOK_SPECS = {
     'danger-gal': dict(const='DANGER_GAL_ENEMIES', sourceBook='danger_gal', era='2045', fmt='red'),
     # [Claude Code · 2026-11-14] v5.44.0 (plan 33): los 20 civiles de Everyday People, con ficha abreviada (sin STATs completos).
     'everyday-people': dict(const='EVERYDAY_PEOPLE_ENEMIES', sourceBook='dlc', era='2045', fmt='red'),
+    # [Claude Code · 2026-11-25] v5.48.0 (plan 35): drones y robots de Corgo's 77 Collection V3. HOMEBREW, no canon:
+    # excepcion aprobada por Giuliano, con fuente y sello propios. Fichas de maquina (Combat Number, sin STATs).
+    'corgo77': dict(const='CORGO77_ENEMIES', sourceBook='homebrew_corgo77', era='2045', fmt='red', homebrew=True),
 }
 
 
@@ -101,6 +104,8 @@ def book_title(book_key, npc):
         return 'Danger Gal Dossier'
     if book_key == 'everyday-people':
         return 'Everyday People'
+    if book_key == 'corgo77':
+        return "Corgo's 77 Collection V3 (homebrew)"
     sub = npc.get('subtitle') or ''
     for t in ('Hardened Mooks', 'Hardened Lieutenants', 'Hardened Mini-Bosses'):
         if sub.startswith(t):
@@ -193,25 +198,40 @@ def build_npc(book_key, npc):
     if sw is None:
         sw = int(math.ceil(hp / 2))
         rules.append('Seriously Wounded no impreso: HP/2')
+    machine = npc.get('machine')
+    cn = npc.get('combatNumber')
+    npc_stats = npc.get('stats') or {}
     stats = {}
     emp_missing = False
     for k in STAT_ORDER:
-        v = npc['stats'].get(k)
+        v = npc_stats.get(k)
         if v is None:
             v = 0
             if k == 'EMP':
                 emp_missing = True
         stats[k] = v
-    if emp_missing and not npc.get('abbreviated'):
+    if machine:
+        # Maquina (plan 35): sin STATs; MOVE impreso aparte. El resto queda en 0 y no se usa.
+        if machine.get('move') is not None:
+            stats['MOVE'] = machine['move']
+        rules.append('Máquina sin STATs: usa su Combat Number para todas sus tiradas'
+                     if cn is not None else 'Máquina sin STATs ni Combat Number: la maneja quien la controla')
+    elif emp_missing and not npc.get('abbreviated'):
         rules.append('EMP no impreso ("-")')
     armor = npc.get('armor') or {}
     skill_bases = npc.get('skillBases') or {}
 
     weapons = [build_weapon(w, skill_bases) for w in npc['weapons']]
+    if machine and cn is not None:
+        for w in weapons:
+            if not w['skillBase']:
+                w['skillBase'] = cn
     combat = []
     for w in weapons:
         cb = {'label': w['name'], 'totalBase': w['skillBase'], 'damage': w['damage'], 'rof': w['rof']}
         combat.append(cb)
+    if machine and cn is not None:
+        combat.append({'label': 'Combat Number', 'totalBase': cn})
     for key in ('Evasion', 'Perception', 'Interface'):
         if key in skill_bases:
             combat.append({'label': key, 'totalBase': skill_bases[key]})
@@ -230,7 +250,7 @@ def build_npc(book_key, npc):
         'role': npc.get('role') or '',
         'hp': hp,
         'seriouslyWounded': sw,
-        'deathSave': npc['deathSave'],
+        'deathSave': npc.get('deathSave') or 0,
         'headSp': armor.get('headSp') or 0,
         'bodySp': armor.get('bodySp') or 0,
     }
@@ -247,12 +267,22 @@ def build_npc(book_key, npc):
     e['loreSummary'] = npc.get('lore') or npc.get('subtitle') or ''
     if npc.get('abbreviated'):
         e['abbreviated'] = True
+    if spec.get('homebrew'):
+        e['homebrew'] = True
+    if machine:
+        m = {'type': machine.get('type') or npc.get('subtitle') or ''}
+        for k in ('move', 'cost', 'counter', 'range', 'defaultTrigger', 'size'):
+            if machine.get(k) is not None:
+                m[k] = machine[k]
+        e['machine'] = m
+        if cn is not None:
+            e['combatNumber'] = cn
     if npc.get('level') is not None:
         e['level'] = npc['level']
     if npc.get('rep') is not None:
         e['rep'] = npc['rep']
-    if npc['stats'].get('LUCK') is not None:
-        e['luck'] = npc['stats']['LUCK']
+    if npc_stats.get('LUCK') is not None:
+        e['luck'] = npc_stats['LUCK']
     if ra:
         e['roleAbility'] = {'name': ra['name'], 'rank': ra['rank']}
     if skill_bases:

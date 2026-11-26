@@ -249,7 +249,7 @@ export interface InjuryModifier {
 }
 
 export type AimedShotTarget = 'none' | 'head' | 'leg' | 'held_item';
-export type SourceBookId = 'core' | 'black_chrome' | 'cemk_2077' | 'interface_red' | 'danger_gal' | 'dlc';
+export type SourceBookId = 'core' | 'black_chrome' | 'cemk_2077' | 'interface_red' | 'danger_gal' | 'dlc' | 'homebrew_corgo77'; // homebrew_corgo77: plan 35 [Claude Code · 2026-11-25]
 
 export interface PreGeneratedEnemyTemplate {
   id: string;

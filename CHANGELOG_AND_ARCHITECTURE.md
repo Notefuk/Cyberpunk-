@@ -117,6 +117,23 @@ cpr-omni-deck/
 
 ## 📜 Master Version Changelog
 
+### [v5.48.0] - 2026-11-25 (Plan 35: drones y robots de Corgo's 77, homebrew con sello) [Claude Code · 2026-11-25]
+* **Category**: bestiario. Es la **primera excepción a "todo canon"** y la aprobó Giuliano. Es contenido homebrew de la comunidad, no oficial: Corgo's 77 Collection V3, de Corgopolis, publicado bajo la Homebrew Content Policy de RTG.
+* **What Changed**:
+  * 33 máquinas en el bestiario (ids `c77-`, fuente `homebrew_corgo77`): Exec Drone Team Members (p.6), Humanoid Ground Drone (p.153) y el catálogo de pp.154-163, con el Militech Chimera como jefe. Las páginas son las del PDF de Corgo.
+  * **Ficha de máquina**: campos `machine` (tipo, MOVE, costo, cómo contrarrestarla, alcance, disparador, tamaño) y `combatNumber` en `EnemySheet`. No tienen STATs: valen 0 adentro y se muestran "—" (salvo MOVE). Las armas, todas las skills del actor convertido y la iniciativa (`enemyInitiativeBase`, también en MODO GM) usan el Combat Number.
+  * **Sello**: campo `homebrew: true`, insignia violeta punteada "🧪 HOMEBREW · CORGO'S 77", borde punteado en la tarjeta, nota de licencia en la ficha, opción propia en el filtro de fuente, sufijo "· homebrew" en el selector del Fixer y conteo aparte en Data Packs.
+  * Interpretaciones:
+    * Los tiers son nuestros (el PDF no los trae).
+    * Las 9 Critical Injuries que los drones ignoran (p.153) son una regla especial escrita; no se aplican solas.
+    * El daño de las armas que la ficha solo nombra se resolvió con el catálogo del mismo PDF o con el tipo del Core, y cada arma dice de dónde sale.
+  * Fuera de alcance: armas, accesorios, cyberware, vehículos e Iconics homebrew del PDF; el ajuste de rol Exec Drone Team (p.5); el ICE "Phaeton" del Chimera como NET jugable.
+* **Files Modified**:
+  * `data/enemies-src/corgo77.json` (nuevo), `scripts/gen_enemies.py`, `frontend/src/data/enemies/corgo77.ts` (generado), `frontend/src/data/enemiesCatalog.ts`, `frontend/src/types/cyberpunk.ts`.
+  * `frontend/src/features/gm/EnemiesCompendiumPanel.tsx`, `frontend/src/features/roles/FixerPanel.tsx`, `frontend/src/features/datapacks/DataPackManagerView.tsx`.
+  * `frontend/src/engine/__tests__/corgo77.test.ts` (nuevo), `frontend/src/features/docs/SystemChangelogAndDocsView.tsx`.
+  * `docs/plans/plan35-drones-corgo77.md`, `docs/plans/README.md`, `CHECKPOINT.md`.
+
 ### [v5.47.1] - 2026-11-21 (La extensión de Owlbear pasa a ser un proyecto aparte) [Claude Code · 2026-11-21]
 * **Category**: organización del código. Desvío del plan 29, pedido por Giuliano: la extensión no toca nada del Omni-Deck y no tiene que viajar en su build ni en su hosting.
 * **What Changed**:

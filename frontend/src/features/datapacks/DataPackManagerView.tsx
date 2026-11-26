@@ -460,7 +460,7 @@ export const DataPackManagerView: React.FC<DataPackManagerViewProps> = ({ onNavi
               </span>
             </div>
             <p className="text-xs text-[#94a3b8] mt-1 font-mono-code leading-relaxed">
-              Biblioteca oficial de Cyberpunk RED y CEMK 2077: <strong>{totalCatalogItems} ítems canónicos</strong>, <strong>{ENEMIES_CATALOG.length} perfiles de enemigos</strong> y <strong>{EXPANSION_RULE_SYSTEMS.length} sistemas de reglas avanzadas</strong> sincronizados con el motor de combate.
+              Biblioteca oficial de Cyberpunk RED y CEMK 2077: <strong>{totalCatalogItems} ítems canónicos</strong>, <strong>{ENEMIES_CATALOG.filter((e) => !e.homebrew).length} perfiles de enemigos</strong> (más {ENEMIES_CATALOG.filter((e) => e.homebrew).length} homebrew marcados aparte) y <strong>{EXPANSION_RULE_SYSTEMS.length} sistemas de reglas avanzadas</strong> sincronizados con el motor de combate.
             </p>
           </div>
 

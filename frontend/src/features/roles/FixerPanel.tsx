@@ -160,7 +160,7 @@ export const FixerPanel: React.FC = () => {
         {source === 'enemy' && gmSees && (
           <div className="flex flex-col gap-1 min-w-0">
             <select value={enemyId} onChange={(e) => setEnemyId(e.target.value)} className={selCls}>
-              {ENEMIES_CATALOG.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
+              {ENEMIES_CATALOG.map((e) => <option key={e.id} value={e.id}>{e.homebrew ? `${e.name} · homebrew` : e.name}</option>)}
             </select>
             {enemy && typeof enemyTradingBase !== 'number' && (
               <span className="text-[11px] text-amber-300">Este enemigo no tiene Trading en su ficha: se usa 0.</span>
