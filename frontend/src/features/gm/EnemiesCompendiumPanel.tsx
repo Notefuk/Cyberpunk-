@@ -12,6 +12,7 @@ import {
   DANGER_GAL_15_FACTIONS,
   convertEnemyToCharacterSheet,
   enemyStatLabel,
+  enemyInitiativeBase,
   type EnemySheet, 
   type ThreatTier, 
   type SourceBookId,
@@ -116,7 +117,9 @@ const SOURCEBOOK_LABELS: Record<SourceBookId, { label: string; badgeClass: strin
   danger_gal: { label: 'DANGER GAL', badgeClass: 'bg-pink-950/40 text-pink-300 border-pink-800/50' },
   black_chrome: { label: 'BLACK CHROME', badgeClass: 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50' },
   interface_red: { label: 'INTERFACE RED', badgeClass: 'bg-amber-950/40 text-amber-300 border-amber-800/50' },
-  dlc: { label: 'DLC / HARDENED', badgeClass: 'bg-indigo-950/40 text-indigo-300 border-indigo-800/50' }
+  dlc: { label: 'DLC / HARDENED', badgeClass: 'bg-indigo-950/40 text-indigo-300 border-indigo-800/50' },
+  // v5.48.0 (plan 35) [Claude Code · 2026-11-25]: sello propio, borde punteado violeta que no usa ninguna fuente canon.
+  homebrew_corgo77: { label: "🧪 HOMEBREW · CORGO'S 77", badgeClass: 'bg-violet-950/70 text-violet-200 border-violet-400 border-dashed' }
 };
 
 function rollD10(): number {
@@ -151,6 +154,12 @@ const EnemyPortView: React.FC<{ enemy: EnemySheet; mode: EnemySheetMode }> = ({ 
   const source = enemy.sourcePage ? (
     <p className="text-[10px] text-slate-500">
       Fuente: {enemy.sourceBookTitle} p.{enemy.sourcePage}
+      {enemy.homebrew && (
+        <span className="block text-violet-300" data-testid="enemy-homebrew-note">
+          Homebrew no oficial (Corgopolis), publicado bajo la Homebrew Content Policy de R. Talsorian Games. No está aprobado
+          por RTG.
+        </span>
+      )}
     </p>
   ) : null;
 
@@ -159,7 +168,7 @@ const EnemyPortView: React.FC<{ enemy: EnemySheet; mode: EnemySheetMode }> = ({ 
       <div className="p-3 bg-[#131622] rounded-xs border border-[#232b3f] space-y-2 text-[11px]">
         <span className="text-[10px] font-bold text-slate-300 uppercase block">FICHA RED ORIGINAL (LIBRO):</span>
         <p className="text-slate-300">
-          HP {enemy.hp} • Herida grave {enemy.seriouslyWounded} • Death Save {enemy.abbreviated ? '—' : enemy.deathSave} • SP C{enemy.headSp} / T{enemy.bodySp}
+          HP {enemy.hp} • Herida grave {enemy.seriouslyWounded} • Death Save {enemy.abbreviated || enemy.machine ? '—' : enemy.deathSave} • SP C{enemy.headSp} / T{enemy.bodySp}
           {enemy.stats.LUCK !== undefined && <> • LUCK {enemy.stats.LUCK}</>}
           {enemy.luck !== undefined && enemy.stats.LUCK === undefined && <> • LUCK {enemy.luck}</>}
         </p>
@@ -387,7 +396,7 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
     showFeedback(`⚔️ Añadido(s) ${count}x "${enemy.name}" al Encuentro Activo.`);
 
     if (autoRollInitiative) {
-      for (const id of ids) useEncounterStore.getState().setInitiative(id, rollD10() + (enemy.stats.REF ?? 6));
+      for (const id of ids) useEncounterStore.getState().setInitiative(id, rollD10() + enemyInitiativeBase(enemy));
     }
   };
 
@@ -408,7 +417,7 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
     const target = activeEnemies.find((e) => e.instanceId === instanceId);
     if (!target) return;
     const d10 = rollD10();
-    const ref = target.stats.REF ?? 6;
+    const ref = enemyInitiativeBase(target);
     const initTotal = d10 + ref;
 
     useEncounterStore.getState().setInitiative(instanceId, initTotal);
@@ -420,14 +429,14 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
       d10,
       baseModifier: ref,
       total: initTotal,
-      notes: `REF ${ref}`,
+      notes: ref !== (target.stats.REF ?? 6) ? `Combat Number ${ref}` : `REF ${ref}`,
       timestamp: new Date().toLocaleTimeString()
     });
   };
 
   const rollAllInitiatives = () => {
     activeEnemies.forEach((e) => {
-      useEncounterStore.getState().setInitiative(e.instanceId, rollD10() + (e.stats.REF ?? 6));
+      useEncounterStore.getState().setInitiative(e.instanceId, rollD10() + enemyInitiativeBase(e));
     });
     showFeedback('🎲 Iniciativa tirada para todos los enemigos activos.');
   };
@@ -1018,6 +1027,7 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
               <option value="black_chrome">Black Chrome</option>
               <option value="interface_red">Interface RED</option>
               <option value="dlc">DLC / Hardened Rules</option>
+              <option value="homebrew_corgo77">🧪 Homebrew: Corgo's 77 (no oficial)</option>
             </select>
           </div>
 
@@ -1182,7 +1192,10 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
             return (
               <div
                 key={enemy.id}
-                className={`chamfer-card bg-[#12141f] border ${tierConf.borderClass} transition-all duration-150`}
+                className={`chamfer-card bg-[#12141f] border ${tierConf.borderClass} transition-all duration-150 ${
+                  enemy.homebrew ? 'outline outline-1 outline-dashed outline-violet-500/70' : ''
+                }`}
+                data-homebrew={enemy.homebrew ? 'true' : undefined}
               >
                 {/* Cabecera de Tarjeta Compacta */}
                 <div
@@ -1235,8 +1248,13 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
                         <span className="bg-[#141b29] border border-[#23314d] text-[#38bdf8] px-1.5 py-0.2 rounded-xs font-bold">
                           SP: C{enemy.headSp} / T{enemy.bodySp}
                         </span>
+                        {enemy.combatNumber !== undefined && (
+                          <span className="bg-[#1d1830] border border-violet-700/60 text-violet-200 px-1.5 py-0.2 rounded-xs font-bold">
+                            Combat Number: {enemy.combatNumber}
+                          </span>
+                        )}
                         <span className="bg-[#151c1c] border border-[#233838] text-emerald-300 px-1.5 py-0.2 rounded-xs">
-                          Armas: {enemy.weapons.map((w) => w.name).join(', ')}
+                          Armas: {enemy.weapons.length ? enemy.weapons.map((w) => w.name).join(', ') : '—'}
                         </span>
                       </div>
                     </div>
@@ -1322,8 +1340,24 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
                       </div>
                     )}
 
+                    {/* Ficha de máquina (plan 35): sin STATs, MOVE / HP / SP / Combat Number */}
+                    {enemy.machine && (
+                      <div className="p-3 bg-[#161229] rounded-xs border border-violet-700/50 space-y-1 text-[11px]" data-testid="enemy-machine-row">
+                        <span className="text-[10px] font-bold text-violet-300 uppercase block">MÁQUINA: {enemy.machine.type}</span>
+                        <p className="text-slate-200">
+                          MOVE {enemy.machine.move ?? '—'} • HP {enemy.hp} • SP {enemy.bodySp} • Combat Number{' '}
+                          {enemy.combatNumber ?? '— (la maneja quien la controla)'}
+                        </p>
+                        {enemy.machine.counter && <p className="text-slate-400">Contrarrestar: {enemy.machine.counter}</p>}
+                        {enemy.machine.range && <p className="text-slate-400">Alcance: {enemy.machine.range}</p>}
+                        {enemy.machine.defaultTrigger && <p className="text-slate-400">Disparador por defecto: {enemy.machine.defaultTrigger}</p>}
+                        {enemy.machine.size && <p className="text-slate-400">Tamaño: {enemy.machine.size}</p>}
+                        {enemy.machine.cost && <p className="text-slate-400">Costo: {enemy.machine.cost}</p>}
+                      </div>
+                    )}
+
                     {/* 10 STATS COMPLETAS */}
-                    <div className="space-y-1">
+                    {!enemy.machine && <div className="space-y-1">
                       <span className="text-[10px] text-slate-400 uppercase font-bold block">
                         ESTADÍSTICAS OFICIALES (10 STATS):
                       </span>
@@ -1340,7 +1374,7 @@ const EnemiesCompendiumPanelGm: React.FC<EnemiesCompendiumPanelProps> = ({ autoR
                           </div>
                         ))}
                       </div>
-                    </div>
+                    </div>}
 
                     {/* Bases de Combate y Habilidades */}
                     <div className="space-y-1">

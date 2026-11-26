@@ -11,6 +11,7 @@ import type { PartySummary } from '../../sync/partySummary';
 import { ActorsColumn, EnemyRow } from './GmActorsPanels';
 import { RollRequestsPanel } from './RollRequestsPanel';
 import { MysteryTracker } from './MysteryTracker';
+import { enemyInitiativeBase } from '../../data/enemiesCatalog';
 
 const card = 'bg-[#0f1219] border border-[#1e2334] rounded-xs p-3 space-y-2';
 const small = 'text-[11px] font-mono-code text-[#94a3b8]';
@@ -121,7 +122,7 @@ export function GmModeView() {
       .filter((c) => (c.kind === 'enemy' ? !!c.enemy : !online))
       .map((c) => ({
         id: c.id,
-        ref: c.kind === 'enemy' ? c.enemy?.stats.REF ?? 0 : characters.find((ch) => ch.id === c.charId)?.stats.REF ?? 0,
+        ref: c.kind === 'enemy' ? (c.enemy ? enemyInitiativeBase(c.enemy, 0) : 0) : characters.find((ch) => ch.id === c.charId)?.stats.REF ?? 0,
       }));
     for (const r of rollInitiativeForAll(targets)) st.setInitiative(r.id, r.total);
     setFeedback(online ? 'Iniciativa tirada para los enemigos; cada jugador tira la suya.' : 'Iniciativa tirada para todos (REF + 1d10, Core p.168).');

@@ -7,7 +7,23 @@
 > Protocolo de cowork (firma, inicio y cierre de sesión): `docs/COWORK.md`. Al cerrar sesión se reemplaza la sección **Traspaso**.
 > **Regla**: "En curso" lista solo trabajo abierto. Lo terminado sale de acá; queda en el CHANGELOG.
 
-**Última actualización**: [Claude Code · 2026-11-21] v5.47.1 en `main` (PR #102), en la beta (gh-pages 3db2ed1) y en prod (Firebase Hosting); plan 29 cerrado
+**Última actualización**: [Claude Code · 2026-11-25] plan 35 (Corgo's 77, homebrew con sello) en curso en la rama `claude/plan35-corgo77`, worktree `C:\Users\TeseoHeracles\cpr-wt-plan35`. Antes: [Claude Code · 2026-11-21] v5.47.1 en `main` (PR #102), en la beta (gh-pages 3db2ed1) y en prod (Firebase Hosting); plan 29 cerrado
+
+**Plan activo (2026-11-25)**: plan 35, `docs/plans/plan35-drones-corgo77.md`, v5.48.0.
+- Hecho:
+  - Generador con fichas de máquina (`machine`, `combatNumber`, `homebrew`), tipos, `corgo77.json` (33 fichas) y `corgo77.ts` regenerado.
+  - Sello en el bestiario, el Fixer y Data Packs; `enemyInitiativeBase` (las máquinas tiran iniciativa con su CN).
+  - Test `corgo77.test.ts`, docs.
+  - tsc, 851 tests y build OK. Probado en el navegador (dev `plan35-dev`, puerto 5180): filtro con 33 fichas y sello, ficha del Chimera con la fila de máquina y nota de licencia, Griffin al encuentro con 20/20 e iniciativa 16 (CN 14).
+- Dudas de la transcripción, sin preguntar todavía:
+  - Las ametralladoras del PDF dicen "Damage N/A", así que se cargaron con 2d6 de Autofire.
+  - Varios humanoides no traen arma de fuego.
+  - Hay cargadores con más balas que su capacidad, y se dejaron como los imprime el PDF.
+  - Los tiers los elegimos nosotros.
+  - Todo está anotado en `notes` y `doubts` del JSON.
+- Falta: push, PR, beta y prod (cada uno con su OK).
+- Push, beta y prod: cada uno con su OK.
+- El plan 34 (Night Market Index) sigue reservado y sin empezar.
 
 **Versión de la app**: v5.47.0 en `main` @ ef9cf3a (PR #101) y en la beta (gh-pages ab4b155, bundle `main-a28MoSCF.js`; el bundle principal ahora se llama `main-*` porque hay varias entradas). En Firebase prod (hosting `index-C1snalmV.js`) sigue la v5.45.0 [Claude Code · 2026-11-21].
 
@@ -61,6 +77,7 @@
 - **Pack:** las dos copias (`frontend/src/data/` y `data/`) deben quedar idénticas. No correr `scripts/extract_core_pack.py`, que está desincronizado.
 - **Decisiones de Giuliano:**
   - Todo canon: borrar lo inventado, sin homebrew. NET Actions según CEMK (hasta 3).
+  - [Claude Code · 2026-11-25] Única excepción: los 33 drones y robots de **Corgo's 77 Collection V3** (plan 35). Van con `homebrew: true`, la fuente `homebrew_corgo77` y el sello violeta 🧪 HOMEBREW, visibles y filtrables. Las armas homebrew de ese PDF no entran al catálogo. Cualquier otro homebrew necesita un OK nuevo.
   - Elflines Online queda fuera de alcance.
 - **PDFs:** `C:\Users\TeseoHeracles\Documents\CP RED TEST ANTIGRAVITY\`, con las carpetas `Core-Rules\`, `Sourcebooks\` (Interface RED 1-4), `DLC-Supplements\` (Hardened en `Hardened-Enemies\`) y `Reference-Aids\`.
 - **Publicar:**
